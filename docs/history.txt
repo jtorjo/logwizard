@@ -1,0 +1,221 @@
+
+
+1.0.44
+- efficiency : filter is thread-safe
+- note: made filter disposable, but at this time we don't need it
+
+
+1.0.42
+- efficiency: reading the log_line_parser / log_line_reader : on their own thread
+
+
+1.0.41
+- efficiency: reading the file on a different thread - doubled the speed (for 32Mb log file)
+
+
+1.0.40
+- working on efficency - small improvement - line.part() does not take a substring of the line
+
+
+1.0.39
+- the last selected item from history -> move to last, so that next time we auto-open it
+
+
+1.0.38
+- made the Filters - into a pane (with several tabs) - I'll allow having several extensions later (like, Allow filtering by thread/context)
+- several hotkeys - if focus on edit, they should not work
+- allow case-insensitive filters
+- allow filtering for "contains any/none"
+
+
+1.0.37
+- clearer UI hints when a certain view becomes active (like, when you within panes with Tab/Shift-tab)
+- allow de-synchronizing existing log with full log (until now they were in sync)
+- toggle Full Log - allow toggling: view/both/full-log-only
+
+
+1.0.36
+- letter hotkeys - should not work when focus on edit
+
+1.0.35
+- +/- hotkeys - increase/decrease font
+- m - just the log messages (without the time/etc.) - this applies only to the current view 
+(so for instance if full log is present as welll, it would only apply to the current view)
+- ctrl-up/down for log, just like it's in notepad++
+
+
+1.0.34
+- setup sample - shown correctly, added SetupSample filters, in order to be shown correctly at setup
+
+
+1.0.33
+- handle showing the setup sample - when running setup
+  more importantly, making sure that the setup sample is added to the history, and when shown again, it will care about
+  its position in history (by default, we load the last log)
+- when setup kit is run, we wait for it to end and then show the setup sample
+
+
+1.0.28
+- tab / shift-tab - work
+- up/down arrows - if history dropdown or focus in filters ctrl (filter list/cur filter), do normal behavior
+- h - toggle history dropdown (after the dropdown closes, focus back to last known pane)
+- ctrl-n - new window
+- ctrl-s - settings
+- updated help form
+
+
+1.0.27b
+- tooltip - not shown on msg column, the msg_details is shown instead when needed
+
+
+1.0.27a
+- fixed the "tooltip" - made it as control instead of a form (msg_details_ctrl)
+
+
+1.0.26
+- added About form
+- added: if current line is too big to show (thus, we would need a tooltip),we can show it as an edit box (or label), behind the line TOTHINK perhaps we would want to turn this off at times?
+  show this either at the bottom or at the top (by default, at the bottom)
+  HOWEVER It does not FUCKING work. I'm too nervous to investigate - it constantly steals focus from the log wizard - which should NOT happen.
+
+
+1.0.25
+- added Debug64/Release64 configs. Note: on valerie/TableNinja2.log.5 -> it generates on exception on Release64, but no exception on Release
+- ctrl-c - copy to clipboard (only the msg) ; ctrl-shift-c - copy full line
+- bookmarks work
+
+
+1.0.24
+- extra column on Fulllog -> shows the views where a line was found. Also, updates based on which view is selected
+
+
+1.0.23d
+- selecting a filter -> marks all lines containing that filter + allows doing f3/shift-f3
+
+
+1.0.23c
+- log view made as ownerdrawn, so that i can specify UnfocusedHightlight color
+- saving last search (text/bg/fg)
+
+
+1.0.23b
+- ctrl-f/esc/f3/shift-f3 work correctly
+
+
+1.0.23a
+- hotkeys: action hotkeys (up/down/pgup/etc) if full-log is selected, they should apply to it
+- fix: - bug: in full-log, control keys are interpreted twice (such as pgup/pgdn etc)
+- ctrl-f/Esc work - basically, we override the fg + bg
+
+
+1.0.22
+- initial settings page (shows hotkeys/tips)
+- scheletron for finding text
+
+
+1.0.21
+- added GNU v3 licensing
+
+
+1.0.20
+- as the file is appended to, all the filters update correctly (same for the "full log")
+fixes:
+- apparently - teh full log is not correctly refreshed as more info is written to it (windows 8/10)
+- windows 10: apparently we don't update in time as file is refreshed
+
+
+1.0.19
+- Home key works
+
+
+1.0.18
+- tooltip only if text bigger than col width
+- Filter "-" - select something after deletion
+- refresh button on the filter: done: not fully tested, seems to work though
+- font names: by default fixed width
+- previewkeydown/up -> allow global hotkeys
+
+
+1.0.16
+- tested log being constantly appended to/rewritten : works now
+
+
+1.0.15
+- added LogWizardSample file
+- refactored log_to_default_context/syntax
+- recognize Sample file
+- recognize TN2 debug files
+
+
+1.0.14
+- initial tests of log being constantly appended to/rewritten work
+
+
+1.0.13c
+- moved file_text_reader code into simple_file_text_reader
+- moved log-syntax related code into find_log_syntax
+
+
+1.0.13b
+- file_text_reader -> make sure pos_ is ulong
+
+
+1.0.13
+- added rewritelogfile - to test logwizard as a file gets rewritten
+
+
+1.0.11
+- added version to the title
+
+
+1.0.10
+- update log columns based on whether they are empty or not
+
+
+1.0.9
+- HM2 syntax recognized correctly
+- HM3 syntax recognized correctly
+
+
+1.0.8
+- tooltip on view_log line -> show the full line
+
+
+1.0.7
+- setup kit + release mode - keep settings in roaming dir
+
+1.0.6
+- allow having the "All" view -> and allow toggling it, and keeping it in sync with active tab.
+
+
+1.0.5
+- implemented additions
+- on addition -> gray the original color
+- test history (changing files)
+- changing the file -> does not automatically update
+
+
+1.0.4
+- remember "toggle" settings
+- updated tooltip for "Filter"
+- partially implemented additions
+
+
+1.0.3
+- using virtuallist
+- refrences to log4net/objectlistview via nuget
+- virtuallist works so far
+
+
+1.0.2
+- starting to work - several filters work correctly
+
+
+
+1.0.1
+- roughtly, UI is ready - need to actually read logs and apply filters
+done:
++ deleting a mid-view -> need to update all filters! (since they are kept by indexes)
++ adding a view -> copy all filters from existing view!
++ adding a view -> add it AFTER the existing one (in TabPages)
++ adding a view -> select it

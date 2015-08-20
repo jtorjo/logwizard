@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6049BFB8-AC77-4D90-8930-75CC7E5178A4}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LogWizard</RootNamespace>
+    <AssemblyName>LogWizard</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release64|x86'">
+    <OutputPath>bin\x86\Release64\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dbg64|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Dbg64\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release64|x64'">
+    <OutputPath>bin\x64\Release64\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dbg64|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Dbg64\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="ObjectListView, Version=2.8.1.33936, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\ObjectListView.Official.2.8.1\lib\net20\ObjectListView.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="3rdparty\ColorEx.cs" />
+    <Compile Include="context\log_to_default_context.cs" />
+    <Compile Include="context\log_to_default_syntax.cs" />
+    <Compile Include="filter\addition.cs" />
+    <Compile Include="filter\filter.cs" />
+    <Compile Include="filter\filter_line.cs" />
+    <Compile Include="filter\filter_row.cs" />
+    <Compile Include="parse\log_line_parser.cs" />
+    <Compile Include="ui\about_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\about_form.Designer.cs">
+      <DependentUpon>about_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\help_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\help_form.Designer.cs">
+      <DependentUpon>help_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\msg_details_ctrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\msg_details_ctrl.Designer.cs">
+      <DependentUpon>msg_details_ctrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\new_context_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\new_context_form.Designer.cs">
+      <DependentUpon>new_context_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="parse\log_line_reader.cs" />
+    <Compile Include="readers\debug_text_reader.cs" />
+    <Compile Include="ui\Dummy.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\Dummy.Designer.cs">
+      <DependentUpon>Dummy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="readers\file_text_reader.cs" />
+    <Compile Include="context\find_log_syntax.cs" />
+    <Compile Include="readers\simple_file_text_reader.cs" />
+    <Compile Include="readers\text_reader.cs" />
+    <Compile Include="ui\log_wizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\log_wizard.Designer.cs">
+      <DependentUpon>log_wizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\log_view.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\log_view.Designer.cs">
+      <DependentUpon>log_view.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ui\search_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\search_form.Designer.cs">
+      <DependentUpon>search_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\settings_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\settings_form.Designer.cs">
+      <DependentUpon>settings_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="util\settings_file.cs" />
+    <Compile Include="readers\shared_memory_text_reader.cs" />
+    <Compile Include="util\util.cs" />
+    <Compile Include="util\win32.cs" />
+    <EmbeddedResource Include="ui\about_form.resx">
+      <DependentUpon>about_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\Dummy.resx">
+      <DependentUpon>Dummy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\help_form.resx">
+      <DependentUpon>help_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\log_wizard.resx">
+      <DependentUpon>log_wizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\log_view.resx">
+      <DependentUpon>log_view.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\msg_details_ctrl.resx">
+      <DependentUpon>msg_details_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\new_context_form.resx">
+      <DependentUpon>new_context_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="ui\search_form.resx">
+      <DependentUpon>search_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\settings_form.resx">
+      <DependentUpon>settings_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="docs\history.txt" />
+    <None Include="docs\todo.txt" />
+    <Content Include="logwizard.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="logwizard_debug.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LogWizardSetupSample.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

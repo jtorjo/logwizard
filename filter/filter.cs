@@ -1,0 +1,348 @@
+/* 
+ * Copyright (C) 2014-2015 John Torjo
+ *
+ * This file is part of LogWizard
+ *
+ * LogWizard is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LogWizard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you wish to use this code in a closed source application, please contact john.code@torjo.com
+*/
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
+
+namespace LogWizard {
+    class filter : IDisposable {
+
+        public class match {
+            // this contains what filters were matched - we need to know this, so that we can later apply 'additions'
+            //
+            // if this is an empty array, then this match is actually an addition (or, the filter contains no rows -> thus, we return the whole file)
+            public bool[] matches = null;
+
+            public filter_line.font_info font = null;
+            public line line = null;
+            public int line_idx = 0;
+        }
+
+
+        private List<filter_row> rows_ = new List<filter_row>();
+
+        private log_line_reader new_log_ = null, old_log_ = null;
+
+        // the filter matches
+        private Dictionary<int, match> matches_ = new Dictionary<int, match>();
+        // ... the indexes, in sorted order
+        private List<int> match_indexes_ = new List<int>(); 
+
+        private bool rows_changed_ = false;
+
+        private Thread compute_matches_thread_ = null;
+        private bool disposed_ = false;
+
+        private bool post_force_recompute_matches_ = false;
+
+        public int row_count {
+            get { lock(this) return rows_.Count; }
+        }
+
+        public bool rows_changed {
+            get { lock(this) return rows_changed_; }
+        }
+
+        public int match_count {
+            get { lock(this) return matches_.Count; }
+        }
+
+        // note: the only time this can return null is this: since we're refreshing on another thread,
+        //       we might at some point get a match_count, and while we're retrieving the items, the matches array clears
+        public match match_at(int idx) {
+            lock (this) 
+                return idx < matches_.Count ? matches_[match_indexes_[idx]] : null;            
+        }
+
+        // note: 
+        // since we're thread-safe: the rows' can be updated in the following ways:
+        // - either the full array points to the new array
+        // - enabled/dimmed has changed - from different items in the rows' array
+        //
+        // in case any of the filter rows changes, we will end up pointing to the new filter_row array
+        public void update_rows(List<filter_row> rows) {
+            lock (this) {
+                // note: if filter is the same, we want to preserve anything we have cached, about the filter
+                rows_changed_ = false;
+                bool same = false;
+                if (rows_.Count == rows.Count) {
+                    same = true;
+                    for (int i = 0; i < rows_.Count; ++i)
+                        if (!rows[i].same(rows_[i]))
+                            same = false;
+                }
+                if (same) {
+                    // at this point, see if user has fiddled with Enabled/Dimmed
+                    bool same_ed = true;
+                    for (int i = 0; i < rows_.Count; ++i)
+                        if (rows[i].enabled != rows_[i].enabled || rows[i].dimmed != rows_[i].dimmed) {
+                            same_ed = false;
+                            // note: we want to preserve what we already have cached (in the filter rows)
+                            rows_[i].enabled = rows[i].enabled;
+                            rows_[i].dimmed = rows[i].dimmed;
+                        }
+
+                    if (!same_ed) 
+                        rows_changed_ = true;
+                } else {
+                    rows_changed_ = true;
+                    rows_ = rows;                    
+                }
+
+                if (!rows_changed_)
+                    return;
+
+                // this forces a recompute matches on the other thread
+                post_force_recompute_matches_ = true;
+            }
+        }
+
+        private void compute_matches_thread() {
+            while (!disposed_) {
+                bool needs_recompute = false;
+                lock (this)
+                    needs_recompute = post_force_recompute_matches_;
+                if (needs_recompute)
+                    force_recompute_matches();
+
+                log_line_reader new_, old;
+                lock (this) {
+                    new_ = new_log_;
+                    old = old_log_;
+                    old_log_ = new_log_;
+                }
+                compute_matches_impl(new_, old);
+
+                Thread.Sleep(100);
+            }
+        }
+
+        // this gets called only on the compute_matches_thread - since we want to update the matches_/match_indexes_ on that thread!
+        private void force_recompute_matches() {
+            lock (this) {
+                post_force_recompute_matches_ = false;
+                if (matches_.Count < 1)
+                    return;
+                matches_.Clear();
+                match_indexes_.Clear();
+                old_log_ = null;
+            }
+        }
+
+        private void start_compute_matches_thread() {
+            bool needs;
+            lock (this)
+                needs = compute_matches_thread_ == null;
+            if (needs) 
+                lock (this) 
+                   if ( compute_matches_thread_ == null) {
+                        compute_matches_thread_ = new Thread(compute_matches_thread) {IsBackground = true};
+                        compute_matches_thread_.Start();
+                    }            
+        }
+
+        public void compute_matches(log_line_reader log) {
+            Debug.Assert(log != null);
+            lock (this)
+                new_log_ = log;
+
+            start_compute_matches_thread();
+        }
+
+        private void compute_matches_impl(log_line_reader new_log, log_line_reader old_log) {
+            Debug.Assert(new_log != null);
+
+            int old_line_count = new_log.line_count;
+            new_log.refresh();
+            if (new_log != old_log || new_log.forced_reload) {
+                old_line_count = 0;
+                force_recompute_matches();
+            }
+            bool has_new_lines = (old_line_count != new_log.line_count);
+
+            // get a pointer to the rows_; in case it changes on the main thread, we don't care,
+            // since next time we will have the new rows
+            List<filter_row> rows;
+            lock (this) rows = rows_;
+
+            if ( old_line_count == 0)
+                foreach ( filter_row row in rows)
+                    row.refresh();
+
+            foreach ( filter_row row in rows)
+                row.compute_line_matches(new_log);
+
+            if (has_new_lines) {
+                // the filter matches
+                Dictionary<int, match> new_matches = new Dictionary<int, match>();
+                // ... the indexes, in sorted order
+                List<int> new_indexes = new List<int>(); 
+
+                // from old_lines to log.line_count -> these need recomputing
+                int old_match_count;
+                lock (this)
+                    old_match_count = match_indexes_.Count;
+                bool[] matches = new bool[rows.Count];
+
+                for (int line_idx = old_line_count; line_idx < new_log.line_count; ++line_idx) {
+                    bool any_match = false;
+                    for (int filter_idx = 0; filter_idx < matches.Length; ++filter_idx) {
+                        if (rows[filter_idx].enabled || rows[filter_idx].dimmed)
+                            matches[filter_idx] = rows[filter_idx].line_matches.Contains(line_idx);
+                        else
+                            matches[filter_idx] = false;
+                        if (matches[filter_idx])
+                            any_match = true;
+                    }
+
+                    if (any_match) {
+                        // in this case, prefer the first "enabled" filter
+                        int enabled_idx = -1;
+                        for (int filter_idx = 0; filter_idx < matches.Count() && enabled_idx < 0; ++filter_idx)
+                            if (matches[filter_idx] && rows[filter_idx].enabled)
+                                enabled_idx = filter_idx;
+                        int used_idx = -1;
+                        if ( enabled_idx < 0)
+                            for (int filter_idx = 0; filter_idx < matches.Count() && used_idx < 0; ++filter_idx)
+                                if (matches[filter_idx] && rows[filter_idx].dimmed)
+                                    used_idx = filter_idx;
+                        Debug.Assert(enabled_idx >= 0 || used_idx >= 0);
+                        int idx = enabled_idx >= 0 ? enabled_idx : used_idx;
+                        var cur_match = rows[idx].get_match(line_idx);
+                        new_matches.Add(line_idx, new match {
+                            font = cur_match.font, line = new_log.line_at(line_idx), line_idx = line_idx, matches = matches.ToArray()
+                        });
+                        new_indexes.Add(line_idx);
+                    }
+
+                    bool any_filter = (rows.Count > 0);
+                    if (!any_filter) {
+                        new_matches.Add(line_idx, new match { matches = new bool[0], line = new_log.line_at(line_idx), line_idx = line_idx, font = new filter_line.font_info {
+                            bg = Color.White, fg = Color.Black
+                        } });
+                        new_indexes.Add(line_idx);
+                    }
+                }
+
+                lock (this) {
+                    foreach ( var kv in new_matches)
+                        matches_.Add(kv.Key, kv.Value);
+                    match_indexes_.AddRange(new_indexes);
+                }
+
+                apply_additions(old_match_count, new_log, rows);
+            }
+        }
+
+
+        private void apply_additions(int old_match_count, log_line_reader log, List<filter_row> rows ) {
+            // FIXME note: we should normally care about the last match before old_match_count as well, to see maybe it still matches some "addition" lines
+            //             but we ignore that for now
+            //
+            // when impleemnting the above, make sure to find the last matched line, not an existing addition
+
+            bool has_additions = false;
+            foreach( filter_row row in rows)
+                if (row.additions.Count > 0)
+                    has_additions = true;
+            if (!has_additions)
+                // optimize for when no additions
+                return;
+
+            Dictionary<int, Color> additions = new Dictionary<int, Color>();
+            int new_match_count;
+            lock (this) new_match_count = match_indexes_.Count;
+            for (int match_idx = old_match_count; match_idx < new_match_count; ++match_idx) {
+                int line_idx;
+                lock(this) 
+                    line_idx = match_indexes_[match_idx];
+                var match = match_at(match_idx);
+
+                int matched_filter = -1;
+                for ( int filter_idx = 0; filter_idx < match.matches.Length && matched_filter < 0; ++filter_idx)
+                    if (match.matches[filter_idx])
+                        matched_filter = filter_idx;
+
+                if (matched_filter >= 0) {
+                    Color gray_fg = util.grayer_color(rows[matched_filter].get_match(line_idx).font.fg);
+                    foreach (var addition in rows[matched_filter].additions) {
+                        switch (addition.type) {
+                        case addition.number_type.lines:
+                            for (int i = 0; i < addition.number; ++i) {
+                                int add_line_idx = line_idx + (addition.add == addition.add_type.after ? i : -i);
+                                if (add_line_idx >= 0 && add_line_idx < log.line_count)
+                                    additions.Add(add_line_idx, gray_fg);
+                            }
+                            break;
+
+                        case addition.number_type.millisecs:
+                            DateTime start = util.str_to_time(log.line_at(line_idx).part(info_type.time));
+                            for (int i = line_idx; i >= 0 && i < log.line_count;) {
+                                i = i + (addition.add == addition.add_type.after ? 1 : -1);
+                                if (i >= 0 && i < log.line_count) {
+                                    DateTime now = util.str_to_time(log.line_at(i).part(info_type.time));
+                                    int diff = (int) ((now - start).TotalMilliseconds);
+                                    bool ok =
+                                        (addition.add == addition.add_type.after && diff <= addition.number) ||
+                                        (addition.add == addition.add_type.before && -diff <= addition.number);
+                                    if (ok && !additions.ContainsKey(i))
+                                        additions.Add(i, gray_fg);
+                                    else
+                                        break;
+                                }
+                            }
+                            break;
+                        default:
+                            Debug.Assert(false);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            lock(this)
+                foreach (var add_idx in additions)
+                    add_addition_line(add_idx.Key, add_idx.Value, log);
+        }
+
+        private static bool[] empty_match = new bool[0];
+        private void add_addition_line(int line_idx, Color fg, log_line_reader log) {
+            // if insert_idx > 0 , that means we already have it
+            int insert_idx = match_indexes_.BinarySearch(line_idx);
+            if (insert_idx < 0) {
+                match_indexes_.Insert(~insert_idx, line_idx);
+                matches_.Add(line_idx, new match {
+                    matches = empty_match, line = log.line_at(line_idx), line_idx = line_idx, font = new filter_line.font_info {
+                        bg = Color.White, fg = fg
+                    }
+                } );
+            }
+        }
+
+        public void Dispose() {
+            disposed_ = true;
+        }
+    }
+}

@@ -1,0 +1,63 @@
+- very big file: C:\john\code\buff\denisehovertest\TableNinja2.log -> generates outofmemory exception
+
+
+- in the tabs - show how many items they match; if that changes, add "*" to it
+
+
++ goto line/time
+  - if on full log, and not synchronized, by default, it should go to whatever line is on the selected view
+
+
+- move up/down -> sometimes it does not update the "Found" column
+
+- allow editing the message (basically just for copying text) + allow "Exclude [text]" + "Include [text]" (on the Full log)
+  -probably listen for keys -> listen for left or right arrow (and start moving cursor from there)
+
+
+
+- settings page: 
+  - font for showing the message (like, Courier New?)
+  - default color for "Include text"
+  - show column "Filter(s)" on full log (it takes more time to synchronize)
+  - colors for bookmarks
+
+
+
+- how easy is it to draw with custom font, or on special color?
+
+
+------------- talk with Vidi
+- threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
+- allow copy-paste of full-log into a cloud
+- allow saving a certain view as a text file
+- file:line -> allow showing the actual source code , eventually integrate with visual studio, 
+  eventually think about root folder / and allow overriding it to your own
+  integrate with github/bitbucket for open source projects? - look for api from github/bitbucket for retrieving files
+  
+- live monitoring: maybe allow monitoring a condition, and somehow alert the user
+- find: allow showing only the lines that matched the find condition (toggle)
+- in visual studio -> if i'm at file:line -> go into logwizard and see what messages were written at this file:line -> create a view with those lines or something like that
+
+- find -> convert to a filter 
+
+---------------
+
+- decrease memory footprint - probably for ascii-encoded files, we can assume we don't need to always keep the byte buffer (file_text_reader)
+
+
+
+
+
+allow bolding or changing font or color or whatever of certain words/phrases
+like, color=red for all "could not" text
+
+- (low) log_line_parser.read_to_end - normally, when a line is incomplete and reparsed, we should reapply filters on it, because the line might have become complete now,
+  thus, some filters might match now. however, it's not a big deal - normally logs should be flushed correctly (several lines at a time)
+
+
+
+allow bolding or changing font or color or whatever of certain regexes?
+like, in the message - if X matches Y -> mark it in a certain color or so.
+case in point -> [time.stats] -> numbers -> if too big -> mark them in given color
+---- at beginning, do this simple, like "match [time.stats] $number ms". Then, allow $number comparisons, like , $number > 100 => color something
+
