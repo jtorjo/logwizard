@@ -1,5 +1,9 @@
 
 
+1.0.45
+- initially added and tested on github
+
+
 1.0.44
 - efficiency : filter is thread-safe
 - note: made filter disposable, but at this time we don't need it
