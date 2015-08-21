@@ -91,6 +91,9 @@ namespace LogWizard {
             bool on_top = distance_to_top >= distance_to_bottom;
             var new_location = new Point(wizard_rect.Left, on_top ? wizard_rect.Top : wizard_rect.Bottom - Height);
             show(true, new_location);
+            var cols = view.sel_line_colors;
+            txt.ForeColor = cols.Item1;
+            txt.BackColor = cols.Item2;
         }
 
         private void show(bool do_show, Point p = default(Point) ) {

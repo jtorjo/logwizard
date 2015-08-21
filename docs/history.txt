@@ -1,4 +1,9 @@
 
+1.0.46
+- fix: bug when changing log files 
+- tested very big file (280Mb) - works on x64
+- msg_details: match the color of the line you're showing details for
+
 
 1.0.45
 - initially added and tested on github

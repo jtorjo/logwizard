@@ -147,7 +147,7 @@ namespace LogWizard {
                     return;
                 matches_.Clear();
                 match_indexes_.Clear();
-                old_log_ = null;
+                //old_log_ = null;
             }
         }
 

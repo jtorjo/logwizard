@@ -273,6 +273,17 @@ namespace LogWizard
                 return new Rectangle();
             }
         }
+        // fg and bg
+        public Tuple<Color,Color> sel_line_colors {
+            get {
+                int sel = list.SelectedIndex;
+                if (sel >= 0) {
+                    var i = list.GetItem(sel).RowObject as item;
+                    return new Tuple<Color, Color>(i.fg, i.bg);
+                }
+                return new Tuple<Color, Color>(Color.Black,Color.White);
+            }
+        }
 
         public void set_filter(List<filter_row> filter) {
             filter_.update_rows(filter);
@@ -627,7 +638,6 @@ namespace LogWizard
             model_.set_matches(new_, this);
 
             // update colors
-            Debug.Assert(list.GetItemCount() == filter_.match_count);
             for (int idx = 0; idx < list.GetItemCount(); ++idx) {
                 item i = list.GetItem(idx).RowObject as item;
                 var match = filter_.match_at(idx);
