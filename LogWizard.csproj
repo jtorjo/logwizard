@@ -117,6 +117,7 @@
     <Compile Include="filter\filter_line.cs" />
     <Compile Include="filter\filter_row.cs" />
     <Compile Include="parse\log_line_parser.cs" />
+    <Compile Include="settings\app.cs" />
     <Compile Include="ui\about_form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,7 +180,7 @@
     <Compile Include="ui\settings_form.Designer.cs">
       <DependentUpon>settings_form.cs</DependentUpon>
     </Compile>
-    <Compile Include="util\settings_file.cs" />
+    <Compile Include="settings\settings_file.cs" />
     <Compile Include="readers\shared_memory_text_reader.cs" />
     <Compile Include="util\util.cs" />
     <Compile Include="util\win32.cs" />

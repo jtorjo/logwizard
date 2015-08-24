@@ -610,6 +610,14 @@ namespace LogWizard
             show_full_log(cur.show_fulllog ? show_full_log_type.both : show_full_log_type.just_view);
         }
 
+        private void load_global_settings() {
+            app.inst.sync_all_views = sett.get("sync_all_views", "1") != "0";
+            app.inst.sync_full_log_view = sett.get("sync_full_log_view", "1") != "0";
+            synchronizeWithExistingLogs.Checked = app.inst.sync_all_views;
+            synchronizedWithFullLog.Checked = app.inst.sync_full_log_view;
+            update_sync_texts();
+        }
+
         private void remove_log_view_from_tab(int idx) {
             Debug.Assert(idx < viewsTab.TabCount);
             TabPage tab = viewsTab.TabPages[idx];
@@ -670,7 +678,9 @@ namespace LogWizard
             load_tabs();
             load_filters();
             load_toggles();
+            load_global_settings();
         }
+
 
 
         private void save() {
@@ -828,9 +838,16 @@ namespace LogWizard
             lv.set_filter(lvf);
         }
 
-        public void go_to_line(int line, log_view from) {
-            if (cur_context().show_fulllog && from != fullLogCtrl && synchronizedWithFullLog.Checked)
-                fullLogCtrl.go_to_line(line - 1);
+        public void go_to_line(int line_idx, log_view from) {
+            if (cur_context().show_fulllog && from != fullLogCtrl && app.inst.sync_full_log_view)
+                fullLogCtrl.go_to_line(line_idx, log_view.select_type.do_not_notify_parent);
+
+            bool keep_all_in_sync = (from != fullLogCtrl && app.inst.sync_all_views) ||
+                // if the current log is full log, we will synchronize all views only if both checks are checked
+                // (note: this is always a bit time consuming as well)
+                (from == fullLogCtrl&& app.inst.sync_all_views && app.inst.sync_full_log_view);
+            if ( keep_all_in_sync)
+                keep_logs_in_sync(from);
         }
 
         private void sourceName_TextChanged(object sender, EventArgs e)
@@ -1527,15 +1544,21 @@ namespace LogWizard
                 break;
 
             case action_type.next_view: {
+                int prev_idx = viewsTab.SelectedIndex;
                 int next = viewsTab.TabCount > 0 ? (sel + 1) % viewsTab.TabCount : -1;
-                if (next >= 0)
+                if (next >= 0) 
                     viewsTab.SelectedIndex = next;
+                if ( prev_idx >= 0)
+                    log_view_for_tab(prev_idx).update_x_of_y();
             }
                 break;
             case action_type.prev_view: {
+                int prev_idx = viewsTab.SelectedIndex;
                 int next = viewsTab.TabCount > 0 ? (sel + viewsTab.TabCount - 1) % viewsTab.TabCount : -1;
                 if (next >= 0)
                     viewsTab.SelectedIndex = next;
+                if ( prev_idx >= 0)
+                    log_view_for_tab(prev_idx).update_x_of_y();
             }
                 break;
 
@@ -1670,6 +1693,21 @@ namespace LogWizard
             return panes;
         }
 
+        // keeps the other logs in sync with this one - if needed
+        private void keep_logs_in_sync(log_view src) {
+            int line_idx = src.sel_line_idx;
+            if (line_idx < 0)
+                return;
+            foreach ( log_view lv in all_log_views_and_full_log())
+                if (lv != src) {
+                    if (cur_context().show_fulllog && lv == fullLogCtrl && app.inst.sync_full_log_view)
+                        // in this case, we already synched the full log
+                        continue;
+
+                    lv.go_to_closest_line(line_idx);
+                }
+        }
+
         private void switch_pane(bool forward) {
             List<Control> panes = this.panes();
             Control focus_ctrl = focused_ctrl();
@@ -1796,8 +1834,19 @@ namespace LogWizard
             }
         }
 
+        private void update_sync_texts() {
+            synchronizedWithFullLog.Text = synchronizedWithFullLog.Checked ? "<-FL->" : "</FL/>";
+            synchronizeWithExistingLogs.Text = synchronizeWithExistingLogs.Checked ? "<-V->" : "</V/>";            
+        }
+
         private void synchronizedWithFullLog_CheckedChanged(object sender, EventArgs e) {
-            synchronizedWithFullLog.Text = synchronizedWithFullLog.Checked ? "<->" : "</>";
+            app.inst.sync_full_log_view = synchronizedWithFullLog.Checked;
+            update_sync_texts();
+        }
+
+        private void synchronizeWithExistingLogs_CheckedChanged(object sender, EventArgs e) {
+            app.inst.sync_all_views = synchronizeWithExistingLogs.Checked;
+            update_sync_texts();
         }
     }
 }

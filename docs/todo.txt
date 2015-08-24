@@ -9,17 +9,19 @@
   (Sync: with current tab / with all tabs / none)
   when synchronizing -> specify how to show unsynchronized lines (like, darkgray?)
 
-
+- synchronizing with full-log -> if key is down (up/down/etc.) -> don't sync yet TOTHINK (basically so that we only synchronize when the user has selected the final row)
 
 - file_text_reader - in case fs_ can't be open - retry until we can
 - history - deleted files - ignore them
 
-
-
+- allow selecting several rows
 
 - move up/down -> sometimes it does not update the "Found" column
 
-
+- alert -> allow showing a msg, beep, etc. when a certain msg is found
+  for instance "same scrape" -> show a message when that happens
+  or, when "overridden theme" gets written (for alerts - force refresh of the view all the time)
+  by default -> the alert would show the message itself + perhaps beep?
 
 
 - settings page: 
@@ -56,7 +58,7 @@
 
 - decrease memory footprint - probably for ascii-encoded files, we can assume we don't need to always keep the byte buffer (file_text_reader)
 
-
+- at some point: all commands should be available via menu - which should be turned on/off
 
 
 

@@ -61,6 +61,7 @@
             this.addContext = new System.Windows.Forms.Button();
             this.delContext = new System.Windows.Forms.Button();
             this.synchronizedWithFullLog = new System.Windows.Forms.CheckBox();
+            this.synchronizeWithExistingLogs = new System.Windows.Forms.CheckBox();
             this.settingsCtrl = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.main = new System.Windows.Forms.SplitContainer();
@@ -308,10 +309,10 @@
             // newFilteredView
             // 
             this.newFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.newFilteredView.Location = new System.Drawing.Point(461, 3);
+            this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.newFilteredView.Location = new System.Drawing.Point(422, 3);
             this.newFilteredView.Name = "newFilteredView";
-            this.newFilteredView.Size = new System.Drawing.Size(24, 24);
+            this.newFilteredView.Size = new System.Drawing.Size(18, 24);
             this.newFilteredView.TabIndex = 1;
             this.newFilteredView.Text = "+";
             this.tip.SetToolTip(this.newFilteredView, "New Filtered View of the same Log");
@@ -401,10 +402,10 @@
             // delFilteredView
             // 
             this.delFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.delFilteredView.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.delFilteredView.Location = new System.Drawing.Point(488, 3);
+            this.delFilteredView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.delFilteredView.Location = new System.Drawing.Point(440, 3);
             this.delFilteredView.Name = "delFilteredView";
-            this.delFilteredView.Size = new System.Drawing.Size(24, 24);
+            this.delFilteredView.Size = new System.Drawing.Size(18, 24);
             this.delFilteredView.TabIndex = 2;
             this.delFilteredView.Text = "-";
             this.tip.SetToolTip(this.delFilteredView, "Delete this View");
@@ -461,14 +462,32 @@
             this.synchronizedWithFullLog.Appearance = System.Windows.Forms.Appearance.Button;
             this.synchronizedWithFullLog.Checked = true;
             this.synchronizedWithFullLog.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.synchronizedWithFullLog.Location = new System.Drawing.Point(513, 3);
+            this.synchronizedWithFullLog.Font = new System.Drawing.Font("Segoe UI", 7F);
+            this.synchronizedWithFullLog.Location = new System.Drawing.Point(509, 3);
             this.synchronizedWithFullLog.Name = "synchronizedWithFullLog";
-            this.synchronizedWithFullLog.Size = new System.Drawing.Size(39, 24);
+            this.synchronizedWithFullLog.Size = new System.Drawing.Size(46, 24);
             this.synchronizedWithFullLog.TabIndex = 1;
-            this.synchronizedWithFullLog.Text = "<->";
+            this.synchronizedWithFullLog.Text = "<-FL->";
             this.tip.SetToolTip(this.synchronizedWithFullLog, "Synchronized with the Full Log");
             this.synchronizedWithFullLog.UseVisualStyleBackColor = true;
             this.synchronizedWithFullLog.CheckedChanged += new System.EventHandler(this.synchronizedWithFullLog_CheckedChanged);
+            // 
+            // synchronizeWithExistingLogs
+            // 
+            this.synchronizeWithExistingLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.synchronizeWithExistingLogs.Appearance = System.Windows.Forms.Appearance.Button;
+            this.synchronizeWithExistingLogs.Checked = true;
+            this.synchronizeWithExistingLogs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.synchronizeWithExistingLogs.Font = new System.Drawing.Font("Segoe UI", 7F);
+            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(463, 3);
+            this.synchronizeWithExistingLogs.Name = "synchronizeWithExistingLogs";
+            this.synchronizeWithExistingLogs.Size = new System.Drawing.Size(46, 24);
+            this.synchronizeWithExistingLogs.TabIndex = 3;
+            this.synchronizeWithExistingLogs.Text = "<-V->";
+            this.tip.SetToolTip(this.synchronizeWithExistingLogs, "Synchronized with the rest of the Views\r\n(when you change the line, the other vie" +
+        "ws will \r\ngo to the closest line as you)");
+            this.synchronizeWithExistingLogs.UseVisualStyleBackColor = true;
+            this.synchronizeWithExistingLogs.CheckedChanged += new System.EventHandler(this.synchronizeWithExistingLogs_CheckedChanged);
             // 
             // settingsCtrl
             // 
@@ -688,6 +707,7 @@
             // 
             // filteredLeft.Panel1
             // 
+            this.filteredLeft.Panel1.Controls.Add(this.synchronizeWithExistingLogs);
             this.filteredLeft.Panel1.Controls.Add(this.synchronizedWithFullLog);
             this.filteredLeft.Panel1.Controls.Add(this.delFilteredView);
             this.filteredLeft.Panel1.Controls.Add(this.newFilteredView);
@@ -875,6 +895,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.CheckBox synchronizeWithExistingLogs;
     }
 }
 

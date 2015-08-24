@@ -303,6 +303,7 @@ namespace LogWizard
                 wait_for_filter_to_read_from_new_log_ = true;
                 logger.Debug("[view] new log for " + name + " - " + log.name);
                 model_.set_matches(new List<filter.match>(), this);
+                update_x_of_y();
             }
         }
 
@@ -337,12 +338,6 @@ namespace LogWizard
             return null;
         }
 
-        private void select_idx(int idx) {
-            if (idx >= 0 && idx < list.GetItemCount()) {
-                list.SelectedIndex = idx;
-                update_line_highlight_color(idx);
-            }
-        }
 
         public void on_action(log_wizard.action_type action) {
             switch (action) {
@@ -397,7 +392,7 @@ namespace LogWizard
                 break;
             }
             if (sel >= 0 && list.SelectedIndex != sel) {
-                select_idx( sel);
+                select_idx( sel, select_type.notify_parent);
                 list.EnsureVisible(sel);
             }
         }
@@ -496,6 +491,52 @@ namespace LogWizard
             }
         }
 
+        private bool is_current_view {
+            get {
+                var parent = Parent as TabPage;
+                if (parent != null) {
+                    var tab = parent.Parent as TabControl;
+                    bool is_ = tab.SelectedTab == parent;
+                    return is_;
+                }
+                return false;
+            }
+        }
+
+        public void update_x_of_y() {
+            string x_idx =  list.SelectedIndex >= 0 ? "" + (list.SelectedIndex+1) : "";
+            string x_line =  sel_line_idx >= 0 ? "" + (sel_line_idx + 1) : "";
+            string y = "" + list.GetItemCount();
+            string header = (app.inst.show_view_line_count || app.inst.show_view_selected_line || app.inst.show_view_selected_index ? (x_idx != "" ? x_idx + " of " + y : "(" + y + ")") : "");
+            string x_of_y_msg = "Message " + header;
+            string x_of_y_title = "";
+            if (app.inst.show_view_line_count && app.inst.show_view_selected_index)
+                x_of_y_title = " (" + (x_idx != "" ? x_idx + "/" : "") + y + ")";
+            else if (!app.inst.show_view_line_count && app.inst.show_view_selected_index) {
+                if ( x_idx != "")
+                    x_of_y_title = " (" + x_idx + ")";
+            } else if (app.inst.show_view_line_count && !app.inst.show_view_selected_index)
+                x_of_y_title = " (" + y + ")";
+
+            if ( x_line != "" && app.inst.show_view_selected_line && !is_current_view)
+                x_of_y_title = " [" + x_line + "] " + x_of_y_title;
+            x_of_y_title = x_of_y_title.TrimEnd();
+
+            var parent = Parent as TabPage;
+            if (parent != null)
+                parent.Text = name + x_of_y_title;
+
+            msgCol.Text = x_of_y_msg;
+        }
+
+        private void force_select_first_item() {
+            if ( list.GetItemCount() > 0)
+                if (list.SelectedIndex < 0) {
+                    list.SelectedIndex = 0;
+                    logger.Debug("[view] forcing sel zero for " + name);
+                }
+        }
+
         public void refresh() {
             // comment the following line to easily test the UI
             //return;
@@ -535,6 +576,8 @@ namespace LogWizard
                         new_ = new List<filter.match>();
                     }
                     model_.add_matches(new_, this);
+                    update_x_of_y();
+                    force_select_first_item();
                     logger.Debug("[view] log " + viewName.Text + " has " + model_.GetObjectCount() + " entries.");
                 } else
                     // less items than we have shown to the user? either the file has been erased, or cleared-and-re-written to, so we process it as a full-blown filter change
@@ -619,7 +662,7 @@ namespace LogWizard
             var count = list.GetItemCount();
             if (count > 0) {
                 list.EnsureVisible(count - 1);
-                select_idx( count - 1);
+                select_idx( count - 1, select_type.do_not_notify_parent);
             }
         }
 
@@ -682,6 +725,9 @@ namespace LogWizard
 
             if( needs_scroll)
                 go_last();
+            else 
+                force_select_first_item();
+            update_x_of_y();
         }
 
         private void list_FormatCell_1(object sender, FormatCellEventArgs e) {
@@ -696,20 +742,38 @@ namespace LogWizard
             }
         }
 
+        public enum select_type {
+            notify_parent, do_not_notify_parent
+        }
+        // by default, notify parent
+        private select_type select_nofify_ = select_type.notify_parent;
+        private void select_idx(int idx, select_type notify) {
+            select_nofify_ = notify;
+            if (idx >= 0 && idx < list.GetItemCount()) {
+                logger.Debug("[view] " + name + " sel=" + idx);
+                list.SelectedIndex = idx;
+                update_line_highlight_color(idx);
+                update_x_of_y();
+            }
+            select_nofify_ = select_type.notify_parent;
+        }
+
         private void list_SelectedIndexChanged(object sender, EventArgs e) {
             int sel = list.SelectedIndex;
             if (sel < 0)
                 return;
 
-            int line = (list.GetItem(sel).RowObject as item).line;
-            parent.go_to_line(line, this);
+            if (select_nofify_ == select_type.notify_parent) {
+                int line_idx = (list.GetItem(sel).RowObject as item).match.line_idx;
+                parent.go_to_line(line_idx, this);
+            }
         }
 
-        public void go_to_line(int line_idx) {
+        public void go_to_line(int line_idx, select_type notify) {
             if (line_idx >= list.GetItemCount())
                 return;
 
-            select_idx( line_idx);
+            select_idx( line_idx, notify);
             //list.EnsureVisible(line_idx);
 
             int rows = list.Height / list.RowHeight;
@@ -722,6 +786,27 @@ namespace LogWizard
             // we want to show the line in the *middle* of the control (height-wise)
             list.EnsureVisible(top_idx);
             list.EnsureVisible(bottom_idx);
+        }
+
+        public void go_to_closest_line(int line_idx) {
+            if (list.GetItemCount() < 1)
+                return;
+
+            // note: yeah - i could do binary search, but it's not that big of a time increase
+            int last_line_idx = (list.GetItem(0).RowObject as item).match.line_idx;
+            int found_idx = 0;
+            for (int idx = 1; idx < list.GetItemCount(); ++idx) {
+                var cur_line_idx = (list.GetItem(idx).RowObject as item).match.line_idx;
+                int last_dist = Math.Abs(line_idx - last_line_idx);
+                int cur_dist = Math.Abs(cur_line_idx - line_idx);
+                if (cur_dist < last_dist) {
+                    last_line_idx = cur_line_idx;
+                    found_idx = idx;
+                } else
+                    // we found it
+                    break;
+            }
+            go_to_line(found_idx, select_type.do_not_notify_parent);
         }
 
         public int line_count {
@@ -807,7 +892,7 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
 
-            select_idx( 0);
+            select_idx( 0, select_type.notify_parent);
             item i = list.GetItem(0).RowObject as item;
             if (i.match.line.part(info_type.msg).Contains(txt)) {
                 // line zero contains the text already
@@ -830,7 +915,7 @@ namespace LogWizard
                         found = idx;
                 }
             if (found >= 0) {
-                select_idx( found);
+                select_idx( found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
                 System.Media.SystemSounds.Asterisk.Play();
@@ -847,7 +932,7 @@ namespace LogWizard
                         found = idx;
                 }
             if (found >= 0) {
-                select_idx( found);
+                select_idx( found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
                 System.Media.SystemSounds.Asterisk.Play();            
@@ -886,7 +971,7 @@ namespace LogWizard
                         found = idx;
                 }
             if (found >= 0) {
-                select_idx( found);
+                select_idx( found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
                 System.Media.SystemSounds.Asterisk.Play();
@@ -904,7 +989,7 @@ namespace LogWizard
                         found = idx;
                 }
             if (found >= 0) {
-                select_idx( found);
+                select_idx( found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
                 System.Media.SystemSounds.Asterisk.Play();
@@ -967,7 +1052,7 @@ namespace LogWizard
 
             if (mark >= 0) {
                 int idx = row_by_line_idx(mark).Index;
-                select_idx(idx);
+                select_idx(idx, select_type.notify_parent);
                 list.EnsureVisible(idx);
             } else
                 System.Media.SystemSounds.Asterisk.Play();
@@ -986,7 +1071,7 @@ namespace LogWizard
 
             if (mark >= 0) {
                 int idx = row_by_line_idx(mark).Index;
-                select_idx(idx);
+                select_idx(idx, select_type.notify_parent);
                 list.EnsureVisible(idx);
             }
             else

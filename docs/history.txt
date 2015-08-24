@@ -1,12 +1,15 @@
+- filter row: Move to Top / Move To Buttom
 
+- export to clipboard/import from clipboard for filters/full-context
 
 - Monitor TN2 - if present (%appdata%\tn2)
 
--todo: show the number of lines in teh tab + show when it changes
-       instead of "Line",show x/y (meaning line X of Y lines) -> setting Show Line / show X/Y
-	   probably just "x" because we already know Y (it's in the tab - only for Full log would we need X/Y)
-	   and basically, for Full Log we would only need Y, since X is already shown
-	   maybe show it in Message column!!! the full deal X of Y [full-line-count] if Y = [full-line-count] don't show [full-line-count]
+
+
+1.0.50
+- sync all views to existing view - force all views to go to the closest line 
+- show the number of lines in teh tab + show when it changes
+  WEIRD BUG: in order for logs to be in sync, i need to go with ctrl-=> to each log. then, they will end up in sync as i change the items
 
 
 1.0.49
