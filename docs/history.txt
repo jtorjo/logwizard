@@ -1,5 +1,4 @@
 
-- check if monitoring the same file - and that file gets rewritten -> everything should go from zero
 
 - Monitor TN2 - if present (%appdata%\tn2)
 
@@ -10,7 +9,9 @@
 	   maybe show it in Message column!!! the full deal X of Y [full-line-count] if Y = [full-line-count] don't show [full-line-count]
 
 
-
+1.0.49
+- done, works: check if monitoring the same file - and that file gets rewritten -> everything should go from zero
+- updated TableNinja context
 
 
 1.0.47

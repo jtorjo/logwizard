@@ -328,7 +328,7 @@ namespace LogWizard
                 forced_reload_.Clear();
                 lines_.Clear();
                 text_reader_.pos = 0;
-                logger.Info("log reloaded: " + text_reader_.name);
+                logger.Info("[log] log reloaded: " + text_reader_.name);
             }
         }
 
