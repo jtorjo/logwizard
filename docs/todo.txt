@@ -1,17 +1,24 @@
 - very big file: C:\john\code\buff\denisehovertest\TableNinja2.log -> generates outofmemory exception
-
-
-- in the tabs - show how many items they match; if that changes, add "*" to it
+   --> generate the release build as x64 by default
 
 
 + goto line/time
   - if on full log, and not synchronized, by default, it should go to whatever line is on the selected view
 
+- synchronize colors : full log - synchronize with what the existing tab has and/or with all tabs? 
+  (Sync: with current tab / with all tabs / none)
+  when synchronizing -> specify how to show unsynchronized lines (like, darkgray?)
+
+
+
+- file_text_reader - in case fs_ can't be open - retry until we can
+- history - deleted files - ignore them
+
+
+
 
 - move up/down -> sometimes it does not update the "Found" column
 
-- allow editing the message (basically just for copying text) + allow "Exclude [text]" + "Include [text]" (on the Full log)
-  -probably listen for keys -> listen for left or right arrow (and start moving cursor from there)
 
 
 
@@ -25,11 +32,16 @@
 
 - how easy is it to draw with custom font, or on special color?
 
+- find - case-insensitive + full words
+
+
+- allow editing the message (basically just for copying text) + allow "Exclude [text]" + "Include [text]" (on the Full log)
+  -probably listen for keys -> listen for left or right arrow (and start moving cursor from there)
 
 ------------- talk with Vidi
 - threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
 - allow copy-paste of full-log into a cloud
-- allow saving a certain view as a text file
+- allow saving a certain view as a text file (.txt or .html)
 - file:line -> allow showing the actual source code , eventually integrate with visual studio, 
   eventually think about root folder / and allow overriding it to your own
   integrate with github/bitbucket for open source projects? - look for api from github/bitbucket for retrieving files

@@ -1,7 +1,7 @@
 11:06:12,939 main       INFO  wizard_intro - 
 11:06:12,939 main       INFO  wizard_intro - This is a LogWizard Setup sample. Load it in your "Log Wizard" application, 
 11:06:12,939 main       INFO  wizard_intro - to see what LogWizard can do!
-11:06:12,939 main       INFO  wizard_intro - https://bitbucket.org/jtorjo/logwizard
+11:06:12,939 main       INFO  wizard_intro - https://github.com/jtorjo/logwizard/wiki
 11:06:12,939 main       INFO  wizard_intro - 
 11:06:12,939 main       INFO  wizard_intro - You might see this, when you run the LogWizard setup kit.
 11:06:12,939 main       INFO  wizard_intro - 

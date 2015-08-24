@@ -26,10 +26,12 @@ namespace LogWizard.ui {
             } catch {}
         }
 
-        private void bitbucket_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+
+        private void link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             try {
-                Process.Start("https://bitbucket.org/jtorjo/logwizard");
+                Process.Start("https://github.com/jtorjo/logwizard/wiki");
             } catch {}
+            
         }
     }
 }

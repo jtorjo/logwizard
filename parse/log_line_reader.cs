@@ -40,6 +40,10 @@ namespace LogWizard {
             parser_ = parser;
         }
 
+        public string name {
+            get { return parser_.name; }
+        }
+
         public bool forced_reload {
             get { return parser_.forced_reload(this); }
         }

@@ -28,6 +28,7 @@ using System.Windows.Forms;
 
 namespace LogWizard {
     class filter : IDisposable {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public class match {
             // this contains what filters were matched - we need to know this, so that we can later apply 'additions'
@@ -74,6 +75,11 @@ namespace LogWizard {
         public match match_at(int idx) {
             lock (this) 
                 return idx < matches_.Count ? matches_[match_indexes_[idx]] : null;            
+        }
+
+        // this will return the log we last read the matches from
+        internal log_line_reader log {
+            get { lock(this) return old_log_; }
         }
 
         // note: 
@@ -131,9 +137,12 @@ namespace LogWizard {
                 lock (this) {
                     new_ = new_log_;
                     old = old_log_;
-                    old_log_ = new_log_;
                 }
                 compute_matches_impl(new_, old);
+                // the reason I do this here - I need to let the main thread know htat the log was fully set (and the matches are from This log)
+                // ONLY after I have read from it at least once
+                lock (this)
+                    old_log_ = new_;
 
                 Thread.Sleep(100);
             }
@@ -177,6 +186,7 @@ namespace LogWizard {
             int old_line_count = new_log.line_count;
             new_log.refresh();
             if (new_log != old_log || new_log.forced_reload) {
+                logger.Info("[filter] new log " + new_log.name);
                 old_line_count = 0;
                 force_recompute_matches();
             }

@@ -26,7 +26,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.jt = new System.Windows.Forms.LinkLabel();
-            this.bitbucket = new System.Windows.Forms.LinkLabel();
+            this.link = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
             this.jt2 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
@@ -62,16 +62,16 @@
             this.jt.Text = "John Torjo";
             this.jt.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.jt_LinkClicked);
             // 
-            // bitbucket
+            // link
             // 
-            this.bitbucket.AutoSize = true;
-            this.bitbucket.Location = new System.Drawing.Point(161, 68);
-            this.bitbucket.Name = "bitbucket";
-            this.bitbucket.Size = new System.Drawing.Size(312, 16);
-            this.bitbucket.TabIndex = 3;
-            this.bitbucket.TabStop = true;
-            this.bitbucket.Text = "https://bitbucket.org/jtorjo/logwizard";
-            this.bitbucket.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.bitbucket_LinkClicked);
+            this.link.AutoSize = true;
+            this.link.Location = new System.Drawing.Point(161, 68);
+            this.link.Name = "link";
+            this.link.Size = new System.Drawing.Size(328, 16);
+            this.link.TabIndex = 3;
+            this.link.TabStop = true;
+            this.link.Text = "https://github.com/jtorjo/logwizard/wiki";
+            this.link.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.link_LinkClicked);
             // 
             // label3
             // 
@@ -100,12 +100,12 @@
             this.ClientSize = new System.Drawing.Size(498, 136);
             this.Controls.Add(this.jt2);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.bitbucket);
+            this.Controls.Add(this.link);
             this.Controls.Add(this.jt);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "about_form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "About LogWizard";
@@ -119,7 +119,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel jt;
-        private System.Windows.Forms.LinkLabel bitbucket;
+        private System.Windows.Forms.LinkLabel link;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.LinkLabel jt2;
     }

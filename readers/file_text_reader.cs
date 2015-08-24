@@ -40,8 +40,6 @@ namespace LogWizard
 
         private readonly string file_;
 
-        FileStream fs_ = null;
-
         // for now, make it simple - read everything 
         string full_log_ = "";
 
@@ -56,11 +54,12 @@ namespace LogWizard
 
 
         public file_text_reader(string file) {
-            // get absolute path
-            this.file_ = new FileInfo( file).FullName;
             try {
-                fs_ = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            } catch { fs_ = null; }
+                // get absolute path - normally, this should be the absolute path, but just to be sure
+                file_ = new FileInfo(file).FullName;
+            } catch {
+                file_ = file;
+            }
             pos_ = 0;
             new Thread(read_all_file_thread) {IsBackground = true}.Start();
         }
@@ -124,23 +123,25 @@ namespace LogWizard
             try {
                 long len = new FileInfo(file_).Length;
                 allocate_buffer(len);
-                if (len > (long)full_log_read_bytes_) {
-                    long offset = (long)full_log_read_bytes_;
-                    long count = (len - (long) full_log_read_bytes_);
-                    logger.Debug("reading file " + file_ + " at " + offset + ", " + count  + " bytes.");
-                    fs_.Seek(offset, SeekOrigin.Begin);
-                    int read_bytes = fs_.Read(full_log_buffer_, (int)offset, (int)count);
-                    if ( read_bytes >= 0)
-                        full_log_read_bytes_ += (ulong)read_bytes;
-                    lock(this)
-                        full_log_ = Encoding.Default.GetString(full_log_buffer_, 0, (int)full_log_read_bytes_);
-                }
+                using (var fs = new FileStream(file_, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    if (len > (long)full_log_read_bytes_) {
+                        long offset = (long)full_log_read_bytes_;
+                        long count = (len - (long) full_log_read_bytes_);
+                        logger.Debug("[file] reading file " + file_ + " at " + offset + ", " + count  + " bytes.");
+                        fs.Seek(offset, SeekOrigin.Begin);
+                        int read_bytes = fs.Read(full_log_buffer_, (int)offset, (int)count);
+                        if ( read_bytes >= 0)
+                            full_log_read_bytes_ += (ulong)read_bytes;
+                        lock(this)
+                            full_log_ = Encoding.Default.GetString(full_log_buffer_, 0, (int)full_log_read_bytes_);
+                    }
                 else if ( len == (long)full_log_read_bytes_) {
                     // file not changed - nothing to do
                 }
                 else 
                     on_rewritten_file();
-            } catch {
+            } catch(Exception e) {
+                logger.Error("[file] can't read file - " + file_ + " : " + e.Message);
             }
         }
 
@@ -158,10 +159,16 @@ namespace LogWizard
             if (cached_syntax_ != "")
                 return cached_syntax_;
 
-            string found = new find_log_syntax().try_find_log_syntax(fs_);
-            if (found != UNKNOWN_SYNTAX)
-                cached_syntax_ = found;
-            return found;
+            try {
+                using (var fs = new FileStream(file_, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+                    string found = new find_log_syntax().try_find_log_syntax(fs);
+                    if (found != UNKNOWN_SYNTAX)
+                        cached_syntax_ = found;
+                    return found;
+                }
+            } catch {
+                return UNKNOWN_SYNTAX;
+            }
         }
 
 

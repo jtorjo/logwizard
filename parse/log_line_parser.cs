@@ -156,6 +156,10 @@ namespace LogWizard
 
         public int line_count { get { lock(this) return lines_.Count; } }
 
+        public string name {
+            get { return text_reader_.name; }
+        }
+
         public line line_at(int idx) {
             lock (this) {
                 Debug.Assert(idx < lines_.Count);

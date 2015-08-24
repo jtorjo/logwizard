@@ -200,7 +200,10 @@ namespace LogWizard
 
         private int font_size_ = 9; // default font size
 
-        private List<int> old_widths_ = new List<int>(); 
+        private List<int> old_widths_ = new List<int>();
+
+        // if true, we're waiting for the filter to read from the NEW log
+        private bool wait_for_filter_to_read_from_new_log_ = false;
 
         public log_view(log_wizard parent, string name)
         {
@@ -297,6 +300,9 @@ namespace LogWizard
                 filter_changed_ = true;
                 visible_columns_refreshed_ = false;
                 last_view_column_index_ = 0;
+                wait_for_filter_to_read_from_new_log_ = true;
+                logger.Debug("[view] new log for " + name + " - " + log.name);
+                model_.set_matches(new List<filter.match>(), this);
             }
         }
 
@@ -499,23 +505,37 @@ namespace LogWizard
 
             bool needs_scroll = needs_scroll_to_last();
             filter_.compute_matches(log_);
+
+            if (wait_for_filter_to_read_from_new_log_) {
+                if (filter_.log != log_)
+                    return;
+                logger.Debug("[view] filter refreshed after log changed " + name);
+            }
+            wait_for_filter_to_read_from_new_log_ = false;
+
             if (!filter_changed_) {
                 int match_count = filter_.match_count;
                 if (list.GetItemCount() == match_count)
                     // nothing changed
                     return;
-                logger.Debug("log " + viewName.Text + ": going from " + list.GetItemCount() + " to " + match_count + " entries.");
+                logger.Debug("[view] log " + viewName.Text + ": going from " + list.GetItemCount() + " to " + match_count + " entries.");
                 if (list.GetItemCount() < match_count) {
                     // items have been added
                     List<filter.match> new_ = new List<filter.match>();
-                    for (int i = list.GetItemCount(); i < match_count; ++i) {
+                    bool filter_reset = false;
+                    for (int i = list.GetItemCount(); i < match_count && !filter_reset; ++i) {
                         var new_match = filter_.match_at(i);
-                        if (new_match == null)                            
-                            break; // filter got reset in the other thread
-                        new_.Add(new_match);
+                        if (new_match != null)
+                            new_.Add(new_match);
+                        else
+                            filter_reset = true; // filter got reset in the other thread
+                    }
+                    if (filter_reset) {
+                        logger.Debug("[view] filter reset on refresh " + name);
+                        new_ = new List<filter.match>();
                     }
                     model_.add_matches(new_, this);
-                    logger.Debug("log " + viewName.Text + " has " + model_.GetObjectCount() + " entries.");
+                    logger.Debug("[view] log " + viewName.Text + " has " + model_.GetObjectCount() + " entries.");
                 } else
                     // less items than we have shown to the user? either the file has been erased, or cleared-and-re-written to, so we process it as a full-blown filter change
                     filter_changed_ = true;
@@ -624,30 +644,41 @@ namespace LogWizard
         }
 
         private void on_filter_changed() {
+            logger.Debug("[view] filter changed on " + name + " - " + list.GetItemCount() + " items so far");
             bool needs_scroll = needs_scroll_to_last();
 
             // from this point on, we only append to the existing list
             List<filter.match> new_ = new List<filter.match>();
             int match_count = filter_.match_count;
-            for (int i = 0; i < match_count; ++i) {
+            bool filter_reset = false;
+            for (int i = 0; i < match_count && !filter_reset; ++i) {
                 var new_match = filter_.match_at(i);
-                if (new_match == null)
-                    break; // filter got reset in the other thread
-                new_.Add(new_match);
+                if (new_match != null)
+                    new_.Add(new_match);
+                else
+                    filter_reset = true; // filter got reset in the other thread
             }
-            model_.set_matches(new_, this);
+            if ( !filter_reset)
+                model_.set_matches(new_, this);
 
             // update colors
-            for (int idx = 0; idx < list.GetItemCount(); ++idx) {
+            for (int idx = 0; idx < list.GetItemCount() && !filter_reset; ++idx) {
                 item i = list.GetItem(idx).RowObject as item;
                 var match = filter_.match_at(idx);
-                if (match == null)
-                    break; // filter got reset in the other thread
-                i.match = match;
+                if (match != null)
+                    i.match = match;
+                else
+                    filter_reset = true; // filter got reset in the other thread
             }
-            for (int idx = 0; idx < list.GetItemCount(); ++idx) 
-                update_line_color(idx);
-            list.Refresh();
+
+            if (!filter_reset) {
+                for (int idx = 0; idx < list.GetItemCount(); ++idx)
+                    update_line_color(idx);
+                list.Refresh();
+            } else {
+                logger.Debug("[view] filter got reset on the other thread - " + name);
+                model_.set_matches(new List<filter.match>(), this);
+            }
 
             if( needs_scroll)
                 go_last();
@@ -1027,12 +1058,12 @@ namespace LogWizard
         }
 
         private void list_Enter(object sender, EventArgs e) {
-            logger.Info("lv got focus " + name);
+            //logger.Info("[view] lv got focus " + name);
             BackColor = Color.LightGray;
         }
 
         private void list_Leave(object sender, EventArgs e) {
-            logger.Info("lv lost focus " + name);
+            //logger.Info("[view] lv lost focus " + name);
             BackColor = Color.White;
         }
     }
