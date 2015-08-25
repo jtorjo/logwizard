@@ -19,6 +19,7 @@
   for instance "same scrape" -> show a message when that happens
   or, when "overridden theme" gets written (for alerts - force refresh of the view all the time)
   by default -> the alert would show the message itself + perhaps beep?
+  alerts - to be also shown in a left pane (as a new tab)
 
 - settings page: 
   - font for showing the message (like, Courier New?)

@@ -1,15 +1,12 @@
-
-
-- bug -> sometiems changnig the file stops refresheshing the existing view - probably because of wait_for_filter_to_read_from_new_log_
-
-
 + goto line/time
   - if on full log, and not synchronized, by default, it should go to whatever line is on the selected view
 
-
-
 - generate release? / update doc
 
+
+
+1.0.51c
+- fix: bug -> sometiems changnig the file stops refresheshing the existing view - probably because of wait_for_filter_to_read_from_new_log_
 
 
 1.0.51b

@@ -203,7 +203,8 @@ namespace LogWizard
         private List<int> old_widths_ = new List<int>();
 
         // if true, we're waiting for the filter to read from the NEW log
-        private bool wait_for_filter_to_read_from_new_log_ = false;
+        private DateTime wait_for_filter_to_read_from_new_log_ = DateTime.MinValue;
+        private const double WAIT_FOR_NEW_LOG_MAX_MS = 3000;
 
         public log_view(log_wizard parent, string name)
         {
@@ -300,7 +301,7 @@ namespace LogWizard
                 filter_changed_ = true;
                 visible_columns_refreshed_ = false;
                 last_view_column_index_ = 0;
-                wait_for_filter_to_read_from_new_log_ = true;
+                wait_for_filter_to_read_from_new_log_ = DateTime.Now.AddMilliseconds(WAIT_FOR_NEW_LOG_MAX_MS);
                 logger.Debug("[view] new log for " + name + " - " + log.name);
                 model_.set_matches(new List<filter.match>(), this);
                 update_x_of_y();
@@ -547,12 +548,11 @@ namespace LogWizard
             bool needs_scroll = needs_scroll_to_last();
             filter_.compute_matches(log_);
 
-            if (wait_for_filter_to_read_from_new_log_) {
+            if (wait_for_filter_to_read_from_new_log_ > DateTime.Now) {
                 if (filter_.log != log_)
                     return;
                 logger.Debug("[view] filter refreshed after log changed " + name);
             }
-            wait_for_filter_to_read_from_new_log_ = false;
 
             if (!filter_changed_) {
                 int match_count = filter_.match_count;
