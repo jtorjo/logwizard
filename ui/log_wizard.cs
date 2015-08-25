@@ -770,16 +770,19 @@ namespace LogWizard
                     fullLogCtrl.update_view_column( all_log_views() );
                 }
 
-                if (selected_view() != null && msg_details_ != null) {
-                    int top_offset = 40;
-                    log_view any_lv = log_view_for_tab(0);
-                    if (any_lv != null)
-                        top_offset = any_lv.RectangleToScreen(any_lv.ClientRectangle).Top - RectangleToScreen(ClientRectangle).Top  + 5;
-                    int bottom_offset = ClientRectangle.Height - logHistory.Top;
-                    msg_details_.update(selected_view(), top_offset, bottom_offset);
-                }
-
+                update_msg_details(false);
                 refresh_filter_found();
+            }
+        }
+
+        private void update_msg_details(bool force_update) {
+            if (selected_view() != null && msg_details_ != null) {
+                int top_offset = 40;
+                log_view any_lv = log_view_for_tab(0);
+                if (any_lv != null)
+                    top_offset = any_lv.RectangleToScreen(any_lv.ClientRectangle).Top - RectangleToScreen(ClientRectangle).Top  + 5;
+                int bottom_offset = ClientRectangle.Height - logHistory.Top;
+                msg_details_.update(selected_view(), top_offset, bottom_offset, force_update);
             }
         }
 
@@ -1252,6 +1255,18 @@ namespace LogWizard
             filters.Insert(sel - 1, cur);
             load_filters();
         }
+        private void moveToTopToolStripMenuItem_Click(object sender, EventArgs e) {
+            int sel = filterCtrl.SelectedIndex;
+            if (sel < 1)
+                return;
+            ui_context ctx = cur_context();
+            int cur_view = viewsTab.SelectedIndex;
+            var filters = ctx.views[cur_view].filters;
+            var cur = filters[sel];
+            filters.RemoveAt(sel);
+            filters.Insert(0, cur);
+            load_filters();
+        }
 
         private void moveDownToolStripMenuItem_Click(object sender, EventArgs e) {
             int sel = filterCtrl.SelectedIndex;
@@ -1267,6 +1282,21 @@ namespace LogWizard
             filters.Insert(sel + 1, cur);
             load_filters();
         }
+        private void moveToBottomToolStripMenuItem_Click(object sender, EventArgs e) {
+            int sel = filterCtrl.SelectedIndex;
+            if (sel < 0)
+                return;
+            if (sel == filterCtrl.GetItemCount() - 1)
+                return;
+            ui_context ctx = cur_context();
+            int cur_view = viewsTab.SelectedIndex;
+            var filters = ctx.views[cur_view].filters;
+            var cur = filters[sel];
+            filters.RemoveAt(sel);
+            filters.Add(cur);
+            load_filters();
+        }
+
 
         private void refreshFilter_Click(object sender, EventArgs e) {
             if (text_ != null)
@@ -1393,6 +1423,24 @@ namespace LogWizard
 
         private action_type key_to_action(string key_code) {
             switch (key_code) {
+            case "up":
+            case "down":
+                if (allow_arrow_to_function_normally())
+                    return action_type.none;
+                break;
+            case "ctrl-right":
+            case "ctrl-left":
+                if ( is_focus_on_edit())
+                    return action_type.none;
+                break;
+            }
+
+            bool has_modifiers = key_code.Contains("ctrl-") || key_code.Contains("alt-") || key_code.Contains("shift");
+            if (!has_modifiers && key_code != "tab" && is_focus_on_edit())
+                // key down - in edit -> don't have it as hotkey
+                return action_type.none;
+
+            switch (key_code) {
             case "ctrl-f": 
                 return action_type.search ;
             case "f3":
@@ -1419,49 +1467,27 @@ namespace LogWizard
                 // for some strange reason, ctrl-tab/ctrl-shift-tab are caught by the viewsTab - even if I remove the event handlers
                 // http://stackoverflow.com/questions/91778/how-to-remove-all-event-handlers-from-a-control
             case "ctrl-right":
-                if (!is_focus_on_edit())
-                    return action_type.next_view;
-                break;
+                return action_type.next_view;
             case "ctrl-left":
-                if (!is_focus_on_edit())
-                    return action_type.prev_view;
-                break;
+                return action_type.prev_view;
             case "home":
-                if (!is_focus_on_edit())
-                    return action_type.home;
-                break;
+                return action_type.home;
             case "end":
-                if (!is_focus_on_edit())
-                    return action_type.end;
-                break;
+                return action_type.end;
             case "pageup":
-                if (!is_focus_on_edit())
-                    return action_type.pageup;
-                break;
+                return action_type.pageup;
             case "next":
-                if (!is_focus_on_edit())
-                    return action_type.pagedown;
-                break;
+                return action_type.pagedown;
             case "up":
-                if (!allow_arrow_to_function_normally())
-                    return action_type.arrow_up;
-                break;
+                return action_type.arrow_up;
             case "down":
-                if (!allow_arrow_to_function_normally())
-                    return action_type.arrow_down;
-                break;
+                return action_type.arrow_down;
             case "f":
-                if ( !is_focus_on_edit())
-                    return action_type.toggle_filters;
-                break;
+                return action_type.toggle_filters;
             case "s":
-                if ( !is_focus_on_edit())
-                    return action_type.toggle_source;
-                break;
+                return action_type.toggle_source;
             case "l":
-                if ( !is_focus_on_edit())
-                    return action_type.toggle_fulllog;
-                break;
+                return action_type.toggle_fulllog;
 
             case "tab":
                 return action_type.pane_next;
@@ -1469,26 +1495,18 @@ namespace LogWizard
                 return action_type.pane_prev;
 
             case "h":
-                if ( !is_focus_on_edit())
-                    return action_type.toggle_history_dropdown;
-                break;
+                return action_type.toggle_history_dropdown;
             case "ctrl-n":
                 return action_type.new_log_wizard;
             case "ctrl-s":
                 return action_type.show_settings;
 
             case "add":
-                if ( !is_focus_on_edit())
-                    return action_type.increase_font;
-                break;
+                return action_type.increase_font;
             case "subtract":
-                if ( !is_focus_on_edit())
-                    return action_type.decrease_font;
-                break;
+                return action_type.decrease_font;
             case "m":
-                if ( !is_focus_on_edit())
-                    return action_type.toggle_show_msg_only;
-                break;
+                return action_type.toggle_show_msg_only;
             case "ctrl-up":
                 return action_type.scroll_up;
             case "ctrl-down":
@@ -1842,11 +1860,20 @@ namespace LogWizard
         private void synchronizedWithFullLog_CheckedChanged(object sender, EventArgs e) {
             app.inst.sync_full_log_view = synchronizedWithFullLog.Checked;
             update_sync_texts();
+            sett.set("sync_full_log_view", "" + (app.inst.sync_full_log_view ? "1" : "0"));
+            sett.save();
         }
 
         private void synchronizeWithExistingLogs_CheckedChanged(object sender, EventArgs e) {
             app.inst.sync_all_views = synchronizeWithExistingLogs.Checked;
             update_sync_texts();
+            sett.set("sync_all_views", "" + (app.inst.sync_all_views ? "1" : "0"));
+            sett.save();
         }
+
+        private void log_wizard_SizeChanged(object sender, EventArgs e) {
+            update_msg_details(true);
+        }
+
     }
 }

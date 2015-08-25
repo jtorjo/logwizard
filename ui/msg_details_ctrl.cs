@@ -61,7 +61,7 @@ namespace LogWizard {
             
         }
 
-        public void update(log_view view, int top_offset, int bottom_offset) {
+        public void update(log_view view, int top_offset, int bottom_offset, bool force_update) {
             Rectangle wizard_rect = wizard_parent_.ClientRectangle; 
             Rectangle wizard_screen = wizard_parent_.RectangleToScreen(wizard_rect);
             // ... care about the lower buttons
@@ -73,7 +73,7 @@ namespace LogWizard {
                 show(false);
                 return;
             }
-            if (sel == txt.Text)
+            if (sel == txt.Text && !force_update)
                 return; // nothing changed
             int height_offset = 10;
             var new_size = new Size( wizard_rect.Width, Math.Min( text_height(sel, wizard_rect.Width) + height_offset, MAX_HEIGHT) );

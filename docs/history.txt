@@ -1,9 +1,21 @@
-- filter row: Move to Top / Move To Buttom
+
 
 - export to clipboard/import from clipboard for filters/full-context
 
 - Monitor TN2 - if present (%appdata%\tn2)
 
++ goto line/time
+  - if on full log, and not synchronized, by default, it should go to whatever line is on the selected view
+
+  - settings [Views -> what is in app]
+
+
+- generate release? / update doc
+
+1.0.51
+- filter row: Move to Top / Move To Buttom
+- resize log wizard: update message details
+- key down - in edit -> don't have it as hotkey
 
 
 1.0.50

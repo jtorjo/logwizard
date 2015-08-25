@@ -2,8 +2,6 @@
    --> generate the release build as x64 by default
 
 
-+ goto line/time
-  - if on full log, and not synchronized, by default, it should go to whatever line is on the selected view
 
 - synchronize colors : full log - synchronize with what the existing tab has and/or with all tabs? 
   (Sync: with current tab / with all tabs / none)
@@ -11,7 +9,6 @@
 
 - synchronizing with full-log -> if key is down (up/down/etc.) -> don't sync yet TOTHINK (basically so that we only synchronize when the user has selected the final row)
 
-- file_text_reader - in case fs_ can't be open - retry until we can
 - history - deleted files - ignore them
 
 - allow selecting several rows
@@ -23,19 +20,24 @@
   or, when "overridden theme" gets written (for alerts - force refresh of the view all the time)
   by default -> the alert would show the message itself + perhaps beep?
 
-
 - settings page: 
   - font for showing the message (like, Courier New?)
   - default color for "Include text"
   - show column "Filter(s)" on full log (it takes more time to synchronize)
   - colors for bookmarks
 
+- find - case-insensitive + full words
+
+
+
+
+
+
+
+
 
 
 - how easy is it to draw with custom font, or on special color?
-
-- find - case-insensitive + full words
-
 
 - allow editing the message (basically just for copying text) + allow "Exclude [text]" + "Include [text]" (on the Full log)
   -probably listen for keys -> listen for left or right arrow (and start moving cursor from there)
