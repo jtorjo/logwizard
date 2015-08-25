@@ -918,7 +918,7 @@ namespace LogWizard
                 select_idx( found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
-                System.Media.SystemSounds.Asterisk.Play();
+                util.beep(util.beep_type.err);
         }
 
         public void search_for_text_prev(string txt) {
@@ -935,7 +935,7 @@ namespace LogWizard
                 select_idx( found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
-                System.Media.SystemSounds.Asterisk.Play();            
+                util.beep(util.beep_type.err);
         }
 
         public void mark_match(int filter_row_idx, Color fg, Color bg) {
@@ -974,7 +974,7 @@ namespace LogWizard
                 select_idx( found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
-                System.Media.SystemSounds.Asterisk.Play();
+                util.beep(util.beep_type.err);
             
         }
         public void search_for_prev_match(int filter_row_idx) {
@@ -992,7 +992,7 @@ namespace LogWizard
                 select_idx( found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
-                System.Media.SystemSounds.Asterisk.Play();
+                util.beep(util.beep_type.err);
         }
 
         public void copy_to_clipboard() {
@@ -1055,7 +1055,7 @@ namespace LogWizard
                 select_idx(idx, select_type.notify_parent);
                 list.EnsureVisible(idx);
             } else
-                System.Media.SystemSounds.Asterisk.Play();
+                util.beep(util.beep_type.err);
         }
 
         public void prev_bookmark() {
@@ -1075,7 +1075,7 @@ namespace LogWizard
                 list.EnsureVisible(idx);
             }
             else
-                System.Media.SystemSounds.Asterisk.Play();            
+                util.beep(util.beep_type.err);
         }
 
         private void list_CellOver(object sender, CellOverEventArgs e) {

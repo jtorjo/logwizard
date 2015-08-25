@@ -1,18 +1,25 @@
 
 
-- export to clipboard/import from clipboard for filters/full-context
+- bug -> sometiems changnig the file stops refresheshing the existing view - probably because of wait_for_filter_to_read_from_new_log_
 
-- Monitor TN2 - if present (%appdata%\tn2)
 
 + goto line/time
   - if on full log, and not synchronized, by default, it should go to whatever line is on the selected view
 
-  - settings [Views -> what is in app]
 
 
 - generate release? / update doc
 
-1.0.51
+
+
+1.0.51b
+- export to clipboard/import from clipboard for filters/full-context
+- initial version of settings
+- Monitor TN2 - if present (%appdata%\tn2)
+- Refresh button - moved next to history
+
+
+1.0.51a
 - filter row: Move to Top / Move To Buttom
 - resize log wizard: update message details
 - key down - in edit -> don't have it as hotkey

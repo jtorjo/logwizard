@@ -64,6 +64,10 @@
             this.delContext = new System.Windows.Forms.Button();
             this.synchronizedWithFullLog = new System.Windows.Forms.CheckBox();
             this.synchronizeWithExistingLogs = new System.Windows.Forms.CheckBox();
+            this.viewFromClipboard = new System.Windows.Forms.Button();
+            this.viewToClipboard = new System.Windows.Forms.Button();
+            this.contextFromClipboard = new System.Windows.Forms.Button();
+            this.contextToClipboard = new System.Windows.Forms.Button();
             this.settingsCtrl = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.main = new System.Windows.Forms.SplitContainer();
@@ -88,6 +92,7 @@
             this.refresh = new System.Windows.Forms.Timer(this.components);
             this.focusOnFilterCtrl = new System.Windows.Forms.Timer(this.components);
             this.postFocus = new System.Windows.Forms.Timer(this.components);
+            this.monitor = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).BeginInit();
             this.filterContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.main)).BeginInit();
@@ -112,7 +117,7 @@
             // delFilter
             // 
             this.delFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.delFilter.Location = new System.Drawing.Point(239, 338);
+            this.delFilter.Location = new System.Drawing.Point(239, 471);
             this.delFilter.Name = "delFilter";
             this.delFilter.Size = new System.Drawing.Size(24, 23);
             this.delFilter.TabIndex = 10;
@@ -124,7 +129,7 @@
             // addFilter
             // 
             this.addFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addFilter.Location = new System.Drawing.Point(209, 338);
+            this.addFilter.Location = new System.Drawing.Point(211, 471);
             this.addFilter.Name = "addFilter";
             this.addFilter.Size = new System.Drawing.Size(24, 23);
             this.addFilter.TabIndex = 9;
@@ -263,7 +268,7 @@
             this.curFilterCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.curFilterCtrl.Enabled = false;
-            this.curFilterCtrl.Location = new System.Drawing.Point(44, 365);
+            this.curFilterCtrl.Location = new System.Drawing.Point(44, 337);
             this.curFilterCtrl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.curFilterCtrl.Multiline = true;
             this.curFilterCtrl.Name = "curFilterCtrl";
@@ -276,7 +281,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1, 368);
+            this.label2.Location = new System.Drawing.Point(1, 340);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(33, 15);
             this.label2.TabIndex = 2;
@@ -316,9 +321,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.logHistory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.logHistory.FormattingEnabled = true;
-            this.logHistory.Location = new System.Drawing.Point(122, 536);
+            this.logHistory.Location = new System.Drawing.Point(188, 536);
             this.logHistory.Name = "logHistory";
-            this.logHistory.Size = new System.Drawing.Size(824, 23);
+            this.logHistory.Size = new System.Drawing.Size(692, 23);
             this.logHistory.TabIndex = 7;
             this.tip.SetToolTip(this.logHistory, "History - just select any of the previous logs, and they instantly load");
             this.logHistory.SelectedIndexChanged += new System.EventHandler(this.logHistory_SelectedIndexChanged);
@@ -507,10 +512,56 @@
             this.synchronizeWithExistingLogs.UseVisualStyleBackColor = true;
             this.synchronizeWithExistingLogs.CheckedChanged += new System.EventHandler(this.synchronizeWithExistingLogs_CheckedChanged);
             // 
+            // viewFromClipboard
+            // 
+            this.viewFromClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.viewFromClipboard.Location = new System.Drawing.Point(45, 471);
+            this.viewFromClipboard.Name = "viewFromClipboard";
+            this.viewFromClipboard.Size = new System.Drawing.Size(52, 23);
+            this.viewFromClipboard.TabIndex = 14;
+            this.viewFromClipboard.Text = "FromC";
+            this.tip.SetToolTip(this.viewFromClipboard, "Paste Full Set of Filters From Clipboard");
+            this.viewFromClipboard.UseVisualStyleBackColor = true;
+            this.viewFromClipboard.Click += new System.EventHandler(this.viewFromClipboard_Click);
+            // 
+            // viewToClipboard
+            // 
+            this.viewToClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.viewToClipboard.Location = new System.Drawing.Point(3, 471);
+            this.viewToClipboard.Name = "viewToClipboard";
+            this.viewToClipboard.Size = new System.Drawing.Size(38, 23);
+            this.viewToClipboard.TabIndex = 13;
+            this.viewToClipboard.Text = "ToC";
+            this.tip.SetToolTip(this.viewToClipboard, "Copy This Set of Filters to Clipboard");
+            this.viewToClipboard.UseVisualStyleBackColor = true;
+            this.viewToClipboard.Click += new System.EventHandler(this.viewToClipboard_Click);
+            // 
+            // contextFromClipboard
+            // 
+            this.contextFromClipboard.Location = new System.Drawing.Point(282, 8);
+            this.contextFromClipboard.Name = "contextFromClipboard";
+            this.contextFromClipboard.Size = new System.Drawing.Size(53, 22);
+            this.contextFromClipboard.TabIndex = 14;
+            this.contextFromClipboard.Text = "FromC";
+            this.tip.SetToolTip(this.contextFromClipboard, "Paste Context From Clipboard");
+            this.contextFromClipboard.UseVisualStyleBackColor = true;
+            this.contextFromClipboard.Click += new System.EventHandler(this.contextFromClipboard_Click);
+            // 
+            // contextToClipboard
+            // 
+            this.contextToClipboard.Location = new System.Drawing.Point(247, 8);
+            this.contextToClipboard.Name = "contextToClipboard";
+            this.contextToClipboard.Size = new System.Drawing.Size(38, 22);
+            this.contextToClipboard.TabIndex = 13;
+            this.contextToClipboard.Text = "ToC";
+            this.tip.SetToolTip(this.contextToClipboard, "Copy Context To Clipboard");
+            this.contextToClipboard.UseVisualStyleBackColor = true;
+            this.contextToClipboard.Click += new System.EventHandler(this.contextToClipboard_Click);
+            // 
             // settingsCtrl
             // 
             this.settingsCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.settingsCtrl.Location = new System.Drawing.Point(1118, 536);
+            this.settingsCtrl.Location = new System.Drawing.Point(1122, 536);
             this.settingsCtrl.Name = "settingsCtrl";
             this.settingsCtrl.Size = new System.Drawing.Size(68, 23);
             this.settingsCtrl.TabIndex = 12;
@@ -521,7 +572,7 @@
             // about
             // 
             this.about.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.about.Location = new System.Drawing.Point(1044, 536);
+            this.about.Location = new System.Drawing.Point(974, 536);
             this.about.Name = "about";
             this.about.Size = new System.Drawing.Size(68, 23);
             this.about.TabIndex = 13;
@@ -565,10 +616,11 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.viewFromClipboard);
+            this.tabPage2.Controls.Add(this.viewToClipboard);
             this.tabPage2.Controls.Add(this.filterCtrl);
             this.tabPage2.Controls.Add(this.checkBox1);
             this.tabPage2.Controls.Add(this.label1);
-            this.tabPage2.Controls.Add(this.refreshFilter);
             this.tabPage2.Controls.Add(this.curFilterCtrl);
             this.tabPage2.Controls.Add(this.delFilter);
             this.tabPage2.Controls.Add(this.label2);
@@ -586,7 +638,7 @@
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox1.AutoSize = true;
             this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(44, 476);
+            this.checkBox1.Location = new System.Drawing.Point(44, 445);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(144, 19);
             this.checkBox1.TabIndex = 12;
@@ -596,9 +648,9 @@
             // refreshFilter
             // 
             this.refreshFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.refreshFilter.Location = new System.Drawing.Point(4, 338);
+            this.refreshFilter.Location = new System.Drawing.Point(122, 535);
             this.refreshFilter.Name = "refreshFilter";
-            this.refreshFilter.Size = new System.Drawing.Size(75, 23);
+            this.refreshFilter.Size = new System.Drawing.Size(60, 23);
             this.refreshFilter.TabIndex = 11;
             this.refreshFilter.Text = "Refresh";
             this.refreshFilter.UseVisualStyleBackColor = true;
@@ -665,6 +717,8 @@
             // 
             // sourceUp.Panel1
             // 
+            this.sourceUp.Panel1.Controls.Add(this.contextFromClipboard);
+            this.sourceUp.Panel1.Controls.Add(this.contextToClipboard);
             this.sourceUp.Panel1.Controls.Add(this.delContext);
             this.sourceUp.Panel1.Controls.Add(this.addContext);
             this.sourceUp.Panel1.Controls.Add(this.logSyntaxCtrl);
@@ -688,9 +742,9 @@
             // 
             this.sourceNameCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.sourceNameCtrl.Location = new System.Drawing.Point(454, 6);
+            this.sourceNameCtrl.Location = new System.Drawing.Point(486, 6);
             this.sourceNameCtrl.Name = "sourceNameCtrl";
-            this.sourceNameCtrl.Size = new System.Drawing.Size(287, 23);
+            this.sourceNameCtrl.Size = new System.Drawing.Size(255, 23);
             this.sourceNameCtrl.TabIndex = 2;
             this.sourceNameCtrl.TextChanged += new System.EventHandler(this.sourceName_TextChanged);
             // 
@@ -702,16 +756,16 @@
             "File",
             "Shared Memory",
             "Debug Window"});
-            this.sourceTypeCtrl.Location = new System.Drawing.Point(314, 6);
+            this.sourceTypeCtrl.Location = new System.Drawing.Point(393, 6);
             this.sourceTypeCtrl.Name = "sourceTypeCtrl";
-            this.sourceTypeCtrl.Size = new System.Drawing.Size(134, 23);
+            this.sourceTypeCtrl.Size = new System.Drawing.Size(87, 23);
             this.sourceTypeCtrl.TabIndex = 1;
             this.sourceTypeCtrl.SelectedIndexChanged += new System.EventHandler(this.sourceType_SelectedIndexChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(260, 11);
+            this.label3.Location = new System.Drawing.Point(347, 11);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(43, 15);
             this.label3.TabIndex = 0;
@@ -782,7 +836,7 @@
             // 
             this.tipsHotkeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.tipsHotkeys.AutoSize = true;
-            this.tipsHotkeys.Location = new System.Drawing.Point(952, 541);
+            this.tipsHotkeys.Location = new System.Drawing.Point(886, 541);
             this.tipsHotkeys.Name = "tipsHotkeys";
             this.tipsHotkeys.Size = new System.Drawing.Size(83, 15);
             this.tipsHotkeys.TabIndex = 12;
@@ -806,14 +860,27 @@
             this.postFocus.Interval = 1;
             this.postFocus.Tick += new System.EventHandler(this.postFocus_Tick);
             // 
+            // monitor
+            // 
+            this.monitor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.monitor.Location = new System.Drawing.Point(1044, 536);
+            this.monitor.Name = "monitor";
+            this.monitor.Size = new System.Drawing.Size(76, 23);
+            this.monitor.TabIndex = 14;
+            this.monitor.Text = "Monitor";
+            this.monitor.UseVisualStyleBackColor = true;
+            this.monitor.Click += new System.EventHandler(this.monitor_Click);
+            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1255, 568);
+            this.Controls.Add(this.monitor);
             this.Controls.Add(this.about);
             this.Controls.Add(this.tipsHotkeys);
             this.Controls.Add(this.settingsCtrl);
+            this.Controls.Add(this.refreshFilter);
             this.Controls.Add(this.toggleFullLog);
             this.Controls.Add(this.toggleSource);
             this.Controls.Add(this.toggleFilters);
@@ -917,6 +984,11 @@
         private System.Windows.Forms.CheckBox synchronizeWithExistingLogs;
         private System.Windows.Forms.ToolStripMenuItem moveToTopToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveToBottomToolStripMenuItem;
+        private System.Windows.Forms.Button viewFromClipboard;
+        private System.Windows.Forms.Button viewToClipboard;
+        private System.Windows.Forms.Button contextFromClipboard;
+        private System.Windows.Forms.Button contextToClipboard;
+        private System.Windows.Forms.Button monitor;
     }
 }
 

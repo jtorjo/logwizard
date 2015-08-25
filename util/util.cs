@@ -218,6 +218,31 @@ namespace LogWizard {
             return transparent;
         }
 
+        public enum beep_type {
+            err, question
+        }
+
+        public static void beep(beep_type type) {
+            switch (type) {
+            case beep_type.err:
+                System.Media.SystemSounds.Asterisk.Play();
+                break;
+            case beep_type.question:
+                System.Media.SystemSounds.Question.Play();
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+            }
+        }
+
+        // sometimes we get bad-written enters (mostly from xml deserializing) - normalize them 
+        public static string normalize_enters(string value) {
+            if (value.Contains("\r"))
+                return value.Replace("\n", "").Replace("\r", "\r\n");
+            else
+                return value.Replace("\n", "\r\n");
+        }
 
     }
 }

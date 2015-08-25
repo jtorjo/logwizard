@@ -16,7 +16,7 @@ namespace LogWizard {
         public bool show_view_line_count = true;
         // if true, we show the selected line index of each view
         public bool show_view_selected_index = true;
-        // if true, we show the selected line of each view (the real line in the view)
+        // if true, we show the selected line of each view (the real line in the log)
         public bool show_view_selected_line = true;
 
         // if true, synchronize all views with existing view
@@ -24,6 +24,28 @@ namespace LogWizard {
         public bool sync_all_views = true;
         // if true, synchronize Full Log with existing view (that is, the selected line)
         public bool sync_full_log_view = true;
+
+        public void load() {
+            var sett = Program.sett;
+            show_view_line_count = sett.get("show_view_line_count", "1") != "0";
+            show_view_selected_index = sett.get("show_view_selected_index", "1") != "0";
+            show_view_selected_line = sett.get("show_view_selected_line", "1") != "0";
+
+            sync_all_views = sett.get("sync_all_views", "1") != "0";
+            sync_full_log_view = sett.get("sync_full_log_view", "1") != "0";
+        }
+
+        public void save() {
+            var sett = Program.sett;
+            sett.set("show_view_line_count", show_view_line_count ? "1" : "0");
+            sett.set("show_view_selected_line", show_view_selected_line ? "1" : "0");
+            sett.set("show_view_selected_index", show_view_selected_index ? "1" : "0");
+
+            sett.set("sync_full_log_view", "" + (sync_full_log_view ? "1" : "0"));
+            sett.set("sync_all_views", "" + (sync_all_views ? "1" : "0"));
+
+            sett.save();            
+        }
 
 
     }

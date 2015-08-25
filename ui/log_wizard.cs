@@ -30,6 +30,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Xml.Serialization;
 using BrightIdeasSoftware;
 using LogWizard.context;
 using LogWizard.ui;
@@ -70,39 +71,6 @@ namespace LogWizard
             scroll_up, scroll_down,
 
             none,
-        }
-
-        public class ui_filter {
-            // the filter itself
-            public string text = "";
-            // if true, it's enabled
-            public bool enabled = true;
-            // if !enabled, but dimmed, the filter acts the same, only that it shows the lines pertaining to it as gray (dimmed)
-            public bool dimmed = false;
-        }
-
-        private class ui_view {
-            // friendlly name
-            public string name = "";
-            // the filters
-            public List< ui_filter > filters = new List<ui_filter>();
-        }
-        private class ui_context {
-            public string name  = "";
-            public string auto_match = "";
-
-            // show/hide toggles
-            public bool show_filter = true;
-            public bool show_source = true;
-            public bool show_fulllog = false;
-
-            public List<ui_view> views = new List<ui_view>();
-
-            public void copy_from(ui_context other) {
-                name = other.name;
-                auto_match = other.auto_match;
-                views = other.views.ToList();
-            }
         }
 
         private class history {
@@ -176,9 +144,11 @@ namespace LogWizard
             Text += " " + version();
             sourceTypeCtrl.SelectedIndex = 0;
             bool first_time = contexts_.Count == 0;
-            if ( first_time) 
-                load_contexts();                
-            
+            if (first_time) {
+                app.inst.load();
+                load_contexts();
+            }
+
             ignore_change = true;
 
             foreach ( ui_context ctx in contexts_)
@@ -207,10 +177,9 @@ namespace LogWizard
             bool open_cmd_line_file = forms.Count == 1 && Program.open_file_name != null;
             if ( history_.Count > 0 && !open_cmd_line_file) 
                 logHistory.SelectedIndex = history_.Count - 1;
-            if (open_cmd_line_file) {
-                history_select(Program.open_file_name);
+            if (open_cmd_line_file) 
                 on_file_drop(Program.open_file_name);
-            }
+            
         }
 
         private void hide_tabs(TabControl tab) {
@@ -467,6 +436,7 @@ namespace LogWizard
             // this will force us to process this change
             last_sel = -2;
 
+            history_select(file);
             on_new_file_log(file);
         }
 
@@ -611,8 +581,6 @@ namespace LogWizard
         }
 
         private void load_global_settings() {
-            app.inst.sync_all_views = sett.get("sync_all_views", "1") != "0";
-            app.inst.sync_full_log_view = sett.get("sync_full_log_view", "1") != "0";
             synchronizeWithExistingLogs.Checked = app.inst.sync_all_views;
             synchronizedWithFullLog.Checked = app.inst.sync_full_log_view;
             update_sync_texts();
@@ -655,7 +623,10 @@ namespace LogWizard
             ui_context cur = cur_context();
             if (cur.views.Count > 1) {
                 cur.views.RemoveAt(idx);
-                viewsTab.TabPages.RemoveAt(idx);
+                // 1.0.51+ - yeah - RemoveAt() has a bug and quite often removes a different tab
+                //viewsTab.TabPages.RemoveAt(idx);
+                var page = viewsTab.TabPages[idx];
+                viewsTab.TabPages.Remove(page);
             } else {
                 // it's the last tab, clear the filter
                 cur.views[0].name = "New_1";
@@ -1860,19 +1831,139 @@ namespace LogWizard
         private void synchronizedWithFullLog_CheckedChanged(object sender, EventArgs e) {
             app.inst.sync_full_log_view = synchronizedWithFullLog.Checked;
             update_sync_texts();
-            sett.set("sync_full_log_view", "" + (app.inst.sync_full_log_view ? "1" : "0"));
-            sett.save();
+            app.inst.save();
         }
 
         private void synchronizeWithExistingLogs_CheckedChanged(object sender, EventArgs e) {
             app.inst.sync_all_views = synchronizeWithExistingLogs.Checked;
             update_sync_texts();
-            sett.set("sync_all_views", "" + (app.inst.sync_all_views ? "1" : "0"));
-            sett.save();
+            app.inst.save();
         }
 
         private void log_wizard_SizeChanged(object sender, EventArgs e) {
             update_msg_details(true);
+        }
+
+        private void viewToClipboard_Click(object sender, EventArgs e) {
+            ui_context cur = cur_context();
+            int cur_view = viewsTab.SelectedIndex;
+            if (cur_view < 0)
+                return;
+            var view = cur.views[cur_view];
+            if (view.filters.Count < 1)
+                return; // nothing to copy
+            var formatter = new XmlSerializer( typeof(ui_view));
+            string to_copy = "";
+            using (var stream = new MemoryStream()) {
+                formatter.Serialize(stream, view);
+                stream.Flush();
+                stream.Position = 0;
+                using (var reader = new StreamReader(stream))
+                    to_copy = reader.ReadToEnd();
+            }
+            Clipboard.SetText(to_copy);
+        }
+        
+
+        private void viewFromClipboard_Click(object sender, EventArgs ea) {
+            try {
+                string txt = Clipboard.GetText();
+                ui_context cur = cur_context();
+                int cur_view = viewsTab.SelectedIndex;
+                if (cur_view < 0)
+                    return;
+                var view = cur.views[cur_view];
+                var formatter = new XmlSerializer( typeof(ui_view));
+                using (var stream = new MemoryStream()) {
+                    using (var writer = new StreamWriter(stream)) {
+                        writer.Write(txt);
+                        writer.Flush();
+                        stream.Position = 0;
+                        using (var reader = new StreamReader(stream)) {
+                            var new_view = (ui_view) formatter.Deserialize(reader);
+                            // we don't care about the name, just the filters
+                            new_view.filters.ForEach(f => f.text = util.normalize_enters(f.text));
+                            view.filters = new_view.filters;
+                        }
+                    }
+                }
+                load_filters();
+                refreshFilter_Click(null, null);
+                save();
+            } catch(Exception e) {
+                logger.Error("can't copy from clipboard: " + e.Message);
+                util.beep(util.beep_type.err);
+            }
+        }
+
+        private void contextToClipboard_Click(object sender, EventArgs e) {
+            ui_context cur = cur_context();
+            if (cur.views.Count < 1)
+                return; // no views
+            var formatter = new XmlSerializer( typeof(ui_context));
+            string to_copy = "";
+            using (var stream = new MemoryStream()) {
+                formatter.Serialize(stream, cur);
+                stream.Flush();
+                stream.Position = 0;
+                using (var reader = new StreamReader(stream))
+                    to_copy = reader.ReadToEnd();
+            }
+            Clipboard.SetText(to_copy);
+        }
+
+        private void contextFromClipboard_Click(object sender, EventArgs ea) {
+            try {
+                string txt = Clipboard.GetText();
+                ui_context cur = cur_context();
+
+                var formatter = new XmlSerializer( typeof(ui_context));
+                using (var stream = new MemoryStream()) {
+                    using (var writer = new StreamWriter(stream)) {
+                        writer.Write(txt);
+                        writer.Flush();
+                        stream.Position = 0;
+                        using (var reader = new StreamReader(stream)) {
+                            var new_ctx = (ui_context) formatter.Deserialize(reader);
+                            // we don't care about the name, just the filters
+                            foreach ( var view in new_ctx.views)
+                                view.filters.ForEach(f => f.text = util.normalize_enters(f.text));
+                            // ... preserve existing context name
+                            string ctx_name = cur.name;
+                            cur.copy_from(new_ctx);
+                            cur.name = ctx_name;
+                        }
+                    }
+                }
+                curContextCtrl_SelectedIndexChanged(null, null);
+            } catch(Exception e) {
+                logger.Error("can't copy from clipboard: " + e.Message);
+                util.beep(util.beep_type.err);
+            }
+        }
+
+        private static string tn2_file() {
+            return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\TableNinja.v2\\TableNinja2.log";
+        }
+        private static string hm2_file() {
+            // FIXME I think this is not the right file
+            return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\HoldemManager\\hm2.log";
+        }
+        private static string hm3_file() {
+            return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Max Value Software\\Holdem Manager\\3.0\\Logs\\holdemmanager3.log.txt";
+        }
+
+        private void monitor_Click(object sender, EventArgs e) {
+            List<MenuItem> items = new List<MenuItem>();
+            if ( File.Exists(tn2_file()))
+                items.Add( new MenuItem("TableNinja II", (o,args) => on_file_drop(tn2_file())));
+            if ( File.Exists(hm2_file()))
+                items.Add( new MenuItem("HM2", (o,args) => on_file_drop(hm2_file())));
+            if ( File.Exists(hm3_file()))
+                items.Add( new MenuItem("HM3", (o,args) => on_file_drop(hm3_file())));
+
+            monitor.ContextMenu = new ContextMenu(items.ToArray());
+            monitor.ContextMenu.Show(monitor, monitor.PointToClient(Cursor.Position) );
         }
 
     }
