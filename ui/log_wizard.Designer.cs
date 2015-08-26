@@ -74,7 +74,6 @@
             this.leftPane = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.refreshFilter = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -88,6 +87,7 @@
             this.viewsTab = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dropHere = new System.Windows.Forms.Label();
+            this.refreshFilter = new System.Windows.Forms.Button();
             this.tipsHotkeys = new System.Windows.Forms.LinkLabel();
             this.refresh = new System.Windows.Forms.Timer(this.components);
             this.focusOnFilterCtrl = new System.Windows.Forms.Timer(this.components);
@@ -300,7 +300,6 @@
             // 
             this.tip.AutoPopDelay = 32000;
             this.tip.InitialDelay = 500;
-            this.tip.IsBalloon = true;
             this.tip.ReshowDelay = 100;
             // 
             // newView
@@ -645,17 +644,6 @@
             this.checkBox1.Text = "Apply to existing Lines";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
-            // refreshFilter
-            // 
-            this.refreshFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.refreshFilter.Location = new System.Drawing.Point(122, 535);
-            this.refreshFilter.Name = "refreshFilter";
-            this.refreshFilter.Size = new System.Drawing.Size(60, 23);
-            this.refreshFilter.TabIndex = 11;
-            this.refreshFilter.Text = "Refresh";
-            this.refreshFilter.UseVisualStyleBackColor = true;
-            this.refreshFilter.Click += new System.EventHandler(this.refreshFilter_Click);
-            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.listBox1);
@@ -831,6 +819,17 @@
             this.dropHere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.dropHere.DragDrop += new System.Windows.Forms.DragEventHandler(this.dropHere_DragDrop);
             this.dropHere.DragEnter += new System.Windows.Forms.DragEventHandler(this.dropHere_DragEnter);
+            // 
+            // refreshFilter
+            // 
+            this.refreshFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.refreshFilter.Location = new System.Drawing.Point(122, 535);
+            this.refreshFilter.Name = "refreshFilter";
+            this.refreshFilter.Size = new System.Drawing.Size(60, 23);
+            this.refreshFilter.TabIndex = 11;
+            this.refreshFilter.Text = "Refresh";
+            this.refreshFilter.UseVisualStyleBackColor = true;
+            this.refreshFilter.Click += new System.EventHandler(this.refreshFilter_Click);
             // 
             // tipsHotkeys
             // 

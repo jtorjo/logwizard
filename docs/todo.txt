@@ -29,7 +29,7 @@
 
 - find - case-insensitive + full words
 
-
+- while the log is changing or the view is loading or so -> visually show that we're loading (like, in the view name -> show rotating "...")
 
 
 

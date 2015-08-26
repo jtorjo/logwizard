@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
@@ -788,7 +789,8 @@ namespace LogWizard
             list.EnsureVisible(bottom_idx);
         }
 
-        public void go_to_closest_line(int line_idx) {
+
+        public void go_to_closest_line(int line_idx, select_type notify) {
             if (list.GetItemCount() < 1)
                 return;
 
@@ -806,7 +808,52 @@ namespace LogWizard
                     // we found it
                     break;
             }
-            go_to_line(found_idx, select_type.do_not_notify_parent);
+            go_to_line(found_idx, notify);
+        }
+
+        public void go_to_closest_time(DateTime time) {
+
+            // note: yeah - i could do binary search, but it's not that big of a time increase
+            var last_time = (list.GetItem(0).RowObject as item).match.line.time;
+            int found_idx = 0;
+            for (int idx = 1; idx < list.GetItemCount(); ++idx) {
+                var cur_time = (list.GetItem(idx).RowObject as item).match.line.time;
+                var last_dist = Math.Abs( (time- last_time).TotalMilliseconds);
+                var cur_dist = Math.Abs( (cur_time - time).TotalMilliseconds);
+                if (cur_dist <= last_dist) {
+                    last_time = cur_time;
+                    found_idx = idx;
+                } else
+                    // we found it
+                    break;
+            }
+            go_to_line(found_idx, select_type.notify_parent);
+        }
+
+        public void offset_closest_time(int time_ms, bool forward) {
+            if (list.GetItemCount() < 1)
+                return;
+            int sel = list.SelectedIndex;
+            if (sel < 0)
+                sel = 0; // just in case we haven't selected anything - start from beginning
+            var i = (list.GetItem(sel).RowObject as item);
+            var time = i.match.line.time;
+
+            if (time != DateTime.MinValue) {
+                time = time.AddMilliseconds(forward ? time_ms : -time_ms);
+                go_to_closest_time(time);
+            }
+            else
+                // in this case, there is no time logged, or it was invalid
+                util.beep(util.beep_type.err);
+        }
+
+        public void offset_closest_line(int offset, bool forward) {
+            int line_idx = sel_line_idx;
+            if (line_idx < 0)
+                line_idx = 0; // just in case we haven't selected anything - start from beginning
+            line_idx += forward ? offset : -offset;
+            go_to_closest_line(line_idx, select_type.notify_parent);
         }
 
         public int line_count {

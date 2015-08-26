@@ -44,6 +44,9 @@ namespace LogWizard
 
         private string[] parts = new string[(int)info_type.max];
 
+        // if not minvalue, it's the time this message was written
+        public DateTime time = DateTime.MinValue;
+
         public string full_line {
             get {
                 string full = "";
@@ -66,6 +69,11 @@ namespace LogWizard
                         parts[part_idx] = part_idx == (int)info_type.msg ? result : result.Trim();
                     }
             }
+
+            // normalize time - so that we can do proper comparisons when "Go to Line"
+            var time_str = parts[(int) info_type.time];
+            if (time_str != "" && time_str != null)
+                time = util.str_to_normalized_time(time_str);
         }
 
         public string part(info_type i) {
@@ -86,7 +94,7 @@ namespace LogWizard
         // [index, length]
         private Tuple<int,int>[] idx_in_line_ = new Tuple<int, int>[ (int)info_type.max];
         private readonly Tuple<int,int>[] line_contains_msg_only_ = new Tuple<int, int>[] {
-            new Tuple<int,int>(0, -1),
+            new Tuple<int,int>(-1, -1),
             new Tuple<int,int>(-1, -1),
             new Tuple<int,int>(-1, -1),
             new Tuple<int,int>(-1, -1),
@@ -131,6 +139,7 @@ namespace LogWizard
 
         public log_line_parser(text_reader reader, string syntax) {
             Debug.Assert(reader != null);
+            line_contains_msg_only_[(int) info_type.msg] = new Tuple<int, int>(0, -1);
             parse_syntax(syntax);
             text_reader_ = reader;
             force_reload();

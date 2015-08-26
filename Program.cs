@@ -52,8 +52,9 @@ namespace LogWizard
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main(string[] args)
-        {
+        static void Main(string[] args) {
+            //util.test_normalized_times();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             log4net.Config.XmlConfigurator.Configure( new FileInfo("LogWizard.exe.config"));

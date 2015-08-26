@@ -244,5 +244,89 @@ namespace LogWizard {
                 return value.Replace("\n", "\r\n");
         }
 
+
+        // normalizes the time, so that no matter what input, it will take out hh:mm:ss.zzz
+        //
+        // assumes time is in correct form: [h]h:[m]m[:[s]s[.z[z[z]]]]
+        public static string normalize_time_str(string time) {
+            // milliseconds after "."
+            time = time.Replace(',', '.');
+
+            // in this case, just mm:ss[.zzz]
+            if (time.Count(c => c == ':') == 1)
+                time = "00:" + time;
+
+            int sep1 = time.IndexOf(':');
+            Debug.Assert(sep1 >= 1 && sep1 <= 2);
+            if (sep1 == 1)
+                time = "0" + time;
+            // hh:mm:ss or hh:m:s
+            int sep2 = time.IndexOf(':', 3);
+            Debug.Assert(sep2 == -1 || sep2 == 4 || sep2 == 5);
+            if (sep2 == 4)
+                time = time.Substring(0, 3) + "0" + time.Substring(3);
+            if (sep2 > 0) {
+                // look for seconds:  hh:mm:ss.zzz or hh:mm:s.zzz
+                int sep3 = time.IndexOf('.', 6);
+                Debug.Assert(sep3 == -1 || sep3 == 7 || sep3 == 8);
+                if (sep3 == 7 || time.Length == 7)
+                    time = time.Substring(0, 6) + "0" + time.Substring(6);
+            } else
+                // in this case, it was just mm:ss - should never happen
+                Debug.Assert(false);
+
+            switch (time.Length) {
+            case 8:
+                return time + ".000";
+            case 10:
+                return time + "00";
+            case 11:
+                return time + "0";
+            case 12:
+                return time;
+            default:
+                Debug.Assert(false);
+                return time;
+            }
+        }
+
+        public static DateTime str_to_normalized_time(string time_str) {
+            Debug.Assert(time_str != null && time_str != "");
+            DateTime time = DateTime.MinValue;
+            time_str = normalize_time_str(time_str);
+            DateTime.TryParseExact( time_str, "HH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out time);
+            return time;
+        } 
+
+        /*
+        private static void test_normalize_time(string a, string b) {
+            Console.WriteLine("Testing " + normalize_time(a) + " / " + b);
+            Debug.Assert( normalize_time(a) == b);
+        }
+        public static void test_normalized_times() {
+            test_normalize_time("3:5", "00:03:05.000");
+            test_normalize_time("11:5", "00:11:05.000");
+            test_normalize_time("3:15", "00:03:15.000");
+            test_normalize_time("3:5.7", "00:03:05.700");
+
+            test_normalize_time("12:32:1", "12:32:01.000");
+            test_normalize_time("2:3:5", "02:03:05.000");
+            test_normalize_time("02:3:5", "02:03:05.000");
+            test_normalize_time("2:03:5", "02:03:05.000");
+            test_normalize_time("2:03:05", "02:03:05.000");
+
+            test_normalize_time("2:3:5.0", "02:03:05.000");
+            test_normalize_time("2:3:5.01", "02:03:05.010");
+            test_normalize_time("2:3:5.011", "02:03:05.011");
+
+            test_normalize_time("2:3:5,0", "02:03:05.000");
+            test_normalize_time("2:3:5,01", "02:03:05.010");
+            test_normalize_time("2:3:5,011", "02:03:05.011");
+
+            test_normalize_time("2:3:5,1", "02:03:05.100");
+            test_normalize_time("2:3:5,12", "02:03:05.120");
+            test_normalize_time("2:3:5,123", "02:03:05.123");
+        }*/
+
     }
 }

@@ -40,13 +40,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_58DF238636A54D29D1ED2560A161DA19"
+        "OwnerKey" = "8:_FE97592EE371AE93311B615D98612263"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FE97592EE371AE93311B615D98612263"
+        "OwnerKey" = "8:_58DF238636A54D29D1ED2560A161DA19"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -229,11 +229,6 @@
             "AssemblyAsmDisplayName" = "8:ObjectListView, Version=2.8.1.33936, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_58DF238636A54D29D1ED2560A161DA19"
-                    {
-                    "Name" = "8:ObjectListView.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ObjectListView.dll"
             "TargetName" = "8:"
@@ -260,11 +255,6 @@
             "AssemblyAsmDisplayName" = "8:log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_FE97592EE371AE93311B615D98612263"
-                    {
-                    "Name" = "8:log4net.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:log4net.dll"
             "TargetName" = "8:"
@@ -362,15 +352,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
-        "ProductCode" = "8:{20A603B9-8111-4A20-BA1B-EA1983424B1D}"
-        "PackageCode" = "8:{989D1835-181B-494D-A09F-46678FCB4E54}"
+        "ProductCode" = "8:{8C768FBE-4080-4C1B-8FDC-373C1E056B9D}"
+        "PackageCode" = "8:{A89D6AC9-F475-4455-8755-CBCFE06CDEB0}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.51"
+        "ProductVersion" = "8:1.0.52"
         "Manufacturer" = "8:John Torjo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -940,7 +930,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_900BA54346A2479085BF08862BE89061"
             {
-            "SourcePath" = "8:..\\obj\\x86\\Release\\LogWizard.exe"
+            "SourcePath" = "8:..\\obj\\x86\\Debug\\LogWizard.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E297CB39A550491681319D6F014A659B"

@@ -70,6 +70,9 @@ namespace LogWizard
             // ... equivalent of ctrl-up/down
             scroll_up, scroll_down,
 
+            // 1.0.52+
+            go_to_line,
+
             none,
         }
 
@@ -1482,6 +1485,8 @@ namespace LogWizard
                 return action_type.scroll_up;
             case "ctrl-down":
                 return action_type.scroll_down;
+            case "ctrl-g":
+                return action_type.go_to_line;
             }
 
             return action_type.none;
@@ -1652,6 +1657,23 @@ namespace LogWizard
                     lv.scroll_down();
                 break;
 
+            case action_type.go_to_line:
+                if (lv != null) {
+                    var dlg = new go_to_line_time_form();
+                    if (dlg.ShowDialog() == DialogResult.OK) {
+                        if (dlg.is_number()) {
+                            if ( dlg.has_offset != '\0')
+                                lv.offset_closest_line(dlg.number, dlg.has_offset == '+');
+                            else
+                                lv.go_to_closest_line(dlg.number - 1, log_view.select_type.notify_parent);
+                        } else if (dlg.has_offset != '\0')
+                            lv.offset_closest_time(dlg.time_milliseconds, dlg.has_offset == '+');
+                        else
+                            lv.go_to_closest_time(dlg.normalized_time);
+                    }
+                }
+                break;
+
             case action_type.none:
                 break;
             default:
@@ -1693,7 +1715,7 @@ namespace LogWizard
                         // in this case, we already synched the full log
                         continue;
 
-                    lv.go_to_closest_line(line_idx);
+                    lv.go_to_closest_line(line_idx, log_view.select_type.do_not_notify_parent);
                 }
         }
 

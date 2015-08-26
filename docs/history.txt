@@ -1,8 +1,11 @@
-+ goto line/time
-  - if on full log, and not synchronized, by default, it should go to whatever line is on the selected view
 
+- f5 = refresh
 - generate release? / update doc
 
+
+1.0.52
+- go to line/time
+  - allow even goodies like +4s and such
 
 
 1.0.51c
