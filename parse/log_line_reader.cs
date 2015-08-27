@@ -48,6 +48,16 @@ namespace LogWizard {
             get { return parser_.forced_reload(this); }
         }
 
+        public bool up_to_date {
+            get {
+                if (!parser_.up_to_date)
+                    return false;
+                int parser_lines = parser_.line_count;
+                lock(this)
+                return line_count_ == parser_lines;
+            }
+        }
+
         public int line_count {
             get { lock(this) return line_count_;  }
         }

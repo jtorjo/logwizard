@@ -54,6 +54,11 @@ namespace LogWizard
             get { return disposed_; }
         }
 
+        // returns true when the read is fully read
+        public virtual bool is_up_to_date() {
+            return true;
+        }
+
         public virtual string try_to_find_log_syntax() {
             return "$msg[0]";
         }

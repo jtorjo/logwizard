@@ -25,6 +25,10 @@ namespace LogWizard {
         // if true, synchronize Full Log with existing view (that is, the selected line)
         public bool sync_full_log_view = true;
 
+        // if true, I instantly refresh all views all the time
+        // if false, I refresh only the current view
+        public bool instant_refresh_all_views = true;
+
         public void load() {
             var sett = Program.sett;
             show_view_line_count = sett.get("show_view_line_count", "1") != "0";

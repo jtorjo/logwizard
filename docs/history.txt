@@ -1,6 +1,11 @@
 
-- f5 = refresh
 - generate release? / update doc
+
+
+1.0.54
+- f5 = refresh
+- generate the release build as x64 by default
+- whenever something is added - to a view that is not current, show visually (bold) that there are new items there
 
 
 1.0.52

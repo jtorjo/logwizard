@@ -73,6 +73,9 @@ namespace LogWizard
             // 1.0.52+
             go_to_line,
 
+            // 1.0.53
+            refresh,
+
             none,
         }
 
@@ -182,7 +185,34 @@ namespace LogWizard
                 logHistory.SelectedIndex = history_.Count - 1;
             if (open_cmd_line_file) 
                 on_file_drop(Program.open_file_name);
-            
+
+            viewsTab.DrawMode = TabDrawMode.OwnerDrawFixed;
+            viewsTab.DrawItem += ViewsTabOnDrawItem;
+        }
+
+        private Brush views_brush_ = new SolidBrush(Color.Black), views_something_changed_brush_ = new SolidBrush(Color.DarkRed);
+        private void ViewsTabOnDrawItem(object sender, DrawItemEventArgs e) {            
+            Graphics g = e.Graphics;
+
+            // Get the item from the collection.
+            TabPage tab = viewsTab.TabPages[e.Index];
+
+            // Get the real bounds for the tab rectangle.
+            Rectangle bounds = viewsTab.GetTabRect(e.Index);
+
+            if (e.State == DrawItemState.Selected)
+                // Draw a different background color, and don't paint a focus rectangle.
+                g.FillRectangle(Brushes.LightGray, e.Bounds);
+
+            var lv = log_view_for_tab(e.Index);
+            Font font = lv != null ? lv.title_font : viewsTab.Font;
+            Brush brush = lv != null && lv.has_anything_changed ? views_something_changed_brush_ : views_brush_;
+
+            // Draw string. Center the text.
+            StringFormat _StringFlags = new StringFormat();
+            _StringFlags.Alignment = StringAlignment.Center;
+            _StringFlags.LineAlignment = StringAlignment.Center;
+            g.DrawString(viewsTab.TabPages[e.Index].Text, font, brush, bounds, new StringFormat(_StringFlags));
         }
 
         private void hide_tabs(TabControl tab) {
@@ -722,32 +752,35 @@ namespace LogWizard
         }
 
         private void refresh_cur_log_view() {
+            if (text_ == null)
+                // no log yet
+                return;
             log_view lv = log_view_for_tab(viewsTab.SelectedIndex);
-            if ( lv != null) {
-                if (text_ == null)
-                    // no log yet
-                    return;
+            if (lv == null)
+                return;
 
+            if (app.inst.instant_refresh_all_views) {
+                refresh_all_views();
+            } else {
+                // optimized - refresh only current view
                 update_filter(lv);
-                // the problem is if two filters (or a filter + full log) share the same log_line_parser -> basically first time i refresh the log line parser,
-                // next time log.line_count is already set to the new value, and it assumes we haven't read anything
-                // thus, i need a single log_line_parser per each filter - no filter can share the log!
                 lv.refresh();
                 if (cur_context().show_fulllog) {
                     for (int idx = 0; idx < viewsTab.TabCount; ++idx) {
                         var other = ensure_we_have_log_view_for_tab(idx);
-                        if (other != lv) 
+                        if (other != lv)
                             update_non_active_filter(idx);
                     }
                     fullLogCtrl.refresh();
                     fullLogCtrl.set_view_selected_view_name(lv.name);
-                    fullLogCtrl.update_view_column( all_log_views() );
+                    fullLogCtrl.update_view_column(all_log_views());
                 }
 
                 update_msg_details(false);
                 refresh_filter_found();
             }
         }
+
 
         private void update_msg_details(bool force_update) {
             if (selected_view() != null && msg_details_ != null) {
@@ -862,6 +895,62 @@ namespace LogWizard
             if (file_ctx != cur_context())
                 // update context based on file name
                 curContextCtrl.SelectedIndex = contexts_.IndexOf(file_ctx);
+
+            force_initial_refresh_of_all_views();
+        }
+
+        private void refresh_all_views() {
+            if (text_ == null)
+                // no log yet
+                return;
+            log_view lv = log_view_for_tab(viewsTab.SelectedIndex);
+            if (lv == null)
+                return;
+
+            update_filter(lv);
+            lv.refresh();
+
+            for (int idx = 0; idx < viewsTab.TabCount; ++idx) {
+                var other = ensure_we_have_log_view_for_tab(idx);
+                if (other != lv) {
+                    update_non_active_filter(idx);
+                    other.refresh();
+                }
+            }
+
+            if (cur_context().show_fulllog) {
+                fullLogCtrl.refresh();
+                fullLogCtrl.set_view_selected_view_name(lv.name);
+                fullLogCtrl.update_view_column( all_log_views() );
+            }
+
+            update_msg_details(false);
+            refresh_filter_found();            
+        }
+
+        private void force_initial_refresh_of_all_views() {
+            // note: refreshing happens on different threads, so we're not sure when it's complete
+            //       just take a guess and refresh in a bit
+
+            foreach (log_view lv in all_log_views_and_full_log())
+                lv.turn_off_has_anying_changed = true;
+            refresh_all_views();
+            
+            util.add_timer(
+                (has_terminated) => {
+                    refresh_all_views();
+                    if ( has_terminated)
+                        foreach (log_view lv in all_log_views_and_full_log())
+                            lv.turn_off_has_anying_changed = false;
+                },
+                () =>
+                    {
+                        foreach (log_view lv in all_log_views_and_full_log())
+                            if (!lv.is_filter_up_to_date)
+                                return false;
+                        logger.Debug("[view] initial refresh complete");
+                        return true;
+                    }, 500);
         }
 
         private void on_new_shared_log(string name) {
@@ -1277,6 +1366,12 @@ namespace LogWizard
                 log_parser_.force_reload();
             refresh_filter_found();
             fullLogCtrl.recompute_view_column();
+
+            util.add_timer(
+                (has_ended) => {
+                    refreshFilter.Enabled = has_ended;
+                    refreshFilter.Text = has_ended ? "Refresh" : util.add_dots(refreshFilter.Text, 3);
+                }, 2500, 250);
         }
 
         // http://stackoverflow.com/questions/91778/how-to-remove-all-event-handlers-from-a-control
@@ -1395,6 +1490,22 @@ namespace LogWizard
             return false;
         }
 
+        // in case the Filter is selected, make sure we remove focus from it
+        private void unfocus_filter_panel() {
+            if ( is_focus_on_filter_panel())
+                viewsTab.Focus();            
+        }
+
+        private bool is_focus_on_full_log() {
+            var focus_ctrl = focused_ctrl();
+            return focus_ctrl != null && focus_ctrl is VirtualObjectListView && focus_ctrl.Parent == fullLogCtrl;
+        }
+
+        private bool is_focus_on_filter_panel() {
+            var focus = focused_ctrl();
+            return focus == filterCtrl || focus == curFilterCtrl;            
+        }
+
         private action_type key_to_action(string key_code) {
             switch (key_code) {
             case "up":
@@ -1487,25 +1598,11 @@ namespace LogWizard
                 return action_type.scroll_down;
             case "ctrl-g":
                 return action_type.go_to_line;
+            case "f5":
+                return action_type.refresh;
             }
 
             return action_type.none;
-        }
-
-        // in case the Filter is selected, make sure we remove focus from it
-        private void unfocus_filter_panel() {
-            if ( is_focus_on_filter_panel())
-                viewsTab.Focus();            
-        }
-
-        private bool is_focus_on_full_log() {
-            var focus_ctrl = focused_ctrl();
-            return focus_ctrl != null && focus_ctrl is VirtualObjectListView && focus_ctrl.Parent == fullLogCtrl;
-        }
-
-        private bool is_focus_on_filter_panel() {
-            var focus = focused_ctrl();
-            return focus == filterCtrl || focus == curFilterCtrl;            
         }
 
         private void handle_action(action_type action) {
@@ -1539,18 +1636,22 @@ namespace LogWizard
 
             case action_type.next_view: {
                 int prev_idx = viewsTab.SelectedIndex;
-                int next = viewsTab.TabCount > 0 ? (sel + 1) % viewsTab.TabCount : -1;
-                if (next >= 0) 
-                    viewsTab.SelectedIndex = next;
+                int next_idx = viewsTab.TabCount > 0 ? (sel + 1) % viewsTab.TabCount : -1;
+                if (next_idx >= 0) {
+                    viewsTab.SelectedIndex = next_idx;
+                    log_view_for_tab(next_idx).on_selected();
+                }
                 if ( prev_idx >= 0)
                     log_view_for_tab(prev_idx).update_x_of_y();
             }
                 break;
             case action_type.prev_view: {
                 int prev_idx = viewsTab.SelectedIndex;
-                int next = viewsTab.TabCount > 0 ? (sel + viewsTab.TabCount - 1) % viewsTab.TabCount : -1;
-                if (next >= 0)
-                    viewsTab.SelectedIndex = next;
+                int next_idx = viewsTab.TabCount > 0 ? (sel + viewsTab.TabCount - 1) % viewsTab.TabCount : -1;
+                if (next_idx >= 0) {
+                    viewsTab.SelectedIndex = next_idx;
+                    log_view_for_tab(next_idx).on_selected();
+                }
                 if ( prev_idx >= 0)
                     log_view_for_tab(prev_idx).update_x_of_y();
             }
@@ -1672,6 +1773,9 @@ namespace LogWizard
                             lv.go_to_closest_time(dlg.normalized_time);
                     }
                 }
+                break;
+            case action_type.refresh:
+                refreshFilter_Click(null,null);
                 break;
 
             case action_type.none:

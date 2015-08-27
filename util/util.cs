@@ -20,6 +20,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -327,6 +328,49 @@ namespace LogWizard {
             test_normalize_time("2:3:5,12", "02:03:05.120");
             test_normalize_time("2:3:5,123", "02:03:05.123");
         }*/
+
+        public delegate void update_control_func(bool has_terminated);
+        public delegate bool terminate_update_func();
+
+        public static void add_timer(update_control_func updater, terminate_update_func terminator, int refresh_ms = 100) {
+            updater(false);
+
+            Timer t = new Timer(){ Interval = refresh_ms };
+            t.Tick += (sender, args) => {
+                bool has_terminated = terminator();
+                updater(has_terminated);
+                if (has_terminated) {
+                    t.Enabled = false;
+                    t.Dispose();
+                }
+            };
+            t.Enabled = true;
+        }
+
+        // update_ms = how long to update the control visually
+        public static void add_timer(update_control_func updater, int update_ms, int refresh_ms = 100) {
+            DateTime end = DateTime.Now.AddMilliseconds(update_ms);
+            add_timer( updater, () => (DateTime.Now > end), refresh_ms );
+        }
+
+        public void postpone_func(Action a, int postpone_ms) {
+            Timer t = new Timer(){ Interval = postpone_ms };
+            t.Tick += (sender, args) => {
+                t.Enabled = false;
+                a();
+                t.Dispose();
+            };
+            t.Enabled = true;            
+        }
+
+        public static string add_dots(string s, int max_dots) {
+            string max_dots_str = new string('.', max_dots);
+            if (s.EndsWith(max_dots_str))
+                s = s.Substring(0, s.Length - max_dots);
+            else
+                s += ".";
+            return s;
+        }
 
     }
 }

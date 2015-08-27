@@ -145,6 +145,16 @@ namespace LogWizard
             }
         }
 
+        public override bool is_up_to_date() {
+            try {
+                long len = new FileInfo(file_).Length;
+                lock (this)
+                    return full_log_read_bytes_ == (ulong)len;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
         // file got rewritten from scratch - note: we preserve the log syntax
         private void on_rewritten_file() {
             lock (this) {

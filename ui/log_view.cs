@@ -42,8 +42,14 @@ namespace LogWizard
         private filter filter_ = new filter();
         private log_line_reader log_ = null;
 
-        private bool filter_changed_ = false;
+        // by default - it's a new filter (thus, needing refresh)
+        private bool filter_changed_ = true;
+
         private string selected_view_ = null;
+
+        private int last_item_count_while_current_view_ = 0;
+
+        private Font non_bold_ = null, bold_ = null;
 
         private class item {
             private filter.match match_;
@@ -190,8 +196,6 @@ namespace LogWizard
         private list_data_source model_ = null;
         private bool visible_columns_refreshed_ = false;
 
-        private Font font_ = null;
-
         private int last_view_column_index_ = 0;
 
         // lines that are bookmarks (sorted by index)
@@ -244,6 +248,13 @@ namespace LogWizard
         public bool is_filter_set {
             get { return filter_.row_count > 0; }
         }
+        public bool is_filter_up_to_date {
+            get {
+                if (!is_filter_set)
+                    return true;
+                return filter_.is_up_to_date;
+            }
+        }
 
         // returns the line index of the current selection
         public int sel_line_idx {
@@ -289,6 +300,63 @@ namespace LogWizard
                 return new Tuple<Color, Color>(Color.Black,Color.White);
             }
         }
+        private bool is_current_view {
+            get {
+                var parent = Parent as TabPage;
+                if (parent != null) {
+                    var tab = parent.Parent as TabControl;
+                    bool is_ = tab.SelectedTab == parent;
+                    return is_;
+                }
+                return false;
+            }
+        }
+
+        private TabPage tab_parent {
+            get {
+                return Parent as TabPage;
+            }
+        }
+        private TabControl tab_control {
+            get {
+                Debug.Assert(tab_parent != null);
+                var tab = tab_parent.Parent as TabControl;
+                Debug.Assert(tab != null);
+                return tab;
+            }
+        }
+        public Font title_font {
+            get {
+                if (non_bold_ == null)
+                    return tab_parent.Font;
+                return has_anything_changed ? bold_ : non_bold_;
+            }
+        }
+
+        // while this is true, has anything_changed always returns false (basically, we want this during loading,
+        // since it happens on a different thread - it's pretty complicated to find out when the complete loading has occured)
+        private bool turn_off_has_anying_changed_ = true;
+
+        public bool turn_off_has_anying_changed {
+            get { return turn_off_has_anying_changed_; }
+            set {
+                turn_off_has_anying_changed_ = value;
+                if (!turn_off_has_anying_changed_) {
+                    last_item_count_while_current_view_ = list.GetItemCount();
+                    update_x_of_y();
+                }
+            }
+        }
+
+        public bool has_anything_changed {
+            get {
+                if (turn_off_has_anying_changed)
+                    return false;
+                return !is_current_view && (last_item_count_while_current_view_ != list.GetItemCount());
+            }
+        }
+
+
 
         public void set_filter(List<filter_row> filter) {
             filter_.update_rows(filter);
@@ -300,6 +368,7 @@ namespace LogWizard
             if (log_ != log) {
                 log_ = log;
                 filter_changed_ = true;
+                last_item_count_while_current_view_ = 0;
                 visible_columns_refreshed_ = false;
                 last_view_column_index_ = 0;
                 wait_for_filter_to_read_from_new_log_ = DateTime.Now.AddMilliseconds(WAIT_FOR_NEW_LOG_MAX_MS);
@@ -493,19 +562,20 @@ namespace LogWizard
             }
         }
 
-        private bool is_current_view {
-            get {
-                var parent = Parent as TabPage;
-                if (parent != null) {
-                    var tab = parent.Parent as TabControl;
-                    bool is_ = tab.SelectedTab == parent;
-                    return is_;
-                }
-                return false;
-            }
+        private void compute_title_fonts() {
+            if (tab_parent == null)
+                return;
+            if (non_bold_ != null)
+                return; // already computed
+            // we need this - so that we have enough space in order to draw the title in bold/non-bold
+            Debug.Assert(tab_parent.Font.Bold);
+            bold_ = tab_parent.Font;
+            non_bold_ = new Font(bold_.FontFamily, bold_.Size, FontStyle.Regular);
         }
 
         public void update_x_of_y() {
+            compute_title_fonts();
+
             string x_idx =  list.SelectedIndex >= 0 ? "" + (list.SelectedIndex+1) : "";
             string x_line =  sel_line_idx >= 0 ? "" + (sel_line_idx + 1) : "";
             string y = "" + list.GetItemCount();
@@ -524,9 +594,12 @@ namespace LogWizard
                 x_of_y_title = " [" + x_line + "] " + x_of_y_title;
             x_of_y_title = x_of_y_title.TrimEnd();
 
-            var parent = Parent as TabPage;
-            if (parent != null)
-                parent.Text = name + x_of_y_title;
+            string tab_text = filter_changed_ ? name + (x_of_y_title != "" ? " (?)" : "") : name + x_of_y_title;
+            tab_text += "  ";
+            if (tab_parent != null) {
+                if ( tab_parent.Text != tab_text)
+                    tab_parent.Text = tab_text;
+            }
 
             msgCol.Text = x_of_y_msg;
         }
@@ -537,6 +610,28 @@ namespace LogWizard
                     list.SelectedIndex = 0;
                     logger.Debug("[view] forcing sel zero for " + name);
                 }
+        }
+
+        // called when we've been selected as current view
+        public void on_selected() {
+            if (tab_parent == null)
+                return;
+
+            // we want the tab to be repainted
+            last_item_count_while_current_view_ = list.GetItemCount();
+            tab_parent.Text += " ";
+
+            if (list.GetItemCount() > 0)
+                return;
+            // if we don't have any items, it's likely that we need to refresh
+            if ( filter_changed_)
+                util.add_timer(
+                    (has_ended) => {
+                        if ( !has_ended && filter_changed_)
+                            tab_parent.Text = util.add_dots(tab_parent.Text, 3);
+                        else 
+                            update_x_of_y();
+                    }, 2500);
         }
 
         public void refresh() {
@@ -554,6 +649,9 @@ namespace LogWizard
                     return;
                 logger.Debug("[view] filter refreshed after log changed " + name);
             }
+
+            if (is_current_view)
+                last_item_count_while_current_view_ = list.GetItemCount();
 
             if (!filter_changed_) {
                 int match_count = filter_.match_count;
@@ -593,6 +691,9 @@ namespace LogWizard
 
             if( needs_scroll)
                 go_last();
+
+            if (is_current_view)
+                last_item_count_while_current_view_ = list.GetItemCount();
         }
 
         // returns all the lines that match this filter
@@ -863,6 +964,7 @@ namespace LogWizard
         public int filter_row_count {
             get { return filter_.row_count; }
         }
+
 
         // returns how many lines this filter has found
         public int filter_row_match_count(int row_idx) {

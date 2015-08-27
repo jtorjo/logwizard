@@ -1,7 +1,3 @@
-- very big file: C:\john\code\buff\denisehovertest\TableNinja2.log -> generates outofmemory exception
-   --> generate the release build as x64 by default
-
-
 
 - synchronize colors : full log - synchronize with what the existing tab has and/or with all tabs? 
   (Sync: with current tab / with all tabs / none)
@@ -26,13 +22,15 @@
   - default color for "Include text"
   - show column "Filter(s)" on full log (it takes more time to synchronize)
   - colors for bookmarks
+  - if to add "*" to the tab title when something changed -> this forces refresh of all  tabs all the time
 
 - find - case-insensitive + full words
 
 - while the log is changing or the view is loading or so -> visually show that we're loading (like, in the view name -> show rotating "...")
 
+- bug - sometimes refreshing clears the current view (and the view remains cleared) - clicking it a few times will make it work again, but it's not cool
 
-
+- bug - log_line_parser.line_at can actually cause assertion -> i should be able to handle the case when line_at returns null (and 'matches' should return false in that case)
 
 
 

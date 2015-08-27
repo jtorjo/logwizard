@@ -58,6 +58,8 @@ namespace LogWizard {
 
         private bool post_force_recompute_matches_ = false;
 
+        private bool is_up_to_date_ = false;
+
         public int row_count {
             get { lock(this) return rows_.Count; }
         }
@@ -68,6 +70,10 @@ namespace LogWizard {
 
         public int match_count {
             get { lock(this) return matches_.Count; }
+        }
+
+        public bool is_up_to_date {
+            get { lock (this) return is_up_to_date_;  }
         }
 
         // note: the only time this can return null is this: since we're refreshing on another thread,
@@ -174,8 +180,11 @@ namespace LogWizard {
 
         public void compute_matches(log_line_reader log) {
             Debug.Assert(log != null);
-            lock (this)
+            lock (this) {
+                if (new_log_ != log)
+                    is_up_to_date_ = false;
                 new_log_ = log;
+            }
 
             start_compute_matches_thread();
         }
@@ -264,6 +273,10 @@ namespace LogWizard {
 
                 apply_additions(old_match_count, new_log, rows);
             }
+
+            bool is_up_to_date = new_log.up_to_date;
+            lock (this)
+                is_up_to_date_ = is_up_to_date;
         }
 
 

@@ -153,6 +153,14 @@ F3, Shift-F3
   If there is no Search running, they will navigate through the selected Filter (in the filter pane), 
   showing exactly the lines that match that specific filter.
 
+  
+Go to Line/Time
+Ctrl-G
+- Allows going to a the closest line or time. Allows for offsets (+/-) to make the distance relative
+  to your selected line, such as +10 (add ten lines), -1:10:05 (before 1h 10mins 5 secs),
+  +7m (add 7 minutes), etc.
+  
+  
 Clipboard:
 Ctrl-C
 - Copies current message to clipboard (excluding date/time, level, etc.)
@@ -191,7 +199,9 @@ Miscellaneous
 Ctrl-N
 - New Log Wizard window  
 Ctrl-S
-- Show Settings window</value>
+- Show Settings window
+F5
+- Refresh current view</value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
     <value>Column names are like this: $(ColumnName)

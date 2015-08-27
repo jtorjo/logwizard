@@ -136,6 +136,8 @@ namespace LogWizard
         private ulong last_pos_ = 0;
         private bool was_last_line_incomplete_ = false;
 
+        // if true, we've been fully read (thus, we're up to date)
+        private bool up_to_date_ = false;
 
         public log_line_parser(text_reader reader, string syntax) {
             Debug.Assert(reader != null);
@@ -167,6 +169,10 @@ namespace LogWizard
 
         public string name {
             get { return text_reader_.name; }
+        }
+
+        public bool up_to_date {
+            get { return up_to_date_;  }
         }
 
         public line line_at(int idx) {
@@ -337,6 +343,7 @@ namespace LogWizard
                 forced_reload_.Clear();
                 lines_.Clear();
                 text_reader_.pos = 0;
+                up_to_date_ = false;
                 logger.Info("[log] log reloaded: " + text_reader_.name);
             }
         }
@@ -350,13 +357,22 @@ namespace LogWizard
                 // file got re-written
                 force_reload();
 
+            bool fully_read = old_len == new_len && text_reader_.is_up_to_date();
+
             ulong pos_in_log;
             lock(this)
                 pos_in_log = last_pos_;
             text_reader_.pos = pos_in_log;
             int remaining = (int)(text_reader_.full_len - text_reader_.pos);
-            if (remaining < 1)
+            if (remaining < 1) {
+                lock (this)
+                    up_to_date_ = fully_read;
                 return;
+            }
+            
+            lock (this)
+                up_to_date_ = false;
+
             string[] cur_lines = text_reader_.read_next_text(remaining).Split(new string[] { LINE_SEP }, StringSplitOptions.None);
             if (cur_lines.Length < 1)
                 return;
