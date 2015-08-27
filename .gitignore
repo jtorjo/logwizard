@@ -20,6 +20,7 @@ packages/log4net.2.0.3/*
 packages/ObjectListView.Official.2.8.1/*
 logwizardsetup/Release/*
 logwizardsetup/Dbg64/*
+logwizardsetup/Release64/*
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -61,6 +62,7 @@ ipch/
 *.psess
 *.vsp
 *.vspx
+*.msi
 
 # Guidance Automation Toolkit
 *.gpState
