@@ -76,6 +76,13 @@ namespace LogWizard
             // 1.0.53
             refresh,
 
+            // 1.0.56
+            toggle_title,
+
+            // 1.0.56 - not implemented yet (show/hide the tabs themselves)
+            toggle_view_tabs,
+
+
             none,
         }
 
@@ -473,6 +480,18 @@ namespace LogWizard
             on_new_file_log(file);
         }
 
+        private void toggle_title() {
+            bool shown = FormBorderStyle == FormBorderStyle.Sizable;
+            if (shown) {
+                FormBorderStyle = FormBorderStyle.None;
+                main.Height += lower.Height;
+                Height += lower.Height;
+            } else {
+                main.Height -= lower.Height;
+                Height -= lower.Height;
+                FormBorderStyle = FormBorderStyle.Sizable;
+            }
+        }
 
         private void toggleFilters_Click(object sender, EventArgs e)
         {
@@ -788,7 +807,7 @@ namespace LogWizard
                 log_view any_lv = log_view_for_tab(0);
                 if (any_lv != null)
                     top_offset = any_lv.RectangleToScreen(any_lv.ClientRectangle).Top - RectangleToScreen(ClientRectangle).Top  + 5;
-                int bottom_offset = ClientRectangle.Height - logHistory.Top;
+                int bottom_offset = ClientRectangle.Height - lower.Top;
                 msg_details_.update(selected_view(), top_offset, bottom_offset, force_update);
             }
         }
@@ -1600,6 +1619,10 @@ namespace LogWizard
                 return action_type.go_to_line;
             case "f5":
                 return action_type.refresh;
+            case "t":
+                return action_type.toggle_title;
+            case "v":
+                return action_type.toggle_view_tabs;
             }
 
             return action_type.none;
@@ -1776,6 +1799,11 @@ namespace LogWizard
                 break;
             case action_type.refresh:
                 refreshFilter_Click(null,null);
+                break;
+            case action_type.toggle_title:
+                toggle_title();
+                break;
+            case action_type.toggle_view_tabs:
                 break;
 
             case action_type.none:

@@ -129,7 +129,7 @@
             // 
             this.viewCol.AspectName = "view";
             this.viewCol.IsEditable = false;
-            this.viewCol.Text = "Filter(s)";
+            this.viewCol.Text = "View(s)";
             this.viewCol.Width = 0;
             // 
             // dateCol

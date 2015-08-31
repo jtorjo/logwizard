@@ -1,5 +1,12 @@
 
-- generate release? / update doc
+- bring to top on restart (with button to switch on/off - or 'R' hotkey) - the button should be shown only when this is available - it should be our icon!
+   + bring to top + make topmost
+    --> this is on a file by file basis -> you would turn this on for your log files written during debugging
+- apply to existing lines
+
+
+1.0.56
+- 'T' - toggle title (remove border + lower pane)
 
 
 1.0.54

@@ -16,6 +16,12 @@
   or, when "overridden theme" gets written (for alerts - force refresh of the view all the time)
   by default -> the alert would show the message itself + perhaps beep?
   alerts - to be also shown in a left pane (as a new tab)
+  when an alert happens -and it actually matches the current view - just show the alert sign (no need to show the message itself since the user already sees it)
+  --------> when an alert happens, show it in the line number as an "!" icon - also, all views that contain an alert should have the "!" icon
+  --------> checkbox - beep on alert + checkbox - bring LogWizard to top on alert
+  ----- i should look for an alert in all the filters (in other words, maybe two filters match a line -> the first filter gives the color; but maybe the second one matches the alert)
+
+
 
 - settings page: 
   - font for showing the message (like, Courier New?)
@@ -32,7 +38,7 @@
 
 - bug - log_line_parser.line_at can actually cause assertion -> i should be able to handle the case when line_at returns null (and 'matches' should return false in that case)
 
-
+- level column -> allow transforming it into pictures
 
 
 
@@ -40,6 +46,7 @@
 
 - allow editing the message (basically just for copying text) + allow "Exclude [text]" + "Include [text]" (on the Full log)
   -probably listen for keys -> listen for left or right arrow (and start moving cursor from there)
+  -> another context menu -> "To Color" -> which converts lines containing that text to a given color
 
 ------------- talk with Vidi
 - threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
