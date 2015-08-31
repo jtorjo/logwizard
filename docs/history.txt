@@ -4,7 +4,7 @@
     --> this is on a file by file basis -> you would turn this on for your log files written during debugging
 - apply to existing lines
 
-- by default -> don't sync views (for large files -> it's slows')
+- by default -> don't sync views (for large files -> it's slow')
 
 - intro (github) -> the images should not show tn2.
 - article : Customer support/Testing /etc 
