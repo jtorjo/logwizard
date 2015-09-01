@@ -62,7 +62,7 @@ namespace LogWizard
 
             // 1.0.28+
             toggle_history_dropdown,
-            new_log_wizard, show_settings,
+            new_log_wizard, show_preferences,
 
             // 1.0.35+
             increase_font, decrease_font,
@@ -1602,8 +1602,8 @@ namespace LogWizard
                 return action_type.toggle_history_dropdown;
             case "ctrl-n":
                 return action_type.new_log_wizard;
-            case "ctrl-s":
-                return action_type.show_settings;
+            case "ctrl-p":
+                return action_type.show_preferences;
 
             case "add":
                 return action_type.increase_font;
@@ -1755,7 +1755,7 @@ namespace LogWizard
             case action_type.new_log_wizard:
                 newView_Click(null,null);
                 break;
-            case action_type.show_settings:
+            case action_type.show_preferences:
                 settingsCtrl_Click(null,null);
                 break;
 

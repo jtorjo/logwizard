@@ -99,12 +99,12 @@
             this.msgCol});
             this.list.FullRowSelect = true;
             this.list.HideSelection = false;
-            this.list.Location = new System.Drawing.Point(3, 32);
+            this.list.Location = new System.Drawing.Point(2, 30);
             this.list.Name = "list";
             this.list.OwnerDraw = true;
             this.list.ShowGroups = false;
             this.list.ShowItemToolTips = true;
-            this.list.Size = new System.Drawing.Size(691, 387);
+            this.list.Size = new System.Drawing.Size(693, 393);
             this.list.TabIndex = 3;
             this.list.UseCompatibleStateImageBehavior = false;
             this.list.View = System.Windows.Forms.View.Details;

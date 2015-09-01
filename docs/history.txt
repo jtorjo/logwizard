@@ -7,11 +7,6 @@
 - by default -> don't sync views (for large files -> it's slow')
 
 - intro (github) -> the images should not show tn2.
-- article : Customer support/Testing /etc 
-             + source code - c#/.net4
-			 + picture on Filters section
-			 - feedback Horia Uifaleanu
-			 - table of contents
 
 
 1.0.56

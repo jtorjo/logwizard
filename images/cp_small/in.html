@@ -1,0 +1,294 @@
+<!-- INSERT contents -->
+
+<h2>Introduction</h2>
+
+<p>I created LogWizard to help anyone that really needs to deal with logs in order to hunt down bugs and/or issues that happen somewhere else (read = at customer site).</p>
+
+<h2>Background</h2>
+
+<p>My team and I have created a rather large piece of software that is running on thousands of machines every day. Our customers, when they encounter an issue, send us their logs. The software is pretty big, we run 10+ threads, we log a lot of information, and parsing through it is pretty complex. Focusing on a certain issue (the customer&#39;s) has always been rather complicated.</p>
+
+<p>The first thing we wanted was to identify common issues/problems at the blink of an eye - open the log, and have some crafted views that would show us instantly details if and when a common issue occurred.</p>
+
+<p>The second thing was the exact opposite - if there are some issues that should never happen but did, we would want to know about it as well - once again, instantly.</p>
+
+<p><img height="527px" src="00_small.jpg" width="600px" /></p>
+
+<h2>Logging - as much as possible</h2>
+
+<p>When it comes to logging, it&#39;s a constant battle - as to what to log, and what not to log. You&#39;re never sure if the log message you&#39;re just about to turn off would end up being useful when run at the customer site. So why not log it? Unless that log message will clog your log file with tens of megabytes, it&#39;s probably a good idea to log it - and filter it out from within LogWizard (you can always go back to seing it at any time).</p>
+
+<p>You should always log as much as possible, and the use LogWizard to create views (filters) for what you want to focus on.</p>
+
+<p><img height="467px" src="01_small.jpg" width="600px" /></p>
+
+<h2>It&#39;s a Log Viewer - so lets create some Views!</h2>
+
+<p>At the core of LogWizard is the concept of a View. The View is just what the name suggests - a filtered subset of the existing log (file) that you are looking at. A View is a combination of Filters, each yielding some information. The Filters are OR-ed, and all the lines that match them are shown in the View. The first filter that matches gives the color of the line - it&#39;s a very easy way to distinguish the importance of each information.</p>
+
+<p><img height="408px" src="02_small.jpg" width="600px" /></p>
+
+<p>As you get used to LogWizard, you&#39;ll use the color filter more and more - it&#39;s sooo powerful! And as you&#39;ll see, editing/adding/removing filters is easy, thus you can tweak colors on/off as your application gets developed.</p>
+
+<p>What&#39;s more important is that as your focus changes, your Views don&#39;t have to get lost. Say you move to work on a different module of your application. Leave your existing View as is (maybe you&#39;ll need it later!), create a new View with what interests you at this time - and go from there.</p>
+
+<p>You can also create Views for rare-occuring events - just so that you are notified if they ever happen. This is a very important feature. For example, I have View that shows me User-Interface Notifications, Errors, and Fatal Errors. When I open a log from a customer, the first thing I look at is - how many lines are in that view? If too many, that&#39;s the first thing I check.</p>
+
+<p><img height="464px" src="03_small.jpg" width="600px" /></p>
+
+<p>Another View you could find useful is an overview of how the application is behaving. This is clearly dependant on your application - but you can log your application&#39;s start (version, when it started, where it was installed, etc.), the modules it&#39;s running, how much CPU is using, how your application ended and so on. When you get a log from your customer, this will give you just that - an overview of what you would want to ask the customer.</p>
+
+<p><img height="333px" src="04_small.jpg" width="600px" /></p>
+
+<h2>A deeper look at LogWizard - On/Off switches</h2>
+
+<p>I developed LogWizard to show you as much information as possible - at any time, you can choose to remove any clutter information you don&#39;t care about. Here are all the panes available in Log Wizard:</p>
+
+<p><img height="291px" src="05_small.jpg" width="600px" /></p>
+
+<ol>
+	<li><strong>Filter Pane (Left Pane) </strong>- This contains all the Filters in the Current View. It enables editing filters and to easily enable/disable them.</li>
+	<li><strong>Source Pane (Top Pane)</strong> - This contains information about the Log Source - the file name, its line syntax, and what template to apply (the template contains all the Views that are shown). These are all advanced topics - and you&#39;ll very seldom need them. One thing to note is when you want to change the name of the current View. You will toggle this Pane ON, and you will notice below the tabs, the label &quot;View&quot; and a text box with the name of the current View - just type in there whatever you want to change the View to. Then select a line in the View (in other words, move focus away from the text box), then toggle the Pane OFF.</li>
+	<li><strong>Current View Pane (Middle Pane)</strong> - This contains the current View.</li>
+	<li><strong>Full Log Pane (Right Pane)</strong> - This contains all lines in the Log. As an added bonus, you&#39;ll see the &quot;View(s)&quot; column - which for each line, shows what Views match it. It can be very useful when you find a culprit line and you want to see what happened before and after it.</li>
+</ol>
+
+<p>You will usually want to see at most two panes: <strong>The Current View Pane</strong> and/or <strong>The Full Log Pane</strong>. Say Hi to Toggling Hotkeys:</p>
+
+<ul>
+	<li><strong>&#39;F&#39;</strong> - Toggle Filter Pane ON/OFF</li>
+	<li><strong>&#39;S&#39;</strong> - Toggle Source Pane ON/OFF</li>
+	<li><strong>&#39;L&#39;</strong> - Toggle Current View Pane/Full Log Pane (rotate between CV-only &lt;-&gt; CV/FL &lt;-&gt; FL-only)</li>
+	<li><strong>&#39;T&#39;</strong> - Toggle Title ON/OFF. If you toggle this OFF, I remove the title + border + the lower pane where History and a few buttons are shown.</li>
+</ul>
+
+<p>(Note: Toggle Hotkeys work only when focus is not on a text box. Otherwise, they work as normal keys). Here&#39;s LogWizard with only the Current View Pane shown:</p>
+
+<p><img height="304px" src="06_small.jpg" width="600px" /></p>
+
+<h2>Editing Filters</h2>
+
+<p>To Edit the filters in the current View, first make sure the Filter Pane is shown (if it&#39;s not shown, toggle it on with &#39;F&#39; hotkey). When you drag-and-drop your first log file, it will have no views. The current View will show ALL lines. At this point, you&#39;ll want to filter what messages you want to see in this View.</p>
+
+<p>You can add as many Filters as you want. Filters are matched top-down, and the first filter that matches will decide the color of the line (this also means that the Filters are OR-ed - if any filter matches, it will be shown in the current View).</p>
+
+<p>To add/remove filters, you have the <strong>&#39;+&#39;</strong> and <strong>&#39;-&#39;</strong> buttons. Each Filter can consist of several lines. Each line can be:</p>
+
+<ul>
+	<li>a condition that needs to match</li>
+	<li>extra information about the filter (such as, color or if case-insensitive)</li>
+	<li>a comment (starts with #, it&#39;s ignored)<br />
+	&nbsp;</li>
+</ul>
+
+<p>In order for the filter to match, <strong>all</strong> conditions must yield true. So, within a filter, conditions are <strong>AND</strong>-ed. This also answers the question - what if I want my filters AND-ed? Simple, just make a new filter, and add there all the conditions you want AND-ed.</p>
+
+<p>Condition lines are like this:</p>
+
+<pre>
+$[part-of-line] [condition] [text]</pre>
+
+<p>$[part-of-line] can be any of :</p>
+
+<ul>
+	<li><strong>$level</strong> - the category of the message (such as, INFO, DEBUG, ERROR, etc)</li>
+	<li><strong>$msg</strong> - the message</li>
+	<li><strong>$file</strong> - the file where the message was logged from (only if you&#39;re logging this)</li>
+	<li><strong>$func</strong> - the function where the message was logged from (only if you&#39;re logging this)</li>
+	<li><strong>$class</strong> - the class where the message was logged from (only if you&#39;re logging this)</li>
+	<li><strong>$ctx1</strong>, <strong>$ctx2</strong>, <strong>$ctx3</strong> - extra context (depending on your log, you can decide to log extra information, such as - the module where the message is coming from)</li>
+</ul>
+
+<p>[condition] is any of:</p>
+
+<ul>
+	<li><strong>=</strong> - matches if it&#39;s equal to the given text</li>
+	<li><strong>!=</strong> - matches if it&#39;s not equal to the given text</li>
+	<li><strong>startswith</strong> - matches if it starts with the given text</li>
+	<li><strong>!startswith</strong> - matches if it doesn&#39;t start with the given text</li>
+	<li><strong>contains</strong> - matches if it contains the given text</li>
+	<li><strong>!contains</strong> - matches if it doesn&#39;t contain the given text</li>
+	<li><strong>any</strong> - matches if the text contains any of the subexpressions in the given text. Each subexpression is - separated by &quot;|&quot;. Example: $msg any Kaspersky|Norton|Avg</li>
+	<li><strong>none</strong> - matches if the text contains none of the subexpressions in the given text. Each subexpression is separated by &quot;|&quot;. Example: $msg none Kaspersky|Norton|Avg</li>
+</ul>
+
+<p>Extra information lines:</p>
+
+<ul>
+	<li><strong>color</strong> fg [bg]</li>
+	<li><strong>case-insensitive</strong></li>
+</ul>
+
+<p>The color line specifies what color to apply if the filter matches. The colors are in the <strong>#RRGGBB</strong> syntax, and some of the known colors are recognized. So you can say things like &#39;<em>color red</em>&#39;, &#39;<em>color darkred</em>&#39;, &#39;<em>color #ee0022</em>&#39;.</p>
+
+<p>By default, the filter is case-sensitive. If you want it to be case-insensitive, just add a line saying &#39;case-insensitive&#39;.</p>
+
+<p>Example:</p>
+
+<pre>
+case-insensitive  
+$msg contains kaspersky  
+$msg startswith process  
+color green</pre>
+
+<p>This will create a case-insensitive filter that matches all lines that start with &#39;<em>process</em>&#39; and contain &#39;<em>kaspersky</em>&#39;. It will show all lines matching it in green color.</p>
+
+<p>Finally, I added two more buttons: <strong>ToC</strong> / <strong>FromC</strong> (= To Clipboard / From Clipboard). ToC will copy ALL the filters from the current View to clipboard, and FromC will paste them. Say you have a colleague and you want to &quot;send him&quot; your current View - copy it to cliboard, send it to him. He&#39;ll paste it and voila - he&#39;s got the same View as yours!</p>
+
+<h2>Hotkeys</h2>
+
+<p>I&#39;m a developer - mouse is too slow. I want to do as much as possible with keys - hotkeys. As I&#39;ve explained above: the <strong>&#39;F&#39;</strong>, <strong>&#39;S&#39;</strong>,<strong> &#39;L</strong>&#39;, <strong>&#39;T&#39;</strong> - toggle the Panes ON/OFF.</p>
+
+<p>In addition to that:</p>
+
+<ul>
+	<li><strong>Ctrl-[Right]</strong>/ <strong>Ctrl-[Left]</strong> - navigate between the Views (tabs).</li>
+	<li><strong>Tab</strong>/<strong>Shift-Tab</strong> - navigates between Panes - rotates between Current View Pane, Full Log Pane, Filters Pane/Filters List, Filters Pane/Current Filter (text box)</li>
+	<li><strong>Ctrl-F</strong>/<strong>F3</strong>/<strong>Shift-F3</strong> - Search for text within the Current View</li>
+	<li><strong>Ctrl-G</strong> - Go to Line/Time</li>
+	<li><strong>Ctrl-C</strong>/<strong>Ctrl-Shift-C</strong> - Copy to Clipboard (copies Just the Message Part/The Full Line)</li>
+	<li><strong>+</strong>/<strong>-</strong> - Increase/decrease the Font size</li>
+	<li><strong>Ctrl-F2</strong> - Toggle Bookmark (Mark/Unmark line as Bookmark). Note: Bookmarks are shown in all Views.</li>
+	<li><strong>F2</strong>/<strong>Shift-F2</strong> - Go to Next/Previous Bookmark</li>
+	<li><strong>Ctrl-Shift-F2</strong> - Clear all Bookmarks.</li>
+	<li><strong>M</strong> - Toggle Showing Message-Only. Press it once to show you only the Message column (stripping away Line, Time, Date, etc. columns). Press it again to bring all columns back.</li>
+	<li><strong>F5</strong> - Refreshes the current View</li>
+	<li><strong>H</strong> - Toggle History. Press it once to get focus into the History combo, to allow you to select a previous log. Press it again to get back to where you were before.</li>
+</ul>
+
+<h2>Find</h2>
+
+<p>If you want to search within your Current View or Full Log, just press <strong>Ctrl-F</strong>. It&#39;s a rather straightforward dialog. One thing to note is that it will mark all lines containing the text with a slightly darker background, and you can also move to the next/previous line containing the text with <strong>F3</strong>/<strong>Shift-F3</strong>.</p>
+
+<p>Here&#39;s how searching for &quot;Lampetia&quot; would look like:</p>
+
+<p><img height="488px" src="07_small.jpg" width="600px" /></p>
+
+<p>To end the Find (thus, un-marking all lines containing the text), just press Escape.</p>
+
+<h2>Go To Line/Time</h2>
+
+<p><img height="421px" src="08_small.jpg" width="592px" /></p>
+
+<p>It&#39;s the usual Ctrl-G, with a few twists:</p>
+
+<ul>
+	<li>if it&#39;s a number, I interpret it as a line, and go to the closest line (since your current View might not contain the exact line)</li>
+	<li>if it&#39;s a time ([hh:]mm:ss[.fff]), I interpret it as a time, and go to the closest time there is</li>
+	<li>if it&#39;s prefixed by + or -, I interpret this as relative to the selected line. Such as &#39;+10&#39; goes 10 lines after, &#39;-3:5&#39; goes 3 minutes and 5 seconds below.</li>
+</ul>
+
+<h2>Real-time Monitoring</h2>
+
+<p>Of course, LogWizard monitors the file constantly. As soon as new information is appended to the log, you see it instantly. And you see which Views contain new lines (except for the current View) - the View names turn to bold - which is what you&#39;d expect.</p>
+
+<p><img height="174px" src="09_small.jpg" width="590px" /></p>
+
+<p>And if you re-write the file, LogWizard instantly restarts from scratch - thus, when debugging, you can monitor your log file - not having to worry each time the log gets re-written.</p>
+
+<p>Even more, I have added an option - &quot;<strong>Bring to Top on Restart</strong>&quot;. If you check it, it will bring LogWizard to the top when the log file gets re-written.</p>
+
+<p>The idea behind this is that usually, your IDE takes 100% of your screen, and for example, when debugging with Visual Studio, you&#39;ll look at Output window (which is docked somewhere). You would then resize LogWizard to be cover the Output Window, toggle the Title OFF, and everytime you restart debugging, LogWizard pops up where you would expect:</p>
+
+<p><img height="463px" src="10_small.jpg" width="600px" /></p>
+
+<p>This way, when debugging, you can easily focus on the information you want.</p>
+
+<h2>Remember My Settings / Auto-Saving</h2>
+
+<p>I&#39;ve made LogWizard to automatically save everything you do - any filter you modify, any view you add/delete/edit, everything is automatically saved and remembered.</p>
+
+<p>Every Pane you&#39;ve shown/hidden - LogWizard remembers it, and will show it in the same way next time you open it.</p>
+
+<p>The log file you viewed last is opened by default. All the log files you&#39;ve viewed - are kept in history. Change a setting, it&#39;s automatically saved.</p>
+
+<p>All you need to do is - focus on Viewing your logs.</p>
+
+<h2>The Hard Core stuff</h2>
+
+<p>You probably won&#39;t need to know the following - but just in case you&#39;re wondering...</p>
+
+<h3>LogWizard Templates (Advanced)</h3>
+
+<p>The Template decides the Views you see and what filters each View has. The default template is boringly called &#39;Default&#39;. You can however create more templates to match different types of logs.</p>
+
+<p>Say you work with 3 applications. Very likely, you&#39;ll want a template per application (each application will have its own Views).</p>
+
+<p>To create a new template, you will toggle the Source Pane ON (<strong>&#39;S&#39;</strong> hotkey) and press the <strong>&#39;+&#39;</strong> next to the template. When choosing a name for the template, note that the template with automatically match any files containing that name. So, &#39;Pidgin&#39; template will automatically match the &#39;Pidgin001.log&#39;.</p>
+
+<p>Most applications have a certain prefix to the log name. The template name should be just that prefix - an easy way for LogWizard to automatically select and use that template. Otherwise, once you&#39;re viewing a log, you can at any time select a different template.</p>
+
+<p>You can copy the full template to clipboard (&#39;ToC&#39;) or paste it from clipboard (&#39;FromC&#39;) - so that you can easily share the way you View your log with your colleagues.</p>
+
+<h3>Logging Syntax (Advanced)</h3>
+
+<p>Another thing you can specify for a Template, is the syntax of the log files that belong to it. By default, LogWizard tries to automatically guess the file syntax. In case it guesses it wrong, you can manually set it. The syntax goes like this:</p>
+
+<pre>
+$part-of-line1[start,end] $part-of-line2[start,end] ... $part-of-lineN[start,end] $msg[start]</pre>
+
+<p>$part-of-line can by any of:</p>
+
+<ul>
+	<li><strong>$msg</strong> - the logged message itself. This must always be last</li>
+	<li><strong>$date</strong> - Date of the message</li>
+	<li><strong>$time</strong> - Time of the message</li>
+	<li><strong>$level</strong> - Level (INFO, DEBUG, ERROR, FATAL, etc)</li>
+	<li><strong>$file</strong> - file:line the message was logged from (in case you&#39;re logging it)</li>
+	<li><strong>$func</strong> - Function the message was logged from (in case you&#39;re logging it)</li>
+	<li><strong>$class</strong> - Class the message was logged from (in case you&#39;re logging it)</li>
+	<li><strong>$ctx1</strong> - Extra contextual information about the message (in case you&#39;re logging it)</li>
+	<li><strong>$ctx2</strong> - Extra contextual information about the message (in case you&#39;re logging it)</li>
+	<li><strong>$ctx3</strong> - Extra contextual information about the message (in case you&#39;re logging it)</li>
+</ul>
+
+<p>The start and end can be any of:</p>
+
+<ul>
+	<li>a number (the index in line where the part-of-line starts or ends)</li>
+	<li>a string (where the part-of-line starts or ends). It is not considered part of the message.</li>
+</ul>
+
+<p>Example:</p>
+
+<pre>
+&quot;$time[0,12] $ctx1[13,10] $level[24,5] $class[&#39; &#39;,&#39;- &#39;] $msg&quot;</pre>
+
+<p>Will correctly parse this line:&nbsp;</p>
+
+<pre>
+&quot;11:06:13,944 main       DEBUG TNControls.ls_util - load_save - on_change not implemented - enable_vision&quot;</pre>
+
+<p>as</p>
+
+<ul>
+	<li>time = 11:06:13,944</li>
+	<li>ctx1 = main</li>
+	<li>level = DEBUG</li>
+	<li>class = TNControls.ls_util</li>
+	<li>msg = load_save - on_change not implemented - enable_vision</li>
+</ul>
+
+<h2>It&#39;s BETA</h2>
+
+<p>As of this time - 31st of August 2015 -, LogWizard is BETA. I welcome any feedback/suggestions you may have. In case you notice any issue, please let me know and I&#39;ll do my best to fix ASAP.</p>
+
+<p>There are quite a few things I want to improve in time:</p>
+
+<ul>
+	<li>Decrease memory footprint</li>
+	<li>Synchronizing colors: the Full Log should show the same color as the Current View - at this time, the Full Log shows the lines in black.</li>
+	<li>Alerts: certain filters should be able to cause alerts. For instance, when a certain very rare condition happens, you could be notified with a beep and/or visually.</li>
+	<li>More integration with Visual studio: such as, double click would take you to the file/line where the message was logged from.</li>
+	<li>Regex-es</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<h2>History</h2>
+
+<ul>
+	<li>1 sept - initial version</li>
+</ul>
+
+<p>&nbsp;</p>

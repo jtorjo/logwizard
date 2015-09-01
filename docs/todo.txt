@@ -1,4 +1,3 @@
-
 - synchronize colors : full log - synchronize with what the existing tab has and/or with all tabs? 
   (Sync: with current tab / with all tabs / none)
   when synchronizing -> specify how to show unsynchronized lines (like, darkgray?)
@@ -8,6 +7,12 @@
 - history - deleted files - ignore them
 
 - allow selecting several rows
+
+- find - case-insensitive + full words
+
+- decrease memory footprint - probably for ascii-encoded files, we can assume we don't need to always keep the byte buffer (file_text_reader)
+  note: since i'm always reading ahead (the parser), very likely i don't need to keep anything (buffer) in file_text_reader
+
 
 - move up/down -> sometimes it does not update the "Found" column
 
@@ -30,9 +35,7 @@
   - colors for bookmarks
   - if to add "*" to the tab title when something changed -> this forces refresh of all  tabs all the time
 
-- find - case-insensitive + full words
 
-- while the log is changing or the view is loading or so -> visually show that we're loading (like, in the view name -> show rotating "...")
 
 - bug - sometimes refreshing clears the current view (and the view remains cleared) - clicking it a few times will make it work again, but it's not cool
 
@@ -42,11 +45,24 @@
 
 
 
-- how easy is it to draw with custom font, or on special color?
 
 - allow editing the message (basically just for copying text) + allow "Exclude [text]" + "Include [text]" (on the Full log)
   -probably listen for keys -> listen for left or right arrow (and start moving cursor from there)
   -> another context menu -> "To Color" -> which converts lines containing that text to a given color
+
+- color filter
+  search "within existing lines" for certain condition -> just to give it a color.
+
+- open in Explorer (ctrl-o)
+
+- save view (ctrl-s) - normalize, allow selecting which rows to save (time, date, etc.)
+
+- allow using the surrounding lines - if a $part ends in a number, it's the prev/next line. 
+  Example: $msg2 (the second line from now), $time-3 (the time 3 lines above), $thread-12 (the thread 12 lines above)
+  This should be: 
+  if "apply to existing lines" is checked -> the lines are only taken from this view
+  if "apply to existing lines" is unchecked -> lines are taken from the log
+
 
 ------------- talk with Vidi
 - threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
@@ -56,7 +72,6 @@
   eventually think about root folder / and allow overriding it to your own
   integrate with github/bitbucket for open source projects? - look for api from github/bitbucket for retrieving files
   
-- live monitoring: maybe allow monitoring a condition, and somehow alert the user
 - find: allow showing only the lines that matched the find condition (toggle)
 - in visual studio -> if i'm at file:line -> go into logwizard and see what messages were written at this file:line -> create a view with those lines or something like that
 
@@ -64,11 +79,15 @@
 
 ---------------
 
-- decrease memory footprint - probably for ascii-encoded files, we can assume we don't need to always keep the byte buffer (file_text_reader)
 
 - at some point: all commands should be available via menu - which should be turned on/off
 
 
+
+
+
+---------------------------------------------------------------------------------
+- how easy is it to draw with custom font, or on special color?
 
 allow bolding or changing font or color or whatever of certain words/phrases
 like, color=red for all "could not" text
@@ -76,10 +95,7 @@ like, color=red for all "could not" text
 - (low) log_line_parser.read_to_end - normally, when a line is incomplete and reparsed, we should reapply filters on it, because the line might have become complete now,
   thus, some filters might match now. however, it's not a big deal - normally logs should be flushed correctly (several lines at a time)
 
-
-
 allow bolding or changing font or color or whatever of certain regexes?
 like, in the message - if X matches Y -> mark it in a certain color or so.
 case in point -> [time.stats] -> numbers -> if too big -> mark them in given color
 ---- at beginning, do this simple, like "match [time.stats] $number ms". Then, allow $number comparisons, like , $number > 100 => color something
-
