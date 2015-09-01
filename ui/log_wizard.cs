@@ -33,6 +33,7 @@ using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 using BrightIdeasSoftware;
 using LogWizard.context;
+using LogWizard.Properties;
 using LogWizard.ui;
 
 namespace LogWizard
@@ -195,6 +196,8 @@ namespace LogWizard
 
             viewsTab.DrawMode = TabDrawMode.OwnerDrawFixed;
             viewsTab.DrawItem += ViewsTabOnDrawItem;
+
+            update_topmost_image();
         }
 
         private Brush views_brush_ = new SolidBrush(Color.Black), views_something_changed_brush_ = new SolidBrush(Color.DarkRed);
@@ -480,17 +483,22 @@ namespace LogWizard
             on_new_file_log(file);
         }
 
+        private int extra_width_ = 0;
         private void toggle_title() {
             bool shown = FormBorderStyle == FormBorderStyle.Sizable;
             if (shown) {
+                extra_width_ = Width - RectangleToScreen(ClientRectangle).Width;
                 FormBorderStyle = FormBorderStyle.None;
                 main.Height += lower.Height;
                 Height += lower.Height;
+                Width += extra_width_;
             } else {
                 main.Height -= lower.Height;
                 Height -= lower.Height;
+                Width -= extra_width_;
                 FormBorderStyle = FormBorderStyle.Sizable;
             }
+            toggleTopmost.Visible = shown;
         }
 
         private void toggleFilters_Click(object sender, EventArgs e)
@@ -2120,5 +2128,18 @@ namespace LogWizard
             monitor.ContextMenu.Show(monitor, monitor.PointToClient(Cursor.Position) );
         }
 
+        private void toggleTopmost_Click(object sender, EventArgs e) {
+            TopMost = !TopMost;
+            update_topmost_image();
+        }
+
+
+        private void update_topmost_image() {
+            toggleTopmost.Image = TopMost ? Resources.bug : Resources.bug_disabled;
+        }
+
+        private void log_wizard_Load(object sender, EventArgs e) {
+
+        }
     }
 }

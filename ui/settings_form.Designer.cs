@@ -23,12 +23,13 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(settings_form));
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.viewLineCount = new System.Windows.Forms.CheckBox();
-            this.viewIndex = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.viewLine = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.viewIndex = new System.Windows.Forms.CheckBox();
+            this.viewLineCount = new System.Windows.Forms.CheckBox();
             this.close = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -55,15 +56,24 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Views";
             // 
-            // viewLineCount
+            // viewLine
             // 
-            this.viewLineCount.AutoSize = true;
-            this.viewLineCount.Location = new System.Drawing.Point(16, 50);
-            this.viewLineCount.Name = "viewLineCount";
-            this.viewLineCount.Size = new System.Drawing.Size(210, 21);
-            this.viewLineCount.TabIndex = 0;
-            this.viewLineCount.Text = "Show number of lines in View";
-            this.viewLineCount.UseVisualStyleBackColor = true;
+            this.viewLine.AutoSize = true;
+            this.viewLine.Location = new System.Drawing.Point(16, 95);
+            this.viewLine.Name = "viewLine";
+            this.viewLine.Size = new System.Drawing.Size(205, 21);
+            this.viewLine.TabIndex = 3;
+            this.viewLine.Text = "Show Log Line Index in View";
+            this.viewLine.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 24);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(355, 17);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "To Each View\'s name, append the following information";
             // 
             // viewIndex
             // 
@@ -75,24 +85,15 @@
             this.viewIndex.Text = "Show current index in View";
             this.viewIndex.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // viewLineCount
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(355, 17);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "To Each View\'s name, append the following information";
-            // 
-            // viewLine
-            // 
-            this.viewLine.AutoSize = true;
-            this.viewLine.Location = new System.Drawing.Point(16, 95);
-            this.viewLine.Name = "viewLine";
-            this.viewLine.Size = new System.Drawing.Size(205, 21);
-            this.viewLine.TabIndex = 3;
-            this.viewLine.Text = "Show Log Line Index in View";
-            this.viewLine.UseVisualStyleBackColor = true;
+            this.viewLineCount.AutoSize = true;
+            this.viewLineCount.Location = new System.Drawing.Point(16, 50);
+            this.viewLineCount.Name = "viewLineCount";
+            this.viewLineCount.Size = new System.Drawing.Size(210, 21);
+            this.viewLineCount.TabIndex = 0;
+            this.viewLineCount.Text = "Show number of lines in View";
+            this.viewLineCount.UseVisualStyleBackColor = true;
             // 
             // close
             // 
@@ -113,6 +114,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "settings_form";
             this.Text = "Settings";

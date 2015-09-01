@@ -21,7 +21,9 @@ namespace LogWizard {
 
         // if true, synchronize all views with existing view
         // (that is, when we selected line changes, the other views should go to the closest line to the selected line in this view)
-        public bool sync_all_views = true;
+        //
+        // 1.0.56+ - don't have it by default, for large files (20+Mb) it's slow
+        public bool sync_all_views = false;
         // if true, synchronize Full Log with existing view (that is, the selected line)
         public bool sync_full_log_view = true;
 
@@ -35,7 +37,7 @@ namespace LogWizard {
             show_view_selected_index = sett.get("show_view_selected_index", "1") != "0";
             show_view_selected_line = sett.get("show_view_selected_line", "1") != "0";
 
-            sync_all_views = sett.get("sync_all_views", "1") != "0";
+            sync_all_views = sett.get("sync_all_views", "0") != "0";
             sync_full_log_view = sett.get("sync_full_log_view", "1") != "0";
         }
 

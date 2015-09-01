@@ -250,6 +250,8 @@
   <ItemGroup>
     <None Include="docs\history.txt" />
     <None Include="docs\todo.txt" />
+    <None Include="icons\bug.png" />
+    <None Include="icons\bug_disabled.png" />
     <Content Include="logwizard.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

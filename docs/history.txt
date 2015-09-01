@@ -4,13 +4,14 @@
     --> this is on a file by file basis -> you would turn this on for your log files written during debugging
 - apply to existing lines
 
-- by default -> don't sync views (for large files -> it's slow')
 
-- intro (github) -> the images should not show tn2.
+1.0.57
+- toggle topmost works - via button (only when title is not shown)
 
 
-1.0.56
+1.0.56e
 - 'T' - toggle title (remove border + lower pane)
+- by default -> don't sync views (for large files -> it's slow')
 
 
 1.0.54

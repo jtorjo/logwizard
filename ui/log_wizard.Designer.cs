@@ -68,6 +68,7 @@
             this.viewToClipboard = new System.Windows.Forms.Button();
             this.contextFromClipboard = new System.Windows.Forms.Button();
             this.contextToClipboard = new System.Windows.Forms.Button();
+            this.toggleTopmost = new System.Windows.Forms.PictureBox();
             this.settingsCtrl = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.main = new System.Windows.Forms.SplitContainer();
@@ -96,6 +97,7 @@
             this.lower = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).BeginInit();
             this.filterContextMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.main)).BeginInit();
             this.main.Panel1.SuspendLayout();
             this.main.Panel2.SuspendLayout();
@@ -119,7 +121,7 @@
             // delFilter
             // 
             this.delFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.delFilter.Location = new System.Drawing.Point(239, 508);
+            this.delFilter.Location = new System.Drawing.Point(239, 501);
             this.delFilter.Name = "delFilter";
             this.delFilter.Size = new System.Drawing.Size(24, 23);
             this.delFilter.TabIndex = 10;
@@ -131,7 +133,7 @@
             // addFilter
             // 
             this.addFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addFilter.Location = new System.Drawing.Point(211, 508);
+            this.addFilter.Location = new System.Drawing.Point(211, 501);
             this.addFilter.Name = "addFilter";
             this.addFilter.Size = new System.Drawing.Size(24, 23);
             this.addFilter.TabIndex = 9;
@@ -168,7 +170,7 @@
             this.filterCtrl.ShowFilterMenuOnRightClick = false;
             this.filterCtrl.ShowGroups = false;
             this.filterCtrl.ShowImagesOnSubItems = true;
-            this.filterCtrl.Size = new System.Drawing.Size(258, 348);
+            this.filterCtrl.Size = new System.Drawing.Size(258, 341);
             this.filterCtrl.TabIndex = 4;
             this.filterCtrl.UseAlternatingBackColors = true;
             this.filterCtrl.UseCellFormatEvents = true;
@@ -270,7 +272,7 @@
             this.curFilterCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.curFilterCtrl.Enabled = false;
-            this.curFilterCtrl.Location = new System.Drawing.Point(44, 374);
+            this.curFilterCtrl.Location = new System.Drawing.Point(44, 367);
             this.curFilterCtrl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.curFilterCtrl.Multiline = true;
             this.curFilterCtrl.Name = "curFilterCtrl";
@@ -283,7 +285,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1, 377);
+            this.label2.Location = new System.Drawing.Point(1, 370);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(33, 15);
             this.label2.TabIndex = 2;
@@ -513,7 +515,7 @@
             // viewFromClipboard
             // 
             this.viewFromClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.viewFromClipboard.Location = new System.Drawing.Point(45, 508);
+            this.viewFromClipboard.Location = new System.Drawing.Point(45, 501);
             this.viewFromClipboard.Name = "viewFromClipboard";
             this.viewFromClipboard.Size = new System.Drawing.Size(52, 23);
             this.viewFromClipboard.TabIndex = 14;
@@ -525,7 +527,7 @@
             // viewToClipboard
             // 
             this.viewToClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.viewToClipboard.Location = new System.Drawing.Point(3, 508);
+            this.viewToClipboard.Location = new System.Drawing.Point(3, 501);
             this.viewToClipboard.Name = "viewToClipboard";
             this.viewToClipboard.Size = new System.Drawing.Size(38, 23);
             this.viewToClipboard.TabIndex = 13;
@@ -556,6 +558,21 @@
             this.contextToClipboard.UseVisualStyleBackColor = true;
             this.contextToClipboard.Click += new System.EventHandler(this.contextToClipboard_Click);
             // 
+            // toggleTopmost
+            // 
+            this.toggleTopmost.BackColor = System.Drawing.Color.Transparent;
+            this.toggleTopmost.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.toggleTopmost.Image = global::LogWizard.Properties.Resources.bug;
+            this.toggleTopmost.Location = new System.Drawing.Point(0, 0);
+            this.toggleTopmost.Name = "toggleTopmost";
+            this.toggleTopmost.Size = new System.Drawing.Size(24, 24);
+            this.toggleTopmost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.toggleTopmost.TabIndex = 17;
+            this.toggleTopmost.TabStop = false;
+            this.tip.SetToolTip(this.toggleTopmost, "Click it to toggle LogWizard\'s TopMost state");
+            this.toggleTopmost.Visible = false;
+            this.toggleTopmost.Click += new System.EventHandler(this.toggleTopmost_Click);
+            // 
             // settingsCtrl
             // 
             this.settingsCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -584,7 +601,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.main.IsSplitterFixed = true;
-            this.main.Location = new System.Drawing.Point(2, 1);
+            this.main.Location = new System.Drawing.Point(2, 0);
             this.main.Name = "main";
             // 
             // main.Panel1
@@ -594,7 +611,7 @@
             // main.Panel2
             // 
             this.main.Panel2.Controls.Add(this.sourceUp);
-            this.main.Size = new System.Drawing.Size(1258, 533);
+            this.main.Size = new System.Drawing.Size(1258, 534);
             this.main.SplitterDistance = 273;
             this.main.TabIndex = 4;
             // 
@@ -609,7 +626,7 @@
             this.leftPane.Location = new System.Drawing.Point(-1, 4);
             this.leftPane.Name = "leftPane";
             this.leftPane.SelectedIndex = 0;
-            this.leftPane.Size = new System.Drawing.Size(277, 531);
+            this.leftPane.Size = new System.Drawing.Size(277, 532);
             this.leftPane.TabIndex = 13;
             // 
             // tabPage2
@@ -626,7 +643,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 24);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(269, 503);
+            this.tabPage2.Size = new System.Drawing.Size(269, 504);
             this.tabPage2.TabIndex = 0;
             this.tabPage2.Text = "Filters";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -636,7 +653,7 @@
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox1.AutoSize = true;
             this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(44, 482);
+            this.checkBox1.Location = new System.Drawing.Point(44, 475);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(144, 19);
             this.checkBox1.TabIndex = 12;
@@ -650,7 +667,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(269, 505);
+            this.tabPage3.Size = new System.Drawing.Size(269, 506);
             this.tabPage3.TabIndex = 1;
             this.tabPage3.Text = "By Threads / By Context";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -679,7 +696,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(269, 505);
+            this.tabPage4.Size = new System.Drawing.Size(269, 506);
             this.tabPage4.TabIndex = 2;
             this.tabPage4.Text = "Notes / Bookmarks";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -721,7 +738,7 @@
             // sourceUp.Panel2
             // 
             this.sourceUp.Panel2.Controls.Add(this.filteredLeft);
-            this.sourceUp.Size = new System.Drawing.Size(981, 533);
+            this.sourceUp.Size = new System.Drawing.Size(981, 534);
             this.sourceUp.SplitterDistance = 65;
             this.sourceUp.TabIndex = 0;
             // 
@@ -771,7 +788,7 @@
             this.filteredLeft.Panel1.Controls.Add(this.delFilteredView);
             this.filteredLeft.Panel1.Controls.Add(this.newFilteredView);
             this.filteredLeft.Panel1.Controls.Add(this.viewsTab);
-            this.filteredLeft.Size = new System.Drawing.Size(981, 464);
+            this.filteredLeft.Size = new System.Drawing.Size(981, 465);
             this.filteredLeft.SplitterDistance = 558;
             this.filteredLeft.TabIndex = 0;
             // 
@@ -786,7 +803,7 @@
             this.viewsTab.Location = new System.Drawing.Point(0, 3);
             this.viewsTab.Name = "viewsTab";
             this.viewsTab.SelectedIndex = 0;
-            this.viewsTab.Size = new System.Drawing.Size(553, 462);
+            this.viewsTab.Size = new System.Drawing.Size(553, 463);
             this.viewsTab.TabIndex = 0;
             this.viewsTab.SelectedIndexChanged += new System.EventHandler(this.filteredViews_SelectedIndexChanged);
             this.viewsTab.DragDrop += new System.Windows.Forms.DragEventHandler(this.filteredViews_DragDrop);
@@ -798,7 +815,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(545, 434);
+            this.tabPage1.Size = new System.Drawing.Size(545, 435);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -813,7 +830,7 @@
             this.dropHere.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.dropHere.Location = new System.Drawing.Point(8, 0);
             this.dropHere.Name = "dropHere";
-            this.dropHere.Size = new System.Drawing.Size(534, 431);
+            this.dropHere.Size = new System.Drawing.Size(534, 432);
             this.dropHere.TabIndex = 0;
             this.dropHere.Text = "Drop it Like it\'s Hot!\r\nJust drop a file here, and get to work!\r\n";
             this.dropHere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -893,6 +910,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1255, 568);
+            this.Controls.Add(this.toggleTopmost);
             this.Controls.Add(this.main);
             this.Controls.Add(this.lower);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -903,9 +921,11 @@
             this.Deactivate += new System.EventHandler(this.log_wizard_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LogWizard_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LogNinja_FormClosed);
+            this.Load += new System.EventHandler(this.log_wizard_Load);
             this.SizeChanged += new System.EventHandler(this.log_wizard_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).EndInit();
             this.filterContextMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).EndInit();
             this.main.Panel1.ResumeLayout(false);
             this.main.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.main)).EndInit();
@@ -999,6 +1019,7 @@
         private System.Windows.Forms.Button contextToClipboard;
         private System.Windows.Forms.Button monitor;
         private System.Windows.Forms.Panel lower;
+        private System.Windows.Forms.PictureBox toggleTopmost;
     }
 }
 

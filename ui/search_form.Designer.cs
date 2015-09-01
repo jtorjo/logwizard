@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(search_form));
             this.label1 = new System.Windows.Forms.Label();
             this.txt = new System.Windows.Forms.TextBox();
             this.mark = new System.Windows.Forms.CheckBox();
@@ -138,6 +139,7 @@
             this.Controls.Add(this.txt);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "search_form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
