@@ -52,7 +52,8 @@ namespace LogWizard
         private byte[] full_log_buffer_ = null;
         private ulong full_log_read_bytes_ = 0;
 
-
+        private bool has_it_been_rewritten_ = false;
+        
         public file_text_reader(string file) {
             try {
                 // get absolute path - normally, this should be the absolute path, but just to be sure
@@ -155,9 +156,22 @@ namespace LogWizard
             }
         }
 
+        public override bool has_it_been_rewritten {
+            get {
+                bool has;
+                lock (this) {
+                    has = has_it_been_rewritten_;
+                    has_it_been_rewritten_ = false;
+                }
+                return has;
+            }
+        }
+
         // file got rewritten from scratch - note: we preserve the log syntax
         private void on_rewritten_file() {
+            logger.Info("[file] file rewritten - " + file_);
             lock (this) {
+                has_it_been_rewritten_ = true;
                 full_log_read_bytes_ = 0;
                 // restart from beginning
                 pos_ = 0;

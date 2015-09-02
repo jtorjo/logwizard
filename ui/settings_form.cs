@@ -18,12 +18,20 @@ namespace LogWizard.ui {
             viewLineCount.Checked = app.inst.show_view_line_count;
             viewLine.Checked = app.inst.show_view_selected_line;
             viewIndex.Checked = app.inst.show_view_selected_index;
+
+            toggleTopmost.Checked = app.inst.show_topmost_toggle;
+            bringToTopOnRestart.Checked = app.inst.bring_to_top_on_restart;
+            makeTopmostOnRestart.Checked = app.inst.make_topmost_on_restart;
+            makeTopmostOnRestart.Enabled = bringToTopOnRestart.Checked;
         }
 
         private void save() {
             app.inst.show_view_line_count = viewLineCount.Checked;
             app.inst.show_view_selected_line = viewLine.Checked;
             app.inst.show_view_selected_index = viewIndex.Checked;
+            app.inst.bring_to_top_on_restart = bringToTopOnRestart.Checked;
+            app.inst.make_topmost_on_restart = makeTopmostOnRestart.Checked;
+
             app.inst.save();
         }
 
@@ -34,6 +42,10 @@ namespace LogWizard.ui {
         private void close_Click(object sender, EventArgs e) {
             save();
             DialogResult = DialogResult.OK;
+        }
+
+        private void bringToTopOnRestart_CheckedChanged(object sender, EventArgs e) {
+            makeTopmostOnRestart.Enabled = bringToTopOnRestart.Checked;
         }
     }
 }

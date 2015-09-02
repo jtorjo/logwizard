@@ -372,5 +372,17 @@ namespace LogWizard {
             return s;
         }
 
+        public static void bring_to_top(Form form) {
+            form.BringToFront();
+            form.TopMost = true;
+            form.TopMost = false;
+        }
+
+        // ... just setting .TopMost sometimes does not work
+        public static void bring_to_topmost(Form form) {
+            form.BringToFront();
+            form.TopMost = true;
+        }
+
     }
 }

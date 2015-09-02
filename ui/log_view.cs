@@ -211,6 +211,8 @@ namespace LogWizard
         private DateTime wait_for_filter_to_read_from_new_log_ = DateTime.MinValue;
         private const double WAIT_FOR_NEW_LOG_MAX_MS = 3000;
 
+        private bool pad_name_on_left_ = false;
+
         public log_view(log_wizard parent, string name)
         {
             InitializeComponent();
@@ -596,6 +598,9 @@ namespace LogWizard
 
             string tab_text = filter_changed_ ? name + (x_of_y_title != "" ? " (?)" : "") : name + x_of_y_title;
             tab_text += "  ";
+            if (pad_name_on_left_)
+                // this is so that the "Toggle topmost" does not obscure the first tab's name
+                tab_text = "    " + tab_text;
             if (tab_parent != null) {
                 if ( tab_parent.Text != tab_text)
                     tab_parent.Text = tab_text;
@@ -963,6 +968,16 @@ namespace LogWizard
 
         public int filter_row_count {
             get { return filter_.row_count; }
+        }
+
+        public bool pad_name_on_left {
+            get { return pad_name_on_left_; }
+            set {
+                if (pad_name_on_left_ != value) {
+                    pad_name_on_left_ = value;
+                    update_x_of_y();
+                }
+            }
         }
 
 

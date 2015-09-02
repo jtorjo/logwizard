@@ -12,6 +12,9 @@ namespace LogWizard {
             get { return inst_; }
         }
 
+        // ... for file-to-file settings
+        private string selected_log_file_name_ = "";
+
         // if true, we show how many lines each view has
         public bool show_view_line_count = true;
         // if true, we show the selected line index of each view
@@ -31,25 +34,75 @@ namespace LogWizard {
         // if false, I refresh only the current view
         public bool instant_refresh_all_views = true;
 
-        public void load() {
-            var sett = Program.sett;
-            show_view_line_count = sett.get("show_view_line_count", "1") != "0";
-            show_view_selected_index = sett.get("show_view_selected_index", "1") != "0";
-            show_view_selected_line = sett.get("show_view_selected_line", "1") != "0";
+        // if true, we show the Topmost button (top-left)
+        public bool show_topmost_toggle = false;
 
-            sync_all_views = sett.get("sync_all_views", "0") != "0";
-            sync_full_log_view = sett.get("sync_full_log_view", "1") != "0";
+        // file-by-file
+        public bool bring_to_top_on_restart = false;
+        public bool make_topmost_on_restart = false;
+
+        public void set_log_file(string file) {
+            if (selected_log_file_name_ != "") 
+                // save old settings
+                load_save_file_by_file(false);
+
+            selected_log_file_name_ = file;
+            load_save_file_by_file(true);
+        }
+
+        private void load_save_file_by_file(bool load) {
+            var sett = Program.sett;
+            if (load) {
+                string[] words = sett.get("settings_by_file." + selected_log_file_name_).Split(',');
+                bring_to_top_on_restart = false;
+                make_topmost_on_restart = true; // ... default
+                foreach (string word in words)
+                    switch (word) {
+                    case "bring_to_top_on_restart":
+                        bring_to_top_on_restart = true;
+                        break;
+                    case "not_make_topmost_on_restart":
+                        make_topmost_on_restart = false;
+                        break;
+                    }
+            } else {
+                string words = "";
+                if (bring_to_top_on_restart)
+                    words += "bring_to_top_on_restart,";
+                if (!make_topmost_on_restart)
+                    words += "not_make_topmost_on_restart,";
+                sett.set("settings_by_file." + selected_log_file_name_, words);
+                sett.save();
+            }
+        }
+
+        private void load_save(bool load, ref bool prop, string name, bool default_ = false) {
+            var sett = Program.sett;
+            if (load)
+                prop = sett.get(name, default_ ? "1" : "0") != "0";
+            else 
+                sett.set(name, prop ? "1" : "0");
+        }
+
+        private void load_save(bool load) {
+            load_save(load, ref show_view_line_count, "show_view_line_count", true);
+            load_save(load, ref show_view_selected_line, "show_view_selected_line", true);
+            load_save(load, ref show_view_selected_index, "show_view_selected_index", true);
+            load_save(load, ref sync_all_views, "sync_all_views");
+            load_save(load, ref sync_full_log_view, "sync_full_log_view", true);
+
+            load_save(load, ref show_topmost_toggle, "show_topmost_toggle");
+        }
+
+        public void load() {
+            load_save(true);
         }
 
         public void save() {
+            load_save(false);
+            if ( selected_log_file_name_ != "")
+                load_save_file_by_file(false);
             var sett = Program.sett;
-            sett.set("show_view_line_count", show_view_line_count ? "1" : "0");
-            sett.set("show_view_selected_line", show_view_selected_line ? "1" : "0");
-            sett.set("show_view_selected_index", show_view_selected_index ? "1" : "0");
-
-            sett.set("sync_full_log_view", "" + (sync_full_log_view ? "1" : "0"));
-            sett.set("sync_all_views", "" + (sync_all_views ? "1" : "0"));
-
             sett.save();            
         }
 

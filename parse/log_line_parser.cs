@@ -515,14 +515,19 @@ namespace LogWizard
             if (relative_syntax_)
                 return parse_relative_line(l, pos_in_log);
 
-            bool normal_line = parse_time(l, idx_in_line_[(int) info_type.time]) && parse_date(l, idx_in_line_[(int) info_type.date]);
-            if ( idx_in_line_[ (int)info_type.time].Item1 < 0 && idx_in_line_[ (int)info_type.date].Item1 < 0)
-                // in this case, we don't have time & date - see that the level matches
-                // note: we can't rely on level too much, since the user might have additional levels that our defaults - so we could get false negatives
-                normal_line = parse_level(l, idx_in_line_[(int) info_type.level]);
+            try {
+                bool normal_line = parse_time(l, idx_in_line_[(int) info_type.time]) && parse_date(l, idx_in_line_[(int) info_type.date]);
+                if (idx_in_line_[(int) info_type.time].Item1 < 0 && idx_in_line_[(int) info_type.date].Item1 < 0)
+                    // in this case, we don't have time & date - see that the level matches
+                    // note: we can't rely on level too much, since the user might have additional levels that our defaults - so we could get false negatives
+                    normal_line = parse_level(l, idx_in_line_[(int) info_type.level]);
 
-            line new_ = new line(pos_in_log, l, normal_line ? idx_in_line_ : line_contains_msg_only_);
-            return new_;
+                line new_ = new line(pos_in_log, l, normal_line ? idx_in_line_ : line_contains_msg_only_);
+                return new_;
+            } catch(Exception e) {
+                logger.Error("invalid line: " + l);
+                return new line(pos_in_log, l, line_contains_msg_only_);
+            }
         }
 
         public void Dispose() {

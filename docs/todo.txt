@@ -1,3 +1,5 @@
+- apply to existing lines
+
 - synchronize colors : full log - synchronize with what the existing tab has and/or with all tabs? 
   (Sync: with current tab / with all tabs / none)
   when synchronizing -> specify how to show unsynchronized lines (like, darkgray?)

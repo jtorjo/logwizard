@@ -198,6 +198,7 @@ namespace LogWizard
             viewsTab.DrawItem += ViewsTabOnDrawItem;
 
             update_topmost_image();
+            update_toggle_topmost_visibility();
         }
 
         private Brush views_brush_ = new SolidBrush(Color.Black), views_something_changed_brush_ = new SolidBrush(Color.DarkRed);
@@ -498,7 +499,20 @@ namespace LogWizard
                 Width -= extra_width_;
                 FormBorderStyle = FormBorderStyle.Sizable;
             }
-            toggleTopmost.Visible = shown;
+
+            update_toggle_topmost_visibility();
+        }
+
+        private void update_toggle_topmost_visibility() {
+            bool show_toggle_topmost = (FormBorderStyle == FormBorderStyle.None) || app.inst.show_topmost_toggle || TopMost;
+            toggleTopmost.Visible = show_toggle_topmost;
+            var first_tab = viewsTab.TabCount >= 0 ? log_view_for_tab(0) : null;
+            if (first_tab != null)
+                first_tab.pad_name_on_left = show_toggle_topmost;            
+        }
+
+        private void update_topmost_image() {
+            toggleTopmost.Image = TopMost ? Resources.bug : Resources.bug_disabled;
         }
 
         private void toggleFilters_Click(object sender, EventArgs e)
@@ -806,8 +820,22 @@ namespace LogWizard
                 update_msg_details(false);
                 refresh_filter_found();
             }
+
+            if (text_.has_it_been_rewritten)
+                on_rewritten_log();
         }
 
+        private void on_rewritten_log() {
+            if (app.inst.bring_to_top_on_restart) {
+                if (app.inst.make_topmost_on_restart) {
+                    util.bring_to_topmost(this);
+                    update_topmost_image();
+                    update_toggle_topmost_visibility();
+                }
+                else
+                    util.bring_to_top(this);
+            }
+        }
 
         private void update_msg_details(bool force_update) {
             if (selected_view() != null && msg_details_ != null) {
@@ -1150,8 +1178,10 @@ namespace LogWizard
         }
 
         private void on_log_listory_changed() {
-            if ( logHistory.SelectedIndex >= 0)
-                history_select(history_[ logHistory.SelectedIndex].name);
+            if (logHistory.SelectedIndex >= 0) {
+                history_select(history_[logHistory.SelectedIndex].name);
+                app.inst.set_log_file( history_[ logHistory.SelectedIndex].name );
+            }
 
             sourceTypeCtrl.SelectedIndex = history_[ logHistory.SelectedIndex].type;
             sourceNameCtrl.Text = history_[ logHistory.SelectedIndex].name;
@@ -2133,10 +2163,6 @@ namespace LogWizard
             update_topmost_image();
         }
 
-
-        private void update_topmost_image() {
-            toggleTopmost.Image = TopMost ? Resources.bug : Resources.bug_disabled;
-        }
 
         private void log_wizard_Load(object sender, EventArgs e) {
 

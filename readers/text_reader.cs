@@ -50,6 +50,11 @@ namespace LogWizard
             get { return ""; }
         }
 
+        // 1.0.57+ - if true, the file has been rewritten from scratch
+        public virtual bool has_it_been_rewritten {
+            get { return false; }
+        }
+
         protected bool disposed {
             get { return disposed_; }
         }

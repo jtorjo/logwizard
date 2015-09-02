@@ -1,8 +1,13 @@
 
-- bring to top on restart (with button to switch on/off - or 'R' hotkey) - the button should be shown only when this is available - it should be our icon!
-   + bring to top + make topmost
-    --> this is on a file by file basis -> you would turn this on for your log files written during debugging
-- apply to existing lines
+- test on deleted settings file (do we get exception)
+
+
+1.0.58
+- toggle topmost - allow showing even if title is shown as well
+- fix: filter buttons not shown properly
+- settings by file - easy to have settings by file (bring to top on restart/make topmost no restart)
+- bring to top on restart - works as expected, but when another app is full-screen, 
+  sometimes TopMost=true is ignored
 
 
 1.0.57
