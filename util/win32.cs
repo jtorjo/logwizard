@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 
 namespace LogWizard {
 
@@ -59,5 +60,40 @@ namespace LogWizard {
         public static bool SetMousePos(int x, int y) {
             return SetCursorPos(x, y);
         }
+
+        [DllImport("user32.dll", SetLastError = true)] 
+        public static extern bool BringWindowToTop(IntPtr hWnd); 
+        [DllImport("user32")]
+        public static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+
+        const UInt32 SWP_NOSIZE = 0x0001;
+
+        const UInt32 SWP_NOMOVE = 0x0002;
+        const UInt32 TOPMOST_FLAGS = SWP_NOMOVE | SWP_NOSIZE;
+
+        public static void MakeTopMost(Form form) {
+            IntPtr hWnd = form.Handle;
+
+            // backup - hopefully we don't need to do this, but just in case
+            BringWindowToTop(hWnd);
+            const int SW_SHOW = 5;
+            ShowWindow(hWnd, SW_SHOW);
+
+            SetForegroundWindow(hWnd);
+            SetForegroundWindow(hWnd);
+
+            SetWindowPos(form.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+        }
+
     }
 }

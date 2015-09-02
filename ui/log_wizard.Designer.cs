@@ -664,10 +664,10 @@
             // 
             this.tabPage3.Controls.Add(this.listBox1);
             this.tabPage3.Controls.Add(this.label6);
-            this.tabPage3.Location = new System.Drawing.Point(4, 24);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(269, 499);
+            this.tabPage3.Size = new System.Drawing.Size(269, 501);
             this.tabPage3.TabIndex = 1;
             this.tabPage3.Text = "By Threads / By Context";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -696,7 +696,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(269, 506);
+            this.tabPage4.Size = new System.Drawing.Size(269, 501);
             this.tabPage4.TabIndex = 2;
             this.tabPage4.Text = "Notes / Bookmarks";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -918,10 +918,12 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "log_wizard";
             this.Text = "Log Wizard";
+            this.Activated += new System.EventHandler(this.log_wizard_Activated);
             this.Deactivate += new System.EventHandler(this.log_wizard_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LogWizard_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LogNinja_FormClosed);
             this.Load += new System.EventHandler(this.log_wizard_Load);
+            this.LocationChanged += new System.EventHandler(this.log_wizard_LocationChanged);
             this.SizeChanged += new System.EventHandler(this.log_wizard_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).EndInit();
             this.filterContextMenu.ResumeLayout(false);

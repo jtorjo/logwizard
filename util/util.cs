@@ -374,15 +374,27 @@ namespace LogWizard {
 
         public static void bring_to_top(Form form) {
             form.BringToFront();
+            form.Focus();
+            form.Activate();
+
             form.TopMost = true;
             form.TopMost = false;
         }
 
         // ... just setting .TopMost sometimes does not work
         public static void bring_to_topmost(Form form) {
+            form.Activated += FormOnActivated;
+
             form.BringToFront();
-            form.TopMost = true;
+            form.Focus();
+            form.Activate();
         }
 
+        private static void FormOnActivated(object sender, EventArgs eventArgs) {
+            var form = sender as Form;
+            form.Activated -= FormOnActivated;
+            form.TopMost = true;
+            win32.MakeTopMost(form);
+        }
     }
 }

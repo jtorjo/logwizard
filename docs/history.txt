@@ -1,6 +1,10 @@
 
 - test on deleted settings file (do we get exception)
 
+1.0.60a
+- added application manifest, to request admin credentials -> for topmost to work correctly (still did not work)
+- fixed setting topmost - forcing it via win32 messages
+
 
 1.0.58
 - toggle topmost - allow showing even if title is shown as well

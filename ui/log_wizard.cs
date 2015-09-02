@@ -2032,9 +2032,6 @@ namespace LogWizard
             app.inst.save();
         }
 
-        private void log_wizard_SizeChanged(object sender, EventArgs e) {
-            update_msg_details(true);
-        }
 
         private void viewToClipboard_Click(object sender, EventArgs e) {
             ui_context cur = cur_context();
@@ -2165,6 +2162,20 @@ namespace LogWizard
 
 
         private void log_wizard_Load(object sender, EventArgs e) {
+
+        }
+
+        private void log_wizard_SizeChanged(object sender, EventArgs e) {
+            update_msg_details(true);
+            // FIXME remember position - if Visible
+        }
+
+        private void log_wizard_LocationChanged(object sender, EventArgs e) {
+            // FIXME remember position - if Visible
+
+        }
+
+        private void log_wizard_Activated(object sender, EventArgs e) {
 
         }
     }
