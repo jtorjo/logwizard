@@ -277,6 +277,7 @@
     <None Include="icons\bug.png" />
     <None Include="icons\bug_disabled.png" />
     <Content Include="app.ico" />
+    <Content Include="icons\app.ico" />
     <Content Include="logwizard.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

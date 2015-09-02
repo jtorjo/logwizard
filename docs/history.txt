@@ -1,4 +1,7 @@
 
+1.0.62
+- made the icon much smaller
+
 
 1.0.61
 - fix: test on deleted settings file (we used to have problems)
