@@ -18,6 +18,11 @@
 
 - move up/down -> sometimes it does not update the "Found" column
 
+- save sets of location/sizes (ctrl-shift-Number -> save, ctrl-Number -> use (toggle)). if full screen, we should just note that
+  also, i should save existing location - however if it matches an already saved location, don't save
+  perhaps save a few more things -> like whether i have title toggled/and am topmost? TOTHINK
+
+
 - alert -> allow showing a msg, beep, etc. when a certain msg is found
   for instance "same scrape" -> show a message when that happens
   or, when "overridden theme" gets written (for alerts - force refresh of the view all the time)
