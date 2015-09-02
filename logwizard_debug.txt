@@ -1,102 +1,14 @@
 font_names=Consolas,Courier New,Terminal,Monoid,Tahoma,Arial
 
 context_count=2
+
 context.0.name=Default
 context.0.auto_match=
 context.0.show_filter=0
 context.0.show_source=1
 context.0.show_fulllog=1
 context.0.show_tips=1
-context.0.view_count=7
-context.0.view0.name=Mostly all
-context.0.view0.filter_count=4
-
-context.0.view0.filt0.enabled=1
-context.0.view0.filt0.dimmed=0
-context.0.view0.filt0.text="$level = ERROR\r\ncolor red"
-context.0.view0.filt1.enabled=1
-context.0.view0.filt1.dimmed=0
-context.0.view0.filt1.text="$level = FATAL\r\ncolor darkred"
-context.0.view0.filt2.enabled=1
-context.0.view0.filt2.dimmed=0
-context.0.view0.filt2.text="$msg contains has theme\r\ncolor green"
-context.0.view1.name=Errors+Notif
-context.0.view1.filter_count=3
-context.0.view1.filt0.enabled=1
-context.0.view1.filt0.dimmed=0
-context.0.view1.filt0.text="$level = ERROR\r\ncolor red"
-context.0.view1.filt1.enabled=1
-context.0.view1.filt1.dimmed=0
-context.0.view1.filt1.text="$level = FATAL\r\ncolor darkred"
-context.0.view1.filt2.enabled=1
-context.0.view1.filt2.dimmed=0
-context.0.view1.filt2.text=$msg startswith Notification
-context.0.view0.filt3.enabled=1
-context.0.view0.filt3.dimmed=0
-context.0.view0.filt3.text="$msg !startswith [hk] Target\r\n$msg !startswith [time\r\n$msg !startswith Process\r\n$msg !startswith [manual]"
-
-context.0.view2.name=mouse
-context.0.view2.filter_count=4
-context.0.view2.filt0.enabled=1
-context.0.view2.filt0.dimmed=0
-context.0.view2.filt0.text="$level = ERROR\r\ncolor red"
-context.0.view2.filt1.enabled=1
-context.0.view2.filt1.dimmed=0
-context.0.view2.filt1.text="$level = FATAL\r\ncolor darkred"
-context.0.view2.filt2.enabled=0
-context.0.view2.filt2.dimmed=0
-context.0.view2.filt2.text="$msg !startswith [hk] Target\r\n$msg !startswith [time]\r\n"
-context.0.view2.filt3.enabled=1
-context.0.view2.filt3.dimmed=0
-context.0.view2.filt3.text=$msg startswith [mouse]
-
-context.0.view3.name=set_bet
-context.0.view3.filter_count=3
-context.0.view3.filt0.enabled=1
-context.0.view3.filt0.dimmed=0
-context.0.view3.filt0.text="$msg startswith [hk] Hotkey set_bet\r\n	"
-context.0.view3.filt1.enabled=1
-context.0.view3.filt1.dimmed=0
-context.0.view3.filt1.text="$msg contains pot not needed\r\ncolor red"
-context.0.view3.filt2.enabled=1
-context.0.view3.filt2.dimmed=0
-context.0.view3.filt2.text="$msg startswith [bet]\r\ncolor gray"
-
-context.0.view4.name=bet
-context.0.view4.filter_count=2
-context.0.view4.filt0.enabled=1
-context.0.view4.filt0.dimmed=0
-context.0.view4.filt0.text="$msg contains pot not needed\r\ncolor red"
-context.0.view4.filt1.enabled=1
-context.0.view4.filt1.dimmed=0
-context.0.view4.filt1.text="$msg startswith [bet]\r\n"
-context.0.view4.filt2.enabled=1
-context.0.view4.filt2.dimmed=0
-context.0.view4.filt2.text="$msg startswith [bet]\r\ncolor gray"
-
-context.0.view5.name=hotkeys
-context.0.view5.filter_count=1
-context.0.view5.filt0.enabled=1
-context.0.view5.filt0.dimmed=0
-context.0.view5.filt0.text="$msg startswith [hk] Hotkey\r\n"
-context.0.view5.filt1.enabled=1
-context.0.view5.filt1.dimmed=0
-context.0.view5.filt1.text="$msg startswith [hk] Hotkey\r\n"
-context.0.view5.filt2.enabled=1
-context.0.view5.filt2.dimmed=0
-context.0.view5.filt2.text="$msg startswith [time\r\ncolor green"
-
-context.0.view6.name=time
-context.0.view6.filter_count=3
-context.0.view6.filt0.enabled=1
-context.0.view6.filt0.dimmed=0
-context.0.view6.filt0.text="$msg contains open tables:\r\ncolor blue"
-context.0.view6.filt1.enabled=1
-context.0.view6.filt1.dimmed=0
-context.0.view6.filt1.text=$msg startswith [time]
-context.0.view6.filt2.enabled=1
-context.0.view6.filt2.dimmed=0
-context.0.view6.filt2.text="$msg startswith [time\r\ncolor green"
+context.0.view_count=0
 
 context.1.auto_match=
 context.1.name=TableNinja

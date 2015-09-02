@@ -1,7 +1,10 @@
 
-- test on deleted settings file (do we get exception)
 
-1.0.60a
+1.0.61
+- fix: test on deleted settings file (we used to have problems)
+
+
+1.0.60
 - added application manifest, to request admin credentials -> for topmost to work correctly (still did not work)
 - fixed setting topmost - forcing it via win32 messages
 

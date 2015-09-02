@@ -302,7 +302,12 @@ namespace LogWizard
                 sett.set("context." + i + ".show_source", (contexts_[i].show_source ? "1" : "0"));
                 sett.set("context." + i + ".show_fulllog", (contexts_[i].show_fulllog ? "1" : "0"));
 
-                sett.set("context." + i + ".view_count", "" + contexts_[i].views.Count);
+                int view_count = contexts_[i].views.Count;
+                if ( view_count == 1)
+                    if (contexts_[i].views[0].filters.Count < 1)
+                        // in this case, the user has not set any filters at all
+                        view_count = 0;
+                sett.set("context." + i + ".view_count", "" + view_count);
                 for ( int v = 0; v < contexts_[i].views.Count; ++v) {
                     ui_view lv = contexts_[i].views[v];
                     sett.set("context." + i + ".view" + v + ".name", lv.name);
@@ -552,10 +557,12 @@ namespace LogWizard
             List<object> items = new List<object>();
             ui_context cur = cur_context();
             int cur_view = viewsTab.SelectedIndex;
-            var filters = cur.views[cur_view].filters;
-            for (int idx = 0; idx < filters.Count; ++idx) {
-                item i = new item() {text = filters[idx].text, enabled = filters[idx].enabled, dimmed = filters[idx].dimmed};
-                items.Add(i);
+            if (cur_view < cur.views.Count) {
+                var filters = cur.views[cur_view].filters;
+                for (int idx = 0; idx < filters.Count; ++idx) {
+                    item i = new item() {text = filters[idx].text, enabled = filters[idx].enabled, dimmed = filters[idx].dimmed};
+                    items.Add(i);
+                }
             }
             filterCtrl.SetObjects(items);
             if ( old_sel != "")
@@ -634,6 +641,11 @@ namespace LogWizard
             // note: we only add the inner view when there's some source to read from
             ui_context cur = cur_context();
 
+            // never allow "no view" whatsoever
+            bool has_views = cur.views.Count > 0;
+            if (cur.views.Count < 1) 
+                cur.views.Add(new ui_view() { name = "New_1", filters = new List<ui_filter>() });
+
             for ( int idx = 0; idx < cur.views.Count; ++idx) 
                 if ( viewsTab.TabCount < idx + 1) 
                     viewsTab.TabPages.Add(cur.views[idx].name);
@@ -643,8 +655,16 @@ namespace LogWizard
                 ensure_we_have_log_view_for_tab(idx);
             }
 
-            while ( viewsTab.TabCount > cur.views.Count)
-                viewsTab.TabPages.RemoveAt(cur.views.Count);
+            while (viewsTab.TabCount > cur.views.Count) {
+                // TabControl.RemoveAt is buggy
+                var page = viewsTab.TabPages[cur.views.Count];
+                viewsTab.TabPages.Remove(page);
+            }
+
+            if (!has_views) {
+                log_view_for_tab(0).Visible = false;
+                dropHere.Visible = true;
+            }
         }
 
         private void load_toggles() {
@@ -1084,6 +1104,7 @@ namespace LogWizard
 
         private int last_sel = -1;
         private void on_new_log() {
+            dropHere.Visible = false;
 
             // by default - try to find the syntax by reading the header info
             //              otherwise, try to parse it
@@ -1119,6 +1140,9 @@ namespace LogWizard
                 ensure_we_have_log_view_for_tab(idx);
             load_bookmarks();
             logger.Info("new reader_ " + history_[logHistory.SelectedIndex].name);
+
+            // at this point, some file has been dropped
+            log_view_for_tab(0).Visible = true;
         }
 
         private void add_reader_to_history() {
@@ -1214,8 +1238,10 @@ namespace LogWizard
             save();
         }
 
-        private void logHistory_DropDownClosed(object sender, EventArgs e)
-        {
+        private void logHistory_DropDownClosed(object sender, EventArgs e) {
+            if (logHistory.Items.Count < 1)
+                return; // nothing is in history
+
             //sourceName_TextChanged(null,null);
             on_log_listory_changed();
         }
