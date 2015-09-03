@@ -124,13 +124,18 @@ namespace LogWizard {
 
         public static string read_beginning_of_file(string file, int len) {
             try {
+                var encoding = file_encoding(file);
+                if (encoding == null)
+                    return "";
+
                 var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 fs.Seek(0, SeekOrigin.Begin);
             
                 // read a few lines from the beginning
                 byte[] readBuffer = new byte[len];
                 int bytes = fs.Read(readBuffer, 0, len);
-                string now = System.Text.Encoding.Default.GetString(readBuffer, 0, bytes);
+                
+                string now = encoding.GetString(readBuffer, 0, bytes);
                 return now;
             } catch {
                 return "";
@@ -246,6 +251,7 @@ namespace LogWizard {
         }
 
 
+        private static char[] time_ms_separators = new[] { '.', ',', ':' };
         // normalizes the time, so that no matter what input, it will take out hh:mm:ss.zzz
         //
         // assumes time is in correct form: [h]h:[m]m[:[s]s[.z[z[z]]]]
@@ -268,7 +274,7 @@ namespace LogWizard {
                 time = time.Substring(0, 3) + "0" + time.Substring(3);
             if (sep2 > 0) {
                 // look for seconds:  hh:mm:ss.zzz or hh:mm:s.zzz
-                int sep3 = time.IndexOf('.', 6);
+                int sep3 = time.IndexOfAny( time_ms_separators, 6);
                 Debug.Assert(sep3 == -1 || sep3 == 7 || sep3 == 8);
                 if (sep3 == 7 || time.Length == 7)
                     time = time.Substring(0, 6) + "0" + time.Substring(6);
@@ -278,17 +284,25 @@ namespace LogWizard {
 
             switch (time.Length) {
             case 8:
-                return time + ".000";
+                time = time + ".000";
+                break;
             case 10:
-                return time + "00";
+                time = time + "00";
+                break;
             case 11:
-                return time + "0";
+                time = time + "0";
+                break;
             case 12:
-                return time;
+                break;
             default:
                 Debug.Assert(false);
-                return time;
+                break;
             }
+            
+            if ( time[8] != '.')
+                time = time.Substring(0,8) + "." + time.Substring(9);
+            
+            return time;
         }
 
         public static DateTime str_to_normalized_time(string time_str) {
@@ -395,6 +409,35 @@ namespace LogWizard {
             form.Activated -= FormOnActivated;
             form.TopMost = true;
             win32.MakeTopMost(form);
+        }
+
+        // taken from http://stackoverflow.com/questions/3825390/effective-way-to-find-any-files-encoding
+        // + return null if cant' read header
+        //
+        // alternatives: http://www.architectshack.com/TextFileEncodingDetector.ashx (don't like the licensing)
+        //               http://www.codeproject.com/Articles/17201/Detect-Encoding-for-In-and-Outgoing-Text    
+        public static Encoding file_encoding(string filename)
+        {
+            try {
+                // Read the BOM
+                var bom = new byte[4];
+                int read = 0;
+                using (var file = new FileStream(filename, FileMode.Open, FileAccess.Read)) 
+                    read = file.Read(bom, 0, 4);
+
+                if (read < 4)
+                    return null;
+
+                // Analyze the BOM
+                if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76) return Encoding.UTF7;
+                if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf) return Encoding.UTF8;
+                if (bom[0] == 0xff && bom[1] == 0xfe) return Encoding.Unicode; //UTF-16LE
+                if (bom[0] == 0xfe && bom[1] == 0xff) return Encoding.BigEndianUnicode; //UTF-16BE
+                if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) return Encoding.UTF32;
+                return Encoding.ASCII;
+            } catch {
+                return null;
+            }
         }
     }
 }

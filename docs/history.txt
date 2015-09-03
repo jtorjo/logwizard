@@ -1,4 +1,14 @@
 
+1.0.64
+- support non-ascii encodings
+- adjust time of lines that could not be parsed
+- allow time that uses : as millis separator
+- auto recognized msi log files
+  - at this time, non homegeneous lines are considered 'just message'
+- fix: auto update msg details when toggling
+- fix: when filters pane shown, msg details should not override it
+
+
 1.0.62
 - made the icon much smaller
 

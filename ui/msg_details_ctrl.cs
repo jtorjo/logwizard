@@ -62,7 +62,7 @@ namespace LogWizard {
         }
 
         public void update(log_view view, int top_offset, int bottom_offset, bool force_update) {
-            Rectangle wizard_rect = wizard_parent_.ClientRectangle; 
+            Rectangle wizard_rect = wizard_parent_.client_rect_no_filter; 
             Rectangle wizard_screen = wizard_parent_.RectangleToScreen(wizard_rect);
             // ... care about the lower buttons
             wizard_rect.Y += top_offset;

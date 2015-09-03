@@ -514,6 +514,7 @@ namespace LogWizard
             var first_tab = viewsTab.TabCount >= 0 ? log_view_for_tab(0) : null;
             if (first_tab != null)
                 first_tab.pad_name_on_left = show_toggle_topmost;            
+            update_msg_details(true);
         }
 
         private void update_topmost_image() {
@@ -524,18 +525,21 @@ namespace LogWizard
         {
             show_filters( toggleFilters.Text[0] == '+');
             save();
+            update_msg_details(true);
         }
 
         private void toggleSource_Click(object sender, EventArgs e)
         {
             show_source( toggleSource.Text[0] == '+');
             save();
+            update_msg_details(true);
         }
 
         private void toggleFullLog_Click(object sender, EventArgs e)
         {
             toggle_full_log();
             save();
+            update_msg_details(true);
         }
 
         private void newView_Click(object sender, EventArgs e)
@@ -635,6 +639,18 @@ namespace LogWizard
                 if ( c is log_view)
                     return (log_view)c; // we have it
             return null;
+        }
+
+        public Rectangle client_rect_no_filter {
+            get {
+                Rectangle r = ClientRectangle;
+                Rectangle source_screen = sourceUp.RectangleToScreen(sourceUp.ClientRectangle);
+                Rectangle main_rect = RectangleToClient(source_screen);
+                int offset_x = main_rect.Left;
+                r.X += offset_x;
+                r.Width -= offset_x;
+                return r;
+            }
         }
 
         private void load_tabs() {

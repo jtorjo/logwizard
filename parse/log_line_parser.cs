@@ -398,11 +398,35 @@ namespace LogWizard
                 pos_in_log += (ulong)cur_lines[i].Length + (ulong)LINE_SEP.Length;
             }
 
+
+            int old_count;
             lock (this) {
+                old_count = lines_.Count;
                 lines_.AddRange(now);
+                for ( int idx = old_count; idx < lines_.Count; ++idx)
+                    adjust_line_time(idx);
                 was_last_line_incomplete_ = cur_lines[cur_lines.Length - 1] != "";
                 last_pos_ = pos_in_log;
             }
+        }
+
+        // if the time isn't set - try to use it from the surroundings
+        private void adjust_line_time(int idx) {
+            if (lines_[idx].time != DateTime.MinValue)
+                return;
+
+            int src_idx = idx - 1;
+            for ( ; src_idx >= 0; --src_idx)
+                if (lines_[src_idx].time != DateTime.MinValue) {
+                    lines_[idx].time = lines_[src_idx].time;
+                    return;
+                }
+
+            for ( src_idx = idx + 1; src_idx < lines_.Count; ++src_idx)
+                if (lines_[src_idx].time != DateTime.MinValue) {
+                    lines_[idx].time = lines_[src_idx].time;
+                    return;                    
+                }
         }
 
         private bool parse_time(string line, Tuple<int,int> idx) {

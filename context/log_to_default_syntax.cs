@@ -34,13 +34,21 @@ namespace LogWizard.context {
             { "This is a LogWizard Setup sample", "$time[0,12] $ctx1[13,10] $level[24,5] $class[' ','- '] $msg" },
             { "Welcome to TableNinja! debug", "$file[0,': '] $time['',12] $ctx1[' ',10] $level[' ','- '] $msg" },
             //{ "", "" },
+            { "logging started: \nCalling process: \nmsiexec.exe ===", "$ctx1['MSI (',') '] $ctx2['(',')'] $time['[',']: ']  $msg" },
         }; 
 
         public static string file_to_syntax(string name) {
             string file_header = util.read_beginning_of_file(name, 8192);
-            foreach ( var fts in file_to_syntax_)
-                if (file_header.Contains(fts.Key))
+            foreach (var fts in file_to_syntax_) {
+                var phrases = fts.Key.Split('\n');
+                int count = 0;
+                foreach (string sub in phrases)
+                    if (file_header.Contains(sub))
+                        ++count;
+
+                if ( count == phrases.Count())
                     return fts.Value;
+            }
 
             return null;
         }

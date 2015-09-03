@@ -53,6 +53,8 @@ namespace LogWizard
         private ulong full_log_read_bytes_ = 0;
 
         private bool has_it_been_rewritten_ = false;
+
+        private Encoding file_encoding_ = null;
         
         public file_text_reader(string file) {
             try {
@@ -122,6 +124,13 @@ namespace LogWizard
 
         private void read_all_file() {
             try {
+                if (file_encoding_ == null) {
+                    var encoding = util.file_encoding(file_);
+                    if ( encoding != null)
+                        lock (this)
+                            file_encoding_ = encoding;
+                }
+
                 long len = new FileInfo(file_).Length;
                 allocate_buffer(len);
                 using (var fs = new FileStream(file_, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -134,7 +143,7 @@ namespace LogWizard
                         if ( read_bytes >= 0)
                             full_log_read_bytes_ += (ulong)read_bytes;
                         lock(this)
-                            full_log_ = Encoding.Default.GetString(full_log_buffer_, 0, (int)full_log_read_bytes_);
+                            full_log_ = file_encoding_.GetString(full_log_buffer_, 0, (int)full_log_read_bytes_);
                     }
                 else if ( len == (long)full_log_read_bytes_) {
                     // file not changed - nothing to do
