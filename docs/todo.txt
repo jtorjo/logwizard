@@ -1,5 +1,11 @@
 - apply to existing lines
 
+- on file rewrite (bring to top on restart) 
+  -> make sure to navigate to last line!
+  -> see if i can bring to top+topmost without gaining focus
+ 
+- deal with homogeneous logs (msi log files?)
+
 - synchronize colors : full log - synchronize with what the existing tab has and/or with all tabs? 
   (Sync: with current tab / with all tabs / none)
   when synchronizing -> specify how to show unsynchronized lines (like, darkgray?)
