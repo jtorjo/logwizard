@@ -1,4 +1,9 @@
 
+1.0.65
+- made logwizard run as invoker again (rationale: now, that i made logwizard run as admin, i can't drop files onto it)
+  tested: "bring to top on restart" works as expected
+
+
 1.0.64
 - support non-ascii encodings
 - adjust time of lines that could not be parsed

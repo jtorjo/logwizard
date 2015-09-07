@@ -1,8 +1,13 @@
 - apply to existing lines
 
+
 - on file rewrite (bring to top on restart) 
   -> make sure to navigate to last line!
   -> see if i can bring to top+topmost without gaining focus
+
+- open in Explorer (ctrl-o)
+
+- regex
  
 - deal with homogeneous logs (msi log files?)
 
@@ -20,7 +25,6 @@
 
 - decrease memory footprint - probably for ascii-encoded files, we can assume we don't need to always keep the byte buffer (file_text_reader)
   note: since i'm always reading ahead (the parser), very likely i don't need to keep anything (buffer) in file_text_reader
-
 
 - move up/down -> sometimes it does not update the "Found" column
 
@@ -66,7 +70,6 @@
 - color filter
   search "within existing lines" for certain condition -> just to give it a color.
 
-- open in Explorer (ctrl-o)
 
 - save view (ctrl-s) - normalize, allow selecting which rows to save (time, date, etc.)
 
