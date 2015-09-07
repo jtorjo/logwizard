@@ -136,18 +136,23 @@ namespace LogWizard
             both, just_view, just_full_log
         }
 
-        class item {
+        class filter_item {
             public bool enabled = true;
             public bool dimmed = false;
             public string text = "";
 
             public string found_count = "";
 
-            // "name" is just a faster way for a user to edit a filter 
-            // in case he needs to use "|" in the filter itself, he'd better edit the Filter Details
+            // "name" is just a friendly name for the text
             public string name {
-                get { return text.Replace("\r\n", "|"); }
-                set { text = value.Replace("|", "\r\n"); }
+                get {
+                    string[] lines = text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+                    var filter_name = lines.FirstOrDefault(l => l.Trim().StartsWith("## "));
+                    if (filter_name != null)
+                        return filter_name.Trim().Substring(3).Trim();
+
+                    return lines.Aggregate("", (current, l) => current + (l + " | "));
+                }
             } 
         }
 
@@ -556,7 +561,7 @@ namespace LogWizard
 
         private void load_filters() {
             // filter_row Enabled / Used - are context dependent!
-            string old_sel = filterCtrl.SelectedObject != null ? ((item)filterCtrl.SelectedObject).name : "";
+            string old_sel = filterCtrl.SelectedObject != null ? ((filter_item)filterCtrl.SelectedObject).name : "";
 
             List<object> items = new List<object>();
             ui_context cur = cur_context();
@@ -564,7 +569,7 @@ namespace LogWizard
             if (cur_view < cur.views.Count) {
                 var filters = cur.views[cur_view].filters;
                 for (int idx = 0; idx < filters.Count; ++idx) {
-                    item i = new item() {text = filters[idx].text, enabled = filters[idx].enabled, dimmed = filters[idx].dimmed};
+                    filter_item i = new filter_item() {text = filters[idx].text, enabled = filters[idx].enabled, dimmed = filters[idx].dimmed};
                     items.Add(i);
                 }
             }
@@ -582,7 +587,7 @@ namespace LogWizard
 
             cur.views[cur_view].filters.Clear();
             for ( int idx = 0; idx < filterCtrl.GetItemCount(); ++idx) {
-                item i = filterCtrl.GetItem(idx).RowObject as item;
+                filter_item i = filterCtrl.GetItem(idx).RowObject as filter_item;
                 cur.views[cur_view].filters.Add(  new ui_filter { enabled = i.enabled, dimmed = i.dimmed, text = i.text } );
             }
         }
@@ -749,7 +754,7 @@ namespace LogWizard
 
         private void select_filter(string name) {
             for ( int idx = 0; idx < filterCtrl.GetItemCount(); ++idx) {
-                item i = (item)filterCtrl.GetItem(idx).RowObject;
+                filter_item i = (filter_item)filterCtrl.GetItem(idx).RowObject;
                 if ( i.name == name)
                     filterCtrl.SelectedIndex = idx;
             }
@@ -788,7 +793,7 @@ namespace LogWizard
 
         private void addFilter_Click(object sender, EventArgs e)
         {
-            item new_ = new item { enabled = true, dimmed = false, name = "", text = "" };
+            filter_item new_ = new filter_item { enabled = true, dimmed = false, text = "" };
 
             ui_context cur = cur_context();
             cur.views[ viewsTab.SelectedIndex ].filters.Add( new ui_filter() );
@@ -805,7 +810,7 @@ namespace LogWizard
         private void delFilter_Click(object sender, EventArgs e)
         {
             ui_context cur = cur_context();
-            var sel = filterCtrl.SelectedObject as item;
+            var sel = filterCtrl.SelectedObject as filter_item;
             if ( sel != null) {
                 int idx = filterCtrl.SelectedIndex;
                 var filters = cur.views[viewsTab.SelectedIndex].filters;
@@ -913,7 +918,7 @@ namespace LogWizard
             // recompute line count
             for (int i = 0; i < filterCtrl.GetItemCount(); ++i) {
                 int count = lv.filter_row_match_count(i);
-                (filterCtrl.GetItem(i).RowObject as item).found_count = count > 0 ? "" + count : "";
+                (filterCtrl.GetItem(i).RowObject as filter_item).found_count = count > 0 ? "" + count : "";
                 filterCtrl.RefreshItem( filterCtrl.GetItem(i) );
             }
 
@@ -927,7 +932,7 @@ namespace LogWizard
             List<filter_row> lvf = new List<filter_row>();
             int count = filterCtrl.GetItemCount();
             for ( int idx = 0; idx < count; ++idx) {
-                item i = filterCtrl.GetItem(idx).RowObject as item;
+                filter_item i = filterCtrl.GetItem(idx).RowObject as filter_item;
                 filter_row filt = new filter_row(i.text);
                 filt.enabled = i.enabled;
                 filt.dimmed = i.dimmed;
@@ -1332,7 +1337,7 @@ namespace LogWizard
 
         private void enabledCtrl_SelectionChanged(object sender, EventArgs e) {
             ignore_change = true;
-            var sel = filterCtrl.SelectedObject as item;
+            var sel = filterCtrl.SelectedObject as filter_item;
             curFilterCtrl.Text = sel != null ? sel.text : "";
             curFilterCtrl.Enabled = sel != null;
             ignore_change = false;
@@ -1347,7 +1352,7 @@ namespace LogWizard
             if (e.SubItemIndex == filterCol.Index) {
                 e.Cancel = true;
 
-                var sel = filterCtrl.SelectedObject as item;
+                var sel = filterCtrl.SelectedObject as filter_item;
                 // we must be editing a filter row!
                 Debug.Assert(sel != null);
                 focusOnFilterCtrl.Enabled = true;
@@ -1355,9 +1360,12 @@ namespace LogWizard
         }
 
         private void enabledCtrl_CellEditFinishing(object sender, BrightIdeasSoftware.CellEditEventArgs e) {
+
             if (e.SubItemIndex == filterCol.Index) {
-                var sel = e.RowObject as item;
-                sel.name = e.NewValue.ToString();
+                // 1.0.66+ we should not end up here - we're modifying this in the current-filter edit
+                Debug.Assert(false);
+
+                var sel = e.RowObject as filter_item;
                 // in this case, the user has edited the filter
                 curFilterCtrl.Text = sel.text;
                 last_filter_text_change_ = DateTime.Now;
@@ -1374,7 +1382,7 @@ namespace LogWizard
                 addFilter_Click(null,null);
                 return;
             }
-            var sel = filterCtrl.SelectedObject as item;
+            var sel = filterCtrl.SelectedObject as filter_item;
             // we must be editing a filter row!
             Debug.Assert(sel != null);
             if (sel == null) 
@@ -1384,6 +1392,19 @@ namespace LogWizard
                 sel.text = curFilterCtrl.Text;
                 filterCtrl.RefreshObject(sel);
                 last_filter_text_change_ = DateTime.Now;
+            }
+
+            var row = new filter_row(curFilterCtrl.Text);
+            bool is_valid = row.is_valid;
+            Color bg = is_valid ? Color.White : Color.LightPink;
+            if (curFilterCtrl.BackColor.ToArgb() != bg.ToArgb())
+                curFilterCtrl.BackColor = bg;
+
+            if (row.is_valid) {
+                if (filterLabel.BackColor.ToArgb() != row.bg.ToArgb())
+                    filterLabel.BackColor = row.bg;
+                if (filterLabel.ForeColor.ToArgb() != row.fg.ToArgb())
+                    filterLabel.ForeColor = row.fg;
             }
         }
 
@@ -1961,7 +1982,7 @@ namespace LogWizard
             if (sel_view < 0)
                 return;
 
-            item i = filterCtrl.GetItem(sel_filter).RowObject as item;
+            filter_item i = filterCtrl.GetItem(sel_filter).RowObject as filter_item;
             filter_row filt = new filter_row(i.text);
             if (filt.is_valid) {
                 var lv = ensure_we_have_log_view_for_tab(sel_view);

@@ -20,6 +20,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -43,6 +44,20 @@ namespace LogWizard
         // if true, we log each time we modify something - for debugging only
         bool log_each_set = false;
 
+        private const string VERSION_NAME = "_settings_version";
+        /* 1.0.66+ added versioning
+
+        1 
+        - old version (1.0.65 or less)
+
+        2 
+        - multiple lines are stored as multiple lines with prepending \t
+        - lines that contain prepending or appending spaces -> surround with quotes
+
+        */
+        private int version_ = 1;
+        private const int max_version_ = 2;
+
         public settings_file(string file_name) {
             this.file_name = file_name;
             if ( !File.Exists(file_name))
@@ -58,13 +73,11 @@ namespace LogWizard
                             // it will be appended to the previous name
                             // so that we can have a property contain several concatenated "lines"
                             line = line.Trim();
-                            if ( line.Length > 2)
-                                if ( line.StartsWith("\"") && line.EndsWith("\"")) {
+                            if ( line.Length >= 2)
+                                if ( line.StartsWith("\"") && line.EndsWith("\"")) 
                                     line = line.Substring(1, line.Length - 2);
-                                    data[last_name] += line;
-                                    continue;
-                                }
-
+                            data[last_name] += "\r\n" + line;
+                            continue;
                         }
                     line = line.Trim();
                     if ( line.Length < 1)
@@ -76,19 +89,32 @@ namespace LogWizard
                         continue;
                     }
 
-                    string name = line.Split('=')[0].Trim();
-                    string value = string.Join("=",line.Split('=').Skip(1).ToArray()).Trim();
+                    int pos = line.IndexOf('=');
+                    string name = line.Substring(0,pos).Trim();
+                    string value = line.Substring(pos+1).Trim();
+                    // 1.0.65 - versioning
+                    if (name == VERSION_NAME) {
+                        version_ = int.Parse(value);
+                        continue;
+                    }
+
                     // any special value (containing starting or ending spaces), surround it with quotes
                     if ( value.Length > 2)
                         if ( value[0] == '"' && value[value.Length-1] == '"') 
                             value = value.Substring(1, value.Length-2);
+
                     // boolean -> integer
                     if ( value.ToLower() == "false")
                         value = "0";
-                    if ( value.ToLower() == "true")
+                    else if ( value.ToLower() == "true")
                         value = "1";
-                    value = value.Replace("\\n", "\n");
-                    value = value.Replace("\\r", "\r");
+
+                    if (version_ < 2) {
+                        // old versions
+                        value = value.Replace("\\n", "\n");
+                        value = value.Replace("\\r", "\r");
+                    }
+
                     if ( !data.ContainsKey(name))
                         data.Add(name,"");
                     data[name] = value;
@@ -98,8 +124,6 @@ namespace LogWizard
                 logger.Error("Could not read " + file_name + " : " + e.Message);
             }
 
-            // log_each_set = int.Parse( get("log_each_set", "0")) != 0;
-            // for now, log everything
             log_each_set = true;
         }
 
@@ -125,6 +149,33 @@ namespace LogWizard
                 }
         }
 
+        private static string surround_with_quotes_if_needed(string line) {
+            return line != line.Trim() ? '"' + line + '"' : line;
+        }
+
+        // converts the string to be dumped to the settings file
+        private string str_to_value(string str) {
+            int count_n = str.Count(c => c == '\n'), count_r = str.Count(c => c == '\r');
+            // invalid string
+            if (count_n != count_r)
+                logger.Error("invalid setings line [" + str + "]");
+
+            if (count_n > 0) {
+                // the string contains multiple lines
+                // ... account for when there are invalid enters - we care only about \r
+                str = str.Replace("\n", "");
+                string[] lines = str.Split(new string[] {"\r"}, StringSplitOptions.None);
+                for (int i = 0; i < lines.Length; ++i)
+                    if (i > 0)
+                        str += "\r\n\t" + surround_with_quotes_if_needed(lines[i]) ;
+                    else
+                        str = surround_with_quotes_if_needed( lines[i]);
+            } else
+                str = surround_with_quotes_if_needed(str);
+
+            return str;
+        }
+
 
         public void save() {
             string contents = "";
@@ -132,12 +183,10 @@ namespace LogWizard
                 if ( !dirty)
                     return;
                 dirty = false;
-                foreach( KeyValuePair<string,string> kv in data) {
-                    string value = kv.Value;
-                    value = value.Replace("\n", "\\n").Replace("\r", "\\r");
+                contents += VERSION_NAME + "=" + max_version_ + "\r\n";
 
-                    if ( value != kv.Value.Trim())
-                        value = '"' + value + '"';
+                foreach( KeyValuePair<string,string> kv in data) {
+                    string value = str_to_value( kv.Value);
                     contents += kv.Key + "=" + value + "\r\n";
                 }
             }
@@ -145,6 +194,8 @@ namespace LogWizard
                 File.WriteAllText(file_name, contents);
             } catch (Exception e) {
                 logger.Error("Could not write " + file_name + " : " + e.Message);
+                lock (this)
+                    dirty = true;
             }
             logger.Debug("[sett] Saved settings to " + file_name);
         }

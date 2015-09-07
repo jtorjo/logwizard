@@ -44,7 +44,7 @@
             this.moveToTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveToBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.curFilterCtrl = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.filterLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.newView = new System.Windows.Forms.Button();
@@ -281,15 +281,16 @@
             this.curFilterCtrl.TabIndex = 3;
             this.curFilterCtrl.TextChanged += new System.EventHandler(this.curFilter_TextChanged);
             // 
-            // label2
+            // filterLabel
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(2, 340);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(33, 15);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Filter";
+            this.filterLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.filterLabel.AutoSize = true;
+            this.filterLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.filterLabel.Location = new System.Drawing.Point(2, 340);
+            this.filterLabel.Name = "filterLabel";
+            this.filterLabel.Size = new System.Drawing.Size(36, 15);
+            this.filterLabel.TabIndex = 2;
+            this.filterLabel.Text = "Filter";
             // 
             // label1
             // 
@@ -638,7 +639,7 @@
             this.tabPage2.Controls.Add(this.label1);
             this.tabPage2.Controls.Add(this.curFilterCtrl);
             this.tabPage2.Controls.Add(this.delFilter);
-            this.tabPage2.Controls.Add(this.label2);
+            this.tabPage2.Controls.Add(this.filterLabel);
             this.tabPage2.Controls.Add(this.addFilter);
             this.tabPage2.Location = new System.Drawing.Point(4, 24);
             this.tabPage2.Name = "tabPage2";
@@ -958,7 +959,7 @@
         #endregion
 
         private System.Windows.Forms.TextBox curFilterCtrl;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label filterLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolTip tip;
         private BrightIdeasSoftware.ObjectListView filterCtrl;

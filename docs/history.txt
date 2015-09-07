@@ -1,4 +1,23 @@
 
+- "refresh" -> should clear the existing filter's cache -> so that it updates
+  test: go from '\breading\b' 
+	-> remove the case-sensitive, then refresh
+	-> add it back, then refresh
+
+
+
+1.0.66
+- filters now can match regexes as well. in fact, by default, they work as regexes. If you say:
+  $[part-of-line] some-regex-expression, it works as regex.
+  Example:
+  $msg \breading\b
+  - will match all lines containing the word 'reading'
+- settings file - save settings in such a way that I can add regexes (namely, don't escape multiple lines the way i used to)
+- filter friendly names -> just add a line (anywhere) thta starts with '## ' 
+- show the filter in background pink if it's an invalid one
+- when you edit the filter, and set the color ('color XXX' line), it will visually show the color
+
+
 1.0.65
 - made logwizard run as invoker again (rationale: now, that i made logwizard run as admin, i can't drop files onto it)
   tested: "bring to top on restart" works as expected

@@ -64,6 +64,7 @@ namespace LogWizard {
             return Enumerable.SequenceEqual(items_, other.items_) && Enumerable.SequenceEqual(additions_, other.additions_);            
         }
 
+        private bool valid_ = true;
         private List<filter_line> items_ = new List<filter_line>();
         private List<addition> additions_ = new List<addition>();
 
@@ -71,7 +72,6 @@ namespace LogWizard {
         // cached - so that what we computed once, we don't ask again
         private log_line_reader old_line_matches_log_ = null;
         private int old_line_count_ = 0;
-
 
         private filter_line.font_info font_ = null;
 
@@ -85,12 +85,22 @@ namespace LogWizard {
                 addition add = addition.parse(line);
                 if ( add != null)
                     additions.Add(add);
+
+                if (item == null && add == null) {
+                    bool is_comment = line.StartsWith("#"), is_empty = line.Trim() == "";
+                    if (!is_comment && !is_empty)
+                        // in this case, the line is not valid yet
+                        valid_ = false;
+                }
             }
             init(lines, additions);
+
+            if (items_.Count < 1)
+                valid_ = false;
         }
 
         public bool is_valid {
-            get { return items_.Count > 0; }
+            get { return valid_; }
         } 
 
         public class match {
@@ -105,7 +115,15 @@ namespace LogWizard {
             get { return additions_; }
         }
 
-        private filter_line.font_info font() {
+        public Color fg {
+            get { return font_.fg; }
+        }
+        public Color bg {
+            get { return font_.bg; }
+        }
+
+
+        private filter_line.font_info get_font_info() {
             var result = new filter_line.font_info();
             foreach ( var item in items_)
                 if (item.part == filter_line.part_type.font)
@@ -121,7 +139,7 @@ namespace LogWizard {
         public bool enabled {
             get { return enabled_; }
             set { enabled_ = value;
-                font_ = font();
+                font_ = get_font_info();
             }
         }
 
@@ -130,14 +148,14 @@ namespace LogWizard {
             get { return dimmed_; }
             set {
                 dimmed_ = value; 
-                font_ = font();                
+                font_ = get_font_info();                
             }
         }
 
         private void init(List<filter_line> items, List<addition> additions) {
             items_ = items;
             additions_ = additions;
-            font_ = font();
+            font_ = get_font_info();
             update_case_sensitive();
         }
 

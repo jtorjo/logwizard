@@ -22,10 +22,15 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using log4net.Repository.Hierarchy;
 
 namespace LogWizard {
     class filter_line {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+
         protected bool Equals(filter_line other) {
             return part == other.part && comparison == other.comparison && string.Equals(text, other.text);// && Equals(fi, other.fi);
         }
@@ -65,7 +70,9 @@ namespace LogWizard {
         public enum comparison_type {
             equal, not_equal, starts_with, does_not_start_with, contains, does_not_contain,
             // 1.0.38+
-            contains_any, contains_none
+            contains_any, contains_none,
+            // 1.0.66+
+            regex
         }
         public part_type part;
         public comparison_type comparison;
@@ -78,7 +85,17 @@ namespace LogWizard {
         private string lo_text = "";
         private string[] lo_words = null;
 
-        public bool case_sensitive = true;
+        private bool case_sensitive_ = true;
+        public bool case_sensitive {
+            get { return case_sensitive_; }
+            set {
+                case_sensitive_ = value;
+                if (regex_ != null)
+                    create_regex();
+            }
+        }
+
+        private Regex regex_ = null;
 
         // font -> contains details about the font; for now, the colors
         public class font_info {
@@ -146,6 +163,20 @@ namespace LogWizard {
             return fi;
         }
 
+        // guess if this is a regex
+        private static bool is_regex_expression(string expr) {
+            return expr.IndexOfAny(new char[] { '*', '\\', '.', '^', '$' }) >= 0 ;
+        }
+
+        private void create_regex() {
+            try {
+                if (comparison == comparison_type.regex)
+                    regex_ = case_sensitive ? new Regex(text) : new Regex(text, RegexOptions.IgnoreCase);
+            } catch (Exception e) {
+                logger.Error("invalid regex: " + text + " : " + e.Message);
+            }
+        }
+
         // tries to parse a line - if it fails, it will return null
         private static filter_line parse_impl(string line) {
             line = line.Trim();
@@ -166,7 +197,8 @@ namespace LogWizard {
             
             // Syntax:
             // $ColumnName Comparison Text
-            if (words.Length < 3)
+            bool ok = words.Length >= 3 || (words.Length == 2 && is_regex_expression(words[1]));
+            if (!ok)
                 // we need at least $c compare word(s)
                 return null;
 
@@ -187,6 +219,15 @@ namespace LogWizard {
             case "$thread": fi.part = part_type.thread; break;
             default:
                 return null;
+            }
+
+            if (words.Length == 2) {
+                // comparison is not present; inferred as regex
+                fi.text = words[1];
+                fi.comparison = comparison_type.regex;
+                fi.lo_text = fi.text.ToLower();
+                fi.create_regex();
+                return fi.regex_ != null ? fi : null ;
             }
 
             switch ( words[1].ToLower() ) {
@@ -220,6 +261,11 @@ namespace LogWizard {
             case "none":
                 fi.comparison = comparison_type.contains_none;
                 break;
+
+            case "matches":
+            case "match":
+                fi.comparison = comparison_type.regex;
+                break;
             default:
                 return null;
             }
@@ -233,7 +279,10 @@ namespace LogWizard {
             }
             fi.text = line;
             fi.lo_text = line.ToLower();
-
+            fi.create_regex();
+            if (fi.comparison == comparison_type.regex && fi.regex_ == null)
+                // the regex is invalid at this point
+                return null;
             return fi;
         }
 
@@ -311,6 +360,13 @@ namespace LogWizard {
                 if (words.Any(line_part.Contains)) 
                     result = false;                
                 break;
+
+            case comparison_type.regex:
+                result = false;
+                if (regex_ != null)
+                    result = regex_.IsMatch(line_part);
+                break;
+
             default:
                 Debug.Assert(false);
                 break;
