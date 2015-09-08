@@ -358,6 +358,11 @@ namespace LogWizard
             }
         }
 
+        private bool is_full_log {
+            get {
+                return filter_.row_count < 1;
+            }
+        }
 
 
         public void set_filter(List<filter_row> filter) {
@@ -862,7 +867,7 @@ namespace LogWizard
                 return; // already selected
 
             // 1.0.67+ - there's a bug in objectlistview - if we're not the current view, we can't really select a row
-            if (!is_current_view)
+            if (!is_current_view && !is_full_log)
                 return;
 
             select_nofify_ = notify;

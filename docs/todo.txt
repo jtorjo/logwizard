@@ -1,17 +1,15 @@
-
-
-
-
- 
-- deal with homogeneous logs (msi log files?)
-
 - apply to existing lines
 
 - synchronize colors : full log - synchronize with what the existing tab has and/or with all tabs? 
   (Sync: with current tab / with all tabs / none)
   when synchronizing -> specify how to show unsynchronized lines (like, darkgray?)
 
-- synchronizing with full-log -> if key is down (up/down/etc.) -> don't sync yet TOTHINK (basically so that we only synchronize when the user has selected the final row)
+
+
+
+- deal with homogeneous logs (msi log files?)
+
+- synchronizing with full-log/other logs -> if key is down (up/down/etc.) -> don't sync yet TOTHINK (basically so that we only synchronize when the user has selected the final row)
 
 - history - deleted files - ignore them
 
