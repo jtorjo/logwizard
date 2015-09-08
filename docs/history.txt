@@ -1,9 +1,21 @@
 
-- "refresh" -> should clear the existing filter's cache -> so that it updates
+
+
+
+
+1.0.67
+- fix: "refresh" -> should clear the existing filter's cache -> so that it updates
   test: go from '\breading\b' 
 	-> remove the case-sensitive, then refresh
 	-> add it back, then refresh
-
+- added Open in Explorer command (Ctrl-O)
+- open with LogWizard - for .log and .txt files
+- send to logwizard - for ay file
+- fix: on file rewrite (bring to top on restart) 
+  -> make sure to navigate to last line!
+- fix: on file rewrite (bring to top on restart) 
+  -> done: see if i can bring to top+topmost without gaining focus
+- help/goto/find/etc - all other forms - if parent is topmost, make topmost as well (othewise they would be covered by parent)
 
 
 1.0.66

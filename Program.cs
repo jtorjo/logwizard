@@ -41,6 +41,11 @@ namespace LogWizard
             get { return open_file_name_; }
         }
 
+        private static string appdata_dir() {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\";
+            return path;
+        }
+
         private static string local_dir() {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LogWizard\\";
             return path;
@@ -79,8 +84,15 @@ namespace LogWizard
             if ( args.Length > 0 && File.Exists(args[0]))
                 open_file_name_ = args[0];
 
+//            if (args.Length > 0)
+  //              MessageBox.Show(args[0]);
+
             if (open_file_name_ != null)
                 wait_for_setup_kit_to_complete();
+
+            util.set_association(".log", "Log_file", Application.ExecutablePath, "Log File");
+            util.set_association(".txt", "Text_file", Application.ExecutablePath, "Text File");
+            util.create_shortcut("LogWizard", appdata_dir() + @"Microsoft\Windows\SendTo", "Send To LogWizard", null, Application.ExecutablePath, null);
 
             Application.Run(new Dummy());
         }

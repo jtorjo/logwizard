@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace LogWizard.ui {
-    public partial class search_form : Form {
+    partial class search_form : Form {
 
         public class search_for {
             public string text = "";
@@ -18,11 +18,12 @@ namespace LogWizard.ui {
         private search_for search_ = new search_for();
         private settings_file sett = Program.sett;
 
-        public search_form() {
+        public search_form(log_wizard parent) {
             InitializeComponent();
             fg.BackColor = util.str_to_color( sett.get("search_fg", "transparent"));
             bg.BackColor = util.str_to_color( sett.get("search_bg", "#faebd7") ); // antiquewhite
             txt.Text = sett.get("search_text");
+            TopMost = parent.TopMost;
         }
 
         public search_for search {

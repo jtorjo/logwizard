@@ -1,14 +1,11 @@
-- apply to existing lines
 
 
-- on file rewrite (bring to top on restart) 
-  -> make sure to navigate to last line!
-  -> see if i can bring to top+topmost without gaining focus
 
-- open in Explorer (ctrl-o)
 
  
 - deal with homogeneous logs (msi log files?)
+
+- apply to existing lines
 
 - synchronize colors : full log - synchronize with what the existing tab has and/or with all tabs? 
   (Sync: with current tab / with all tabs / none)
@@ -24,6 +21,8 @@
 
 - decrease memory footprint - probably for ascii-encoded files, we can assume we don't need to always keep the byte buffer (file_text_reader)
   note: since i'm always reading ahead (the parser), very likely i don't need to keep anything (buffer) in file_text_reader
+
+
 
 - move up/down -> sometimes it does not update the "Found" column
 
@@ -44,6 +43,14 @@
 
 
 
+- allow using the surrounding lines - if a $part ends in a number, it's the prev/next line. 
+  Example: $msg[2] (the second line from now), $time[-3] (the time 3 lines above), $thread[-12] (the thread 12 lines above)
+  allow concatenating of several messages - like: $msg[-1,2] = prev msg + enter + msg + enter + next msg + next+1 msg
+  This should be: 
+  if "apply to existing lines" is checked -> the lines are only taken from this view
+  if "apply to existing lines" is unchecked -> lines are taken from the log
+
+
 - settings page: 
   - font for showing the message (like, Courier New?)
   - default color for "Include text"
@@ -56,6 +63,12 @@
 - bug - sometimes refreshing clears the current view (and the view remains cleared) - clicking it a few times will make it work again, but it's not cool
 
 - bug - log_line_parser.line_at can actually cause assertion -> i should be able to handle the case when line_at returns null (and 'matches' should return false in that case)
+
+- bug - go from '\breading\b' 
+	-> remove the case-sensitive
+	-> add it back
+	-- this does not work - you need to manually refresh to work correctly
+
 
 - level column -> allow transforming it into pictures
 
@@ -72,11 +85,6 @@
 
 - save view (ctrl-s) - normalize, allow selecting which rows to save (time, date, etc.)
 
-- allow using the surrounding lines - if a $part ends in a number, it's the prev/next line. 
-  Example: $msg2 (the second line from now), $time-3 (the time 3 lines above), $thread-12 (the thread 12 lines above)
-  This should be: 
-  if "apply to existing lines" is checked -> the lines are only taken from this view
-  if "apply to existing lines" is unchecked -> lines are taken from the log
 
 
 ------------- talk with Vidi

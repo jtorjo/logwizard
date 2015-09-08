@@ -9,9 +9,10 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace LogWizard.ui {
-    public partial class about_form : Form {
-        public about_form() {
+    partial class about_form : Form {
+        public about_form(log_wizard parent) {
             InitializeComponent();
+            TopMost = parent.TopMost;
         }
 
         private void jt2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {

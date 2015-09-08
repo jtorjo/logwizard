@@ -8,10 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace LogWizard.ui {
-    public partial class settings_form : Form {
-        public settings_form() {
+    partial class settings_form : Form {
+        public settings_form(log_wizard parent) {
             InitializeComponent();
             load();
+            TopMost = parent.TopMost;
         }
 
         private void load() {

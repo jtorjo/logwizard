@@ -80,9 +80,11 @@ namespace LogWizard
             // 1.0.56
             toggle_title,
 
-            // 1.0.56 - not implemented yet (show/hide the tabs themselves)
+            // 1.0.56 - not implemented yet (show/hide the tabs themselves) FIXME show the tab name in the "Message" column itself
             toggle_view_tabs,
 
+            // 1.0.67
+            open_in_explorer,
 
             none,
         }
@@ -492,6 +494,7 @@ namespace LogWizard
 
             history_select(file);
             on_new_file_log(file);
+            util.bring_to_top(this);
         }
 
         private int extra_width_ = 0;
@@ -513,7 +516,7 @@ namespace LogWizard
             update_toggle_topmost_visibility();
         }
 
-        private void update_toggle_topmost_visibility() {
+        internal void update_toggle_topmost_visibility() {
             bool show_toggle_topmost = (FormBorderStyle == FormBorderStyle.None) || app.inst.show_topmost_toggle || TopMost;
             toggleTopmost.Visible = show_toggle_topmost;
             var first_tab = viewsTab.TabCount >= 0 ? log_view_for_tab(0) : null;
@@ -1275,7 +1278,7 @@ namespace LogWizard
 
         private void addContext_Click(object sender, EventArgs e)
         {
-            new_context_form new_ = new new_context_form();
+            new_context_form new_ = new new_context_form(this);
             new_.Location = Cursor.Position;
             if ( new_.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                 ui_context new_ctx = new ui_context();
@@ -1485,7 +1488,7 @@ namespace LogWizard
             if (text_ != null)
                 log_parser_.force_reload();
             refresh_filter_found();
-            fullLogCtrl.recompute_view_column();
+            fullLogCtrl.recompute_views_column();
 
             util.add_timer(
                 (has_ended) => {
@@ -1724,6 +1727,8 @@ namespace LogWizard
                 return action_type.toggle_title;
             case "v":
                 return action_type.toggle_view_tabs;
+            case "ctrl-o":
+                return action_type.open_in_explorer;
             }
 
             return action_type.none;
@@ -1735,7 +1740,7 @@ namespace LogWizard
 
             switch (action) {
             case action_type.search:
-                var searcher = new search_form();
+                var searcher = new search_form(this);
                 if (searcher.ShowDialog() == DialogResult.OK) {
                     search_for_text_ = searcher.search;
                     // remove focus from the Filters tab, just in case (otherwise, search prev/next would end up working on that)
@@ -1884,7 +1889,7 @@ namespace LogWizard
 
             case action_type.go_to_line:
                 if (lv != null) {
-                    var dlg = new go_to_line_time_form();
+                    var dlg = new go_to_line_time_form(this);
                     if (dlg.ShowDialog() == DialogResult.OK) {
                         if (dlg.is_number()) {
                             if ( dlg.has_offset != '\0')
@@ -1904,7 +1909,18 @@ namespace LogWizard
             case action_type.toggle_title:
                 toggle_title();
                 break;
+
             case action_type.toggle_view_tabs:
+                // FIXME
+                break;
+
+            case action_type.open_in_explorer:
+                try {
+                    string name = text_ != null ? text_.name : "";
+                    Process.Start("explorer", "/select,\"" + name + "\"");
+                } catch (Exception e) {
+                    logger.Error("can't open in explorer " + e.Message);
+                }
                 break;
 
             case action_type.none:
@@ -1993,7 +2009,7 @@ namespace LogWizard
         }
 
         private void settingsCtrl_Click(object sender, EventArgs e) {
-            new settings_form().ShowDialog();
+            new settings_form(this).ShowDialog();
         }
 
         private log_view selected_view() {
@@ -2028,7 +2044,7 @@ namespace LogWizard
         }
 
         private void tipsHotkeys_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            new help_form().Show();
+            new help_form(this).Show();
         }
 
         private void load_bookmarks() {
@@ -2060,7 +2076,7 @@ namespace LogWizard
         }
 
         private void about_Click(object sender, EventArgs e) {
-            new about_form().Show();
+            new about_form(this).Show();
         }
 
         private void log_wizard_Deactivate(object sender, EventArgs e) {

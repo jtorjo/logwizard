@@ -75,6 +75,13 @@ namespace LogWizard {
 
         private filter_line.font_info font_ = null;
 
+        public override string ToString() {
+            if (valid_)
+                return items_.Aggregate("", (current, line) => "" + current + line.text + "\r\n");
+            else
+                return "invalid";
+        }
+
         public filter_row(string text) {
             List<filter_line> lines = new List<filter_line>();
             List<addition> additions = new List<addition>();

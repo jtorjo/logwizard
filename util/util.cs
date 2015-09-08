@@ -26,12 +26,15 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using ColorSchemeExtension;
+using Microsoft.Win32;
 
 namespace LogWizard {
     class util {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 
         // this way I can emulate "release" behavior in debug mode - I want to avoid using #ifs as much as possible
@@ -386,30 +389,40 @@ namespace LogWizard {
             return s;
         }
 
-        public static void bring_to_top(Form form) {
+        public static void bring_to_top(log_wizard form) {
+            win32.BringToTop(form);
+            /*
             form.BringToFront();
             form.Focus();
             form.Activate();
 
             form.TopMost = true;
             form.TopMost = false;
+            */
         }
 
         // ... just setting .TopMost sometimes does not work
-        public static void bring_to_topmost(Form form) {
+        public static void bring_to_topmost(log_wizard form) {
+            form.TopMost = true;
+            form.update_toggle_topmost_visibility();
+            win32.MakeTopMost(form);
+            /*
+            form.TopMost = false;
             form.Activated += FormOnActivated;
 
             form.BringToFront();
             form.Focus();
             form.Activate();
+            */
         }
 
+        /*
         private static void FormOnActivated(object sender, EventArgs eventArgs) {
             var form = sender as Form;
             form.Activated -= FormOnActivated;
             form.TopMost = true;
             win32.MakeTopMost(form);
-        }
+        }*/
 
         // taken from http://stackoverflow.com/questions/3825390/effective-way-to-find-any-files-encoding
         // + return null if cant' read header
@@ -439,5 +452,75 @@ namespace LogWizard {
                 return null;
             }
         }
+
+
+        // http://stackoverflow.com/questions/2681878/associate-file-extension-with-application
+        [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
+        public static void set_association(string Extension, string KeyName, string OpenWith, string FileDescription)
+        {
+            try {
+                RegistryKey BaseKey;
+                RegistryKey OpenMethod;
+                RegistryKey Shell;
+                RegistryKey CurrentUser;
+
+                BaseKey = Registry.ClassesRoot.CreateSubKey(Extension);
+                BaseKey.SetValue("", KeyName);
+
+                OpenMethod = Registry.ClassesRoot.CreateSubKey(KeyName);
+                OpenMethod.SetValue("", FileDescription);
+                OpenMethod.CreateSubKey("DefaultIcon").SetValue("", "\"" + OpenWith + "\",0");
+                Shell = OpenMethod.CreateSubKey("Shell");
+                Shell.CreateSubKey("edit").CreateSubKey("command").SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
+                Shell.CreateSubKey("open").CreateSubKey("command").SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
+                BaseKey.Close();
+                OpenMethod.Close();
+                Shell.Close();
+
+                /*
+                CurrentUser = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.ucs");
+                CurrentUser = CurrentUser.OpenSubKey("UserChoice", RegistryKeyPermissionCheck.ReadWriteSubTree,
+                    System.Security.AccessControl.RegistryRights.FullControl);
+                CurrentUser.SetValue("Progid", KeyName, RegistryValueKind.String);
+                CurrentUser.Close();
+                */
+                // Delete the key instead of trying to change it
+                CurrentUser = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.ucs", true);
+                CurrentUser.DeleteSubKey("UserChoice", false);
+                CurrentUser.Close();
+
+                // Tell explorer the file association has been changed
+                SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+            } catch (Exception e) {
+                logger.Error("can't set association: " + e.Message);
+            }
+        }
+        public static void create_shortcut(string name, string directory, string description, string iconLocation, string targetPath, string targetArgs)
+        {
+            try {
+                string shortcutLocation = System.IO.Path.Combine(directory, name + ".lnk");
+                IWshRuntimeLibrary.WshShell shell = new IWshRuntimeLibrary.WshShell();
+                IWshRuntimeLibrary.IWshShortcut shortcut = (IWshRuntimeLibrary.IWshShortcut) shell.CreateShortcut(shortcutLocation);
+
+                shortcut.Description = description; // The description of the shortcut
+                if ( iconLocation != null)
+                    shortcut.IconLocation = iconLocation; // The icon of the shortcut
+                shortcut.TargetPath = targetPath; // The path of the file that will launch when the shortcut is run
+                if (targetArgs != null)
+                    shortcut.Arguments = targetArgs;
+                shortcut.Save(); // Save the shortcut
+            } catch(Exception e) {
+                MessageBox.Show("Could not create shortcut " + e.Message);
+            }
+        }
+
+
+
+
+
+
+
+
     }
 }

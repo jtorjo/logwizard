@@ -660,9 +660,12 @@ namespace LogWizard
 
             if (!filter_changed_) {
                 int match_count = filter_.match_count;
-                if (list.GetItemCount() == match_count)
+                if (list.GetItemCount() == match_count) {
                     // nothing changed
+                    if( needs_scroll)
+                        go_last();
                     return;
+                }
                 logger.Debug("[view] log " + viewName.Text + ": going from " + list.GetItemCount() + " to " + match_count + " entries.");
                 if (list.GetItemCount() < match_count) {
                     // items have been added
@@ -712,7 +715,7 @@ namespace LogWizard
             return lines;
         }
 
-        public void recompute_view_column() {
+        public void recompute_views_column() {
             for (int idx = 0; idx < list.GetItemCount(); ++idx) {
                 item i = list.GetItem(idx).RowObject as item;
                 i.matched_logs = null;
@@ -855,6 +858,13 @@ namespace LogWizard
         // by default, notify parent
         private select_type select_nofify_ = select_type.notify_parent;
         private void select_idx(int idx, select_type notify) {
+            if (list.SelectedIndex == idx)
+                return; // already selected
+
+            // 1.0.67+ - there's a bug in objectlistview - if we're not the current view, we can't really select a row
+            if (!is_current_view)
+                return;
+
             select_nofify_ = notify;
             if (idx >= 0 && idx < list.GetItemCount()) {
                 logger.Debug("[view] " + name + " sel=" + idx);

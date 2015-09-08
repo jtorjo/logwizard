@@ -46,13 +46,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FE97592EE371AE93311B615D98612263"
+        "OwnerKey" = "8:_58DF238636A54D29D1ED2560A161DA19"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_58DF238636A54D29D1ED2560A161DA19"
+        "OwnerKey" = "8:_FE97592EE371AE93311B615D98612263"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -235,6 +235,11 @@
             "AssemblyAsmDisplayName" = "8:ObjectListView, Version=2.8.1.33936, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_58DF238636A54D29D1ED2560A161DA19"
+                    {
+                    "Name" = "8:ObjectListView.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:ObjectListView.dll"
             "TargetName" = "8:"
@@ -281,6 +286,11 @@
             "AssemblyAsmDisplayName" = "8:log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_FE97592EE371AE93311B615D98612263"
+                    {
+                    "Name" = "8:log4net.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:log4net.dll"
             "TargetName" = "8:"
@@ -315,6 +325,39 @@
             "Property" = "8:AppDataFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_2A8A4B14842C40D2BFCB91D5CC60A127"
+                    {
+                    "Name" = "8:Microsoft"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_F751EB8FDB5C454798337E290D010817"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_4B365A0B382D442D93C18A06BFD52BDF"
+                            {
+                            "Name" = "8:Windows"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_C5AAD918C9BA411AA03FA6F7F3A0789A"
+                                "Folders"
+                                {
+                                    "{9EF0B969-E518-4E46-987F-47570745A589}:_BCE43CAFDF954168BDDF6BCB1A5AA7DF"
+                                    {
+                                    "Name" = "8:SendTo"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "Property" = "8:_A068FBAF73594E8C985BB18BD9E50F90"
+                                        "Folders"
+                                        {
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_879649FD9B554958BFD8F5DA7201A786"
                     {
                     "Name" = "8:LogWizard"
@@ -378,15 +421,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
-        "ProductCode" = "8:{80F809E7-478B-4FF0-89FA-3C03DC8DECA4}"
-        "PackageCode" = "8:{0C313DAA-CA2B-4842-871D-D1CD5F506B84}"
+        "ProductCode" = "8:{7E0FE78C-318B-4CB8-869B-157B56D7350E}"
+        "PackageCode" = "8:{92A8F69C-E9BE-4A8C-8C93-ECB3F6CAE1D3}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.66"
+        "ProductVersion" = "8:1.0.67"
         "Manufacturer" = "8:John Torjo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

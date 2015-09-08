@@ -29,12 +29,13 @@ using System.Windows.Forms;
 
 namespace LogWizard
 {
-    public partial class new_context_form : Form
+    partial class new_context_form : Form
     {
-        public new_context_form()
+        public new_context_form(log_wizard parent)
         {
             InitializeComponent();
             matchType.SelectedIndex = 0;
+            TopMost = parent.TopMost;
         }
 
         private void ok_Click(object sender, EventArgs e)

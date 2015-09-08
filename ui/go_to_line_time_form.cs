@@ -9,9 +9,10 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace LogWizard.ui {
-    public partial class go_to_line_time_form : Form {
-        public go_to_line_time_form() {
+    partial class go_to_line_time_form : Form {
+        public go_to_line_time_form(log_wizard parent) {
             InitializeComponent();
+            TopMost = parent.TopMost;
         }
 
         // in this case, it's an offset

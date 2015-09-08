@@ -81,7 +81,7 @@ namespace LogWizard {
         const UInt32 SWP_NOMOVE = 0x0002;
         const UInt32 TOPMOST_FLAGS = SWP_NOMOVE | SWP_NOSIZE;
 
-        public static void MakeTopMost(Form form) {
+        public static void BringToTop(Form form) {
             IntPtr hWnd = form.Handle;
 
             // backup - hopefully we don't need to do this, but just in case
@@ -92,6 +92,11 @@ namespace LogWizard {
             SetForegroundWindow(hWnd);
             SetForegroundWindow(hWnd);
 
+            SetWindowPos(form.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
+        }
+
+        public static void MakeTopMost(Form form) {
+            BringToTop(form);
             SetWindowPos(form.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
         }
 

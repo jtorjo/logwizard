@@ -32,7 +32,9 @@ namespace LogWizard {
 
 
         protected bool Equals(filter_line other) {
-            return part == other.part && comparison == other.comparison && string.Equals(text, other.text);// && Equals(fi, other.fi);
+            return Equals(fi, other.fi) && case_sensitive_ == other.case_sensitive_ && 
+                string.Equals(lo_text, other.lo_text) && string.Equals(text, other.text) && 
+                comparison == other.comparison && part == other.part;
         }
 
         public override bool Equals(object obj) {
@@ -44,10 +46,14 @@ namespace LogWizard {
 
         public override int GetHashCode() {
             unchecked {
-                var hashCode = (int) part;
-                hashCode = (hashCode * 397) ^ (int) comparison;
+                var hashCode = (fi != null ? fi.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ case_sensitive_.GetHashCode();
+                hashCode = (hashCode * 397) ^ (lo_words != null ? lo_words.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (lo_text != null ? lo_text.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (words != null ? words.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (text != null ? text.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (fi != null ? fi.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (int) comparison;
+                hashCode = (hashCode * 397) ^ (int) part;
                 return hashCode;
             }
         }
@@ -100,7 +106,8 @@ namespace LogWizard {
         // font -> contains details about the font; for now, the colors
         public class font_info {
             protected bool Equals(font_info other) {
-                return fg.Equals(other.fg) && bg.Equals(other.bg);
+                return fg.ToArgb() == other.fg.ToArgb() && bg.ToArgb() == other.bg.ToArgb();
+                //return fg.Equals(other.fg) && bg.Equals(other.bg);
             }
 
             public override bool Equals(object obj) {

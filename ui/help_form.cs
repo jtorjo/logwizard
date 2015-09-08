@@ -8,9 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace LogWizard.ui {
-    public partial class help_form : Form {
-        public help_form() {
+    partial class help_form : Form {
+        public help_form(log_wizard parent) {
             InitializeComponent();
+            TopMost = parent.TopMost;
         }
     }
 }
