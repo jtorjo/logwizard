@@ -227,31 +227,56 @@ namespace LogWizard {
 
                 for (int line_idx = old_line_count; line_idx < new_log.line_count; ++line_idx) {
                     bool any_match = false;
+                    // 1.0.69 added "apply to existing filters"
                     for (int filter_idx = 0; filter_idx < matches.Length; ++filter_idx) {
-                        if (rows[filter_idx].enabled || rows[filter_idx].dimmed)
-                            matches[filter_idx] = rows[filter_idx].line_matches.Contains(line_idx);
+                        var row = rows[filter_idx];
+                        if ( (row.enabled || row.dimmed) && !row.apply_to_existing_lines)
+                            matches[filter_idx] = row.line_matches.Contains(line_idx);
                         else
                             matches[filter_idx] = false;
                         if (matches[filter_idx])
                             any_match = true;
                     }
+                    // 1.0.69 "apply to existing filters" is applied afterwards
+                    filter_line.font_info existing_filter_font = null;
+                    if ( any_match)
+                        for (int filter_idx = 0; filter_idx < matches.Length && any_match; ++filter_idx) {
+                            var row = rows[filter_idx];
+                            if ((row.enabled || row.dimmed) && row.apply_to_existing_lines) {
+                                bool is_font_only = row.raw_font != null;
+                                if (row.line_matches.Contains(line_idx)) {
+                                    if (existing_filter_font == null && is_font_only) {
+                                        // in this case, use the font from "apply to existing filters" - only if the user has specifically set it
+                                        existing_filter_font = row.get_match(line_idx).font;
+                                        matches[filter_idx] = true;
+                                    }
+                                } else if (!is_font_only)
+                                    // we're filtering this line out
+                                    any_match = false;
+                            }
+                        }
 
                     if (any_match) {
-                        // in this case, prefer the first "enabled" filter
-                        int enabled_idx = -1;
-                        for (int filter_idx = 0; filter_idx < matches.Count() && enabled_idx < 0; ++filter_idx)
-                            if (matches[filter_idx] && rows[filter_idx].enabled)
-                                enabled_idx = filter_idx;
-                        int used_idx = -1;
-                        if ( enabled_idx < 0)
-                            for (int filter_idx = 0; filter_idx < matches.Count() && used_idx < 0; ++filter_idx)
-                                if (matches[filter_idx] && rows[filter_idx].dimmed)
-                                    used_idx = filter_idx;
-                        Debug.Assert(enabled_idx >= 0 || used_idx >= 0);
-                        int idx = enabled_idx >= 0 ? enabled_idx : used_idx;
-                        var cur_match = rows[idx].get_match(line_idx);
+                        filter_line.font_info font;
+                        if (existing_filter_font != null)
+                            font = existing_filter_font;
+                        else {
+                            // in this case, prefer the first "enabled" filter
+                            int enabled_idx = -1;
+                            for (int filter_idx = 0; filter_idx < matches.Count() && enabled_idx < 0; ++filter_idx)
+                                if (matches[filter_idx] && rows[filter_idx].enabled)
+                                    enabled_idx = filter_idx;
+                            int used_idx = -1;
+                            if (enabled_idx < 0)
+                                for (int filter_idx = 0; filter_idx < matches.Count() && used_idx < 0; ++filter_idx)
+                                    if (matches[filter_idx] && rows[filter_idx].dimmed)
+                                        used_idx = filter_idx;
+                            Debug.Assert(enabled_idx >= 0 || used_idx >= 0);
+                            int idx = enabled_idx >= 0 ? enabled_idx : used_idx;
+                            font = rows[idx].get_match(line_idx).font;
+                        }
                         new_matches.Add(line_idx, new match {
-                            font = cur_match.font, line = new_log.line_at(line_idx), line_idx = line_idx, matches = matches.ToArray()
+                            font = font, line = new_log.line_at(line_idx), line_idx = line_idx, matches = matches.ToArray()
                         });
                         new_indexes.Add(line_idx);
                     }

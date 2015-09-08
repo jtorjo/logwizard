@@ -61,7 +61,7 @@ namespace LogWizard {
         //
         // if it is, we can keep the cached information (about line matches)
         public bool same(filter_row other) {
-            return Enumerable.SequenceEqual(items_, other.items_) && Enumerable.SequenceEqual(additions_, other.additions_);            
+            return Enumerable.SequenceEqual(items_, other.items_) && Enumerable.SequenceEqual(additions_, other.additions_) && apply_to_existing_lines == other.apply_to_existing_lines;
         }
 
         private bool valid_ = true;
@@ -74,6 +74,15 @@ namespace LogWizard {
         private int old_line_count_ = 0;
 
         private filter_line.font_info font_ = null;
+        // 1.0.69+ this contains raw font info - if any - in other words, if any font information is set for this row, this is non-null
+        //                                       otherwise, it's null
+        private filter_line.font_info raw_font_ = null;
+
+        // if true, this is applied after the normal filters
+        //
+        // it can : filter out lines from what the normal filters yielded and/or
+        //          give a different color to the lines
+        public bool apply_to_existing_lines = false; 
 
         public override string ToString() {
             if (valid_)
@@ -129,13 +138,17 @@ namespace LogWizard {
             get { return font_.bg; }
         }
 
-
-        private filter_line.font_info get_font_info() {
+        private filter_line.font_info get_raw_font_info() {
             var result = new filter_line.font_info();
             foreach ( var item in items_)
                 if (item.part == filter_line.part_type.font)
                     result.copy_from( item.fi);
 
+            return result;
+        }
+
+        private filter_line.font_info get_font_info() {
+            var result = get_raw_font_info();
             result.bg = get_bg_color(result.bg, enabled);
             result.fg = get_fg_color(result.fg, enabled);
             return result;
@@ -146,7 +159,7 @@ namespace LogWizard {
         public bool enabled {
             get { return enabled_; }
             set { enabled_ = value;
-                font_ = get_font_info();
+                update_font();
             }
         }
 
@@ -155,15 +168,26 @@ namespace LogWizard {
             get { return dimmed_; }
             set {
                 dimmed_ = value; 
-                font_ = get_font_info();                
+                update_font();
             }
+        }
+
+        public filter_line.font_info raw_font {
+            get { return raw_font_; }
         }
 
         private void init(List<filter_line> items, List<addition> additions) {
             items_ = items;
             additions_ = additions;
-            font_ = get_font_info();
+            update_font();
             update_case_sensitive();
+        }
+
+        private void update_font() {
+            font_ = get_font_info();
+
+            bool has_font_info = items_.Count(i => i.part == filter_line.part_type.font) > 0;
+            raw_font_ = has_font_info ? get_raw_font_info() : null;
         }
 
         private void update_case_sensitive() {

@@ -74,7 +74,7 @@
             this.main = new System.Windows.Forms.SplitContainer();
             this.leftPane = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.applyToExistingLines = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -577,11 +577,11 @@
             // settingsCtrl
             // 
             this.settingsCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.settingsCtrl.Location = new System.Drawing.Point(1123, 9);
+            this.settingsCtrl.Location = new System.Drawing.Point(1112, 9);
             this.settingsCtrl.Name = "settingsCtrl";
-            this.settingsCtrl.Size = new System.Drawing.Size(68, 23);
+            this.settingsCtrl.Size = new System.Drawing.Size(78, 23);
             this.settingsCtrl.TabIndex = 12;
-            this.settingsCtrl.Text = "Settings";
+            this.settingsCtrl.Text = "Preferences";
             this.settingsCtrl.UseVisualStyleBackColor = true;
             this.settingsCtrl.Click += new System.EventHandler(this.settingsCtrl_Click);
             // 
@@ -635,7 +635,7 @@
             this.tabPage2.Controls.Add(this.viewFromClipboard);
             this.tabPage2.Controls.Add(this.viewToClipboard);
             this.tabPage2.Controls.Add(this.filterCtrl);
-            this.tabPage2.Controls.Add(this.checkBox1);
+            this.tabPage2.Controls.Add(this.applyToExistingLines);
             this.tabPage2.Controls.Add(this.label1);
             this.tabPage2.Controls.Add(this.curFilterCtrl);
             this.tabPage2.Controls.Add(this.delFilter);
@@ -649,17 +649,17 @@
             this.tabPage2.Text = "Filters";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
+            // applyToExistingLines
             // 
-            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(45, 442);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(144, 19);
-            this.checkBox1.TabIndex = 12;
-            this.checkBox1.Text = "Apply to existing Lines";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.applyToExistingLines.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.applyToExistingLines.AutoSize = true;
+            this.applyToExistingLines.Location = new System.Drawing.Point(45, 442);
+            this.applyToExistingLines.Name = "applyToExistingLines";
+            this.applyToExistingLines.Size = new System.Drawing.Size(144, 19);
+            this.applyToExistingLines.TabIndex = 12;
+            this.applyToExistingLines.Text = "Apply to existing Lines";
+            this.applyToExistingLines.UseVisualStyleBackColor = true;
+            this.applyToExistingLines.CheckedChanged += new System.EventHandler(this.applyToExistingLines_CheckedChanged);
             // 
             // tabPage3
             // 
@@ -881,7 +881,7 @@
             this.monitor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.monitor.Location = new System.Drawing.Point(1045, 9);
             this.monitor.Name = "monitor";
-            this.monitor.Size = new System.Drawing.Size(76, 23);
+            this.monitor.Size = new System.Drawing.Size(64, 23);
             this.monitor.TabIndex = 14;
             this.monitor.Text = "Monitor";
             this.monitor.UseVisualStyleBackColor = true;
@@ -1005,7 +1005,7 @@
         private System.Windows.Forms.Button about;
         private System.Windows.Forms.Timer postFocus;
         private System.Windows.Forms.CheckBox synchronizedWithFullLog;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox applyToExistingLines;
         private System.Windows.Forms.TabControl leftPane;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;

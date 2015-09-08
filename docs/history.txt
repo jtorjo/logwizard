@@ -1,7 +1,13 @@
 
-
 - bug - drop one file onto logwizard; then drop another -> press ctrl-f -> the find window is shown behind our window (our window was made topmost somehow?)
   as soon as i drop something -> our window becomes topmost?
+
+
+
+
+1.0.69a
+- apply to existing lines
+- when changing tab (view) -> we update the filterctrl - we also need to clear curFilterText + applytoexistingfilters
 
 
 1.0.68

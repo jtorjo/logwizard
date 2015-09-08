@@ -12,6 +12,8 @@ namespace LogWizard {
         public bool enabled = true;
         // if !enabled, but dimmed, the filter acts the same, only that it shows the lines pertaining to it as gray (dimmed)
         public bool dimmed = false;
+
+        public bool apply_to_existing_lines = false;
     }
 
     [Serializable]

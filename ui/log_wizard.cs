@@ -143,6 +143,8 @@ namespace LogWizard
             public bool dimmed = false;
             public string text = "";
 
+            public bool apply_to_existing_lines = false;
+
             public string found_count = "";
 
             // "name" is just a friendly name for the text
@@ -283,7 +285,8 @@ namespace LogWizard
                         bool enabled = int.Parse( sett.get(prefix + "enabled", "1")) != 0;
                         bool dimmed = int.Parse( sett.get(prefix + "dimmed", "0")) != 0;
                         string text = sett.get(prefix + "text");
-                        lv.filters.Add( new ui_filter { enabled = enabled, dimmed = dimmed, text = text } );
+                        bool apply_to_existing_lines = int.Parse( sett.get(prefix + "apply_to_existing_lines", "0")) != 0;
+                        lv.filters.Add( new ui_filter { enabled = enabled, dimmed = dimmed, text = text, apply_to_existing_lines = apply_to_existing_lines } );
                     }
                     ctx.views.Add(lv);
                 }
@@ -323,6 +326,7 @@ namespace LogWizard
                         string prefix = "context." + i + ".view" + v + ".filt" + f + ".";
                         sett.set(prefix + "enabled", lv.filters[f].enabled ? "1" : "0");
                         sett.set(prefix + "dimmed", lv.filters[f].dimmed ? "1" : "0");
+                        sett.set(prefix + "apply_to_existing_lines", lv.filters[f].apply_to_existing_lines ? "1" : "0");
                         sett.set(prefix + "text", lv.filters[f].text);
                     }
                 }
@@ -564,7 +568,6 @@ namespace LogWizard
 
         private void load_filters() {
             // filter_row Enabled / Used - are context dependent!
-            string old_sel = filterCtrl.SelectedObject != null ? ((filter_item)filterCtrl.SelectedObject).name : "";
 
             List<object> items = new List<object>();
             ui_context cur = cur_context();
@@ -572,13 +575,17 @@ namespace LogWizard
             if (cur_view < cur.views.Count) {
                 var filters = cur.views[cur_view].filters;
                 for (int idx = 0; idx < filters.Count; ++idx) {
-                    filter_item i = new filter_item() {text = filters[idx].text, enabled = filters[idx].enabled, dimmed = filters[idx].dimmed};
+                    filter_item i = new filter_item { text = filters[idx].text, enabled = filters[idx].enabled, 
+                                                      dimmed = filters[idx].dimmed, apply_to_existing_lines = filters[idx].apply_to_existing_lines };
                     items.Add(i);
                 }
             }
             filterCtrl.SetObjects(items);
-            if ( old_sel != "")
-                select_filter(old_sel);
+
+            ignore_change = true;
+            curFilterCtrl.Text = "";
+            applyToExistingLines.Checked = false;
+            ignore_change = false;
         }
 
         private void save_filters() {
@@ -591,7 +598,7 @@ namespace LogWizard
             cur.views[cur_view].filters.Clear();
             for ( int idx = 0; idx < filterCtrl.GetItemCount(); ++idx) {
                 filter_item i = filterCtrl.GetItem(idx).RowObject as filter_item;
-                cur.views[cur_view].filters.Add(  new ui_filter { enabled = i.enabled, dimmed = i.dimmed, text = i.text } );
+                cur.views[cur_view].filters.Add(  new ui_filter { enabled = i.enabled, dimmed = i.dimmed, text = i.text, apply_to_existing_lines = i.apply_to_existing_lines} );
             }
         }
 
@@ -796,7 +803,7 @@ namespace LogWizard
 
         private void addFilter_Click(object sender, EventArgs e)
         {
-            filter_item new_ = new filter_item { enabled = true, dimmed = false, text = "" };
+            filter_item new_ = new filter_item { enabled = true, dimmed = false, text = "", apply_to_existing_lines = false};
 
             ui_context cur = cur_context();
             cur.views[ viewsTab.SelectedIndex ].filters.Add( new ui_filter() );
@@ -903,6 +910,7 @@ namespace LogWizard
                 filter_row row = new filter_row(filt.text);
                 row.enabled = filt.enabled;
                 row.dimmed = filt.dimmed;
+                row.apply_to_existing_lines = filt.apply_to_existing_lines;
                 if ( row.is_valid)
                     lvf.Add(row);
             }
@@ -939,6 +947,7 @@ namespace LogWizard
                 filter_row filt = new filter_row(i.text);
                 filt.enabled = i.enabled;
                 filt.dimmed = i.dimmed;
+                filt.apply_to_existing_lines = i.apply_to_existing_lines;
 
                 if ( filt.is_valid)
                     lvf.Add(filt);
@@ -1372,6 +1381,24 @@ namespace LogWizard
                 // in this case, the user has edited the filter
                 curFilterCtrl.Text = sel.text;
                 last_filter_text_change_ = DateTime.Now;
+            }
+        }
+
+        private void applyToExistingLines_CheckedChanged(object sender, EventArgs e) {
+            if ( ignore_change)
+                return;
+            if (filterCtrl.GetItemCount() == 0)
+                return;
+
+            var sel = filterCtrl.SelectedObject as filter_item;
+            // we must be editing a filter row!
+            Debug.Assert(sel != null);
+            if (sel == null) 
+                return;
+
+            if (sel.apply_to_existing_lines != applyToExistingLines.Checked) {
+                sel.apply_to_existing_lines = applyToExistingLines.Checked;
+                save();
             }
         }
 
@@ -1992,11 +2019,15 @@ namespace LogWizard
 
         private void filterCtrl_SelectedIndexChanged(object sender, EventArgs e) {
             int sel_filter = filterCtrl.SelectedIndex;
-            if (sel_filter < 0)
-                return;
             int sel_view = viewsTab.SelectedIndex;
-            if (sel_view < 0)
+            bool has_sel = sel_filter >= 0 && sel_view >= 0;
+            if (!has_sel) {
+                ignore_change = true;
+                curFilterCtrl.Text = "";
+                applyToExistingLines.Checked = false;
+                ignore_change = false;
                 return;
+            }
 
             filter_item i = filterCtrl.GetItem(sel_filter).RowObject as filter_item;
             filter_row filt = new filter_row(i.text);
@@ -2006,6 +2037,10 @@ namespace LogWizard
                 Color bg = util.str_to_color(sett.get("filter_bg", "#faebd7"));
                 lv.mark_match(sel_filter, fg, bg);
             }
+
+            ignore_change = true;
+            applyToExistingLines.Checked = i.apply_to_existing_lines;
+            ignore_change = false;
         }
 
         private void settingsCtrl_Click(object sender, EventArgs e) {
@@ -2257,5 +2292,6 @@ namespace LogWizard
         private void log_wizard_Activated(object sender, EventArgs e) {
 
         }
+
     }
 }
