@@ -91,8 +91,6 @@ namespace LogWizard {
 
             SetForegroundWindow(hWnd);
             SetForegroundWindow(hWnd);
-
-            SetWindowPos(form.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
         }
 
         public static void MakeTopMost(Form form) {
