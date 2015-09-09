@@ -396,25 +396,32 @@ namespace LogWizard
         }
 
         private void show_full_log(show_full_log_type show) {
+            Control to_focus = null;
             switch (show) {
             case show_full_log_type.both:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(true);
                 cur_context().show_fulllog = true;
+                to_focus = fullLogCtrl != null ? fullLogCtrl.list : null;
                 break;
             case show_full_log_type.just_view:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(false);
                 cur_context().show_fulllog = false;
+                to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex).list;
                 break;
             case show_full_log_type.just_full_log:
                 show_filteredleft_pane1(false);
                 show_filteredleft_pane2(true);
+                to_focus = fullLogCtrl != null ? fullLogCtrl.list : null;
                 break;
             default:
                 Debug.Assert(false);
                 break;
             }
+            // this ends up causing another bug: -> when pressed ('l') in full-log, it's pressed twice
+            //if (to_focus != null)
+              //  to_focus.Focus();
             toggleFullLog.Text = show_full_log_type_to_str(show);
         }
 

@@ -1,4 +1,5 @@
 - toggle 'v' - show/hide view + 'h' show/hide header
+  - global - they apply to all views
 
 - decrease memory footprint - probably for ascii-encoded files, we can assume we don't need to always keep the byte buffer (file_text_reader)
   note: since i'm always reading ahead (the parser), very likely i don't need to keep anything (buffer) in file_text_reader
@@ -32,6 +33,8 @@
 - for large files / sync colors -> when switching tab (thus, resync-ing) takes rather long. the best way to do it is to synchronize ONLY the lines that are visible
   (of course, only when full log shown)
 
+- option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?)
+
 
 
 
@@ -59,6 +62,33 @@
   This should be: 
   if "apply to existing lines" is checked -> the lines are only taken from this view
   if "apply to existing lines" is unchecked -> lines are taken from the log
+
+
+
+
+
+
+
+
+
+
+
+
+  - ' ' toggle between enabled/dimmed in the filter (if on a filter row)
+- 'd' toggle details - this is the beginning of a larger feature -> allow showing details about the message (like, certain columns should show up in the list, and certain in the details - they can overlap)
+  if turned on, the msg details is automatically off
+  - i should also have a way to toggle msg_details on/off
+
+- 's' - toggle status (info about the file/current view - like, file size, number of lines, how many lines the last Find matched)
+
+- toggles - have them as a single context menu - to be shown at the press of a button or when right-clicking on our "bug" icon
+  - when showing the menu, the hotkeys for each toggle, show them in [] , like, [F]ilter Pane
+  - include 'm' as well - explain for current view only
+  - tooltip -> explain that toggles are shown when right clicking the icon as well
+- option to turn off hotkeys
+
+- ctrl-h -> should show history - if the title is toggled off, just bring the history part to visibility, and then hide it back
+
 
 
 
@@ -105,6 +135,9 @@
 
 
 
+
+- show/hide views altogether -> allow hiding the views that don't interest you at this time
+  (you might want to re-show them later, but for now, you don't care about them)
 
 
 
