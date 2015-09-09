@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -8,11 +9,29 @@ namespace LogWizard {
         // http://stackoverflow.com/questions/1766328/can-linq-use-binary-search-when-the-collection-is-ordered
         //
         // does not throw, returns null if not found
-        public static T BinarySearch<T, TKey>(this IList<T> list, Func<T, TKey> keySelector, TKey key)
+        // returns the position of the element as well (so that we don't have to call the inefficient IndexOf)
+        public static Tuple<T,int> binary_search<T, TKey>(this IList<T> list, Func<T, TKey> keySelector, TKey key)
                 where TKey : IComparable<TKey> where T : class
         {
             if (list.Count == 0)
-                return null;
+                return new Tuple<T, int>(null,-1);
+
+            var closest = binary_search_closest(list, keySelector, key);
+            if (closest.Item1 != null) {
+                // see if it's an exact match
+                bool is_exact = keySelector(list[closest.Item2]).CompareTo(key) == 0;
+                if (is_exact)
+                    return closest;
+            }
+
+            return new Tuple<T, int>(null,-1);
+        }
+
+        // returns the closest item - guaranteed to return something
+        public static Tuple<T,int> binary_search_closest<T, TKey>(this IList<T> list, Func<T, TKey> keySelector, TKey key)
+                where TKey : IComparable<TKey> where T : class
+        {
+            Debug.Assert(list.Count > 0);
 
             int min = 0;
             int max = list.Count;
@@ -23,21 +42,31 @@ namespace LogWizard {
                 TKey midKey = keySelector(midItem);
                 int comp = midKey.CompareTo(key);
                 if (comp < 0)
-                {
                     min = mid + 1;
-                }
                 else if (comp > 0)
-                {
                     max = mid - 1;
-                }
                 else
-                {
-                    return midItem;
-                }
+                    return new Tuple<T, int>(midItem, mid);
             }
-            if (min == max && min < list.Count && keySelector(list[min]).CompareTo(key) == 0)
-                return list[min];
-            return null;
+
+            if (min >= list.Count)
+                min = list.Count - 1;
+            if (max >= list.Count)
+                max = list.Count - 1;
+            if (max < 0)
+                max = 0;
+
+            if (min == max )
+                return new Tuple<T, int>(list[min], min);
+
+            Debug.Assert(min >= 0);
+            // now - see if to return start or end
+            T startItem = list[min];
+            TKey startKey = keySelector(startItem);
+            T endItem = list[max];
+            TKey endKey = keySelector(endItem);
+            bool return_start = Math.Abs(startKey.CompareTo(key)) < Math.Abs(endKey.CompareTo(key));
+            return new Tuple<T, int>(return_start ? startItem : endItem, return_start ? min : max);
         }
     }
 }

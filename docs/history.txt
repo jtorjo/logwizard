@@ -1,4 +1,10 @@
 
+
+1.0.71
+- fix: deal with big files (_test1.HoldemManager.Import.test.txt) -> do profiling
+  synchronizing with other views - use binary search
+
+
 1.0.70b
 - deal with homogeneous logs (hm3 files -> several syntaxes)
 

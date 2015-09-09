@@ -777,8 +777,8 @@ namespace LogWizard
             int end_idx = list.GetItemCount();
             for (int idx = start_idx; idx < end_idx; ++idx) {
                 item i = list.GetItem(idx).RowObject as item;
-                i.override_bg = Color.White;
-                i.override_fg = Color.DarkGray;
+                i.override_bg = filter_line.font_info.full_log_gray_.bg;
+                i.override_fg = filter_line.font_info.full_log_gray_.fg;
 
                 int line_idx = i.match.line_idx;
                 item found_line = null;
@@ -787,19 +787,19 @@ namespace LogWizard
                     i.override_fg = Color.Black;
                     break;
                 case app.synchronize_colors_type.with_current_view:
-                    found_line = current.model_.get_matches.BinarySearch(item => item.match.line_idx, line_idx);
+                    found_line = current.model_.get_matches.binary_search(item => item.match.line_idx, line_idx).Item1;
                     if (found_line != null) {
                         i.override_bg = found_line.bg;
                         i.override_fg = found_line.fg;
                     }
                     break;
                 case app.synchronize_colors_type.with_all_views:
-                    found_line = current.model_.get_matches.BinarySearch(item => item.match.line_idx, line_idx);
+                    found_line = current.model_.get_matches.binary_search(item => item.match.line_idx, line_idx).Item1;
                     bool found_in_current = found_line != null;
                     for (int other_idx = 0; other_idx < other_logs.Count && found_line == null; ++other_idx) {
                         log_view other = other_logs[other_idx];
                         if ( other != current)
-                            found_line = other.model_.get_matches.BinarySearch(item => item.match.line_idx, line_idx);
+                            found_line = other.model_.get_matches.binary_search(item => item.match.line_idx, line_idx).Item1;
                     }
 
                     if (found_line != null) {
@@ -970,6 +970,11 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
 
+            var closest = model_.get_matches.binary_search_closest(item => item.match.line_idx, line_idx);
+            go_to_line(closest.Item2, notify);
+
+
+            /*
             // note: yeah - i could do binary search, but it's not that big of a time increase
             int last_line_idx = (list.GetItem(0).RowObject as item).match.line_idx;
             int found_idx = 0;
@@ -985,10 +990,17 @@ namespace LogWizard
                     break;
             }
             go_to_line(found_idx, notify);
+            */
         }
 
         public void go_to_closest_time(DateTime time) {
+            if (list.GetItemCount() < 1)
+                return;
 
+            var closest = model_.get_matches.binary_search_closest(item => item.match.line.time, time);
+            go_to_line(closest.Item2, select_type.notify_parent);
+
+            /*
             // note: yeah - i could do binary search, but it's not that big of a time increase
             var last_time = (list.GetItem(0).RowObject as item).match.line.time;
             int found_idx = 0;
@@ -1004,6 +1016,7 @@ namespace LogWizard
                     break;
             }
             go_to_line(found_idx, select_type.notify_parent);
+            */
         }
 
         public void offset_closest_time(int time_ms, bool forward) {

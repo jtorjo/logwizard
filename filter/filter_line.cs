@@ -144,6 +144,7 @@ namespace LogWizard {
             public static font_info dimmed = new font_info { bg = Color.White, fg = Color.LightGray };
 
             public static font_info default_ = new font_info { bg = Color.White, fg = Color.Black };
+            public static font_info full_log_gray_ = new font_info { bg = Color.White, fg = Color.LightSlateGray };
         }
         public font_info fi = new font_info();
 

@@ -116,6 +116,10 @@ namespace LogWizard {
                 return Color.LightCoral;
             if (argb == Color.Pink.ToArgb())
                 return Color.LightPink;
+            if ( argb == Color.Black.ToArgb())
+                return Color.Gray;
+            if (argb  == Color.Gray.ToArgb())
+                return Color.DarkGray;
 
             ColorEx ex = new ColorEx(col);
             ex.S = (byte)(ex.S / 5);
@@ -275,9 +279,17 @@ namespace LogWizard {
             // milliseconds after "."
             time = time.Replace(',', '.');
 
-            // in this case, just mm:ss[.zzz]
-            if (time.Count(c => c == ':') == 1)
-                time = "00:" + time;
+            // in this case, just hh:mm
+            if (time.Count(c => c == ':') == 1) {
+                int sep0 = time.IndexOf(':');
+                bool has_zzz_sep = time.IndexOfAny(time_ms_separators, sep0 + 1) >= 0;
+                if (has_zzz_sep)
+                    // weird, it's an mm:ss.zzz ?
+                    time = "00:" + time;
+                else
+                    // it's hh:mm
+                    time = time + ":00";
+            }
 
             int sep1 = time.IndexOf(':');
             Debug.Assert(sep1 >= 1 && sep1 <= 2);

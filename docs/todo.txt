@@ -1,5 +1,3 @@
-
-
 - toggle 'v' - show/hide view + 'h' show/hide header
 
 - decrease memory footprint - probably for ascii-encoded files, we can assume we don't need to always keep the byte buffer (file_text_reader)
@@ -31,6 +29,8 @@
   also, i should save existing location - however if it matches an already saved location, don't save
   perhaps save a few more things -> like whether i have title toggled/and am topmost? TOTHINK, like - save all toggles
 
+- for large files / sync colors -> when switching tab (thus, resync-ing) takes rather long. the best way to do it is to synchronize ONLY the lines that are visible
+  (of course, only when full log shown)
 
 
 
