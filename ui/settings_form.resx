@@ -122,6 +122,13 @@
 If checked, the LogWizard is brought to top when the log file is re-written.
 (useful when debugging, and you restart your application - thus, your log file is re-written from scratch)</value>
   </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>Lines from the Active View are shown in the same color in the Full Log
+Lines that are not in the Active View, are shown in the color of 
+the first View that matches.
+If no view matches, they are shown in dark gray.
+</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

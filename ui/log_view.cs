@@ -165,6 +165,10 @@ namespace LogWizard
                 lv_ = lv;
             }
 
+            public IList<item> get_matches {
+                get { return items_; }
+            } 
+
             public override int GetObjectIndex(object model) {
                 return items_.IndexOf(model as item);
             }
@@ -760,7 +764,58 @@ namespace LogWizard
                     }
                 i.matched_logs = log_names;
             }
+            update_colors(other_logs, last_view_column_index_);
             last_view_column_index_ = new_view_column_idx_;
+        }
+
+        public void update_colors(List<log_view> other_logs, int start_idx = 0) {
+            log_view current = other_logs.FirstOrDefault(v => v.is_current_view);
+            Debug.Assert(current != null);
+            if (current == null)
+                return; // no views?
+
+            int end_idx = list.GetItemCount();
+            for (int idx = start_idx; idx < end_idx; ++idx) {
+                item i = list.GetItem(idx).RowObject as item;
+                i.override_bg = Color.White;
+                i.override_fg = Color.DarkGray;
+
+                int line_idx = i.match.line_idx;
+                item found_line = null;
+                switch (app.inst.syncronize_colors) {
+                case app.synchronize_colors_type.none: // nothing to do
+                    i.override_fg = Color.Black;
+                    break;
+                case app.synchronize_colors_type.with_current_view:
+                    found_line = current.model_.get_matches.BinarySearch(item => item.match.line_idx, line_idx);
+                    if (found_line != null) {
+                        i.override_bg = found_line.bg;
+                        i.override_fg = found_line.fg;
+                    }
+                    break;
+                case app.synchronize_colors_type.with_all_views:
+                    found_line = current.model_.get_matches.BinarySearch(item => item.match.line_idx, line_idx);
+                    bool found_in_current = found_line != null;
+                    for (int other_idx = 0; other_idx < other_logs.Count && found_line == null; ++other_idx) {
+                        log_view other = other_logs[other_idx];
+                        if ( other != current)
+                            found_line = other.model_.get_matches.BinarySearch(item => item.match.line_idx, line_idx);
+                    }
+
+                    if (found_line != null) {
+                        Color bg = found_line.bg, fg = found_line.fg;
+                        if (app.inst.sync_colors_all_views_gray_non_active && !found_in_current) 
+                            fg = util.grayer_color(fg);
+                        i.override_bg = bg;
+                        i.override_fg = fg;
+                    }
+                    break;
+                default: Debug.Assert(false);
+                    break;
+                }
+
+                update_line_color(idx);
+            }
             list.Refresh();
         }
 

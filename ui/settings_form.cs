@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,22 @@ namespace LogWizard.ui {
             bringToTopOnRestart.Checked = app.inst.bring_to_top_on_restart;
             makeTopmostOnRestart.Checked = app.inst.make_topmost_on_restart;
             makeTopmostOnRestart.Enabled = bringToTopOnRestart.Checked;
+
+            switch (app.inst.syncronize_colors) {
+            case app.synchronize_colors_type.none:
+                syncColorsNone.Checked = true;
+                break;
+            case app.synchronize_colors_type.with_current_view:
+                syncColorsCurView.Checked = true;
+                break;
+            case app.synchronize_colors_type.with_all_views:
+                syncColorsAllViews.Checked = true;
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+            }
+            syncColorsGrayOutNonActive.Checked = app.inst.sync_colors_all_views_gray_non_active;
         }
 
         private void save() {
@@ -32,6 +49,12 @@ namespace LogWizard.ui {
             app.inst.show_view_selected_index = viewIndex.Checked;
             app.inst.bring_to_top_on_restart = bringToTopOnRestart.Checked;
             app.inst.make_topmost_on_restart = makeTopmostOnRestart.Checked;
+
+            if (syncColorsNone.Checked) app.inst.syncronize_colors = app.synchronize_colors_type.none;
+            else if (syncColorsCurView.Checked) app.inst.syncronize_colors = app.synchronize_colors_type.with_current_view;
+            else if ( syncColorsAllViews.Checked) app.inst.syncronize_colors = app.synchronize_colors_type.with_all_views;
+            else Debug.Assert(false);
+            app.inst.sync_colors_all_views_gray_non_active = syncColorsGrayOutNonActive.Checked;
 
             app.inst.save();
         }

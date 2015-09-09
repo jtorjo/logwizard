@@ -80,8 +80,11 @@ namespace LogWizard
             // 1.0.56
             toggle_title,
 
-            // 1.0.56 - not implemented yet (show/hide the tabs themselves) FIXME show the tab name in the "Message" column itself
+            // 1.0.56+ - not implemented yet (show/hide the tabs themselves) FIXME show the tab name in the "Message" column itself
             toggle_view_tabs,
+
+            // 1.0.70+ - not implemented yet - toggle the header (show/hide)
+            toggle_view_header,
 
             // 1.0.67
             open_in_explorer,
@@ -586,6 +589,16 @@ namespace LogWizard
             curFilterCtrl.Text = "";
             applyToExistingLines.Checked = false;
             ignore_change = false;
+
+            bool needs_sync_colors = app.inst.syncronize_colors != app.synchronize_colors_type.none;
+            if (cur_context().show_fulllog && needs_sync_colors) 
+                force_sync_full_log_colors();
+        }
+
+        private void force_sync_full_log_colors() {
+            refresh_cur_log_view();
+            if (fullLogCtrl != null) 
+                fullLogCtrl.update_colors(all_log_views(), 0);            
         }
 
         private void save_filters() {
@@ -1729,7 +1742,7 @@ namespace LogWizard
             case "shift-tab":
                 return action_type.pane_prev;
 
-            case "h":
+            case "ctrl-h":
                 return action_type.toggle_history_dropdown;
             case "ctrl-n":
                 return action_type.new_log_wizard;
@@ -1754,6 +1767,8 @@ namespace LogWizard
                 return action_type.toggle_title;
             case "v":
                 return action_type.toggle_view_tabs;
+            case "h":
+                return action_type.toggle_view_header;
             case "ctrl-o":
                 return action_type.open_in_explorer;
             }
@@ -2044,7 +2059,13 @@ namespace LogWizard
         }
 
         private void settingsCtrl_Click(object sender, EventArgs e) {
+            var old_sync_colors = app.inst.syncronize_colors;
+            var old_sync_gray = app.inst.sync_colors_all_views_gray_non_active;
             new settings_form(this).ShowDialog();
+
+            bool sync_changed = app.inst.syncronize_colors != old_sync_colors || old_sync_gray != app.inst.sync_colors_all_views_gray_non_active;
+            if ( sync_changed)
+                force_sync_full_log_colors();
         }
 
         private log_view selected_view() {

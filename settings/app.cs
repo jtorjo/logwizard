@@ -37,6 +37,13 @@ namespace LogWizard {
         // if true, we show the Topmost button (top-left)
         public bool show_topmost_toggle = false;
 
+        public enum synchronize_colors_type {
+            none, with_current_view, with_all_views
+        }
+
+        public synchronize_colors_type syncronize_colors = synchronize_colors_type.none;
+        public bool sync_colors_all_views_gray_non_active = false;
+
         // file-by-file
         public bool bring_to_top_on_restart = false;
         public bool make_topmost_on_restart = false;
@@ -84,6 +91,19 @@ namespace LogWizard {
                 sett.set(name, prop ? "1" : "0");
         }
 
+        private void load_save<T>(bool load, ref T prop, string name, T default_) {
+            var sett = Program.sett;
+            if (load) {
+                string val = sett.get(name);
+                if (val == "")
+                    prop = default_;
+                else 
+                    prop = (T) (object) int.Parse( sett.get(name));
+
+            } else
+                sett.set(name, "" + (int)(object)prop);
+        }
+
         private void load_save(bool load) {
             load_save(load, ref show_view_line_count, "show_view_line_count", true);
             load_save(load, ref show_view_selected_line, "show_view_selected_line", true);
@@ -92,6 +112,9 @@ namespace LogWizard {
             load_save(load, ref sync_full_log_view, "sync_full_log_view", true);
 
             load_save(load, ref show_topmost_toggle, "show_topmost_toggle");
+
+            load_save(load, ref syncronize_colors, "synchronize_colors", synchronize_colors_type.none);
+            load_save(load, ref sync_colors_all_views_gray_non_active, "synchronize_colors_gray_non_active", false);
         }
 
         public void load() {

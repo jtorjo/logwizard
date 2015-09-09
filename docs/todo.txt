@@ -1,13 +1,10 @@
-- synchronize colors : full log - synchronize with what the existing tab has and/or with all tabs? 
-  (Sync: with current tab / with all tabs / none)
-  when synchronizing -> specify how to show unsynchronized lines (like, darkgray?)
 
 - deal with homogeneous logs (msi log files? + hm3 files)
 
 - decrease memory footprint - probably for ascii-encoded files, we can assume we don't need to always keep the byte buffer (file_text_reader)
   note: since i'm always reading ahead (the parser), very likely i don't need to keep anything (buffer) in file_text_reader
 
-
+- toggle 'v' - show/hide view + 'h' show/hide header
 
 
 
@@ -20,17 +17,19 @@
 
 - history - deleted files - ignore them
 
+- optimization: filter -> when a filter row is modified / added / or deleted -> I should check exactly that -> so that when updating rows -> reuse what has not been modified
+
 - find - case-insensitive + full words + regex
 
 - allow selecting several rows
 
-- history: for each file -> remember the last view (maybe the row(s) as well?)
+- history: for each file -> remember the last view (maybe the row(s) as well?, toggles?)
 
 - bug: move up/down -> sometimes it does not update the "Found" column - also, sometimes it's not updated at all
 
 - save sets of location/sizes (ctrl-shift-Number -> save, ctrl-Number -> use (toggle)). if full screen, we should just note that
   also, i should save existing location - however if it matches an already saved location, don't save
-  perhaps save a few more things -> like whether i have title toggled/and am topmost? TOTHINK
+  perhaps save a few more things -> like whether i have title toggled/and am topmost? TOTHINK, like - save all toggles
 
 
 
@@ -52,7 +51,7 @@
   --------> checkbox - beep on alert + checkbox - bring LogWizard to top on alert
   ----- i should look for an alert in all the filters (in other words, maybe two filters match a line -> the first filter gives the color; but maybe the second one matches the alert)
 
-
+  - new article (about monitoring your own log while debugging) + "bring to top/most on alt-tab"?
 
 - allow using the surrounding lines - if a $part ends in a number, it's the prev/next line. 
   Example: $msg[2] (the second line from now), $time[-3] (the time 3 lines above), $thread[-12] (the thread 12 lines above)
@@ -76,7 +75,8 @@
   - colors for bookmarks
   - if to add "*" to the tab title when something changed -> this forces refresh of all  tabs all the time
 
-
+- parse log4net patterns: example: "%-50file(%4line): %date{HH:mm:ss,fff} %-10thread %-5level - %message%newline"
+  if a .config file found, read it from there - prefer the pattern after FileAppender
 
 - bug - sometimes refreshing clears the current view (and the view remains cleared) - clicking it a few times will make it work again, but it's not cool
 

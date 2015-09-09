@@ -1,5 +1,8 @@
 
 
+1.0.70a
+- synchronize colors : full log - synchronize with what the existing tab has and/or with all tabs? 
+  (Sync: with current tab / with all tabs / none)
 
 
 1.0.69

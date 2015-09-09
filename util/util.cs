@@ -33,6 +33,8 @@ using ColorSchemeExtension;
 using Microsoft.Win32;
 
 namespace LogWizard {
+
+
     class util {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -105,18 +107,29 @@ namespace LogWizard {
         }
 
         public static Color grayer_color(Color col) {
+            var argb = col.ToArgb();
+            if (argb == Color.Blue.ToArgb())
+                return Color.DodgerBlue;
+            if (argb == Color.Green.ToArgb())
+                return Color.LightGreen;
+            if (argb == Color.Red.ToArgb())
+                return Color.LightCoral;
+            if (argb == Color.Pink.ToArgb())
+                return Color.LightPink;
+
             ColorEx ex = new ColorEx(col);
             ex.S = (byte)(ex.S / 5);
             return ex.Color;
         }
         public static Color darker_color(Color col) {
-            if (col.ToArgb() == Color.White.ToArgb())
+            var argb = col.ToArgb();
+            if (argb  == Color.White.ToArgb())
                 return Color.WhiteSmoke;
-            if (col.ToArgb() == Color.WhiteSmoke.ToArgb())
+            if (argb  == Color.WhiteSmoke.ToArgb())
                 return Color.LightGray;
-            if (col.ToArgb() == Color.LightGray.ToArgb())
+            if (argb  == Color.LightGray.ToArgb())
                 return Color.DarkGray;
-            if (col.ToArgb() == Color.DarkGray.ToArgb())
+            if (argb  == Color.DarkGray.ToArgb())
                 return Color.Gray;
 
             ColorEx ex = new ColorEx(col);
