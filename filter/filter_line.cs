@@ -142,6 +142,8 @@ namespace LogWizard {
 
             // basically this is what "Used" means - dim this filter_row compared to the rest
             public static font_info dimmed = new font_info { bg = Color.White, fg = Color.LightGray };
+
+            public static font_info default_ = new font_info { bg = Color.White, fg = Color.Black };
         }
         public font_info fi = new font_info();
 

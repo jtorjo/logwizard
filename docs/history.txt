@@ -1,4 +1,7 @@
 
+1.0.70b
+- deal with homogeneous logs (hm3 files -> several syntaxes)
+
 
 1.0.70a
 - synchronize colors : full log - synchronize with what the existing tab has and/or with all tabs? 

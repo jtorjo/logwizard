@@ -27,8 +27,8 @@ namespace LogWizard {
     // find out information on the file/log - from its header
     class log_to_default_context {
         private static Dictionary<string, string> file_to_context_ = new Dictionary<string, string>() {
-            { "HM2 Version: 2.", "HoldemManager2" },
-            { "HM3 Version=3", "HoldemManager3" },
+            { "HM2 Version: 2.", "HM2" },
+            { "HM3 Version=3", "HM3" },
             { "Welcome to TableNinja!", "TableNinja" },
             { "This is a LogWizard Setup sample!", "SetupSample" },
             //{ "", "" },

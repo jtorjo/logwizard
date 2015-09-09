@@ -227,16 +227,22 @@ namespace LogWizard {
 
                 for (int line_idx = old_line_count; line_idx < new_log.line_count; ++line_idx) {
                     bool any_match = false;
+                    bool any_non_apply_to_existing_lines_filters = false;
                     // 1.0.69 added "apply to existing filters"
                     for (int filter_idx = 0; filter_idx < matches.Length; ++filter_idx) {
                         var row = rows[filter_idx];
-                        if ( (row.enabled || row.dimmed) && !row.apply_to_existing_lines)
+                        if ((row.enabled || row.dimmed) && !row.apply_to_existing_lines) {
                             matches[filter_idx] = row.line_matches.Contains(line_idx);
-                        else
+                            any_non_apply_to_existing_lines_filters = true;
+                        } else
                             matches[filter_idx] = false;
                         if (matches[filter_idx])
                             any_match = true;
                     }
+                    if (!any_non_apply_to_existing_lines_filters)
+                        // in this case - all filters apply to existing lines - thus, by default, we show all the lines
+                        any_match = true;
+
                     // 1.0.69 "apply to existing filters" is applied afterwards
                     filter_line.font_info existing_filter_font = null;
                     if ( any_match)
@@ -271,21 +277,22 @@ namespace LogWizard {
                                 for (int filter_idx = 0; filter_idx < matches.Count() && used_idx < 0; ++filter_idx)
                                     if (matches[filter_idx] && rows[filter_idx].dimmed)
                                         used_idx = filter_idx;
-                            Debug.Assert(enabled_idx >= 0 || used_idx >= 0);
-                            int idx = enabled_idx >= 0 ? enabled_idx : used_idx;
-                            font = rows[idx].get_match(line_idx).font;
+                            if (enabled_idx >= 0 || used_idx >= 0) {
+                                int idx = enabled_idx >= 0 ? enabled_idx : used_idx;
+                                font = rows[idx].get_match(line_idx).font;
+                            } else
+                                font = filter_line.font_info.default_;
                         }
                         new_matches.Add(line_idx, new match {
                             font = font, line = new_log.line_at(line_idx), line_idx = line_idx, matches = matches.ToArray()
                         });
                         new_indexes.Add(line_idx);
+                        continue;
                     }
 
                     bool any_filter = (rows.Count > 0);
                     if (!any_filter) {
-                        new_matches.Add(line_idx, new match { matches = new bool[0], line = new_log.line_at(line_idx), line_idx = line_idx, font = new filter_line.font_info {
-                            bg = Color.White, fg = Color.Black
-                        } });
+                        new_matches.Add(line_idx, new match { matches = new bool[0], line = new_log.line_at(line_idx), line_idx = line_idx, font = filter_line.font_info.default_ });
                         new_indexes.Add(line_idx);
                     }
                 }

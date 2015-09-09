@@ -87,44 +87,54 @@ namespace LogWizard
     */
     class log_line_parser : IDisposable {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        
-        // if true, each line needs to be parsed (the positions of each part are relative)
-        private bool relative_syntax_ = false;
 
-        // [index, length]
-        private Tuple<int,int>[] idx_in_line_ = new Tuple<int, int>[ (int)info_type.max];
-        private readonly Tuple<int,int>[] line_contains_msg_only_ = new Tuple<int, int>[] {
-            new Tuple<int,int>(-1, -1),
-            new Tuple<int,int>(-1, -1),
-            new Tuple<int,int>(-1, -1),
-            new Tuple<int,int>(-1, -1),
-            new Tuple<int,int>(-1, -1),
-            new Tuple<int,int>(-1, -1),
-            new Tuple<int,int>(-1, -1),
-            new Tuple<int,int>(-1, -1),
-            new Tuple<int,int>(-1, -1),
-            new Tuple<int,int>(-1, -1),
-            new Tuple<int,int>(-1, -1)
-        };
-
-        private class relative_pos {
-            public info_type type = info_type.max;
-            // if >= 0, they are fixed
-            public int start = -1, len = -1;
-            // if != null, we find the start via the finding a string, or end via finding of a string
-            public string start_str = null, end_str = null;
-
-            public bool is_end_of_string {
-                get { return start < 0 && len < 0 && start_str == null && end_str == null; }
+        private class syntax_info {
+            public syntax_info() {
+                line_contains_msg_only_[(int) info_type.msg] = new Tuple<int, int>(0, -1);                
             }
+            
+            // if true, each line needs to be parsed (the positions of each part are relative)
+            public bool relative_syntax_ = false;
+
+            // [index, length]
+            public Tuple<int,int>[] idx_in_line_ = new Tuple<int, int>[ (int)info_type.max];
+            public readonly Tuple<int,int>[] line_contains_msg_only_ = new Tuple<int, int>[] {
+                new Tuple<int,int>(-1, -1),
+                new Tuple<int,int>(-1, -1),
+                new Tuple<int,int>(-1, -1),
+                new Tuple<int,int>(-1, -1),
+                new Tuple<int,int>(-1, -1),
+                new Tuple<int,int>(-1, -1),
+                new Tuple<int,int>(-1, -1),
+                new Tuple<int,int>(-1, -1),
+                new Tuple<int,int>(-1, -1),
+                new Tuple<int,int>(-1, -1),
+                new Tuple<int,int>(-1, -1)
+            };
+
+            public class relative_pos {
+                public info_type type = info_type.max;
+                // if >= 0, they are fixed
+                public int start = -1, len = -1;
+                // if != null, we find the start via the finding a string, or end via finding of a string
+                public string start_str = null, end_str = null;
+
+                public bool is_end_of_string {
+                    get { return start < 0 && len < 0 && start_str == null && end_str == null; }
+                }
+            }
+
+            // readonly - set in constructor
+            public List<relative_pos> relative_idx_in_line_ = new List<relative_pos>();
         }
+
+        private List<syntax_info> syntaxes_ = new List<syntax_info>();
+
 
         private const string LINE_SEP = "\r\n";
 
         private readonly text_reader text_reader_ = null;
 
-        // readonly - set in constructor
-        private List<relative_pos> relative_idx_in_line_ = new List<relative_pos>();
 
         private bool disposed_ = false;
 
@@ -141,7 +151,6 @@ namespace LogWizard
 
         public log_line_parser(text_reader reader, string syntax) {
             Debug.Assert(reader != null);
-            line_contains_msg_only_[(int) info_type.msg] = new Tuple<int, int>(0, -1);
             parse_syntax(syntax);
             text_reader_ = reader;
             force_reload();
@@ -203,29 +212,47 @@ namespace LogWizard
             return new Tuple<int, int>(prefix.StartsWith("msg") ? 0 : -1, -1);
         }
 
-        private void parse_syntax(string syntax) {
+        private syntax_info parse_single_syntax(string syntax) {
             try {
-                if (syntax.Contains("'")) {
-                    parse_relative_syntax(syntax);
-                    return;
-                }
-                idx_in_line_[(int) info_type.time] = parse_syntax_pos(syntax, "time[");
-                idx_in_line_[(int) info_type.date] = parse_syntax_pos(syntax, "date[");
-                idx_in_line_[(int) info_type.level] = parse_syntax_pos(syntax, "level[");
-                idx_in_line_[(int) info_type.msg] = parse_syntax_pos(syntax, "msg[");
-                idx_in_line_[(int) info_type.class_] = parse_syntax_pos(syntax, "class[");
-                idx_in_line_[(int) info_type.file] = parse_syntax_pos(syntax, "file[");
+                if (syntax.Contains("'")) 
+                    return parse_relative_syntax(syntax);
 
-                idx_in_line_[(int) info_type.func] = parse_syntax_pos(syntax, "func[");
-                idx_in_line_[(int) info_type.ctx1] = parse_syntax_pos(syntax, "ctx1[");
-                idx_in_line_[(int) info_type.ctx2] = parse_syntax_pos(syntax, "ctx2[");
-                idx_in_line_[(int) info_type.ctx3] = parse_syntax_pos(syntax, "ctx3[");
-                idx_in_line_[(int) info_type.thread] = parse_syntax_pos(syntax, "thread[");
+                syntax_info si = new syntax_info();
+                si.idx_in_line_[(int) info_type.time] = parse_syntax_pos(syntax, "time[");
+                si.idx_in_line_[(int) info_type.date] = parse_syntax_pos(syntax, "date[");
+                si.idx_in_line_[(int) info_type.level] = parse_syntax_pos(syntax, "level[");
+                si.idx_in_line_[(int) info_type.msg] = parse_syntax_pos(syntax, "msg[");
+                si.idx_in_line_[(int) info_type.class_] = parse_syntax_pos(syntax, "class[");
+                si.idx_in_line_[(int) info_type.file] = parse_syntax_pos(syntax, "file[");
 
-                Debug.Assert(idx_in_line_.Length == line_contains_msg_only_.Length);
+                si.idx_in_line_[(int) info_type.func] = parse_syntax_pos(syntax, "func[");
+                si.idx_in_line_[(int) info_type.ctx1] = parse_syntax_pos(syntax, "ctx1[");
+                si.idx_in_line_[(int) info_type.ctx2] = parse_syntax_pos(syntax, "ctx2[");
+                si.idx_in_line_[(int) info_type.ctx3] = parse_syntax_pos(syntax, "ctx3[");
+                si.idx_in_line_[(int) info_type.thread] = parse_syntax_pos(syntax, "thread[");
+
+                Debug.Assert(si.idx_in_line_.Length == si.line_contains_msg_only_.Length);
+                return si;
             } catch {
                 // invalid syntax
+                return null;
             }
+        }
+
+        private void parse_syntax(string syntax) {
+            try {
+                string[] several = syntax.Split(new string[] {"|"}, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string single in several) {
+                    var parsed = parse_single_syntax(single);
+                    if ( parsed != null)
+                        syntaxes_.Add(parsed);
+                }
+            } catch {
+                // invalid syntax - use whatever works
+            }
+            if ( syntaxes_.Count < 1)
+                // in this case - can't parse syntax - treat each line as msg-only
+                syntaxes_.Add(new syntax_info());
         }
 
         // it can be a number (index) or a string (to search for)
@@ -264,9 +291,10 @@ namespace LogWizard
             return new Tuple<int, string>(-1, null);            
         }
 
-        private void parse_relative_syntax(string syntax) {
-            relative_syntax_ = true;
-            relative_idx_in_line_.Clear();
+        private syntax_info parse_relative_syntax(string syntax) {
+            syntax_info si = new syntax_info();
+            si.relative_syntax_ = true;
+            si.relative_idx_in_line_.Clear();
 
             // Example: "$time[0,12] $ctx1['[','-'] $func[' ',']'] $ctx2['[[',' ] ]'] $msg"
             syntax = syntax.Trim();
@@ -319,7 +347,7 @@ namespace LogWizard
                 syntax = bracket >= 0 ? syntax.Substring(bracket + 1).Trim() : "";
                 if (syntax == "") {
                     // this was the last item (the remainder of the string)
-                    relative_idx_in_line_.Add( new relative_pos {
+                    si.relative_idx_in_line_.Add( new syntax_info.relative_pos {
                         type = type, start = -1, start_str = null, len = -1, end_str = null
                     });
                     break;
@@ -327,12 +355,13 @@ namespace LogWizard
 
                 var start = parse_sub_relative_syntax(ref syntax);
                 var end = parse_sub_relative_syntax(ref syntax);
-                relative_idx_in_line_.Add( new relative_pos {
+                si.relative_idx_in_line_.Add( new syntax_info.relative_pos {
                     type = type, start = start.Item1, start_str = start.Item2, len = end.Item1, end_str = end.Item2
                 });
 
                 syntax = syntax.Trim();
             }
+            return si;
         }
 
         // forces the WHOLE FILE to be reloaded
@@ -477,7 +506,7 @@ namespace LogWizard
 
 
         // if at exit of function, idx < 0, the line could not be parsed
-        private Tuple<int, int> parse_relative_part(string l, relative_pos part, ref int idx) {
+        private Tuple<int, int> parse_relative_part(string l, syntax_info.relative_pos part, ref int idx) {
             if (part.is_end_of_string) {
                 // return remainder of the string
                 int at = idx;
@@ -491,7 +520,7 @@ namespace LogWizard
             else {
                 if ( idx >= l.Length)
                     // passed the end of string
-                    return new Tuple<int, int>(-1, -1);
+                    return null;
 
                 start = l.IndexOf(part.start_str, idx);
                 idx = start >= 0 ? start + part.start_str.Length : -1;
@@ -504,24 +533,32 @@ namespace LogWizard
                     end = start + part.len;
                     idx = end;
                 } else {
-                    end = l.IndexOf(part.end_str, idx);
-                    idx = end >= 0 ? end + part.end_str.Length : -1;
+                    if (part.end_str != null)
+                        end = l.IndexOf(part.end_str, idx);
+                    else {
+                        end = l.Length;
+                        if ( part.start_str != null)
+                            start -= part.start_str.Length;
+                    }
+                    idx = end >= 0 ? end + (part.end_str != null ? part.end_str.Length : 0) : -1;
                 }
 
-            return new Tuple<int, int>(start, end - start);
+            return ( start < l.Length && end <= l.Length) ? new Tuple<int, int>(start, end - start) : null;
         }
 
-        private line parse_relative_line(string l, ulong pos_in_log) {
+        private line parse_relative_line(string l, ulong pos_in_log, syntax_info si) {
             List< Tuple<int,int> > indexes = new List<Tuple<int, int>>();
             for ( int i = 0; i < (int)info_type.max; ++i)
                 indexes.Add(new Tuple<int,int>(-1,-1));
 
             int cur_idx = 0;
             int correct_count = 0;
-            foreach (var rel in relative_idx_in_line_) {
+            foreach (var rel in si.relative_idx_in_line_) {
                 if (cur_idx < 0)
                     break;
                 var index = parse_relative_part(l, rel, ref cur_idx);
+                if (index == null)
+                    return null;
                 if (index.Item1 >= 0 && index.Item2 >= 0) {
                     indexes[(int) rel.type] = index;
                     ++correct_count;
@@ -529,29 +566,46 @@ namespace LogWizard
             }
 
             // if we could parse time or date, we consider it an OK line
-            bool normal_line = correct_count == relative_idx_in_line_.Count;
-            line new_ = new line(pos_in_log, l, normal_line ? indexes.ToArray() : line_contains_msg_only_);
-            return new_;
+            bool normal_line = correct_count == si.relative_idx_in_line_.Count;
+            return normal_line ? new line(pos_in_log, l, indexes.ToArray()) : null ;
         }
 
-
-        private line parse_line(string l, ulong pos_in_log) {
-            if (relative_syntax_)
-                return parse_relative_line(l, pos_in_log);
+        // returns null if it can't parse
+        private line parse_line_with_syntax(string l, ulong pos_in_log, syntax_info si) {
+            if (si.relative_syntax_)
+                return parse_relative_line(l, pos_in_log, si);
 
             try {
-                bool normal_line = parse_time(l, idx_in_line_[(int) info_type.time]) && parse_date(l, idx_in_line_[(int) info_type.date]);
-                if (idx_in_line_[(int) info_type.time].Item1 < 0 && idx_in_line_[(int) info_type.date].Item1 < 0)
+                bool normal_line = parse_time(l, si.idx_in_line_[(int) info_type.time]) && parse_date(l, si.idx_in_line_[(int) info_type.date]);
+                if (si.idx_in_line_[(int) info_type.time].Item1 < 0 && si.idx_in_line_[(int) info_type.date].Item1 < 0)
                     // in this case, we don't have time & date - see that the level matches
                     // note: we can't rely on level too much, since the user might have additional levels that our defaults - so we could get false negatives
-                    normal_line = parse_level(l, idx_in_line_[(int) info_type.level]);
+                    normal_line = parse_level(l, si.idx_in_line_[(int) info_type.level]);
 
-                line new_ = new line(pos_in_log, l, normal_line ? idx_in_line_ : line_contains_msg_only_);
-                return new_;
+                return normal_line ? new line(pos_in_log, l, si.idx_in_line_) : null;
             } catch(Exception e) {
                 logger.Error("invalid line: " + l);
-                return new line(pos_in_log, l, line_contains_msg_only_);
+                //return new line(pos_in_log, l, line_contains_msg_only_);
+                return null;
             }
+        }
+
+        private line parse_line(string l, ulong pos_in_log) {
+            Debug.Assert(syntaxes_.Count > 0);
+
+            foreach (var si in syntaxes_) {
+                line result = null;
+                if (si.relative_syntax_)
+                    result = parse_relative_line(l, pos_in_log, si);
+                else
+                    result = parse_line_with_syntax(l, pos_in_log, si);
+
+                if (result != null)
+                    return result;
+            }
+
+            // in this case, we can't parse the line at all - use default
+            return new line(pos_in_log, l, syntaxes_[0].line_contains_msg_only_);
         }
 
         public void Dispose() {

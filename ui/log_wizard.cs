@@ -572,6 +572,7 @@ namespace LogWizard
         private void load_filters() {
             // filter_row Enabled / Used - are context dependent!
 
+            ignore_change = true;
             List<object> items = new List<object>();
             ui_context cur = cur_context();
             int cur_view = viewsTab.SelectedIndex;
@@ -585,7 +586,6 @@ namespace LogWizard
             }
             filterCtrl.SetObjects(items);
 
-            ignore_change = true;
             curFilterCtrl.Text = "";
             applyToExistingLines.Checked = false;
             ignore_change = false;
@@ -686,7 +686,7 @@ namespace LogWizard
             ui_context cur = cur_context();
 
             // never allow "no view" whatsoever
-            bool has_views = cur.views.Count > 0;
+            bool has_views = cur.views.Count > 0 || cur.name != "Default";
             if (cur.views.Count < 1) 
                 cur.views.Add(new ui_view() { name = "New_1", filters = new List<ui_filter>() });
 
@@ -857,6 +857,8 @@ namespace LogWizard
         }
 
         private void refresh_cur_log_view() {
+            if (ignore_change)
+                return;
             if (text_ == null)
                 // no log yet
                 return;
@@ -1021,6 +1023,8 @@ namespace LogWizard
         }
 
         private void refresh_all_views() {
+            if (ignore_change)
+                return;
             if (text_ == null)
                 // no log yet
                 return;
@@ -1953,6 +1957,9 @@ namespace LogWizard
                 break;
 
             case action_type.toggle_view_tabs:
+                // FIXME
+                break;
+            case action_type.toggle_view_header:
                 // FIXME
                 break;
 

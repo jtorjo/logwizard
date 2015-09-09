@@ -29,7 +29,7 @@ namespace LogWizard.context {
     class log_to_default_syntax {
         private static Dictionary<string, string> file_to_syntax_ = new Dictionary<string, string>() {
             { "HM2 Version: 2.", "$time[0,12] $ctx1['[','-'] $func[' ',']'] $ctx2['[[','] ]'] $msg" },
-            {"HM3 Version=3", "$time[0,12] $ctx1['[',']'] $ctx2['[',']'] $msg"},
+            {"HM3 Version=3", "$time[0,12] $ctx1['[',']'] $ctx2['[','] '] $msg|$time[0,12] $ctx1['[',']'] $msg['---']|$time[0,12] $ctx1['[',']'] $msg['  ']"},
 
             { "This is a LogWizard Setup sample", "$time[0,12] $ctx1[13,10] $level[24,5] $class[' ','- '] $msg" },
             { "Welcome to TableNinja! debug", "$file[0,': '] $time['',12] $ctx1[' ',10] $level[' ','- '] $msg" },
