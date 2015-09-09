@@ -1,4 +1,7 @@
 
+1.0.71b
+- updated setup kit so that some HM3 log views are there by default
+
 
 1.0.71
 - fix: deal with big files (_test1.HoldemManager.Import.test.txt) -> do profiling

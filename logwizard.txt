@@ -1,12 +1,112 @@
-font_names=Consolas,Courier New,Terminal,Monoid,Tahoma,Arial
+_settings_version=2
 
 context.0.auto_match=
 context.0.name=Default
-context.0.show_filter=1
+context.0.show_filter=0
 context.0.show_fulllog=1
-context.0.show_source=1
+context.0.show_source=0
 context.0.show_tips=1
 context.0.view_count=0
+context.0.view0.filt0.dimmed=0
+context.0.view0.filt0.enabled=1
+context.0.view0.filt0.text=$msg contains open tables:
+	color blue
+context.0.view0.filt1.dimmed=0
+context.0.view0.filt1.enabled=1
+context.0.view0.filt1.text=$msg startswith [time]
+context.0.view0.filt2.dimmed=0
+context.0.view0.filt2.enabled=1
+context.0.view0.filt2.text=$msg startswith [time
+	color green
+context.0.view0.filt3.dimmed=0
+context.0.view0.filt3.enabled=1
+context.0.view0.filt3.text=$msg startswith [mouse]
+context.0.view0.filter_count=0
+context.0.view0.name=New_1
+context.0.view1.filt0.dimmed=0
+context.0.view1.filt0.enabled=1
+context.0.view1.filt0.text=$msg contains open tables:
+	color blue
+context.0.view1.filt1.dimmed=0
+context.0.view1.filt1.enabled=1
+context.0.view1.filt1.text=$msg startswith [time]
+context.0.view1.filt2.dimmed=0
+context.0.view1.filt2.enabled=1
+context.0.view1.filt2.text=$msg startswith [time
+	color green
+context.0.view1.filt3.dimmed=0
+context.0.view1.filt3.enabled=1
+context.0.view1.filt3.text=$msg startswith [mouse]
+context.0.view1.filter_count=3
+context.0.view1.name=time
+context.0.view2.filt0.dimmed=0
+context.0.view2.filt0.enabled=1
+context.0.view2.filt0.text=$msg contains open tables:
+	color blue
+context.0.view2.filt1.dimmed=0
+context.0.view2.filt1.enabled=1
+context.0.view2.filt1.text=$msg startswith [time]
+context.0.view2.filt2.dimmed=0
+context.0.view2.filt2.enabled=1
+context.0.view2.filt2.text=$msg startswith [time
+	color green
+context.0.view2.filt3.dimmed=0
+context.0.view2.filt3.enabled=1
+context.0.view2.filt3.text=$msg startswith [mouse]
+context.0.view2.filter_count=3
+context.0.view2.name=time
+context.0.view3.filt0.dimmed=0
+context.0.view3.filt0.enabled=1
+context.0.view3.filt0.text=$msg contains open tables:
+	color blue
+context.0.view3.filt1.dimmed=0
+context.0.view3.filt1.enabled=1
+context.0.view3.filt1.text=$msg startswith [time]
+context.0.view3.filt2.dimmed=0
+context.0.view3.filt2.enabled=1
+context.0.view3.filt2.text=$msg startswith [time
+	color green
+context.0.view3.filter_count=3
+context.0.view3.name=time
+context.0.view4.filt0.dimmed=0
+context.0.view4.filt0.enabled=1
+context.0.view4.filt0.text=$msg contains open tables:
+	color blue
+context.0.view4.filt1.dimmed=0
+context.0.view4.filt1.enabled=1
+context.0.view4.filt1.text=$msg startswith [time]
+context.0.view4.filt2.dimmed=0
+context.0.view4.filt2.enabled=1
+context.0.view4.filt2.text=$msg startswith [time
+	color green
+context.0.view4.filter_count=3
+context.0.view4.name=time
+context.0.view5.filt0.dimmed=0
+context.0.view5.filt0.enabled=1
+context.0.view5.filt0.text=$msg contains open tables:
+	color blue
+context.0.view5.filt1.dimmed=0
+context.0.view5.filt1.enabled=1
+context.0.view5.filt1.text=$msg startswith [time]
+context.0.view5.filt2.dimmed=0
+context.0.view5.filt2.enabled=1
+context.0.view5.filt2.text=$msg startswith [time
+	color green
+context.0.view5.filter_count=3
+context.0.view5.name=time
+context.0.view6.filt0.dimmed=0
+context.0.view6.filt0.enabled=1
+context.0.view6.filt0.text=$msg contains open tables:
+	color blue
+context.0.view6.filt1.dimmed=0
+context.0.view6.filt1.enabled=1
+context.0.view6.filt1.text=$msg startswith [time]
+context.0.view6.filt2.dimmed=0
+context.0.view6.filt2.enabled=1
+context.0.view6.filt2.text=$msg startswith [time
+	color green
+context.0.view6.filter_count=3
+context.0.view6.name=time
 
 context.1.auto_match=
 context.1.name=TableNinja
@@ -14,93 +114,149 @@ context.1.show_filter=0
 context.1.show_fulllog=1
 context.1.show_source=0
 context.1.show_tips=1
-context.1.view_count=9
+context.1.view_count=10
+context.1.view0.filt0.apply_to_existing_lines=0
 context.1.view0.filt0.dimmed=0
 context.1.view0.filt0.enabled=1
-context.1.view0.filt0.text="$msg contains settings from\r\ncolor darkgreen\r\n"
+context.1.view0.filt0.text=$msg startswith [hh]
+	color darkblue pink
+context.1.view0.filt1.apply_to_existing_lines=0
 context.1.view0.filt1.dimmed=0
 context.1.view0.filt1.enabled=1
-context.1.view0.filt1.text="$msg startswith [dir]\r\ncolor darkred\r\n"
+context.1.view0.filt1.text=$msg contains settings from
+	color darkgreen
+context.1.view0.filt10.apply_to_existing_lines=0
 context.1.view0.filt10.dimmed=0
 context.1.view0.filt10.enabled=1
-context.1.view0.filt10.text="$msg startswith [nv]\r\ncolor lightgray\r\n"
+context.1.view0.filt10.text=$msg startswith [ft] adding
+context.1.view0.filt11.apply_to_existing_lines=0
 context.1.view0.filt11.dimmed=0
 context.1.view0.filt11.enabled=1
-context.1.view0.filt11.text=$msg startswith Updated to
+context.1.view0.filt11.text=$msg startswith [nv]
+	color lightgray
+context.1.view0.filt12.apply_to_existing_lines=0
 context.1.view0.filt12.dimmed=0
 context.1.view0.filt12.enabled=1
-context.1.view0.filt12.text="$msg startswith [sett]\r\ncolor lightgray"
+context.1.view0.filt12.text=$msg startswith Updated to
+context.1.view0.filt13.apply_to_existing_lines=0
 context.1.view0.filt13.dimmed=0
 context.1.view0.filt13.enabled=1
-context.1.view0.filt13.text="$msg contains Antivirus\r\ncolor red"
+context.1.view0.filt13.text=$msg startswith [sett]
+	color lightgray
+context.1.view0.filt14.apply_to_existing_lines=0
 context.1.view0.filt14.dimmed=0
 context.1.view0.filt14.enabled=1
-context.1.view0.filt14.text="case-insensitive\r\n$msg startswith Process\r\n$msg any kaspersky|avast|/avg|bitdefender|MPCMDRUN|norton antivirus|microsoft security client\r\ncolor red"
+context.1.view0.filt14.text=$msg contains Antivirus
+	color red
+context.1.view0.filt15.apply_to_existing_lines=0
 context.1.view0.filt15.dimmed=0
 context.1.view0.filt15.enabled=1
-context.1.view0.filt15.text="case-insensitive\r\n$msg startswith Process\r\n$msg any holdemmanager|pt4\r\ncolor darkviolet"
+context.1.view0.filt15.text=case-insensitive
+	$msg startswith Process
+	$msg any kaspersky|avast|/avg|bitdefender|MPCMDRUN|norton antivirus|microsoft security client
+	color red
+context.1.view0.filt16.apply_to_existing_lines=0
 context.1.view0.filt16.dimmed=0
 context.1.view0.filt16.enabled=1
-context.1.view0.filt16.text="$msg startswith Process\r\ncolor blue\r\n"
+context.1.view0.filt16.text=case-insensitive
+	$msg startswith Process
+	$msg any holdemmanager|pt4
+	color darkviolet
+context.1.view0.filt17.apply_to_existing_lines=0
 context.1.view0.filt17.dimmed=0
 context.1.view0.filt17.enabled=1
-context.1.view0.filt17.text="$msg any has theme|overridden theme to\r\ncolor darkorange\r\n"
+context.1.view0.filt17.text=$msg startswith Process
+	color blue
+context.1.view0.filt18.apply_to_existing_lines=0
+context.1.view0.filt18.dimmed=0
+context.1.view0.filt18.enabled=1
+context.1.view0.filt18.text=$msg any has theme|overridden theme to
+	color darkorange
+context.1.view0.filt2.apply_to_existing_lines=0
 context.1.view0.filt2.dimmed=0
 context.1.view0.filt2.enabled=1
-context.1.view0.filt2.text=$msg startswith Decimal separator
+context.1.view0.filt2.text=$msg startswith [dir]
+	color darkred
+context.1.view0.filt3.apply_to_existing_lines=0
 context.1.view0.filt3.dimmed=0
 context.1.view0.filt3.enabled=1
-context.1.view0.filt3.text="$msg startswith screen\r\ncolor darkred"
+context.1.view0.filt3.text=$msg startswith Decimal separator
+context.1.view0.filt4.apply_to_existing_lines=0
 context.1.view0.filt4.dimmed=0
 context.1.view0.filt4.enabled=1
-context.1.view0.filt4.text="case-insensitive\r\n$msg any memory found|starting layout\r\ncolor darkred\r\n"
+context.1.view0.filt4.text=$msg startswith screen
+	color darkred
+context.1.view0.filt5.apply_to_existing_lines=0
 context.1.view0.filt5.dimmed=0
 context.1.view0.filt5.enabled=1
-context.1.view0.filt5.text="$msg startswith Starting TN2\r\ncolor darkviolet\r\n"
+context.1.view0.filt5.text=case-insensitive
+	$msg any memory found|starting layout
+	color darkred
+context.1.view0.filt6.apply_to_existing_lines=0
 context.1.view0.filt6.dimmed=0
 context.1.view0.filt6.enabled=1
-context.1.view0.filt6.text="$msg any [lic]|logging initialized|TableNinja2 started\r\ncolor pink"
+context.1.view0.filt6.text=$msg startswith Starting TN2
+	color darkviolet
+context.1.view0.filt7.apply_to_existing_lines=0
 context.1.view0.filt7.dimmed=0
 context.1.view0.filt7.enabled=1
-context.1.view0.filt7.text=$msg startswith TN Current Directory
+context.1.view0.filt7.text=$msg any [lic]|logging initialized|TableNinja2 started
+	color pink
+context.1.view0.filt8.apply_to_existing_lines=0
 context.1.view0.filt8.dimmed=0
 context.1.view0.filt8.enabled=1
-context.1.view0.filt8.text=$msg startswith [ps] adding
+context.1.view0.filt8.text=$msg startswith TN Current Directory
+context.1.view0.filt9.apply_to_existing_lines=0
 context.1.view0.filt9.dimmed=0
 context.1.view0.filt9.enabled=1
-context.1.view0.filt9.text=$msg startswith [ft] adding
-context.1.view0.filter_count=18
+context.1.view0.filt9.text=$msg startswith [ps] adding
+context.1.view0.filter_count=19
 context.1.view0.name=Init/Exit
+context.1.view1.filt0.apply_to_existing_lines=0
 context.1.view1.filt0.dimmed=0
 context.1.view1.filt0.enabled=1
-context.1.view1.filt0.text="$level = ERROR\r\ncolor red"
+context.1.view1.filt0.text=$level = ERROR
+	color red
+context.1.view1.filt1.apply_to_existing_lines=0
 context.1.view1.filt1.dimmed=0
 context.1.view1.filt1.enabled=1
-context.1.view1.filt1.text="$level = FATAL\r\ncolor darkred"
+context.1.view1.filt1.text=$level = FATAL
+	color darkred
 context.1.view1.filt10.dimmed=0
 context.1.view1.filt10.enabled=1
 context.1.view1.filt10.text=$msg startswith [ft] adding
 context.1.view1.filt11.dimmed=0
 context.1.view1.filt11.enabled=1
-context.1.view1.filt11.text="$msg startswith [nv]\r\ncolor lightgray\r\n"
+context.1.view1.filt11.text=$msg startswith [nv]
+	color lightgray
 context.1.view1.filt12.dimmed=0
 context.1.view1.filt12.enabled=1
 context.1.view1.filt12.text=$msg startswith Updated to
 context.1.view1.filt13.dimmed=0
 context.1.view1.filt13.enabled=1
-context.1.view1.filt13.text="$msg startswith [sett]\r\ncolor lightgray"
+context.1.view1.filt13.text=$msg startswith [sett]
+	color lightgray
 context.1.view1.filt14.dimmed=0
 context.1.view1.filt14.enabled=1
-context.1.view1.filt14.text="$msg contains Antivirus\r\ncolor red"
+context.1.view1.filt14.text=$msg contains Antivirus
+	color red
 context.1.view1.filt15.dimmed=0
 context.1.view1.filt15.enabled=1
-context.1.view1.filt15.text="case-insensitive\r\n$msg startswith Process\r\n$msg any kaspersky|avast|/avg|bitdefender|MPCMDRUN|norton antivirus|microsoft security client\r\ncolor red"
+context.1.view1.filt15.text=case-insensitive
+	$msg startswith Process
+	$msg any kaspersky|avast|/avg|bitdefender|MPCMDRUN|norton antivirus|microsoft security client
+	color red
 context.1.view1.filt16.dimmed=0
 context.1.view1.filt16.enabled=1
-context.1.view1.filt16.text="case-insensitive\r\n$msg startswith Process\r\n$msg any holdemmanager|pt4\r\ncolor darkviolet"
+context.1.view1.filt16.text=case-insensitive
+	$msg startswith Process
+	$msg any holdemmanager|pt4
+	color darkviolet
 context.1.view1.filt17.dimmed=0
 context.1.view1.filt17.enabled=1
-context.1.view1.filt17.text="$msg startswith Process\r\ncolor blue\r\n"
+context.1.view1.filt17.text=$msg startswith Process
+	color blue
+context.1.view1.filt2.apply_to_existing_lines=0
 context.1.view1.filt2.dimmed=0
 context.1.view1.filt2.enabled=1
 context.1.view1.filt2.text=$msg startswith Notification
@@ -109,16 +265,20 @@ context.1.view1.filt3.enabled=1
 context.1.view1.filt3.text=$msg startswith Decimal separator
 context.1.view1.filt4.dimmed=0
 context.1.view1.filt4.enabled=1
-context.1.view1.filt4.text="$msg startswith screen\r\ncolor darkred"
+context.1.view1.filt4.text=$msg startswith screen
+	color darkred
 context.1.view1.filt5.dimmed=0
 context.1.view1.filt5.enabled=1
-context.1.view1.filt5.text="$msg startswith memory found\r\ncolor darkred\r\n"
+context.1.view1.filt5.text=$msg startswith memory found
+	color darkred
 context.1.view1.filt6.dimmed=0
 context.1.view1.filt6.enabled=1
-context.1.view1.filt6.text="$msg startswith Starting TN2\r\ncolor darkviolet\r\n"
+context.1.view1.filt6.text=$msg startswith Starting TN2
+	color darkviolet
 context.1.view1.filt7.dimmed=0
 context.1.view1.filt7.enabled=1
-context.1.view1.filt7.text="$msg startswith [lic]\r\ncolor pink"
+context.1.view1.filt7.text=$msg startswith [lic]
+	color pink
 context.1.view1.filt8.dimmed=0
 context.1.view1.filt8.enabled=1
 context.1.view1.filt8.text=$msg startswith TN Current Directory
@@ -127,9 +287,12 @@ context.1.view1.filt9.enabled=1
 context.1.view1.filt9.text=$msg startswith [ps] adding
 context.1.view1.filter_count=3
 context.1.view1.name=Errors+Notif
+context.1.view2.filt0.apply_to_existing_lines=0
 context.1.view2.filt0.dimmed=0
 context.1.view2.filt0.enabled=0
-context.1.view2.filt0.text="$msg !startswith [hk] Target\r\n$msg !startswith [time]\r\n"
+context.1.view2.filt0.text=$msg !startswith [hk] Target
+	$msg !startswith [time]
+context.1.view2.filt1.apply_to_existing_lines=0
 context.1.view2.filt1.dimmed=0
 context.1.view2.filt1.enabled=1
 context.1.view2.filt1.text=$msg startswith [mouse]
@@ -141,118 +304,264 @@ context.1.view2.filt3.enabled=1
 context.1.view2.filt3.text=$msg startswith [mouse]
 context.1.view2.filter_count=2
 context.1.view2.name=mouse
+context.1.view3.filt0.apply_to_existing_lines=0
 context.1.view3.filt0.dimmed=0
 context.1.view3.filt0.enabled=1
-context.1.view3.filt0.text="$msg startswith [hk] Hotkey set_bet\r\n"
+context.1.view3.filt0.text=$msg startswith [hk] Hotkey set_bet
+	"	"
+context.1.view3.filt1.apply_to_existing_lines=0
 context.1.view3.filt1.dimmed=0
 context.1.view3.filt1.enabled=1
-context.1.view3.filt1.text="$msg contains pot not needed\r\ncolor red"
+context.1.view3.filt1.text=$msg contains pot not needed
+	color red
+context.1.view3.filt2.apply_to_existing_lines=0
 context.1.view3.filt2.dimmed=0
 context.1.view3.filt2.enabled=1
-context.1.view3.filt2.text="$msg startswith [bet]\r\ncolor gray"
+context.1.view3.filt2.text=$msg startswith [bet]
+	color gray
 context.1.view3.filter_count=3
 context.1.view3.name=set_bet
+context.1.view4.filt0.apply_to_existing_lines=0
 context.1.view4.filt0.dimmed=0
 context.1.view4.filt0.enabled=1
-context.1.view4.filt0.text="$msg contains pot not needed\r\ncolor red"
+context.1.view4.filt0.text=$msg startswith [bet] pot =
+	color blue
+context.1.view4.filt1.apply_to_existing_lines=0
 context.1.view4.filt1.dimmed=0
 context.1.view4.filt1.enabled=1
-context.1.view4.filt1.text="$msg contains betting took\r\ncolor violet"
+context.1.view4.filt1.text=$msg startswith [bet] pf
+	color lightcoral
+context.1.view4.filt2.apply_to_existing_lines=0
 context.1.view4.filt2.dimmed=0
 context.1.view4.filt2.enabled=1
-context.1.view4.filt2.text="$msg startswith [bet]\r\n"
-context.1.view4.filter_count=3
+context.1.view4.filt2.text=$msg contains pot not needed
+	color red
+context.1.view4.filt3.apply_to_existing_lines=0
+context.1.view4.filt3.dimmed=0
+context.1.view4.filt3.enabled=1
+context.1.view4.filt3.text=$msg contains betting took
+	color violet
+context.1.view4.filt4.apply_to_existing_lines=0
+context.1.view4.filt4.dimmed=0
+context.1.view4.filt4.enabled=1
+context.1.view4.filt4.text=$msg contains same scrape
+	color darkcyan violet
+context.1.view4.filt5.apply_to_existing_lines=0
+context.1.view4.filt5.dimmed=0
+context.1.view4.filt5.enabled=1
+context.1.view4.filt5.text=$msg startswith [bet]
+context.1.view4.filt6.apply_to_existing_lines=0
+context.1.view4.filt6.dimmed=0
+context.1.view4.filt6.enabled=1
+context.1.view4.filt6.text=$msg startswith [pot]
+	color darkcyan
+context.1.view4.filt7.apply_to_existing_lines=0
+context.1.view4.filt7.dimmed=0
+context.1.view4.filt7.enabled=1
+context.1.view4.filt7.text=$msg contains Hotkey problem
+	color red
+context.1.view4.filter_count=8
 context.1.view4.name=bet
+context.1.view5.filt0.apply_to_existing_lines=0
 context.1.view5.filt0.dimmed=0
 context.1.view5.filt0.enabled=1
-context.1.view5.filt0.text="$msg startswith [hk] Hotkey\r\n	"
+context.1.view5.filt0.text=$msg startswith [act] after player acted
+	color gray
+context.1.view5.filt1.apply_to_existing_lines=0
 context.1.view5.filt1.dimmed=0
 context.1.view5.filt1.enabled=1
-context.1.view5.filt1.text="$msg contains betting took\r\ncolor violet"
+context.1.view5.filt1.text=$msg startswith [act]
 context.1.view5.filt2.dimmed=0
 context.1.view5.filt2.enabled=1
-context.1.view5.filt2.text="$msg startswith [bet]\r\n"
-context.1.view5.filter_count=1
-context.1.view5.name=hotkeys
+context.1.view5.filt2.text=$msg startswith [bet]
+context.1.view5.filt3.dimmed=0
+context.1.view5.filt3.enabled=1
+context.1.view5.filt3.text=$msg startswith [bet]
+context.1.view5.filt4.dimmed=0
+context.1.view5.filt4.enabled=1
+context.1.view5.filt4.text=$msg startswith [bet]
+context.1.view5.filter_count=2
+context.1.view5.name=act
+context.1.view6.filt0.apply_to_existing_lines=0
 context.1.view6.filt0.dimmed=0
 context.1.view6.filt0.enabled=1
-context.1.view6.filt0.text="$msg contains added one more\r\ncolor red"
+context.1.view6.filt0.text=$msg startswith [hk] Hotkey
+	"	"
 context.1.view6.filt1.dimmed=0
 context.1.view6.filt1.enabled=1
-context.1.view6.filt1.text="$msg contains open tables:\r\ncolor blue"
+context.1.view6.filt1.text=$msg contains open tables:
+	color blue
 context.1.view6.filt2.dimmed=0
 context.1.view6.filt2.enabled=1
 context.1.view6.filt2.text=$msg startswith [time]
 context.1.view6.filt3.dimmed=0
 context.1.view6.filt3.enabled=1
-context.1.view6.filt3.text="$msg startswith [time\r\ncolor green"
-context.1.view6.filter_count=4
-context.1.view6.name=time
+context.1.view6.filt3.text=$msg startswith [time
+	color green
+context.1.view6.filter_count=1
+context.1.view6.name=hotkeys
+context.1.view7.filt0.apply_to_existing_lines=0
 context.1.view7.filt0.dimmed=0
 context.1.view7.filt0.enabled=1
-context.1.view7.filt0.text="$msg startswith [new] table removed\r\ncolor red"
+context.1.view7.filt0.text=$msg contains added one more
+	color red
+context.1.view7.filt1.apply_to_existing_lines=0
 context.1.view7.filt1.dimmed=0
 context.1.view7.filt1.enabled=1
-context.1.view7.filt1.text="$msg startswith [new] table\r\ncolor blue\r\n"
+context.1.view7.filt1.text=$msg contains open tables:
+	color blue
+context.1.view7.filt2.apply_to_existing_lines=0
 context.1.view7.filt2.dimmed=0
 context.1.view7.filt2.enabled=1
-context.1.view7.filt2.text=$msg startswith [new] window table
+context.1.view7.filt2.text=$msg startswith [time]
+context.1.view7.filt3.apply_to_existing_lines=0
 context.1.view7.filt3.dimmed=0
 context.1.view7.filt3.enabled=1
-context.1.view7.filt3.text="$msg startswith [new] window\r\ncolor gray"
+context.1.view7.filt3.text=$msg startswith [time
+	color green
 context.1.view7.filter_count=4
-context.1.view7.name=Tables
+context.1.view7.name=time
+context.1.view8.filt0.apply_to_existing_lines=0
 context.1.view8.filt0.dimmed=0
 context.1.view8.filt0.enabled=1
-context.1.view8.filt0.text="$msg startswith [zorder]\r\n$msg contains behind \r\ncolor darkred"
+context.1.view8.filt0.text=$msg startswith [new] table removed
+	color red
+context.1.view8.filt1.apply_to_existing_lines=0
 context.1.view8.filt1.dimmed=0
 context.1.view8.filt1.enabled=1
-context.1.view8.filt1.text="$msg startswith [zorder]\r\n"
+context.1.view8.filt1.text=$msg startswith [new] table
+	color blue
+context.1.view8.filt2.apply_to_existing_lines=0
 context.1.view8.filt2.dimmed=0
 context.1.view8.filt2.enabled=1
-context.1.view8.filt2.text="$msg startswith [fg]\r\n"
+context.1.view8.filt2.text=$msg startswith [new] window table
+context.1.view8.filt3.apply_to_existing_lines=0
 context.1.view8.filt3.dimmed=0
 context.1.view8.filt3.enabled=1
-context.1.view8.filt3.text="$msg startswith [hk] Target\r\n$msg contains PokerStarsTableFrameClass\r\ncolor green"
+context.1.view8.filt3.text=$msg startswith [new] window
+	color gray
 context.1.view8.filt4.dimmed=0
 context.1.view8.filt4.enabled=1
-context.1.view8.filt4.text="$msg startswith [hk] Target\r\ncolor blue"
-context.1.view8.filter_count=5
-context.1.view8.name=zorder
+context.1.view8.filt4.text=$msg startswith [hk] Target
+	color blue
+context.1.view8.filter_count=4
+context.1.view8.name=Tables
+context.1.view9.filt0.apply_to_existing_lines=0
 context.1.view9.filt0.dimmed=0
 context.1.view9.filt0.enabled=1
-context.1.view9.filt0.text="$msg startswith [zorder]\r\n$msg contains behind \r\ncolor darkred"
+context.1.view9.filt0.text=$msg startswith [zorder]
+	"$msg contains behind "
+	color darkred
+context.1.view9.filt1.apply_to_existing_lines=0
 context.1.view9.filt1.dimmed=0
 context.1.view9.filt1.enabled=1
-context.1.view9.filt1.text="$msg startswith [zorder]\r\n"
+context.1.view9.filt1.text=$msg startswith [zorder]
+context.1.view9.filt2.apply_to_existing_lines=0
 context.1.view9.filt2.dimmed=0
 context.1.view9.filt2.enabled=1
-context.1.view9.filt2.text="$msg startswith [fg]\r\n"
+context.1.view9.filt2.text=$msg startswith [fg]
+	color green
+context.1.view9.filt3.apply_to_existing_lines=0
 context.1.view9.filt3.dimmed=0
 context.1.view9.filt3.enabled=1
-context.1.view9.filt3.text="$msg startswith [hk] Target\r\n$msg contains PokerStarsTableFrameClass\r\ncolor green"
+context.1.view9.filt3.text=$msg startswith [hk] Target
+	$msg contains PokerStarsTableFrameClass
+	color green
+context.1.view9.filt4.apply_to_existing_lines=0
 context.1.view9.filt4.dimmed=0
 context.1.view9.filt4.enabled=1
-context.1.view9.filt4.text="$msg startswith [hk] Target\r\ncolor blue"
+context.1.view9.filt4.text=$msg startswith [hk] Target
+	color blue
 context.1.view9.filter_count=5
+context.1.view9.name=zorder
 
 context.2.auto_match=
-context.2.name=HM2
-context.2.show_filter=1
-context.2.show_fulllog=0
-context.2.show_source=1
+context.2.name=HM3
+context.2.show_filter=0
+context.2.show_fulllog=1
+context.2.show_source=0
 context.2.show_tips=1
-context.2.view_count=1
-context.2.view0.filter_count=0
-context.2.view0.name=New_1
+context.2.view_count=3
+context.2.view0.filt0.apply_to_existing_lines=0
+context.2.view0.filt0.dimmed=0
+context.2.view0.filt0.enabled=1
+context.2.view0.filt0.text=$msg contains TIMER:
+context.2.view0.filt1.apply_to_existing_lines=1
+context.2.view0.filt1.dimmed=0
+context.2.view0.filt1.enabled=1
+context.2.view0.filt1.text=case-insensitive
+	$msg any delete from|insert into
+	color blue
+context.2.view0.filter_count=2
+context.2.view0.name=Times
+context.2.view1.filt0.apply_to_existing_lines=0
+context.2.view1.filt0.dimmed=0
+context.2.view1.filt0.enabled=1
+context.2.view1.filt0.text=$ctx2 startswith HoldemManager.Import
+context.2.view1.filt1.apply_to_existing_lines=1
+context.2.view1.filt1.dimmed=0
+context.2.view1.filt1.enabled=1
+context.2.view1.filt1.text=$msg startswith CurrentImportState
+	color blue
+context.2.view1.filt2.apply_to_existing_lines=1
+context.2.view1.filt2.dimmed=0
+context.2.view1.filt2.enabled=1
+context.2.view1.filt2.text=$ctx2 contains ProcessCompiledStats
+	color lightgray
+context.2.view1.filt3.apply_to_existing_lines=1
+context.2.view1.filt3.dimmed=0
+context.2.view1.filt3.enabled=1
+context.2.view1.filt3.text=case-insensitive
+	$msg any parsing file|file parsed
+	color green
+context.2.view1.filt4.apply_to_existing_lines=1
+context.2.view1.filt4.dimmed=0
+context.2.view1.filt4.enabled=1
+context.2.view1.filt4.text=$msg startswith Importing
+	color red
+context.2.view1.filt5.apply_to_existing_lines=1
+context.2.view1.filt5.dimmed=0
+context.2.view1.filt5.enabled=1
+context.2.view1.filt5.text=$msg !startswith TIMER
+context.2.view1.filter_count=6
+context.2.view1.name=Import
+context.2.view2.filt0.apply_to_existing_lines=1
+context.2.view2.filt0.dimmed=0
+context.2.view2.filt0.enabled=1
+context.2.view2.filt0.text=$msg startswith HM3
+	color blue
+context.2.view2.filt1.apply_to_existing_lines=1
+context.2.view2.filt1.dimmed=0
+context.2.view2.filt1.enabled=1
+context.2.view2.filt1.text=$msg startswith ---
+	color green
+context.2.view2.filt2.apply_to_existing_lines=1
+context.2.view2.filt2.dimmed=0
+context.2.view2.filt2.enabled=1
+context.2.view2.filt2.text=$msg contains disk space
+	color violet
+context.2.view2.filt3.apply_to_existing_lines=1
+context.2.view2.filt3.dimmed=0
+context.2.view2.filt3.enabled=1
+context.2.view2.filt3.text=$msg !startswith TIMER
+context.2.view2.filt4.apply_to_existing_lines=1
+context.2.view2.filt4.dimmed=0
+context.2.view2.filt4.enabled=1
+context.2.view2.filt4.text=$msg !startswith TIMER
+context.2.view2.filt5.apply_to_existing_lines=1
+context.2.view2.filt5.dimmed=0
+context.2.view2.filt5.enabled=1
+context.2.view2.filt5.text=$msg !startswith TIMER
+context.2.view2.filter_count=3
+context.2.view2.name=Stats
 
 context.3.auto_match=
-context.3.name=HM3
+context.3.name=HM2
 context.3.show_filter=1
 context.3.show_fulllog=0
 context.3.show_source=1
 context.3.show_tips=1
-context.3.view_count=1
+context.3.view_count=0
 context.3.view0.filter_count=0
 context.3.view0.name=New_1
 
@@ -263,54 +572,71 @@ context.4.show_fulllog=0
 context.4.show_source=0
 context.4.show_tips=1
 context.4.view_count=8
+context.4.view0.filt0.apply_to_existing_lines=0
 context.4.view0.filt0.dimmed=0
 context.4.view0.filt0.enabled=1
 context.4.view0.filt0.text=$class = wizard_intro
 context.4.view0.filter_count=1
 context.4.view0.name=Intro
+context.4.view1.filt0.apply_to_existing_lines=0
 context.4.view1.filt0.dimmed=0
 context.4.view1.filt0.enabled=1
 context.4.view1.filt0.text=$class = wi2a
+context.4.view1.filt1.apply_to_existing_lines=0
 context.4.view1.filt1.dimmed=0
 context.4.view1.filt1.enabled=1
-context.4.view1.filt1.text="$class = wi2b\r\ncolor blue\r\n"
+context.4.view1.filt1.text=$class = wi2b
+	color blue
 context.4.view1.filter_count=2
 context.4.view1.name=Filters
+context.4.view2.filt0.apply_to_existing_lines=0
 context.4.view2.filt0.dimmed=0
 context.4.view2.filt0.enabled=1
 context.4.view2.filt0.text=$class = wi3
 context.4.view2.filt1.dimmed=0
 context.4.view2.filt1.enabled=1
-context.4.view2.filt1.text="$class = wi2b\r\ncolor blue\r\n"
+context.4.view2.filt1.text=$class = wi2b
+	color blue
 context.4.view2.filter_count=1
 context.4.view2.name=DiffViews
+context.4.view3.filt0.apply_to_existing_lines=0
 context.4.view3.filt0.dimmed=0
 context.4.view3.filt0.enabled=1
 context.4.view3.filt0.text=$class = wi4
 context.4.view3.filt1.dimmed=0
 context.4.view3.filt1.enabled=1
-context.4.view3.filt1.text="$class = wi2b\r\ncolor blue\r\n"
+context.4.view3.filt1.text=$class = wi2b
+	color blue
 context.4.view3.filter_count=1
 context.4.view3.name=Source Pane
+context.4.view4.filt0.apply_to_existing_lines=0
 context.4.view4.filt0.dimmed=0
 context.4.view4.filt0.enabled=1
 context.4.view4.filt0.text=$class = wi5
 context.4.view4.filter_count=1
 context.4.view4.name=Hotkeys
+context.4.view5.filt0.apply_to_existing_lines=0
 context.4.view5.filt0.dimmed=0
 context.4.view5.filt0.enabled=1
-context.4.view5.filt0.text="$level = ERROR\r\ncolor red"
+context.4.view5.filt0.text=$level = ERROR
+	color red
+context.4.view5.filt1.apply_to_existing_lines=0
 context.4.view5.filt1.dimmed=0
 context.4.view5.filt1.enabled=1
-context.4.view5.filt1.text="$level = FATAL\r\ncolor darkred\r\n"
+context.4.view5.filt1.text=$level = FATAL
+	color darkred
+context.4.view5.filt2.apply_to_existing_lines=0
 context.4.view5.filt2.dimmed=0
 context.4.view5.filt2.enabled=1
 context.4.view5.filt2.text=$msg startswith Notification
 context.4.view5.filter_count=3
 context.4.view5.name=Errors+Notifs
+context.4.view6.filt0.apply_to_existing_lines=0
 context.4.view6.filt0.dimmed=0
 context.4.view6.filt0.enabled=1
-context.4.view6.filt0.text="$msg startswith [pot]\r\ncolor gray"
+context.4.view6.filt0.text=$msg startswith [pot]
+	color gray
+context.4.view6.filt1.apply_to_existing_lines=0
 context.4.view6.filt1.dimmed=0
 context.4.view6.filt1.enabled=1
 context.4.view6.filt1.text=$msg startswith [bet]
@@ -319,15 +645,31 @@ context.4.view6.filt2.enabled=1
 context.4.view6.filt2.text=$msg startswith Notification
 context.4.view6.filter_count=2
 context.4.view6.name=Bets
+context.4.view7.filt0.apply_to_existing_lines=0
 context.4.view7.filt0.dimmed=0
 context.4.view7.filt0.enabled=1
-context.4.view7.filt0.text="$msg contains open table\r\ncolor blue"
+context.4.view7.filt0.text=$msg contains open table
+	color blue
+context.4.view7.filt1.apply_to_existing_lines=0
 context.4.view7.filt1.dimmed=0
 context.4.view7.filt1.enabled=1
 context.4.view7.filt1.text=$msg startswith [time]
+context.4.view7.filt2.apply_to_existing_lines=0
 context.4.view7.filt2.dimmed=0
 context.4.view7.filt2.enabled=1
-context.4.view7.filt2.text="$msg startswith [time.\r\ncolor green"
+context.4.view7.filt2.text=$msg startswith [time.
+	color green
 context.4.view7.filter_count=3
 context.4.view7.name=Time(s)
 context_count=5
+
+font_names=Consolas,Courier New,Terminal,Monoid,Tahoma,Arial
+
+search_bg=#FAEBD7
+search_fg=transparent
+show_topmost_toggle=0
+show_view_line_count=1
+show_view_selected_index=1
+show_view_selected_line=0
+sync_all_views=0
+sync_full_log_view=1
