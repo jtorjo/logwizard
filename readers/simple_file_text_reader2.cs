@@ -27,90 +27,76 @@ using System.Diagnostics;
 using System.Threading;
 using LogWizard.readers;
 
+#if old_code
 namespace LogWizard
 {
     /*
-    1.0.14+ now, the file_text_reader can handle logs that are being appended to, and that are re-written
+     1.0.14+ now, the file_text_reader can handle logs that are being appended to, and that are re-written
 
-    1.0.41 made thread-safe
+     1.0.41 made thread-safe
 
-    1.0.72
-    - decrease memory footprint
-    - very important assumption: we always assume that when the file is "encoding-complete" - in other words,
-      we never end up in the scenario where a character (that can occupy several bytes) is not fully written into the file
+     1.0.72 the file_text_reader now has better memory footprint (or so it should :D)
     */
-    class file_text_reader : text_reader
+    class simple_file_text_reader2 : text_reader
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly string file_;
 
-        // 1.0.72+ note: for now, assume the encoding is 4-padded, and we never end up splitting a char in the middle
-        //private const ulong MAX_READ_IN_ONE_GO = 16 * 1024 * 1024;
-        private readonly ulong MAX_READ_IN_ONE_GO = (ulong) (util.is_debug ? 128 * 1024 : 16 * 1024 * 1024);
+        // for now, make it simple - read everything 
+        string full_log_ = "";
 
-        private byte[] buffer_ = null;
-
-        private string last_part_ = "";
-
+        private ulong pos_ = 0;
         private ulong full_len_now_ = 0;
 
-        private ulong offset_ = 0;
-        private ulong read_byte_count_ = 0;
-
         private string cached_syntax_ = "";
+
+        // note: these don't need to be thread-safe - only used in the read_all_file_thread
+        private byte[] full_log_buffer_ = null;
+        private ulong full_log_read_bytes_ = 0;
 
         private bool has_it_been_rewritten_ = false;
 
         private Encoding file_encoding_ = null;
         
-        public file_text_reader(string file) {
-            buffer_ = new byte[MAX_READ_IN_ONE_GO];
+        public simple_file_text_reader2(string file) {
             try {
                 // get absolute path - normally, this should be the absolute path, but just to be sure
                 file_ = new FileInfo(file).FullName;
             } catch {
                 file_ = file;
             }
+            pos_ = 0;
             new Thread(read_all_file_thread) {IsBackground = true}.Start();
         }
 
         private void read_all_file_thread() {
             while (!disposed) {
                 Thread.Sleep(100);
-                read_file_block();
-            }
+                read_all_file();
+            }            
         }
 
         public override string name {
             get { return file_; }
         }
 
-        // this should read all text, returns it, and reset our buffer - len is not needed
-        public override string read_next_text() {
+        public override string read_next_text(int len) {
             lock (this) {
-                string now = last_part_;
-                last_part_ = "";
-                offset_ = read_byte_count_;
-                return now;
+                if (pos_ > (ulong) full_log_.Length - 1)
+                    pos_ = (ulong) full_log_.Length - 1;
+                if (pos_ + (ulong) len > (ulong) full_log_.Length)
+                    len = full_log_.Length - (int) pos_;
+                Debug.Assert(len >= 0);
+                string next = full_log_.Substring((int) pos_, len);
+                pos_ += (ulong) len;
+                return next;
             }
         }
 
         public override void compute_full_length() {
-            ulong full;
-            try {
-                full = (ulong)new FileInfo(file_).Length;
-            } catch (FileNotFoundException e) {
-                full = 0;
-            }
-            catch(Exception e) {
-                // if we can't read the file length, something probably happened - either it got re-written, or locked
-                // wait until next time
-                return;
-            }
-
-            lock (this) 
-                full_len_now_ = Math.Min( read_byte_count_ + MAX_READ_IN_ONE_GO, full); 
+            lock (this)
+                full_len_now_ = (ulong) full_log_.Length;
         }
 
         public override ulong full_len {
@@ -118,20 +104,28 @@ namespace LogWizard
         }
         
         public override ulong pos {
-            get { lock(this) return offset_;  }
+            get { return pos_;  }
+            set { pos_ = value; } 
         }
 
-        public override void force_reload() {
-            lock (this) 
-                if (offset_ == 0)
-                    // we're already at beginning of file
-                    return;
-            on_rewritten_file();
+        private void allocate_buffer(long new_len) {
+            long existing_len = full_log_buffer_ != null ? full_log_buffer_.Length : 0;
+            if (new_len > existing_len) {
+                // we should clearly allocate more - so that not at every write we would need to reallocate
+                double STEP = 1.2;
+                long MIN_SIZE = 16 * 1024;
+                long resize = Math.Max( existing_len, MIN_SIZE); // at least a decent size
+                while (resize < new_len)
+                    resize = (long) (resize * STEP);
+
+                byte[] new_ = new byte[resize];
+                if ( full_log_buffer_ != null)
+                    Array.Copy(full_log_buffer_, new_, (int)full_log_read_bytes_);
+                full_log_buffer_ = new_;
+            }
         }
 
-
-        // reads a file block from the file (as much as we can, in a single go)
-        private void read_file_block() {
+        private void read_all_file() {
             try {
                 if (file_encoding_ == null) {
                     var encoding = util.file_encoding(file_);
@@ -141,28 +135,23 @@ namespace LogWizard
                 }
 
                 long len = new FileInfo(file_).Length;
-                bool file_rewritten = false;
-                long offset;
-                lock (this) offset = (long) read_byte_count_;
+                allocate_buffer(len);
                 using (var fs = new FileStream(file_, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    if (len > offset) {
-                        long read_now = Math.Min( (long)MAX_READ_IN_ONE_GO, len - offset);
-                        logger.Debug("[file] reading file " + file_ + " at " + offset + ", " + read_now  + " bytes.");
+                    if (len > (long)full_log_read_bytes_) {
+                        long offset = (long)full_log_read_bytes_;
+                        long count = (len - (long) full_log_read_bytes_);
+                        logger.Debug("[file] reading file " + file_ + " at " + offset + ", " + count  + " bytes.");
                         fs.Seek(offset, SeekOrigin.Begin);
-                        int read_bytes = fs.Read(buffer_, 0, (int)read_now);
-                        if (read_bytes >= 0) {
-                            string now = file_encoding_.GetString(buffer_, 0, read_bytes);
-                            lock (this) {
-                                read_byte_count_ += (ulong) read_bytes;
-                                last_part_ += now;
-                            }
-                        }
+                        int read_bytes = fs.Read(full_log_buffer_, (int)offset, (int)count);
+                        if ( read_bytes >= 0)
+                            full_log_read_bytes_ += (ulong)read_bytes;
+                        lock(this)
+                            full_log_ = file_encoding_.GetString(full_log_buffer_, 0, (int)full_log_read_bytes_);
                     }
-                    else if (len == offset) {
-                        // file not changed - nothing to do
-                    } else
-                        file_rewritten = true;
-                if ( file_rewritten)
+                else if ( len == (long)full_log_read_bytes_) {
+                    // file not changed - nothing to do
+                }
+                else 
                     on_rewritten_file();
             } catch(Exception e) {
                 logger.Error("[file] can't read file - " + file_ + " : " + e.Message);
@@ -173,15 +162,9 @@ namespace LogWizard
             try {
                 long len = new FileInfo(file_).Length;
                 lock (this)
-                    return read_byte_count_ == (ulong) len;
-            } catch (FileNotFoundException fe) {
-                // file may have been erased
-                lock (this)
-                    return read_byte_count_ == 0;
-            }             
-            catch (Exception e) {
-                // in this case, maybe the file is locked - we'll try again next time
-                return true;
+                    return full_log_read_bytes_ == (ulong)len;
+            } catch (Exception e) {
+                return false;
             }
         }
 
@@ -200,12 +183,12 @@ namespace LogWizard
         private void on_rewritten_file() {
             logger.Info("[file] file rewritten - " + file_);
             lock (this) {
-                // restart from beginning
                 has_it_been_rewritten_ = true;
-                read_byte_count_ = 0;
-                offset_ = 0;
+                full_log_read_bytes_ = 0;
+                // restart from beginning
+                pos_ = 0;
             }
-            read_file_block();
+            read_all_file();
         }
 
         public override string try_to_find_log_syntax() {
@@ -227,3 +210,4 @@ namespace LogWizard
 
     }
 }
+#endif

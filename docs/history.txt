@@ -5,6 +5,9 @@
 - allow resetting the default settings (for Denise)
 
 
+1.0.72b
+- decrease memory footprint - step 1
+
 
 1.0.72a
 - toggling full log -> make sure we focus on a view, so that we don't end up having focus on a hidden control

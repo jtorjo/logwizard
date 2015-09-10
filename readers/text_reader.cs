@@ -31,7 +31,7 @@ namespace LogWizard
         public const string UNKNOWN_SYNTAX = find_log_syntax.UNKNOWN_SYNTAX;
 
         // reads text at position - and updates position
-        public abstract string read_next_text(int len) ;
+        public abstract string read_next_text() ;
 
         // 1.0.14+ - this computes the full length of the reader - until we call it again
         //           (since this can be costly CPU-wise)
@@ -41,8 +41,9 @@ namespace LogWizard
         // 1.0.14+ - returns the length computed in compute_full_length()
         public abstract ulong full_len { get; }
 
-        // the position in the log_line_parser
-        public abstract ulong pos { get; set; }
+        // the position in the log_line_parser (in bytes)
+        // 1.0.72+ - made readonly
+        public abstract ulong pos { get; }
 
         private bool disposed_ = false;
 
@@ -69,6 +70,9 @@ namespace LogWizard
         }
 
         public virtual void on_dispose() {
+        }
+
+        public virtual void force_reload() {            
         }
 
         public void Dispose() {

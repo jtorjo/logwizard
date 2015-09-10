@@ -25,6 +25,8 @@ using System.Linq;
 using System.Text;
 using LogWizard.readers;
 
+#if old_code
+
 namespace LogWizard {
     // moved here on 1.0.14 - this was the simple way to read all file
     // now, the file_text_reader can handle logs that are being appended to, and that are re-written
@@ -101,3 +103,5 @@ namespace LogWizard {
         }
     }
 }
+
+#endif

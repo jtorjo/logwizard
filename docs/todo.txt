@@ -170,6 +170,42 @@
 
 
 
+---------------------------------------------------------------------------------
+- how easy is it to draw with custom font, or on special color?
+
+allow bolding or changing font or color or whatever of certain words/phrases
+like, color=red for all "could not" text
+
+- (low) log_line_parser.read_to_end - normally, when a line is incomplete and reparsed, we should reapply filters on it, because the line might have become complete now,
+  thus, some filters might match now. however, it's not a big deal - normally logs should be flushed correctly (several lines at a time)
+
+allow bolding or changing font or color or whatever of certain regexes?
+like, in the message - if X matches Y -> mark it in a certain color or so.
+case in point -> [time.stats] -> numbers -> if too big -> mark them in given color
+---- at beginning, do this simple, like "match [time.stats] $number ms". Then, allow $number comparisons, like , $number > 100 => color something
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ------------- talk with Vidi
 - threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
@@ -188,21 +224,3 @@
 
 
 - at some point: all commands should be available via menu - which should be turned on/off
-
-
-
-
-
----------------------------------------------------------------------------------
-- how easy is it to draw with custom font, or on special color?
-
-allow bolding or changing font or color or whatever of certain words/phrases
-like, color=red for all "could not" text
-
-- (low) log_line_parser.read_to_end - normally, when a line is incomplete and reparsed, we should reapply filters on it, because the line might have become complete now,
-  thus, some filters might match now. however, it's not a big deal - normally logs should be flushed correctly (several lines at a time)
-
-allow bolding or changing font or color or whatever of certain regexes?
-like, in the message - if X matches Y -> mark it in a certain color or so.
-case in point -> [time.stats] -> numbers -> if too big -> mark them in given color
----- at beginning, do this simple, like "match [time.stats] $number ms". Then, allow $number comparisons, like , $number > 100 => color something

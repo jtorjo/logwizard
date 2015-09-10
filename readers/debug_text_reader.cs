@@ -29,7 +29,7 @@ namespace LogWizard
     {
         public debug_text_reader() {
         }
-        public override string read_next_text(int len) {
+        public override string read_next_text() {
             return "";
         }
 
@@ -42,7 +42,7 @@ namespace LogWizard
 
         public override ulong pos { 
             get { return 0; } 
-            set {}
+            
         }
     }
 }

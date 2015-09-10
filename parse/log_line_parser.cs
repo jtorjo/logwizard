@@ -39,9 +39,6 @@ namespace LogWizard
         max }
 
     class line {
-        // pos in log - probably useless
-        public readonly ulong pos_in_log;
-
         private string[] parts = new string[(int)info_type.max];
 
         // if not minvalue, it's the time this message was written
@@ -52,14 +49,13 @@ namespace LogWizard
                 string full = "";
                 foreach ( string p in parts)
                     if (p != null)
-                        full += p;
+                        full += p + " ";
                 return full;
             }
         }
 
-        public line(ulong pos_in_log, string msg, Tuple<int, int>[] idx_in_line) {
+        public line(string msg, Tuple<int, int>[] idx_in_line) {
             Debug.Assert(idx_in_line.Length == (int)info_type.max);
-            this.pos_in_log = pos_in_log;
 
             for (int part_idx = 0; part_idx < idx_in_line.Length; ++part_idx) {
                 var index = idx_in_line[part_idx];
@@ -132,6 +128,7 @@ namespace LogWizard
 
 
         private const string LINE_SEP = "\r\n";
+        private const int CACHE_LAST_INCOMPLETE_LINE_MS = 500;
 
         private readonly text_reader text_reader_ = null;
 
@@ -143,8 +140,8 @@ namespace LogWizard
         // for each of these readers, we have returned a "yes" to forced_reload
         private HashSet<log_line_reader> forced_reload_ = new HashSet<log_line_reader>();
 
-        private ulong last_pos_ = 0;
-        private bool was_last_line_incomplete_ = false;
+        private DateTime was_last_line_incomplete_ = DateTime.MinValue;
+        private string last_line_ = "";
 
         // if true, we've been fully read (thus, we're up to date)
         private bool up_to_date_ = false;
@@ -174,7 +171,18 @@ namespace LogWizard
             }
         }
 
-        public int line_count { get { lock(this) return lines_.Count; } }
+        public int line_count {
+            get {
+                lock (this) {
+                    int count = lines_.Count;
+                    if ( was_last_line_incomplete_ != DateTime.MinValue)
+                        if (was_last_line_incomplete_.AddMilliseconds(CACHE_LAST_INCOMPLETE_LINE_MS) > DateTime.Now)
+                            // we're not sure if the last line was fully read - assume not...
+                            --count;
+                    return count;
+                }
+            }
+        }
 
         public string name {
             get { return text_reader_.name; }
@@ -367,14 +375,14 @@ namespace LogWizard
         // forces the WHOLE FILE to be reloaded
         public void force_reload() {
             lock (this) {
-                last_pos_ = 0;
-                was_last_line_incomplete_ = false;
+                was_last_line_incomplete_ = DateTime.MinValue;
+                last_line_ = "";
                 forced_reload_.Clear();
                 lines_.Clear();
-                text_reader_.pos = 0;
                 up_to_date_ = false;
                 logger.Info("[log] log reloaded: " + text_reader_.name);
             }
+            text_reader_.force_reload();
         }
 
 
@@ -382,39 +390,47 @@ namespace LogWizard
             ulong old_len = text_reader_.full_len;
             text_reader_.compute_full_length();
             ulong new_len = text_reader_.full_len;
-            if (old_len > new_len) 
+            // when reader's position is zero -> it's either the first time, or file was re-rewritten
+            if (old_len > new_len || text_reader_.pos == 0) 
                 // file got re-written
                 force_reload();
 
             bool fully_read = old_len == new_len && text_reader_.is_up_to_date();
 
-            ulong pos_in_log;
-            lock(this)
-                pos_in_log = last_pos_;
-            text_reader_.pos = pos_in_log;
             int remaining = (int)(text_reader_.full_len - text_reader_.pos);
             if (remaining < 1) {
-                lock (this)
+                lock (this) {
                     up_to_date_ = fully_read;
+                    if ( up_to_date_)
+                        // at this point, we're sure we read everything
+                        was_last_line_incomplete_ = DateTime.MinValue;
+                }
                 return;
             }
             
             lock (this)
                 up_to_date_ = false;
 
-            string[] cur_lines = text_reader_.read_next_text(remaining).Split(new string[] { LINE_SEP }, StringSplitOptions.None);
+            string text = text_reader_.read_next_text();
+            bool starts_with_sep = text.StartsWith(LINE_SEP), ends_with_sep = text.EndsWith(LINE_SEP);
+            string[] cur_lines = text.Split(new string[] { LINE_SEP }, StringSplitOptions.None);
             if (cur_lines.Length < 1)
                 return;
 
             int start_idx = 0;
-            var first_line = parse_line(cur_lines[0], pos_in_log);
-            lock(this)
-                if ( lines_.Count > 0 && was_last_line_incomplete_) {
+            string merge_last_existing_line;
+            lock (this)
+                merge_last_existing_line = lines_.Count > 0 && !starts_with_sep && was_last_line_incomplete_ != DateTime.MinValue ? last_line_ + cur_lines[0] : "";
+            var first_line = merge_last_existing_line != "" ? parse_line(merge_last_existing_line) : null;
+            lock (this) {
+                if (first_line != null) {
                     // we re-parse the last line (which was previously incomplete)
-                    lines_[ lines_.Count - 1] = first_line;
-                    pos_in_log += (ulong)cur_lines[0].Length + (ulong)LINE_SEP.Length;
+                    lines_[lines_.Count - 1] = first_line;
                     start_idx = 1;
                 }
+                if (cur_lines[0] == "")
+                    start_idx = 1;
+            }
 
             int end_idx = cur_lines.Length;
             // find the first non-empty line
@@ -422,11 +438,8 @@ namespace LogWizard
             }
 
             List<line> now = new List<line>();
-            for ( int i = start_idx; i < end_idx; ++i) {
-                now.Add( parse_line( cur_lines[i], pos_in_log));
-                pos_in_log += (ulong)cur_lines[i].Length + (ulong)LINE_SEP.Length;
-            }
-
+            for ( int i = start_idx; i < end_idx; ++i) 
+                now.Add( parse_line( cur_lines[i]));
 
             int old_count;
             lock (this) {
@@ -434,8 +447,8 @@ namespace LogWizard
                 lines_.AddRange(now);
                 for ( int idx = old_count; idx < lines_.Count; ++idx)
                     adjust_line_time(idx);
-                was_last_line_incomplete_ = cur_lines[cur_lines.Length - 1] != "";
-                last_pos_ = pos_in_log;
+                was_last_line_incomplete_ = !ends_with_sep ? DateTime.Now : DateTime.MinValue;
+                last_line_ = cur_lines.Last();
             }
         }
 
@@ -546,7 +559,7 @@ namespace LogWizard
             return ( start < l.Length && end <= l.Length) ? new Tuple<int, int>(start, end - start) : null;
         }
 
-        private line parse_relative_line(string l, ulong pos_in_log, syntax_info si) {
+        private line parse_relative_line(string l, syntax_info si) {
             List< Tuple<int,int> > indexes = new List<Tuple<int, int>>();
             for ( int i = 0; i < (int)info_type.max; ++i)
                 indexes.Add(new Tuple<int,int>(-1,-1));
@@ -567,13 +580,13 @@ namespace LogWizard
 
             // if we could parse time or date, we consider it an OK line
             bool normal_line = correct_count == si.relative_idx_in_line_.Count;
-            return normal_line ? new line(pos_in_log, l, indexes.ToArray()) : null ;
+            return normal_line ? new line(l, indexes.ToArray()) : null ;
         }
 
         // returns null if it can't parse
-        private line parse_line_with_syntax(string l, ulong pos_in_log, syntax_info si) {
+        private line parse_line_with_syntax(string l, syntax_info si) {
             if (si.relative_syntax_)
-                return parse_relative_line(l, pos_in_log, si);
+                return parse_relative_line(l, si);
 
             try {
                 bool normal_line = parse_time(l, si.idx_in_line_[(int) info_type.time]) && parse_date(l, si.idx_in_line_[(int) info_type.date]);
@@ -582,7 +595,7 @@ namespace LogWizard
                     // note: we can't rely on level too much, since the user might have additional levels that our defaults - so we could get false negatives
                     normal_line = parse_level(l, si.idx_in_line_[(int) info_type.level]);
 
-                return normal_line ? new line(pos_in_log, l, si.idx_in_line_) : null;
+                return normal_line ? new line(l, si.idx_in_line_) : null;
             } catch(Exception e) {
                 logger.Error("invalid line: " + l);
                 //return new line(pos_in_log, l, line_contains_msg_only_);
@@ -590,22 +603,22 @@ namespace LogWizard
             }
         }
 
-        private line parse_line(string l, ulong pos_in_log) {
+        private line parse_line(string l) {
             Debug.Assert(syntaxes_.Count > 0);
 
             foreach (var si in syntaxes_) {
                 line result = null;
                 if (si.relative_syntax_)
-                    result = parse_relative_line(l, pos_in_log, si);
+                    result = parse_relative_line(l, si);
                 else
-                    result = parse_line_with_syntax(l, pos_in_log, si);
+                    result = parse_line_with_syntax(l, si);
 
                 if (result != null)
                     return result;
             }
 
             // in this case, we can't parse the line at all - use default
-            return new line(pos_in_log, l, syntaxes_[0].line_contains_msg_only_);
+            return new line(l, syntaxes_[0].line_contains_msg_only_);
         }
 
         public void Dispose() {
