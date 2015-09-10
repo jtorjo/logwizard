@@ -140,9 +140,12 @@
     <Compile Include="filter\filter.cs" />
     <Compile Include="filter\filter_line.cs" />
     <Compile Include="filter\filter_row.cs" />
+    <Compile Include="parse\line.cs" />
     <Compile Include="parse\log_line_parser.cs" />
     <Compile Include="readers\simple_file_text_reader2.cs" />
     <Compile Include="settings\app.cs" />
+    <Compile Include="string\large_string.cs" />
+    <Compile Include="string\sub_string.cs" />
     <Compile Include="ui\about_form.cs">
       <SubType>Form</SubType>
     </Compile>

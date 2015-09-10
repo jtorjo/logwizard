@@ -4,6 +4,13 @@
 
 - allow resetting the default settings (for Denise)
 
+1.0.74a
+- decrease memory footprint - step 3 - large_string now holds the whole string, and the lines point into it
+  - rationale: dotmemory found a LOT of small strings
+  - IMPORTANT: there is a BUG - at huge files, some lines are missed (huge1.txt - we miss two lines)
+    (very likely, we consider they are part of existing lines and append to them)
+
+
 1.0.73
 - decrease memory footprint - step 2 (loaded 90Mb file , takes 515Mb instead of 811Mb (1.0.66))
 

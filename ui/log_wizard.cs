@@ -1081,6 +1081,8 @@ namespace LogWizard
                             if (!lv.is_filter_up_to_date)
                                 return false;
                         logger.Debug("[view] initial refresh complete");
+                        // we allocated a lot of interim objects
+                        GC.Collect();
                         return true;
                     }, 500);
         }

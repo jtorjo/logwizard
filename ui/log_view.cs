@@ -733,6 +733,7 @@ namespace LogWizard
         }
 
         public void update_view_column(List<log_view> other_logs) {
+
             // in this case, everything needs to be up to date
             foreach (log_view other in other_logs)
                 other.refresh();
