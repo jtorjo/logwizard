@@ -53,10 +53,12 @@ namespace LogWizard
 
         private class item {
             private filter.match match_;
-            private readonly log_view parent_ = null;
-            public int row = 0;
 
             public Color override_bg = util.transparent, override_fg = util.transparent;
+
+            private readonly log_view parent_ = null;
+            // if non-null, it contains the names of the logs it matches (set to a valid value only on the full-log)
+            public List<string> matched_logs = null;
 
             public item(filter.match match, log_view parent) {
                 match_ = match;
@@ -66,9 +68,6 @@ namespace LogWizard
             public int line {
                 get { return match_.line_idx + 1; }
             }
-
-            // if non-null, it contains the names of the logs it matches (set to a valid value only on the full-log)
-            public List<string> matched_logs = null;
 
             public string view {
                 get {
@@ -183,7 +182,7 @@ namespace LogWizard
 
             public void add_matches(List<filter.match> matches, log_view parent) {
                 foreach ( var m in matches)
-                    items_.Add(new item(m,parent) { row = items_.Count + 1 });
+                    items_.Add(new item(m,parent) );
 
                 if ( matches.Count == 0)
                     lv_.ClearObjects();

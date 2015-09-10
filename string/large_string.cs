@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using log4net.Repository.Hierarchy;
 
 namespace LogWizard
 {
@@ -11,10 +12,24 @@ namespace LogWizard
     // note: at this time, we assume the enter is formed of 2 chars - either \r\n or \n\r
     class large_string
     {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private const string LINE_SEP = "\r\n";
         private StringBuilder string_ = new StringBuilder();
 
-        private List<int> indexes_ = new List<int>(); 
+        private List<int> indexes_ = new List<int>();
+
+        private bool test_we_computed_lines_correctly = false; //util.is_debug;
+
+        // tests to see we've computed the lines correctly
+        private void test_compute_lines() {
+            string[] lines = string_.ToString().Split(new string[] {LINE_SEP}, StringSplitOptions.None);
+            Debug.Assert(lines.Length == line_count);
+            for (int i = 0; i < lines.Length; ++i) {
+                string cur = line_at(i);
+                Debug.Assert(lines[i] == cur);
+            }
+        }
 
         public void add_lines(string lines, ref int added_line_count, ref bool was_last_line_incomplete, ref bool is_last_line_incomplete) {
             if (lines == "")
@@ -35,6 +50,10 @@ namespace LogWizard
             added_line_count = line_count - old_line_count;
 
             is_last_line_incomplete = line_count > indexes_.Count;
+            logger.Debug("[line] we have read " + line_count + " lines");
+
+            if (test_we_computed_lines_correctly)
+                test_compute_lines();
         }
 
         public void set_lines(string lines, ref int line_count) {
@@ -43,6 +62,9 @@ namespace LogWizard
             string_.Append(lines);
             compute_indexes(0);
             line_count = this.line_count;
+
+            if (test_we_computed_lines_correctly)
+                test_compute_lines();
         }
 
         public void clear() {
@@ -52,6 +74,9 @@ namespace LogWizard
 
         public int line_count {
             get {
+                if (string_.Length == 0)
+                    return 0;
+
                 int count = indexes_.Count + 1;
                 if (indexes_.Count > 0) {
                     bool ends_in_enter = indexes_.Last() + 2 >= string_.Length;
@@ -76,7 +101,7 @@ namespace LogWizard
                 // last line
                 int start = indexes_.Last() + 2;
                 int end = string_.Length;
-                if (end >= start)
+                if (end <= start)
                     return "";
                 return string_.ToString(start, end - start);
             } else

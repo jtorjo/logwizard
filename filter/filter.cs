@@ -19,6 +19,7 @@
  * If you wish to use this code in a closed source application, please contact john.code@torjo.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -34,7 +35,7 @@ namespace LogWizard {
             // this contains what filters were matched - we need to know this, so that we can later apply 'additions'
             //
             // if this is an empty array, then this match is actually an addition (or, the filter contains no rows -> thus, we return the whole file)
-            public bool[] matches = null;
+            public BitArray matches = null;
 
             public filter_line.font_info font = null;
             public line line = null;
@@ -223,7 +224,7 @@ namespace LogWizard {
                 int old_match_count;
                 lock (this)
                     old_match_count = match_indexes_.Count;
-                bool[] matches = new bool[rows.Count];
+                BitArray matches = new BitArray(rows.Count);
 
                 for (int line_idx = old_line_count; line_idx < new_log.line_count; ++line_idx) {
                     bool any_match = false;
@@ -269,12 +270,12 @@ namespace LogWizard {
                         else {
                             // in this case, prefer the first "enabled" filter
                             int enabled_idx = -1;
-                            for (int filter_idx = 0; filter_idx < matches.Count() && enabled_idx < 0; ++filter_idx)
+                            for (int filter_idx = 0; filter_idx < matches.Length && enabled_idx < 0; ++filter_idx)
                                 if (matches[filter_idx] && rows[filter_idx].enabled)
                                     enabled_idx = filter_idx;
                             int used_idx = -1;
                             if (enabled_idx < 0)
-                                for (int filter_idx = 0; filter_idx < matches.Count() && used_idx < 0; ++filter_idx)
+                                for (int filter_idx = 0; filter_idx < matches.Length && used_idx < 0; ++filter_idx)
                                     if (matches[filter_idx] && rows[filter_idx].dimmed)
                                         used_idx = filter_idx;
                             if (enabled_idx >= 0 || used_idx >= 0) {
@@ -284,7 +285,7 @@ namespace LogWizard {
                                 font = filter_line.font_info.default_;
                         }
                         new_matches.Add(line_idx, new match {
-                            font = font, line = new_log.line_at(line_idx), line_idx = line_idx, matches = matches.ToArray()
+                            font = font, line = new_log.line_at(line_idx), line_idx = line_idx, matches = new BitArray(matches)
                         });
                         new_indexes.Add(line_idx);
                         continue;
@@ -292,7 +293,7 @@ namespace LogWizard {
 
                     bool any_filter = (rows.Count > 0);
                     if (!any_filter) {
-                        new_matches.Add(line_idx, new match { matches = new bool[0], line = new_log.line_at(line_idx), line_idx = line_idx, font = filter_line.font_info.default_ });
+                        new_matches.Add(line_idx, new match { matches = new BitArray(0), line = new_log.line_at(line_idx), line_idx = line_idx, font = filter_line.font_info.default_ });
                         new_indexes.Add(line_idx);
                     }
                 }
@@ -382,7 +383,7 @@ namespace LogWizard {
                     add_addition_line(add_idx.Key, add_idx.Value, log);
         }
 
-        private static bool[] empty_match = new bool[0];
+        private static BitArray empty_match = new BitArray(0);
         private void add_addition_line(int line_idx, Color fg, log_line_reader log) {
             // if insert_idx > 0 , that means we already have it
             int insert_idx = match_indexes_.BinarySearch(line_idx);

@@ -79,7 +79,8 @@ namespace LogWizard
 
 
         private const string LINE_SEP = "\r\n";
-        private const int CACHE_LAST_INCOMPLETE_LINE_MS = 500;
+        // FIXME not a good idea
+        private const int CACHE_LAST_INCOMPLETE_LINE_MS = 50000;
 
         private readonly text_reader text_reader_ = null;
 
@@ -374,29 +375,26 @@ namespace LogWizard
             bool needs_reparse_last_line;
             lock (this)
                 needs_reparse_last_line = lines_.Count > 0 && was_last_line_incomplete ;
-            var first_line = needs_reparse_last_line ? parse_line(new sub_string(string_, old_line_count - 1)) : null;
-            int start_idx = old_line_count;
-            lock (this) {
-                if (first_line != null) {
-                    // we re-parse the last line (which was previously incomplete)
-                    lines_[lines_.Count - 1] = first_line;
-                    ++start_idx;
-                }
-            }
-
+            int start_idx = old_line_count - (was_last_line_incomplete ? 1 : 0);
             int end_idx = string_.line_count;
             List<line> now = new List<line>();
             for ( int i = start_idx; i < end_idx; ++i) 
                 now.Add( parse_line( new sub_string(string_,i) ));
 
-            int old_count;
             lock (this) {
-                old_count = lines_.Count;
+                if (needs_reparse_last_line) {
+                    // we re-parse the last line (which was previously incomplete)
+                    logger.Debug("[line] reparsed line " + (old_line_count-1) );
+                    lines_.RemoveAt( lines_.Count - 1);
+                }
+
+                int old_count = lines_.Count;
                 lines_.AddRange(now);
                 for ( int idx = old_count; idx < lines_.Count; ++idx)
                     adjust_line_time(idx);
                 was_last_line_incomplete_ = was_last_line_incomplete ? DateTime.Now : DateTime.MinValue;
             }
+            Debug.Assert( lines_.Count == string_.line_count);
         }
 
         // if the time isn't set - try to use it from the surroundings

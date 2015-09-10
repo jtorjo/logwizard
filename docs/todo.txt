@@ -79,7 +79,7 @@
   if turned on, the msg details is automatically off
   - i should also have a way to toggle msg_details on/off
 
-- 's' - toggle status (info about the file/current view - like, file size, number of lines, how many lines the last Find matched)
+- 's' - toggle status (info about the file/current view - like, file size, number of lines, how many lines the last Find matched; when loading a file -> write status about it)
 
 - toggles - have them as a single context menu - to be shown at the press of a button or when right-clicking on our "bug" icon
   - when showing the menu, the hotkeys for each toggle, show them in [] , like, [F]ilter Pane

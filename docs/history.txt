@@ -1,14 +1,33 @@
 
 - bug: toggle full log -> when pressed ('l') in full-log, it's pressed twice
-
-
 - allow resetting the default settings (for Denise)
+
+
+
+
+1.0.74b
+- decrease memory footprint - step 4 
+  - using BitArray instead of bool[]
+  - further testing
+  - fixed bug from 1.0.74a - works as expected now
+
+Notes:
+- I initially thought that compiling as 32-bit would save us quite a lot of memory - this does not seem to be the case.
+- memory "bottlenecks" are:
+  - line class - not much can be improved about it
+  - filter.match - probably a small improvement could be achieved by making filter_line.font_info a struct - however, i don't think it's worth my time at this point
+  - *** log_view.item 
+    - i could create a class derived from item, for the full-log only -> which would keep the parent_ and matched_logs
+
 
 1.0.74a
 - decrease memory footprint - step 3 - large_string now holds the whole string, and the lines point into it
   - rationale: dotmemory found a LOT of small strings
   - IMPORTANT: there is a BUG - at huge files, some lines are missed (huge1.txt - we miss two lines)
     (very likely, we consider they are part of existing lines and append to them)
+	also, it's likely that I access some lines before they are fully read (like, a line was partially read) - and i don't treat that correctly
+
+- managed to successfully load 280Mb file - we occupy about 1.1Gb - which is quite decent (older version just crashed)
 
 
 1.0.73

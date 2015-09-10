@@ -20,21 +20,30 @@ namespace LogWizard {
 
     class line {
         private sub_string sub_;
-        // FIXME the len - keep it as ubyte
+        // note: I could theoretically keep the length as a ubyte - and only the length of the message as a short
+        //       however, I don't think it's worth doing, since if in the future, I would parse more complicated logs,
+        //       we could end up with several parts of the message being bigger than 255 chars, so we'd have to come back to this again
+        //
+        //      thus, not worth doing
         private short[] parts = new short[(int)info_type.max * 2];
 
         // if not minvalue, it's the time this message was written
         public DateTime time = DateTime.MinValue;
 
+        // for debugging
+        public override string ToString() {
+            return sub_.msg;
+        }
+
         public string full_line {
             get {
                 string full = "";
-                foreach (info_type i in Enum.GetValues(typeof (info_type))) {
-                    string sub = part(i);
-                    if (sub != "")
-                        full += sub + " ";
-                }
-
+                foreach (info_type i in Enum.GetValues(typeof (info_type))) 
+                    if ( i != info_type.max) {
+                        string sub = part(i);
+                        if (sub != "")
+                            full += sub + " ";
+                    }
                 return full;
             }
         }
