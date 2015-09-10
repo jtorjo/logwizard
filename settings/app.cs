@@ -12,6 +12,17 @@ namespace LogWizard {
             get { return inst_; }
         }
 
+        // these are settings that are NOT shown in the UI
+        public class no_ui_ {
+            public ulong file_max_read_in_one_go = (ulong) (util.is_debug ? 128 * 1024 : 16 * 1024 * 1024);
+            // ... after the file has been fully read, we don't expect that much info to be written in a few milliseconds
+            //     thus, make the muffer MUCH smaller
+            public ulong file_max_read_in_one_go_after_fully_read = (ulong) (util.is_debug ? 8 * 1024 : 128 * 1024);
+            
+        }
+        public no_ui_ no_ui = new no_ui_();
+
+
         // ... for file-to-file settings
         private string selected_log_file_name_ = "";
 
@@ -43,6 +54,9 @@ namespace LogWizard {
 
         public synchronize_colors_type syncronize_colors = synchronize_colors_type.none;
         public bool sync_colors_all_views_gray_non_active = false;
+
+
+
 
         // file-by-file
         public bool bring_to_top_on_restart = false;

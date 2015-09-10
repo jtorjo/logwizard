@@ -46,8 +46,10 @@ namespace LogWizard
         private readonly string file_;
 
         // 1.0.72+ note: for now, assume the encoding is 4-padded, and we never end up splitting a char in the middle
-        //private const ulong MAX_READ_IN_ONE_GO = 16 * 1024 * 1024;
-        private readonly ulong MAX_READ_IN_ONE_GO = (ulong) (util.is_debug ? 128 * 1024 : 16 * 1024 * 1024);
+        private readonly ulong MAX_READ_IN_ONE_GO_UNTIL_FULLY_READ = app.inst.no_ui.file_max_read_in_one_go;
+        // ... after the file has been fully read, we don't expect that much info to be written in a few milliseconds
+        //     thus, make the muffer MUCH smaller
+        private readonly ulong MAX_READ_IN_ONE_GO_AFTER_FULLY_READ = app.inst.no_ui.file_max_read_in_one_go_after_fully_read;
 
         private byte[] buffer_ = null;
 
@@ -61,11 +63,13 @@ namespace LogWizard
         private string cached_syntax_ = "";
 
         private bool has_it_been_rewritten_ = false;
+        // useful for using a smaller buffer for reading 
+        private bool fully_read_once_ = false;
 
         private Encoding file_encoding_ = null;
         
         public file_text_reader(string file) {
-            buffer_ = new byte[MAX_READ_IN_ONE_GO];
+            buffer_ = new byte[max_read_in_one_go];
             try {
                 // get absolute path - normally, this should be the absolute path, but just to be sure
                 file_ = new FileInfo(file).FullName;
@@ -73,6 +77,10 @@ namespace LogWizard
                 file_ = file;
             }
             new Thread(read_all_file_thread) {IsBackground = true}.Start();
+        }
+
+        private ulong max_read_in_one_go {
+            get { lock (this) return fully_read_once_ ? MAX_READ_IN_ONE_GO_AFTER_FULLY_READ : MAX_READ_IN_ONE_GO_UNTIL_FULLY_READ; }
         }
 
         private void read_all_file_thread() {
@@ -110,7 +118,7 @@ namespace LogWizard
             }
 
             lock (this) 
-                full_len_now_ = Math.Min( read_byte_count_ + MAX_READ_IN_ONE_GO, full); 
+                full_len_now_ = Math.Min( read_byte_count_ + max_read_in_one_go, full); 
         }
 
         public override ulong full_len {
@@ -129,6 +137,16 @@ namespace LogWizard
             on_rewritten_file();
         }
 
+        private void update_buffer() {
+            int max_read = (int) max_read_in_one_go;
+            lock (this) {
+                if (buffer_.Length == max_read)
+                    return;
+                buffer_ = new byte[max_read];
+            }
+            // we just released the old buffer
+            GC.Collect();
+        }
 
         // reads a file block from the file (as much as we can, in a single go)
         private void read_file_block() {
@@ -146,7 +164,8 @@ namespace LogWizard
                 lock (this) offset = (long) read_byte_count_;
                 using (var fs = new FileStream(file_, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     if (len > offset) {
-                        long read_now = Math.Min( (long)MAX_READ_IN_ONE_GO, len - offset);
+                        update_buffer();
+                        long read_now = Math.Min( (long)max_read_in_one_go, len - offset);
                         logger.Debug("[file] reading file " + file_ + " at " + offset + ", " + read_now  + " bytes.");
                         fs.Seek(offset, SeekOrigin.Begin);
                         int read_bytes = fs.Read(buffer_, 0, (int)read_now);
@@ -160,6 +179,13 @@ namespace LogWizard
                     }
                     else if (len == offset) {
                         // file not changed - nothing to do
+                        bool fully_read_now;
+                        lock (this) {
+                            fully_read_now = !fully_read_once_;
+                            fully_read_once_ = true;
+                        }
+                        if ( fully_read_now)
+                            update_buffer();
                     } else
                         file_rewritten = true;
                 if ( file_rewritten)
@@ -204,6 +230,7 @@ namespace LogWizard
                 has_it_been_rewritten_ = true;
                 read_byte_count_ = 0;
                 offset_ = 0;
+                fully_read_once_ = false;
             }
             read_file_block();
         }

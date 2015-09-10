@@ -4,6 +4,8 @@
 
 - allow resetting the default settings (for Denise)
 
+1.0.73
+- decrease memory footprint - step 2 (loaded 90Mb file , takes 515Mb instead of 811Mb (1.0.66))
 
 1.0.72b
 - decrease memory footprint - step 1
