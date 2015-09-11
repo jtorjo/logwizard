@@ -349,8 +349,7 @@ namespace LogWizard
 
             bool fully_read = old_len == new_len && text_reader_.is_up_to_date();
 
-            int remaining = (int)(text_reader_.full_len - text_reader_.pos);
-            if (remaining < 1) {
+            if ( !text_reader_.has_read_next_text()) {
                 lock (this) {
                     up_to_date_ = fully_read;
                     if ( up_to_date_)

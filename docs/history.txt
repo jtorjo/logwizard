@@ -3,6 +3,10 @@
 - allow resetting the default settings (for Denise)
 
 
+1.0.74c
+- decrease memory footprint - step 5
+ - loaded 90Mb file , takes 640Mb instead of 1084Mb (1.0.66) = when showing full log
+ - loads 280 Mb file - takes 1170Mb when not showing full log; when full log is shown, it crashes (outofmemoryexception)
 
 
 1.0.74b

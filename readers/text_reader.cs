@@ -33,6 +33,10 @@ namespace LogWizard
         // reads text at position - and updates position
         public abstract string read_next_text() ;
 
+        public virtual bool has_read_next_text() {
+            return false;
+        }
+
         // 1.0.14+ - this computes the full length of the reader - until we call it again
         //           (since this can be costly CPU-wise)
         //           after this call, we can rely on full_len being constant until this is called again

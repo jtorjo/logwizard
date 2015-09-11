@@ -51,9 +51,12 @@ namespace LogWizard
         //     thus, make the muffer MUCH smaller
         private readonly ulong MAX_READ_IN_ONE_GO_AFTER_FULLY_READ = app.inst.no_ui.file_max_read_in_one_go_after_fully_read;
 
+        // if our kept string exceeds this, stop reading from the file - let the parser first read this, then continue
+        private readonly ulong MAX_STRING_SIZE = 32 * 1024 * 1024;
+
         private byte[] buffer_ = null;
 
-        private string last_part_ = "";
+        private StringBuilder last_part_ = new StringBuilder();
 
         private ulong full_len_now_ = 0;
 
@@ -97,14 +100,22 @@ namespace LogWizard
         // this should read all text, returns it, and reset our buffer - len is not needed
         public override string read_next_text() {
             lock (this) {
-                string now = last_part_;
-                last_part_ = "";
+                string now = last_part_.ToString();
+                last_part_ = new StringBuilder();
                 offset_ = read_byte_count_;
                 return now;
             }
         }
 
+        public override bool has_read_next_text() {
+            lock (this)
+                return last_part_.Length > 0;
+        }
+
         public override void compute_full_length() {
+            lock(this)
+                if (last_part_.Length >= (long)MAX_STRING_SIZE)
+                    return;
             ulong full;
             try {
                 full = (ulong)new FileInfo(file_).Length;
@@ -158,6 +169,10 @@ namespace LogWizard
                             file_encoding_ = encoding;
                 }
 
+                lock(this)
+                    if (last_part_.Length >= (long)MAX_STRING_SIZE)
+                        return;
+
                 long len = new FileInfo(file_).Length;
                 bool file_rewritten = false;
                 long offset;
@@ -173,7 +188,7 @@ namespace LogWizard
                             string now = file_encoding_.GetString(buffer_, 0, read_bytes);
                             lock (this) {
                                 read_byte_count_ += (ulong) read_bytes;
-                                last_part_ += now;
+                                last_part_.Append(now) ;
                             }
                         }
                     }

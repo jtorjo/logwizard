@@ -56,40 +56,16 @@ namespace LogWizard
 
             public Color override_bg = util.transparent, override_fg = util.transparent;
 
-            private readonly log_view parent_ = null;
-            // if non-null, it contains the names of the logs it matches (set to a valid value only on the full-log)
-            public List<string> matched_logs = null;
-
             public item(filter.match match, log_view parent) {
                 match_ = match;
-                parent_ = parent;
             }
 
             public int line {
                 get { return match_.line_idx + 1; }
             }
 
-            public string view {
-                get {
-                    if ( matched_logs == null)
-                        return "";
-                    if (matched_logs.Count == 1)
-                        return matched_logs[0]; // optimization
-
-                    string views = "";
-                    bool has_selected_view = false;
-                    foreach (string name in matched_logs) {
-                        if (name == parent_.selected_view_) {
-                            has_selected_view = true;
-                            continue;
-                        }
-                        if (views != "") views += ", ";
-                        views += name;
-                    }
-                    if ( has_selected_view)
-                        views = parent_.selected_view_ + ", " + views;
-                    return views;
-                }
+            public virtual string view {
+                get { return ""; }
             }
 
             public string date {
@@ -127,24 +103,20 @@ namespace LogWizard
                 get { return match_.line.part(info_type.thread); }
             }
 
-            public Color bg {
-                get {
-                    if (parent_.bookmarks_.Contains(match.line_idx))
-                        return parent_.bookmark_bg_;
-                    if (override_bg != util.transparent)
-                        return override_bg;
-                    return match_.font.bg;
-                }
+            public Color bg(log_view parent) {
+                if (parent.bookmarks_.Contains(match.line_idx))
+                    return parent.bookmark_bg_;
+                if (override_bg != util.transparent)
+                    return override_bg;
+                return match_.font.bg;
             }
 
-            public Color fg {
-                get {
-                    if (parent_.bookmarks_.Contains(match.line_idx))
-                        return parent_.bookmark_fg_;
-                    if (override_fg != util.transparent)
-                        return override_fg;
-                    return match_.font.fg;
-                }
+            public Color fg(log_view parent) {
+                if (parent.bookmarks_.Contains(match.line_idx))
+                    return parent.bookmark_fg_;
+                if (override_fg != util.transparent)
+                    return override_fg;
+                return match_.font.fg;
             }
 
             public filter.match match {
@@ -155,6 +127,39 @@ namespace LogWizard
                 }
             }
         };
+
+        private class full_log_item : item {
+            private readonly log_view parent_ = null;
+            // if non-null, it contains the names of the logs it matches (set to a valid value only on the full-log)
+            public List<string> matched_logs = null;
+
+            public full_log_item(filter.match match, log_view parent) : base(match, parent) {
+                parent_ = parent;
+            }
+
+            public override string view {
+                get {
+                    if ( matched_logs == null)
+                        return "";
+                    if (matched_logs.Count == 1)
+                        return matched_logs[0]; // optimization
+
+                    string views = "";
+                    bool has_selected_view = false;
+                    foreach (string name in matched_logs) {
+                        if (name == parent_.selected_view_) {
+                            has_selected_view = true;
+                            continue;
+                        }
+                        if (views != "") views += ", ";
+                        views += name;
+                    }
+                    if ( has_selected_view)
+                        views = parent_.selected_view_ + ", " + views;
+                    return views;
+                }
+            }
+        }
 
         private class list_data_source : AbstractVirtualListDataSource {
             private List<item> items_ = new List<item>();
@@ -181,8 +186,9 @@ namespace LogWizard
             }
 
             public void add_matches(List<filter.match> matches, log_view parent) {
+                bool is_full_log = parent.is_full_log;
                 foreach ( var m in matches)
-                    items_.Add(new item(m,parent) );
+                    items_.Add( is_full_log ? new full_log_item(m,parent) : new item(m,parent) );
 
                 if ( matches.Count == 0)
                     lv_.ClearObjects();
@@ -300,7 +306,7 @@ namespace LogWizard
                 int sel = list.SelectedIndex;
                 if (sel >= 0) {
                     var i = list.GetItem(sel).RowObject as item;
-                    return new Tuple<Color, Color>(i.fg, i.bg);
+                    return new Tuple<Color, Color>(i.fg(this), i.bg(this));
                 }
                 return new Tuple<Color, Color>(Color.Black,Color.White);
             }
@@ -724,15 +730,16 @@ namespace LogWizard
         }
 
         public void recompute_views_column() {
+            Debug.Assert(is_full_log);
             for (int idx = 0; idx < list.GetItemCount(); ++idx) {
-                item i = list.GetItem(idx).RowObject as item;
+                var i = list.GetItem(idx).RowObject as full_log_item;
                 i.matched_logs = null;
             }
             last_view_column_index_ = 0;
         }
 
         public void update_view_column(List<log_view> other_logs) {
-
+            Debug.Assert(is_full_log);
             // in this case, everything needs to be up to date
             foreach (log_view other in other_logs)
                 other.refresh();
@@ -754,7 +761,7 @@ namespace LogWizard
             }
 
             for (int idx = last_view_column_index_; idx < new_view_column_idx_; ++idx) {
-                item i = list.GetItem(idx).RowObject as item;
+                var i = list.GetItem(idx).RowObject as full_log_item;
                 List<string> log_names = null;
                 for (int j = 0; j < other_logs.Count; ++j) 
                     if ( matches[idx - last_view_column_index_, j] ) {
@@ -769,6 +776,7 @@ namespace LogWizard
         }
 
         public void update_colors(List<log_view> other_logs, int start_idx = 0) {
+            Debug.Assert(is_full_log);
             log_view current = other_logs.FirstOrDefault(v => v.is_current_view);
             Debug.Assert(current != null);
             if (current == null)
@@ -776,7 +784,7 @@ namespace LogWizard
 
             int end_idx = list.GetItemCount();
             for (int idx = start_idx; idx < end_idx; ++idx) {
-                item i = list.GetItem(idx).RowObject as item;
+                var i = list.GetItem(idx).RowObject as full_log_item;
                 i.override_bg = filter_line.font_info.full_log_gray_.bg;
                 i.override_fg = filter_line.font_info.full_log_gray_.fg;
 
@@ -789,8 +797,8 @@ namespace LogWizard
                 case app.synchronize_colors_type.with_current_view:
                     found_line = current.model_.get_matches.binary_search(item => item.match.line_idx, line_idx).Item1;
                     if (found_line != null) {
-                        i.override_bg = found_line.bg;
-                        i.override_fg = found_line.fg;
+                        i.override_bg = found_line.bg(this);
+                        i.override_fg = found_line.fg(this);
                     }
                     break;
                 case app.synchronize_colors_type.with_all_views:
@@ -803,7 +811,7 @@ namespace LogWizard
                     }
 
                     if (found_line != null) {
-                        Color bg = found_line.bg, fg = found_line.fg;
+                        Color bg = found_line.bg(this), fg = found_line.fg(this);
                         if (app.inst.sync_colors_all_views_gray_non_active && !found_in_current) 
                             fg = util.grayer_color(fg);
                         i.override_bg = bg;
@@ -840,20 +848,20 @@ namespace LogWizard
             var row = list.GetItem(idx);
             item i = row.RowObject as item;
 
-            if ( row.BackColor.ToArgb() != i.bg.ToArgb())
-                row.BackColor = i.bg;
+            if ( row.BackColor.ToArgb() != i.bg(this).ToArgb())
+                row.BackColor = i.bg(this);
 
-            if ( row.ForeColor.ToArgb() != i.fg.ToArgb())
-                row.ForeColor = i.fg;
+            if ( row.ForeColor.ToArgb() != i.fg(this).ToArgb())
+                row.ForeColor = i.fg(this);
         }
 
         private void update_line_highlight_color(int idx) {
             item i = list.GetItem(idx).RowObject as item;
-            list.UnfocusedHighlightBackgroundColor = util.darker_color(i.bg);
-            list.UnfocusedHighlightForegroundColor = i.fg;
+            list.UnfocusedHighlightBackgroundColor = util.darker_color(i.bg(this));
+            list.UnfocusedHighlightForegroundColor = i.fg(this);
 
-            list.HighlightBackgroundColor = util.darker_color( util.darker_color(i.bg));
-            list.HighlightForegroundColor = i.fg;
+            list.HighlightBackgroundColor = util.darker_color( util.darker_color(i.bg(this)));
+            list.HighlightForegroundColor = i.fg(this);
         }
 
         private void on_filter_changed() {
@@ -907,8 +915,8 @@ namespace LogWizard
         private void list_FormatRow_1(object sender, FormatRowEventArgs e) {
             item i = e.Item.RowObject as item;
             if (i != null) {
-                e.Item.BackColor = i.bg;
-                e.Item.ForeColor = i.fg;
+                e.Item.BackColor = i.bg(this);
+                e.Item.ForeColor = i.fg(this);
             }
         }
 
