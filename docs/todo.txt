@@ -52,7 +52,18 @@
   --------> checkbox - beep on alert + checkbox - bring LogWizard to top on alert
   ----- i should look for an alert in all the filters (in other words, maybe two filters match a line -> the first filter gives the color; but maybe the second one matches the alert)
 
-  - new article (about monitoring your own log while debugging) + "bring to top/most on alt-tab"?
+  -> alerts - allow an alert to stop the program (have setting: alerts : break into code, default = yes).
+     in this case, I need to create a special logger (that writes to shmem). then, use signals - after each log, we wait until the "alert" filters have been run
+	 if an alert triggers (one that should be on - if "break into code" is turned off, then an alert must be specifically set to "break"),
+	 then we stop the program. otherwise, the program continue
+	 in our program -> we first run the 'alert' filters that can break (synchronously) - if anything matches, we signal this. otherwise, we allow the original program
+	 (the one being debugged), to continue.
+	 (note: see if it's easier to monitor for console)
+	 note: when writing to shmem, the log pattern should match what you would write the the file.
+	 (shmem -> have a setting - how to identify the beginning of hte program - like, a specific message gets written -> restarts logging)
+
+
+  - new article (about monitoring your own log while debugging) + "bring to top/most on alt-tab"? "Logging and Debugging - they can get along"
 
 - allow using the surrounding lines - if a $part ends in a number, it's the prev/next line. 
   Example: $msg[2] (the second line from now), $time[-3] (the time 3 lines above), $thread[-12] (the thread 12 lines above)
@@ -83,6 +94,7 @@
   - when showing the menu, the hotkeys for each toggle, show them in [] , like, [F]ilter Pane
   - include 'm' as well - explain for current view only
   - tooltip -> explain that toggles are shown when right clicking the icon as well
+  - rethink : where do i keep all toggles? (context? or file itself?)
 - option to turn off hotkeys
 
 - ctrl-h -> should show history - if the title is toggled off, just bring the history part to visibility, and then hide it back

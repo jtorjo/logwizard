@@ -128,6 +128,7 @@ namespace LogWizard
             }
         };
 
+        // the reason we have this class - is for memory eficiency - since all views (except full log) don't need the info here
         private class full_log_item : item {
             private readonly log_view parent_ = null;
             // if non-null, it contains the names of the logs it matches (set to a valid value only on the full-log)

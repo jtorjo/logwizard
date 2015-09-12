@@ -46,6 +46,8 @@ namespace LogWizard {
         private List<filter_row> rows_ = new List<filter_row>();
 
         private log_line_reader new_log_ = null, old_log_ = null;
+        // 1.0.75+ - wait for the full log to be read first - in the hopes of using les memory on huge logs
+        private bool new_log_fully_read_at_least_once_ = false;
 
         // the filter matches
         private Dictionary<int, match> matches_ = new Dictionary<int, match>();
@@ -60,6 +62,7 @@ namespace LogWizard {
         private bool post_force_recompute_matches_ = false;
 
         private bool is_up_to_date_ = false;
+
 
         public int row_count {
             get { lock(this) return rows_.Count; }
@@ -144,6 +147,8 @@ namespace LogWizard {
                 lock (this) {
                     new_ = new_log_;
                     old = old_log_;
+                    if (new_ != old)
+                        new_log_fully_read_at_least_once_ = false;
                 }
                 compute_matches_impl(new_, old);
                 // the reason I do this here - I need to let the main thread know htat the log was fully set (and the matches are from This log)
@@ -192,6 +197,20 @@ namespace LogWizard {
 
         private void compute_matches_impl(log_line_reader new_log, log_line_reader old_log) {
             Debug.Assert(new_log != null);
+
+            /* problem - the full log colors are not updated correctly, AND we crash on huge log (even with full log off)
+            // 1.0.75+ - wait until log has fully loaded - in the hopes of using less memory
+            if (new_log == old_log) {
+                bool at_least_once;
+                lock (this) at_least_once = new_log_fully_read_at_least_once_;
+                if (!at_least_once) {
+                    new_log.refresh();
+                    if (!new_log.up_to_date)
+                        return;
+                    lock (this) new_log_fully_read_at_least_once_ = true;
+                }
+            }
+            */
 
             int old_line_count = new_log.line_count;
             new_log.refresh();

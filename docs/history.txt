@@ -1,12 +1,58 @@
 
 - bug: toggle full log -> when pressed ('l') in full-log, it's pressed twice
 - allow resetting the default settings (for Denise)
+- one last run of dotmemory, license will end soon
+
+
+
+1.0.75
+- decrease memory footprint - step 6
+  - removed gcConcurrent="false" (http://stackoverflow.com/questions/1267611/net-is-there-a-way-to-change-the-gc-behavior-for-the-entire-machine)
+  - allow creating huge objects on x64 (http://www.centerspace.net/blog/large-matrices-and-vectors/)
+  - added gcServer enabled="true" (http://content.atalasoft.com/h/i/58213870-choosing-the-right-garbage-collector-settings-for-your-application-net-memory-management-part-4)
+
+- tried loading the full log first, then refreshing filters, this made things worse (filter.compute_matches_impl) - crash even with full log off
+
+- notes: 
+  - on 280 Mb file, I still got outofmemory exception when showing full log
+  - perhaps a system restart could help
+  - since i've updated the above (in app.config), we crash on the huge file
+
+******** possible further improvements
+   -stringbuilder -> set its capacity (since we know the size of the original file)
+     - also, force a gc.collect level 3 ?
+   http://blogs.msdn.com/b/vsofficedeveloper/archive/2008/10/10/stringbuilder-outofmemoryexception.aspx
+   - full log -> set capacity of _model to the number of lines
+   - have a connection pool of List<T>. then, when items are added, ensure we have the space for them, and we reuse them constantly
+     - have a minsize for the number of items (at which, this should start happening)
+	 - i should use this on all List<list_view.item> and filter.match?
 
 
 1.0.74c
 - decrease memory footprint - step 5
  - loaded 90Mb file , takes 640Mb instead of 1084Mb (1.0.66) = when showing full log
  - loads 280 Mb file - takes 1170Mb when not showing full log; when full log is shown, it crashes (outofmemoryexception)
+
+******** possible furher improvements: 
+  - some of the objects could be created on the stack - like: 
+    - log_line_parser.read_to_line (List<line> now)
+	- filter.compute_matches_impl (new_matches, new_match_indexes)
+	  - here, I could tweak with .Capacity ?
+	- log_view.update_view_column (matches)
+	- maybe 'match' could be made a struct? careful - not sure if i assume it's pased by value - however, this should be immutable
+	  - note : this might actualy backfire, because there are plenty of places holding a match
+  - large_string -> indexes_ -> maybe enlarge its capacity as we add new lines? 
+    (like, 20% or so - only when needed; have a ratio of: number of lines / existing-string -> thus, get the average line length;
+	 then, based on that, we should see if we need to increase indexes_' capacity )
+  - filter - matches_ dictionary could become a list - not sure if this would yield that much of an improvement though
+
+  - another possibly big improvement: the line should not keep a reference to the large_string
+    - every request for a part of a line would need to send the large_string reference as well
+	- this can also backfire, because in list_view.item, we would need to keep a reference to either the large_string, or the parent
+	  so very likely no gain would be achieved
+	  - the more I think about, the more I think this would bring unnecessary complexity, with very small gains, if any
+	    (like, if we move the ref to large_string from line into filter.match, we will end up having more references to large_string,
+		 since we can have more matches than lines - if several filters match the lines -> so, not a good idea)
 
 
 1.0.74b
@@ -21,7 +67,7 @@ Notes:
   - line class - not much can be improved about it
   - filter.match - probably a small improvement could be achieved by making filter_line.font_info a struct - however, i don't think it's worth my time at this point
   - *** log_view.item 
-    - i could create a class derived from item, for the full-log only -> which would keep the parent_ and matched_logs
+    - i could create a class derived from item, for the full-log only -> which would keep the parent_ and matched_logs (note: done: in 1.0.74c)
 
 
 1.0.74a
