@@ -163,11 +163,15 @@ namespace LogWizard
         }
 
         private class list_data_source : AbstractVirtualListDataSource {
-            private memory_optimized_list<item> items_ = new memory_optimized_list<item>() { min_capacity = app.inst.no_ui.min_list_data_source_capacity };
+            private memory_optimized_list<item> items_ = new memory_optimized_list<item>() { min_capacity = app.inst.no_ui.min_list_data_source_capacity, increase_percentage = 0.4 };
             private VirtualObjectListView lv_ = null;
 
             public list_data_source(VirtualObjectListView lv) : base(lv) {
                 lv_ = lv;
+            }
+
+            public string name {
+                set { items_.name = "list_data " + value; }
             }
 
             public IList<item> get_matches {
@@ -228,7 +232,7 @@ namespace LogWizard
             InitializeComponent();
             this.parent = parent;
             viewName.Text = name;
-            model_ = new list_data_source(this.list);
+            model_ = new list_data_source(this.list) { name = name };
             list.VirtualListDataSource = model_;
             list.RowHeight = 18;
 
@@ -376,6 +380,7 @@ namespace LogWizard
 
 
         public void set_filter(List<filter_row> filter) {
+            filter_.name = name;
             filter_.update_rows(filter);
             if (filter_.rows_changed)
                 filter_changed_ = true;
@@ -397,7 +402,11 @@ namespace LogWizard
 
         public string name {
             get { return viewName.Text; }
-            set { viewName.Text = value; }
+            set {
+                viewName.Text = value;
+                model_.name = value;
+                filter_.name = value;
+            }
         }
 
         public void show_name(bool show) {
@@ -684,7 +693,7 @@ namespace LogWizard
                 logger.Debug("[view] log " + viewName.Text + ": going from " + list.GetItemCount() + " to " + match_count + " entries.");
                 if (list.GetItemCount() < match_count) {
                     // items have been added
-                    memory_optimized_list<filter.match> new_ = new memory_optimized_list<filter.match>( Math.Max(  match_count - list.GetItemCount(), 0));
+                    memory_optimized_list<filter.match> new_ = new memory_optimized_list<filter.match>( Math.Max(  match_count - list.GetItemCount(), 0)) { name = "temp_refresh " + name };
                     bool filter_reset = false;
                     for (int i = list.GetItemCount(); i < match_count && !filter_reset; ++i) {
                         var new_match = filter_.match_at(i);
@@ -695,7 +704,7 @@ namespace LogWizard
                     }
                     if (filter_reset) {
                         logger.Debug("[view] filter reset on refresh " + name);
-                        new_ = new memory_optimized_list<filter.match>();
+                        new_ = new memory_optimized_list<filter.match>() { name = "refresh_reset " + name };
                     }
                     model_.add_matches(new_, this);
                     update_x_of_y();
@@ -721,7 +730,7 @@ namespace LogWizard
 
         // returns all the lines that match this filter
         public List<int> matched_lines(int start_line_idx, int end_line_idx) {
-            memory_optimized_list<int> lines = new memory_optimized_list<int>() { min_capacity = app.inst.no_ui.min_matched_lines_capacity };
+            memory_optimized_list<int> lines = new memory_optimized_list<int>() { min_capacity = app.inst.no_ui.min_matched_lines_capacity, name = "matched_lines " + name, increase_percentage = .6 };
             for (int idx = 0; idx < list.GetItemCount(); ++idx) {
                 item i = list.GetItem(idx).RowObject as item;
                 if ( i.match.line_idx >= start_line_idx && i.match.line_idx < end_line_idx)
@@ -871,7 +880,7 @@ namespace LogWizard
 
             // from this point on, we only append to the existing list
             int match_count = filter_.match_count;
-            memory_optimized_list<filter.match> new_ = new memory_optimized_list<filter.match>( match_count);
+            memory_optimized_list<filter.match> new_ = new memory_optimized_list<filter.match>( match_count) { name = "view " + name };
             bool filter_reset = false;
             for (int i = 0; i < match_count && !filter_reset; ++i) {
                 var new_match = filter_.match_at(i);

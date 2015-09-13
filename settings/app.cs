@@ -23,6 +23,7 @@ namespace LogWizard {
             public int min_filter_capacity = 50000;
             public int min_list_data_source_capacity = 75000;
             public int min_matched_lines_capacity = 20000;
+            public int min_lines_capacity = 50000;
         }
         public no_ui_ no_ui = new no_ui_();
 

@@ -64,6 +64,18 @@ namespace LogWizard {
 
         private bool is_up_to_date_ = false;
 
+        // debugging/testing only
+        private string name_ = "";
+
+        public string name {
+            get { return name_; }
+            set {
+                name_ = value;
+                matches_.name = "filter_m " + name;
+                match_indexes_.name = "filter_i " + name;
+            }
+        }
+
         public void compute_matches(log_line_reader log) {
             Debug.Assert(log != null);
             lock (this) {
@@ -236,11 +248,12 @@ namespace LogWizard {
                 row.compute_line_matches(new_log);
 
             if (has_new_lines) {
-                int expected_capacity = (new_log.line_count - old_line_count) / 5;
+                bool is_full_log = row_count < 1;
+                int expected_capacity = is_full_log ? (new_log.line_count - old_line_count) : (new_log.line_count - old_line_count) / 5;
                 // the filter matches
-                memory_optimized_list<match> new_matches = new memory_optimized_list<match>() { min_capacity = expected_capacity };
+                memory_optimized_list<match> new_matches = new memory_optimized_list<match>() { min_capacity = expected_capacity, name = "temp_m " + name, increase_percentage = .7 };
                 // ... the indexes, in sorted order
-                memory_optimized_list<int> new_indexes = new memory_optimized_list<int>() { min_capacity = expected_capacity }; 
+                memory_optimized_list<int> new_indexes = new memory_optimized_list<int>() { min_capacity = expected_capacity, name = "temp_i " + name, increase_percentage = .7 }; 
 
                 // from old_lines to log.line_count -> these need recomputing
                 int old_match_count;
@@ -321,16 +334,30 @@ namespace LogWizard {
                 }
 
                 lock (this) {
-                    matches_.AddRange(new_matches);
-                    match_indexes_.AddRange(new_indexes);
+                    bool optimize = matches_.Count == 0 && new_matches.Count > app.inst.no_ui.min_filter_capacity;
+                    if (!optimize) {
+                        matches_.AddRange(new_matches);
+                        match_indexes_.AddRange(new_indexes);
+                    } else {
+                        // optimization - reuse this memory
+                        new_matches.name = matches_.name;
+                        new_indexes.name = match_indexes_.name;
+                        matches_ = new_matches;
+                        match_indexes_ = new_indexes;
+                    }
                 }
 
                 apply_additions(old_match_count, new_log, rows);
+                if (new_matches.Count > app.inst.no_ui.min_filter_capacity) {
+                    logger.Debug("[memory] GC.collect - from filter " + name );
+                    GC.Collect();
+                }
             }
 
             bool is_up_to_date = new_log.up_to_date;
             lock (this)
                 is_up_to_date_ = is_up_to_date;
+
         }
 
 
@@ -399,9 +426,12 @@ namespace LogWizard {
                 }
             }
 
-            lock(this)
+            lock (this) {
+                matches_.prepare_add( additions.Count);
+                match_indexes_.prepare_add( additions.Count);
                 foreach (var add_idx in additions)
                     add_addition_line(add_idx.Key, add_idx.Value, log);
+            }
         }
 
 

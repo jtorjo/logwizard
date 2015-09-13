@@ -3,6 +3,13 @@
 - allow resetting the default settings (for Denise)
 - one last run of dotmemory, license will end soon
 
+1.0.76c
+- decrease memory footprint - step 7
+  - done all I said in 1.0.75
+  - note: basically the memory itself did not drop by much, ***however***, I did minimize the posibility of an out-of-memory exception 
+    due to memory fragmenting
+
+
 1.0.76b
 - fix bug at filter.add_addition_line (not tested)
 

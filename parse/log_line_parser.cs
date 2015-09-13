@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -84,11 +85,13 @@ namespace LogWizard
 
         private readonly text_reader text_reader_ = null;
 
+        // this is probably far from truth (probably the avg line is much smaller), but it's good to have a good starting capacity, to minimizes resizes
+        private const int CHARS_PER_AVG_LINE = 384;
 
         private bool disposed_ = false;
 
         private large_string string_ = new large_string();
-        private List<line> lines_ = new List<line>();
+        private memory_optimized_list<line> lines_ = new memory_optimized_list<line>() { name = "parser"};
 
         // for each of these readers, we have returned a "yes" to forced_reload
         private HashSet<log_line_reader> forced_reload_ = new HashSet<log_line_reader>();
@@ -98,14 +101,42 @@ namespace LogWizard
         // if true, we've been fully read (thus, we're up to date)
         private bool up_to_date_ = false;
 
+        private bool lines_min_capacity_updated_ = false;
+
         public log_line_parser(text_reader reader, string syntax) {
             Debug.Assert(reader != null);
             parse_syntax(syntax);
             text_reader_ = reader;
-            if ( text_reader_.try_guess_full_len != ulong.MaxValue)
-                string_.expect_bytes( text_reader_.try_guess_full_len);
+            
+            lines_.name = "parser " + text_reader_.name;
+            var file = reader as file_text_reader;
+            if (file != null)
+                lines_.name = "parser " + new FileInfo(file.name).Name;
+            
+            var full_len = text_reader_.try_guess_full_len;            
+            if (full_len != ulong.MaxValue) {
+                string_.expect_bytes(full_len);
+                lines_.min_capacity = (int)(full_len / CHARS_PER_AVG_LINE);
+            }
+
             force_reload();
             new Thread(refresh_thread) {IsBackground = true}.Start();
+        }
+
+
+        private void update_log_lines_capacity() {
+            if (lines_min_capacity_updated_)
+                return;
+
+            // wait until we read a bit until we can guess the average length
+            if (string_.line_count < large_string.COMPUTE_AVG_LINE_AFTER)
+                return;
+            lines_min_capacity_updated_ = true;
+            int avg_line = string_.char_count / string_.line_count ;
+
+            var full_len = text_reader_.try_guess_full_len;
+            if (full_len != ulong.MaxValue) 
+                lines_.min_capacity = (int)(full_len / (ulong)avg_line);            
         }
 
         // once we've been forced to reload - we should return true once per each reader
@@ -378,7 +409,7 @@ namespace LogWizard
                 needs_reparse_last_line = lines_.Count > 0 && was_last_line_incomplete ;
             int start_idx = old_line_count - (was_last_line_incomplete ? 1 : 0);
             int end_idx = string_.line_count;
-            List<line> now = new List<line>();
+            List<line> now = new List<line>(end_idx - start_idx);
             for ( int i = start_idx; i < end_idx; ++i) 
                 now.Add( parse_line( new sub_string(string_,i) ));
 
@@ -396,6 +427,8 @@ namespace LogWizard
                 was_last_line_incomplete_ = was_last_line_incomplete ? DateTime.Now : DateTime.MinValue;
             }
             Debug.Assert( lines_.Count == string_.line_count);
+
+            update_log_lines_capacity();
         }
 
         // if the time isn't set - try to use it from the surroundings

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Configuration;
 using System.Text;
 using log4net.Repository.Hierarchy;
 
@@ -15,11 +16,16 @@ namespace LogWizard
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string LINE_SEP = "\r\n";
+        public const int COMPUTE_AVG_LINE_AFTER = 2000;
+
         private StringBuilder string_ = new StringBuilder();
 
-        private List<int> indexes_ = new List<int>();
+        private memory_optimized_list<int> indexes_ = new memory_optimized_list<int>() { name = "large_string_indexes", min_capacity = app.inst.no_ui.min_lines_capacity };
 
         private bool test_we_computed_lines_correctly = false; //util.is_debug;
+
+        private bool computed_avg_line_ = false;
+        private bool expected_bytes_set_ = false;
 
         // tests to see we've computed the lines correctly
         private void test_compute_lines() {
@@ -34,6 +40,7 @@ namespace LogWizard
         public void expect_bytes(ulong byte_count) {
             Debug.Assert( byte_count < int.MaxValue);
             string_.Capacity = (int)byte_count;
+            expected_bytes_set_ = true;
         }
 
         public void add_lines(string lines, ref int added_line_count, ref bool was_last_line_incomplete, ref bool is_last_line_incomplete) {
@@ -56,6 +63,7 @@ namespace LogWizard
 
             is_last_line_incomplete = line_count > indexes_.Count;
             logger.Debug("[line] we have read " + line_count + " lines");
+            update_indexes_capacity();
 
             if (test_we_computed_lines_correctly)
                 test_compute_lines();
@@ -67,6 +75,7 @@ namespace LogWizard
             string_.Append(lines);
             compute_indexes(0);
             line_count = this.line_count;
+            update_indexes_capacity();
 
             if (test_we_computed_lines_correctly)
                 test_compute_lines();
@@ -75,6 +84,24 @@ namespace LogWizard
         public void clear() {
             indexes_.Clear();
             string_.Clear();            
+        }
+
+        private void update_indexes_capacity() {
+            if (line_count < COMPUTE_AVG_LINE_AFTER)
+                return;
+            if (computed_avg_line_)
+                return;
+            if (!expected_bytes_set_)
+                return;
+
+            computed_avg_line_ = true;
+            int avg_line = char_count / line_count ;
+            indexes_.min_capacity = (string_.Capacity / avg_line);
+        }
+
+
+        public int char_count {
+            get { return string_.Length;  }
         }
 
         public int line_count {
