@@ -4,6 +4,9 @@
 - one last run of dotmemory, license will end soon
 
 
+1.0.76f
+- the 280Mb file loads in 2.53Gb of RAM
+
 1.0.76e
 - apparently, my Release64's actual platform was x86 instead of x64
 
