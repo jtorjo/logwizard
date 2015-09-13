@@ -3,6 +3,11 @@
 - allow resetting the default settings (for Denise)
 
 
+
+1.0.76h
+- after generated 32 and 64 setup kits
+
+
 1.0.76g
 - full log : matches computed on the fly (instead of an extra array, which also meant huge delays when we changed the current view)
 - full log : computing synchronized colors on the fly - much faster, and using less memory

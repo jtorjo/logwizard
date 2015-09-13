@@ -46,13 +46,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FE97592EE371AE93311B615D98612263"
+        "OwnerKey" = "8:_58DF238636A54D29D1ED2560A161DA19"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_58DF238636A54D29D1ED2560A161DA19"
+        "OwnerKey" = "8:_FE97592EE371AE93311B615D98612263"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -235,6 +235,11 @@
             "AssemblyAsmDisplayName" = "8:ObjectListView, Version=2.8.1.33936, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_58DF238636A54D29D1ED2560A161DA19"
+                    {
+                    "Name" = "8:ObjectListView.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:ObjectListView.dll"
             "TargetName" = "8:"
@@ -281,6 +286,11 @@
             "AssemblyAsmDisplayName" = "8:log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_FE97592EE371AE93311B615D98612263"
+                    {
+                    "Name" = "8:log4net.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:log4net.dll"
             "TargetName" = "8:"
@@ -412,7 +422,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
         "ProductCode" = "8:{9AB14558-E87C-44DC-8D1F-77288005DEEB}"
-        "PackageCode" = "8:{511240DF-914F-4278-B097-6C0EFB1F3A26}"
+        "PackageCode" = "8:{38477363-26D2-4E9B-BA2F-221B80480F23}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -989,7 +999,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_900BA54346A2479085BF08862BE89061"
             {
-            "SourcePath" = "8:..\\obj\\x86\\Release64\\LogWizard.exe"
+            "SourcePath" = "8:..\\obj\\x64\\Release64\\LogWizard.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E297CB39A550491681319D6F014A659B"
