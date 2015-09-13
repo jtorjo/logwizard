@@ -24,6 +24,10 @@ namespace LogWizard {
             public int min_list_data_source_capacity = 75000;
             public int min_matched_lines_capacity = 20000;
             public int min_lines_capacity = 50000;
+
+            // if true, we read the full log first (then compute filters) - so far (1.0.76d), this seems to use less memory
+            // if false, we compute filters in paralel as the log is being read
+            public bool read_full_log_first = true;
         }
         public no_ui_ no_ui = new no_ui_();
 

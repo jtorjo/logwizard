@@ -58,6 +58,9 @@ namespace LogWizard {
             }
         }
 
+        public bool parser_up_to_date {
+            get { return parser_.up_to_date; }
+        }
         public int line_count {
             get { lock(this) return line_count_;  }
         }

@@ -210,19 +210,17 @@ namespace LogWizard {
         private void compute_matches_impl(log_line_reader new_log, log_line_reader old_log) {
             Debug.Assert(new_log != null);
 
-            /* problem - the full log colors are not updated correctly, AND we crash on huge log (even with full log off)
-            // 1.0.75+ - wait until log has fully loaded - in the hopes of using less memory
-            if (new_log == old_log) {
-                bool at_least_once;
-                lock (this) at_least_once = new_log_fully_read_at_least_once_;
-                if (!at_least_once) {
-                    new_log.refresh();
-                    if (!new_log.up_to_date)
-                        return;
-                    lock (this) new_log_fully_read_at_least_once_ = true;
+            if ( app.inst.no_ui.read_full_log_first)
+                // 1.0.76d+ - wait until log has fully loaded - in the hopes of using less memory
+                if (new_log == old_log) {
+                    bool at_least_once;
+                    lock (this) at_least_once = new_log_fully_read_at_least_once_;
+                    if (!at_least_once) {
+                        if (!new_log.parser_up_to_date)
+                            return;
+                        lock (this) new_log_fully_read_at_least_once_ = true;
+                    }
                 }
-            }
-            */
 
             // fixme: start with number of lines / 20 (capacity), and go from there
 
