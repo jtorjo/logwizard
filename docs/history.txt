@@ -1,7 +1,25 @@
 
 - bug: toggle full log -> when pressed ('l') in full-log, it's pressed twice
 - allow resetting the default settings (for Denise)
-- one last run of dotmemory, license will end soon
+
+
+1.0.76g
+- full log : matches computed on the fly (instead of an extra array, which also meant huge delays when we changed the current view)
+- full log : computing synchronized colors on the fly - much faster, and using less memory
+- one last run of dotmemory - all that is found is ok - no point in sacrificing stuff for more memory increases
+
+- Conclusion at this point:
+  - at some point I said that 32-bit occupied mem is about the same as 64-bit. I was wrong (see 1.0.76e)
+  - x64 version will take about 40% more memory (due to 8-byte pointers)
+  - due to memory improvements, I also got some speed improvements
+  - 280Mb file loads only on 64-bit - it takes about 2.5Gb of RAM (with full log shown).
+  - 280Mb raises exception on 32-bit (out of memory)
+  - 90Mb file takes <600Mb on 32-bit . This is HUGE improvement (initially, it took close to twice as much)
+  - I really see no more possible improvements at this point without sacrificing something else (very likely, speed and simplicity)
+  **** note: the reason the 280Mb and 90Mb files take so much memory is because many of the lines match in a quite a few filters,
+       and I had a LOT of views;
+       thus, we end up creating a lot of objects. It's very likely that on some of your huge files that won't be the case, and
+	   loading a file of this size would take much less memory and cpu
 
 
 1.0.76f

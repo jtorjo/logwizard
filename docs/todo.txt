@@ -1,15 +1,6 @@
 - toggle 'v' - show/hide view + 'h' show/hide header
   - global - they apply to all views
 
-
-
-
-
-
-
-
-
-
 - synchronizing with full-log/other logs -> if key is down (up/down/etc.) -> don't sync yet TOTHINK (basically so that we only synchronize when the user has selected the final row)
 
 - history - deleted files - ignore them
@@ -28,10 +19,9 @@
   also, i should save existing location - however if it matches an already saved location, don't save
   perhaps save a few more things -> like whether i have title toggled/and am topmost? TOTHINK, like - save all toggles
 
-- for large files / sync colors -> when switching tab (thus, resync-ing) takes rather long. the best way to do it is to synchronize ONLY the lines that are visible
-  (of course, only when full log shown)
-
 - option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?)
+
+
 
 
 
@@ -99,7 +89,7 @@
 
 - ctrl-h -> should show history - if the title is toggled off, just bring the history part to visibility, and then hide it back
 
-
+- loading large files -> optimize logwizard to load stuff 100% in the background, and show in the status bar as we're loading stuff (first file, then filters)
 
 
 

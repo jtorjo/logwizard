@@ -596,16 +596,12 @@ namespace LogWizard
             curFilterCtrl.Text = "";
             applyToExistingLines.Checked = false;
             ignore_change = false;
-
-            bool needs_sync_colors = app.inst.syncronize_colors != app.synchronize_colors_type.none;
-            if (cur_context().show_fulllog && needs_sync_colors) 
-                force_sync_full_log_colors();
+            sync_full_log_colors();
         }
 
-        private void force_sync_full_log_colors() {
-            refresh_cur_log_view();
-            if (fullLogCtrl != null) 
-                fullLogCtrl.update_colors(all_log_views(), 0);            
+        private void sync_full_log_colors() {
+            if (fullLogCtrl != null && cur_context().show_fulllog ) 
+                fullLogCtrl.update_colors(all_log_views(), viewsTab.SelectedIndex);
         }
 
         private void save_filters() {
@@ -887,12 +883,12 @@ namespace LogWizard
                     }
                     fullLogCtrl.refresh();
                     fullLogCtrl.set_view_selected_view_name(lv.name);
-                    fullLogCtrl.update_view_column(all_log_views());
                 }
 
                 update_msg_details(false);
                 refresh_filter_found();
             }
+            sync_full_log_colors();
 
             if (text_.has_it_been_rewritten)
                 on_rewritten_log();
@@ -979,8 +975,10 @@ namespace LogWizard
         }
 
         public void go_to_line(int line_idx, log_view from) {
-            if (cur_context().show_fulllog && from != fullLogCtrl && app.inst.sync_full_log_view)
+            if (cur_context().show_fulllog && from != fullLogCtrl && app.inst.sync_full_log_view) {
                 fullLogCtrl.go_to_line(line_idx, log_view.select_type.do_not_notify_parent);
+                sync_full_log_colors();
+            }
 
             bool keep_all_in_sync = (from != fullLogCtrl && app.inst.sync_all_views) ||
                 // if the current log is full log, we will synchronize all views only if both checks are checked
@@ -1053,7 +1051,6 @@ namespace LogWizard
             if (cur_context().show_fulllog) {
                 fullLogCtrl.refresh();
                 fullLogCtrl.set_view_selected_view_name(lv.name);
-                fullLogCtrl.update_view_column( all_log_views() );
             }
 
             update_msg_details(false);
@@ -1541,7 +1538,6 @@ namespace LogWizard
             if (text_ != null)
                 log_parser_.force_reload();
             refresh_filter_found();
-            fullLogCtrl.recompute_views_column();
 
             util.add_timer(
                 (has_ended) => {
@@ -2081,7 +2077,7 @@ namespace LogWizard
 
             bool sync_changed = app.inst.syncronize_colors != old_sync_colors || old_sync_gray != app.inst.sync_colors_all_views_gray_non_active;
             if ( sync_changed)
-                force_sync_full_log_colors();
+                sync_full_log_colors();
         }
 
         private log_view selected_view() {
@@ -2093,6 +2089,26 @@ namespace LogWizard
 
             var lv = ensure_we_have_log_view_for_tab(sel);
             return lv;
+        }
+
+        public string matched_logs(int line_idx) {
+            List<string> matched = new List<string>();
+            foreach ( var lv in all_log_views())
+                if ( lv.matches_line(line_idx))
+                    matched.Add(lv.name);
+
+            string selected = log_view_for_tab(viewsTab.SelectedIndex).name;
+            bool removed = matched.Remove(selected);
+            if ( removed)
+                matched.Insert(0, selected);
+
+            string txt = "";
+            foreach (string m in matched) {
+                if (txt != "")
+                    txt += ",";
+                txt += m;
+            }
+            return txt;
         }
 
         private void search_next() {

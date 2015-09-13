@@ -131,33 +131,15 @@ namespace LogWizard
         // the reason we have this class - is for memory eficiency - since all views (except full log) don't need the info here
         private class full_log_item : item {
             private readonly log_view parent_ = null;
-            // if non-null, it contains the names of the logs it matches (set to a valid value only on the full-log)
-            public List<string> matched_logs = null;
 
             public full_log_item(filter.match match, log_view parent) : base(match, parent) {
+                Debug.Assert(parent != null);
                 parent_ = parent;
             }
 
             public override string view {
                 get {
-                    if ( matched_logs == null)
-                        return "";
-                    if (matched_logs.Count == 1)
-                        return matched_logs[0]; // optimization
-
-                    string views = "";
-                    bool has_selected_view = false;
-                    foreach (string name in matched_logs) {
-                        if (name == parent_.selected_view_) {
-                            has_selected_view = true;
-                            continue;
-                        }
-                        if (views != "") views += ", ";
-                        views += name;
-                    }
-                    if ( has_selected_view)
-                        views = parent_.selected_view_ + ", " + views;
-                    return views;
+                    return parent_.parent.matched_logs(match.line_idx);
                 }
             }
         }
@@ -209,8 +191,6 @@ namespace LogWizard
 
         private list_data_source model_ = null;
         private bool visible_columns_refreshed_ = false;
-
-        private int last_view_column_index_ = 0;
 
         // lines that are bookmarks (sorted by index)
         private List<int> bookmarks_ = new List<int>();
@@ -269,6 +249,23 @@ namespace LogWizard
                 if (!is_filter_set)
                     return true;
                 return filter_.is_up_to_date;
+            }
+        }
+
+        public int view_idx {
+            get {
+                if (is_full_log)
+                    return -1;
+
+                var parent = tab_control;
+                var page = tab_parent;
+                // note: .TabPages is not really a collection, so I don't want to use IndexOf - RemoveAt works incorrectly, so, for me, all bets are off
+                for ( int idx = 0; idx < parent.TabPages.Count; ++idx)
+                    if (parent.TabPages[idx] == page)
+                        return idx;
+
+                Debug.Assert(false);
+                return 0;
             }
         }
 
@@ -392,7 +389,6 @@ namespace LogWizard
                 filter_changed_ = true;
                 last_item_count_while_current_view_ = 0;
                 visible_columns_refreshed_ = false;
-                last_view_column_index_ = 0;
                 wait_for_filter_to_read_from_new_log_ = DateTime.Now.AddMilliseconds(WAIT_FOR_NEW_LOG_MAX_MS);
                 logger.Debug("[view] new log for " + name + " - " + log.name);
                 model_.set_matches(new memory_optimized_list<filter.match>(), this);
@@ -739,102 +735,97 @@ namespace LogWizard
             return lines;
         }
 
-        public void recompute_views_column() {
-            Debug.Assert(is_full_log);
-            for (int idx = 0; idx < list.GetItemCount(); ++idx) {
-                var i = list.GetItem(idx).RowObject as full_log_item;
-                i.matched_logs = null;
-            }
-            last_view_column_index_ = 0;
-        }
 
-        public void update_view_column(List<log_view> other_logs) {
-            Debug.Assert(is_full_log);
-            // in this case, everything needs to be up to date
-            foreach (log_view other in other_logs)
-                other.refresh();
+        private bool has_found_colors(int row_idx, log_view other_log, bool is_sel) {
+            var i = list.GetItem(row_idx).RowObject as full_log_item;
 
-            int new_view_column_idx_ = list.GetItemCount();
-            if (last_view_column_index_ == new_view_column_idx_)
-                return;
-            else if (last_view_column_index_ > new_view_column_idx_)
-                // probably file got re-written
-                last_view_column_index_ = 0;
-
-            bool[,] matches = new bool[ new_view_column_idx_ - last_view_column_index_ , other_logs.Count];
-            int log_idx = 0;
-            foreach (log_view other in other_logs) {
-                var matched = other.matched_lines(last_view_column_index_, new_view_column_idx_);
-                foreach (int line_idx in matched)
-                    matches[line_idx - last_view_column_index_, log_idx] = true ;
-                ++log_idx;
-            }
-
-            for (int idx = last_view_column_index_; idx < new_view_column_idx_; ++idx) {
-                var i = list.GetItem(idx).RowObject as full_log_item;
-                List<string> log_names = null;
-                for (int j = 0; j < other_logs.Count; ++j) 
-                    if ( matches[idx - last_view_column_index_, j] ) {
-                        if ( log_names == null)
-                            log_names = new List<string>();
-                        log_names.Add(other_logs[j].viewName.Text);
-                    }
-                i.matched_logs = log_names;
-            }
-            update_colors(other_logs, last_view_column_index_);
-            last_view_column_index_ = new_view_column_idx_;
-        }
-
-        public void update_colors(List<log_view> other_logs, int start_idx = 0) {
-            Debug.Assert(is_full_log);
-            log_view current = other_logs.FirstOrDefault(v => v.is_current_view);
-            Debug.Assert(current != null);
-            if (current == null)
-                return; // no views?
-
-            int end_idx = list.GetItemCount();
-            for (int idx = start_idx; idx < end_idx; ++idx) {
-                var i = list.GetItem(idx).RowObject as full_log_item;
-                i.override_bg = filter_line.font_info.full_log_gray_.bg;
-                i.override_fg = filter_line.font_info.full_log_gray_.fg;
-
-                int line_idx = i.match.line_idx;
-                item found_line = null;
-                switch (app.inst.syncronize_colors) {
-                case app.synchronize_colors_type.none: // nothing to do
-                    i.override_fg = Color.Black;
-                    break;
-                case app.synchronize_colors_type.with_current_view:
-                    found_line = current.model_.get_matches.binary_search(item => item.match.line_idx, line_idx).Item1;
-                    if (found_line != null) {
-                        i.override_bg = found_line.bg(this);
-                        i.override_fg = found_line.fg(this);
-                    }
-                    break;
-                case app.synchronize_colors_type.with_all_views:
-                    found_line = current.model_.get_matches.binary_search(item => item.match.line_idx, line_idx).Item1;
-                    bool found_in_current = found_line != null;
-                    for (int other_idx = 0; other_idx < other_logs.Count && found_line == null; ++other_idx) {
-                        log_view other = other_logs[other_idx];
-                        if ( other != current)
-                            found_line = other.model_.get_matches.binary_search(item => item.match.line_idx, line_idx).Item1;
-                    }
-
-                    if (found_line != null) {
-                        Color bg = found_line.bg(this), fg = found_line.fg(this);
-                        if (app.inst.sync_colors_all_views_gray_non_active && !found_in_current) 
-                            fg = util.grayer_color(fg);
-                        i.override_bg = bg;
-                        i.override_fg = fg;
-                    }
-                    break;
-                default: Debug.Assert(false);
-                    break;
+            int line_idx = i.match.line_idx;
+            item found_line = null;
+            switch (app.inst.syncronize_colors) {
+            case app.synchronize_colors_type.none: // nothing to do
+                i.override_fg = Color.Black;
+                return true;
+            case app.synchronize_colors_type.with_current_view:
+                found_line = other_log.model_.get_matches.binary_search(item => item.match.line_idx, line_idx).Item1;
+                if (found_line != null) {
+                    i.override_bg = found_line.bg(this);
+                    i.override_fg = found_line.fg(this);
+                    return true;
                 }
-
-                update_line_color(idx);
+                break;
+            case app.synchronize_colors_type.with_all_views:
+                found_line = other_log.model_.get_matches.binary_search(item => item.match.line_idx, line_idx).Item1;
+                if (found_line != null) {
+                    Color bg = found_line.bg(this), fg = found_line.fg(this);
+                    if (app.inst.sync_colors_all_views_gray_non_active && !is_sel) 
+                        fg = util.grayer_color(fg);
+                    i.override_bg = bg;
+                    i.override_fg = fg;
+                    return true;
+                }
+                break;
+            default: Debug.Assert(false);
+                break;
             }
-            list.Refresh();
+            return false;
+        }
+
+        private void update_colors_for_line(int row_idx, List<log_view> other_logs, int sel_idx, ref bool needed_refresh) {
+            Debug.Assert(other_logs.Count > 0 && sel_idx < other_logs.Count);
+
+            var i = list.GetItem(row_idx).RowObject as full_log_item;
+            i.override_bg = filter_line.font_info.full_log_gray_.bg;
+            i.override_fg = filter_line.font_info.full_log_gray_.fg;
+
+            switch (app.inst.syncronize_colors) {
+            case app.synchronize_colors_type.none:
+                has_found_colors(row_idx, other_logs[0], false);
+                break;
+            case app.synchronize_colors_type.with_current_view:
+                has_found_colors(row_idx, other_logs[sel_idx], true);
+                break;
+            case app.synchronize_colors_type.with_all_views:
+                if (has_found_colors(row_idx, other_logs[sel_idx], true))
+                    break;
+                for (int idx = 0; idx < other_logs.Count; ++idx)
+                    if ( idx != sel_idx)
+                        if (has_found_colors(row_idx, other_logs[idx], false))
+                            break;
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+            }
+            if (update_line_color(row_idx))
+                needed_refresh = true;
+        }
+
+
+        public void update_colors(List<log_view> other_logs, int sel_log_view_idx) {
+            Debug.Assert(is_full_log);
+
+            int PAD = 5;
+            var top = list.GetItemAt(PAD, list.HeaderControl.ClientRectangle.Height + PAD);
+            if (top == null)
+                return;
+            int top_idx = top.Index;
+            int height = list.Height - list.HeaderControl.ClientRectangle.Height;
+            int row_height = top.Bounds.Height;
+            int rows_per_page = height / row_height;
+
+            int JUST_IN_CASE = 3;
+            int bottom_idx = top_idx + rows_per_page + JUST_IN_CASE;
+            top_idx -= JUST_IN_CASE;
+            if (top_idx < 0)
+                top_idx = 0;
+
+            bool needs_refresh = false;
+            for ( int idx = top_idx; idx <= bottom_idx; ++idx)
+                if ( idx < model_.get_matches.Count)
+                    update_colors_for_line(idx, other_logs, sel_log_view_idx, ref needs_refresh);
+
+            if ( needs_refresh)
+                list.Refresh();
         }
 
         // specifies the name of selected view (on the right pane)
@@ -850,19 +841,26 @@ namespace LogWizard
             var count = list.GetItemCount();
             if (count > 0) {
                 list.EnsureVisible(count - 1);
-                select_idx( count - 1, select_type.do_not_notify_parent);
+                select_idx(count - 1, select_type.do_not_notify_parent);
             }
         }
 
-        private void update_line_color(int idx) {
+        // returns true if it needed to refresh
+        private bool update_line_color(int idx) {
             var row = list.GetItem(idx);
             item i = row.RowObject as item;
 
-            if ( row.BackColor.ToArgb() != i.bg(this).ToArgb())
+            bool needed = false;
+            if (row.BackColor.ToArgb() != i.bg(this).ToArgb()) {
                 row.BackColor = i.bg(this);
+                needed = true;
+            }
 
-            if ( row.ForeColor.ToArgb() != i.fg(this).ToArgb())
+            if (row.ForeColor.ToArgb() != i.fg(this).ToArgb()) {
                 row.ForeColor = i.fg(this);
+                needed = true;
+            }
+            return needed;
         }
 
         private void update_line_highlight_color(int idx) {
@@ -870,7 +868,7 @@ namespace LogWizard
             list.UnfocusedHighlightBackgroundColor = util.darker_color(i.bg(this));
             list.UnfocusedHighlightForegroundColor = i.fg(this);
 
-            list.HighlightBackgroundColor = util.darker_color( util.darker_color(i.bg(this)));
+            list.HighlightBackgroundColor = util.darker_color(util.darker_color(i.bg(this)));
             list.HighlightForegroundColor = i.fg(this);
         }
 
@@ -880,7 +878,7 @@ namespace LogWizard
 
             // from this point on, we only append to the existing list
             int match_count = filter_.match_count;
-            memory_optimized_list<filter.match> new_ = new memory_optimized_list<filter.match>( match_count) { name = "view " + name };
+            memory_optimized_list<filter.match> new_ = new memory_optimized_list<filter.match>(match_count) {name = "view " + name};
             bool filter_reset = false;
             for (int i = 0; i < match_count && !filter_reset; ++i) {
                 var new_match = filter_.match_at(i);
@@ -889,7 +887,7 @@ namespace LogWizard
                 else
                     filter_reset = true; // filter got reset in the other thread
             }
-            if ( !filter_reset)
+            if (!filter_reset)
                 model_.set_matches(new_, this);
 
             // update colors
@@ -913,15 +911,14 @@ namespace LogWizard
                 needs_scroll = false;
             }
 
-            if( needs_scroll)
+            if (needs_scroll)
                 go_last();
-            else 
+            else
                 force_select_first_item();
             update_x_of_y();
         }
 
         private void list_FormatCell_1(object sender, FormatCellEventArgs e) {
-
         }
 
         private void list_FormatRow_1(object sender, FormatRowEventArgs e) {
@@ -933,10 +930,13 @@ namespace LogWizard
         }
 
         public enum select_type {
-            notify_parent, do_not_notify_parent
+            notify_parent,
+            do_not_notify_parent
         }
+
         // by default, notify parent
         private select_type select_nofify_ = select_type.notify_parent;
+
         private void select_idx(int idx, select_type notify) {
             if (list.SelectedIndex == idx)
                 return; // already selected
@@ -970,7 +970,7 @@ namespace LogWizard
             if (line_idx >= list.GetItemCount())
                 return;
 
-            select_idx( line_idx, notify);
+            select_idx(line_idx, notify);
             //list.EnsureVisible(line_idx);
 
             int rows = list.Height / list.RowHeight;
@@ -992,25 +992,13 @@ namespace LogWizard
 
             var closest = model_.get_matches.binary_search_closest(item => item.match.line_idx, line_idx);
             go_to_line(closest.Item2, notify);
+        }
 
-
-            /*
-            // note: yeah - i could do binary search, but it's not that big of a time increase
-            int last_line_idx = (list.GetItem(0).RowObject as item).match.line_idx;
-            int found_idx = 0;
-            for (int idx = 1; idx < list.GetItemCount(); ++idx) {
-                var cur_line_idx = (list.GetItem(idx).RowObject as item).match.line_idx;
-                int last_dist = Math.Abs(line_idx - last_line_idx);
-                int cur_dist = Math.Abs(cur_line_idx - line_idx);
-                if (cur_dist < last_dist) {
-                    last_line_idx = cur_line_idx;
-                    found_idx = idx;
-                } else
-                    // we found it
-                    break;
-            }
-            go_to_line(found_idx, notify);
-            */
+        public bool matches_line(int line_idx) {
+            if (list.GetItemCount() < 1)
+                return false;
+            var closest = model_.get_matches.binary_search_closest(item => item.match.line_idx, line_idx);
+            return closest.Item1.match.line_idx == line_idx;
         }
 
         public void go_to_closest_time(DateTime time) {
@@ -1019,24 +1007,6 @@ namespace LogWizard
 
             var closest = model_.get_matches.binary_search_closest(item => item.match.line.time, time);
             go_to_line(closest.Item2, select_type.notify_parent);
-
-            /*
-            // note: yeah - i could do binary search, but it's not that big of a time increase
-            var last_time = (list.GetItem(0).RowObject as item).match.line.time;
-            int found_idx = 0;
-            for (int idx = 1; idx < list.GetItemCount(); ++idx) {
-                var cur_time = (list.GetItem(idx).RowObject as item).match.line.time;
-                var last_dist = Math.Abs( (time- last_time).TotalMilliseconds);
-                var cur_dist = Math.Abs( (cur_time - time).TotalMilliseconds);
-                if (cur_dist <= last_dist) {
-                    last_time = cur_time;
-                    found_idx = idx;
-                } else
-                    // we found it
-                    break;
-            }
-            go_to_line(found_idx, select_type.notify_parent);
-            */
         }
 
         public void offset_closest_time(int time_ms, bool forward) {
@@ -1051,9 +1021,8 @@ namespace LogWizard
             if (time != DateTime.MinValue) {
                 time = time.AddMilliseconds(forward ? time_ms : -time_ms);
                 go_to_closest_time(time);
-            }
-            else
-                // in this case, there is no time logged, or it was invalid
+            } else
+            // in this case, there is no time logged, or it was invalid
                 util.beep(util.beep_type.err);
         }
 
@@ -1102,13 +1071,13 @@ namespace LogWizard
 
         [DllImport("user32")]
         private static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
+
         private void list_CellToolTipShowing(object sender, ToolTipShowingEventArgs e) {
-            if (e.ColumnIndex == msgCol.Index) 
+            if (e.ColumnIndex == msgCol.Index)
                 ShowWindow(e.ToolTipControl.Handle, 0);
         }
 
         private void log_view_Load(object sender, EventArgs e) {
-
         }
 
         private void list_KeyPress(object sender, KeyPressEventArgs e) {
@@ -1132,8 +1101,8 @@ namespace LogWizard
                     update_line_color(idx);
                 }
             }
-            if (needs_refresh) 
-                list.Refresh();            
+            if (needs_refresh)
+                list.Refresh();
         }
 
         // unmarks any previously marked rows
@@ -1151,38 +1120,36 @@ namespace LogWizard
                     update_line_color(idx);
                 }
             }
-            if (needs_refresh) 
-                list.Refresh();            
+            if (needs_refresh)
+                list.Refresh();
         }
 
         public void search_for_text_first(string txt) {
             if (list.GetItemCount() < 1)
                 return;
 
-            select_idx( 0, select_type.notify_parent);
+            select_idx(0, select_type.notify_parent);
             item i = list.GetItem(0).RowObject as item;
             if (i.match.line.part(info_type.msg).Contains(txt)) {
                 // line zero contains the text already
                 list.EnsureVisible(0);
                 return;
-            }
-            else 
+            } else
                 search_for_text_next(txt);
-            
         }
 
         public void search_for_text_next(string txt) {
             if (list.GetItemCount() < 1)
                 return;
             int found = -1;
-            if ( list.SelectedIndex >= 0)
+            if (list.SelectedIndex >= 0)
                 for (int idx = list.SelectedIndex + 1; idx < list.GetItemCount() && found < 0; ++idx) {
                     item i = list.GetItem(idx).RowObject as item;
                     if (i.match.line.part(info_type.msg).Contains(txt))
                         found = idx;
                 }
             if (found >= 0) {
-                select_idx( found, select_type.notify_parent);
+                select_idx(found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
                 util.beep(util.beep_type.err);
@@ -1192,14 +1159,14 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
             int found = -1;
-            if ( list.SelectedIndex > 0)
+            if (list.SelectedIndex > 0)
                 for (int idx = list.SelectedIndex - 1; idx >= 0 && found < 0; --idx) {
                     item i = list.GetItem(idx).RowObject as item;
                     if (i.match.line.part(info_type.msg).Contains(txt))
                         found = idx;
                 }
             if (found >= 0) {
-                select_idx( found, select_type.notify_parent);
+                select_idx(found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
                 util.beep(util.beep_type.err);
@@ -1212,8 +1179,7 @@ namespace LogWizard
             for (int idx = 0; idx < list.GetItemCount(); ++idx) {
                 item i = list.GetItem(idx).RowObject as item;
                 bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
-                bool needs_change = (is_match && (i.override_fg.ToArgb() != fg.ToArgb() || i.override_bg.ToArgb() != bg.ToArgb())) ||
-                                    (!is_match && (i.override_fg != util.transparent || i.override_bg != util.transparent));
+                bool needs_change = (is_match && (i.override_fg.ToArgb() != fg.ToArgb() || i.override_bg.ToArgb() != bg.ToArgb())) || (!is_match && (i.override_fg != util.transparent || i.override_bg != util.transparent));
 
                 if (needs_change) {
                     i.override_fg = is_match ? fg : util.transparent;
@@ -1222,7 +1188,7 @@ namespace LogWizard
                     update_line_color(idx);
                 }
             }
-            if (needs_refresh) 
+            if (needs_refresh)
                 list.Refresh();
         }
 
@@ -1230,7 +1196,7 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
             int found = -1;
-            if ( list.SelectedIndex >= 0)
+            if (list.SelectedIndex >= 0)
                 for (int idx = list.SelectedIndex + 1; idx < list.GetItemCount() && found < 0; ++idx) {
                     item i = list.GetItem(idx).RowObject as item;
                     bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
@@ -1238,17 +1204,17 @@ namespace LogWizard
                         found = idx;
                 }
             if (found >= 0) {
-                select_idx( found, select_type.notify_parent);
+                select_idx(found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
                 util.beep(util.beep_type.err);
-            
         }
+
         public void search_for_prev_match(int filter_row_idx) {
             if (list.GetItemCount() < 1)
                 return;
             int found = -1;
-            if ( list.SelectedIndex > 0)
+            if (list.SelectedIndex > 0)
                 for (int idx = list.SelectedIndex - 1; idx >= 0 && found < 0; --idx) {
                     item i = list.GetItem(idx).RowObject as item;
                     bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
@@ -1256,7 +1222,7 @@ namespace LogWizard
                         found = idx;
                 }
             if (found >= 0) {
-                select_idx( found, select_type.notify_parent);
+                select_idx(found, select_type.notify_parent);
                 list.EnsureVisible(found);
             } else
                 util.beep(util.beep_type.err);
@@ -1268,7 +1234,7 @@ namespace LogWizard
                 return;
             item i = list.GetItem(sel).RowObject as item;
             try {
-                Clipboard.SetText( i.match.line.part(info_type.msg));
+                Clipboard.SetText(i.match.line.part(info_type.msg));
             } catch {
             }
         }
@@ -1279,9 +1245,9 @@ namespace LogWizard
                 return;
             item i = list.GetItem(sel).RowObject as item;
             try {
-                Clipboard.SetText( i.match.line.full_line);
+                Clipboard.SetText(i.match.line.full_line);
             } catch {
-            }            
+            }
         }
 
         public void set_bookmarks(List<int> line_idxs) {
@@ -1305,14 +1271,14 @@ namespace LogWizard
                     list.RefreshItem(row);
                 }
             }
-            if ( list.SelectedIndex >= 0)
+            if (list.SelectedIndex >= 0)
                 update_line_highlight_color(list.SelectedIndex);
         }
 
         public void next_bookmark() {
             int start = list.SelectedIndex >= 0 ? sel_line_idx + 1 : 0;
-            int mark = bookmarks_.FirstOrDefault(line => line >= start && row_by_line_idx(line) != null );
-            if ( mark == 0)
+            int mark = bookmarks_.FirstOrDefault(line => line >= start && row_by_line_idx(line) != null);
+            if (mark == 0)
                 if (mark < start || !bookmarks_.Contains(mark))
                     // in this case, we did not find anything and got returned default (0)
                     mark = -1;
@@ -1329,9 +1295,9 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
 
-            int start = list.SelectedIndex >= 0 ? sel_line_idx - 1 : (list.GetItem(list.SelectedIndex).RowObject as item).match.line_idx ;
+            int start = list.SelectedIndex >= 0 ? sel_line_idx - 1 : (list.GetItem(list.SelectedIndex).RowObject as item).match.line_idx;
             int mark = bookmarks_.LastOrDefault(line => line <= start && row_by_line_idx(line) != null);
-            if ( mark == 0)
+            if (mark == 0)
                 if (!bookmarks_.Contains(mark))
                     // in this case, we did not find anything and got returned default (0)
                     mark = -1;
@@ -1340,8 +1306,7 @@ namespace LogWizard
                 int idx = row_by_line_idx(mark).Index;
                 select_idx(idx, select_type.notify_parent);
                 list.EnsureVisible(idx);
-            }
-            else
+            } else
                 util.beep(util.beep_type.err);
         }
 
@@ -1387,8 +1352,7 @@ namespace LogWizard
             if (r.Bottom + r.Height < list.ClientRectangle.Height) {
                 list.LowLevelScroll(0, -r.Height);
                 list.EnsureVisible(sel);
-            }
-            else 
+            } else
                 on_action(log_wizard.action_type.arrow_up);
         }
 
@@ -1404,9 +1368,8 @@ namespace LogWizard
             if (r.Bottom + r.Height < list.ClientRectangle.Height) {
                 list.LowLevelScroll(0, r.Height);
                 list.EnsureVisible(sel);
-            }
-            else 
-                on_action(log_wizard.action_type.arrow_down);            
+            } else
+                on_action(log_wizard.action_type.arrow_down);
         }
 
         private void list_Enter(object sender, EventArgs e) {
@@ -1419,5 +1382,4 @@ namespace LogWizard
             BackColor = Color.White;
         }
     }
-
 }
