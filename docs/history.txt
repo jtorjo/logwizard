@@ -4,6 +4,10 @@
 - one last run of dotmemory, license will end soon
 
 
+1.0.76e
+- apparently, my Release64's actual platform was x86 instead of x64
+
+
 1.0.76d
 - decrease memory footprint - step 9
   - read full log first - apparent 10% less memory consumed (on 90Mb file)
