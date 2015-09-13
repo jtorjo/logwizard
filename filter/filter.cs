@@ -50,8 +50,8 @@ namespace LogWizard {
         private bool new_log_fully_read_at_least_once_ = false;
 
         // the filter matches
-        // FIXME make this a list!
-        private Dictionary<int, match> matches_ = new Dictionary<int, match>();
+        //private Dictionary<int, match> matches_ = new Dictionary<int, match>();
+        private memory_optimized_list<match> matches_ = new memory_optimized_list<match>() { min_capacity = app.inst.no_ui.min_filter_capacity };
         // ... the indexes, in sorted order
         private memory_optimized_list<int> match_indexes_ = new memory_optimized_list<int>() { min_capacity = app.inst.no_ui.min_filter_capacity }; 
 
@@ -95,7 +95,7 @@ namespace LogWizard {
         //       we might at some point get a match_count, and while we're retrieving the items, the matches array clears
         public match match_at(int idx) {
             lock (this) 
-                return idx < matches_.Count ? matches_[match_indexes_[idx]] : null;            
+                return idx < matches_.Count ? matches_[idx] : null;            
         }
 
         // this will return the log we last read the matches from
@@ -238,7 +238,7 @@ namespace LogWizard {
             if (has_new_lines) {
                 int expected_capacity = (new_log.line_count - old_line_count) / 5;
                 // the filter matches
-                Dictionary<int, match> new_matches = new Dictionary<int, match>();
+                memory_optimized_list<match> new_matches = new memory_optimized_list<match>() { min_capacity = expected_capacity };
                 // ... the indexes, in sorted order
                 memory_optimized_list<int> new_indexes = new memory_optimized_list<int>() { min_capacity = expected_capacity }; 
 
@@ -306,7 +306,7 @@ namespace LogWizard {
                             } else
                                 font = filter_line.font_info.default_;
                         }
-                        new_matches.Add(line_idx, new match {
+                        new_matches.Add(new match {
                             font = font, line = new_log.line_at(line_idx), line_idx = line_idx, matches = new BitArray(matches)
                         });
                         new_indexes.Add(line_idx);
@@ -315,14 +315,13 @@ namespace LogWizard {
 
                     bool any_filter = (rows.Count > 0);
                     if (!any_filter) {
-                        new_matches.Add(line_idx, new match { matches = new BitArray(0), line = new_log.line_at(line_idx), line_idx = line_idx, font = filter_line.font_info.default_ });
+                        new_matches.Add(new match { matches = new BitArray(0), line = new_log.line_at(line_idx), line_idx = line_idx, font = filter_line.font_info.default_ });
                         new_indexes.Add(line_idx);
                     }
                 }
 
                 lock (this) {
-                    foreach ( var kv in new_matches)
-                        matches_.Add(kv.Key, kv.Value);
+                    matches_.AddRange(new_matches);
                     match_indexes_.AddRange(new_indexes);
                 }
 
@@ -405,13 +404,14 @@ namespace LogWizard {
                     add_addition_line(add_idx.Key, add_idx.Value, log);
         }
 
+
         private static BitArray empty_match = new BitArray(0);
         private void add_addition_line(int line_idx, Color fg, log_line_reader log) {
             // if insert_idx > 0 , that means we already have it
             int insert_idx = match_indexes_.BinarySearch(line_idx);
             if (insert_idx < 0) {
                 match_indexes_.Insert(~insert_idx, line_idx);
-                matches_.Add(line_idx, new match {
+                matches_.Insert(~insert_idx, new match {
                     matches = empty_match, line = log.line_at(line_idx), line_idx = line_idx, font = new filter_line.font_info {
                         bg = Color.White, fg = fg
                     }

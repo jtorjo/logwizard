@@ -12,8 +12,10 @@ namespace LogWizard {
         public double increase_percentage = .2;
         private int min_capacity_ = 100;
 
-
         private const int PAD = 100;
+
+        // friendly name - useful when dumping change of capacity
+        public string name = "";
 
         public memory_optimized_list(int capacity) : base(capacity) {
             ensure(min_capacity_);
@@ -45,9 +47,9 @@ namespace LogWizard {
         }
 
         private void ensure(int count) {
-            if (Count + PAD > Capacity) {
+            if (count + PAD > Capacity) {
                 Capacity = PAD + (int) (Capacity * (1 + increase_percentage));
-                logger.Debug("[memory] new capacity - " + Capacity);
+                logger.Debug("[memory] new capacity [" + name +"] - " + Capacity);
                 GC.Collect();
             }
         }
