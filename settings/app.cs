@@ -19,7 +19,10 @@ namespace LogWizard {
             // ... after the file has been fully read, we don't expect that much info to be written in a few milliseconds
             //     thus, make the muffer MUCH smaller
             public ulong file_max_read_in_one_go_after_fully_read = (ulong) (util.is_debug ? 8 * 1024 : 128 * 1024);
-            
+
+            public int min_filter_capacity = 50000;
+            public int min_list_data_source_capacity = 75000;
+            public int min_matched_lines_capacity = 20000;
         }
         public no_ui_ no_ui = new no_ui_();
 

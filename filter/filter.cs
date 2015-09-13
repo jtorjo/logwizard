@@ -50,9 +50,10 @@ namespace LogWizard {
         private bool new_log_fully_read_at_least_once_ = false;
 
         // the filter matches
+        // FIXME make this a list!
         private Dictionary<int, match> matches_ = new Dictionary<int, match>();
         // ... the indexes, in sorted order
-        private List<int> match_indexes_ = new List<int>(); 
+        private memory_optimized_list<int> match_indexes_ = new memory_optimized_list<int>() { min_capacity = app.inst.no_ui.min_filter_capacity }; 
 
         private bool rows_changed_ = false;
 
@@ -63,6 +64,16 @@ namespace LogWizard {
 
         private bool is_up_to_date_ = false;
 
+        public void compute_matches(log_line_reader log) {
+            Debug.Assert(log != null);
+            lock (this) {
+                if (new_log_ != log)
+                    is_up_to_date_ = false;
+                new_log_ = log;
+            }
+
+            start_compute_matches_thread();
+        }
 
         public int row_count {
             get { lock(this) return rows_.Count; }
@@ -184,17 +195,6 @@ namespace LogWizard {
                     }            
         }
 
-        public void compute_matches(log_line_reader log) {
-            Debug.Assert(log != null);
-            lock (this) {
-                if (new_log_ != log)
-                    is_up_to_date_ = false;
-                new_log_ = log;
-            }
-
-            start_compute_matches_thread();
-        }
-
         private void compute_matches_impl(log_line_reader new_log, log_line_reader old_log) {
             Debug.Assert(new_log != null);
 
@@ -211,6 +211,8 @@ namespace LogWizard {
                 }
             }
             */
+
+            // fixme: start with number of lines / 20 (capacity), and go from there
 
             int old_line_count = new_log.line_count;
             new_log.refresh();
@@ -234,10 +236,11 @@ namespace LogWizard {
                 row.compute_line_matches(new_log);
 
             if (has_new_lines) {
+                int expected_capacity = (new_log.line_count - old_line_count) / 5;
                 // the filter matches
                 Dictionary<int, match> new_matches = new Dictionary<int, match>();
                 // ... the indexes, in sorted order
-                List<int> new_indexes = new List<int>(); 
+                memory_optimized_list<int> new_indexes = new memory_optimized_list<int>() { min_capacity = expected_capacity }; 
 
                 // from old_lines to log.line_count -> these need recomputing
                 int old_match_count;

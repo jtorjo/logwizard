@@ -45,6 +45,11 @@ namespace LogWizard
         // 1.0.14+ - returns the length computed in compute_full_length()
         public abstract ulong full_len { get; }
 
+        // 1.0.76+ - if != maxvalue, we try to guess the length of the log to read (so we can optimize our internal memory consumption)
+        public virtual ulong try_guess_full_len {
+            get { return ulong.MaxValue;  }
+        }
+
         // the position in the log_line_parser (in bytes)
         // 1.0.72+ - made readonly
         public abstract ulong pos { get; }

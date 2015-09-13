@@ -101,7 +101,9 @@ namespace LogWizard
         public override string read_next_text() {
             lock (this) {
                 string now = last_part_.ToString();
-                last_part_ = new StringBuilder();
+                //last_part_ = new StringBuilder();
+                // IMPORTANT : we don't want to create a new object - we want the .Capacity to stay the same
+                last_part_.Clear();
                 offset_ = read_byte_count_;
                 return now;
             }
@@ -135,7 +137,17 @@ namespace LogWizard
         public override ulong full_len {
             get { lock(this) return full_len_now_; }
         }
-        
+
+        public override ulong try_guess_full_len {
+            get {
+                try {
+                    return (ulong)new FileInfo(file_).Length;
+                } catch (FileNotFoundException e) {
+                    return ulong.MaxValue;
+                }                
+            }
+        }
+
         public override ulong pos {
             get { lock(this) return offset_;  }
         }

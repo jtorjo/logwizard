@@ -31,6 +31,11 @@ namespace LogWizard
             }
         }
 
+        public void expect_bytes(ulong byte_count) {
+            Debug.Assert( byte_count < int.MaxValue);
+            string_.Capacity = (int)byte_count;
+        }
+
         public void add_lines(string lines, ref int added_line_count, ref bool was_last_line_incomplete, ref bool is_last_line_incomplete) {
             if (lines == "")
                 return;

@@ -163,7 +163,7 @@ namespace LogWizard
         }
 
         private class list_data_source : AbstractVirtualListDataSource {
-            private List<item> items_ = new List<item>();
+            private memory_optimized_list<item> items_ = new memory_optimized_list<item>() { min_capacity = app.inst.no_ui.min_list_data_source_capacity };
             private VirtualObjectListView lv_ = null;
 
             public list_data_source(VirtualObjectListView lv) : base(lv) {
@@ -186,7 +186,7 @@ namespace LogWizard
                 return items_.Count;
             }
 
-            public void add_matches(List<filter.match> matches, log_view parent) {
+            public void add_matches(memory_optimized_list<filter.match> matches, log_view parent) {
                 bool is_full_log = parent.is_full_log;
                 foreach ( var m in matches)
                     items_.Add( is_full_log ? new full_log_item(m,parent) : new item(m,parent) );
@@ -197,7 +197,7 @@ namespace LogWizard
                 lv_.UpdateVirtualListSize();
             }
 
-            public void set_matches(List<filter.match> matches, log_view parent) {
+            public void set_matches(memory_optimized_list<filter.match> matches, log_view parent) {
                 items_.Clear();
                 add_matches(matches, parent);
             }
@@ -390,7 +390,7 @@ namespace LogWizard
                 last_view_column_index_ = 0;
                 wait_for_filter_to_read_from_new_log_ = DateTime.Now.AddMilliseconds(WAIT_FOR_NEW_LOG_MAX_MS);
                 logger.Debug("[view] new log for " + name + " - " + log.name);
-                model_.set_matches(new List<filter.match>(), this);
+                model_.set_matches(new memory_optimized_list<filter.match>(), this);
                 update_x_of_y();
             }
         }
@@ -684,7 +684,7 @@ namespace LogWizard
                 logger.Debug("[view] log " + viewName.Text + ": going from " + list.GetItemCount() + " to " + match_count + " entries.");
                 if (list.GetItemCount() < match_count) {
                     // items have been added
-                    List<filter.match> new_ = new List<filter.match>();
+                    memory_optimized_list<filter.match> new_ = new memory_optimized_list<filter.match>( Math.Max(  match_count - list.GetItemCount(), 0));
                     bool filter_reset = false;
                     for (int i = list.GetItemCount(); i < match_count && !filter_reset; ++i) {
                         var new_match = filter_.match_at(i);
@@ -695,7 +695,7 @@ namespace LogWizard
                     }
                     if (filter_reset) {
                         logger.Debug("[view] filter reset on refresh " + name);
-                        new_ = new List<filter.match>();
+                        new_ = new memory_optimized_list<filter.match>();
                     }
                     model_.add_matches(new_, this);
                     update_x_of_y();
@@ -721,7 +721,7 @@ namespace LogWizard
 
         // returns all the lines that match this filter
         public List<int> matched_lines(int start_line_idx, int end_line_idx) {
-            List<int> lines = new List<int>();
+            memory_optimized_list<int> lines = new memory_optimized_list<int>() { min_capacity = app.inst.no_ui.min_matched_lines_capacity };
             for (int idx = 0; idx < list.GetItemCount(); ++idx) {
                 item i = list.GetItem(idx).RowObject as item;
                 if ( i.match.line_idx >= start_line_idx && i.match.line_idx < end_line_idx)
@@ -870,8 +870,8 @@ namespace LogWizard
             bool needs_scroll = needs_scroll_to_last();
 
             // from this point on, we only append to the existing list
-            List<filter.match> new_ = new List<filter.match>();
             int match_count = filter_.match_count;
+            memory_optimized_list<filter.match> new_ = new memory_optimized_list<filter.match>( match_count);
             bool filter_reset = false;
             for (int i = 0; i < match_count && !filter_reset; ++i) {
                 var new_match = filter_.match_at(i);
@@ -884,7 +884,8 @@ namespace LogWizard
                 model_.set_matches(new_, this);
 
             // update colors
-            for (int idx = 0; idx < list.GetItemCount() && !filter_reset; ++idx) {
+            int count = model_.get_matches.Count;
+            for (int idx = 0; idx < count && !filter_reset; ++idx) {
                 item i = list.GetItem(idx).RowObject as item;
                 var match = filter_.match_at(idx);
                 if (match != null)
@@ -894,12 +895,13 @@ namespace LogWizard
             }
 
             if (!filter_reset) {
-                for (int idx = 0; idx < list.GetItemCount(); ++idx)
+                for (int idx = 0; idx < count; ++idx)
                     update_line_color(idx);
                 list.Refresh();
             } else {
                 logger.Debug("[view] filter got reset on the other thread - " + name);
-                model_.set_matches(new List<filter.match>(), this);
+                model_.set_matches(new memory_optimized_list<filter.match>(), this);
+                needs_scroll = false;
             }
 
             if( needs_scroll)

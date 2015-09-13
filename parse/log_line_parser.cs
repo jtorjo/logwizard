@@ -102,6 +102,8 @@ namespace LogWizard
             Debug.Assert(reader != null);
             parse_syntax(syntax);
             text_reader_ = reader;
+            if ( text_reader_.try_guess_full_len != ulong.MaxValue)
+                string_.expect_bytes( text_reader_.try_guess_full_len);
             force_reload();
             new Thread(refresh_thread) {IsBackground = true}.Start();
         }
