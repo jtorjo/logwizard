@@ -1,14 +1,41 @@
 
-- bug: toggle full log -> when pressed ('l') in full-log, it's pressed twice
+- history - deleted files - ignore them
+- synchronizing with full-log/other logs -> if key is down (up/down/etc.) -> don't sync yet TOTHINK (basically so that we only synchronize when the user has selected the final row)
+
+- allow selecting several rows
+- find - case-insensitive + full words + regex (by default, auto-detect -> [],(),any\ -> regex)
+
 - allow resetting the default settings (for Denise)
 
+
+1.0.77a
+- toggle 'v' - show/hide view + 'h' show/hide header
+  - global - they apply to all views
+- show_full_log() -> split into two things -> show_full_log / show_current_view (both can't be off at the same time)
+- all toggles are saved into current context (except "show msgonly")
+- fix bug: toggle full log -> when pressed ('l') in full-log, it's pressed twice
+- history - deleted files - ignore them
+- synchronizing with full-log/other logs -> if key is down (up/down/etc.) -> don't sync yet TOTHINK (basically so that we only synchronize when the user has selected the final row)
 
 
 1.0.76h
 - after generated 32 and 64 setup kits
 
+- Decrease memory - final step TODO:
+  - log_view has an array of items (_model), which basically are on top of matches_
+    I guess we can actually get rid of log_view.item, and embody it match_ - I do have to think about it big time
+	I should also think about the fact that I may want to toggle the results of a view + search-in-view (but that should be fine,
+	I would just go through the original filter, and do my search, create a copy of the array, with the search; now that i think about it,
+	i could even keep another array with the results of a search - if no search, just an empty array; this should also work for when selecting a filter -> which would show the
+	results of that filter; at this point - I can easily find out the number of matches to hold)
+  - match_indexes_ -> the only time I actually use this is when adding an addition via BinarySearch
+    - since i already have binary_search myself, I should look into that 
+	  (also - my search returns the closest item; i should see if that is the right place to do an Insert).
+
 
 1.0.76g
+- decrease memory footprint - step 10
+
 - full log : matches computed on the fly (instead of an extra array, which also meant huge delays when we changed the current view)
 - full log : computing synchronized colors on the fly - much faster, and using less memory
 - one last run of dotmemory - all that is found is ok - no point in sacrificing stuff for more memory increases
@@ -17,7 +44,7 @@
   - at some point I said that 32-bit occupied mem is about the same as 64-bit. I was wrong (see 1.0.76e)
   - x64 version will take about 40% more memory (due to 8-byte pointers)
   - due to memory improvements, I also got some speed improvements
-  - 280Mb file loads only on 64-bit - it takes about 2.5Gb of RAM (with full log shown).
+  - 280Mb file loads only on 64-bit - it takes about 2.5Gb of RAM (with full log shown); note: it has 3M lines
   - 280Mb raises exception on 32-bit (out of memory)
   - 90Mb file takes <600Mb on 32-bit . This is HUGE improvement (initially, it took close to twice as much)
   - I really see no more possible improvements at this point without sacrificing something else (very likely, speed and simplicity)

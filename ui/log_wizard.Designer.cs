@@ -336,10 +336,10 @@
             // newFilteredView
             // 
             this.newFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.newFilteredView.Location = new System.Drawing.Point(422, 3);
             this.newFilteredView.Name = "newFilteredView";
-            this.newFilteredView.Size = new System.Drawing.Size(18, 24);
+            this.newFilteredView.Size = new System.Drawing.Size(18, 20);
             this.newFilteredView.TabIndex = 1;
             this.newFilteredView.Text = "+";
             this.tip.SetToolTip(this.newFilteredView, "New Filtered View of the same Log");
@@ -426,10 +426,10 @@
             // delFilteredView
             // 
             this.delFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.delFilteredView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.delFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.delFilteredView.Location = new System.Drawing.Point(440, 3);
             this.delFilteredView.Name = "delFilteredView";
-            this.delFilteredView.Size = new System.Drawing.Size(18, 24);
+            this.delFilteredView.Size = new System.Drawing.Size(18, 20);
             this.delFilteredView.TabIndex = 2;
             this.delFilteredView.Text = "-";
             this.tip.SetToolTip(this.delFilteredView, "Delete this View");
@@ -489,7 +489,7 @@
             this.synchronizedWithFullLog.Font = new System.Drawing.Font("Segoe UI", 7F);
             this.synchronizedWithFullLog.Location = new System.Drawing.Point(509, 3);
             this.synchronizedWithFullLog.Name = "synchronizedWithFullLog";
-            this.synchronizedWithFullLog.Size = new System.Drawing.Size(46, 24);
+            this.synchronizedWithFullLog.Size = new System.Drawing.Size(46, 20);
             this.synchronizedWithFullLog.TabIndex = 1;
             this.synchronizedWithFullLog.Text = "<-FL->";
             this.tip.SetToolTip(this.synchronizedWithFullLog, "Synchronized with the Full Log");
@@ -505,7 +505,7 @@
             this.synchronizeWithExistingLogs.Font = new System.Drawing.Font("Segoe UI", 7F);
             this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(463, 3);
             this.synchronizeWithExistingLogs.Name = "synchronizeWithExistingLogs";
-            this.synchronizeWithExistingLogs.Size = new System.Drawing.Size(46, 24);
+            this.synchronizeWithExistingLogs.Size = new System.Drawing.Size(46, 20);
             this.synchronizeWithExistingLogs.TabIndex = 3;
             this.synchronizeWithExistingLogs.Text = "<-V->";
             this.tip.SetToolTip(this.synchronizeWithExistingLogs, "Synchronized with the rest of the Views\r\n(when you change the line, the other vie" +
@@ -923,7 +923,6 @@
             this.Deactivate += new System.EventHandler(this.log_wizard_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LogWizard_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LogNinja_FormClosed);
-            this.Load += new System.EventHandler(this.log_wizard_Load);
             this.LocationChanged += new System.EventHandler(this.log_wizard_LocationChanged);
             this.SizeChanged += new System.EventHandler(this.log_wizard_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).EndInit();

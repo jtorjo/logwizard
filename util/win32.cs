@@ -98,5 +98,12 @@ namespace LogWizard {
             SetWindowPos(form.Handle, HWND_TOPMOST, 0, 0, 0, 0, TOPMOST_FLAGS);
         }
 
+        [DllImport("user32.dll")]
+        private extern static short GetAsyncKeyState(System.Windows.Forms.Keys vKey); 
+
+        public static bool IsKeyPushedDown(System.Windows.Forms.Keys vKey) {
+            return 0 != (GetAsyncKeyState(vKey) & 0x8000);
+        }
+
     }
 }

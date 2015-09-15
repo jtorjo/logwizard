@@ -373,6 +373,7 @@ namespace LogWizard {
 
         public delegate void update_control_func(bool has_terminated);
         public delegate bool terminate_update_func();
+        public delegate void void_func();
 
         public static void add_timer(update_control_func updater, terminate_update_func terminator, int refresh_ms = 100) {
             updater(false);
@@ -380,11 +381,11 @@ namespace LogWizard {
             Timer t = new Timer(){ Interval = refresh_ms };
             t.Tick += (sender, args) => {
                 bool has_terminated = terminator();
-                updater(has_terminated);
                 if (has_terminated) {
                     t.Enabled = false;
                     t.Dispose();
                 }
+                updater(has_terminated);
             };
             t.Enabled = true;
         }
@@ -393,6 +394,17 @@ namespace LogWizard {
         public static void add_timer(update_control_func updater, int update_ms, int refresh_ms = 100) {
             DateTime end = DateTime.Now.AddMilliseconds(update_ms);
             add_timer( updater, () => (DateTime.Now > end), refresh_ms );
+        }
+
+        // postpones executing this function
+        public static void postpone(void_func f, int time_ms) {
+            Timer t = new Timer(){ Interval = time_ms };
+            t.Tick += (sender, args) => {
+                t.Enabled = false;
+                t.Dispose();
+                f();
+            };
+            t.Enabled = true;
         }
 
         public void postpone_func(Action a, int postpone_ms) {
@@ -521,6 +533,7 @@ namespace LogWizard {
                 logger.Error("can't set association: " + e.Message);
             }
         }
+
         public static void create_shortcut(string name, string directory, string description, string iconLocation, string targetPath, string targetArgs)
         {
             try {

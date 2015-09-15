@@ -33,8 +33,9 @@ namespace LogWizard {
 
         public class match {
             // this contains what filters were matched - we need to know this, so that we can later apply 'additions'
-            //
             // if this is an empty array, then this match is actually an addition (or, the filter contains no rows -> thus, we return the whole file)
+            //
+            // also used to know how many lines were matched by a filter
             public BitArray matches = null;
 
             public filter_line.font_info font = null;

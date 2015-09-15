@@ -207,6 +207,10 @@ namespace LogWizard
 
         private bool pad_name_on_left_ = false;
 
+        private bool show_name_in_header_ = false;
+        private bool show_header_ = true;
+        private bool show_name_ = true;
+
         public log_view(log_wizard parent, string name)
         {
             InitializeComponent();
@@ -405,15 +409,23 @@ namespace LogWizard
             }
         }
 
-        public void show_name(bool show) {
-            bool shown = list.Top - 10 > labelName.Top;
-            if ( shown == show)
-                return;
-            
+        public void update_show_name() {            
+            viewName.Visible = show_name_;
+            labelName.Visible = show_name_;
+ 
+            int height = viewName.Height + 2;
+            list.Top = !show_name_ ? list.Top - height : list.Top + height;
+            list.Height = !show_name_ ? list.Height + height : list.Height - height;
+        }
+
+        private void update_show_header() {
+            // note: if name is shown, we can't hide header
+            bool show = show_name_ || show_header_;
+
             viewName.Visible = show;
             labelName.Visible = show;
  
-            int height = viewName.Height + 5;
+            int height = list.HeaderControl.ClientRectangle.Height;
             list.Top = !show ? list.Top - height : list.Top + height;
             list.Height = !show ? list.Height + height : list.Height - height;
         }
@@ -464,7 +476,11 @@ namespace LogWizard
                     var r = list.GetItem(sel).Bounds;
                     var middle = new Point( r.Left + r.Width / 2, r.Top + r.Height / 2 );
                     list.LowLevelScroll(0, -height);
-                    sel = list.HitTest(middle).Item.Index;
+                    int new_sel = list.HitTest(middle).Item.Index;
+                    if (new_sel != sel)
+                        sel = new_sel;
+                    else
+                        sel = 0; // reached top
                 }
                 break;
             case log_wizard.action_type.pagedown:
@@ -472,7 +488,11 @@ namespace LogWizard
                     var r = list.GetItem(sel).Bounds;
                     var middle = new Point( r.Left + r.Width / 2, r.Top + r.Height / 2 );
                     list.LowLevelScroll(0, height);
-                    sel = list.HitTest(middle).Item.Index;
+                    int new_sel = list.HitTest(middle).Item.Index;
+                    if (new_sel != sel)
+                        sel = new_sel;
+                    else
+                        sel = list.GetItemCount() - 1; // reached bottom
                 }
                 break;
             case log_wizard.action_type.arrow_up:
@@ -602,7 +622,7 @@ namespace LogWizard
             string x_line =  sel_line_idx >= 0 ? "" + (sel_line_idx + 1) : "";
             string y = "" + list.GetItemCount();
             string header = (app.inst.show_view_line_count || app.inst.show_view_selected_line || app.inst.show_view_selected_index ? (x_idx != "" ? x_idx + " of " + y : "(" + y + ")") : "");
-            string x_of_y_msg = "Message " + header;
+            string x_of_y_msg = (show_name_in_header ? "[" + name + "] " : "") + "Message " + header;
             string x_of_y_title = "";
             if (app.inst.show_view_line_count && app.inst.show_view_selected_index)
                 x_of_y_title = " (" + (x_idx != "" ? x_idx + "/" : "") + y + ")";
@@ -962,7 +982,7 @@ namespace LogWizard
 
             if (select_nofify_ == select_type.notify_parent) {
                 int line_idx = (list.GetItem(sel).RowObject as item).match.line_idx;
-                parent.go_to_line(line_idx, this);
+                //parent.go_to_line(line_idx, this);
             }
         }
 
@@ -1048,6 +1068,40 @@ namespace LogWizard
                 if (pad_name_on_left_ != value) {
                     pad_name_on_left_ = value;
                     update_x_of_y();
+                }
+            }
+        }
+
+        public bool show_name_in_header {
+            get { return show_name_in_header_; }
+            set {
+                show_name_in_header_ = value;
+                update_x_of_y();
+            }
+        }
+
+        public bool show_header {
+            get { return show_header_; }
+            set {
+                bool old_show_header = show_name_ || show_header_;
+                show_header_ = value;
+                bool new_show_header = show_name_ || show_header_;
+                if (old_show_header != new_show_header) 
+                    update_show_header();
+            }
+        }
+
+        public bool show_name {
+            get { return show_name_; }
+            set {
+                bool old_show_header = show_name_ || show_header_;
+                if (show_name_ != value) {
+                    show_name_ = value;
+                    update_show_name();
+
+                    bool new_show_header = show_name_ || show_header_;
+                    if( old_show_header != new_show_header)
+                        update_show_header();
                 }
             }
         }
@@ -1374,12 +1428,16 @@ namespace LogWizard
 
         private void list_Enter(object sender, EventArgs e) {
             //logger.Info("[view] lv got focus " + name);
-            BackColor = Color.LightGray;
+            BackColor = Color.DarkSlateGray;
         }
 
         private void list_Leave(object sender, EventArgs e) {
             //logger.Info("[view] lv lost focus " + name);
             BackColor = Color.White;
+        }
+
+        public void set_focus() {
+            list.Focus();
         }
     }
 }

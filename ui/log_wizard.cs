@@ -80,11 +80,14 @@ namespace LogWizard
             // 1.0.56
             toggle_title,
 
-            // 1.0.56+ - not implemented yet (show/hide the tabs themselves) FIXME show the tab name in the "Message" column itself
+            // 1.0.77+ - (show/hide the tabs themselves) ; show the tab name in the "Message" column itself
             toggle_view_tabs,
 
-            // 1.0.70+ - not implemented yet - toggle the header (show/hide)
+            // 1.0.70+ - toggle the header (show/hide)
             toggle_view_header,
+
+            // 1.0.77 - show/hide details view - note: I've not implemented "details" view yet
+            toggle_details,
 
             // 1.0.67
             open_in_explorer,
@@ -93,8 +96,12 @@ namespace LogWizard
         }
 
         private class history {
+            public enum entry_type {
+                file = 0, shmem = 1
+            }
+
             // 0->file, 1->shmem
-            public int type;
+            public entry_type type;
             public string name = "";
             public string friendly_name = "";
             public string log_syntax  = "";
@@ -102,8 +109,8 @@ namespace LogWizard
             public string combo_name { get {
                 if ( friendly_name != "") return friendly_name;
                 switch ( type) {
-                    case 0: return name; // the name of the type
-                    case 1: return "Shared Memory: " + name;
+                    case entry_type.file: return name; // the name of the type
+                    case entry_type.shmem: return "Shared Memory: " + name;
                     default: Debug.Assert(false); break;
                 }
                 return "invalid";
@@ -117,7 +124,7 @@ namespace LogWizard
 
         private text_reader text_ = null;
         private log_line_parser log_parser_ = null;
-        private log_view fullLogCtrl = null;
+        private log_view full_log_ctrl = null;
 
         private int old_line_count_ = 0;
 
@@ -136,6 +143,8 @@ namespace LogWizard
         private msg_details_ctrl msg_details_ = null;
 
         private Control pane_to_focus_ = null;
+
+        private action_type last_action_ = action_type.none;
 
         private enum show_full_log_type {
             both, just_view, just_full_log
@@ -187,14 +196,14 @@ namespace LogWizard
 
             load();
 
-            fullLogCtrl = new log_view( this, "[All]");
-            fullLogCtrl.Dock = DockStyle.Fill;
-            filteredLeft.Panel2.Controls.Add(fullLogCtrl);
-            fullLogCtrl.show_name(false);
-            fullLogCtrl.show_view(true);
+            full_log_ctrl = new log_view( this, "[All]");
+            full_log_ctrl.Dock = DockStyle.Fill;
+            filteredLeft.Panel2.Controls.Add(full_log_ctrl);
+            full_log_ctrl.show_name = false;
+            full_log_ctrl.show_view(true);
 
             ignore_change = false;
-            hide_tabs(leftPane);
+            set_tabs_visible(leftPane, false);
 
             msg_details_ = new msg_details_ctrl(this);
             Controls.Add(msg_details_);
@@ -238,10 +247,24 @@ namespace LogWizard
             g.DrawString(viewsTab.TabPages[e.Index].Text, font, brush, bounds, new StringFormat(_StringFlags));
         }
 
-        private void hide_tabs(TabControl tab) {
+        // returns true if the tabs are visible
+        private bool are_tabs_visible(TabControl tab) {
+            return tab.Top >= 0;
+        }
+        private void set_tabs_visible(TabControl tab, bool show) {
             int extra = tab.Height - tab.TabPages[0].Height;
-            tab.Top -= extra;
-            tab.Height += extra;
+            bool visible_now = are_tabs_visible(tab);
+            if (show) {
+                if (!visible_now) {
+                    tab.Top += extra;
+                    tab.Height -= extra;                    
+                }
+            } else {
+                if (visible_now) {
+                    tab.Top -= extra;
+                    tab.Height += extra;
+                }
+            }
         }
 
         private ui_context cur_context() { 
@@ -261,12 +284,18 @@ namespace LogWizard
             int history_count = int.Parse( sett.get("history_count", "0"));
             for (int idx = 0; idx < history_count; ++idx) {
                 history hist = new history();
-                hist.type = int.Parse( sett.get("history." + idx + "type", "0"));
+                hist.type = (history.entry_type) int.Parse( sett.get("history." + idx + "type", "0"));
                 hist.name = sett.get("history." + idx + "name");
                 hist.friendly_name = sett.get("history." + idx + "friendly_name");
                 hist.log_syntax = sett.get("history." + idx + "log_syntax");
                 history_.Add( hist );
             }
+            history_ = history_.Where(h => {
+                if (h.type == history.entry_type.file)
+                    if( !File.Exists(h.name))
+                        return false;
+                return true;
+            }).ToList();
 
             int count = int.Parse( sett.get("context_count", "1"));
             for ( int i = 0; i < count ; ++i) {
@@ -277,6 +306,13 @@ namespace LogWizard
                 ctx.show_filter = sett.get("context." + i + ".show_filter", "1") != "0";
                 ctx.show_source = sett.get("context." + i + ".show_source", "1") != "0";
                 ctx.show_fulllog = sett.get("context." + i + ".show_fulllog", "0") != "0";
+
+                ctx.show_current_view = sett.get("context." + i + ".show_current_view", "1") != "0";
+                ctx.show_header = sett.get("context." + i + ".show_header", "1") != "0";
+                ctx.show_tabs = sett.get("context." + i + ".show_tabs", "1") != "0";
+                ctx.show_title = sett.get("context." + i + ".show_title", "1") != "0";
+                ctx.show_details = sett.get("context." + i + ".show_details", "0") != "0";
+                ctx.topmost = sett.get("context." + i + ".topmost", "0") != "0";
 
                 int view_count = int.Parse( sett.get("context." + i + ".view_count", "1"));
                 for ( int v = 0; v < view_count; ++v) {
@@ -300,7 +336,7 @@ namespace LogWizard
         private void save_contexts() {
             sett.set( "history_count", "" + history_.Count);
             for ( int idx = 0; idx < history_.Count; ++idx) {
-                sett.set("history." + idx + "type", "" + history_[idx].type);
+                sett.set("history." + idx + "type", "" + (int)history_[idx].type);
                 sett.set("history." + idx + "name", history_[idx].name);
                 sett.set("history." + idx + "friendly_name", history_[idx].friendly_name);
                 sett.set("history." + idx + "log_syntax", history_[idx].log_syntax);
@@ -314,6 +350,13 @@ namespace LogWizard
                 sett.set("context." + i + ".show_filter", (contexts_[i].show_filter ? "1" : "0"));
                 sett.set("context." + i + ".show_source", (contexts_[i].show_source ? "1" : "0"));
                 sett.set("context." + i + ".show_fulllog", (contexts_[i].show_fulllog ? "1" : "0"));
+
+                sett.set("context." + i + ".show_current_view", (contexts_[i].show_current_view ? "1" : "0"));
+                sett.set("context." + i + ".show_header", (contexts_[i].show_header ? "1" : "0"));
+                sett.set("context." + i + ".show_tabs", (contexts_[i].show_tabs? "1" : "0"));
+                sett.set("context." + i + ".show_title", (contexts_[i].show_title ? "1" : "0"));
+                sett.set("context." + i + ".show_details", (contexts_[i].show_details ? "1" : "0"));
+                sett.set("context." + i + ".topmost", (contexts_[i].topmost ? "1" : "0"));
 
                 int view_count = contexts_[i].views.Count;
                 if ( view_count == 1)
@@ -365,7 +408,7 @@ namespace LogWizard
                 for ( int i = 0; i < cur_context().views.Count; ++i) {
                     log_view lv = log_view_for_tab(i);
                     if ( lv != null)
-                        lv.show_name(show);
+                        lv.show_name = show;
                 }
             cur_context().show_source = show;
         }
@@ -402,27 +445,38 @@ namespace LogWizard
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(true);
                 cur_context().show_fulllog = true;
-                to_focus = fullLogCtrl != null ? fullLogCtrl.list : null;
+                cur_context().show_current_view = true;
+                to_focus = full_log_ctrl;
                 break;
             case show_full_log_type.just_view:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(false);
                 cur_context().show_fulllog = false;
-                to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex).list;
+                cur_context().show_current_view = true;
+                to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
                 break;
             case show_full_log_type.just_full_log:
                 show_filteredleft_pane1(false);
                 show_filteredleft_pane2(true);
-                to_focus = fullLogCtrl != null ? fullLogCtrl.list : null;
+                cur_context().show_fulllog = true;
+                cur_context().show_current_view = false;
+                to_focus = full_log_ctrl != null ? full_log_ctrl.list : null;
                 break;
             default:
                 Debug.Assert(false);
                 break;
             }
-            // this ends up causing another bug: -> when pressed ('l') in full-log, it's pressed twice
-            //if (to_focus != null)
-              //  to_focus.Focus();
             toggleFullLog.Text = show_full_log_type_to_str(show);
+
+            // can't focus now, it would sometimes get the hotkey ('L') to be sent twice, and we'd end up toggling twice with a single press
+            if ( to_focus != null)
+                util.postpone(() => {
+                    var lv = to_focus as log_view;
+                    if ( lv != null)
+                        lv.set_focus();
+                    else
+                        to_focus.Focus();
+                }, 100);
         }
 
         private show_full_log_type str_to_show_full_log_type(string s) {
@@ -511,10 +565,25 @@ namespace LogWizard
             util.bring_to_top(this);
         }
 
+        // to show/hide the "details" view - the details view contains all information in the message (that is not usually shown in the list)
+        private void show_details(bool show) {
+            // not implmented yet
+        }
+
+        private void toggle_details() {
+            bool show = !cur_context().show_details;
+            show_details( show);
+            cur_context().show_details = show;
+            save();
+        }
+
         private int extra_width_ = 0;
-        private void toggle_title() {
+        private void show_title(bool show) {
             bool shown = FormBorderStyle == FormBorderStyle.Sizable;
-            if (shown) {
+            if (show == shown)
+                return; // nothing to do
+
+            if (!show) {
                 extra_width_ = Width - RectangleToScreen(ClientRectangle).Width;
                 FormBorderStyle = FormBorderStyle.None;
                 main.Height += lower.Height;
@@ -528,6 +597,40 @@ namespace LogWizard
             }
 
             update_toggle_topmost_visibility();
+        }
+
+        private void toggle_title() {
+            bool shown = FormBorderStyle == FormBorderStyle.Sizable;
+            show_title(!shown);
+            cur_context().show_title = !shown;
+            save();
+        }
+
+        private void show_tabs(bool show) {
+            bool visible_now = show;
+            set_tabs_visible(viewsTab, visible_now);
+            // show the tab name in the "Message" column itself
+            foreach (var lv in all_log_views())
+                lv.show_name_in_header = !visible_now;
+        }
+
+        private void toggle_view_tabs() {
+            bool visible_now = !are_tabs_visible(viewsTab);
+            show_tabs(visible_now);
+            cur_context().show_tabs = visible_now;
+            save();
+        }
+
+        private void show_header(bool show) {
+            foreach (var lv in all_log_views_and_full_log())
+                lv.show_header = show;
+        }
+
+        private void toggle_view_header() {
+            bool show = !all_log_views()[0].show_header;
+            show_header( show);
+            cur_context().show_header = show;
+            save();
         }
 
         internal void update_toggle_topmost_visibility() {
@@ -600,8 +703,8 @@ namespace LogWizard
         }
 
         private void sync_full_log_colors() {
-            if (fullLogCtrl != null && cur_context().show_fulllog ) 
-                fullLogCtrl.update_colors(all_log_views(), viewsTab.SelectedIndex);
+            if (full_log_ctrl != null && cur_context().show_fulllog ) 
+                full_log_ctrl.update_colors(all_log_views(), viewsTab.SelectedIndex);
         }
 
         private void save_filters() {
@@ -632,7 +735,7 @@ namespace LogWizard
             log_view new_ = new log_view( this, viewsTab.TabPages[idx].Text );
             new_.Dock = DockStyle.Fill;
             tab.Controls.Add(new_);
-            new_.show_name(source_shown);
+            new_.show_name = source_shown;
             new_.set_bookmarks(bookmarks_.ToList());
             if ( log_parser_ != null)
                 new_.set_log( new log_line_reader(log_parser_));
@@ -650,7 +753,8 @@ namespace LogWizard
 
         private List<log_view> all_log_views_and_full_log() {
             var all = all_log_views();
-            all.Add(fullLogCtrl);
+            if ( full_log_ctrl != null)
+                all.Add(full_log_ctrl);
             return all;
         }
 
@@ -716,9 +820,28 @@ namespace LogWizard
 
         private void load_toggles() {
             var cur = cur_context();
+            if (!cur.has_views)
+                return;
+
             show_filters(cur.show_filter);
             show_source(cur.show_source);
-            show_full_log(cur.show_fulllog ? show_full_log_type.both : show_full_log_type.just_view);
+
+            if ( cur.show_fulllog && cur.show_current_view)
+                show_full_log(show_full_log_type.both);
+            else
+                show_full_log(cur.show_current_view ? show_full_log_type.just_view : show_full_log_type.just_full_log);
+
+            show_header(cur.show_header);
+            show_title(cur.show_title);
+            show_details(cur.show_details);
+
+            util.postpone( () => show_tabs(cur.show_tabs), 100);
+            /* not tested
+            if (cur.topmost) {
+                util.bring_to_topmost(this);
+                update_topmost_image();
+                update_toggle_topmost_visibility();                
+            }*/
         }
 
         private void load_global_settings() {
@@ -881,8 +1004,8 @@ namespace LogWizard
                         if (other != lv)
                             update_non_active_filter(idx);
                     }
-                    fullLogCtrl.refresh();
-                    fullLogCtrl.set_view_selected_view_name(lv.name);
+                    full_log_ctrl.refresh();
+                    full_log_ctrl.set_view_selected_view_name(lv.name);
                 }
 
                 update_msg_details(false);
@@ -974,16 +1097,24 @@ namespace LogWizard
             lv.set_filter(lvf);
         }
 
+        private void on_move_key_end() {
+            var sel = selected_view();
+            if (sel == full_log_ctrl)
+                return;
+
+            go_to_line(sel.sel_line_idx, sel);
+        }
+
         public void go_to_line(int line_idx, log_view from) {
-            if (cur_context().show_fulllog && from != fullLogCtrl && app.inst.sync_full_log_view) {
-                fullLogCtrl.go_to_line(line_idx, log_view.select_type.do_not_notify_parent);
+            if (cur_context().show_fulllog && from != full_log_ctrl && app.inst.sync_full_log_view) {
+                full_log_ctrl.go_to_line(line_idx, log_view.select_type.do_not_notify_parent);
                 sync_full_log_colors();
             }
 
-            bool keep_all_in_sync = (from != fullLogCtrl && app.inst.sync_all_views) ||
+            bool keep_all_in_sync = (from != full_log_ctrl && app.inst.sync_all_views) ||
                 // if the current log is full log, we will synchronize all views only if both checks are checked
                 // (note: this is always a bit time consuming as well)
-                (from == fullLogCtrl&& app.inst.sync_all_views && app.inst.sync_full_log_view);
+                (from == full_log_ctrl&& app.inst.sync_all_views && app.inst.sync_full_log_view);
             if ( keep_all_in_sync)
                 keep_logs_in_sync(from);
         }
@@ -1049,8 +1180,8 @@ namespace LogWizard
             }
 
             if (cur_context().show_fulllog) {
-                fullLogCtrl.refresh();
-                fullLogCtrl.set_view_selected_view_name(lv.name);
+                full_log_ctrl.refresh();
+                full_log_ctrl.set_view_selected_view_name(lv.name);
             }
 
             update_msg_details(false);
@@ -1117,7 +1248,7 @@ namespace LogWizard
         }
 
         private void on_new_log_parser() {
-            fullLogCtrl.set_log(new log_line_reader(log_parser_));
+            full_log_ctrl.set_log(new log_line_reader(log_parser_));
             for (int i = 0; i < viewsTab.TabCount; ++i) {
                 var lv = log_view_for_tab(i);
                 if ( lv != null)
@@ -1183,7 +1314,7 @@ namespace LogWizard
             log_parser_ = new log_line_parser(text_, logSyntaxCtrl.Text);
             on_new_log_parser();
 
-            fullLogCtrl.set_filter(new List<filter_row>());
+            full_log_ctrl.set_filter(new List<filter_row>());
 
             Text = reader_title() + " - Log Wizard " + version();
             if ( logHistory.SelectedIndex == last_sel)
@@ -1207,11 +1338,11 @@ namespace LogWizard
             history new_ = new history();
             if ( text_ is file_text_reader) {
                 new_.name = ((file_text_reader)text_).name;
-                new_.type = 0;
+                new_.type = history.entry_type.file;
             }
             else if ( text_ is shared_memory_text_reader) {
                 new_.name = ((shared_memory_text_reader)text_).name;
-                new_.type = 1;
+                new_.type = history.entry_type.shmem;
             }
             else
                 Debug.Assert(false);
@@ -1263,7 +1394,7 @@ namespace LogWizard
                 app.inst.set_log_file( history_[ logHistory.SelectedIndex].name );
             }
 
-            sourceTypeCtrl.SelectedIndex = history_[ logHistory.SelectedIndex].type;
+            sourceTypeCtrl.SelectedIndex = (int) history_[ logHistory.SelectedIndex].type;
             sourceNameCtrl.Text = history_[ logHistory.SelectedIndex].name;
             friendlyNameCtrl.Text = history_[ logHistory.SelectedIndex].friendly_name;
             logSyntaxCtrl.Text = history_[ logHistory.SelectedIndex].log_syntax;
@@ -1342,8 +1473,8 @@ namespace LogWizard
 
             load();
             viewsTab.SelectedIndex = 0;
-            if ( cur_context().show_fulllog && fullLogCtrl != null)
-                fullLogCtrl.refresh();
+            if ( cur_context().show_fulllog && full_log_ctrl != null)
+                full_log_ctrl.refresh();
             refresh_cur_log_view();
             save();
         }
@@ -1570,12 +1701,29 @@ namespace LogWizard
                 // note: some hotkeys are sent twice
                 bool handle_now = !is_key_sent_twice() || (handled_key_idx_ % 2 == 0);
                 if (handle_now) {
+                    last_action_ = action;
                     handle_action(action);
                     logger.Info("action by key - " + action); // + " from " + sender);
                 }
             }
-
         }
+        private void log_wizard_KeyUp(object sender, KeyEventArgs e) {
+            // see if any of the moving keys is still down
+            bool any_moving_key_still_down = win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || win32.IsKeyPushedDown(Keys.PageUp) ||
+                                        win32.IsKeyPushedDown(Keys.PageDown) || win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
+            if ( !any_moving_key_still_down)
+                switch (last_action_) {
+                case log_wizard.action_type.home:
+                case log_wizard.action_type.end:
+                case log_wizard.action_type.pageup:
+                case log_wizard.action_type.pagedown:
+                case log_wizard.action_type.arrow_up:
+                case log_wizard.action_type.arrow_down:
+                    on_move_key_end();
+                    break;
+                }
+        }
+
 
         private bool is_key_sent_twice() {
             return is_focus_on_full_log();
@@ -1592,6 +1740,7 @@ namespace LogWizard
             */
             c.PreviewKeyDown += LogWizard_PreviewKeyDown;
             c.KeyDown += LogWizard_KeyDown;
+            c.KeyUp += log_wizard_KeyUp;
 
             foreach ( Control sub in c.Controls)
                 handle_subcontrol_keys(sub);
@@ -1670,7 +1819,7 @@ namespace LogWizard
 
         private bool is_focus_on_full_log() {
             var focus_ctrl = focused_ctrl();
-            return focus_ctrl != null && focus_ctrl is VirtualObjectListView && focus_ctrl.Parent == fullLogCtrl;
+            return focus_ctrl != null && focus_ctrl is VirtualObjectListView && focus_ctrl.Parent == full_log_ctrl;
         }
 
         private bool is_focus_on_filter_panel() {
@@ -1778,6 +1927,8 @@ namespace LogWizard
                 return action_type.toggle_view_tabs;
             case "h":
                 return action_type.toggle_view_header;
+            case "d":
+                return action_type.toggle_details;
             case "ctrl-o":
                 return action_type.open_in_explorer;
             }
@@ -1962,10 +2113,13 @@ namespace LogWizard
                 break;
 
             case action_type.toggle_view_tabs:
-                // FIXME
+                toggle_view_tabs();
                 break;
             case action_type.toggle_view_header:
-                // FIXME
+                toggle_view_header();
+                break;
+            case action_type.toggle_details:
+                toggle_details();
                 break;
 
             case action_type.open_in_explorer:
@@ -1995,7 +2149,7 @@ namespace LogWizard
 
             // second pane - the full log (if shown)
             if( cur_context().show_fulllog)
-                panes.Add(fullLogCtrl.list);
+                panes.Add(full_log_ctrl.list);
 
             // third pane - the filters control (if visible)
             if ( cur_context().show_filter)
@@ -2014,7 +2168,7 @@ namespace LogWizard
                 return;
             foreach ( log_view lv in all_log_views_and_full_log())
                 if (lv != src) {
-                    if (cur_context().show_fulllog && lv == fullLogCtrl && app.inst.sync_full_log_view)
+                    if (cur_context().show_fulllog && lv == full_log_ctrl && app.inst.sync_full_log_view)
                         // in this case, we already synched the full log
                         continue;
 
@@ -2085,7 +2239,7 @@ namespace LogWizard
             if (sel < 0)
                 return null;
             if (is_focus_on_full_log())
-                return fullLogCtrl;
+                return full_log_ctrl;
 
             var lv = ensure_we_have_log_view_for_tab(sel);
             return lv;
@@ -2152,7 +2306,7 @@ namespace LogWizard
             for (int i = 0; i < viewsTab.TabCount; ++i)
                 // always send a copy of the list - this way, the views can see which bookmarks are new/deleted
                 log_view_for_tab(i).set_bookmarks(bookmarks_.ToList());
-            fullLogCtrl.set_bookmarks(bookmarks_.ToList());
+            full_log_ctrl.set_bookmarks(bookmarks_.ToList());
         }
 
         private void save_bookmarks() {
@@ -2325,11 +2479,6 @@ namespace LogWizard
         private void toggleTopmost_Click(object sender, EventArgs e) {
             TopMost = !TopMost;
             update_topmost_image();
-        }
-
-
-        private void log_wizard_Load(object sender, EventArgs e) {
-
         }
 
         private void log_wizard_SizeChanged(object sender, EventArgs e) {

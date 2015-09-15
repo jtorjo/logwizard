@@ -51,7 +51,7 @@
             // labelName
             // 
             this.labelName.AutoSize = true;
-            this.labelName.Location = new System.Drawing.Point(3, 9);
+            this.labelName.Location = new System.Drawing.Point(3, 3);
             this.labelName.Name = "labelName";
             this.labelName.Size = new System.Drawing.Size(30, 13);
             this.labelName.TabIndex = 1;
@@ -60,7 +60,7 @@
             // 
             // viewName
             // 
-            this.viewName.Location = new System.Drawing.Point(51, 6);
+            this.viewName.Location = new System.Drawing.Point(51, 0);
             this.viewName.Name = "viewName";
             this.viewName.Size = new System.Drawing.Size(265, 20);
             this.viewName.TabIndex = 2;
@@ -99,12 +99,12 @@
             this.msgCol});
             this.list.FullRowSelect = true;
             this.list.HideSelection = false;
-            this.list.Location = new System.Drawing.Point(2, 30);
+            this.list.Location = new System.Drawing.Point(2, 22);
             this.list.Name = "list";
             this.list.OwnerDraw = true;
             this.list.ShowGroups = false;
             this.list.ShowItemToolTips = true;
-            this.list.Size = new System.Drawing.Size(693, 393);
+            this.list.Size = new System.Drawing.Size(693, 404);
             this.list.TabIndex = 3;
             this.list.UseCompatibleStateImageBehavior = false;
             this.list.View = System.Windows.Forms.View.Details;

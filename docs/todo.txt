@@ -1,27 +1,21 @@
-- toggle 'v' - show/hide view + 'h' show/hide header
-  - global - they apply to all views
 
-- synchronizing with full-log/other logs -> if key is down (up/down/etc.) -> don't sync yet TOTHINK (basically so that we only synchronize when the user has selected the final row)
-
-- history - deleted files - ignore them
-
-- optimization: filter -> when a filter row is modified / added / or deleted -> I should check exactly that -> so that when updating rows -> reuse what has not been modified
-
-- find - case-insensitive + full words + regex
-
-- allow selecting several rows
-
-- history: for each file -> remember the last view (maybe the row(s) as well?, toggles?)
-
-- bug: move up/down -> sometimes it does not update the "Found" column - also, sometimes it's not updated at all
 
 - save sets of location/sizes (ctrl-shift-Number -> save, ctrl-Number -> use (toggle)). if full screen, we should just note that
   also, i should save existing location - however if it matches an already saved location, don't save
   perhaps save a few more things -> like whether i have title toggled/and am topmost? TOTHINK, like - save all toggles
+   ---> see about the issue below
+   --- need to save toggles + location (toggles are saved as strings -> toggles - saving only those that are turned off)
+   ---- i should see whether we're in a custom-saved location (if that is the case, the toggles and everything are NOT saved into the current context)
+   ----- maybe i should also save the current view
+- history: for each file -> remember the last view (maybe the row(s) as well?, toggles?)
+
+- optimization: filter -> when a filter row is modified / added / or deleted -> I should check exactly that -> so that when updating rows -> reuse what has not been modified
+  - bug: move up/down -> sometimes it does not update the "Found" column - also, sometimes it's not updated at all (we should care when filter moved up/down/top/bottom)
+    (whe should i recompute "Found" column?)
 
 - option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?)
 
-
+- home/end/esc/' '/enter - should work correctly when history dropdown shown
 
 
 
@@ -114,7 +108,7 @@
 
 - level column -> allow transforming it into pictures
 
-
+- article: testing with logwizard (command line?) + customer support with logwizard
 
 
 
