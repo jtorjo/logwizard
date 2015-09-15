@@ -4,8 +4,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace LogWizard.ui {
@@ -70,6 +73,28 @@ namespace LogWizard.ui {
 
         private void bringToTopOnRestart_CheckedChanged(object sender, EventArgs e) {
             makeTopmostOnRestart.Enabled = bringToTopOnRestart.Checked;
+        }
+
+        private void reset_Click(object sender, EventArgs e) {
+            bool want_reset = MessageBox.Show("Do you want to reset ALL the Settings to their Defaults?", "LogWizard", MessageBoxButtons.YesNo) == DialogResult.Yes;
+            if (!want_reset)
+                return;
+
+            foreach (var lw in log_wizard.forms) {
+                lw.stop_saving();
+                lw.Visible = false;
+            }
+
+            string dir = Program.local_dir();
+            try {
+                File.Copy(dir + "\\logwizard.txt", dir + "\\logwizard_user.txt", true);
+            } catch {
+            }
+
+            string app_name = Assembly.GetExecutingAssembly().Location;
+            Application.Exit();
+            Thread.Sleep(500);
+            Process.Start(app_name);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace LogWizard
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static List<log_wizard> forms = new List<log_wizard>();
+        private static List<log_wizard> forms_ = new List<log_wizard>();
 
         public enum action_type {
             search, search_prev, search_next, clear_search,
@@ -91,6 +91,9 @@ namespace LogWizard
 
             // 1.0.67
             open_in_explorer,
+
+            // 1.0.77+ default behavior does not work correctly
+            shift_arrow_up, shift_arrow_down,
 
             none,
         }
@@ -175,7 +178,7 @@ namespace LogWizard
         public log_wizard()
         {
             InitializeComponent();
-            forms.Add(this);
+            forms_.Add(this);
             Text += " " + version();
             sourceTypeCtrl.SelectedIndex = 0;
             bool first_time = contexts_.Count == 0;
@@ -209,7 +212,7 @@ namespace LogWizard
             Controls.Add(msg_details_);
             handle_subcontrol_keys(this);
 
-            bool open_cmd_line_file = forms.Count == 1 && Program.open_file_name != null;
+            bool open_cmd_line_file = forms_.Count == 1 && Program.open_file_name != null;
             if ( history_.Count > 0 && !open_cmd_line_file) 
                 logHistory.SelectedIndex = history_.Count - 1;
             if (open_cmd_line_file) 
@@ -460,7 +463,7 @@ namespace LogWizard
                 show_filteredleft_pane2(true);
                 cur_context().show_fulllog = true;
                 cur_context().show_current_view = false;
-                to_focus = full_log_ctrl != null ? full_log_ctrl.list : null;
+                to_focus = full_log_ctrl;
                 break;
             default:
                 Debug.Assert(false);
@@ -674,8 +677,8 @@ namespace LogWizard
 
         private void LogNinja_FormClosed(object sender, FormClosedEventArgs e)
         {
-            forms.Remove(this);
-            if ( forms.Count == 0)
+            forms_.Remove(this);
+            if ( forms_.Count == 0)
                 Application.Exit();
         }
 
@@ -786,6 +789,10 @@ namespace LogWizard
                 r.Width -= offset_x;
                 return r;
             }
+        }
+
+        public static List<log_wizard> forms {
+            get { return forms_; }
         }
 
         private void load_tabs() {
@@ -916,7 +923,9 @@ namespace LogWizard
             load_global_settings();
         }
 
-
+        public void stop_saving() {
+            ignore_change = true;
+        }
 
         private void save() {
             if ( ignore_change)
@@ -933,7 +942,7 @@ namespace LogWizard
                 return;
 
             Program.sett.save();
-            foreach ( log_wizard lw in forms)
+            foreach ( log_wizard lw in forms_)
                 if ( lw != this)
                     lw.load();
         }
@@ -1888,6 +1897,10 @@ namespace LogWizard
                 return action_type.arrow_up;
             case "down":
                 return action_type.arrow_down;
+            case "shift-up":
+                return action_type.shift_arrow_up;
+            case "shift-down":
+                return action_type.shift_arrow_down;
             case "f":
                 return action_type.toggle_filters;
             case "s":
@@ -1994,6 +2007,8 @@ namespace LogWizard
             case action_type.pagedown:
             case action_type.arrow_up:
             case action_type.arrow_down:
+            case action_type.shift_arrow_down:
+            case action_type.shift_arrow_up:
                 if ( lv != null)
                     lv.on_action(action);
                 break;

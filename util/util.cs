@@ -553,6 +553,9 @@ namespace LogWizard {
             }
         }
 
+        public static void restart_app() {
+            
+        }
 
 
 

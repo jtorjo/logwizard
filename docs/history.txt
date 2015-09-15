@@ -1,14 +1,13 @@
-
-- history - deleted files - ignore them
-- synchronizing with full-log/other logs -> if key is down (up/down/etc.) -> don't sync yet TOTHINK (basically so that we only synchronize when the user has selected the final row)
-
-- allow selecting several rows
 - find - case-insensitive + full words + regex (by default, auto-detect -> [],(),any\ -> regex)
 
+
+
+1.0.79
+- allow selecting several rows
 - allow resetting the default settings (for Denise)
 
 
-1.0.77a
+1.0.77
 - toggle 'v' - show/hide view + 'h' show/hide header
   - global - they apply to all views
 - show_full_log() -> split into two things -> show_full_log / show_current_view (both can't be off at the same time)

@@ -38,17 +38,21 @@
             this.label3 = new System.Windows.Forms.Label();
             this.toggleTopmost = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.syncColorsNone = new System.Windows.Forms.RadioButton();
-            this.syncColorsCurView = new System.Windows.Forms.RadioButton();
-            this.syncColorsAllViews = new System.Windows.Forms.RadioButton();
-            this.syncColorsGrayOutNonActive = new System.Windows.Forms.CheckBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.syncColorsGrayOutNonActive = new System.Windows.Forms.CheckBox();
+            this.syncColorsAllViews = new System.Windows.Forms.RadioButton();
+            this.syncColorsCurView = new System.Windows.Forms.RadioButton();
+            this.syncColorsNone = new System.Windows.Forms.RadioButton();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.reset = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -68,7 +72,7 @@
             this.groupBox1.Controls.Add(this.viewLineCount);
             this.groupBox1.Location = new System.Drawing.Point(12, 208);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(582, 122);
+            this.groupBox1.Size = new System.Drawing.Size(380, 122);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Views";
@@ -114,7 +118,7 @@
             // 
             // close
             // 
-            this.close.Location = new System.Drawing.Point(519, 486);
+            this.close.Location = new System.Drawing.Point(565, 488);
             this.close.Name = "close";
             this.close.Size = new System.Drawing.Size(75, 25);
             this.close.TabIndex = 3;
@@ -131,7 +135,7 @@
             this.groupBox2.Controls.Add(this.toggleTopmost);
             this.groupBox2.Location = new System.Drawing.Point(12, 41);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(579, 161);
+            this.groupBox2.Size = new System.Drawing.Size(628, 161);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "General";
@@ -203,53 +207,39 @@
             this.groupBox3.Controls.Add(this.syncColorsNone);
             this.groupBox3.Location = new System.Drawing.Point(12, 336);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(582, 146);
+            this.groupBox3.Size = new System.Drawing.Size(628, 146);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Synchronize Colors in Full Log";
             // 
-            // syncColorsNone
+            // label8
             // 
-            this.syncColorsNone.AutoSize = true;
-            this.syncColorsNone.Location = new System.Drawing.Point(19, 23);
-            this.syncColorsNone.Name = "syncColorsNone";
-            this.syncColorsNone.Size = new System.Drawing.Size(60, 21);
-            this.syncColorsNone.TabIndex = 0;
-            this.syncColorsNone.TabStop = true;
-            this.syncColorsNone.Text = "None";
-            this.syncColorsNone.UseVisualStyleBackColor = true;
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(218, 84);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(334, 52);
+            this.label8.TabIndex = 7;
+            this.label8.Text = resources.GetString("label8.Text");
             // 
-            // syncColorsCurView
+            // label7
             // 
-            this.syncColorsCurView.AutoSize = true;
-            this.syncColorsCurView.Location = new System.Drawing.Point(19, 47);
-            this.syncColorsCurView.Name = "syncColorsCurView";
-            this.syncColorsCurView.Size = new System.Drawing.Size(129, 21);
-            this.syncColorsCurView.TabIndex = 1;
-            this.syncColorsCurView.TabStop = true;
-            this.syncColorsCurView.Text = "With Active View";
-            this.syncColorsCurView.UseVisualStyleBackColor = true;
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(218, 23);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(162, 13);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "Full Log Lines are shown in black";
             // 
-            // syncColorsAllViews
+            // label6
             // 
-            this.syncColorsAllViews.AutoSize = true;
-            this.syncColorsAllViews.Location = new System.Drawing.Point(19, 79);
-            this.syncColorsAllViews.Name = "syncColorsAllViews";
-            this.syncColorsAllViews.Size = new System.Drawing.Size(113, 21);
-            this.syncColorsAllViews.TabIndex = 2;
-            this.syncColorsAllViews.TabStop = true;
-            this.syncColorsAllViews.Text = "With All Views";
-            this.syncColorsAllViews.UseVisualStyleBackColor = true;
-            // 
-            // syncColorsGrayOutNonActive
-            // 
-            this.syncColorsGrayOutNonActive.AutoSize = true;
-            this.syncColorsGrayOutNonActive.Location = new System.Drawing.Point(41, 101);
-            this.syncColorsGrayOutNonActive.Name = "syncColorsGrayOutNonActive";
-            this.syncColorsGrayOutNonActive.Size = new System.Drawing.Size(124, 21);
-            this.syncColorsGrayOutNonActive.TabIndex = 3;
-            this.syncColorsGrayOutNonActive.Text = "Gray out colors";
-            this.syncColorsGrayOutNonActive.UseVisualStyleBackColor = true;
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(61, 121);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(146, 17);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "from non Active Views";
             // 
             // label5
             // 
@@ -262,40 +252,86 @@
             this.label5.Text = "Lines from the Active View are shown in the same color in the Full Log\r\nLines tha" +
     "t are not in the Active View, are shown in dark gray.";
             // 
-            // label6
+            // syncColorsGrayOutNonActive
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(61, 121);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(146, 17);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "from non Active Views";
+            this.syncColorsGrayOutNonActive.AutoSize = true;
+            this.syncColorsGrayOutNonActive.Location = new System.Drawing.Point(41, 101);
+            this.syncColorsGrayOutNonActive.Name = "syncColorsGrayOutNonActive";
+            this.syncColorsGrayOutNonActive.Size = new System.Drawing.Size(124, 21);
+            this.syncColorsGrayOutNonActive.TabIndex = 3;
+            this.syncColorsGrayOutNonActive.Text = "Gray out colors";
+            this.syncColorsGrayOutNonActive.UseVisualStyleBackColor = true;
             // 
-            // label7
+            // syncColorsAllViews
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(218, 23);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(162, 13);
-            this.label7.TabIndex = 6;
-            this.label7.Text = "Full Log Lines are shown in black";
+            this.syncColorsAllViews.AutoSize = true;
+            this.syncColorsAllViews.Location = new System.Drawing.Point(19, 79);
+            this.syncColorsAllViews.Name = "syncColorsAllViews";
+            this.syncColorsAllViews.Size = new System.Drawing.Size(113, 21);
+            this.syncColorsAllViews.TabIndex = 2;
+            this.syncColorsAllViews.TabStop = true;
+            this.syncColorsAllViews.Text = "With All Views";
+            this.syncColorsAllViews.UseVisualStyleBackColor = true;
             // 
-            // label8
+            // syncColorsCurView
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(218, 84);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(334, 52);
-            this.label8.TabIndex = 7;
-            this.label8.Text = resources.GetString("label8.Text");
+            this.syncColorsCurView.AutoSize = true;
+            this.syncColorsCurView.Location = new System.Drawing.Point(19, 47);
+            this.syncColorsCurView.Name = "syncColorsCurView";
+            this.syncColorsCurView.Size = new System.Drawing.Size(129, 21);
+            this.syncColorsCurView.TabIndex = 1;
+            this.syncColorsCurView.TabStop = true;
+            this.syncColorsCurView.Text = "With Active View";
+            this.syncColorsCurView.UseVisualStyleBackColor = true;
+            // 
+            // syncColorsNone
+            // 
+            this.syncColorsNone.AutoSize = true;
+            this.syncColorsNone.Location = new System.Drawing.Point(19, 23);
+            this.syncColorsNone.Name = "syncColorsNone";
+            this.syncColorsNone.Size = new System.Drawing.Size(60, 21);
+            this.syncColorsNone.TabIndex = 0;
+            this.syncColorsNone.TabStop = true;
+            this.syncColorsNone.Text = "None";
+            this.syncColorsNone.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.reset);
+            this.groupBox4.Controls.Add(this.label9);
+            this.groupBox4.Location = new System.Drawing.Point(398, 208);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(242, 122);
+            this.groupBox4.TabIndex = 6;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Reset All Settings";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 25);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(229, 51);
+            this.label9.TabIndex = 0;
+            this.label9.Text = "Resets all settings to their defaults.\r\nYou will lose your history,\r\nand LogWizar" +
+    "d will restart.";
+            // 
+            // reset
+            // 
+            this.reset.Location = new System.Drawing.Point(153, 87);
+            this.reset.Name = "reset";
+            this.reset.Size = new System.Drawing.Size(75, 25);
+            this.reset.TabIndex = 1;
+            this.reset.Text = "Reset";
+            this.reset.UseVisualStyleBackColor = true;
+            this.reset.Click += new System.EventHandler(this.reset_Click);
             // 
             // settings_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(606, 516);
+            this.ClientSize = new System.Drawing.Size(649, 523);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.close);
@@ -313,6 +349,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -342,6 +380,9 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox syncColorsGrayOutNonActive;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button reset;
+        private System.Windows.Forms.Label label9;
 
     }
 }

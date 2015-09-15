@@ -46,7 +46,7 @@ namespace LogWizard
             return path;
         }
 
-        private static string local_dir() {
+        public static string local_dir() {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LogWizard\\";
             return path;
         }

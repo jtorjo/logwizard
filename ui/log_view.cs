@@ -273,19 +273,37 @@ namespace LogWizard
             }
         }
 
+        // 1.0.77+ - care about multiple selection - returns the first sel
+        public int sel_row_idx {
+            get {
+                int sel = list.SelectedIndex;
+                if (sel >= 0)
+                    return sel;
+                
+                var multi = list.SelectedIndices;
+                if ( multi != null)
+                    if (multi.Count > 0)
+                        return multi[0];
+
+                return -1;
+            }
+        }
+
         // returns the line index of the current selection
         public int sel_line_idx {
             get {
-                int sel = list.SelectedIndex;
+                int sel = sel_row_idx;
                 if (sel >= 0)
                     return (list.GetItem(sel).RowObject as item).match.line_idx;
                 return -1;
             }
         }
 
+
+
         public string sel_line_text {
             get {
-                int sel = list.SelectedIndex;
+                int sel = sel_row_idx;
                 if (sel >= 0)
                     return (list.GetItem(sel).RowObject as item).match.line.part(info_type.msg);
                 return "";
@@ -293,7 +311,7 @@ namespace LogWizard
         }
         public Rectangle sel_rect {
             get {
-                int sel = list.SelectedIndex;
+                int sel = sel_row_idx;
                 if (sel >= 0) {
                     var r = list.RectangleToScreen(list.GetItem(sel).GetSubItemBounds(msgCol.Index));
                     if (r.Height == 0) {
@@ -309,7 +327,7 @@ namespace LogWizard
         // fg and bg
         public Tuple<Color,Color> sel_line_colors {
             get {
-                int sel = list.SelectedIndex;
+                int sel = sel_row_idx;
                 if (sel >= 0) {
                     var i = list.GetItem(sel).RowObject as item;
                     return new Tuple<Color, Color>(i.fg(this), i.bg(this));
@@ -452,13 +470,15 @@ namespace LogWizard
             case log_wizard.action_type.pagedown:
             case log_wizard.action_type.arrow_up:
             case log_wizard.action_type.arrow_down:
+            case log_wizard.action_type.shift_arrow_down:
+            case log_wizard.action_type.shift_arrow_up:
                 break;
             default:
                 Debug.Assert(false);
                 return;
             }
 
-            int sel = list.SelectedIndex;
+            int sel = sel_row_idx;
             if (sel < 0 && list.GetItemCount() > 0)
                 sel = 0; // assume we start from the top
 
@@ -503,19 +523,51 @@ namespace LogWizard
                 if ( sel < list.GetItemCount() - 1)
                     ++sel;
                 break;
+
+            // default list behavior is wrong, we need to override
+            case log_wizard.action_type.shift_arrow_up:                
+                if (sel > 0) {
+                    int existing = selected_indices_array().Min();
+                    if (existing > 0) {
+                        list.SelectedIndices.Add(existing - 1);
+                        list.EnsureVisible(existing);
+                    }
+                    return;
+                }
+                break;
+            // default list behavior is wrong, we need to override
+            case log_wizard.action_type.shift_arrow_down:
+                if (sel < list.GetItemCount() - 1) {
+                    int existing = selected_indices_array().Max();
+                    if (existing < list.GetItemCount() - 1) {
+                        list.SelectedIndices.Add(existing + 1);
+                        list.EnsureVisible(existing);                        
+                    }
+                    return;
+                }
+                break;
+
             }
-            if (sel >= 0 && list.SelectedIndex != sel) {
+            if (sel >= 0 && sel_row_idx != sel) {
                 select_idx( sel, select_type.notify_parent);
                 list.EnsureVisible(sel);
             }
         }
 
+        private List<int> selected_indices_array() {
+            List<int> sel = new List<int>();
+            if ( list.SelectedIndices != null)
+                for ( int i = 0; i < list.SelectedIndices.Count; ++i)
+                    sel.Add(list.SelectedIndices[i]);
+            return sel;
+        } 
+
         private bool needs_scroll_to_last() {
             if (list.GetItemCount() < 1)
                 return true;
-            if (list.SelectedIndex < 0)
+            if (sel_row_idx < 0)
                 return true;
-            if (list.SelectedIndex == list.GetItemCount() - 1)
+            if (sel_row_idx == list.GetItemCount() - 1)
                 return true;
             return false;
         }
@@ -618,7 +670,7 @@ namespace LogWizard
         public void update_x_of_y() {
             compute_title_fonts();
 
-            string x_idx =  list.SelectedIndex >= 0 ? "" + (list.SelectedIndex+1) : "";
+            string x_idx =  sel_row_idx >= 0 ? "" + (sel_row_idx+1) : "";
             string x_line =  sel_line_idx >= 0 ? "" + (sel_line_idx + 1) : "";
             string y = "" + list.GetItemCount();
             string header = (app.inst.show_view_line_count || app.inst.show_view_selected_line || app.inst.show_view_selected_index ? (x_idx != "" ? x_idx + " of " + y : "(" + y + ")") : "");
@@ -651,7 +703,7 @@ namespace LogWizard
 
         private void force_select_first_item() {
             if ( list.GetItemCount() > 0)
-                if (list.SelectedIndex < 0) {
+                if (sel_row_idx < 0) {
                     list.SelectedIndex = 0;
                     logger.Debug("[view] forcing sel zero for " + name);
                 }
@@ -958,7 +1010,7 @@ namespace LogWizard
         private select_type select_nofify_ = select_type.notify_parent;
 
         private void select_idx(int idx, select_type notify) {
-            if (list.SelectedIndex == idx)
+            if (sel_row_idx == idx)
                 return; // already selected
 
             // 1.0.67+ - there's a bug in objectlistview - if we're not the current view, we can't really select a row
@@ -976,7 +1028,7 @@ namespace LogWizard
         }
 
         private void list_SelectedIndexChanged(object sender, EventArgs e) {
-            int sel = list.SelectedIndex;
+            int sel = sel_row_idx;
             if (sel < 0)
                 return;
 
@@ -1032,7 +1084,7 @@ namespace LogWizard
         public void offset_closest_time(int time_ms, bool forward) {
             if (list.GetItemCount() < 1)
                 return;
-            int sel = list.SelectedIndex;
+            int sel = sel_row_idx;
             if (sel < 0)
                 sel = 0; // just in case we haven't selected anything - start from beginning
             var i = (list.GetItem(sel).RowObject as item);
@@ -1196,8 +1248,8 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
             int found = -1;
-            if (list.SelectedIndex >= 0)
-                for (int idx = list.SelectedIndex + 1; idx < list.GetItemCount() && found < 0; ++idx) {
+            if (sel_row_idx >= 0)
+                for (int idx = sel_row_idx + 1; idx < list.GetItemCount() && found < 0; ++idx) {
                     item i = list.GetItem(idx).RowObject as item;
                     if (i.match.line.part(info_type.msg).Contains(txt))
                         found = idx;
@@ -1213,8 +1265,8 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
             int found = -1;
-            if (list.SelectedIndex > 0)
-                for (int idx = list.SelectedIndex - 1; idx >= 0 && found < 0; --idx) {
+            if (sel_row_idx > 0)
+                for (int idx = sel_row_idx - 1; idx >= 0 && found < 0; --idx) {
                     item i = list.GetItem(idx).RowObject as item;
                     if (i.match.line.part(info_type.msg).Contains(txt))
                         found = idx;
@@ -1250,8 +1302,8 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
             int found = -1;
-            if (list.SelectedIndex >= 0)
-                for (int idx = list.SelectedIndex + 1; idx < list.GetItemCount() && found < 0; ++idx) {
+            if (sel_row_idx >= 0)
+                for (int idx = sel_row_idx + 1; idx < list.GetItemCount() && found < 0; ++idx) {
                     item i = list.GetItem(idx).RowObject as item;
                     bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                     if (is_match)
@@ -1268,8 +1320,8 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
             int found = -1;
-            if (list.SelectedIndex > 0)
-                for (int idx = list.SelectedIndex - 1; idx >= 0 && found < 0; --idx) {
+            if (sel_row_idx > 0)
+                for (int idx = sel_row_idx - 1; idx >= 0 && found < 0; --idx) {
                     item i = list.GetItem(idx).RowObject as item;
                     bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                     if (is_match)
@@ -1283,23 +1335,39 @@ namespace LogWizard
         }
 
         public void copy_to_clipboard() {
-            int sel = list.SelectedIndex;
-            if (sel < 0)
+            var sel = selected_indices_array();
+            if (sel.Count < 1)
                 return;
-            item i = list.GetItem(sel).RowObject as item;
+
+            string full = "";
+            foreach (int row in sel) {
+                item i = list.GetItem(row).RowObject as item;
+                if (full != "")
+                    full += "\r\n";
+                full += i.match.line.part(info_type.msg);
+            }
+
             try {
-                Clipboard.SetText(i.match.line.part(info_type.msg));
+                Clipboard.SetText(full);
             } catch {
             }
         }
 
         public void copy_full_line_to_clipboard() {
-            int sel = list.SelectedIndex;
-            if (sel < 0)
+            var sel = selected_indices_array();
+            if (sel.Count < 1)
                 return;
-            item i = list.GetItem(sel).RowObject as item;
+
+            string full = "";
+            foreach (int row in sel) {
+                item i = list.GetItem(row).RowObject as item;
+                if (full != "")
+                    full += "\r\n";
+                full += i.match.line.full_line;
+            }
+
             try {
-                Clipboard.SetText(i.match.line.full_line);
+                Clipboard.SetText(full);
             } catch {
             }
         }
@@ -1325,12 +1393,12 @@ namespace LogWizard
                     list.RefreshItem(row);
                 }
             }
-            if (list.SelectedIndex >= 0)
-                update_line_highlight_color(list.SelectedIndex);
+            if (sel_row_idx >= 0)
+                update_line_highlight_color(sel_row_idx);
         }
 
         public void next_bookmark() {
-            int start = list.SelectedIndex >= 0 ? sel_line_idx + 1 : 0;
+            int start = sel_row_idx >= 0 ? sel_line_idx + 1 : 0;
             int mark = bookmarks_.FirstOrDefault(line => line >= start && row_by_line_idx(line) != null);
             if (mark == 0)
                 if (mark < start || !bookmarks_.Contains(mark))
@@ -1349,7 +1417,7 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
 
-            int start = list.SelectedIndex >= 0 ? sel_line_idx - 1 : (list.GetItem(list.SelectedIndex).RowObject as item).match.line_idx;
+            int start = sel_row_idx >= 0 ? sel_line_idx - 1 : (list.GetItem(sel_row_idx).RowObject as item).match.line_idx;
             int mark = bookmarks_.LastOrDefault(line => line <= start && row_by_line_idx(line) != null);
             if (mark == 0)
                 if (!bookmarks_.Contains(mark))
@@ -1398,7 +1466,7 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
 
-            int sel = list.SelectedIndex;
+            int sel = sel_row_idx;
             if (sel < 0)
                 sel = 0; // assume we start from the top
 
@@ -1414,7 +1482,7 @@ namespace LogWizard
             if (list.GetItemCount() < 1)
                 return;
 
-            int sel = list.SelectedIndex;
+            int sel = sel_row_idx;
             if (sel < 0)
                 sel = 0; // assume we start from the top
 
