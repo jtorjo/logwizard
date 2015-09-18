@@ -91,10 +91,7 @@ namespace LogWizard.ui {
             } catch {
             }
 
-            string app_name = Assembly.GetExecutingAssembly().Location;
-            Application.Exit();
-            Thread.Sleep(500);
-            Process.Start(app_name);
+            util.restart_app();
         }
     }
 }

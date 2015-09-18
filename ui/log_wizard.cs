@@ -89,6 +89,8 @@ namespace LogWizard
             // 1.0.77 - show/hide details view - note: I've not implemented "details" view yet
             toggle_details,
 
+            toggle_status,
+
             // 1.0.67
             open_in_explorer,
 
@@ -148,6 +150,9 @@ namespace LogWizard
         private Control pane_to_focus_ = null;
 
         private action_type last_action_ = action_type.none;
+
+        // the status(es) to be shown
+        private List< Tuple<string,DateTime>> statuses_ = new List<Tuple<string, DateTime>>(); 
 
         private enum show_full_log_type {
             both, just_view, just_full_log
@@ -315,6 +320,7 @@ namespace LogWizard
                 ctx.show_tabs = sett.get("context." + i + ".show_tabs", "1") != "0";
                 ctx.show_title = sett.get("context." + i + ".show_title", "1") != "0";
                 ctx.show_details = sett.get("context." + i + ".show_details", "0") != "0";
+                ctx.show_status = sett.get("context." + i + ".show_status", "1") != "0";
                 ctx.topmost = sett.get("context." + i + ".topmost", "0") != "0";
 
                 int view_count = int.Parse( sett.get("context." + i + ".view_count", "1"));
@@ -356,6 +362,7 @@ namespace LogWizard
 
                 sett.set("context." + i + ".show_current_view", (contexts_[i].show_current_view ? "1" : "0"));
                 sett.set("context." + i + ".show_header", (contexts_[i].show_header ? "1" : "0"));
+                sett.set("context." + i + ".show_status", (contexts_[i].show_status ? "1" : "0"));
                 sett.set("context." + i + ".show_tabs", (contexts_[i].show_tabs? "1" : "0"));
                 sett.set("context." + i + ".show_title", (contexts_[i].show_title ? "1" : "0"));
                 sett.set("context." + i + ".show_details", (contexts_[i].show_details ? "1" : "0"));
@@ -579,6 +586,36 @@ namespace LogWizard
             cur_context().show_details = show;
             save();
         }
+
+        private int status_height_ = 0;
+        private void show_status(bool show) {
+            bool shown = status.Height > 1;
+            if (show == shown)
+                return;
+
+            if (show) {
+                Debug.Assert(status_height_ > 0);
+                int height = status_height_ - 1;
+                main.Height -= height;
+                lower.Top -= height;
+                status.Top -= height;
+                status.Height = status_height_;
+            } else {
+                status_height_ = status.Height;
+                status.Height = 1;
+                int height = status_height_ - 1;
+                main.Height += height;
+                lower.Top += height;
+                status.Top += height;
+            }
+        }
+
+        private void toggle_status() {
+            bool shown = status.Height > 1;
+            show_status(!shown);
+            cur_context().show_status = !shown;
+        }
+
 
         private int extra_width_ = 0;
         private void show_title(bool show) {
@@ -841,6 +878,7 @@ namespace LogWizard
             show_header(cur.show_header);
             show_title(cur.show_title);
             show_details(cur.show_details);
+            show_status(cur.show_status);
 
             util.postpone( () => show_tabs(cur.show_tabs), 100);
             /* not tested
@@ -989,6 +1027,7 @@ namespace LogWizard
                 return;
             save();
             refresh_cur_log_view();
+            update_status_text();
         }
 
         private void refresh_cur_log_view() {
@@ -1300,6 +1339,8 @@ namespace LogWizard
 
         private int last_sel = -1;
         private void on_new_log() {
+            string size = text_ is file_text_reader ? " (" + new FileInfo((text_ as file_text_reader).name).Length + " bytes)" : "";
+            set_status_forever("Log: " + text_.name + size);
             dropHere.Visible = false;
 
             // by default - try to find the syntax by reading the header info
@@ -1901,17 +1942,14 @@ namespace LogWizard
                 return action_type.shift_arrow_up;
             case "shift-down":
                 return action_type.shift_arrow_down;
-            case "f":
-                return action_type.toggle_filters;
-            case "s":
-                return action_type.toggle_source;
-            case "l":
-                return action_type.toggle_fulllog;
-
             case "tab":
                 return action_type.pane_next;
             case "shift-tab":
                 return action_type.pane_prev;
+            case "add":
+                return action_type.increase_font;
+            case "subtract":
+                return action_type.decrease_font;
 
             case "ctrl-h":
                 return action_type.toggle_history_dropdown;
@@ -1919,13 +1957,6 @@ namespace LogWizard
                 return action_type.new_log_wizard;
             case "ctrl-p":
                 return action_type.show_preferences;
-
-            case "add":
-                return action_type.increase_font;
-            case "subtract":
-                return action_type.decrease_font;
-            case "m":
-                return action_type.toggle_show_msg_only;
             case "ctrl-up":
                 return action_type.scroll_up;
             case "ctrl-down":
@@ -1934,16 +1965,30 @@ namespace LogWizard
                 return action_type.go_to_line;
             case "f5":
                 return action_type.refresh;
-            case "t":
-                return action_type.toggle_title;
-            case "v":
-                return action_type.toggle_view_tabs;
-            case "h":
-                return action_type.toggle_view_header;
-            case "d":
-                return action_type.toggle_details;
             case "ctrl-o":
                 return action_type.open_in_explorer;
+
+
+            case "alt-f":
+                return action_type.toggle_filters;
+            case "alt-o":
+                return action_type.toggle_source;
+            case "alt-l":
+                return action_type.toggle_fulllog;
+
+
+            case "alt-m":
+                return action_type.toggle_show_msg_only;
+            case "alt-t":
+                return action_type.toggle_title;
+            case "alt-v":
+                return action_type.toggle_view_tabs;
+            case "alt-h":
+                return action_type.toggle_view_header;
+            case "alt-d":
+                return action_type.toggle_details;
+            case "alt-s":
+                return action_type.toggle_status;
             }
 
             return action_type.none;
@@ -2125,6 +2170,9 @@ namespace LogWizard
                 break;
             case action_type.toggle_title:
                 toggle_title();
+                break;
+            case action_type.toggle_status:
+                toggle_status();
                 break;
 
             case action_type.toggle_view_tabs:
@@ -2465,6 +2513,35 @@ namespace LogWizard
                 logger.Error("can't copy from clipboard: " + e.Message);
                 util.beep(util.beep_type.err);
             }
+        }
+
+
+
+
+        // sets the status for a given period - after that ends, the previous status is shown
+        // if < 0, it's forever
+        private void set_status(string msg, int set_status_for_ms = 5000) {
+            if (set_status_for_ms <= 0)
+                statuses_.Clear();
+
+            statuses_.Add( new Tuple<string, DateTime>(msg,  set_status_for_ms > 0 ? DateTime.Now.AddMilliseconds(set_status_for_ms) : DateTime.MaxValue));
+            status.Text = msg;
+            status.ForeColor = msg.ToLower().StartsWith("err") ? Color.Red : Color.Black;
+        }
+
+        private void set_status_forever(string msg) {
+            set_status(msg, -1);
+        }
+
+        private void update_status_text() {
+            bool needs_update = false;
+            while (statuses_.Count > 0 && statuses_.Last().Item2 < DateTime.Now) {
+                statuses_.RemoveAt(statuses_.Count - 1);
+                needs_update = true;
+            }
+
+            if (needs_update)
+                status.Text = statuses_.Count > 0 ? statuses_.Last().Item1 : "";
         }
 
         private static string tn2_file() {

@@ -64,6 +64,7 @@ namespace LogWizard
             Application.SetCompatibleTextRenderingDefault(false);
             log4net.Config.XmlConfigurator.Configure( new FileInfo("LogWizard.exe.config"));
             util.force_break_into_debugger();
+            util.init_exceptions();
 
             if (!util.is_debug) {
                 Environment.CurrentDirectory = local_dir();

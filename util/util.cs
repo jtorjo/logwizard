@@ -26,11 +26,14 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using ColorSchemeExtension;
 using Microsoft.Win32;
+using Timer = System.Windows.Forms.Timer;
 
 namespace LogWizard {
 
@@ -407,16 +410,6 @@ namespace LogWizard {
             t.Enabled = true;
         }
 
-        public void postpone_func(Action a, int postpone_ms) {
-            Timer t = new Timer(){ Interval = postpone_ms };
-            t.Tick += (sender, args) => {
-                t.Enabled = false;
-                a();
-                t.Dispose();
-            };
-            t.Enabled = true;            
-        }
-
         public static string add_dots(string s, int max_dots) {
             string max_dots_str = new string('.', max_dots);
             if (s.EndsWith(max_dots_str))
@@ -554,9 +547,29 @@ namespace LogWizard {
         }
 
         public static void restart_app() {
-            
+            string app_name = Assembly.GetExecutingAssembly().Location;
+            Application.Exit();
+            Thread.Sleep(500);
+            Process.Start(app_name);
         }
 
+        // taken from http://msdn.microsoft.com/en-us/library/system.windows.forms.application.setunhandledexceptionmode%28v=vs.110%29.aspx
+        //[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
+        public static void init_exceptions() {
+            if ( !util.is_debug) {
+                Application.ThreadException += new ThreadExceptionEventHandler(on_thread_exc);
+                // 2.2.186+ - http://msdn.microsoft.com/en-us/library/system.windows.forms.application.setunhandledexceptionmode%28v=vs.110%29.aspx
+                Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+                AppDomain.CurrentDomain.UnhandledException +=new UnhandledExceptionEventHandler(on_unhandled_exc);
+            }
+        }
+        private static void on_thread_exc(object sender, ThreadExceptionEventArgs e) {
+            logger.Fatal("Thread Exception: " + e.Exception.Message + "\r\n" + e.Exception.StackTrace);
+        }
+        private static void on_unhandled_exc(object sender, UnhandledExceptionEventArgs ue) {
+            Exception e = ue.ExceptionObject as Exception;
+            logger.Fatal("Unhandled Exception: " + e.Message + "\r\n" + e.StackTrace);
+        }
 
 
 

@@ -62,6 +62,7 @@ namespace LogWizard {
         public bool show_tabs = true;
         public bool show_title = true;
         public bool topmost = false;
+        public bool show_status = true;
 
         // not implemented yet
         public bool show_details = false;
@@ -99,6 +100,7 @@ namespace LogWizard {
             show_title = other.show_title;
             topmost = other.topmost;
             show_details = other.show_details;
+            show_status = other.show_status;
         }
     }
 }

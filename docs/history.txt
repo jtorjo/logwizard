@@ -1,6 +1,17 @@
 - find - case-insensitive + full words + regex (by default, auto-detect -> [],(),any\ -> regex)
 
 
+1.0.80a
+- changed toggle hotkeys - so that they are not single chars (without modifiers like Alt/Ctrl/Shift)
+  - due to feedback: the user should not by mistake press a key while in LogWizard and not understand what happens (i.e., freak out)
+  - former hotkeys now are Alt-[former_hotkey]; example : toggle filter - Alt-F
+- show/toggle status: works (Alt-S)
+  - new hotkey for toggling source pane (Alt-O)
+- status: just show the file + length, just to show something there, for now
+- alt-'s' - toggle status (info about the file/current view - like, file size, number of lines, how many lines the last Find matched; when loading a file -> write status about it)
+  - setting a status - either for a number of seconds (after we we get to the previous one), or indefinitely (clears previous queue)
+  - what about source pane? what hotkey for it - - alt-o
+
 
 1.0.79
 - allow selecting several rows

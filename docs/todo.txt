@@ -1,11 +1,17 @@
+
 - find - case-insensitive + full words + regex (by default, auto-detect -> [],(),any\ -> regex)
 
-- save sets of location/sizes (ctrl-shift-Number -> save, ctrl-Number -> use (toggle)). if full screen, we should just note that
+- new default: synchronize colors - with all
+
+
+
+
+- save sets of location/sizes (ctrl-shift-Number -> save, ctrl-Number -> use (toggle)). if full screen, we should just note that (don't allow saving when minimized)
   also, i should save existing location - however if it matches an already saved location, don't save
   perhaps save a few more things -> like whether i have title toggled/and am topmost? TOTHINK, like - save all toggles
    ---> see about the issue below
    --- need to save toggles + location (toggles are saved as strings -> toggles - saving only those that are turned off)
-   ---- i should see whether we're in a custom-saved location (if that is the case, the toggles and everything are NOT saved into the current context)
+   ---- i should see whether we're in a custom-saved location (if that is the case, the toggles and everything are NOT saved into the current context; in that case, probably not save any toggles)
    ----- maybe i should also save the current view
 - history: for each file -> remember the last view (maybe the row(s) as well?, toggles?)
 
@@ -16,6 +22,82 @@
 - option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?; probably - yes)
 
 - home/end/esc/' '/enter - should work correctly when history dropdown shown
+  - if title hidden - show it partially
+      - ctrl-h -> should show history - if the title is toggled off, just bring the history part to visibility, and then hide it back
+- ' ' toggle between enabled/dimmed in the filter (if on a filter row)
+
+- + - <-V-> etc - buttons should override the header (if the header is visible!)
+
+- msg only -> show the line + msg (at this time, i only show msg)
+  - save it for EACH view + full log
+  - full log: should toggle between line+msg / line+view+msg / everything
+
+- update hotkeys page (mayber online?)- explain toggles in document - so that I can send to Denise.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- context matches -> in settings dialog (easy, for now)
+
+- extra.txt -> when holding it locally -> hold the extra-file_name-md5_of_local_file_path.txt
+  - first -> try to find the full md5 - if not, try find the name (in case the file got moved)
+  - see about temporary contexts (they should not be saved?)
+
+- allow notes - on any line even if bookmark or not
+  - clicking on a note - will take you there - notes are prefixed by username (by default, its the windows username)
+  - several people can comment on a line
+  - clicking on a note: 
+    - see if i have the view where the note was made, and if i have the line. if so, i will go there, in that view (since i may be using my own context)
+	- otherwise, go to first view where the note is found, if not found anywhere, open full log and go there
+  - notes should be abe to have colors (like - green OK, red BAD, gray ACCEPTED, stuff like that)
+
+- zip it - zip the file + its notes + its bookmarks + its context
+  - zip as ".logwizard" extension - we should automatically recognize this (Open With)
+  - should we auto-open .zip files? (Open With?) 
+
+- unzip it 
+  - if dropping a zip file onto us -> if it contains 2 files (extra.txt and another one) -> load notes/etc. from extra.txt + load the other file
+    - this should also work as "double click in explorer"
+  - if shift is pressed, override the context, otherwise, we preserve our context.
+    if shift is NOT pressed, if we have the context - we preserve our context; if we DON'T have the context, we will load it
+  - if context is slightly different and we did not load it, show it in status bar
+  - if we do override the context, this is NOT permanent - we will use a temporary context or so
+
+- dropping a zip file
+  - look for .log + .txt files (prefer .log)
+    - if a single one found, use it. otherwise:
+	  - if shift pressed -> show a dialog with all possible files
+	  - if shift not pressed, open the first one (prefer .log)
+	- iterate subdirs?
+
+- allow exporting notes:
+  - to be sent to customer - the line(s) + the author(s)
+  - allow export as .txt or .html
+  - also, export to clipboard
+
+  - article: 
+    - update existing article
+    - sharing thy log with coworkers/customer support/customers (two articles: Share with Coleagues / Customer Support)
+	  - customer support - explain that they can have the developers look at the logs as well.
+
+- .logwizard -> if a single file is found (extra.txt) -> parse it for - context settings or filter settings (import them, and say so visually)
+  - allow exporting settings like this by default (ToC/FromC -> do this somehow to save to file -> maybe from Settings dialog?)
+  - probably both import/export should be done via Settings dialog - if dropped, just ask a question - do you want to import blabla?
+
+
 
 
 
@@ -46,8 +128,11 @@
 	 note: when writing to shmem, the log pattern should match what you would write the the file.
 	 (shmem -> have a setting - how to identify the beginning of hte program - like, a specific message gets written -> restarts logging)
 
-
   - new article (about monitoring your own log while debugging) + "bring to top/most on alt-tab"? "Logging and Debugging - they can get along"
+
+
+
+
 
 - allow using the surrounding lines - if a $part ends in a number, it's the prev/next line. 
   Example: $msg[2] (the second line from now), $time[-3] (the time 3 lines above), $thread[-12] (the thread 12 lines above)
@@ -65,9 +150,8 @@
 
 
 
+- log friendly name -> retest, useful for Denise (also, will be useful in the future, when we'll have several text readers)
 
-
-  - ' ' toggle between enabled/dimmed in the filter (if on a filter row)
 - 'd' toggle details - this is the beginning of a larger feature -> allow showing details about the message (like, certain columns should show up in the list, and certain in the details - they can overlap)
   if turned on, the msg details is automatically off
   - i should also have a way to toggle msg_details on/off
@@ -79,11 +163,31 @@
   - include 'm' as well - explain for current view only
   - tooltip -> explain that toggles are shown when right clicking the icon as well
   - rethink : where do i keep all toggles? (context? or file itself?)
+  - write on github - toggles
 - option to turn off hotkeys
 
-- ctrl-h -> should show history - if the title is toggled off, just bring the history part to visibility, and then hide it back
+
+
+
+
+
+
+
+
 
 - loading large files -> optimize logwizard to load stuff 100% in the background, and show in the status bar as we're loading stuff (first file, then filters)
+
+- defaults: retest when using logwizard for first time 
+  - by default, MAYBE, we should show levels in color (red=ERROR, darkred=FATAL, etc) - have a setting that if checked(default), we would do that.
+    - perhaps we should do htis on small files (like, 50Mb or less)
+  - also, Find -> have a button "Append to Filter" or something -> if the view name is "New_...", rename this as the contents of the search or something TOTHINK
+  - right click on a column -> have an easy "Filter In/Out" dialog where the user can choose to execute something on that column
+    - make sure we can do this with keys - i need to have a way to select a certain column with keys - so that when rightclicking on it, it would then open the Filter In/Out dialog
+	  -- i should print the existing selected cell (column) with a slightly darker background (perhaps just use left/right arrows?)
+	     probably: by default, there is no cell celected (just the row) - if pressing ->, we'll start selecting from the left-to-right
+		                                                                - if pressing <-, we'll start selecting from right-to-left
+	- the defaults (to filter IN or OUT) should be based on whether in current view or full log
+
 
 
 
@@ -107,8 +211,9 @@
 - bug - log_line_parser.line_at can actually cause assertion -> i should be able to handle the case when line_at returns null (and 'matches' should return false in that case)
 
 - level column -> allow transforming it into pictures
+  - this should work on any column - we should be able to transform any context into picts
 
-- article: testing with logwizard (command line?) + customer support with logwizard
+- article: testing with logwizard (command line?) 
 
 
 
@@ -142,6 +247,10 @@
 
 
 
+- allow hiding views - in case we have too many (we can show them at any time)
+- mark views as "should never happen" - the idea is that we would want something like this:
+    - have alerts on this view -> if any alert triggers, show this view - otherwise, keep it hidden
+    = run on command line as well?
 
 
 
@@ -189,7 +298,11 @@ case in point -> [time.stats] -> numbers -> if too big -> mark them in given col
 
 
 
-
+- merging views into a given context (say two people are working on the same context) - you should be able to "import" the other guy's views without screwing your own
+  (by default, back the current settings - just in case something goes wrong)
+  - so in other words, say my collegue goes to Copy to clipboard a full context -> and sends it to me - I should be able to merge it with myown
+  - new views are extremely easy - (I just add them)
+  - existing views with different filters -> do i just add the new filters, erase existing ones? not really sure - perhaps a dialogue asking user what to do
 
 
 
@@ -218,3 +331,24 @@ case in point -> [time.stats] -> numbers -> if too big -> mark them in given col
 
 
 - at some point: all commands should be available via menu - which should be turned on/off
+
+
+
+
+
+
+- finding regex (pro_v) -> allow matching certain numbers etc. from the log lines, and then allow 
+  - having charts based on them
+  - or toggle on/off the results based on what was matched
+  - from the regex -> from each line, we can extract several numbers -> we should be able to name each such number, and create charts based on them.
+  - have a wizard that shows how to do this (for instance, on the wizard, take the 1000 first lines, and generate stuff, so that the user can create the chart;
+    then, be able to run it on all data.)
+
+- graphs/charts (pro_v?)
+  - by default -> on timeline (like, have timeline from start to end, then, show on timeline, when most messages are written)
+  - more: allow extracting the data from the lines themselves - like, [time] -> take off the ms from there, and allow showing graph data from there
+          (+ ignore the lines that don't match[yes/no] - if yes, we create the graph with only matched data; if no, we create the graph with empty lines where there are no matches)
+  - allow zooming on the chart? tothink
+  - switching from graph to log and vice versa needs to be ***seamless***
+  - while in the chart/graph - i should be able to move with hotkeys as well
+  
