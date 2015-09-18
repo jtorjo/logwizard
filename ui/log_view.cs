@@ -31,6 +31,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using LogWizard.ui;
 
 namespace LogWizard
 {
@@ -1191,7 +1192,7 @@ namespace LogWizard
             e.Handled = true;
         }
 
-        public void mark_text(string txt, Color fg, Color bg) {
+        public void mark_text(search_form.search_for search, Color fg, Color bg) {
             Debug.Assert(list.GetItemCount() == filter_.match_count);
 
             // just in case a filter was selected
@@ -1200,7 +1201,7 @@ namespace LogWizard
             bool needs_refresh = false;
             for (int idx = 0; idx < list.GetItemCount(); ++idx) {
                 item i = list.GetItem(idx).RowObject as item;
-                if (i.match.line.part(info_type.msg).Contains(txt)) {
+                if (string_search.matches( i.match.line.part(info_type.msg), search)) {
                     i.override_fg = fg;
                     i.override_bg = bg;
                     needs_refresh = true;
@@ -1230,28 +1231,29 @@ namespace LogWizard
                 list.Refresh();
         }
 
-        public void search_for_text_first(string txt) {
+        public void search_for_text_first(search_form.search_for search) {
             if (list.GetItemCount() < 1)
                 return;
 
             select_idx(0, select_type.notify_parent);
             item i = list.GetItem(0).RowObject as item;
-            if (i.match.line.part(info_type.msg).Contains(txt)) {
+            if ( string_search.matches( i.match.line.part(info_type.msg), search)) {
                 // line zero contains the text already
                 list.EnsureVisible(0);
                 return;
             } else
-                search_for_text_next(txt);
+                search_for_text_next(search);
         }
 
-        public void search_for_text_next(string txt) {
+        public void search_for_text_next(search_form.search_for search) {
             if (list.GetItemCount() < 1)
                 return;
+
             int found = -1;
             if (sel_row_idx >= 0)
                 for (int idx = sel_row_idx + 1; idx < list.GetItemCount() && found < 0; ++idx) {
                     item i = list.GetItem(idx).RowObject as item;
-                    if (i.match.line.part(info_type.msg).Contains(txt))
+                    if (string_search.matches( i.match.line.part(info_type.msg), search))
                         found = idx;
                 }
             if (found >= 0) {
@@ -1261,14 +1263,15 @@ namespace LogWizard
                 util.beep(util.beep_type.err);
         }
 
-        public void search_for_text_prev(string txt) {
+        public void search_for_text_prev(search_form.search_for search) {
             if (list.GetItemCount() < 1)
                 return;
+
             int found = -1;
             if (sel_row_idx > 0)
                 for (int idx = sel_row_idx - 1; idx >= 0 && found < 0; --idx) {
                     item i = list.GetItem(idx).RowObject as item;
-                    if (i.match.line.part(info_type.msg).Contains(txt))
+                    if (string_search.matches( i.match.line.part(info_type.msg), search))
                         found = idx;
                 }
             if (found >= 0) {

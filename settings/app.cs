@@ -136,7 +136,7 @@ namespace LogWizard {
 
             load_save(load, ref show_topmost_toggle, "show_topmost_toggle");
 
-            load_save(load, ref syncronize_colors, "synchronize_colors", synchronize_colors_type.none);
+            load_save(load, ref syncronize_colors, "synchronize_colors", synchronize_colors_type.with_all_views);
             load_save(load, ref sync_colors_all_views_gray_non_active, "synchronize_colors_gray_non_active", false);
         }
 

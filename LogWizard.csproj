@@ -228,6 +228,7 @@
     <Compile Include="readers\shared_memory_text_reader.cs" />
     <Compile Include="util\list_extensions.cs" />
     <Compile Include="util\memory_optimized_list.cs" />
+    <Compile Include="util\string_search.cs" />
     <Compile Include="util\util.cs" />
     <Compile Include="util\win32.cs" />
     <EmbeddedResource Include="ui\about_form.resx">

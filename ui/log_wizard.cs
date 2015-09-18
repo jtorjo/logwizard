@@ -2007,8 +2007,8 @@ namespace LogWizard
                     unfocus_filter_panel();
 
                     if ( search_for_text_.mark_lines_with_color)
-                        lv.mark_text(search_for_text_.text, search_for_text_.fg, search_for_text_.bg);
-                    lv.search_for_text_first(search_for_text_.text);
+                        lv.mark_text(search_for_text_, search_for_text_.fg, search_for_text_.bg);
+                    lv.search_for_text_first(search_for_text_);
                 }
                 break;
             case action_type.search_prev:
@@ -2333,7 +2333,7 @@ namespace LogWizard
             if (lv == null)
                 return;
             if ( search_for_text_ != null)
-                lv.search_for_text_next(search_for_text_.text);
+                lv.search_for_text_next(search_for_text_);
             else if ( filterCtrl.SelectedIndex >= 0)
                 lv.search_for_next_match( filterCtrl.SelectedIndex);
         }
@@ -2343,7 +2343,7 @@ namespace LogWizard
             if (lv == null)
                 return;
             if ( search_for_text_ != null)
-                lv.search_for_text_prev(search_for_text_.text);            
+                lv.search_for_text_prev(search_for_text_);            
             else if ( filterCtrl.SelectedIndex >= 0)
                 lv.search_for_prev_match( filterCtrl.SelectedIndex);
         }
