@@ -2381,13 +2381,14 @@ namespace LogWizard
             Debug.Assert(idx >= 0 && idx < custom_ui_.Length);
             if (toggled_to_custom_ui_ >= 0) {
                 // in this case, we're in a custom UI already
-                util.beep(util.beep_type.err);
-                return;
+                custom_ui_[idx].copy_from(ignored_ui_);
+                set_status( "Custom Position [" + idx + "] Updated!");
+            } else {
+                custom_ui_[idx].copy_from(default_ui_);
+                set_status( idx > 0 ? "Custom Position [" + idx + "] Saved!" : "Default Position Saved!");
             }
 
-            custom_ui_[idx].copy_from(default_ui_);
             save();
-            set_status( idx > 0 ? "Custom Position [" + idx + "] Saved!" : "Default Position Saved!");
         }
 
         private void toggle_custom_ui(int idx) {
@@ -2403,6 +2404,9 @@ namespace LogWizard
                 // ... I'm creating a copy, so that when it gets modified (say the user toggles something) -> that does not get saved into our settings
                 ui_info copy = new ui_info();
                 copy.copy_from( custom_ui_[idx]);
+                // the reason I do this - is in case the user wants to save again - this specific custom UI
+                // in this case, everything that gets changed is stored in ignored_ui_
+                ignored_ui_.copy_from( custom_ui_[idx]);
                 foreach(var ctx in contexts_)
                     ctx.set_other( copy);
             } else {
@@ -2808,21 +2812,19 @@ namespace LogWizard
         }
 
         private void save_location() {
-            if (toggled_to_custom_ui_ >= 0)
-                return;
             if (!Visible)
                 return;
             if (WindowState == FormWindowState.Minimized)
                 return;
 
             if (WindowState == FormWindowState.Maximized)
-                global_ui.maximized = true;
+                global_or_ignore_ui.maximized = true;
             else {
-                global_ui.width = Width;
-                global_ui.height = Height;
-                global_ui.left = Left;
-                global_ui.top = Top;
-                global_ui.maximized = false;
+                global_or_ignore_ui.width = Width;
+                global_or_ignore_ui.height = Height;
+                global_or_ignore_ui.left = Left;
+                global_or_ignore_ui.top = Top;
+                global_or_ignore_ui.maximized = false;
             }
             save();            
         }
