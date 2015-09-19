@@ -96,6 +96,7 @@
             this.monitor = new System.Windows.Forms.Button();
             this.lower = new System.Windows.Forms.Panel();
             this.status = new System.Windows.Forms.Label();
+            this.saveTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).BeginInit();
             this.filterContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
@@ -669,7 +670,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(269, 478);
+            this.tabPage3.Size = new System.Drawing.Size(269, 487);
             this.tabPage3.TabIndex = 1;
             this.tabPage3.Text = "By Threads / By Context";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -698,7 +699,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(269, 478);
+            this.tabPage4.Size = new System.Drawing.Size(269, 487);
             this.tabPage4.TabIndex = 2;
             this.tabPage4.Text = "Notes / Bookmarks";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -793,6 +794,7 @@
             this.filteredLeft.Size = new System.Drawing.Size(981, 451);
             this.filteredLeft.SplitterDistance = 558;
             this.filteredLeft.TabIndex = 0;
+            this.filteredLeft.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.filteredLeft_SplitterMoved);
             // 
             // viewsTab
             // 
@@ -918,6 +920,12 @@
             this.status.TabIndex = 18;
             this.status.Text = " ";
             // 
+            // saveTimer
+            // 
+            this.saveTimer.Enabled = true;
+            this.saveTimer.Interval = 15000;
+            this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
+            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1036,6 +1044,7 @@
         private System.Windows.Forms.Panel lower;
         private System.Windows.Forms.PictureBox toggleTopmost;
         private System.Windows.Forms.Label status;
+        private System.Windows.Forms.Timer saveTimer;
     }
 }
 

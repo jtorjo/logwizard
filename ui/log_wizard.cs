@@ -97,6 +97,21 @@ namespace LogWizard
             // 1.0.77+ default behavior does not work correctly
             shift_arrow_up, shift_arrow_down,
 
+            // 1.0.80+ - allow saving the current position + toggles + current view
+            save_position_1, 
+            save_position_2, 
+            save_position_3, 
+            save_position_4, 
+            save_position_5,
+
+            // 1.0.80+ - switch to a saved position and back
+            toggle_position_1, 
+            toggle_position_2, 
+            toggle_position_3, 
+            toggle_position_4, 
+            toggle_position_5,
+ 
+
             none,
         }
 
@@ -135,7 +150,7 @@ namespace LogWizard
 
         const int MAX_HISTORY_ENTRIES = 100;
 
-        private bool ignore_change = false;
+        private int ignore_change_ = 0;
 
         // while the user is updating the text, don't update the filter right away
         private const int IGNORE_FILTER_UDPATE_MS = 1000;
@@ -152,7 +167,13 @@ namespace LogWizard
         private action_type last_action_ = action_type.none;
 
         // the status(es) to be shown
-        private List< Tuple<string,DateTime>> statuses_ = new List<Tuple<string, DateTime>>(); 
+        private List< Tuple<string,DateTime>> statuses_ = new List<Tuple<string, DateTime>>();
+        // what to be shown behind ALL statuses
+        private string status_prefix_ = "";
+
+        private int toggled_to_custom_ui_ = -1;
+        private ui_info default_ui_ = new ui_info();
+        private ui_info[] custom_ui_ = new ui_info[5];
 
         private enum show_full_log_type {
             both, just_view, just_full_log
@@ -192,7 +213,7 @@ namespace LogWizard
                 load_contexts();
             }
 
-            ignore_change = true;
+            ++ignore_change_;
 
             foreach ( ui_context ctx in contexts_)
                 curContextCtrl.Items.Add(ctx.name);
@@ -202,7 +223,9 @@ namespace LogWizard
             foreach ( history hist in history_)
                 logHistory.Items.Add(hist.combo_name);
 
+            --ignore_change_;
             load();
+            ++ignore_change_;
 
             full_log_ctrl = new log_view( this, "[All]");
             full_log_ctrl.Dock = DockStyle.Fill;
@@ -210,24 +233,40 @@ namespace LogWizard
             full_log_ctrl.show_name = false;
             full_log_ctrl.show_view(true);
 
-            ignore_change = false;
             set_tabs_visible(leftPane, false);
 
             msg_details_ = new msg_details_ctrl(this);
             Controls.Add(msg_details_);
             handle_subcontrol_keys(this);
 
-            bool open_cmd_line_file = forms_.Count == 1 && Program.open_file_name != null;
-            if ( history_.Count > 0 && !open_cmd_line_file) 
-                logHistory.SelectedIndex = history_.Count - 1;
-            if (open_cmd_line_file) 
-                on_file_drop(Program.open_file_name);
-
             viewsTab.DrawMode = TabDrawMode.OwnerDrawFixed;
             viewsTab.DrawItem += ViewsTabOnDrawItem;
 
             update_topmost_image();
             update_toggle_topmost_visibility();
+
+            load_location();
+            --ignore_change_;
+
+            bool open_cmd_line_file = forms_.Count == 1 && Program.open_file_name != null;
+            if ( history_.Count > 0 && !open_cmd_line_file) 
+                logHistory.SelectedIndex = history_.Count - 1;
+            if (open_cmd_line_file) 
+                on_file_drop(Program.open_file_name);
+        }
+
+        private void load_location() {
+            int left = int.Parse(sett.get("location.left", "-1"));
+            int top = int.Parse(sett.get("location.top", "-1"));
+
+            int width = int.Parse(sett.get("location.width", "-1"));
+            int height = int.Parse(sett.get("location.height", "-1"));
+
+            if ( left != -1)
+                Location = new Point(left, top);
+
+            if ( width > 0)
+                Size = new Size(width, height);
         }
 
         private Brush views_brush_ = new SolidBrush(Color.Black), views_something_changed_brush_ = new SolidBrush(Color.DarkRed);
@@ -253,6 +292,13 @@ namespace LogWizard
             _StringFlags.Alignment = StringAlignment.Center;
             _StringFlags.LineAlignment = StringAlignment.Center;
             g.DrawString(viewsTab.TabPages[e.Index].Text, font, brush, bounds, new StringFormat(_StringFlags));
+        }
+
+        private ui_info cur_ui {
+            get {
+                Debug.Assert( toggled_to_custom_ui_ >= -1 && toggled_to_custom_ui_ < 5);
+                return toggled_to_custom_ui_ < 0 ? default_ui_ : custom_ui_[toggled_to_custom_ui_];
+            }
         }
 
         // returns true if the tabs are visible
@@ -311,17 +357,7 @@ namespace LogWizard
                 ctx.name = sett.get("context." + i + ".name", "Default");
                 ctx.auto_match = sett.get("context." + i + ".auto_match");
 
-                ctx.show_filter = sett.get("context." + i + ".show_filter", "1") != "0";
-                ctx.show_source = sett.get("context." + i + ".show_source", "1") != "0";
-                ctx.show_fulllog = sett.get("context." + i + ".show_fulllog", "0") != "0";
-
-                ctx.show_current_view = sett.get("context." + i + ".show_current_view", "1") != "0";
-                ctx.show_header = sett.get("context." + i + ".show_header", "1") != "0";
-                ctx.show_tabs = sett.get("context." + i + ".show_tabs", "1") != "0";
-                ctx.show_title = sett.get("context." + i + ".show_title", "1") != "0";
-                ctx.show_details = sett.get("context." + i + ".show_details", "0") != "0";
-                ctx.show_status = sett.get("context." + i + ".show_status", "1") != "0";
-                ctx.topmost = sett.get("context." + i + ".topmost", "0") != "0";
+                ctx.ui.load("context." + i);
 
                 int view_count = int.Parse( sett.get("context." + i + ".view_count", "1"));
                 for ( int v = 0; v < view_count; ++v) {
@@ -356,17 +392,8 @@ namespace LogWizard
                 sett.set("context." + i + ".name", contexts_[i].name);
                 sett.set("context." + i + ".auto_match", contexts_[i].auto_match);
 
-                sett.set("context." + i + ".show_filter", (contexts_[i].show_filter ? "1" : "0"));
-                sett.set("context." + i + ".show_source", (contexts_[i].show_source ? "1" : "0"));
-                sett.set("context." + i + ".show_fulllog", (contexts_[i].show_fulllog ? "1" : "0"));
-
-                sett.set("context." + i + ".show_current_view", (contexts_[i].show_current_view ? "1" : "0"));
-                sett.set("context." + i + ".show_header", (contexts_[i].show_header ? "1" : "0"));
-                sett.set("context." + i + ".show_status", (contexts_[i].show_status ? "1" : "0"));
-                sett.set("context." + i + ".show_tabs", (contexts_[i].show_tabs? "1" : "0"));
-                sett.set("context." + i + ".show_title", (contexts_[i].show_title ? "1" : "0"));
-                sett.set("context." + i + ".show_details", (contexts_[i].show_details ? "1" : "0"));
-                sett.set("context." + i + ".topmost", (contexts_[i].topmost ? "1" : "0"));
+                if (toggled_to_custom_ui_ < 0) 
+                    contexts_[i].ui.save("context." + i);
 
                 int view_count = contexts_[i].views.Count;
                 if ( view_count == 1)
@@ -394,6 +421,7 @@ namespace LogWizard
 
         private void show_filters(bool show) {
             toggleFilters.Text = show ? "-F" : "+F";
+            ++ignore_change_;
             if ( show) {
                 main.Panel1Collapsed = false;
                 main.Panel1.Show();
@@ -402,7 +430,8 @@ namespace LogWizard
                 main.Panel1Collapsed = true;
                 main.Panel1.Hide();
             }
-            cur_context().show_filter = show;
+            --ignore_change_;
+            cur_context().ui.show_filter = show;
         }
         private void show_source(bool show) {
             toggleSource.Text = show ? "-S" : "+S";
@@ -420,7 +449,7 @@ namespace LogWizard
                     if ( lv != null)
                         lv.show_name = show;
                 }
-            cur_context().show_source = show;
+            cur_context().ui.show_source = show;
         }
 
         private void show_filteredleft_pane1(bool show) {
@@ -454,22 +483,22 @@ namespace LogWizard
             case show_full_log_type.both:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(true);
-                cur_context().show_fulllog = true;
-                cur_context().show_current_view = true;
+                cur_context().ui.show_fulllog = true;
+                cur_context().ui.show_current_view = true;
                 to_focus = full_log_ctrl;
                 break;
             case show_full_log_type.just_view:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(false);
-                cur_context().show_fulllog = false;
-                cur_context().show_current_view = true;
+                cur_context().ui.show_fulllog = false;
+                cur_context().ui.show_current_view = true;
                 to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
                 break;
             case show_full_log_type.just_full_log:
                 show_filteredleft_pane1(false);
                 show_filteredleft_pane2(true);
-                cur_context().show_fulllog = true;
-                cur_context().show_current_view = false;
+                cur_context().ui.show_fulllog = true;
+                cur_context().ui.show_current_view = false;
                 to_focus = full_log_ctrl;
                 break;
             default:
@@ -561,12 +590,12 @@ namespace LogWizard
         }
 
         private void on_file_drop(string file) {
-            ignore_change = true;
+            ++ignore_change_;
             sourceNameCtrl.Text = file;
             sourceTypeCtrl.SelectedIndex = 0;
             friendlyNameCtrl.Text = "";
             logSyntaxCtrl.Text = "";
-            ignore_change = false;
+            --ignore_change_;
             // this will force us to process this change
             last_sel = -2;
 
@@ -581,9 +610,9 @@ namespace LogWizard
         }
 
         private void toggle_details() {
-            bool show = !cur_context().show_details;
+            bool show = !cur_context().ui.show_details;
             show_details( show);
-            cur_context().show_details = show;
+            cur_context().ui.show_details = show;
             save();
         }
 
@@ -613,7 +642,7 @@ namespace LogWizard
         private void toggle_status() {
             bool shown = status.Height > 1;
             show_status(!shown);
-            cur_context().show_status = !shown;
+            cur_context().ui.show_status = !shown;
         }
 
 
@@ -642,7 +671,7 @@ namespace LogWizard
         private void toggle_title() {
             bool shown = FormBorderStyle == FormBorderStyle.Sizable;
             show_title(!shown);
-            cur_context().show_title = !shown;
+            cur_context().ui.show_title = !shown;
             save();
         }
 
@@ -657,7 +686,7 @@ namespace LogWizard
         private void toggle_view_tabs() {
             bool visible_now = !are_tabs_visible(viewsTab);
             show_tabs(visible_now);
-            cur_context().show_tabs = visible_now;
+            cur_context().ui.show_tabs = visible_now;
             save();
         }
 
@@ -669,7 +698,7 @@ namespace LogWizard
         private void toggle_view_header() {
             bool show = !all_log_views()[0].show_header;
             show_header( show);
-            cur_context().show_header = show;
+            cur_context().ui.show_header = show;
             save();
         }
 
@@ -722,7 +751,7 @@ namespace LogWizard
         private void load_filters() {
             // filter_row Enabled / Used - are context dependent!
 
-            ignore_change = true;
+            ++ignore_change_;
             List<object> items = new List<object>();
             ui_context cur = cur_context();
             int cur_view = viewsTab.SelectedIndex;
@@ -738,12 +767,12 @@ namespace LogWizard
 
             curFilterCtrl.Text = "";
             applyToExistingLines.Checked = false;
-            ignore_change = false;
+            --ignore_change_;
             sync_full_log_colors();
         }
 
         private void sync_full_log_colors() {
-            if (full_log_ctrl != null && cur_context().show_fulllog ) 
+            if (full_log_ctrl != null && cur_context().ui.show_fulllog ) 
                 full_log_ctrl.update_colors(all_log_views(), viewsTab.SelectedIndex);
         }
 
@@ -862,25 +891,34 @@ namespace LogWizard
             }
         }
 
-        private void load_toggles() {
+        private void load_ui() {
             var cur = cur_context();
             if (!cur.has_views)
                 return;
 
-            show_filters(cur.show_filter);
-            show_source(cur.show_source);
+            show_filters(cur.ui.show_filter);
+            show_source(cur.ui.show_source);
 
-            if ( cur.show_fulllog && cur.show_current_view)
+            if ( cur.ui.show_fulllog && cur.ui.show_current_view)
                 show_full_log(show_full_log_type.both);
             else
-                show_full_log(cur.show_current_view ? show_full_log_type.just_view : show_full_log_type.just_full_log);
+                show_full_log(cur.ui.show_current_view ? show_full_log_type.just_view : show_full_log_type.just_full_log);
 
-            show_header(cur.show_header);
-            show_title(cur.show_title);
-            show_details(cur.show_details);
-            show_status(cur.show_status);
+            show_header(cur.ui.show_header);
+            show_title(cur.ui.show_title);
+            show_details(cur.ui.show_details);
+            show_status(cur.ui.show_status);
+            if ( cur.ui.full_log_splitter_pos >= 0)
+                filteredLeft.SplitterDistance = cur.ui.full_log_splitter_pos;
 
-            util.postpone( () => show_tabs(cur.show_tabs), 100);
+            if (toggled_to_custom_ui_ < 0 && cur_ui.width > 0) {
+                Left = cur_ui.left;
+                Top = cur_ui.top;
+                Width = cur_ui.width;
+                Height = cur_ui.height;
+            }
+
+            util.postpone( () => show_tabs(cur.ui.show_tabs), 100);
             /* not tested
             if (cur.topmost) {
                 util.bring_to_topmost(this);
@@ -957,16 +995,16 @@ namespace LogWizard
         private void load() {
             load_tabs();
             load_filters();
-            load_toggles();
+            load_ui();
             load_global_settings();
         }
 
         public void stop_saving() {
-            ignore_change = true;
+            ++ignore_change_;
         }
 
         private void save() {
-            if ( ignore_change)
+            if (ignore_change_ > 0)
                 return;
 
             ui_context cur = cur_context();
@@ -1025,13 +1063,17 @@ namespace LogWizard
         {
             if ( curContextCtrl.DroppedDown)
                 return;
-            save();
+
             refresh_cur_log_view();
             update_status_text();
         }
 
+        private void saveTimer_Tick(object sender, EventArgs e) {
+            save();
+        }
+
         private void refresh_cur_log_view() {
-            if (ignore_change)
+            if (ignore_change_ > 0)
                 return;
             if (text_ == null)
                 // no log yet
@@ -1046,7 +1088,7 @@ namespace LogWizard
                 // optimized - refresh only current view
                 update_filter(lv);
                 lv.refresh();
-                if (cur_context().show_fulllog) {
+                if (cur_context().ui.show_fulllog) {
                     for (int idx = 0; idx < viewsTab.TabCount; ++idx) {
                         var other = ensure_we_have_log_view_for_tab(idx);
                         if (other != lv)
@@ -1081,8 +1123,11 @@ namespace LogWizard
             if (selected_view() != null && msg_details_ != null) {
                 int top_offset = 40;
                 log_view any_lv = log_view_for_tab(0);
-                if (any_lv != null)
-                    top_offset = any_lv.RectangleToScreen(any_lv.ClientRectangle).Top - RectangleToScreen(ClientRectangle).Top  + 5;
+                if (any_lv != null) {
+                    top_offset = any_lv.RectangleToScreen(any_lv.ClientRectangle).Top - RectangleToScreen(ClientRectangle).Top + 5;
+                    if (cur_context().ui.show_header)
+                        top_offset += any_lv.list.HeaderControl.ClientRectangle.Height;
+                }
                 int bottom_offset = ClientRectangle.Height - lower.Top;
                 msg_details_.update(selected_view(), top_offset, bottom_offset, force_update);
             }
@@ -1154,7 +1199,7 @@ namespace LogWizard
         }
 
         public void go_to_line(int line_idx, log_view from) {
-            if (cur_context().show_fulllog && from != full_log_ctrl && app.inst.sync_full_log_view) {
+            if (cur_context().ui.show_fulllog && from != full_log_ctrl && app.inst.sync_full_log_view) {
                 full_log_ctrl.go_to_line(line_idx, log_view.select_type.do_not_notify_parent);
                 sync_full_log_colors();
             }
@@ -1169,7 +1214,7 @@ namespace LogWizard
 
         private void sourceName_TextChanged(object sender, EventArgs e)
         {
-            if ( ignore_change)
+            if (ignore_change_ > 0)
                 return;
             if ( logHistory.DroppedDown)
                 // user is going through the history, hasn't made up his mind yet
@@ -1207,7 +1252,7 @@ namespace LogWizard
         }
 
         private void refresh_all_views() {
-            if (ignore_change)
+            if (ignore_change_ > 0)
                 return;
             if (text_ == null)
                 // no log yet
@@ -1227,7 +1272,7 @@ namespace LogWizard
                 }
             }
 
-            if (cur_context().show_fulllog) {
+            if (cur_context().ui.show_fulllog) {
                 full_log_ctrl.refresh();
                 full_log_ctrl.set_view_selected_view_name(lv.name);
             }
@@ -1305,7 +1350,7 @@ namespace LogWizard
         }
 
         private int history_select(string name) {
-            ignore_change = true;
+            ++ignore_change_;
             bool needs_save = false;
             logHistory.SelectedIndex = -1;
             for ( int i = 0; i < logHistory.Items.Count; ++i)
@@ -1331,7 +1376,7 @@ namespace LogWizard
                 logHistory.Items.Add(name);
                 logHistory.SelectedIndex = logHistory.Items.Count - 1;
             }
-            ignore_change = false;
+            --ignore_change_;
             if (needs_save)
                 save();
             return logHistory.SelectedIndex;
@@ -1407,31 +1452,31 @@ namespace LogWizard
                 logHistory.Items.Add(new_.combo_name);
             }
             else {
-                ignore_change = true;
+                ++ignore_change_;
                 friendlyNameCtrl.Text = history_[ history_idx].friendly_name;
                 logSyntaxCtrl.Text = history_[ history_idx].log_syntax;
-                ignore_change = false;
+                --ignore_change_;
             }
 
-            ignore_change = true;
+            ++ignore_change_;
             logHistory.SelectedIndex = history_idx;
-            ignore_change = false;
+            --ignore_change_;
             update_history();
         }
 
         private void update_history() {
             int history_idx = logHistory.SelectedIndex;
-            ignore_change = true;
+            ++ignore_change_;
             logHistory.Items.Clear();
             foreach ( history hist in history_)
                 logHistory.Items.Add(hist.combo_name);
             logHistory.SelectedIndex = history_idx;
-            ignore_change = false;
+            --ignore_change_;
         }
 
         private void logHistory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ( ignore_change || logHistory.SelectedIndex < 0)
+            if ( ignore_change_ > 0 || logHistory.SelectedIndex < 0)
                 return;
             if (logHistory.DroppedDown)
                 return;
@@ -1455,7 +1500,7 @@ namespace LogWizard
 
         private void friendlyName_TextChanged(object sender, EventArgs e)
         {
-            if ( ignore_change)
+            if (ignore_change_ > 0)
                 return;
             history_[ logHistory.SelectedIndex].friendly_name = friendlyNameCtrl.Text;
             update_history();
@@ -1464,7 +1509,7 @@ namespace LogWizard
 
         private void logSyntax_TextChanged(object sender, EventArgs e)
         {
-            if ( ignore_change)
+            if (ignore_change_ > 0)
                 return;
             history_[ logHistory.SelectedIndex].log_syntax = logSyntaxCtrl.Text;
             save();
@@ -1523,7 +1568,7 @@ namespace LogWizard
 
             load();
             viewsTab.SelectedIndex = 0;
-            if ( cur_context().show_fulllog && full_log_ctrl != null)
+            if ( cur_context().ui.show_fulllog && full_log_ctrl != null)
                 full_log_ctrl.refresh();
             refresh_cur_log_view();
             save();
@@ -1552,11 +1597,11 @@ namespace LogWizard
         }
 
         private void enabledCtrl_SelectionChanged(object sender, EventArgs e) {
-            ignore_change = true;
+            ++ignore_change_;
             var sel = filterCtrl.SelectedObject as filter_item;
             curFilterCtrl.Text = sel != null ? sel.text : "";
             curFilterCtrl.Enabled = sel != null;
-            ignore_change = false;
+            --ignore_change_;
         }
 
         private void enabledCtrl_ItemsChanged(object sender, BrightIdeasSoftware.ItemsChangedEventArgs e)
@@ -1589,7 +1634,7 @@ namespace LogWizard
         }
 
         private void applyToExistingLines_CheckedChanged(object sender, EventArgs e) {
-            if ( ignore_change)
+            if (ignore_change_ > 0)
                 return;
             if (filterCtrl.GetItemCount() == 0)
                 return;
@@ -1608,7 +1653,7 @@ namespace LogWizard
 
         private void curFilter_TextChanged(object sender, EventArgs e)
         {
-            if ( ignore_change)
+            if (ignore_change_ > 0)
                 return;
 
             if ( filterCtrl.GetItemCount() == 0) {
@@ -1968,14 +2013,12 @@ namespace LogWizard
             case "ctrl-o":
                 return action_type.open_in_explorer;
 
-
             case "alt-f":
                 return action_type.toggle_filters;
             case "alt-o":
                 return action_type.toggle_source;
             case "alt-l":
                 return action_type.toggle_fulllog;
-
 
             case "alt-m":
                 return action_type.toggle_show_msg_only;
@@ -1989,6 +2032,28 @@ namespace LogWizard
                 return action_type.toggle_details;
             case "alt-s":
                 return action_type.toggle_status;
+
+            case "ctrl-shift-1":
+                return action_type.save_position_1;
+            case "ctrl-shift-2":
+                return action_type.save_position_2;
+            case "ctrl-shift-3":
+                return action_type.save_position_3;
+            case "ctrl-shift-4":
+                return action_type.save_position_4;
+            case "ctrl-shift-5":
+                return action_type.save_position_5;
+
+            case "ctrl-1":
+                return action_type.toggle_position_1;
+            case "ctrl-2":
+                return action_type.toggle_position_2;
+            case "ctrl-3":
+                return action_type.toggle_position_3;
+            case "ctrl-4":
+                return action_type.toggle_position_4;
+            case "ctrl-5":
+                return action_type.toggle_position_5;
             }
 
             return action_type.none;
@@ -2018,9 +2083,7 @@ namespace LogWizard
                 search_next();
                 break;
             case action_type.clear_search:
-                if (selected_view() != null)
-                    selected_view().unmark();
-                search_for_text_ = null;
+                clear_search();
                 break;
 
             case action_type.next_view: {
@@ -2196,10 +2259,60 @@ namespace LogWizard
 
             case action_type.none:
                 break;
+
+            case action_type.save_position_1:
+                save_custom_ui(0);
+                break;
+            case action_type.save_position_2:
+                save_custom_ui(1);
+                break;
+            case action_type.save_position_3:
+                save_custom_ui(2);
+                break;
+            case action_type.save_position_4:
+                save_custom_ui(3);
+                break;
+            case action_type.save_position_5:
+                save_custom_ui(4);
+                break;
+            case action_type.toggle_position_1:
+                toggle_custom_ui(0);
+                break;
+            case action_type.toggle_position_2:
+                toggle_custom_ui(1);
+                break;
+            case action_type.toggle_position_3:
+                toggle_custom_ui(2);
+                break;
+            case action_type.toggle_position_4:
+                toggle_custom_ui(3);
+                 break;
+           case action_type.toggle_position_5:
+                toggle_custom_ui(4);
+                break;
             default:
                 Debug.Assert(false);
                 break;
             }
+        }
+
+        private void clear_search() {
+            if (msg_details_.visible()) {
+                msg_details_.show(false);
+                return;
+            }
+
+            if (selected_view() != null)
+                selected_view().unmark();
+            search_for_text_ = null;
+        }
+
+        private void save_custom_ui(int idx) {
+            toggled_to_custom_ui_ = -1;
+        }
+        private void toggle_custom_ui(int idx) {
+            toggled_to_custom_ui_ = idx == toggled_to_custom_ui_ ? -1 : idx;
+            load_ui();
         }
 
         private List<Control> panes() {
@@ -2211,15 +2324,15 @@ namespace LogWizard
                 panes.Add( log_view_for_tab(sel).list);
 
             // second pane - the full log (if shown)
-            if( cur_context().show_fulllog)
+            if( cur_context().ui.show_fulllog)
                 panes.Add(full_log_ctrl.list);
 
             // third pane - the filters control (if visible)
-            if ( cur_context().show_filter)
+            if ( cur_context().ui.show_filter)
                 panes.Add(filterCtrl);
 
             // fourth pane - the edit box (if enabled)
-            if ( cur_context().show_filter && curFilterCtrl.Enabled)
+            if ( cur_context().ui.show_filter && curFilterCtrl.Enabled)
                 panes.Add(curFilterCtrl);
             return panes;
         }
@@ -2231,7 +2344,7 @@ namespace LogWizard
                 return;
             foreach ( log_view lv in all_log_views_and_full_log())
                 if (lv != src) {
-                    if (cur_context().show_fulllog && lv == full_log_ctrl && app.inst.sync_full_log_view)
+                    if (cur_context().ui.show_fulllog && lv == full_log_ctrl && app.inst.sync_full_log_view)
                         // in this case, we already synched the full log
                         continue;
 
@@ -2266,10 +2379,10 @@ namespace LogWizard
             int sel_view = viewsTab.SelectedIndex;
             bool has_sel = sel_filter >= 0 && sel_view >= 0;
             if (!has_sel) {
-                ignore_change = true;
+                ++ignore_change_;
                 curFilterCtrl.Text = "";
                 applyToExistingLines.Checked = false;
-                ignore_change = false;
+                --ignore_change_;
                 return;
             }
 
@@ -2282,9 +2395,9 @@ namespace LogWizard
                 lv.mark_match(sel_filter, fg, bg);
             }
 
-            ignore_change = true;
+            ++ignore_change_;
             applyToExistingLines.Checked = i.apply_to_existing_lines;
-            ignore_change = false;
+            --ignore_change_;
         }
 
         private void settingsCtrl_Click(object sender, EventArgs e) {
@@ -2525,7 +2638,7 @@ namespace LogWizard
                 statuses_.Clear();
 
             statuses_.Add( new Tuple<string, DateTime>(msg,  set_status_for_ms > 0 ? DateTime.Now.AddMilliseconds(set_status_for_ms) : DateTime.MaxValue));
-            status.Text = msg;
+            status.Text = status_prefix_ + msg;
             status.ForeColor = msg.ToLower().StartsWith("err") ? Color.Red : Color.Black;
         }
 
@@ -2533,15 +2646,19 @@ namespace LogWizard
             set_status(msg, -1);
         }
 
-        private void update_status_text() {
+        private void update_status_text(bool force = false) {
             bool needs_update = false;
             while (statuses_.Count > 0 && statuses_.Last().Item2 < DateTime.Now) {
                 statuses_.RemoveAt(statuses_.Count - 1);
                 needs_update = true;
             }
 
-            if (needs_update)
-                status.Text = statuses_.Count > 0 ? statuses_.Last().Item1 : "";
+            if (needs_update || force)
+                status.Text = statuses_.Count > 0 ? status_prefix_ + statuses_.Last().Item1 : "";
+        }
+
+        private void force_udpate_status_text() {
+            update_status_text(true);
         }
 
         private static string tn2_file() {
@@ -2575,17 +2692,44 @@ namespace LogWizard
 
         private void log_wizard_SizeChanged(object sender, EventArgs e) {
             update_msg_details(true);
-            // FIXME remember position - if Visible
+            if (ignore_change_ > 0)
+                return;
+
+            // remember position - if Visible
+            if (toggled_to_custom_ui_ < 0) {
+                cur_ui.width = Width;
+                cur_ui.height = Height;
+                save();
+            }
         }
 
         private void log_wizard_LocationChanged(object sender, EventArgs e) {
-            // FIXME remember position - if Visible
-
+            if (ignore_change_ > 0)
+                return;
+            // remember position - if Visible
+            if (toggled_to_custom_ui_ < 0) {
+                cur_ui.left = Left;
+                cur_ui.top = Top;
+                save();
+            }
         }
 
         private void log_wizard_Activated(object sender, EventArgs e) {
 
         }
+
+        private void filteredLeft_SplitterMoved(object sender, SplitterEventArgs e) {
+            if (ignore_change_ > 0)
+                return;
+            //logger.Debug("[splitter] filteredleft=" + filteredLeft.SplitterDistance  );
+            if (filteredLeft.SplitterDistance >= 0) {
+                cur_context().ui.full_log_splitter_pos = filteredLeft.SplitterDistance;
+                save();
+            }
+            else
+                Debug.Assert(false);
+        }
+
 
     }
 }

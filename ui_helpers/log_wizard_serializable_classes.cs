@@ -52,20 +52,12 @@ namespace LogWizard {
         public string name  = "";
         public string auto_match = "";
 
-        // show/hide toggles
-        public bool show_filter = true;
-        public bool show_source = true;
-        public bool show_fulllog = false;
+        private ui_info ui_self = new ui_info(), ui_other = null;
+        public ui_info ui;
 
-        public bool show_current_view = true;
-        public bool show_header = true;
-        public bool show_tabs = true;
-        public bool show_title = true;
-        public bool topmost = false;
-        public bool show_status = true;
-
-        // not implemented yet
-        public bool show_details = false;
+        public ui_context() {
+            ui = ui_self;
+        }
 
         public List<ui_view> views = new List<ui_view>();
 
@@ -90,17 +82,7 @@ namespace LogWizard {
             name = other.name;
             auto_match = other.auto_match;
             views = other.views.ToList();
-            show_filter = other.show_filter;
-            show_source = other.show_source;
-            show_fulllog = other.show_fulllog;
-
-            show_current_view = other.show_current_view;
-            show_header = other.show_header;
-            show_tabs = other.show_tabs;
-            show_title = other.show_title;
-            topmost = other.topmost;
-            show_details = other.show_details;
-            show_status = other.show_status;
+            ui.copy_from(other.ui);
         }
     }
 }

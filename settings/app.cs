@@ -106,7 +106,7 @@ namespace LogWizard {
             }
         }
 
-        private void load_save(bool load, ref bool prop, string name, bool default_ = false) {
+        internal static void load_save(bool load, ref bool prop, string name, bool default_ = false) {
             var sett = Program.sett;
             if (load)
                 prop = sett.get(name, default_ ? "1" : "0") != "0";
@@ -114,7 +114,7 @@ namespace LogWizard {
                 sett.set(name, prop ? "1" : "0");
         }
 
-        private void load_save<T>(bool load, ref T prop, string name, T default_) {
+        internal static void load_save<T>(bool load, ref T prop, string name, T default_) {
             var sett = Program.sett;
             if (load) {
                 string val = sett.get(name);
@@ -125,6 +125,13 @@ namespace LogWizard {
 
             } else
                 sett.set(name, "" + (int)(object)prop);
+        }
+        internal static void load_save(bool load, ref string prop, string name, string default_ = "") {
+            var sett = Program.sett;
+            if (load)
+                prop = sett.get(name, default_);
+            else 
+                sett.set(name, prop);
         }
 
         private void load_save(bool load) {

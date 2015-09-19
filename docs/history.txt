@@ -1,8 +1,12 @@
 
+1.0.80c
+- Esc - if message details is shown - hide it
+- refactored the UI-toggles code, to allow for sets of locations/sizes/toggles - NOT complete
+
+
 1.0.80b
 - find - case-insensitive + full words + regex (by default, auto-detect -> [],(),any\ -> regex)
 - new default: synchronize colors - with all
-
 
 
 1.0.80a

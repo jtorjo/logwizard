@@ -96,7 +96,11 @@ namespace LogWizard {
             txt.BackColor = cols.Item2;
         }
 
-        private void show(bool do_show, Point p = default(Point) ) {
+        public bool visible() {
+            return Location.X > -100000;
+        }
+
+        internal void show(bool do_show, Point p = default(Point) ) {
             if (do_show) {
                 Location = p;
                 BringToFront();

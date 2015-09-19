@@ -173,7 +173,7 @@
     <Compile Include="ui\help_form.Designer.cs">
       <DependentUpon>help_form.cs</DependentUpon>
     </Compile>
-    <Compile Include="ui\log_wizard_serializable_classes.cs" />
+    <Compile Include="ui_helpers\log_wizard_serializable_classes.cs" />
     <Compile Include="ui\msg_details_ctrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -226,6 +226,7 @@
     </Compile>
     <Compile Include="settings\settings_file.cs" />
     <Compile Include="readers\shared_memory_text_reader.cs" />
+    <Compile Include="ui_helpers\ui_info.cs" />
     <Compile Include="util\list_extensions.cs" />
     <Compile Include="util\memory_optimized_list.cs" />
     <Compile Include="util\string_search.cs" />
