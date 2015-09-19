@@ -173,7 +173,7 @@ namespace LogWizard
 
         private int toggled_to_custom_ui_ = -1;
         private ui_info default_ui_ = new ui_info();
-        private ui_info[] custom_ui_ = new ui_info[5];
+        private ui_info[] custom_ui_ = new ui_info[] { new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info() };
 
         private enum show_full_log_type {
             both, just_view, just_full_log
@@ -248,11 +248,15 @@ namespace LogWizard
             load_location();
             --ignore_change_;
 
-            bool open_cmd_line_file = forms_.Count == 1 && Program.open_file_name != null;
-            if ( history_.Count > 0 && !open_cmd_line_file) 
-                logHistory.SelectedIndex = history_.Count - 1;
-            if (open_cmd_line_file) 
-                on_file_drop(Program.open_file_name);
+            // 1.0.80d+ - the reason we postpone this is so taht we don't set up all UI in the constructor - the splitters would get extra SplitterMove() events,
+            //            and we would end up positioning them wrong
+            util.postpone(() => {
+                bool open_cmd_line_file = forms_.Count == 1 && Program.open_file_name != null;
+                if (history_.Count > 0 && !open_cmd_line_file)
+                    logHistory.SelectedIndex = history_.Count - 1;
+                if (open_cmd_line_file)
+                    on_file_drop(Program.open_file_name);
+            }, 10);
         }
 
         private void load_location() {
@@ -908,15 +912,19 @@ namespace LogWizard
             show_title(cur.ui.show_title);
             show_details(cur.ui.show_details);
             show_status(cur.ui.show_status);
-            if ( cur.ui.full_log_splitter_pos >= 0)
-                filteredLeft.SplitterDistance = cur.ui.full_log_splitter_pos;
 
+            ++ignore_change_;
             if (toggled_to_custom_ui_ < 0 && cur_ui.width > 0) {
                 Left = cur_ui.left;
                 Top = cur_ui.top;
                 Width = cur_ui.width;
                 Height = cur_ui.height;
+                WindowState = cur_ui.maximized ? FormWindowState.Maximized : FormWindowState.Normal;
             }
+
+            if ( cur.ui.full_log_splitter_pos >= 0)
+                filteredLeft.SplitterDistance = cur.ui.full_log_splitter_pos;
+            --ignore_change_;
 
             util.postpone( () => show_tabs(cur.ui.show_tabs), 100);
             /* not tested
@@ -931,6 +939,10 @@ namespace LogWizard
             synchronizeWithExistingLogs.Checked = app.inst.sync_all_views;
             synchronizedWithFullLog.Checked = app.inst.sync_full_log_view;
             update_sync_texts();
+
+            default_ui_.load("ui.default");
+            for (int i = 0; i < custom_ui_.Length; ++i)
+                custom_ui_[i].load("ui.custom" + i);
         }
 
         private void remove_log_view_from_tab(int idx) {
@@ -995,8 +1007,8 @@ namespace LogWizard
         private void load() {
             load_tabs();
             load_filters();
-            load_ui();
             load_global_settings();
+            load_ui();
         }
 
         public void stop_saving() {
@@ -1012,6 +1024,10 @@ namespace LogWizard
 
             save_filters();
             save_contexts();
+
+            default_ui_.save("ui.default");
+            for (int i = 0; i < custom_ui_.Length; ++i)
+                custom_ui_[i].save("ui.custom" + i);
 
             if ( !Program.sett.dirty)
                 // no change
@@ -2696,22 +2712,34 @@ namespace LogWizard
                 return;
 
             // remember position - if Visible
-            if (toggled_to_custom_ui_ < 0) {
-                cur_ui.width = Width;
-                cur_ui.height = Height;
-                save();
-            }
+            save_location();
         }
 
         private void log_wizard_LocationChanged(object sender, EventArgs e) {
             if (ignore_change_ > 0)
                 return;
-            // remember position - if Visible
-            if (toggled_to_custom_ui_ < 0) {
+
+            save_location();
+        }
+
+        private void save_location() {
+            if (toggled_to_custom_ui_ >= 0)
+                return;
+            if (!Visible)
+                return;
+            if (WindowState == FormWindowState.Minimized)
+                return;
+
+            if (WindowState == FormWindowState.Maximized)
+                cur_ui.maximized = true;
+            else {
+                cur_ui.width = Width;
+                cur_ui.height = Height;
                 cur_ui.left = Left;
                 cur_ui.top = Top;
-                save();
+                cur_ui.maximized = false;
             }
+            save();            
         }
 
         private void log_wizard_Activated(object sender, EventArgs e) {

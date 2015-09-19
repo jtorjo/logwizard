@@ -28,6 +28,7 @@ namespace LogWizard {
     // information about the UI of LogWizard - location, toggles, etc.
     public class ui_info {
         public int left, top, width, height = 0;
+        public bool maximized = false;
 
         // show/hide toggles
         public bool show_filter = true;
@@ -78,6 +79,7 @@ namespace LogWizard {
             app.load_save(load, ref top, prefix + ".top", -1);
             app.load_save(load, ref width, prefix + ".width", -1);
             app.load_save(load, ref height, prefix + ".height", -1);
+            app.load_save(load, ref maximized, prefix + "maximized", false);
 
             app.load_save(load, ref show_filter, prefix + ".show_filter", true);
             app.load_save(load, ref show_source, prefix + ".show_source", true);

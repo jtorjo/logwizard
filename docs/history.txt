@@ -1,4 +1,7 @@
 
+1.0.80d
+- position + maximized - saved correctly
+
 1.0.80c
 - Esc - if message details is shown - hide it
 - refactored the UI-toggles code, to allow for sets of locations/sizes/toggles - NOT complete
