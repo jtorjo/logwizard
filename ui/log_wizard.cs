@@ -2399,7 +2399,7 @@ namespace LogWizard
                 foreach(var ctx in contexts_)
                     ctx.set_other( null);
             }
-            else if (toggled_to_custom_ui_ == -1) {
+            else if (new_ui != -1) {
                 // going to a custom position
                 // ... I'm creating a copy, so that when it gets modified (say the user toggles something) -> that does not get saved into our settings
                 ui_info copy = new ui_info();

@@ -1,6 +1,9 @@
 
 
 
+1.0.80j
+- fix: small bug: if switch from one custom location to another custom location, it does not work correctly
+
 
 1.0.80i
 - done:  what if on a custom location , changed something and want to resave
