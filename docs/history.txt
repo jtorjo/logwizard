@@ -1,4 +1,8 @@
 
+1.0.83c
+- keeping the ui_info in the context itself seems to make no sense - it quite complicates things - we already keep the position info outside (default_ui_, context_ui_)
+
+
 1.0.83b
 - ' ' toggle between enabled/dimmed in the filter (if on a filter row)
 - + - <-V-> etc - buttons should override the header (if the header is visible!)

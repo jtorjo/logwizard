@@ -2,12 +2,10 @@
 
 
 
-
 - msg only -> show the line + msg (at this time, i only show msg)
   - save it for EACH view + full log
   - full log: should toggle between line+msg / line+view+msg / everything
 
-- keeping the ui_info in the context itself seems to make no sense - it quite complicates things - we already keep the position info outside (default_ui_, context_ui_)
 
 - update hotkeys page (mayber online?)- explain toggles in document - so that I can send to Denise.
 

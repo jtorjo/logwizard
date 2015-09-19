@@ -420,7 +420,7 @@ namespace LogWizard
                 main.Panel1.Hide();
             }
             --ignore_change_;
-            global_ui.show_filter = cur_context().ui.show_filter = show;
+            global_ui.show_filter = show;
         }
         private void show_source(bool show) {
             toggleSource.Text = show ? "-S" : "+S";
@@ -438,7 +438,7 @@ namespace LogWizard
                     if ( lv != null)
                         lv.show_name = show;
                 }
-            global_ui.show_source = cur_context().ui.show_source = show;
+            global_ui.show_source = show;
         }
 
         private void show_filteredleft_pane1(bool show) {
@@ -472,22 +472,22 @@ namespace LogWizard
             case show_full_log_type.both:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(true);
-                global_ui.show_fulllog = cur_context().ui.show_fulllog = true;
-                global_ui.show_current_view = cur_context().ui.show_current_view = true;
+                global_ui.show_fulllog = true;
+                global_ui.show_current_view = true;
                 to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
                 break;
             case show_full_log_type.just_view:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(false);
-                global_ui.show_fulllog = cur_context().ui.show_fulllog = false;
-                global_ui.show_current_view = cur_context().ui.show_current_view = true;
+                global_ui.show_fulllog = false;
+                global_ui.show_current_view = true;
                 to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
                 break;
             case show_full_log_type.just_full_log:
                 show_filteredleft_pane1(false);
                 show_filteredleft_pane2(true);
-                global_ui.show_fulllog = cur_context().ui.show_fulllog = true;
-                global_ui.show_current_view = cur_context().ui.show_current_view = false;
+                global_ui.show_fulllog = true;
+                global_ui.show_current_view = false;
                 to_focus = full_log_ctrl;
                 break;
             default:
@@ -599,9 +599,9 @@ namespace LogWizard
         }
 
         private void toggle_details() {
-            bool show = !cur_context().ui.show_details;
+            bool show = !global_ui.show_details;
             show_details( show);
-            global_ui.show_details = cur_context().ui.show_details = show;
+            global_ui.show_details = global_ui.show_details = show;
             save();
         }
 
@@ -631,7 +631,7 @@ namespace LogWizard
         private void toggle_status() {
             bool shown = status.Height > 1;
             show_status(!shown);
-            global_ui.show_status = cur_context().ui.show_status = !shown;
+            global_ui.show_status = global_ui.show_status = !shown;
         }
 
 
@@ -660,7 +660,7 @@ namespace LogWizard
         private void toggle_title() {
             bool shown = FormBorderStyle == FormBorderStyle.Sizable;
             show_title(!shown);
-            global_ui.show_title = cur_context().ui.show_title = !shown;
+            global_ui.show_title = global_ui.show_title = !shown;
             save();
         }
 
@@ -675,7 +675,7 @@ namespace LogWizard
         private void toggle_view_tabs() {
             bool visible_now = !are_tabs_visible(viewsTab);
             show_tabs(visible_now);
-            global_ui.show_tabs = cur_context().ui.show_tabs = visible_now;
+            global_ui.show_tabs = global_ui.show_tabs = visible_now;
             save();
         }
 
@@ -696,7 +696,7 @@ namespace LogWizard
         private void toggle_view_header() {
             bool show = !all_log_views()[0].show_header;
             show_header( show);
-            global_ui.show_header = cur_context().ui.show_header = show;
+            global_ui.show_header = global_ui.show_header = show;
             save();
         }
 
@@ -770,7 +770,7 @@ namespace LogWizard
         }
 
         private void sync_full_log_colors() {
-            if (full_log_ctrl != null && cur_context().ui.show_fulllog ) 
+            if (full_log_ctrl != null && global_ui.show_fulllog ) 
                 full_log_ctrl.update_colors(all_log_views(), viewsTab.SelectedIndex);
         }
 
@@ -895,18 +895,18 @@ namespace LogWizard
                 return;
 
             ++ignore_change_;
-            show_filters(cur.ui.show_filter);
-            show_source(cur.ui.show_source);
+            show_filters(global_ui.show_filter);
+            show_source(global_ui.show_source);
 
-            if ( cur.ui.show_fulllog && cur.ui.show_current_view)
+            if ( global_ui.show_fulllog && global_ui.show_current_view)
                 show_full_log(show_full_log_type.both);
             else
-                show_full_log(cur.ui.show_current_view ? show_full_log_type.just_view : show_full_log_type.just_full_log);
+                show_full_log(global_ui.show_current_view ? show_full_log_type.just_view : show_full_log_type.just_full_log);
 
-            show_header(cur.ui.show_header);
-            show_title(cur.ui.show_title);
-            show_details(cur.ui.show_details);
-            show_status(cur.ui.show_status);
+            show_header(global_ui.show_header);
+            show_title(global_ui.show_title);
+            show_details(global_ui.show_details);
+            show_status(global_ui.show_status);
 
             if ( global_ui.width > 0) {
                 Left = global_ui.left;
@@ -916,10 +916,9 @@ namespace LogWizard
                 WindowState = global_ui.maximized ? FormWindowState.Maximized : FormWindowState.Normal;
             }
 
-            if ( cur.ui.full_log_splitter_pos >= 0)
-                filteredLeft.SplitterDistance = cur.ui.full_log_splitter_pos;
+            if ( global_ui.full_log_splitter_pos >= 0)
+                filteredLeft.SplitterDistance = global_ui.full_log_splitter_pos;
 
-            // this is log-file-dependent
             bool view_name_found = false;
             if (global_ui.selected_view != "") 
                 for (int idx = 0; idx < viewsTab.TabCount && !view_name_found; ++idx)
@@ -932,12 +931,11 @@ namespace LogWizard
 
             --ignore_change_;
 
-            // this is log-file-dependent
             if (global_ui.selected_row_idx > 0)
                 if ( logHistory.SelectedIndex >= 0 && history_[logHistory.SelectedIndex].name == global_ui.log_name)
                     util.postpone( () => try_to_go_to_selected_line(global_ui.selected_row_idx), 250);
 
-            util.postpone( () => show_tabs(cur.ui.show_tabs), 100);
+            util.postpone( () => show_tabs(global_ui.show_tabs), 100);
             /* not tested
             if (cur.topmost) {
                 util.bring_to_topmost(this);
@@ -1126,7 +1124,7 @@ namespace LogWizard
                 // optimized - refresh only current view
                 update_filter(lv);
                 lv.refresh();
-                if (cur_context().ui.show_fulllog) {
+                if (global_ui.show_fulllog) {
                     for (int idx = 0; idx < viewsTab.TabCount; ++idx) {
                         var other = ensure_we_have_log_view_for_tab(idx);
                         if (other != lv)
@@ -1163,7 +1161,7 @@ namespace LogWizard
                 log_view any_lv = log_view_for_tab(0);
                 if (any_lv != null) {
                     top_offset = any_lv.RectangleToScreen(any_lv.ClientRectangle).Top - RectangleToScreen(ClientRectangle).Top + 5;
-                    if (cur_context().ui.show_header)
+                    if (global_ui.show_header)
                         top_offset += any_lv.list.HeaderControl.ClientRectangle.Height;
                 }
                 int bottom_offset = ClientRectangle.Height - lower.Top;
@@ -1234,13 +1232,13 @@ namespace LogWizard
 
             go_to_line(sel.sel_line_idx, sel);
 
-            global_ui.selected_row_idx = cur_context().ui.selected_row_idx = sel.sel_row_idx;
+            global_ui.selected_row_idx = global_ui.selected_row_idx = sel.sel_row_idx;
             if (logHistory.SelectedIndex >= 0)
-                global_ui.log_name = cur_context().ui.log_name = history_[logHistory.SelectedIndex].name;
+                global_ui.log_name = global_ui.log_name = history_[logHistory.SelectedIndex].name;
         }
 
         public void go_to_line(int line_idx, log_view from) {
-            if (cur_context().ui.show_fulllog && from != full_log_ctrl && app.inst.sync_full_log_view) {
+            if (global_ui.show_fulllog && from != full_log_ctrl && app.inst.sync_full_log_view) {
                 full_log_ctrl.go_to_line(line_idx, log_view.select_type.do_not_notify_parent);
                 sync_full_log_colors();
             }
@@ -1313,7 +1311,7 @@ namespace LogWizard
                 }
             }
 
-            if (cur_context().ui.show_fulllog) {
+            if (global_ui.show_fulllog) {
                 full_log_ctrl.refresh();
                 full_log_ctrl.set_view_selected_view_name(lv.name);
             }
@@ -1566,7 +1564,7 @@ namespace LogWizard
             on_log_listory_changed();
 
             util.postpone(() => {
-                if (cur_context().ui.show_current_view)
+                if (global_ui.show_current_view)
                     log_view_for_tab(viewsTab.SelectedIndex).set_focus();
                 else
                     full_log_ctrl.set_focus();
@@ -1579,7 +1577,7 @@ namespace LogWizard
 
             string name = log_view_for_tab(viewsTab.SelectedIndex).name;
             // in this case - even if in a custom UI, we still want to remember the last selected view
-            global_ui.selected_view = cur_context().ui.selected_view = name;
+            global_ui.selected_view = global_ui.selected_view = name;
         }
 
 
@@ -1617,7 +1615,7 @@ namespace LogWizard
 
             load();
             
-            if ( cur_context().ui.show_fulllog && full_log_ctrl != null)
+            if ( global_ui.show_fulllog && full_log_ctrl != null)
                 full_log_ctrl.refresh();
             refresh_cur_log_view();
             save();
@@ -2378,12 +2376,8 @@ namespace LogWizard
                 // going to a custom position
                 if ( !custom_ui_[idx].was_set_at_least_once)
                     custom_ui_[idx].copy_from(global_ui);
-                foreach(var ctx in contexts_)
-                    ctx.set_other( custom_ui_[idx]);
             } else {
                 // going to default position (from a custom position)
-                foreach(var ctx in contexts_)
-                    ctx.set_other( null);
             }
             toggled_to_custom_ui_ = new_ui;
             load_ui();
@@ -2401,15 +2395,15 @@ namespace LogWizard
                 panes.Add( log_view_for_tab(sel).list);
 
             // second pane - the full log (if shown)
-            if( cur_context().ui.show_fulllog)
+            if( global_ui.show_fulllog)
                 panes.Add(full_log_ctrl.list);
 
             // third pane - the filters control (if visible)
-            if ( cur_context().ui.show_filter)
+            if ( global_ui.show_filter)
                 panes.Add(filterCtrl);
 
             // fourth pane - the edit box (if enabled)
-            if ( cur_context().ui.show_filter && curFilterCtrl.Enabled)
+            if ( global_ui.show_filter && curFilterCtrl.Enabled)
                 panes.Add(curFilterCtrl);
             return panes;
         }
@@ -2421,7 +2415,7 @@ namespace LogWizard
                 return;
             foreach ( log_view lv in all_log_views_and_full_log())
                 if (lv != src) {
-                    if (cur_context().ui.show_fulllog && lv == full_log_ctrl && app.inst.sync_full_log_view)
+                    if (global_ui.show_fulllog && lv == full_log_ctrl && app.inst.sync_full_log_view)
                         // in this case, we already synched the full log
                         continue;
 
@@ -2811,7 +2805,7 @@ namespace LogWizard
                 return;
             //logger.Debug("[splitter] filteredleft=" + filteredLeft.SplitterDistance  );
             if (filteredLeft.SplitterDistance >= 0) {
-                global_ui.full_log_splitter_pos = cur_context().ui.full_log_splitter_pos = filteredLeft.SplitterDistance;
+                global_ui.full_log_splitter_pos = global_ui.full_log_splitter_pos = filteredLeft.SplitterDistance;
                 save();
             }
             else

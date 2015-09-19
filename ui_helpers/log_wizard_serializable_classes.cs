@@ -53,13 +53,6 @@ namespace LogWizard {
         public string name  = "";
         public string auto_match = "";
 
-        private ui_info ui_self = new ui_info(), ui_other = null;
-        public ui_info ui;
-
-        public ui_context() {
-            ui = ui_self;
-        }
-
         public List<ui_view> views = new List<ui_view>();
 
         public bool has_views {
@@ -79,16 +72,10 @@ namespace LogWizard {
             }
         }
 
-        public void set_other(ui_info other) {
-            ui_other = other;
-            ui = ui_other ?? ui_self;
-        }
-
         public void copy_from(ui_context other) {
             name = other.name;
             auto_match = other.auto_match;
             views = other.views.ToList();
-            ui.copy_from(other.ui);
         }
 
         private void load_save(bool load, string prefix) {
@@ -98,15 +85,10 @@ namespace LogWizard {
 
         public void load(string prefix) {
             load_save(true, prefix);
-            ui_self.load(prefix);            
         }
 
         public void save(string prefix) {
             load_save(false, prefix);
-
-            // we save the UI information, only if we're not in a custom position
-            if ( ui_other == null)
-                ui_self.save(prefix);
         }
     }
 }
