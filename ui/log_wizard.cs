@@ -680,8 +680,17 @@ namespace LogWizard
         }
 
         private void show_header(bool show) {
+            bool shown = log_view_for_tab(0).show_header;
             foreach (var lv in all_log_views_and_full_log())
                 lv.show_header = show;
+
+            if (shown != show) {
+                int header_height = log_view_for_tab(0).header_height;
+                newFilteredView.Top += show ? header_height : -header_height;
+                delFilteredView.Top += show ? header_height : -header_height;
+                synchronizeWithExistingLogs.Top  += show ? header_height : -header_height;
+                synchronizedWithFullLog.Top  += show ? header_height : -header_height;
+            }
         }
 
         private void toggle_view_header() {
@@ -1954,6 +1963,7 @@ namespace LogWizard
         }
 
         private action_type key_to_action(string key_code) {
+
             switch (key_code) {
             case "up":
             case "down":
@@ -1964,6 +1974,9 @@ namespace LogWizard
             case "space":
             case "enter":
             case "escape":
+                if (key_code == "space" && focused_ctrl() == filterCtrl)
+                    break;
+
                 if (allow_arrow_to_function_normally())
                     return action_type.none;
                 break;
@@ -2082,7 +2095,9 @@ namespace LogWizard
             case "ctrl-5":
                 return action_type.goto_position_5;
             case "space":
-                return action_type.toggle_enabled_dimmed;
+                if ( focused_ctrl() == filterCtrl)
+                    return action_type.toggle_enabled_dimmed;
+                break;
             }
 
             return action_type.none;
@@ -2303,11 +2318,45 @@ namespace LogWizard
                 break;
 
             case action_type.toggle_enabled_dimmed:
+                toggle_enabled_dimmed();
                 break;
 
             default:
                 Debug.Assert(false);
                 break;
+            }
+        }
+
+        private void toggle_enabled_dimmed() {
+            var lv = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
+            int sel = filterCtrl.SelectedIndex;
+            if (sel >= 0) {
+                var filt = cur_context().views[viewsTab.SelectedIndex].filters[sel];
+                bool enabled, dimmed;
+                if (filt.enabled && !filt.dimmed) {
+                    enabled = false;
+                    dimmed = false;
+                }
+                else if (!filt.enabled && !filt.dimmed) {
+                    enabled = false;
+                    dimmed = true;
+                }
+                else if (!filt.enabled && filt.dimmed) {
+                    enabled = true;
+                    dimmed = false;
+                } else {
+                    enabled = false;
+                    dimmed = false;
+                }
+
+                filt.enabled = enabled;
+                filt.dimmed = dimmed;
+
+                var i = filterCtrl.GetItem(sel).RowObject as filter_item;
+                i.enabled = enabled;
+                i.dimmed = dimmed;
+                filterCtrl.RefreshObject(i);
+                save();
             }
         }
 

@@ -1,4 +1,10 @@
 
+1.0.83b
+- ' ' toggle between enabled/dimmed in the filter (if on a filter row)
+- + - <-V-> etc - buttons should override the header (if the header is visible!)
+  - small bug: if both header and views are hidden, the buttons are placed wrongly
+
+
 1.0.83a
 - optimization: filter -> when a filter row is modified / added / or deleted -> I should check exactly that -> so that when updating rows -> reuse what has not been modified
   - bug: move up/down -> sometimes it does not update the "Found" column - also, sometimes it's not updated at all (we should care when filter moved up/down/top/bottom)

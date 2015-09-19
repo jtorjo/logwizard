@@ -437,6 +437,14 @@ namespace LogWizard
             list.Height = !show_name_ ? list.Height + height : list.Height - height;
         }
 
+        public int header_height {
+            get {
+                int height = list.HeaderControl.ClientRectangle.Height;
+                Debug.Assert(height > 0);
+                return height;
+            }
+        }
+
         private void update_show_header() {
             // note: if name is shown, we can't hide header
             bool show = show_name_ || show_header_;

@@ -1,9 +1,7 @@
 
 
 
-- ' ' toggle between enabled/dimmed in the filter (if on a filter row)
 
-- + - <-V-> etc - buttons should override the header (if the header is visible!)
 
 - msg only -> show the line + msg (at this time, i only show msg)
   - save it for EACH view + full log
