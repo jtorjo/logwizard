@@ -1,5 +1,35 @@
 
 
+1.0.81
+- Saving/Toggling positions (+ toggles)
+  the "position" now encompases: 
+  - application position + size
+  - whether app was maximized or not
+  - last selected view
+  - last selected row
+  - full log splitter position
+  - all toggles
+
+  Ctrl-Shift-1 to Ctrl-Shift-5 
+  - saves the position
+  
+  Ctrl-1 to Ctrl-5 
+  - toggles the position (from the default position to a customly-saved position and back)
+  - you can also toggle from one customly-saved position to another customly saved position
+  - whenyou are in a Customly-saved position, any change you make to the position is ignored
+    (so if you're in position 3 and toggle Title OFF, next time you will toggle to position 3, the Title will be ON;
+	 if you make some changes to the position, and want them to update, just re-save the position; 
+	 in our case, you would just re-press Ctrl-Shift-3)
+
+  Ctrl-Shift-0
+  - marks the current position as the "Default" (which you can automatically tweak further)
+
+  Ctrl-0
+  - goes to the position saved by Ctrl-Shift-0
+  - remains in "Default" position (does not go into a "Custom" position)
+    what this means, is that any changes you make further on, are saved as the "Default" position.
+
+
 
 1.0.80j
 - fix: small bug: if switch from one custom location to another custom location, it does not work correctly
