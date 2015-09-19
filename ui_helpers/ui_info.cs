@@ -20,6 +20,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,6 +55,12 @@ namespace LogWizard {
         public int selected_row_idx = -1;
         public int full_log_splitter_pos = -1;
 
+        public enum show_row_type {
+            msg_only, 
+            // ... this makes sense only for the full-log
+            msg_and_view_only, full_row
+        }
+        public Dictionary<string,show_row_type> show_row = new Dictionary<string, show_row_type>(); 
 
         public void copy_from(ui_info other) {
             left = other.left;
@@ -79,6 +86,37 @@ namespace LogWizard {
             full_log_splitter_pos = other.full_log_splitter_pos;
         }
 
+        public show_row_type show_row_for_view(string name) {
+            if (show_row.ContainsKey(name))
+                return show_row[name];
+            else 
+                return show_row_type.full_row;
+        }
+
+        public void show_row_for_view(string name, show_row_type show) {
+            if (show_row.ContainsKey(name))
+                show_row[name] = show;
+            else 
+                show_row.Add(name, show);
+        }
+
+        public show_row_type next_show_row_for_view(string name) {
+            bool is_full_log = name == "[All]";
+
+            switch (show_row_for_view(name)) {
+            case show_row_type.msg_only:
+                return is_full_log ? show_row_type.msg_and_view_only : show_row_type.full_row;
+            case show_row_type.msg_and_view_only:
+                return show_row_type.full_row;
+            case show_row_type.full_row:
+                return show_row_type.msg_only;
+            default:
+                Debug.Assert(false);
+                break;
+            }
+
+            return show_row_type.full_row;
+        }
 
         private void load_save(bool load, string prefix) {
             app.load_save(load, ref left, prefix + ".left", -1);
@@ -102,7 +140,30 @@ namespace LogWizard {
             app.load_save(load, ref selected_view, prefix + "selected_view", selected_view);
             app.load_save(load, ref log_name, prefix + "log_name");
             app.load_save(load, ref selected_row_idx, prefix + "selected_row_idx", -1);
-            app.load_save(load, ref full_log_splitter_pos, prefix + "full_log_splitter_pos", -1);            
+            app.load_save(load, ref full_log_splitter_pos, prefix + "full_log_splitter_pos", -1);
+
+            if (load)
+                load_show_row(prefix);
+            else
+                save_show_row(prefix);
+        }
+
+        private void load_show_row(string prefix) {
+            show_row.Clear();
+            string str = "";
+            app.load_save(true, ref str, prefix + "show_row");
+            foreach (var kv in str.Split( new string[] { ","},StringSplitOptions.RemoveEmptyEntries )) {
+                string[] words = kv.Split('=');
+                try {
+                    show_row.Add(words[0], (show_row_type) int.Parse(words[1]));
+                } catch {
+                }
+            }
+        }
+
+        public void save_show_row(string prefix) {
+            string str = util.concatenate(show_row.Select(x => x.Key + "=" + (int) x.Value), ",");
+            app.load_save(false, ref str, prefix + "show_row");
         }
 
         public void load(string prefix) {

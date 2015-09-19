@@ -571,6 +571,15 @@ namespace LogWizard {
             logger.Fatal("Unhandled Exception: " + e.Message + "\r\n" + e.StackTrace);
         }
 
+        public static string concatenate<T>(IEnumerable<T> vals, string between) {
+            string all = "";
+            foreach (var val in vals) {
+                if (all != "")
+                    all += between;
+                all += val;
+            }
+            return all;
+        }
 
 
 

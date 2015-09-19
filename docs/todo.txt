@@ -2,9 +2,6 @@
 
 
 
-- msg only -> show the line + msg (at this time, i only show msg)
-  - save it for EACH view + full log
-  - full log: should toggle between line+msg / line+view+msg / everything
 
 
 - update hotkeys page (mayber online?)- explain toggles in document - so that I can send to Denise.

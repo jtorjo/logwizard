@@ -931,6 +931,8 @@ namespace LogWizard
 
             --ignore_change_;
 
+            util.postpone( () => show_row_based_on_global_ui(), 100);
+
             if (global_ui.selected_row_idx > 0)
                 if ( logHistory.SelectedIndex >= 0 && history_[logHistory.SelectedIndex].name == global_ui.log_name)
                     util.postpone( () => try_to_go_to_selected_line(global_ui.selected_row_idx), 250);
@@ -951,9 +953,22 @@ namespace LogWizard
                 go_to_line( lv.sel_line_idx, lv);
             }
             else 
-                util.postpone( () => try_to_go_to_selected_line(selected_row_idx), 250);
-            
+                util.postpone( () => try_to_go_to_selected_line(selected_row_idx), 250);            
         }
+
+        private void show_row_based_on_global_ui() {
+            bool is_up_to_date = true;
+            foreach (var lv in all_log_views_and_full_log())
+                if (!lv.is_filter_up_to_date)
+                    is_up_to_date = false;
+
+            if ( is_up_to_date)
+                foreach (var lv in all_log_views_and_full_log())
+                    lv.show_row(global_ui.show_row_for_view(lv.name));
+            else 
+                util.postpone( () => show_row_based_on_global_ui(), 100);
+        }
+
 
         private void load_global_settings() {
             synchronizeWithExistingLogs.Checked = app.inst.sync_all_views;
@@ -2239,8 +2254,11 @@ namespace LogWizard
                 break;
 
             case action_type.toggle_show_msg_only:
-                if (lv != null)
-                    lv.toggle_show_msg_only();
+                if (lv != null) {
+                    var next = global_ui.next_show_row_for_view(lv.name);
+                    lv.show_row(next);
+                    global_ui.show_row_for_view(lv.name, next);
+                }
                 break;
             case action_type.scroll_up:
                 if (lv != null)

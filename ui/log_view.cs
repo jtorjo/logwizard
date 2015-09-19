@@ -200,7 +200,7 @@ namespace LogWizard
 
         private int font_size_ = 9; // default font size
 
-        private List<int> old_widths_ = new List<int>();
+        private List<int> full_widths_ = new List<int>();
 
         // if true, we're waiting for the filter to read from the NEW log
         private DateTime wait_for_filter_to_read_from_new_log_ = DateTime.MinValue;
@@ -1455,23 +1455,39 @@ namespace LogWizard
             }
         }
 
-        public void toggle_show_msg_only() {
-            if (old_widths_.Count < 1) {
-                // hide them
+
+        public void show_row(ui_info.show_row_type show) {
+            if (full_widths_.Count < 1) 
+                // save them now
                 for (int idx = 0; idx < list.Columns.Count; ++idx)
-                    old_widths_.Add(list.Columns[idx].Width);
+                    full_widths_.Add(list.Columns[idx].Width);                
+            
+            logger.Info("[lv] showing rows - " + name + " = " + show );
+
+            switch (show) {
+            case ui_info.show_row_type.msg_only:
                 for (int idx = 0; idx < list.Columns.Count; ++idx)
-                    if (idx != msgCol.Index)
+                    if (idx != msgCol.Index && idx != lineCol.Index)
                         list.Columns[idx].Width = 0;
-            } else {
-                // show them
-                Debug.Assert(list.Columns.Count == old_widths_.Count);
+                break;
+            case ui_info.show_row_type.msg_and_view_only:
                 for (int idx = 0; idx < list.Columns.Count; ++idx)
-                    if (idx != msgCol.Index)
-                        list.Columns[idx].Width = old_widths_[idx];
-                old_widths_.Clear();
+                    if (idx == viewCol.Index)
+                        list.Columns[idx].Width = full_widths_[idx];
+                    else if (idx != msgCol.Index && idx != lineCol.Index)
+                        list.Columns[idx].Width = 0;
+                break;
+            case ui_info.show_row_type.full_row:
+                for (int idx = 0; idx < list.Columns.Count; ++idx)
+                    if (idx != msgCol.Index && idx != lineCol.Index)
+                        list.Columns[idx].Width = full_widths_[idx];
+                break;
+            default:
+                Debug.Assert(false);
+                break;
             }
         }
+
 
         public void scroll_up() {
             if (list.GetItemCount() < 1)
