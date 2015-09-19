@@ -64,14 +64,14 @@ namespace LogWizard {
             return Enumerable.SequenceEqual(items_, other.items_) && Enumerable.SequenceEqual(additions_, other.additions_) && apply_to_existing_lines == other.apply_to_existing_lines;
         }
 
-        private bool valid_ = true;
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // UNIQUE DATA 
+        //
+        // uniquely identifies the filter - any change to the members below, will need to re-run the filter
+
+
         private List<filter_line> items_ = new List<filter_line>();
         private List<addition> additions_ = new List<addition>();
-
-        private HashSet<int> line_matches_ = new HashSet<int>();
-        // cached - so that what we computed once, we don't ask again
-        private log_line_reader old_line_matches_log_ = null;
-        private int old_line_count_ = 0;
 
         private filter_line.font_info font_ = null;
         // 1.0.69+ this contains raw font info - if any - in other words, if any font information is set for this row, this is non-null
@@ -82,7 +82,28 @@ namespace LogWizard {
         //
         // it can : filter out lines from what the normal filters yielded and/or
         //          give a different color to the lines
-        public bool apply_to_existing_lines = false; 
+        public readonly bool apply_to_existing_lines = false;
+
+        private readonly string full_text_;
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // CHANGEABLE DATA 
+        //
+        // this can change without affeacting the cached data
+        private bool valid_ = true;
+        
+        private bool enabled_ = true;
+        private bool dimmed_ = false;
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // CACHED DATA 
+        //
+        // what is below, it's cached running the existing filter row on a log
+
+        private HashSet<int> line_matches_ = new HashSet<int>();
+        // cached - so that what we computed once, we don't ask again
+        private log_line_reader old_line_matches_log_ = null;
+        private int old_line_count_ = 0;
 
         public override string ToString() {
             if (valid_)
@@ -91,7 +112,17 @@ namespace LogWizard {
                 return "invalid";
         }
 
-        public filter_row(string text) {
+        // returns a string that **** uniqueyly identifies **** the UNIQUE data of the filter
+        //
+        // in other words, if two filters' unique_id are equal, they are the ***same*** filter (except for enabled/dimmed)
+        public string unique_id {
+            get {
+                return full_text_;
+            }
+        }
+
+        public filter_row(string text, bool apply_to_existing_lines) {
+            this.apply_to_existing_lines = apply_to_existing_lines;
             List<filter_line> lines = new List<filter_line>();
             List<addition> additions = new List<addition>();
             foreach ( string line in text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)) {
@@ -102,13 +133,17 @@ namespace LogWizard {
                 if ( add != null)
                     additions.Add(add);
 
+                bool is_comment = line.StartsWith("#"), is_empty = line.Trim() == "";
+                if (!is_comment && !is_empty)
+                    full_text_ += line.Trim() + "\r\n";
+
                 if (item == null && add == null) {
-                    bool is_comment = line.StartsWith("#"), is_empty = line.Trim() == "";
                     if (!is_comment && !is_empty)
                         // in this case, the line is not valid yet
                         valid_ = false;
                 }
             }
+            full_text_ += "" + apply_to_existing_lines;
             init(lines, additions);
 
             if (items_.Count < 1)
@@ -155,7 +190,6 @@ namespace LogWizard {
         }
 
         // if !enabled && dimmed:  - dim this filter_row compared to the rest
-        private bool enabled_ = true;
         public bool enabled {
             get { return enabled_; }
             set { enabled_ = value;
@@ -163,7 +197,6 @@ namespace LogWizard {
             }
         }
 
-        private bool dimmed_ = false;
         public bool dimmed {
             get { return dimmed_; }
             set {

@@ -104,6 +104,7 @@ namespace LogWizard
             goto_position_4, 
             goto_position_5,
  
+            toggle_enabled_dimmed,
 
             none,
         }
@@ -144,10 +145,6 @@ namespace LogWizard
         const int MAX_HISTORY_ENTRIES = 100;
 
         private int ignore_change_ = 0;
-
-        // while the user is updating the text, don't update the filter right away
-        private const int IGNORE_FILTER_UDPATE_MS = 1000;
-        private DateTime last_filter_text_change_ = DateTime.MinValue;
 
         // in case we're searching for some text in the current tab, this is non-null
         private search_form.search_for search_for_text_ = null;
@@ -1173,10 +1170,9 @@ namespace LogWizard
             ui_context ctx = cur_context();
             List<filter_row> lvf = new List<filter_row>();
             foreach (ui_filter filt in ctx.views[idx].filters) {
-                filter_row row = new filter_row(filt.text);
+                filter_row row = new filter_row(filt.text, filt.apply_to_existing_lines);
                 row.enabled = filt.enabled;
                 row.dimmed = filt.dimmed;
-                row.apply_to_existing_lines = filt.apply_to_existing_lines;
                 if ( row.is_valid)
                     lvf.Add(row);
             }
@@ -1203,17 +1199,17 @@ namespace LogWizard
         }
 
         private void update_filter( log_view lv) {
-            if (last_filter_text_change_.AddMilliseconds(IGNORE_FILTER_UDPATE_MS) > DateTime.Now)
+            // as long as we're editing the filter, don't update anything
+            if (focused_ctrl() == curFilterCtrl)
                 return;
 
             List<filter_row> lvf = new List<filter_row>();
             int count = filterCtrl.GetItemCount();
             for ( int idx = 0; idx < count; ++idx) {
                 filter_item i = filterCtrl.GetItem(idx).RowObject as filter_item;
-                filter_row filt = new filter_row(i.text);
+                filter_row filt = new filter_row(i.text, i.apply_to_existing_lines);
                 filt.enabled = i.enabled;
                 filt.dimmed = i.dimmed;
-                filt.apply_to_existing_lines = i.apply_to_existing_lines;
 
                 if ( filt.is_valid)
                     lvf.Add(filt);
@@ -1530,8 +1526,6 @@ namespace LogWizard
             friendlyNameCtrl.Text = history_[ logHistory.SelectedIndex].friendly_name;
             logSyntaxCtrl.Text = history_[ logHistory.SelectedIndex].log_syntax;
             sourceName_TextChanged(null,null);
-            if (pane_to_focus_ != null)
-                postFocus.Enabled = true;
         }
 
         private void friendlyName_TextChanged(object sender, EventArgs e)
@@ -1552,7 +1546,6 @@ namespace LogWizard
         }
 
         private void LogWizard_FormClosing(object sender, FormClosingEventArgs e) {
-            last_filter_text_change_ = DateTime.MinValue;
             save();
         }
 
@@ -1562,6 +1555,13 @@ namespace LogWizard
 
             //sourceName_TextChanged(null,null);
             on_log_listory_changed();
+
+            util.postpone(() => {
+                if (cur_context().ui.show_current_view)
+                    log_view_for_tab(viewsTab.SelectedIndex).set_focus();
+                else
+                    full_log_ctrl.set_focus();
+            }, 100);
         }
 
         private void filteredViews_SelectedIndexChanged(object sender, EventArgs e)
@@ -1661,16 +1661,6 @@ namespace LogWizard
         }
 
         private void enabledCtrl_CellEditFinishing(object sender, BrightIdeasSoftware.CellEditEventArgs e) {
-
-            if (e.SubItemIndex == filterCol.Index) {
-                // 1.0.66+ we should not end up here - we're modifying this in the current-filter edit
-                Debug.Assert(false);
-
-                var sel = e.RowObject as filter_item;
-                // in this case, the user has edited the filter
-                curFilterCtrl.Text = sel.text;
-                last_filter_text_change_ = DateTime.Now;
-            }
         }
 
         private void applyToExistingLines_CheckedChanged(object sender, EventArgs e) {
@@ -1710,10 +1700,9 @@ namespace LogWizard
             if (sel.text != curFilterCtrl.Text) {
                 sel.text = curFilterCtrl.Text;
                 filterCtrl.RefreshObject(sel);
-                last_filter_text_change_ = DateTime.Now;
             }
 
-            var row = new filter_row(curFilterCtrl.Text);
+            var row = new filter_row(curFilterCtrl.Text, applyToExistingLines.Checked);
             bool is_valid = row.is_valid;
             Color bg = is_valid ? Color.White : Color.LightPink;
             if (curFilterCtrl.BackColor.ToArgb() != bg.ToArgb())
@@ -1968,6 +1957,13 @@ namespace LogWizard
             switch (key_code) {
             case "up":
             case "down":
+            case "pageup":
+            case "next":
+            case "home":
+            case "end":
+            case "space":
+            case "enter":
+            case "escape":
                 if (allow_arrow_to_function_normally())
                     return action_type.none;
                 break;
@@ -2085,6 +2081,8 @@ namespace LogWizard
                 return action_type.goto_position_4;
             case "ctrl-5":
                 return action_type.goto_position_5;
+            case "space":
+                return action_type.toggle_enabled_dimmed;
             }
 
             return action_type.none;
@@ -2207,9 +2205,6 @@ namespace LogWizard
                 if (logHistory.DroppedDown) 
                     logHistory.DroppedDown = false;
                 else {
-                    var panes = this.panes();
-                    if (panes.Contains(focused_ctrl()))
-                        pane_to_focus_ = focused_ctrl();
                     logHistory.Focus();
                     logHistory.DroppedDown = true;
                 }
@@ -2306,6 +2301,10 @@ namespace LogWizard
             case action_type.goto_position_5:
                 toggle_custom_ui(4);
                 break;
+
+            case action_type.toggle_enabled_dimmed:
+                break;
+
             default:
                 Debug.Assert(false);
                 break;
@@ -2394,6 +2393,7 @@ namespace LogWizard
             else 
                 // move to first / last
                 idx = forward ? 0 : panes.Count - 1;
+            // FIXME 1.0.83+ I should use the util.postpone function
             // note: can't focus now, since the "next/prev" pane event might be triggered twice if from Full-Log
             pane_to_focus_ = panes[ idx % panes.Count ];
             postFocus.Enabled = true;
@@ -2416,7 +2416,7 @@ namespace LogWizard
             }
 
             filter_item i = filterCtrl.GetItem(sel_filter).RowObject as filter_item;
-            filter_row filt = new filter_row(i.text);
+            filter_row filt = new filter_row(i.text, i.apply_to_existing_lines);
             if (filt.is_valid) {
                 var lv = ensure_we_have_log_view_for_tab(sel_view);
                 Color fg = util.str_to_color(sett.get("filter_fg", "transparent"));

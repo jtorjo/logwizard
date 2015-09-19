@@ -116,6 +116,60 @@ namespace LogWizard {
             get { lock(this) return old_log_; }
         }
 
+        private bool same_rows_regarless_enabled_dimmed(List<filter_row> rows) {
+            bool same = false;
+            if (rows_.Count == rows.Count) {
+                same = true;
+                for (int i = 0; i < rows_.Count; ++i)
+                    if (rows[i].unique_id != rows_[i].unique_id)
+                        same = false;
+            }
+
+            return same;
+        }
+
+        private bool same_rows(List<filter_row> rows) {
+            bool same = false;
+            if (rows_.Count == rows.Count) {
+                same = true;
+                for (int i = 0; i < rows_.Count; ++i)
+                    if (rows[i].enabled != rows_[i].enabled || rows[i].dimmed != rows_[i].dimmed || rows[i].unique_id != rows_[i].unique_id)
+                        same = false;
+            }
+
+            return same;
+        }
+
+        /*  preserves as much of the cache as possible
+
+            It can preserve the cache in the following ways:
+            - if you add a new filter row, it will preserve the existing filter rows (and add the new row at the end)
+            - if you delete a filter row, it will preserve the remaining filter rows
+            - if you move a filter row up/down, it wil preserve its computations
+        */
+        private void preserve_cache(List<filter_row> rows) {
+            var old_ids = rows_.ToDictionary(r => r.unique_id, r => r);
+            var new_ids = rows.ToDictionary(r => r.unique_id, r => r);
+
+            List<filter_row> new_rows = new List<filter_row>();
+            int misses = 0;
+            foreach (var id in new_ids) {
+                if (old_ids.ContainsKey(id.Key)) {
+                    var new_ = id.Value;
+                    var old = old_ids[id.Key];
+                    old.enabled = new_.enabled;
+                    old.dimmed = new_.dimmed;
+                    new_rows.Add(old);
+                } else {
+                    // this is completely new (or a changed filter row)
+                    new_rows.Add(id.Value);
+                    ++misses;
+                }
+            }
+            rows_ = new_rows;
+            logger.Info("[filter] preserving cache " + (new_log_ != null ? new_log_.name : "") + ", misses = " + misses);
+        }
+ 
         // note: 
         // since we're thread-safe: the rows' can be updated in the following ways:
         // - either the full array points to the new array
@@ -126,19 +180,12 @@ namespace LogWizard {
             lock (this) {
                 // note: if filter is the same, we want to preserve anything we have cached, about the filter
                 rows_changed_ = false;
-                bool same = false;
-                if (rows_.Count == rows.Count) {
-                    same = true;
-                    for (int i = 0; i < rows_.Count; ++i)
-                        if (!rows[i].same(rows_[i]))
-                            same = false;
-                }
+                bool same = same_rows_regarless_enabled_dimmed(rows);
                 if (same) {
                     // at this point, see if user has fiddled with Enabled/Dimmed
-                    bool same_ed = true;
-                    for (int i = 0; i < rows_.Count; ++i)
-                        if (rows[i].enabled != rows_[i].enabled || rows[i].dimmed != rows_[i].dimmed) {
-                            same_ed = false;
+                    bool same_ed = same_rows(rows);
+                    if ( !same_ed)
+                        for (int i = 0; i < rows_.Count; ++i) {
                             // note: we want to preserve what we already have cached (in the filter rows)
                             rows_[i].enabled = rows[i].enabled;
                             rows_[i].dimmed = rows[i].dimmed;
@@ -148,7 +195,7 @@ namespace LogWizard {
                         rows_changed_ = true;
                 } else {
                     rows_changed_ = true;
-                    rows_ = rows;                    
+                    preserve_cache(rows);
                 }
 
                 if (!rows_changed_)
@@ -174,6 +221,8 @@ namespace LogWizard {
                     if (new_ != old)
                         new_log_fully_read_at_least_once_ = false;
                 }
+                if (needs_recompute)
+                    old = null;
                 compute_matches_impl(new_, old);
                 // the reason I do this here - I need to let the main thread know htat the log was fully set (and the matches are from This log)
                 // ONLY after I have read from it at least once

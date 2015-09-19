@@ -1,13 +1,6 @@
 
-- optimization: filter -> when a filter row is modified / added / or deleted -> I should check exactly that -> so that when updating rows -> reuse what has not been modified
-  - bug: move up/down -> sometimes it does not update the "Found" column - also, sometimes it's not updated at all (we should care when filter moved up/down/top/bottom)
-    (whe should i recompute "Found" column?)
 
-- option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?; probably - yes)
 
-- home/end/esc/' '/enter - should work correctly when history dropdown shown
-  - if title hidden - show it partially
-      - ctrl-h -> should show history - if the title is toggled off, just bring the history part to visibility, and then hide it back
 - ' ' toggle between enabled/dimmed in the filter (if on a filter row)
 
 - + - <-V-> etc - buttons should override the header (if the header is visible!)
@@ -15,6 +8,8 @@
 - msg only -> show the line + msg (at this time, i only show msg)
   - save it for EACH view + full log
   - full log: should toggle between line+msg / line+view+msg / everything
+
+- keeping the ui_info in the context itself seems to make no sense - it quite complicates things - we already keep the position info outside (default_ui_, context_ui_)
 
 - update hotkeys page (mayber online?)- explain toggles in document - so that I can send to Denise.
 
@@ -92,6 +87,13 @@
 
 
 
+
+
+
+
+
+- option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?; probably - yes)
+
 - alert -> allow showing a msg, beep, etc. when a certain msg is found
   for instance "same scrape" -> show a message when that happens
   or, when "overridden theme" gets written (for alerts - force refresh of the view all the time)
@@ -132,7 +134,6 @@
 
 
 
-- keeping the ui_info in the context itself seems to make no sense - it quite complicates things - we already keep the position info outside (default_ui_, context_ui_)
 
 - log friendly name -> retest, useful for Denise (also, will be useful in the future, when we'll have several text readers)
 

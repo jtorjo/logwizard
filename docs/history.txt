@@ -1,4 +1,16 @@
 
+1.0.83a
+- optimization: filter -> when a filter row is modified / added / or deleted -> I should check exactly that -> so that when updating rows -> reuse what has not been modified
+  - bug: move up/down -> sometimes it does not update the "Found" column - also, sometimes it's not updated at all (we should care when filter moved up/down/top/bottom)
+    (whe should i recompute "Found" column?)
+- if editing a filter row, don't update the filter until the user has gone away from it
+- home/end/esc/' '/enter - should work correctly when history dropdown shown
+- history dropdown: closing the dropdown -> move focus away from history
+  - if title hidden - show it partially
+      - ctrl-h -> should show history - if the title is toggled off, just bring the history part to visibility, and then hide it back
+  tested, actually, I don't need to show it - dropping teh Dropdown will show all the items in the history, which is exactly what we want.
+
+
 1.0.82
 - udated saving/toggling positions - made MUCH EASIER
   

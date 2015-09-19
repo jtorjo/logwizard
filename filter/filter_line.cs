@@ -58,6 +58,10 @@ namespace LogWizard {
             }
         }
 
+        private filter_line(string original_line) {
+            this.original_line = original_line.Trim();
+        }
+
         public static bool operator ==(filter_line left, filter_line right) {
             return Equals(left, right);
         }
@@ -81,7 +85,7 @@ namespace LogWizard {
             regex
         }
         public part_type part;
-        public comparison_type comparison;
+        private comparison_type comparison;
         public string text = "";
 
         // in case we're looking for ANY/NONE
@@ -92,6 +96,11 @@ namespace LogWizard {
         private string[] lo_words = null;
 
         private bool case_sensitive_ = true;
+        private Regex regex_ = null;
+        public font_info fi = new font_info();
+
+        public readonly string original_line;
+
         public bool case_sensitive {
             get { return case_sensitive_; }
             set {
@@ -101,7 +110,7 @@ namespace LogWizard {
             }
         }
 
-        private Regex regex_ = null;
+
 
         // font -> contains details about the font; for now, the colors
         public class font_info {
@@ -146,7 +155,6 @@ namespace LogWizard {
             public static font_info default_ = new font_info { bg = Color.White, fg = Color.Black };
             public static font_info full_log_gray_ = new font_info { bg = Color.White, fg = Color.LightSlateGray };
         }
-        public font_info fi = new font_info();
 
 
         public static filter_line parse(string line) {
@@ -165,7 +173,7 @@ namespace LogWizard {
             Debug.Assert(line.StartsWith("color"));
             string[] colors = line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
-            filter_line fi = new filter_line { part = part_type.font };
+            filter_line fi = new filter_line(line) { part = part_type.font };
             if (colors.Length >= 2)
                 fi.fi.fg = util.str_to_color(colors[1]);
             if (colors.Length >= 3)
@@ -198,7 +206,7 @@ namespace LogWizard {
                 return parse_font(line);
 
             if (line == "case-insensitive")
-                return new filter_line {part = part_type.case_sensitive_info, case_sensitive = false };
+                return new filter_line(line) {part = part_type.case_sensitive_info, case_sensitive = false };
 
             if ( !line.StartsWith("$"))
                 return null;
@@ -212,7 +220,7 @@ namespace LogWizard {
                 // we need at least $c compare word(s)
                 return null;
 
-            filter_line fi = new filter_line();
+            filter_line fi = new filter_line(line);
             switch ( words[0]) {
             case "$date": fi.part = part_type.date; break;
             case "$time": fi.part = part_type.time; break;
