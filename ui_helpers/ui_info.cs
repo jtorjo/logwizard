@@ -46,7 +46,8 @@ namespace LogWizard {
         public bool show_details = false;
 
         public string selected_view = "";
-        public int selected_line_idx = -1;
+        public string log_name = ""; // the name of the log 
+        public int selected_row_idx = -1;
         public int full_log_splitter_pos = -1;
 
 
@@ -67,9 +68,10 @@ namespace LogWizard {
             topmost = other.topmost;
             show_details = other.show_details;
             show_status = other.show_status;
+            log_name = other.log_name;
 
             selected_view = other.selected_view;
-            selected_line_idx = other.selected_line_idx;
+            selected_row_idx = other.selected_row_idx;
             full_log_splitter_pos = other.full_log_splitter_pos;
         }
 
@@ -94,7 +96,8 @@ namespace LogWizard {
             app.load_save(load, ref topmost, prefix + ".topmost", false);
 
             app.load_save(load, ref selected_view, prefix + "selected_view", selected_view);
-            app.load_save(load, ref selected_line_idx, prefix + "selected_line_idx", -1);
+            app.load_save(load, ref log_name, prefix + "log_name");
+            app.load_save(load, ref selected_row_idx, prefix + "selected_row_idx", -1);
             app.load_save(load, ref full_log_splitter_pos, prefix + "full_log_splitter_pos", -1);            
         }
 

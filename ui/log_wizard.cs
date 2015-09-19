@@ -298,10 +298,16 @@ namespace LogWizard
             g.DrawString(viewsTab.TabPages[e.Index].Text, font, brush, bounds, new StringFormat(_StringFlags));
         }
 
-        private ui_info cur_ui {
+        private ui_info global_ui {
             get {
                 Debug.Assert( toggled_to_custom_ui_ >= -1 && toggled_to_custom_ui_ < 5);
                 return toggled_to_custom_ui_ < 0 ? default_ui_ : custom_ui_[toggled_to_custom_ui_];
+            }
+        }
+        // 1.0.80f+ - in the future, we might hold log-dependent UI features. At this point, we keep them in the global UI
+        private ui_info log_dependent_ui {
+            get {
+                return global_ui;
             }
         }
 
@@ -489,7 +495,7 @@ namespace LogWizard
                 show_filteredleft_pane2(true);
                 cur_context().ui.show_fulllog = true;
                 cur_context().ui.show_current_view = true;
-                to_focus = full_log_ctrl;
+                to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
                 break;
             case show_full_log_type.just_view:
                 show_filteredleft_pane1(true);
@@ -914,27 +920,33 @@ namespace LogWizard
             show_status(cur.ui.show_status);
 
             ++ignore_change_;
-            if (toggled_to_custom_ui_ < 0 && cur_ui.width > 0) {
-                Left = cur_ui.left;
-                Top = cur_ui.top;
-                Width = cur_ui.width;
-                Height = cur_ui.height;
-                WindowState = cur_ui.maximized ? FormWindowState.Maximized : FormWindowState.Normal;
+            if (toggled_to_custom_ui_ < 0 && global_ui.width > 0) {
+                Left = global_ui.left;
+                Top = global_ui.top;
+                Width = global_ui.width;
+                Height = global_ui.height;
+                WindowState = global_ui.maximized ? FormWindowState.Maximized : FormWindowState.Normal;
             }
 
             if ( cur.ui.full_log_splitter_pos >= 0)
                 filteredLeft.SplitterDistance = cur.ui.full_log_splitter_pos;
             --ignore_change_;
 
+            // this is log-file-dependent
             bool view_name_found = false;
-            if (cur.ui.selected_view != "") 
+            if (log_dependent_ui.selected_view != "") 
                 for (int idx = 0; idx < viewsTab.TabCount && !view_name_found; ++idx)
-                    if (log_view_for_tab(idx).name == cur.ui.selected_view) {
+                    if (log_view_for_tab(idx).name == log_dependent_ui.selected_view) {
                         viewsTab.SelectedIndex = idx;
                         view_name_found = true;
                     }
             if ( !view_name_found)
                 viewsTab.SelectedIndex = 0;
+
+            // this is log-file-dependent
+            if (log_dependent_ui.selected_row_idx > 0)
+                if ( logHistory.SelectedIndex >= 0 && history_[logHistory.SelectedIndex].name == log_dependent_ui.log_name)
+                    util.postpone( () => try_to_go_to_selected_line(log_dependent_ui.selected_row_idx), 250);
 
             util.postpone( () => show_tabs(cur.ui.show_tabs), 100);
             /* not tested
@@ -943,6 +955,17 @@ namespace LogWizard
                 update_topmost_image();
                 update_toggle_topmost_visibility();                
             }*/
+        }
+
+        private void try_to_go_to_selected_line(int selected_row_idx) {
+            var lv = log_view_for_tab(viewsTab.SelectedIndex);
+            if (lv.is_filter_up_to_date) {
+                lv.go_to_line(selected_row_idx, log_view.select_type.do_not_notify_parent);
+                go_to_line( lv.sel_line_idx, lv);
+            }
+            else 
+                util.postpone( () => try_to_go_to_selected_line(selected_row_idx), 250);
+            
         }
 
         private void load_global_settings() {
@@ -1223,8 +1246,10 @@ namespace LogWizard
 
             go_to_line(sel.sel_line_idx, sel);
 
-            cur_context().ui.selected_line_idx = sel.sel_line_idx;
-            cur_ui.selected_line_idx = sel.sel_line_idx;
+            cur_context().ui.selected_row_idx = sel.sel_row_idx;
+            log_dependent_ui.selected_row_idx = sel.sel_row_idx;
+            if (logHistory.SelectedIndex >= 0)
+                cur_context().ui.log_name = log_dependent_ui.log_name = history_[logHistory.SelectedIndex].name;
         }
 
         public void go_to_line(int line_idx, log_view from) {
@@ -1562,7 +1587,7 @@ namespace LogWizard
             load_filters();
 
             cur_context().ui.selected_view = log_view_for_tab(viewsTab.SelectedIndex).name;
-            cur_ui.selected_view = log_view_for_tab(viewsTab.SelectedIndex).name;
+            log_dependent_ui.selected_view = log_view_for_tab(viewsTab.SelectedIndex).name;
         }
 
 
@@ -2747,13 +2772,13 @@ namespace LogWizard
                 return;
 
             if (WindowState == FormWindowState.Maximized)
-                cur_ui.maximized = true;
+                log_dependent_ui.maximized = true;
             else {
-                cur_ui.width = Width;
-                cur_ui.height = Height;
-                cur_ui.left = Left;
-                cur_ui.top = Top;
-                cur_ui.maximized = false;
+                log_dependent_ui.width = Width;
+                log_dependent_ui.height = Height;
+                log_dependent_ui.left = Left;
+                log_dependent_ui.top = Top;
+                log_dependent_ui.maximized = false;
             }
             save();            
         }

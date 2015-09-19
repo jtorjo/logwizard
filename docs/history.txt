@@ -1,4 +1,9 @@
 
+
+1.0.80f
+- select line - saved + restored correctly
+
+
 1.0.80e
 - selected view - saved correctly
 
