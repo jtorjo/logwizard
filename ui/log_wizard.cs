@@ -98,6 +98,7 @@ namespace LogWizard
             shift_arrow_up, shift_arrow_down,
 
             // 1.0.80+ - allow saving the current position + toggles + current view
+            save_position_0,
             save_position_1, 
             save_position_2, 
             save_position_3, 
@@ -105,6 +106,7 @@ namespace LogWizard
             save_position_5,
 
             // 1.0.80+ - switch to a saved position and back
+            toggle_position_0, 
             toggle_position_1, 
             toggle_position_2, 
             toggle_position_3, 
@@ -172,8 +174,8 @@ namespace LogWizard
         private string status_prefix_ = "";
 
         private int toggled_to_custom_ui_ = -1;
-        private ui_info default_ui_ = new ui_info();
-        private ui_info[] custom_ui_ = new ui_info[] { new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info() };
+        private ui_info default_ui_ = new ui_info(), ignored_ui_ = new ui_info();
+        private ui_info[] custom_ui_ = new ui_info[] { new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info() };
 
         private enum show_full_log_type {
             both, just_view, just_full_log
@@ -298,16 +300,20 @@ namespace LogWizard
             g.DrawString(viewsTab.TabPages[e.Index].Text, font, brush, bounds, new StringFormat(_StringFlags));
         }
 
-        private ui_info global_ui {
+        // if we're the normal UI (not toggled into custom) -> we return the global UI settings
+        // if we're toggled into any custom settings -> we return something whose results are ignored
+        // (we don't want to modify the global settings - when we're locked in a Custom UI)
+        private ui_info global_or_ignore_ui {
             get {
-                Debug.Assert( toggled_to_custom_ui_ >= -1 && toggled_to_custom_ui_ < 5);
-                return toggled_to_custom_ui_ < 0 ? default_ui_ : custom_ui_[toggled_to_custom_ui_];
+                Debug.Assert( toggled_to_custom_ui_ >= -1 && toggled_to_custom_ui_ < custom_ui_.Length);
+                return toggled_to_custom_ui_ < 0 ? default_ui_ : ignored_ui_;
             }
         }
-        // 1.0.80f+ - in the future, we might hold log-dependent UI features. At this point, we keep them in the global UI
-        private ui_info log_dependent_ui {
+
+        private ui_info global_ui {
             get {
-                return global_ui;
+                Debug.Assert( toggled_to_custom_ui_ >= -1 && toggled_to_custom_ui_ < custom_ui_.Length);
+                return toggled_to_custom_ui_ < 0 ? default_ui_ : custom_ui_[toggled_to_custom_ui_];
             }
         }
 
@@ -364,10 +370,7 @@ namespace LogWizard
             int count = int.Parse( sett.get("context_count", "1"));
             for ( int i = 0; i < count ; ++i) {
                 ui_context ctx = new ui_context();
-                ctx.name = sett.get("context." + i + ".name", "Default");
-                ctx.auto_match = sett.get("context." + i + ".auto_match");
-
-                ctx.ui.load("context." + i);
+                ctx.load("context." + i);
 
                 int view_count = int.Parse( sett.get("context." + i + ".view_count", "1"));
                 for ( int v = 0; v < view_count; ++v) {
@@ -399,11 +402,7 @@ namespace LogWizard
 
             sett.set("context_count", "" + contexts_.Count);
             for ( int i = 0; i < contexts_.Count; ++i) {
-                sett.set("context." + i + ".name", contexts_[i].name);
-                sett.set("context." + i + ".auto_match", contexts_[i].auto_match);
-
-                if (toggled_to_custom_ui_ < 0) 
-                    contexts_[i].ui.save("context." + i);
+                contexts_[i].save("context." + i);
 
                 int view_count = contexts_[i].views.Count;
                 if ( view_count == 1)
@@ -441,7 +440,7 @@ namespace LogWizard
                 main.Panel1.Hide();
             }
             --ignore_change_;
-            cur_context().ui.show_filter = show;
+            global_or_ignore_ui.show_filter = cur_context().ui.show_filter = show;
         }
         private void show_source(bool show) {
             toggleSource.Text = show ? "-S" : "+S";
@@ -459,7 +458,7 @@ namespace LogWizard
                     if ( lv != null)
                         lv.show_name = show;
                 }
-            cur_context().ui.show_source = show;
+            global_or_ignore_ui.show_source = cur_context().ui.show_source = show;
         }
 
         private void show_filteredleft_pane1(bool show) {
@@ -493,22 +492,22 @@ namespace LogWizard
             case show_full_log_type.both:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(true);
-                cur_context().ui.show_fulllog = true;
-                cur_context().ui.show_current_view = true;
+                global_or_ignore_ui.show_fulllog = cur_context().ui.show_fulllog = true;
+                global_or_ignore_ui.show_current_view = cur_context().ui.show_current_view = true;
                 to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
                 break;
             case show_full_log_type.just_view:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(false);
-                cur_context().ui.show_fulllog = false;
-                cur_context().ui.show_current_view = true;
+                global_or_ignore_ui.show_fulllog = cur_context().ui.show_fulllog = false;
+                global_or_ignore_ui.show_current_view = cur_context().ui.show_current_view = true;
                 to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
                 break;
             case show_full_log_type.just_full_log:
                 show_filteredleft_pane1(false);
                 show_filteredleft_pane2(true);
-                cur_context().ui.show_fulllog = true;
-                cur_context().ui.show_current_view = false;
+                global_or_ignore_ui.show_fulllog = cur_context().ui.show_fulllog = true;
+                global_or_ignore_ui.show_current_view = cur_context().ui.show_current_view = false;
                 to_focus = full_log_ctrl;
                 break;
             default:
@@ -622,7 +621,7 @@ namespace LogWizard
         private void toggle_details() {
             bool show = !cur_context().ui.show_details;
             show_details( show);
-            cur_context().ui.show_details = show;
+            global_or_ignore_ui.show_details = cur_context().ui.show_details = show;
             save();
         }
 
@@ -652,7 +651,7 @@ namespace LogWizard
         private void toggle_status() {
             bool shown = status.Height > 1;
             show_status(!shown);
-            cur_context().ui.show_status = !shown;
+            global_or_ignore_ui.show_status = cur_context().ui.show_status = !shown;
         }
 
 
@@ -681,7 +680,7 @@ namespace LogWizard
         private void toggle_title() {
             bool shown = FormBorderStyle == FormBorderStyle.Sizable;
             show_title(!shown);
-            cur_context().ui.show_title = !shown;
+            global_or_ignore_ui.show_title = cur_context().ui.show_title = !shown;
             save();
         }
 
@@ -696,7 +695,7 @@ namespace LogWizard
         private void toggle_view_tabs() {
             bool visible_now = !are_tabs_visible(viewsTab);
             show_tabs(visible_now);
-            cur_context().ui.show_tabs = visible_now;
+            global_or_ignore_ui.show_tabs = cur_context().ui.show_tabs = visible_now;
             save();
         }
 
@@ -708,7 +707,7 @@ namespace LogWizard
         private void toggle_view_header() {
             bool show = !all_log_views()[0].show_header;
             show_header( show);
-            cur_context().ui.show_header = show;
+            global_or_ignore_ui.show_header = cur_context().ui.show_header = show;
             save();
         }
 
@@ -906,6 +905,7 @@ namespace LogWizard
             if (!cur.has_views)
                 return;
 
+            ++ignore_change_;
             show_filters(cur.ui.show_filter);
             show_source(cur.ui.show_source);
 
@@ -919,8 +919,7 @@ namespace LogWizard
             show_details(cur.ui.show_details);
             show_status(cur.ui.show_status);
 
-            ++ignore_change_;
-            if (toggled_to_custom_ui_ < 0 && global_ui.width > 0) {
+            if ( global_ui.width > 0) {
                 Left = global_ui.left;
                 Top = global_ui.top;
                 Width = global_ui.width;
@@ -930,23 +929,24 @@ namespace LogWizard
 
             if ( cur.ui.full_log_splitter_pos >= 0)
                 filteredLeft.SplitterDistance = cur.ui.full_log_splitter_pos;
-            --ignore_change_;
 
             // this is log-file-dependent
             bool view_name_found = false;
-            if (log_dependent_ui.selected_view != "") 
+            if (global_ui.selected_view != "") 
                 for (int idx = 0; idx < viewsTab.TabCount && !view_name_found; ++idx)
-                    if (log_view_for_tab(idx).name == log_dependent_ui.selected_view) {
+                    if (log_view_for_tab(idx).name == global_ui.selected_view) {
                         viewsTab.SelectedIndex = idx;
                         view_name_found = true;
                     }
             if ( !view_name_found)
                 viewsTab.SelectedIndex = 0;
 
+            --ignore_change_;
+
             // this is log-file-dependent
-            if (log_dependent_ui.selected_row_idx > 0)
-                if ( logHistory.SelectedIndex >= 0 && history_[logHistory.SelectedIndex].name == log_dependent_ui.log_name)
-                    util.postpone( () => try_to_go_to_selected_line(log_dependent_ui.selected_row_idx), 250);
+            if (global_ui.selected_row_idx > 0)
+                if ( logHistory.SelectedIndex >= 0 && history_[logHistory.SelectedIndex].name == global_ui.log_name)
+                    util.postpone( () => try_to_go_to_selected_line(global_ui.selected_row_idx), 250);
 
             util.postpone( () => show_tabs(cur.ui.show_tabs), 100);
             /* not tested
@@ -1246,10 +1246,9 @@ namespace LogWizard
 
             go_to_line(sel.sel_line_idx, sel);
 
-            cur_context().ui.selected_row_idx = sel.sel_row_idx;
-            log_dependent_ui.selected_row_idx = sel.sel_row_idx;
+            global_or_ignore_ui.selected_row_idx = cur_context().ui.selected_row_idx = sel.sel_row_idx;
             if (logHistory.SelectedIndex >= 0)
-                cur_context().ui.log_name = log_dependent_ui.log_name = history_[logHistory.SelectedIndex].name;
+                global_or_ignore_ui.log_name = cur_context().ui.log_name = history_[logHistory.SelectedIndex].name;
         }
 
         public void go_to_line(int line_idx, log_view from) {
@@ -1586,8 +1585,9 @@ namespace LogWizard
         {
             load_filters();
 
-            cur_context().ui.selected_view = log_view_for_tab(viewsTab.SelectedIndex).name;
-            log_dependent_ui.selected_view = log_view_for_tab(viewsTab.SelectedIndex).name;
+            string name = log_view_for_tab(viewsTab.SelectedIndex).name;
+            // in this case - even if in a custom UI, we still want to remember the last selected view
+            global_ui.selected_view = cur_context().ui.selected_view = name;
         }
 
 
@@ -1900,6 +1900,8 @@ namespace LogWizard
 
         private action_type key_to_action(Keys code, string prefix) {
             string s = code.ToString().ToLower();
+            if ( code >= Keys.D0 && code <= Keys.D9)
+                s = code.ToString().ToLower().Substring(1);
             return key_to_action(prefix + s);
         }
 
@@ -2090,6 +2092,8 @@ namespace LogWizard
             case "alt-s":
                 return action_type.toggle_status;
 
+            case "ctrl-shift-0":
+                return action_type.save_position_0;
             case "ctrl-shift-1":
                 return action_type.save_position_1;
             case "ctrl-shift-2":
@@ -2101,6 +2105,8 @@ namespace LogWizard
             case "ctrl-shift-5":
                 return action_type.save_position_5;
 
+            case "ctrl-0":
+                return action_type.toggle_position_0;
             case "ctrl-1":
                 return action_type.toggle_position_1;
             case "ctrl-2":
@@ -2317,35 +2323,41 @@ namespace LogWizard
             case action_type.none:
                 break;
 
-            case action_type.save_position_1:
+            case action_type.save_position_0:
                 save_custom_ui(0);
                 break;
-            case action_type.save_position_2:
+            case action_type.save_position_1:
                 save_custom_ui(1);
                 break;
-            case action_type.save_position_3:
+            case action_type.save_position_2:
                 save_custom_ui(2);
                 break;
-            case action_type.save_position_4:
+            case action_type.save_position_3:
                 save_custom_ui(3);
                 break;
-            case action_type.save_position_5:
+            case action_type.save_position_4:
                 save_custom_ui(4);
                 break;
-            case action_type.toggle_position_1:
+            case action_type.save_position_5:
+                save_custom_ui(5);
+                break;
+            case action_type.toggle_position_0:
                 toggle_custom_ui(0);
                 break;
-            case action_type.toggle_position_2:
+            case action_type.toggle_position_1:
                 toggle_custom_ui(1);
                 break;
-            case action_type.toggle_position_3:
+            case action_type.toggle_position_2:
                 toggle_custom_ui(2);
                 break;
-            case action_type.toggle_position_4:
+            case action_type.toggle_position_3:
                 toggle_custom_ui(3);
+                break;
+            case action_type.toggle_position_4:
+                toggle_custom_ui(4);
                  break;
            case action_type.toggle_position_5:
-                toggle_custom_ui(4);
+                toggle_custom_ui(5);
                 break;
             default:
                 Debug.Assert(false);
@@ -2365,11 +2377,42 @@ namespace LogWizard
         }
 
         private void save_custom_ui(int idx) {
-            toggled_to_custom_ui_ = -1;
+            Debug.Assert(idx >= 0 && idx < custom_ui_.Length);
+            if (toggled_to_custom_ui_ >= 0) {
+                // in this case, we're in a custom UI already
+                util.beep(util.beep_type.err);
+                return;
+            }
+
+            custom_ui_[idx].copy_from(default_ui_);
+            save();
+            set_status( idx > 0 ? "Custom Position [" + idx + "] Saved!" : "Default Position Saved!");
         }
+
         private void toggle_custom_ui(int idx) {
-            toggled_to_custom_ui_ = idx == toggled_to_custom_ui_ ? -1 : idx;
+            int new_ui = idx == toggled_to_custom_ui_ ? -1 : idx;
+            if (idx == 0) {
+                // special case - going to saved "default position"
+                default_ui_.copy_from( custom_ui_[0]);
+                foreach(var ctx in contexts_)
+                    ctx.set_other( null);
+            }
+            else if (toggled_to_custom_ui_ == -1) {
+                // going to a custom position
+                // ... I'm creating a copy, so that when it gets modified (say the user toggles something) -> that does not get saved into our settings
+                ui_info copy = new ui_info();
+                copy.copy_from( custom_ui_[idx]);
+                foreach(var ctx in contexts_)
+                    ctx.set_other( copy);
+            } else {
+                // going to default position (from a custom position)
+                foreach(var ctx in contexts_)
+                    ctx.set_other( null);
+            }
+            toggled_to_custom_ui_ = idx == 0 ? -1 : new_ui;
             load_ui();
+            status_prefix_ = toggled_to_custom_ui_ < 0 ? ""  : "[Position " + idx + "]";
+            force_udpate_status_text();
         }
 
         private List<Control> panes() {
@@ -2772,13 +2815,13 @@ namespace LogWizard
                 return;
 
             if (WindowState == FormWindowState.Maximized)
-                log_dependent_ui.maximized = true;
+                global_ui.maximized = true;
             else {
-                log_dependent_ui.width = Width;
-                log_dependent_ui.height = Height;
-                log_dependent_ui.left = Left;
-                log_dependent_ui.top = Top;
-                log_dependent_ui.maximized = false;
+                global_ui.width = Width;
+                global_ui.height = Height;
+                global_ui.left = Left;
+                global_ui.top = Top;
+                global_ui.maximized = false;
             }
             save();            
         }
@@ -2792,7 +2835,7 @@ namespace LogWizard
                 return;
             //logger.Debug("[splitter] filteredleft=" + filteredLeft.SplitterDistance  );
             if (filteredLeft.SplitterDistance >= 0) {
-                cur_context().ui.full_log_splitter_pos = filteredLeft.SplitterDistance;
+                global_or_ignore_ui.full_log_splitter_pos = cur_context().ui.full_log_splitter_pos = filteredLeft.SplitterDistance;
                 save();
             }
             else

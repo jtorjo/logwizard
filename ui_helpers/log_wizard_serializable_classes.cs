@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 
 namespace LogWizard {
@@ -78,11 +79,34 @@ namespace LogWizard {
             }
         }
 
+        public void set_other(ui_info other) {
+            ui_other = other;
+            ui = ui_other ?? ui_self;
+        }
+
         public void copy_from(ui_context other) {
             name = other.name;
             auto_match = other.auto_match;
             views = other.views.ToList();
             ui.copy_from(other.ui);
+        }
+
+        private void load_save(bool load, string prefix) {
+            app.load_save(load, ref name, prefix + ".name", "Default" );
+            app.load_save(load, ref auto_match, prefix + ".auto_match");
+        }
+
+        public void load(string prefix) {
+            load_save(true, prefix);
+            ui_self.load(prefix);            
+        }
+
+        public void save(string prefix) {
+            load_save(false, prefix);
+
+            // we save the UI information, only if we're not in a custom position
+            if ( ui_other == null)
+                ui_self.save(prefix);
         }
     }
 }
