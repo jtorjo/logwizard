@@ -322,7 +322,8 @@ namespace LogWizard
             return tab.Top >= 0;
         }
         private void set_tabs_visible(TabControl tab, bool show) {
-            int extra = tab.Height - tab.TabPages[0].Height;
+            int page_height = tab.SelectedTab != null ? tab.SelectedTab.Height : tab.TabPages[0].Height;
+            int extra = tab.Height - page_height;
             bool visible_now = are_tabs_visible(tab);
             if (show) {
                 if (!visible_now) {

@@ -3,6 +3,11 @@
  what if on a custom location , changed something and want to resave
 
 
+1.0.80h
+- everything saved correctly - toggling to/from different locations works correctly
+- still todo:  what if on a custom location , changed something and want to resave 
+
+
 1.0.80g
 - still bug when hiding tabs and title
 
