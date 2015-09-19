@@ -65,8 +65,6 @@ namespace LogWizard {
         public bool sync_colors_all_views_gray_non_active = false;
 
 
-
-
         // file-by-file
         public bool bring_to_top_on_restart = false;
         public bool make_topmost_on_restart = false;

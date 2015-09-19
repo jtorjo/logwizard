@@ -98,20 +98,11 @@ namespace LogWizard
             shift_arrow_up, shift_arrow_down,
 
             // 1.0.80+ - allow saving the current position + toggles + current view
-            save_position_0,
-            save_position_1, 
-            save_position_2, 
-            save_position_3, 
-            save_position_4, 
-            save_position_5,
-
-            // 1.0.80+ - switch to a saved position and back
-            toggle_position_0, 
-            toggle_position_1, 
-            toggle_position_2, 
-            toggle_position_3, 
-            toggle_position_4, 
-            toggle_position_5,
+            goto_position_1, 
+            goto_position_2, 
+            goto_position_3, 
+            goto_position_4, 
+            goto_position_5,
  
 
             none,
@@ -174,8 +165,8 @@ namespace LogWizard
         private string status_prefix_ = "";
 
         private int toggled_to_custom_ui_ = -1;
-        private ui_info default_ui_ = new ui_info(), ignored_ui_ = new ui_info();
-        private ui_info[] custom_ui_ = new ui_info[] { new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info() };
+        private ui_info default_ui_ = new ui_info();
+        private ui_info[] custom_ui_ = new ui_info[] { new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info() };
 
         private enum show_full_log_type {
             both, just_view, just_full_log
@@ -300,15 +291,6 @@ namespace LogWizard
             g.DrawString(viewsTab.TabPages[e.Index].Text, font, brush, bounds, new StringFormat(_StringFlags));
         }
 
-        // if we're the normal UI (not toggled into custom) -> we return the global UI settings
-        // if we're toggled into any custom settings -> we return something whose results are ignored
-        // (we don't want to modify the global settings - when we're locked in a Custom UI)
-        private ui_info global_or_ignore_ui {
-            get {
-                Debug.Assert( toggled_to_custom_ui_ >= -1 && toggled_to_custom_ui_ < custom_ui_.Length);
-                return toggled_to_custom_ui_ < 0 ? default_ui_ : ignored_ui_;
-            }
-        }
 
         private ui_info global_ui {
             get {
@@ -441,7 +423,7 @@ namespace LogWizard
                 main.Panel1.Hide();
             }
             --ignore_change_;
-            global_or_ignore_ui.show_filter = cur_context().ui.show_filter = show;
+            global_ui.show_filter = cur_context().ui.show_filter = show;
         }
         private void show_source(bool show) {
             toggleSource.Text = show ? "-S" : "+S";
@@ -459,7 +441,7 @@ namespace LogWizard
                     if ( lv != null)
                         lv.show_name = show;
                 }
-            global_or_ignore_ui.show_source = cur_context().ui.show_source = show;
+            global_ui.show_source = cur_context().ui.show_source = show;
         }
 
         private void show_filteredleft_pane1(bool show) {
@@ -493,22 +475,22 @@ namespace LogWizard
             case show_full_log_type.both:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(true);
-                global_or_ignore_ui.show_fulllog = cur_context().ui.show_fulllog = true;
-                global_or_ignore_ui.show_current_view = cur_context().ui.show_current_view = true;
+                global_ui.show_fulllog = cur_context().ui.show_fulllog = true;
+                global_ui.show_current_view = cur_context().ui.show_current_view = true;
                 to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
                 break;
             case show_full_log_type.just_view:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(false);
-                global_or_ignore_ui.show_fulllog = cur_context().ui.show_fulllog = false;
-                global_or_ignore_ui.show_current_view = cur_context().ui.show_current_view = true;
+                global_ui.show_fulllog = cur_context().ui.show_fulllog = false;
+                global_ui.show_current_view = cur_context().ui.show_current_view = true;
                 to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
                 break;
             case show_full_log_type.just_full_log:
                 show_filteredleft_pane1(false);
                 show_filteredleft_pane2(true);
-                global_or_ignore_ui.show_fulllog = cur_context().ui.show_fulllog = true;
-                global_or_ignore_ui.show_current_view = cur_context().ui.show_current_view = false;
+                global_ui.show_fulllog = cur_context().ui.show_fulllog = true;
+                global_ui.show_current_view = cur_context().ui.show_current_view = false;
                 to_focus = full_log_ctrl;
                 break;
             default:
@@ -622,7 +604,7 @@ namespace LogWizard
         private void toggle_details() {
             bool show = !cur_context().ui.show_details;
             show_details( show);
-            global_or_ignore_ui.show_details = cur_context().ui.show_details = show;
+            global_ui.show_details = cur_context().ui.show_details = show;
             save();
         }
 
@@ -652,7 +634,7 @@ namespace LogWizard
         private void toggle_status() {
             bool shown = status.Height > 1;
             show_status(!shown);
-            global_or_ignore_ui.show_status = cur_context().ui.show_status = !shown;
+            global_ui.show_status = cur_context().ui.show_status = !shown;
         }
 
 
@@ -681,7 +663,7 @@ namespace LogWizard
         private void toggle_title() {
             bool shown = FormBorderStyle == FormBorderStyle.Sizable;
             show_title(!shown);
-            global_or_ignore_ui.show_title = cur_context().ui.show_title = !shown;
+            global_ui.show_title = cur_context().ui.show_title = !shown;
             save();
         }
 
@@ -696,7 +678,7 @@ namespace LogWizard
         private void toggle_view_tabs() {
             bool visible_now = !are_tabs_visible(viewsTab);
             show_tabs(visible_now);
-            global_or_ignore_ui.show_tabs = cur_context().ui.show_tabs = visible_now;
+            global_ui.show_tabs = cur_context().ui.show_tabs = visible_now;
             save();
         }
 
@@ -708,7 +690,7 @@ namespace LogWizard
         private void toggle_view_header() {
             bool show = !all_log_views()[0].show_header;
             show_header( show);
-            global_or_ignore_ui.show_header = cur_context().ui.show_header = show;
+            global_ui.show_header = cur_context().ui.show_header = show;
             save();
         }
 
@@ -1247,9 +1229,9 @@ namespace LogWizard
 
             go_to_line(sel.sel_line_idx, sel);
 
-            global_or_ignore_ui.selected_row_idx = cur_context().ui.selected_row_idx = sel.sel_row_idx;
+            global_ui.selected_row_idx = cur_context().ui.selected_row_idx = sel.sel_row_idx;
             if (logHistory.SelectedIndex >= 0)
-                global_or_ignore_ui.log_name = cur_context().ui.log_name = history_[logHistory.SelectedIndex].name;
+                global_ui.log_name = cur_context().ui.log_name = history_[logHistory.SelectedIndex].name;
         }
 
         public void go_to_line(int line_idx, log_view from) {
@@ -2093,31 +2075,16 @@ namespace LogWizard
             case "alt-s":
                 return action_type.toggle_status;
 
-            case "ctrl-shift-0":
-                return action_type.save_position_0;
-            case "ctrl-shift-1":
-                return action_type.save_position_1;
-            case "ctrl-shift-2":
-                return action_type.save_position_2;
-            case "ctrl-shift-3":
-                return action_type.save_position_3;
-            case "ctrl-shift-4":
-                return action_type.save_position_4;
-            case "ctrl-shift-5":
-                return action_type.save_position_5;
-
-            case "ctrl-0":
-                return action_type.toggle_position_0;
             case "ctrl-1":
-                return action_type.toggle_position_1;
+                return action_type.goto_position_1;
             case "ctrl-2":
-                return action_type.toggle_position_2;
+                return action_type.goto_position_2;
             case "ctrl-3":
-                return action_type.toggle_position_3;
+                return action_type.goto_position_3;
             case "ctrl-4":
-                return action_type.toggle_position_4;
+                return action_type.goto_position_4;
             case "ctrl-5":
-                return action_type.toggle_position_5;
+                return action_type.goto_position_5;
             }
 
             return action_type.none;
@@ -2324,41 +2291,20 @@ namespace LogWizard
             case action_type.none:
                 break;
 
-            case action_type.save_position_0:
-                save_custom_ui(0);
-                break;
-            case action_type.save_position_1:
-                save_custom_ui(1);
-                break;
-            case action_type.save_position_2:
-                save_custom_ui(2);
-                break;
-            case action_type.save_position_3:
-                save_custom_ui(3);
-                break;
-            case action_type.save_position_4:
-                save_custom_ui(4);
-                break;
-            case action_type.save_position_5:
-                save_custom_ui(5);
-                break;
-            case action_type.toggle_position_0:
+            case action_type.goto_position_1:
                 toggle_custom_ui(0);
                 break;
-            case action_type.toggle_position_1:
+            case action_type.goto_position_2:
                 toggle_custom_ui(1);
                 break;
-            case action_type.toggle_position_2:
+            case action_type.goto_position_3:
                 toggle_custom_ui(2);
                 break;
-            case action_type.toggle_position_3:
+            case action_type.goto_position_4:
                 toggle_custom_ui(3);
                 break;
-            case action_type.toggle_position_4:
+            case action_type.goto_position_5:
                 toggle_custom_ui(4);
-                 break;
-           case action_type.toggle_position_5:
-                toggle_custom_ui(5);
                 break;
             default:
                 Debug.Assert(false);
@@ -2377,47 +2323,25 @@ namespace LogWizard
             search_for_text_ = null;
         }
 
-        private void save_custom_ui(int idx) {
-            Debug.Assert(idx >= 0 && idx < custom_ui_.Length);
-            if (toggled_to_custom_ui_ >= 0) {
-                // in this case, we're in a custom UI already
-                custom_ui_[idx].copy_from(ignored_ui_);
-                set_status( "Custom Position [" + idx + "] Updated!");
-            } else {
-                custom_ui_[idx].copy_from(default_ui_);
-                set_status( idx > 0 ? "Custom Position [" + idx + "] Saved!" : "Default Position Saved!");
-            }
-
-            save();
-        }
 
         private void toggle_custom_ui(int idx) {
             int new_ui = idx == toggled_to_custom_ui_ ? -1 : idx;
-            if (idx == 0) {
-                // special case - going to saved "default position"
-                default_ui_.copy_from( custom_ui_[0]);
-                foreach(var ctx in contexts_)
-                    ctx.set_other( null);
-            }
-            else if (new_ui != -1) {
+            if (new_ui != -1) {
                 // going to a custom position
-                // ... I'm creating a copy, so that when it gets modified (say the user toggles something) -> that does not get saved into our settings
-                ui_info copy = new ui_info();
-                copy.copy_from( custom_ui_[idx]);
-                // the reason I do this - is in case the user wants to save again - this specific custom UI
-                // in this case, everything that gets changed is stored in ignored_ui_
-                ignored_ui_.copy_from( custom_ui_[idx]);
+                if ( !custom_ui_[idx].was_set_at_least_once)
+                    custom_ui_[idx].copy_from(global_ui);
                 foreach(var ctx in contexts_)
-                    ctx.set_other( copy);
+                    ctx.set_other( custom_ui_[idx]);
             } else {
                 // going to default position (from a custom position)
                 foreach(var ctx in contexts_)
                     ctx.set_other( null);
             }
-            toggled_to_custom_ui_ = idx == 0 ? -1 : new_ui;
+            toggled_to_custom_ui_ = new_ui;
             load_ui();
-            status_prefix_ = toggled_to_custom_ui_ < 0 ? ""  : "[Position " + idx + "]";
+            status_prefix_ = toggled_to_custom_ui_ < 0 ? ""  : "[Position " + (idx+1) + "]";
             force_udpate_status_text();
+            save();
         }
 
         private List<Control> panes() {
@@ -2818,13 +2742,13 @@ namespace LogWizard
                 return;
 
             if (WindowState == FormWindowState.Maximized)
-                global_or_ignore_ui.maximized = true;
+                global_ui.maximized = true;
             else {
-                global_or_ignore_ui.width = Width;
-                global_or_ignore_ui.height = Height;
-                global_or_ignore_ui.left = Left;
-                global_or_ignore_ui.top = Top;
-                global_or_ignore_ui.maximized = false;
+                global_ui.width = Width;
+                global_ui.height = Height;
+                global_ui.left = Left;
+                global_ui.top = Top;
+                global_ui.maximized = false;
             }
             save();            
         }
@@ -2838,7 +2762,7 @@ namespace LogWizard
                 return;
             //logger.Debug("[splitter] filteredleft=" + filteredLeft.SplitterDistance  );
             if (filteredLeft.SplitterDistance >= 0) {
-                global_or_ignore_ui.full_log_splitter_pos = cur_context().ui.full_log_splitter_pos = filteredLeft.SplitterDistance;
+                global_ui.full_log_splitter_pos = cur_context().ui.full_log_splitter_pos = filteredLeft.SplitterDistance;
                 save();
             }
             else

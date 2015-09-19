@@ -1,4 +1,31 @@
 
+1.0.82
+- udated saving/toggling positions - made MUCH EASIER
+  
+- Saving/Toggling positions
+	  the "position" now encompases: 
+	  - application position + size
+	  - whether app was maximized or not
+	  - last selected view
+	  - last selected row
+	  - full log splitter position
+	  - all toggles
+
+  By default, you're in the "Default" position (you can also call it, position zero). Anything you do is automatically saved.
+  At any time, you can switch to another to another position (1 to 5).
+  To switch to another position, press Ctrl-1 to Ctrl-5. 
+  To switch back to the default position (position zero), just press the hotkey again.
+
+  When going to position 1-5:
+  - if you're going there for the first time, the existing position is copied. This works even if
+    you're in another position. 
+	So, if you're going to position 2, and you were in the default position, the default position is copied into position 2.
+	If you're going into position 2 from position 1, the position 1 is copied into position 2.
+
+	From there on, anything you do is saved within this position.
+	To go back to the default position, just press the Ctrl-(1 to 5) hotkey again.
+
+
 
 1.0.81
 - Saving/Toggling positions (+ toggles)

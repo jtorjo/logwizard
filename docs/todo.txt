@@ -1,11 +1,4 @@
 
-
-
-
-
-
-
-
 - optimization: filter -> when a filter row is modified / added / or deleted -> I should check exactly that -> so that when updating rows -> reuse what has not been modified
   - bug: move up/down -> sometimes it does not update the "Found" column - also, sometimes it's not updated at all (we should care when filter moved up/down/top/bottom)
     (whe should i recompute "Found" column?)
@@ -139,7 +132,7 @@
 
 
 
-
+- keeping the ui_info in the context itself seems to make no sense - it quite complicates things - we already keep the position info outside (default_ui_, context_ui_)
 
 - log friendly name -> retest, useful for Denise (also, will be useful in the future, when we'll have several text readers)
 

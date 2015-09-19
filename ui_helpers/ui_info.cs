@@ -30,6 +30,10 @@ namespace LogWizard {
         public int left, top, width, height = 0;
         public bool maximized = false;
 
+        public bool was_set_at_least_once {
+            get { return width > 0; }
+        }
+
         // show/hide toggles
         public bool show_filter = true;
         public bool show_source = true;

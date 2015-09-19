@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(settings_form));
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -47,8 +48,9 @@
             this.syncColorsCurView = new System.Windows.Forms.RadioButton();
             this.syncColorsNone = new System.Windows.Forms.RadioButton();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label9 = new System.Windows.Forms.Label();
             this.reset = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -70,7 +72,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.viewIndex);
             this.groupBox1.Controls.Add(this.viewLineCount);
-            this.groupBox1.Location = new System.Drawing.Point(12, 208);
+            this.groupBox1.Location = new System.Drawing.Point(12, 239);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(380, 122);
             this.groupBox1.TabIndex = 2;
@@ -118,7 +120,7 @@
             // 
             // close
             // 
-            this.close.Location = new System.Drawing.Point(565, 488);
+            this.close.Location = new System.Drawing.Point(565, 515);
             this.close.Name = "close";
             this.close.Size = new System.Drawing.Size(75, 25);
             this.close.TabIndex = 3;
@@ -135,7 +137,7 @@
             this.groupBox2.Controls.Add(this.toggleTopmost);
             this.groupBox2.Location = new System.Drawing.Point(12, 41);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(628, 161);
+            this.groupBox2.Size = new System.Drawing.Size(628, 192);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "General";
@@ -145,7 +147,7 @@
             this.makeTopmostOnRestart.AutoSize = true;
             this.makeTopmostOnRestart.Enabled = false;
             this.makeTopmostOnRestart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.makeTopmostOnRestart.Location = new System.Drawing.Point(256, 87);
+            this.makeTopmostOnRestart.Location = new System.Drawing.Point(256, 101);
             this.makeTopmostOnRestart.Name = "makeTopmostOnRestart";
             this.makeTopmostOnRestart.Size = new System.Drawing.Size(185, 21);
             this.makeTopmostOnRestart.TabIndex = 4;
@@ -156,7 +158,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(22, 111);
+            this.label4.Location = new System.Drawing.Point(22, 125);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(481, 39);
             this.label4.TabIndex = 3;
@@ -166,7 +168,7 @@
             // 
             this.bringToTopOnRestart.AutoSize = true;
             this.bringToTopOnRestart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bringToTopOnRestart.Location = new System.Drawing.Point(6, 87);
+            this.bringToTopOnRestart.Location = new System.Drawing.Point(10, 101);
             this.bringToTopOnRestart.Name = "bringToTopOnRestart";
             this.bringToTopOnRestart.Size = new System.Drawing.Size(206, 21);
             this.bringToTopOnRestart.TabIndex = 2;
@@ -205,7 +207,7 @@
             this.groupBox3.Controls.Add(this.syncColorsAllViews);
             this.groupBox3.Controls.Add(this.syncColorsCurView);
             this.groupBox3.Controls.Add(this.syncColorsNone);
-            this.groupBox3.Location = new System.Drawing.Point(12, 336);
+            this.groupBox3.Location = new System.Drawing.Point(12, 363);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(628, 146);
             this.groupBox3.TabIndex = 5;
@@ -299,22 +301,12 @@
             // 
             this.groupBox4.Controls.Add(this.reset);
             this.groupBox4.Controls.Add(this.label9);
-            this.groupBox4.Location = new System.Drawing.Point(398, 208);
+            this.groupBox4.Location = new System.Drawing.Point(398, 239);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(242, 122);
             this.groupBox4.TabIndex = 6;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Reset All Settings";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 25);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(229, 51);
-            this.label9.TabIndex = 0;
-            this.label9.Text = "Resets all settings to their defaults.\r\nYou will lose your history,\r\nand LogWizar" +
-    "d will restart.";
             // 
             // reset
             // 
@@ -326,11 +318,21 @@
             this.reset.UseVisualStyleBackColor = true;
             this.reset.Click += new System.EventHandler(this.reset_Click);
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 25);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(229, 51);
+            this.label9.TabIndex = 0;
+            this.label9.Text = "Resets all settings to their defaults.\r\nYou will lose your history,\r\nand LogWizar" +
+    "d will restart.";
+            // 
             // settings_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(649, 523);
+            this.ClientSize = new System.Drawing.Size(649, 552);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -383,6 +385,7 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button reset;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ToolTip tip;
 
     }
 }
