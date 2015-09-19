@@ -926,6 +926,16 @@ namespace LogWizard
                 filteredLeft.SplitterDistance = cur.ui.full_log_splitter_pos;
             --ignore_change_;
 
+            bool view_name_found = false;
+            if (cur.ui.selected_view != "") 
+                for (int idx = 0; idx < viewsTab.TabCount && !view_name_found; ++idx)
+                    if (log_view_for_tab(idx).name == cur.ui.selected_view) {
+                        viewsTab.SelectedIndex = idx;
+                        view_name_found = true;
+                    }
+            if ( !view_name_found)
+                viewsTab.SelectedIndex = 0;
+
             util.postpone( () => show_tabs(cur.ui.show_tabs), 100);
             /* not tested
             if (cur.topmost) {
@@ -1212,6 +1222,9 @@ namespace LogWizard
                 return;
 
             go_to_line(sel.sel_line_idx, sel);
+
+            cur_context().ui.selected_line_idx = sel.sel_line_idx;
+            cur_ui.selected_line_idx = sel.sel_line_idx;
         }
 
         public void go_to_line(int line_idx, log_view from) {
@@ -1547,6 +1560,9 @@ namespace LogWizard
         private void filteredViews_SelectedIndexChanged(object sender, EventArgs e)
         {
             load_filters();
+
+            cur_context().ui.selected_view = log_view_for_tab(viewsTab.SelectedIndex).name;
+            cur_ui.selected_view = log_view_for_tab(viewsTab.SelectedIndex).name;
         }
 
 
@@ -1583,7 +1599,7 @@ namespace LogWizard
             remove_all_log_views();
 
             load();
-            viewsTab.SelectedIndex = 0;
+            
             if ( cur_context().ui.show_fulllog && full_log_ctrl != null)
                 full_log_ctrl.refresh();
             refresh_cur_log_view();

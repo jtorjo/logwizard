@@ -1,6 +1,11 @@
 
+1.0.80e
+- selected view - saved correctly
+
+
 1.0.80d
-- position + maximized - saved correctly
+- position + maximized + full-log-splitter-distance - saved correctly
+
 
 1.0.80c
 - Esc - if message details is shown - hide it
