@@ -2830,6 +2830,10 @@ namespace LogWizard
                 Debug.Assert(false);
         }
 
+        private void hotkeys_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            Process.Start("https://github.com/jtorjo/logwizard/wiki/Hotkeys");
+        }
+
 
     }
 }

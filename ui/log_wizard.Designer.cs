@@ -97,6 +97,7 @@
             this.lower = new System.Windows.Forms.Panel();
             this.status = new System.Windows.Forms.Label();
             this.saveTimer = new System.Windows.Forms.Timer(this.components);
+            this.hotkeys = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).BeginInit();
             this.filterContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
@@ -329,7 +330,7 @@
             this.logHistory.FormattingEnabled = true;
             this.logHistory.Location = new System.Drawing.Point(189, 3);
             this.logHistory.Name = "logHistory";
-            this.logHistory.Size = new System.Drawing.Size(692, 23);
+            this.logHistory.Size = new System.Drawing.Size(724, 23);
             this.logHistory.TabIndex = 7;
             this.tip.SetToolTip(this.logHistory, "History - just select any of the previous logs, and they instantly load");
             this.logHistory.SelectedIndexChanged += new System.EventHandler(this.logHistory_SelectedIndexChanged);
@@ -640,6 +641,7 @@
             this.tabPage2.Controls.Add(this.applyToExistingLines);
             this.tabPage2.Controls.Add(this.label1);
             this.tabPage2.Controls.Add(this.curFilterCtrl);
+            this.tabPage2.Controls.Add(this.tipsHotkeys);
             this.tabPage2.Controls.Add(this.delFilter);
             this.tabPage2.Controls.Add(this.filterLabel);
             this.tabPage2.Controls.Add(this.addFilter);
@@ -853,14 +855,14 @@
             // 
             // tipsHotkeys
             // 
-            this.tipsHotkeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.tipsHotkeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.tipsHotkeys.AutoSize = true;
-            this.tipsHotkeys.Location = new System.Drawing.Point(887, 8);
+            this.tipsHotkeys.Location = new System.Drawing.Point(234, 430);
             this.tipsHotkeys.Name = "tipsHotkeys";
-            this.tipsHotkeys.Size = new System.Drawing.Size(83, 15);
+            this.tipsHotkeys.Size = new System.Drawing.Size(29, 15);
             this.tipsHotkeys.TabIndex = 12;
             this.tipsHotkeys.TabStop = true;
-            this.tipsHotkeys.Text = "Tips / Hotkeys";
+            this.tipsHotkeys.Text = "Tips";
             this.tipsHotkeys.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.tipsHotkeys_LinkClicked);
             // 
             // refresh
@@ -894,13 +896,13 @@
             // 
             this.lower.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lower.Controls.Add(this.hotkeys);
             this.lower.Controls.Add(this.logHistory);
             this.lower.Controls.Add(this.newView);
             this.lower.Controls.Add(this.monitor);
             this.lower.Controls.Add(this.toggleFilters);
             this.lower.Controls.Add(this.about);
             this.lower.Controls.Add(this.toggleSource);
-            this.lower.Controls.Add(this.tipsHotkeys);
             this.lower.Controls.Add(this.toggleFullLog);
             this.lower.Controls.Add(this.settingsCtrl);
             this.lower.Controls.Add(this.refreshFilter);
@@ -925,6 +927,18 @@
             this.saveTimer.Enabled = true;
             this.saveTimer.Interval = 15000;
             this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
+            // 
+            // hotkeys
+            // 
+            this.hotkeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.hotkeys.AutoSize = true;
+            this.hotkeys.Location = new System.Drawing.Point(919, 8);
+            this.hotkeys.Name = "hotkeys";
+            this.hotkeys.Size = new System.Drawing.Size(50, 15);
+            this.hotkeys.TabIndex = 15;
+            this.hotkeys.TabStop = true;
+            this.hotkeys.Text = "Hotkeys";
+            this.hotkeys.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.hotkeys_LinkClicked);
             // 
             // log_wizard
             // 
@@ -1045,6 +1059,7 @@
         private System.Windows.Forms.PictureBox toggleTopmost;
         private System.Windows.Forms.Label status;
         private System.Windows.Forms.Timer saveTimer;
+        private System.Windows.Forms.LinkLabel hotkeys;
     }
 }
 

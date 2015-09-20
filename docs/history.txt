@@ -1,5 +1,10 @@
 
 
+1.0.83e
+- update hotkeys page (mayber online?)- explain toggles in document - so that I can send to Denise.
+  - yes, made help page online
+
+
 1.0.83d
 - msg only -> show the line + msg (at this time, i only show msg)
   - save it for EACH view + full log
