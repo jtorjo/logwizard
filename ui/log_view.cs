@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -53,7 +54,7 @@ namespace LogWizard
         // and one here, full of pointers
         //
         // for large files, this can add up to a LOT of memory
-        private class item : filter.match {
+        internal class item : filter.match {
 
             public Color override_bg = util.transparent, override_fg = util.transparent;
 
@@ -140,6 +141,9 @@ namespace LogWizard
             }
         }
 
+
+        private log_view_render render_;
+
         private class list_data_source : AbstractVirtualListDataSource {
             private VirtualObjectListView lv_ = null;
 
@@ -206,6 +210,13 @@ namespace LogWizard
 
             load_font();
             parent.handle_subcontrol_keys(this);
+
+            render_ = new log_view_render(this);
+            foreach (var col in list.Columns)
+                (col as OLVColumn).Renderer = render_;
+
+            // just an example:
+            //render_.set_override("settings", new log_view_render.print_info { fg = Color.Blue, bold = true });
         }
 
         private filter.match create_match_object() {
@@ -856,7 +867,7 @@ namespace LogWizard
 
         private void go_last() {
             var count = filter_.match_count;
-            if (count > 0) {
+            if (count > 0 && count < list.GetItemCount()) {
                 list.EnsureVisible(count - 1);
                 select_idx(count - 1, select_type.do_not_notify_parent);
             }
@@ -958,8 +969,10 @@ namespace LogWizard
             if (top_idx < 0)
                 top_idx = 0;
             // we want to show the line in the *middle* of the control (height-wise)
-            list.EnsureVisible(top_idx);
-            list.EnsureVisible(bottom_idx);
+            if( top_idx < list.GetItemCount())
+                list.EnsureVisible(top_idx);
+            if( bottom_idx < list.GetItemCount())
+                list.EnsureVisible(bottom_idx);
         }
 
 

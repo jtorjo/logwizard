@@ -105,5 +105,17 @@ namespace LogWizard {
             return 0 != (GetAsyncKeyState(vKey) & 0x8000);
         }
 
+        // http://stackoverflow.com/questions/435433/what-is-the-preferred-way-to-find-focused-control-in-winforms-app
+        [DllImport("user32.dll", CharSet=CharSet.Auto, CallingConvention=CallingConvention.Winapi)]
+        private static extern IntPtr GetFocus();
+        public static Control focused_ctrl() {
+            Control focusedControl = null;
+            IntPtr focusedHandle = GetFocus();
+            if(focusedHandle != IntPtr.Zero)
+                // Note that if the focused Control is not a .Net control, then this will return null.
+                focusedControl = Control.FromHandle(focusedHandle);
+            return focusedControl;
+        }
+
     }
 }

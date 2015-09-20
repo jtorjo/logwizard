@@ -1251,6 +1251,7 @@ namespace LogWizard
             global_ui.selected_row_idx = global_ui.selected_row_idx = sel.sel_row_idx;
             if (logHistory.SelectedIndex >= 0)
                 global_ui.log_name = global_ui.log_name = history_[logHistory.SelectedIndex].name;
+            sel.list.Refresh();
         }
 
         public void go_to_line(int line_idx, log_view from) {
@@ -1925,16 +1926,8 @@ namespace LogWizard
             return key_to_action(e.KeyCode, prefix);
         }
 
-        // http://stackoverflow.com/questions/435433/what-is-the-preferred-way-to-find-focused-control-in-winforms-app
-        [DllImport("user32.dll", CharSet=CharSet.Auto, CallingConvention=CallingConvention.Winapi)]
-        private static extern IntPtr GetFocus();
         private Control focused_ctrl() {
-            Control focusedControl = null;
-            IntPtr focusedHandle = GetFocus();
-            if(focusedHandle != IntPtr.Zero)
-                // Note that if the focused Control is not a .Net control, then this will return null.
-                focusedControl = Control.FromHandle(focusedHandle);
-            return focusedControl;
+            return win32.focused_ctrl();
         }
 
         private bool is_focus_on_edit() {

@@ -1,5 +1,10 @@
 
 
+1.0.87
+- custome renderer - right now, we can draw custom words/phrases/etc. with different fonts, bold, etc. (list_view_render)
+  we need to make it so that we can match anything a filter or a find matches
+
+
 1.0.86
 - added + tested sharpzip - ****awesome lib****
 

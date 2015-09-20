@@ -225,7 +225,6 @@
         private BrightIdeasSoftware.OLVColumn dateCol;
         private BrightIdeasSoftware.OLVColumn timeCol;
         private BrightIdeasSoftware.OLVColumn levelCol;
-        private BrightIdeasSoftware.OLVColumn msgCol;
         private BrightIdeasSoftware.OLVColumn fileCol;
         private BrightIdeasSoftware.OLVColumn funcCol;
         private BrightIdeasSoftware.OLVColumn classCol;
@@ -234,5 +233,6 @@
         private BrightIdeasSoftware.OLVColumn ctx3Col;
         private BrightIdeasSoftware.OLVColumn viewCol;
         internal BrightIdeasSoftware.VirtualObjectListView list;
+        internal BrightIdeasSoftware.OLVColumn msgCol;
     }
 }

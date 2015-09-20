@@ -167,12 +167,17 @@
     <Compile Include="ui\go_to_line_time_form.Designer.cs">
       <DependentUpon>go_to_line_time_form.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\gradient_brush_list.cs" />
     <Compile Include="ui\help_form.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ui\help_form.Designer.cs">
       <DependentUpon>help_form.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\log_view_render.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ui\solid_brush_list.cs" />
     <Compile Include="ui_helpers\log_wizard_serializable_classes.cs" />
     <Compile Include="ui\msg_details_ctrl.cs">
       <SubType>UserControl</SubType>
