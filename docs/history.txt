@@ -1,5 +1,9 @@
 
 
+1.0.86
+- added + tested sharpzip - ****awesome lib****
+
+
 1.0.85
 - side effect, of course, everything is smoother, and loads faster, since we don't need to reload matches on the main thread
   (they are loaded in the filter' tread)

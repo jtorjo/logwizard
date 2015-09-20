@@ -227,6 +227,7 @@
     <Compile Include="settings\settings_file.cs" />
     <Compile Include="readers\shared_memory_text_reader.cs" />
     <Compile Include="ui_helpers\ui_info.cs" />
+    <Compile Include="util\zip_util.cs" />
     <Compile Include="util\list_extensions.cs" />
     <Compile Include="util\memory_optimized_list.cs" />
     <Compile Include="util\string_search.cs" />
@@ -337,6 +338,12 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="3rdparty\SharpZipLib\src\ICSharpCode.SharpZLib.csproj">
+      <Project>{0E7413FF-EB9E-4714-ACF2-BE3A6A7B2FFD}</Project>
+      <Name>ICSharpCode.SharpZLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
