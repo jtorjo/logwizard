@@ -1,4 +1,7 @@
 
+1.0.84a
+- removed filter.match_indexes_
+
 
 1.0.83e
 - update hotkeys page (mayber online?)- explain toggles in document - so that I can send to Denise.

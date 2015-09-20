@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using log4net.Util;
 
 namespace LogWizard {
     static class list_extensions {
@@ -68,5 +69,27 @@ namespace LogWizard {
             bool return_start = Math.Abs(startKey.CompareTo(key)) < Math.Abs(endKey.CompareTo(key));
             return new Tuple<T, int>(return_start ? startItem : endItem, return_start ? min : max);
         }
+
+        // returns where you would insert an item in this list
+        public static int binary_search_insert<T, TKey>(this IList<T> list, Func<T, TKey> keySelector, TKey key)
+            where TKey : IComparable<TKey> where T : class {
+            if (list.Count < 1)
+                return 0;
+            
+            var closest = binary_search_closest(list, keySelector, key);
+            if ( key.CompareTo( keySelector(list[closest.Item2])) == 0)
+                // the element already exists
+                return closest.Item2;
+
+
+            if (closest.Item2 < list.Count) {
+                TKey after = keySelector(list[closest.Item2 + 1]);
+                if (key.CompareTo(after) < 0)
+                    return closest.Item2 + 1;
+            }
+
+            return closest.Item2;
+        }
+
     }
 }
