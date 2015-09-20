@@ -1,4 +1,13 @@
 
+- todo: 
+  remove usages of log_view - list.GetItemCount()
+  when using GetItem() - always check for null
+
+
+1.0.84b
+- log_view and filter share the matches list
+
+
 1.0.84a
 - removed filter.match_indexes_
 

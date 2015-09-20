@@ -950,7 +950,8 @@ namespace LogWizard
             var lv = log_view_for_tab(viewsTab.SelectedIndex);
             if (lv.is_filter_up_to_date) {
                 lv.go_to_line(selected_row_idx, log_view.select_type.do_not_notify_parent);
-                go_to_line( lv.sel_line_idx, lv);
+                if ( lv.sel_line_idx >= 0)
+                    go_to_line( lv.sel_line_idx, lv);
             }
             else 
                 util.postpone( () => try_to_go_to_selected_line(selected_row_idx), 250);            

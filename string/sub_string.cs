@@ -16,7 +16,7 @@ namespace LogWizard
         }
 
         public string msg {
-            get { return string_.line_at(line_idx_); }
+            get { return string_ != null ? string_.line_at(line_idx_) : ""; }
         }
     }
 }

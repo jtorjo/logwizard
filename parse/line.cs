@@ -48,6 +48,19 @@ namespace LogWizard {
             }
         }
 
+        private line() {
+            sub_ = new sub_string(null,0);
+        }
+
+        public static line empty_line() {
+            line l = new line();
+            for (int i = 0; i < l.parts.Length / 2; ++i) {
+                l.parts[i * 2] = -1;
+                l.parts[i * 2 + 1] = 0;
+            }
+            return l;
+        }
+
         public line(sub_string sub, Tuple<int, int>[] idx_in_line) {
             sub_ = sub;
             Debug.Assert(idx_in_line.Length == (int)info_type.max);

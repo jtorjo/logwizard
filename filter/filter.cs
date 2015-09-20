@@ -28,6 +28,7 @@ using System.Threading;
 using System.Windows.Forms;
 
 namespace LogWizard {
+
     class filter : IDisposable {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -43,6 +44,103 @@ namespace LogWizard {
             public int line_idx = 0;
         }
 
+        // 1.0.84b+ the only thing this provides is thread-safe access - so both of us and the log view can access this fine and dandy
+        public class match_list {
+            private string name_ = "";
+            public string name {
+                get { return name_; }
+                set {
+                    name_ = value;
+                    matches_.name = "filter_m " + name;
+                }
+            }
+
+            private match empty_match;
+
+            public match_list(match empty_match) {
+                this.empty_match = empty_match;
+            }
+
+            // the filter matches
+            //
+            // 1.0.84+ the log view accesses this list directly for its items; I'm doing this to save memory on large files
+            //         this will save us quite a few extra pointers, which on x64 can add up to a LOT
+            private memory_optimized_list<match> matches_ = new memory_optimized_list<match>() {
+                min_capacity = app.inst.no_ui.min_list_data_source_capacity, increase_percentage = 0.4            
+            };
+
+            public int count {
+                get { lock (this) return matches_.Count;  }
+            }
+
+            // in case we're asking for an invalid line, just return something that is fully empty
+            // next time, the log view will see that we've updated
+            public match match_at(int idx) {
+                lock (this) 
+                    return idx < matches_.Count ? matches_[idx] : empty_match;
+            }
+
+            public void clear() {
+                lock (this)
+                    matches_.Clear();
+            }
+
+            // 1.0.84 note: if this is proves too slow, i'll do a binary search by m.line_idx !!!
+            public int index_of(match m) {
+                lock (this)
+                    return matches_.IndexOf(m);
+            }
+
+            public void add_range(memory_optimized_list<match> new_matches) {
+                lock (this) {
+                    bool optimize = matches_.Count == 0 && new_matches.Count > app.inst.no_ui.min_filter_capacity;
+                    if (!optimize) {
+                        matches_.AddRange(new_matches);
+                    } else {
+                        // optimization - reuse this memory
+                        new_matches.name = matches_.name;
+                        matches_ = new_matches;
+                    }
+                }                
+            }
+
+            public void prepare_add(int count) {
+                lock(this)
+                    matches_.prepare_add(count);
+            }
+
+            // returns the index where we can insert a line - if I return -1, it means there's already a line with this index
+            public int insert_line_idx(int line_idx) {
+                lock (this) {
+                    int insert_idx = matches_.binary_search_insert(x => x.line_idx, line_idx);
+                    if (insert_idx < matches_.Count)
+                        if (matches_[insert_idx].line_idx == line_idx)
+                            return -1; // we already have a match
+
+                    return insert_idx;
+                }
+            }
+
+            public void insert(int insert_idx, match m) {
+                lock(this)
+                    matches_.Insert(insert_idx, m);
+            }
+
+            public Tuple<match, int> binary_search(int line_idx) {
+                lock (this)
+                    return matches_.binary_search(x => x.line_idx, line_idx);
+            }
+
+            public Tuple<match, int> binary_search_closest(int line_idx) {
+                lock (this)
+                    return matches_.binary_search_closest(x => x.line_idx, line_idx);
+            }
+            public Tuple<match, int> binary_search_closest(DateTime time) {
+                lock (this)
+                    return matches_.binary_search_closest(x => x.line.time, time);
+            }
+        }
+
 
         private List<filter_row> rows_ = new List<filter_row>();
 
@@ -51,8 +149,10 @@ namespace LogWizard {
         private bool new_log_fully_read_at_least_once_ = false;
 
         // the filter matches
-        //private Dictionary<int, match> matches_ = new Dictionary<int, match>();
-        private memory_optimized_list<match> matches_ = new memory_optimized_list<match>() { min_capacity = app.inst.no_ui.min_filter_capacity };
+        private match_list matches_ ;
+
+        public delegate match create_match_func();
+        private create_match_func create_match;
 
         private bool rows_changed_ = false;
 
@@ -65,6 +165,17 @@ namespace LogWizard {
 
         // debugging/testing only
         private string name_ = "";
+
+        public filter(create_match_func creator) {
+            create_match = creator;
+
+            var empty_match = new_match(new BitArray(0), line.empty_line(), 0, filter_line.font_info.default_);
+            matches_ = new match_list(empty_match);
+        }
+
+        public match_list matches {
+            get { return matches_; }
+        }
 
         public string name {
             get { return name_; }
@@ -94,7 +205,7 @@ namespace LogWizard {
         }
 
         public int match_count {
-            get { lock(this) return matches_.Count; }
+            get { return matches_.count; }
         }
 
         public bool is_up_to_date {
@@ -104,8 +215,7 @@ namespace LogWizard {
         // note: the only time this can return null is this: since we're refreshing on another thread,
         //       we might at some point get a match_count, and while we're retrieving the items, the matches array clears
         public match match_at(int idx) {
-            lock (this) 
-                return idx < matches_.Count ? matches_[idx] : null;            
+            return matches_.match_at(idx);
         }
 
         // this will return the log we last read the matches from
@@ -230,15 +340,15 @@ namespace LogWizard {
             }
         }
 
-        // this gets called only on the compute_matches_thread - since we want to update the matches_/match_indexes_ on that thread!
+        // this gets called only on the compute_matches_thread - since we want to update the matches_ on that thread!
         private void force_recompute_matches() {
             lock (this) {
                 post_force_recompute_matches_ = false;
-                if (matches_.Count < 1)
-                    return;
-                matches_.Clear();
                 //old_log_ = null;
             }
+            if (matches_.count < 1)
+                return;
+            matches_.clear();
         }
 
         private void start_compute_matches_thread() {
@@ -298,9 +408,7 @@ namespace LogWizard {
                 memory_optimized_list<match> new_matches = new memory_optimized_list<match>() { min_capacity = expected_capacity, name = "temp_m " + name, increase_percentage = .7 };
 
                 // from old_lines to log.line_count -> these need recomputing
-                int old_match_count;
-                lock (this)
-                    old_match_count = matches_.Count;
+                int old_match_count = matches_.count;
                 BitArray matches = new BitArray(rows.Count);
 
                 for (int line_idx = old_line_count; line_idx < new_log.line_count; ++line_idx) {
@@ -361,27 +469,16 @@ namespace LogWizard {
                             } else
                                 font = filter_line.font_info.default_;
                         }
-                        new_matches.Add(new match {
-                            font = font, line = new_log.line_at(line_idx), line_idx = line_idx, matches = new BitArray(matches)
-                        });
+                        new_matches.Add( new_match(new BitArray(matches), new_log.line_at(line_idx), line_idx, font ));
                         continue;
                     }
 
                     bool any_filter = (rows.Count > 0);
                     if (!any_filter) 
-                        new_matches.Add(new match { matches = new BitArray(0), line = new_log.line_at(line_idx), line_idx = line_idx, font = filter_line.font_info.default_ });
+                        new_matches.Add( new_match(new BitArray(0), new_log.line_at(line_idx), line_idx, filter_line.font_info.default_ ));
                 }
 
-                lock (this) {
-                    bool optimize = matches_.Count == 0 && new_matches.Count > app.inst.no_ui.min_filter_capacity;
-                    if (!optimize) {
-                        matches_.AddRange(new_matches);
-                    } else {
-                        // optimization - reuse this memory
-                        new_matches.name = matches_.name;
-                        matches_ = new_matches;
-                    }
-                }
+                matches_.add_range(new_matches);
 
                 apply_additions(old_match_count, new_log, rows);
                 if (new_matches.Count > app.inst.no_ui.min_filter_capacity) {
@@ -412,12 +509,9 @@ namespace LogWizard {
                 return;
 
             Dictionary<int, Color> additions = new Dictionary<int, Color>();
-            int new_match_count;
-            lock (this) new_match_count = matches_.Count;
+            int new_match_count = matches_.count;
             for (int match_idx = old_match_count; match_idx < new_match_count; ++match_idx) {
-                int line_idx;
-                lock(this) 
-                    line_idx = matches_[match_idx].line_idx;
+                int line_idx = matches_.match_at(match_idx).line_idx;
                 var match = match_at(match_idx);
 
                 int matched_filter = -1;
@@ -462,11 +556,9 @@ namespace LogWizard {
                 }
             }
 
-            lock (this) {
-                matches_.prepare_add( additions.Count);
+            matches_.prepare_add( additions.Count);
                 foreach (var add_idx in additions)
                     add_addition_line(add_idx.Key, add_idx.Value, log);
-            }
         }
 
 
@@ -486,18 +578,22 @@ namespace LogWizard {
         }
         */
 
+        private match new_match(BitArray ba, line l, int idx, filter_line.font_info f ) {
+            match m = create_match();
+            m.matches = ba;
+            m.line = l;
+            m.line_idx = idx;
+            m.font = f;
+            return m;
+        }
+
         private void add_addition_line(int line_idx, Color fg, log_line_reader log) {
             // IMPORTANT: I did NOT test the binary_search_insert!
-            int insert_idx = matches_.binary_search_insert(x => x.line_idx, line_idx);
-            if ( insert_idx < matches_.Count)
-                if (matches_[insert_idx].line_idx == line_idx)
-                    return; // we already have a match
-
-            matches_.Insert(insert_idx, new match {
-                    matches = empty_match, line = log.line_at(line_idx), line_idx = line_idx, font = new filter_line.font_info {
+            int insert_idx = matches_.insert_line_idx(line_idx);
+            if ( insert_idx >= 0)
+                matches_.insert(insert_idx, new_match(empty_match, log.line_at(line_idx), line_idx, new filter_line.font_info {
                         bg = Color.White, fg = fg
-                    }
-                } );
+                    }));            
         }
 
 

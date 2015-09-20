@@ -40,7 +40,7 @@ namespace LogWizard
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private log_wizard parent;
-        private filter filter_ = new filter();
+        private filter filter_ ;
         private log_line_reader log_ = null;
 
         // by default - it's a new filter (thus, needing refresh)
@@ -52,17 +52,19 @@ namespace LogWizard
 
         private Font non_bold_ = null, bold_ = null;
 
-        private class item {
-            private filter.match match_;
+        // the reason we derive from filter.match is memory efficiency; otherwise, ew would have two lists - one in filter,
+        // and one here, full of pointers
+        //
+        // for large files, this can add up to a LOT of memory
+        private class item : filter.match {
 
             public Color override_bg = util.transparent, override_fg = util.transparent;
 
-            public item(filter.match match, log_view parent) {
-                match_ = match;
+            public item(log_view parent) {
             }
 
             public int line {
-                get { return match_.line_idx + 1; }
+                get { return base.line_idx + 1; }
             }
 
             public virtual string view {
@@ -70,62 +72,58 @@ namespace LogWizard
             }
 
             public string date {
-                get { return match_.line.part(info_type.date); }
+                get { return base.line.part(info_type.date); }
             }
             public string time {
-                get { return match_.line.part(info_type.time); }
+                get { return base.line.part(info_type.time); }
             }
             public string level {
-                get { return match_.line.part(info_type.level); }
+                get { return base.line.part(info_type.level); }
             }
             public string msg {
-                get { return match_.line.part(info_type.msg); }
+                get { return base.line.part(info_type.msg); }
             }
 
             public string file {
-                get { return match_.line.part(info_type.file); }
+                get { return base.line.part(info_type.file); }
             }
             public string func {
-                get { return match_.line.part(info_type.func); }
+                get { return base.line.part(info_type.func); }
             }
             public string class_ {
-                get { return match_.line.part(info_type.class_); }
+                get { return base.line.part(info_type.class_); }
             }
             public string ctx1 {
-                get { return match_.line.part(info_type.ctx1); }
+                get { return base.line.part(info_type.ctx1); }
             }
             public string ctx2 {
-                get { return match_.line.part(info_type.ctx2); }
+                get { return base.line.part(info_type.ctx2); }
             }
             public string ctx3 {
-                get { return match_.line.part(info_type.ctx3); }
+                get { return base.line.part(info_type.ctx3); }
             }
             public string thread {
-                get { return match_.line.part(info_type.thread); }
+                get { return base.line.part(info_type.thread); }
             }
 
             public Color bg(log_view parent) {
-                if (parent.bookmarks_.Contains(match.line_idx))
+                if (parent.bookmarks_.Contains(base.line_idx))
                     return parent.bookmark_bg_;
                 if (override_bg != util.transparent)
                     return override_bg;
-                return match_.font.bg;
+                return base.font.bg;
             }
 
             public Color fg(log_view parent) {
-                if (parent.bookmarks_.Contains(match.line_idx))
+                if (parent.bookmarks_.Contains(base.line_idx))
                     return parent.bookmark_fg_;
                 if (override_fg != util.transparent)
                     return override_fg;
-                return match_.font.fg;
+                return base.font.fg;
             }
 
             public filter.match match {
-                get { return match_; }
-                set {
-                    Debug.Assert(value != null);
-                    match_ = value;
-                }
+                get { return this;  }
             }
         };
 
@@ -133,60 +131,49 @@ namespace LogWizard
         private class full_log_item : item {
             private readonly log_view parent_ = null;
 
-            public full_log_item(filter.match match, log_view parent) : base(match, parent) {
+            public full_log_item(log_view parent) : base(parent) {
                 Debug.Assert(parent != null);
                 parent_ = parent;
             }
 
             public override string view {
                 get {
-                    return parent_.parent.matched_logs(match.line_idx);
+                    return parent_.parent.matched_logs(line_idx);
                 }
             }
         }
 
         private class list_data_source : AbstractVirtualListDataSource {
-            private memory_optimized_list<item> items_ = new memory_optimized_list<item>() { min_capacity = app.inst.no_ui.min_list_data_source_capacity, increase_percentage = 0.4 };
             private VirtualObjectListView lv_ = null;
 
-            public list_data_source(VirtualObjectListView lv) : base(lv) {
+            private filter.match_list items_;
+
+            public list_data_source(VirtualObjectListView lv, filter.match_list items ) : base(lv) {
                 lv_ = lv;
+                items_ = items;
             }
 
             public string name {
                 set { items_.name = "list_data " + value; }
             }
 
-            public IList<item> get_matches {
-                get { return items_; }
-            } 
-
             public override int GetObjectIndex(object model) {
-                return items_.IndexOf(model as item);
+                return items_.index_of(model as item);
             }
 
             public override object GetNthObject(int n) {
-                return n < items_.Count ? items_[n] : null;
+                return n < items_.count ? items_.match_at(n) : null;
             }
 
             public override int GetObjectCount() {
-                return items_.Count;
+                return items_.count;
             }
 
-            public void add_matches(memory_optimized_list<filter.match> matches, log_view parent) {
-                bool is_full_log = parent.is_full_log;
-                foreach ( var m in matches)
-                    items_.Add( is_full_log ? new full_log_item(m,parent) : new item(m,parent) );
-
-                if ( matches.Count == 0)
+            public void refresh() {
+                if ( items_.count == 0)
                     lv_.ClearObjects();
 
-                lv_.UpdateVirtualListSize();
-            }
-
-            public void set_matches(memory_optimized_list<filter.match> matches, log_view parent) {
-                items_.Clear();
-                add_matches(matches, parent);
+                lv_.UpdateVirtualListSize();                
             }
         }
 
@@ -202,27 +189,30 @@ namespace LogWizard
 
         private List<int> full_widths_ = new List<int>();
 
-        // if true, we're waiting for the filter to read from the NEW log
-        private DateTime wait_for_filter_to_read_from_new_log_ = DateTime.MinValue;
-        private const double WAIT_FOR_NEW_LOG_MAX_MS = 3000;
-
         private bool pad_name_on_left_ = false;
 
         private bool show_name_in_header_ = false;
         private bool show_header_ = true;
         private bool show_name_ = true;
 
+        private int old_item_count_ = 0;
+
         public log_view(log_wizard parent, string name)
         {
+            filter_ = new filter(this.create_match_object);
             InitializeComponent();
             this.parent = parent;
             viewName.Text = name;
-            model_ = new list_data_source(this.list) { name = name };
+            model_ = new list_data_source(this.list, filter_.matches ) { name = name };
             list.VirtualListDataSource = model_;
             list.RowHeight = 18;
 
             load_font();
             parent.handle_subcontrol_keys(this);
+        }
+
+        private filter.match create_match_object() {
+            return is_full_log ? new full_log_item(this) : new item(this);
         }
 
         public override string ToString() {
@@ -394,7 +384,7 @@ namespace LogWizard
 
         private bool is_full_log {
             get {
-                return filter_.row_count < 1;
+                return filter_ != null ? filter_.row_count < 1 : true;
             }
         }
 
@@ -412,9 +402,7 @@ namespace LogWizard
                 filter_changed_ = true;
                 last_item_count_while_current_view_ = 0;
                 visible_columns_refreshed_ = false;
-                wait_for_filter_to_read_from_new_log_ = DateTime.Now.AddMilliseconds(WAIT_FOR_NEW_LOG_MAX_MS);
                 logger.Debug("[view] new log for " + name + " - " + log.name);
-                model_.set_matches(new memory_optimized_list<filter.match>(), this);
                 update_x_of_y();
             }
         }
@@ -572,11 +560,11 @@ namespace LogWizard
         } 
 
         private bool needs_scroll_to_last() {
-            if (list.GetItemCount() < 1)
+            if (filter_.match_count < 1)
                 return true;
             if (sel_row_idx < 0)
                 return true;
-            if (sel_row_idx == list.GetItemCount() - 1)
+            if (old_item_count_ > 0 && sel_row_idx == old_item_count_ - 1)
                 return true;
             return false;
         }
@@ -648,20 +636,24 @@ namespace LogWizard
                 return;
             int MIN_ROWS = 10;
             if (list.GetItemCount() >= MIN_ROWS) {
-                visible_columns_refreshed_ = true;
 
                 for ( int type_as_int = 0; type_as_int < (int)info_type.max; ++type_as_int)
                     if (type_as_int != (int) info_type.msg) {
                         info_type type = (info_type) type_as_int;
                         int value_count = 0;
-                        for (int idx = 0; idx < MIN_ROWS; ++idx)
-                            if (column_value(list.GetItem(idx).RowObject as item, type) != "")
+                        for (int idx = 0; idx < MIN_ROWS; ++idx) {
+                            var i = list.GetItem(idx).RowObject as item;
+                            if (i == null)
+                                return;
+                            if (column_value(i, type) != "")
                                 ++value_count;
+                        }
                         bool has_values = (value_count > 0);
                         bool is_visible = column(type).Width > 0;
                         if (has_values != is_visible) 
                             column(type).Width = has_values ? 80 : 0;                        
                     }
+                visible_columns_refreshed_ = true;
             }
         }
 
@@ -748,55 +740,18 @@ namespace LogWizard
                 return; // not set yet
 
             bool needs_scroll = needs_scroll_to_last();
+            old_item_count_ = filter_.match_count;
             filter_.compute_matches(log_);
 
-            if (wait_for_filter_to_read_from_new_log_ > DateTime.Now) {
-                if (filter_.log != log_)
-                    return;
-                logger.Debug("[view] filter refreshed after log changed " + name);
-            }
-
             if (is_current_view)
-                last_item_count_while_current_view_ = list.GetItemCount();
+                last_item_count_while_current_view_ = filter_.match_count;
 
-            if (!filter_changed_) {
-                int match_count = filter_.match_count;
-                if (list.GetItemCount() == match_count) {
-                    // nothing changed
-                    if( needs_scroll)
-                        go_last();
-                    return;
-                }
-                logger.Debug("[view] log " + viewName.Text + ": going from " + list.GetItemCount() + " to " + match_count + " entries.");
-                if (list.GetItemCount() < match_count) {
-                    // items have been added
-                    memory_optimized_list<filter.match> new_ = new memory_optimized_list<filter.match>( Math.Max(  match_count - list.GetItemCount(), 0)) { name = "temp_refresh " + name };
-                    bool filter_reset = false;
-                    for (int i = list.GetItemCount(); i < match_count && !filter_reset; ++i) {
-                        var new_match = filter_.match_at(i);
-                        if (new_match != null)
-                            new_.Add(new_match);
-                        else
-                            filter_reset = true; // filter got reset in the other thread
-                    }
-                    if (filter_reset) {
-                        logger.Debug("[view] filter reset on refresh " + name);
-                        new_ = new memory_optimized_list<filter.match>() { name = "refresh_reset " + name };
-                    }
-                    model_.add_matches(new_, this);
-                    update_x_of_y();
-                    force_select_first_item();
-                    logger.Debug("[view] log " + viewName.Text + " has " + model_.GetObjectCount() + " entries.");
-                } else
-                    // less items than we have shown to the user? either the file has been erased, or cleared-and-re-written to, so we process it as a full-blown filter change
-                    filter_changed_ = true;
-            }
-
-            if (filter_changed_)
-                on_filter_changed();
-            filter_changed_ = false;
-
+            // FIXME call update_x_of_y(); and see if we need to scroll last correctly
             refresh_visible_columns();
+            
+            list.Refresh();
+            model_.refresh();
+
 
             if( needs_scroll)
                 go_last();
@@ -827,7 +782,7 @@ namespace LogWizard
                 i.override_fg = Color.Black;
                 return true;
             case app.synchronize_colors_type.with_current_view:
-                found_line = other_log.model_.get_matches.binary_search(item => item.match.line_idx, line_idx).Item1;
+                found_line = other_log.filter_.matches.binary_search(line_idx).Item1 as item;
                 if (found_line != null) {
                     i.override_bg = found_line.bg(this);
                     i.override_fg = found_line.fg(this);
@@ -835,7 +790,7 @@ namespace LogWizard
                 }
                 break;
             case app.synchronize_colors_type.with_all_views:
-                found_line = other_log.model_.get_matches.binary_search(item => item.match.line_idx, line_idx).Item1;
+                found_line = other_log.filter_.matches.binary_search(line_idx).Item1 as item;
                 if (found_line != null) {
                     Color bg = found_line.bg(this), fg = found_line.fg(this);
                     if (app.inst.sync_colors_all_views_gray_non_active && !is_sel) 
@@ -902,7 +857,7 @@ namespace LogWizard
 
             bool needs_refresh = false;
             for ( int idx = top_idx; idx <= bottom_idx; ++idx)
-                if ( idx < model_.get_matches.Count)
+                if ( idx < filter_.matches.count)
                     update_colors_for_line(idx, other_logs, sel_log_view_idx, ref needs_refresh);
 
             if ( needs_refresh)
@@ -946,13 +901,15 @@ namespace LogWizard
 
         private void update_line_highlight_color(int idx) {
             item i = list.GetItem(idx).RowObject as item;
+            if (i == null)
+                return;
             list.UnfocusedHighlightBackgroundColor = util.darker_color(i.bg(this));
             list.UnfocusedHighlightForegroundColor = i.fg(this);
 
             list.HighlightBackgroundColor = util.darker_color(util.darker_color(i.bg(this)));
             list.HighlightForegroundColor = i.fg(this);
         }
-
+        /*
         private void on_filter_changed() {
             logger.Debug("[view] filter changed on " + name + " - " + list.GetItemCount() + " items so far");
             bool needs_scroll = needs_scroll_to_last();
@@ -972,7 +929,7 @@ namespace LogWizard
                 model_.set_matches(new_, this);
 
             // update colors
-            int count = model_.get_matches.Count;
+            int count = filter_.matches.Count;
             for (int idx = 0; idx < count && !filter_reset; ++idx) {
                 item i = list.GetItem(idx).RowObject as item;
                 var match = filter_.match_at(idx);
@@ -997,7 +954,7 @@ namespace LogWizard
             else
                 force_select_first_item();
             update_x_of_y();
-        }
+        }*/
 
         private void list_FormatCell_1(object sender, FormatCellEventArgs e) {
         }
@@ -1070,24 +1027,24 @@ namespace LogWizard
         public void go_to_closest_line(int line_idx, select_type notify) {
             if (list.GetItemCount() < 1)
                 return;
-
-            var closest = model_.get_matches.binary_search_closest(item => item.match.line_idx, line_idx);
-            go_to_line(closest.Item2, notify);
+            
+            var closest = filter_.matches.binary_search_closest(line_idx);
+            if ( closest.Item2 >= 0)
+                go_to_line(closest.Item2, notify);
         }
 
         public bool matches_line(int line_idx) {
-            if (list.GetItemCount() < 1)
+            var closest = filter_.matches.binary_search_closest(line_idx);
+            if (closest.Item2 >= 0)
+                return closest.Item1.line_idx == line_idx;
+            else
                 return false;
-            var closest = model_.get_matches.binary_search_closest(item => item.match.line_idx, line_idx);
-            return closest.Item1.match.line_idx == line_idx;
         }
 
         public void go_to_closest_time(DateTime time) {
-            if (list.GetItemCount() < 1)
-                return;
-
-            var closest = model_.get_matches.binary_search_closest(item => item.match.line.time, time);
-            go_to_line(closest.Item2, select_type.notify_parent);
+            var closest = filter_.matches.binary_search_closest(time);
+            if ( closest.Item2 >= 0)
+                go_to_line(closest.Item2, select_type.notify_parent);
         }
 
         public void offset_closest_time(int time_ms, bool forward) {

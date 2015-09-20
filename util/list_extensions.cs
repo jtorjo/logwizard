@@ -32,7 +32,8 @@ namespace LogWizard {
         public static Tuple<T,int> binary_search_closest<T, TKey>(this IList<T> list, Func<T, TKey> keySelector, TKey key)
                 where TKey : IComparable<TKey> where T : class
         {
-            Debug.Assert(list.Count > 0);
+            if ( list.Count < 1)
+                return new Tuple<T, int>(default(T), -1);
 
             int min = 0;
             int max = list.Count;
