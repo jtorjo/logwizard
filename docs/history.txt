@@ -4,8 +4,10 @@
   when using GetItem() - always check for null
 
 
-1.0.84b
+1.0.84c
 - log_view and filter share the matches list
+  - on the 90Mb file /64bit - improvement - takes 915-920Mb, used to take aprox 1Gb, so improvent of about 9%
+  - on the 280Mb file/64bit - improvement - takes 2340Mb instead of aprox 2750Mb, so improvement of about 15%
 
 
 1.0.84a
