@@ -421,15 +421,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
-        "ProductCode" = "8:{A61B89A3-EB1A-4CD5-A236-4FBD93046D2C}"
-        "PackageCode" = "8:{426588F6-3BEF-4EBE-9A81-7D303B0EE91F}"
+        "ProductCode" = "8:{174CDA20-1BAC-41BE-AF9D-3119E7EAD5F4}"
+        "PackageCode" = "8:{DD74547D-883C-4535-B81A-A3B8DDB8EF39}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.84"
+        "ProductVersion" = "8:1.0.85"
         "Manufacturer" = "8:John Torjo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -999,7 +999,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_900BA54346A2479085BF08862BE89061"
             {
-            "SourcePath" = "8:..\\obj\\x64\\Release64\\LogWizard.exe"
+            "SourcePath" = "8:..\\obj\\x86\\Release\\LogWizard.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E297CB39A550491681319D6F014A659B"
