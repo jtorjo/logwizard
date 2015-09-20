@@ -1,7 +1,22 @@
 
-- todo: 
-  remove usages of log_view - list.GetItemCount()
-  when using GetItem() - always check for null
+
+1.0.84d
+- decrease memory footprint - step 11
+	- log_view: remove usages of list.GetItemCount()
+	- log_view: remove usages of GetItem() - always check for null
+	- fix the "needs to scroll to last"
+
+
+- another possible memory optimization for large files (for much later, probably)
+  - load the file in chunks. for each chunk, parse the lines, and then run ALL the filters on that specific chunk of lines
+    load another chunk, parse lines, run all filters, and so on.
+	this way, we keep very little in large_string (except for line indexes)
+	then, when specific lines are asked (for display) - load them from HDD, with some simple caching mechanism
+	possible problem - if file is not Unicode-16 or Ascii, we need to match the line index to a specific position in the file
+	                   this will probably mean a totatly new large_string class, that would internally keep bytes
+					   also in text_file_reader -> in that case, we could pass to large_string -> the bytes themselves (with encoding as well)
+  - having said that, this would probably be useful only on 3-4GB+ files (since those could indeed take a lot of memory)
+    - for such large files, i may even add an option: pause/resume loading
 
 
 1.0.84c

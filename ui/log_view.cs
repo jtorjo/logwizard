@@ -43,9 +43,6 @@ namespace LogWizard
         private filter filter_ ;
         private log_line_reader log_ = null;
 
-        // by default - it's a new filter (thus, needing refresh)
-        private bool filter_changed_ = true;
-
         private string selected_view_ = null;
 
         private int last_item_count_while_current_view_ = 0;
@@ -285,7 +282,7 @@ namespace LogWizard
             get {
                 int sel = sel_row_idx;
                 if (sel >= 0)
-                    return (list.GetItem(sel).RowObject as item).match.line_idx;
+                    return match_at(sel).match.line_idx;
                 return -1;
             }
         }
@@ -296,7 +293,7 @@ namespace LogWizard
             get {
                 int sel = sel_row_idx;
                 if (sel >= 0)
-                    return (list.GetItem(sel).RowObject as item).match.line.part(info_type.msg);
+                    return match_at(sel) .match.line.part(info_type.msg);
                 return "";
             }
         }
@@ -320,7 +317,7 @@ namespace LogWizard
             get {
                 int sel = sel_row_idx;
                 if (sel >= 0) {
-                    var i = list.GetItem(sel).RowObject as item;
+                    var i = match_at(sel) ;
                     return new Tuple<Color, Color>(i.fg(this), i.bg(this));
                 }
                 return new Tuple<Color, Color>(Color.Black,Color.White);
@@ -368,7 +365,7 @@ namespace LogWizard
             set {
                 turn_off_has_anying_changed_ = value;
                 if (!turn_off_has_anying_changed_) {
-                    last_item_count_while_current_view_ = list.GetItemCount();
+                    last_item_count_while_current_view_ = filter_.match_count;
                     update_x_of_y();
                 }
             }
@@ -378,7 +375,7 @@ namespace LogWizard
             get {
                 if (turn_off_has_anying_changed)
                     return false;
-                return !is_current_view && (last_item_count_while_current_view_ != list.GetItemCount());
+                return !is_current_view && (last_item_count_while_current_view_ != filter_.match_count);
             }
         }
 
@@ -392,14 +389,11 @@ namespace LogWizard
         public void set_filter(List<filter_row> filter) {
             filter_.name = name;
             filter_.update_rows(filter);
-            if (filter_.rows_changed)
-                filter_changed_ = true;
         }
 
         internal void set_log(log_line_reader log) {
             if (log_ != log) {
                 log_ = log;
-                filter_changed_ = true;
                 last_item_count_while_current_view_ = 0;
                 visible_columns_refreshed_ = false;
                 logger.Debug("[view] new log for " + name + " - " + log.name);
@@ -450,12 +444,21 @@ namespace LogWizard
         }
 
         private OLVListItem row_by_line_idx(int line_idx) {
-            for (int idx = 0; idx < list.GetItemCount(); ++idx) {
-                item i = list.GetItem(idx).RowObject as item;
+            var m = filter_.matches.binary_search(line_idx);
+            if (m.Item1 != null)
+                return list.GetItem(m.Item2);
+            /*
+            int count = filter_.match_count;
+            for (int idx = 0; idx < count; ++idx) {
+                item i = match_at(idx) as item;
                 if (i.match.line_idx == line_idx)
                     return list.GetItem(idx);
-            }
+            }*/
             return null;
+        }
+
+        private item match_at(int idx) {
+            return filter_.matches.match_at(idx) as item;
         }
 
 
@@ -476,7 +479,8 @@ namespace LogWizard
             }
 
             int sel = sel_row_idx;
-            if (sel < 0 && list.GetItemCount() > 0)
+            int count = filter_.match_count;
+            if (sel < 0 && count > 0)
                 sel = 0; // assume we start from the top
 
             // int rows_per_page = list.RowsPerPage;
@@ -486,7 +490,7 @@ namespace LogWizard
                 sel = 0;
                 break;
             case log_wizard.action_type.end:
-                sel = list.GetItemCount() - 1;
+                sel = count - 1;
                 break;
             case log_wizard.action_type.pageup:
                 if (sel >= 0) {
@@ -501,7 +505,7 @@ namespace LogWizard
                 }
                 break;
             case log_wizard.action_type.pagedown:
-                if (sel < list.GetItemCount() - 1) {
+                if (sel < count - 1) {
                     var r = list.GetItem(sel).Bounds;
                     var middle = new Point( r.Left + r.Width / 2, r.Top + r.Height / 2 );
                     list.LowLevelScroll(0, height);
@@ -509,7 +513,7 @@ namespace LogWizard
                     if (new_sel != sel)
                         sel = new_sel;
                     else
-                        sel = list.GetItemCount() - 1; // reached bottom
+                        sel = count - 1; // reached bottom
                 }
                 break;
             case log_wizard.action_type.arrow_up:
@@ -517,7 +521,7 @@ namespace LogWizard
                     --sel;
                 break;
             case log_wizard.action_type.arrow_down:
-                if ( sel < list.GetItemCount() - 1)
+                if ( sel < count - 1)
                     ++sel;
                 break;
 
@@ -534,9 +538,9 @@ namespace LogWizard
                 break;
             // default list behavior is wrong, we need to override
             case log_wizard.action_type.shift_arrow_down:
-                if (sel < list.GetItemCount() - 1) {
+                if (sel < count - 1) {
                     int existing = selected_indices_array().Max();
-                    if (existing < list.GetItemCount() - 1) {
+                    if (existing < count - 1) {
                         list.SelectedIndices.Add(existing + 1);
                         list.EnsureVisible(existing);                        
                     }
@@ -635,15 +639,15 @@ namespace LogWizard
             if (visible_columns_refreshed_)
                 return;
             int MIN_ROWS = 10;
-            if (list.GetItemCount() >= MIN_ROWS) {
+            if (filter_.match_count >= MIN_ROWS) {
 
                 for ( int type_as_int = 0; type_as_int < (int)info_type.max; ++type_as_int)
                     if (type_as_int != (int) info_type.msg) {
                         info_type type = (info_type) type_as_int;
                         int value_count = 0;
                         for (int idx = 0; idx < MIN_ROWS; ++idx) {
-                            var i = list.GetItem(idx).RowObject as item;
-                            if (i == null)
+                            var i = match_at(idx) ;
+                            if (i.line_idx < 0)
                                 return;
                             if (column_value(i, type) != "")
                                 ++value_count;
@@ -673,7 +677,7 @@ namespace LogWizard
 
             string x_idx =  sel_row_idx >= 0 ? "" + (sel_row_idx+1) : "";
             string x_line =  sel_line_idx >= 0 ? "" + (sel_line_idx + 1) : "";
-            string y = "" + list.GetItemCount();
+            string y = "" + filter_.match_count;
             string header = (app.inst.show_view_line_count || app.inst.show_view_selected_line || app.inst.show_view_selected_index ? (x_idx != "" ? x_idx + " of " + y : "(" + y + ")") : "");
             string x_of_y_msg = (show_name_in_header ? "[" + name + "] " : "") + "Message " + header;
             string x_of_y_title = "";
@@ -689,7 +693,7 @@ namespace LogWizard
                 x_of_y_title = " [" + x_line + "] " + x_of_y_title;
             x_of_y_title = x_of_y_title.TrimEnd();
 
-            string tab_text = filter_changed_ ? name + (x_of_y_title != "" ? " (?)" : "") : name + x_of_y_title;
+            string tab_text = name + x_of_y_title;
             tab_text += "  ";
             if (pad_name_on_left_)
                 // this is so that the "Toggle topmost" does not obscure the first tab's name
@@ -703,7 +707,7 @@ namespace LogWizard
         }
 
         private void force_select_first_item() {
-            if ( list.GetItemCount() > 0)
+            if ( filter_.match_count > 0)
                 if (sel_row_idx < 0) {
                     list.SelectedIndex = 0;
                     logger.Debug("[view] forcing sel zero for " + name);
@@ -716,20 +720,8 @@ namespace LogWizard
                 return;
 
             // we want the tab to be repainted
-            last_item_count_while_current_view_ = list.GetItemCount();
+            last_item_count_while_current_view_ = filter_.match_count;
             tab_parent.Text += " ";
-
-            if (list.GetItemCount() > 0)
-                return;
-            // if we don't have any items, it's likely that we need to refresh
-            if ( filter_changed_)
-                util.add_timer(
-                    (has_ended) => {
-                        if ( !has_ended && filter_changed_)
-                            tab_parent.Text = util.add_dots(tab_parent.Text, 3);
-                        else 
-                            update_x_of_y();
-                    }, 2500);
         }
 
         public void refresh() {
@@ -740,40 +732,29 @@ namespace LogWizard
                 return; // not set yet
 
             bool needs_scroll = needs_scroll_to_last();
-            old_item_count_ = filter_.match_count;
+            int new_item_count = filter_.match_count;
             filter_.compute_matches(log_);
 
             if (is_current_view)
-                last_item_count_while_current_view_ = filter_.match_count;
+                last_item_count_while_current_view_ = new_item_count;
 
-            // FIXME call update_x_of_y(); and see if we need to scroll last correctly
+            if (old_item_count_ == new_item_count)
+                return; // nothing changed
+            old_item_count_ = new_item_count;
+
+            model_.refresh();
             refresh_visible_columns();
+            update_x_of_y();
             
             list.Refresh();
-            model_.refresh();
-
-
             if( needs_scroll)
                 go_last();
-
-            if (is_current_view)
-                last_item_count_while_current_view_ = list.GetItemCount();
         }
 
-        // returns all the lines that match this filter
-        public List<int> matched_lines(int start_line_idx, int end_line_idx) {
-            memory_optimized_list<int> lines = new memory_optimized_list<int>() { min_capacity = app.inst.no_ui.min_matched_lines_capacity, name = "matched_lines " + name, increase_percentage = .6 };
-            for (int idx = 0; idx < list.GetItemCount(); ++idx) {
-                item i = list.GetItem(idx).RowObject as item;
-                if ( i.match.line_idx >= start_line_idx && i.match.line_idx < end_line_idx)
-                    lines.Add(i.match.line_idx);
-            }
-            return lines;
-        }
 
 
         private bool has_found_colors(int row_idx, log_view other_log, bool is_sel) {
-            var i = list.GetItem(row_idx).RowObject as full_log_item;
+            var i = match_at(row_idx) as full_log_item;
 
             int line_idx = i.match.line_idx;
             item found_line = null;
@@ -809,7 +790,7 @@ namespace LogWizard
         private void update_colors_for_line(int row_idx, List<log_view> other_logs, int sel_idx, ref bool needed_refresh) {
             Debug.Assert(other_logs.Count > 0 && sel_idx < other_logs.Count);
 
-            var i = list.GetItem(row_idx).RowObject as full_log_item;
+            var i = match_at(row_idx) as full_log_item;
             i.override_bg = filter_line.font_info.full_log_gray_.bg;
             i.override_fg = filter_line.font_info.full_log_gray_.fg;
 
@@ -874,7 +855,7 @@ namespace LogWizard
         }
 
         private void go_last() {
-            var count = list.GetItemCount();
+            var count = filter_.match_count;
             if (count > 0) {
                 list.EnsureVisible(count - 1);
                 select_idx(count - 1, select_type.do_not_notify_parent);
@@ -883,6 +864,10 @@ namespace LogWizard
 
         // returns true if it needed to refresh
         private bool update_line_color(int idx) {
+            if (idx >= list.GetItemCount())
+                // in this case, the list hasn't fully refreshed - the filter contains more items than the list
+                return false;
+
             var row = list.GetItem(idx);
             item i = row.RowObject as item;
 
@@ -900,7 +885,7 @@ namespace LogWizard
         }
 
         private void update_line_highlight_color(int idx) {
-            item i = list.GetItem(idx).RowObject as item;
+            item i = match_at(idx) ;
             if (i == null)
                 return;
             list.UnfocusedHighlightBackgroundColor = util.darker_color(i.bg(this));
@@ -909,52 +894,6 @@ namespace LogWizard
             list.HighlightBackgroundColor = util.darker_color(util.darker_color(i.bg(this)));
             list.HighlightForegroundColor = i.fg(this);
         }
-        /*
-        private void on_filter_changed() {
-            logger.Debug("[view] filter changed on " + name + " - " + list.GetItemCount() + " items so far");
-            bool needs_scroll = needs_scroll_to_last();
-
-            // from this point on, we only append to the existing list
-            int match_count = filter_.match_count;
-            memory_optimized_list<filter.match> new_ = new memory_optimized_list<filter.match>(match_count) {name = "view " + name};
-            bool filter_reset = false;
-            for (int i = 0; i < match_count && !filter_reset; ++i) {
-                var new_match = filter_.match_at(i);
-                if (new_match != null)
-                    new_.Add(new_match);
-                else
-                    filter_reset = true; // filter got reset in the other thread
-            }
-            if (!filter_reset)
-                model_.set_matches(new_, this);
-
-            // update colors
-            int count = filter_.matches.Count;
-            for (int idx = 0; idx < count && !filter_reset; ++idx) {
-                item i = list.GetItem(idx).RowObject as item;
-                var match = filter_.match_at(idx);
-                if (match != null)
-                    i.match = match;
-                else
-                    filter_reset = true; // filter got reset in the other thread
-            }
-
-            if (!filter_reset) {
-                for (int idx = 0; idx < count; ++idx)
-                    update_line_color(idx);
-                list.Refresh();
-            } else {
-                logger.Debug("[view] filter got reset on the other thread - " + name);
-                model_.set_matches(new memory_optimized_list<filter.match>(), this);
-                needs_scroll = false;
-            }
-
-            if (needs_scroll)
-                go_last();
-            else
-                force_select_first_item();
-            update_x_of_y();
-        }*/
 
         private void list_FormatCell_1(object sender, FormatCellEventArgs e) {
         }
@@ -984,7 +923,7 @@ namespace LogWizard
                 return;
 
             select_nofify_ = notify;
-            if (idx >= 0 && idx < list.GetItemCount()) {
+            if (idx >= 0 && idx < filter_.match_count) {
                 logger.Debug("[view] " + name + " sel=" + idx);
                 list.SelectedIndex = idx;
                 update_line_highlight_color(idx);
@@ -999,13 +938,13 @@ namespace LogWizard
                 return;
 
             if (select_nofify_ == select_type.notify_parent) {
-                int line_idx = (list.GetItem(sel).RowObject as item).match.line_idx;
+                int line_idx = match_at(sel) .match.line_idx;
                 //parent.go_to_line(line_idx, this);
             }
         }
 
         public void go_to_line(int line_idx, select_type notify) {
-            if (line_idx >= list.GetItemCount())
+            if (line_idx >= filter_.match_count)
                 return;
 
             select_idx(line_idx, notify);
@@ -1013,8 +952,8 @@ namespace LogWizard
 
             int rows = list.Height / list.RowHeight;
             int bottom_idx = line_idx + rows / 2;
-            if (bottom_idx >= list.GetItemCount())
-                bottom_idx = list.GetItemCount() - 1;
+            if (bottom_idx >= filter_.match_count)
+                bottom_idx = filter_.match_count - 1;
             int top_idx = bottom_idx - rows;
             if (top_idx < 0)
                 top_idx = 0;
@@ -1025,7 +964,7 @@ namespace LogWizard
 
 
         public void go_to_closest_line(int line_idx, select_type notify) {
-            if (list.GetItemCount() < 1)
+            if (filter_.match_count < 1)
                 return;
             
             var closest = filter_.matches.binary_search_closest(line_idx);
@@ -1048,12 +987,12 @@ namespace LogWizard
         }
 
         public void offset_closest_time(int time_ms, bool forward) {
-            if (list.GetItemCount() < 1)
+            if (filter_.match_count < 1)
                 return;
             int sel = sel_row_idx;
             if (sel < 0)
                 sel = 0; // just in case we haven't selected anything - start from beginning
-            var i = (list.GetItem(sel).RowObject as item);
+            var i = match_at(sel);
             var time = i.match.line.time;
 
             if (time != DateTime.MinValue) {
@@ -1073,7 +1012,7 @@ namespace LogWizard
         }
 
         public int line_count {
-            get { return list.GetItemCount(); }
+            get { return filter_.match_count; }
         }
 
         public int filter_row_count {
@@ -1158,14 +1097,14 @@ namespace LogWizard
         }
 
         public void mark_text(search_form.search_for search, Color fg, Color bg) {
-            Debug.Assert(list.GetItemCount() == filter_.match_count);
 
             // just in case a filter was selected
             unmark();
 
             bool needs_refresh = false;
-            for (int idx = 0; idx < list.GetItemCount(); ++idx) {
-                item i = list.GetItem(idx).RowObject as item;
+            int count = filter_.match_count;
+            for (int idx = 0; idx < count; ++idx) {
+                item i = match_at(idx) ;
                 if (string_search.matches( i.match.line.part(info_type.msg), search)) {
                     i.override_fg = fg;
                     i.override_bg = bg;
@@ -1179,11 +1118,11 @@ namespace LogWizard
 
         // unmarks any previously marked rows
         public void unmark() {
-            Debug.Assert(list.GetItemCount() == filter_.match_count);
 
             bool needs_refresh = false;
-            for (int idx = 0; idx < list.GetItemCount(); ++idx) {
-                item i = list.GetItem(idx).RowObject as item;
+            int count = filter_.match_count;
+            for (int idx = 0; idx < count; ++idx) {
+                item i = match_at(idx) ;
                 bool needs_unmark = i.override_bg != util.transparent || i.override_fg != util.transparent;
                 if (needs_unmark) {
                     i.override_fg = util.transparent;
@@ -1197,11 +1136,11 @@ namespace LogWizard
         }
 
         public void search_for_text_first(search_form.search_for search) {
-            if (list.GetItemCount() < 1)
+            if (filter_.match_count < 1)
                 return;
 
             select_idx(0, select_type.notify_parent);
-            item i = list.GetItem(0).RowObject as item;
+            item i = match_at(0) ;
             if ( string_search.matches( i.match.line.part(info_type.msg), search)) {
                 // line zero contains the text already
                 list.EnsureVisible(0);
@@ -1211,13 +1150,14 @@ namespace LogWizard
         }
 
         public void search_for_text_next(search_form.search_for search) {
-            if (list.GetItemCount() < 1)
+            int count = filter_.match_count;
+            if (count < 1)
                 return;
 
             int found = -1;
             if (sel_row_idx >= 0)
-                for (int idx = sel_row_idx + 1; idx < list.GetItemCount() && found < 0; ++idx) {
-                    item i = list.GetItem(idx).RowObject as item;
+                for (int idx = sel_row_idx + 1; idx < count && found < 0; ++idx) {
+                    item i = match_at(idx) ;
                     if (string_search.matches( i.match.line.part(info_type.msg), search))
                         found = idx;
                 }
@@ -1229,13 +1169,14 @@ namespace LogWizard
         }
 
         public void search_for_text_prev(search_form.search_for search) {
-            if (list.GetItemCount() < 1)
+            int count = filter_.match_count;
+            if (count < 1)
                 return;
 
             int found = -1;
             if (sel_row_idx > 0)
                 for (int idx = sel_row_idx - 1; idx >= 0 && found < 0; --idx) {
-                    item i = list.GetItem(idx).RowObject as item;
+                    item i = match_at(idx) ;
                     if (string_search.matches( i.match.line.part(info_type.msg), search))
                         found = idx;
                 }
@@ -1247,11 +1188,10 @@ namespace LogWizard
         }
 
         public void mark_match(int filter_row_idx, Color fg, Color bg) {
-            Debug.Assert(list.GetItemCount() == filter_.match_count);
-
             bool needs_refresh = false;
-            for (int idx = 0; idx < list.GetItemCount(); ++idx) {
-                item i = list.GetItem(idx).RowObject as item;
+            int count = filter_.match_count;
+            for (int idx = 0; idx < count; ++idx) {
+                item i = match_at(idx) ;
                 bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                 bool needs_change = (is_match && (i.override_fg.ToArgb() != fg.ToArgb() || i.override_bg.ToArgb() != bg.ToArgb())) || (!is_match && (i.override_fg != util.transparent || i.override_bg != util.transparent));
 
@@ -1267,12 +1207,13 @@ namespace LogWizard
         }
 
         public void search_for_next_match(int filter_row_idx) {
-            if (list.GetItemCount() < 1)
+            int count = filter_.match_count;
+            if (count < 1)
                 return;
             int found = -1;
             if (sel_row_idx >= 0)
-                for (int idx = sel_row_idx + 1; idx < list.GetItemCount() && found < 0; ++idx) {
-                    item i = list.GetItem(idx).RowObject as item;
+                for (int idx = sel_row_idx + 1; idx < count && found < 0; ++idx) {
+                    item i = match_at(idx) ;
                     bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                     if (is_match)
                         found = idx;
@@ -1285,12 +1226,12 @@ namespace LogWizard
         }
 
         public void search_for_prev_match(int filter_row_idx) {
-            if (list.GetItemCount() < 1)
+            if (filter_.match_count < 1)
                 return;
             int found = -1;
             if (sel_row_idx > 0)
                 for (int idx = sel_row_idx - 1; idx >= 0 && found < 0; --idx) {
-                    item i = list.GetItem(idx).RowObject as item;
+                    item i = match_at(idx) ;
                     bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                     if (is_match)
                         found = idx;
@@ -1309,7 +1250,7 @@ namespace LogWizard
 
             string full = "";
             foreach (int row in sel) {
-                item i = list.GetItem(row).RowObject as item;
+                item i = match_at(row) ;
                 if (full != "")
                     full += "\r\n";
                 full += i.match.line.part(info_type.msg);
@@ -1328,7 +1269,7 @@ namespace LogWizard
 
             string full = "";
             foreach (int row in sel) {
-                item i = list.GetItem(row).RowObject as item;
+                item i = match_at(row) ;
                 if (full != "")
                     full += "\r\n";
                 full += i.match.line.full_line;
@@ -1382,10 +1323,10 @@ namespace LogWizard
         }
 
         public void prev_bookmark() {
-            if (list.GetItemCount() < 1)
+            if (filter_.match_count < 1)
                 return;
 
-            int start = sel_row_idx >= 0 ? sel_line_idx - 1 : (list.GetItem(sel_row_idx).RowObject as item).match.line_idx;
+            int start = sel_row_idx >= 0 ? sel_line_idx - 1 : match_at(sel_row_idx).match.line_idx;
             int mark = bookmarks_.LastOrDefault(line => line <= start && row_by_line_idx(line) != null);
             if (mark == 0)
                 if (!bookmarks_.Contains(mark))
@@ -1447,7 +1388,7 @@ namespace LogWizard
 
 
         public void scroll_up() {
-            if (list.GetItemCount() < 1)
+            if (filter_.match_count < 1)
                 return;
 
             int sel = sel_row_idx;
@@ -1463,7 +1404,7 @@ namespace LogWizard
         }
 
         public void scroll_down() {
-            if (list.GetItemCount() < 1)
+            if (filter_.match_count < 1)
                 return;
 
             int sel = sel_row_idx;

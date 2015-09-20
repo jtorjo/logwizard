@@ -41,6 +41,8 @@ namespace LogWizard {
 
             public filter_line.font_info font = null;
             public line line = null;
+            // convention - if we can't find a specific line (match_at), we'll return a line with the index -1
+            //              (so that we don't return null)
             public int line_idx = 0;
         }
 
@@ -77,7 +79,7 @@ namespace LogWizard {
             // next time, the log view will see that we've updated
             public match match_at(int idx) {
                 lock (this) 
-                    return idx < matches_.Count ? matches_[idx] : empty_match;
+                    return idx >= 0 && idx < matches_.Count ? matches_[idx] : empty_match;
             }
 
             public void clear() {
@@ -87,8 +89,12 @@ namespace LogWizard {
 
             // 1.0.84 note: if this is proves too slow, i'll do a binary search by m.line_idx !!!
             public int index_of(match m) {
-                lock (this)
-                    return matches_.IndexOf(m);
+                lock (this) {
+                    //return matches_.IndexOf(m);
+                    int idx = matches_.binary_search_closest(x => x.line_idx, m.line_idx).Item2;
+                    Debug.Assert(matches_[idx] == m);
+                    return idx;
+                }
             }
 
             public void add_range(memory_optimized_list<match> new_matches) {
@@ -169,7 +175,7 @@ namespace LogWizard {
         public filter(create_match_func creator) {
             create_match = creator;
 
-            var empty_match = new_match(new BitArray(0), line.empty_line(), 0, filter_line.font_info.default_);
+            var empty_match = new_match(new BitArray(0), line.empty_line(), -1, filter_line.font_info.default_);
             matches_ = new match_list(empty_match);
         }
 
