@@ -2829,6 +2829,53 @@ namespace LogWizard
             Process.Start("https://github.com/jtorjo/logwizard/wiki/Hotkeys");
         }
 
+        private void selectColor_Click(object sender, EventArgs e) {
+            if (filterCtrl.SelectedIndex < 0)
+                return; // there's nothing selected
+
+            var sel = new select_color_form();
+            if (sel.ShowDialog() == DialogResult.OK) {
+                string sel_color = util.color_to_str( sel.SelectedColor);
+
+                var lines = curFilterCtrl.Text.Split( new string[] { "\r\n" }, StringSplitOptions.None ).ToList();
+                int sel_start = curFilterCtrl.SelectionStart;
+                int edited_line = util.index_to_line(curFilterCtrl.Text, sel_start);
+                if (edited_line == -1) {
+                    // it's not with the cursor on a line - find the first line that would actually be a color
+                    for ( int i = 0; i < lines.Count && edited_line == -1; ++i)
+                        if (lines[i].StartsWith("color") || lines[i].StartsWith("match_color"))
+                            edited_line = i;
+                }
+                if (edited_line != -1) {
+                    // in this case, he's editing the color from a given line
+                    bool is_color_line = lines[edited_line].StartsWith("color ") || lines[edited_line].StartsWith("match_color ");
+                    bool is_replacing = lines[edited_line].Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries).Length == 2 &&
+                                        lines[edited_line].Trim() == lines[edited_line];
+                    if (is_color_line) {
+                        if (is_replacing)
+                            lines[edited_line] = (lines[edited_line].StartsWith("color ") ? "color" : "match_color") + " " + sel_color;
+                        else
+                            lines[edited_line] += " " + sel_color;
+                    } else
+                        // the edited line does not contain any color, thus, we append the color line
+                        edited_line = -1;
+                }
+
+
+                if (edited_line == -1) {
+                    lines.Add("color " + sel_color);
+                    sel_start = -1;
+                }
+
+                curFilterCtrl.Text = util.concatenate(lines, "\r\n");
+                if ( sel_start >= 0 && sel_start < curFilterCtrl.TextLength)
+                    curFilterCtrl.SelectionStart = sel_start;
+
+                selected_view().Refresh();
+                log_view_for_tab(viewsTab.SelectedIndex).Refresh();
+            }
+        }
+
 
     }
 }

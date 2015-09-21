@@ -51,6 +51,12 @@ namespace LogWizard.ui {
             logBg.SelectedItem = app.inst.bg;
             logBgFrom.SelectedItem = app.inst.bg_from;
             logBgTo.SelectedItem = app.inst.bg_to;
+
+            noteAuthorName.Text = app.inst.notes_author_name;
+            noteInitials.Text = app.inst.notes_initials;
+            noteColor.SelectedItem = app.inst.notes_color;
+
+            zipExtensions.Text = app.inst.look_into_zip_files;
         }
 
         private void save() {
@@ -70,6 +76,12 @@ namespace LogWizard.ui {
             app.inst.bg = logBg.SelectedItem;
             app.inst.bg_from = logBgFrom.SelectedItem;
             app.inst.bg_to = logBgTo.SelectedItem;
+
+            app.inst.notes_author_name = noteAuthorName.Text;
+            app.inst.notes_initials = noteInitials.Text;
+            app.inst.notes_color = noteColor.SelectedItem;
+
+            app.inst.look_into_zip_files = zipExtensions.Text;
 
             app.inst.save();
         }

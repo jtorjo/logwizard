@@ -65,6 +65,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
             this.objectListView2 = new BrightIdeasSoftware.ObjectListView();
@@ -77,7 +78,15 @@
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.label12 = new System.Windows.Forms.Label();
+            this.zipExtensions = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.noteAuthorName = new System.Windows.Forms.TextBox();
+            this.noteInitials = new System.Windows.Forms.TextBox();
+            this.noteColor = new ColorPicker.ColorPickerCombobox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -87,6 +96,8 @@
             this.tabPage2.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.tabPage7.SuspendLayout();
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             this.tabPage6.SuspendLayout();
@@ -512,6 +523,13 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.noteColor);
+            this.tabPage4.Controls.Add(this.noteInitials);
+            this.tabPage4.Controls.Add(this.noteAuthorName);
+            this.tabPage4.Controls.Add(this.label17);
+            this.tabPage4.Controls.Add(this.label16);
+            this.tabPage4.Controls.Add(this.label15);
+            this.tabPage4.Controls.Add(this.label14);
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -519,6 +537,18 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Notes";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // tabPage7
+            // 
+            this.tabPage7.Controls.Add(this.zipExtensions);
+            this.tabPage7.Controls.Add(this.label12);
+            this.tabPage7.Location = new System.Drawing.Point(4, 25);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(666, 468);
+            this.tabPage7.TabIndex = 6;
+            this.tabPage7.Text = "Zip Files";
+            this.tabPage7.UseVisualStyleBackColor = true;
             // 
             // tabPage5
             // 
@@ -644,15 +674,82 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // tabPage7
+            // label12
             // 
-            this.tabPage7.Location = new System.Drawing.Point(4, 25);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(666, 468);
-            this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "Zip Files";
-            this.tabPage7.UseVisualStyleBackColor = true;
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 12);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(374, 17);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "Parsing Zip Files. Care only about the following extensions";
+            // 
+            // zipExtensions
+            // 
+            this.zipExtensions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.zipExtensions.Location = new System.Drawing.Point(386, 9);
+            this.zipExtensions.Name = "zipExtensions";
+            this.zipExtensions.Size = new System.Drawing.Size(274, 23);
+            this.zipExtensions.TabIndex = 1;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(12, 17);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(304, 17);
+            this.label14.TabIndex = 0;
+            this.label14.Text = "When making notes over a Log, identify me as:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(12, 47);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(45, 17);
+            this.label15.TabIndex = 1;
+            this.label15.Text = "Name";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(253, 47);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(47, 17);
+            this.label16.TabIndex = 2;
+            this.label16.Text = "Initials";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(362, 47);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(41, 17);
+            this.label17.TabIndex = 3;
+            this.label17.Text = "Color";
+            // 
+            // noteAuthorName
+            // 
+            this.noteAuthorName.Location = new System.Drawing.Point(78, 44);
+            this.noteAuthorName.Name = "noteAuthorName";
+            this.noteAuthorName.Size = new System.Drawing.Size(169, 23);
+            this.noteAuthorName.TabIndex = 4;
+            // 
+            // noteInitials
+            // 
+            this.noteInitials.Location = new System.Drawing.Point(306, 44);
+            this.noteInitials.Name = "noteInitials";
+            this.noteInitials.Size = new System.Drawing.Size(50, 23);
+            this.noteInitials.TabIndex = 5;
+            // 
+            // noteColor
+            // 
+            this.noteColor.Location = new System.Drawing.Point(409, 44);
+            this.noteColor.Name = "noteColor";
+            this.noteColor.SelectedItem = System.Drawing.Color.Wheat;
+            this.noteColor.Size = new System.Drawing.Size(55, 23);
+            this.noteColor.TabIndex = 6;
+            this.noteColor.Text = "colorPickerCombobox1";
             // 
             // settings_form
             // 
@@ -682,6 +779,10 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).EndInit();
@@ -747,6 +848,15 @@
         private BrightIdeasSoftware.OLVColumn olvColumn3;
         private BrightIdeasSoftware.OLVColumn olvColumn4;
         private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.TextBox zipExtensions;
+        private System.Windows.Forms.Label label12;
+        private ColorPicker.ColorPickerCombobox noteColor;
+        private System.Windows.Forms.TextBox noteInitials;
+        private System.Windows.Forms.TextBox noteAuthorName;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label14;
 
     }
 }

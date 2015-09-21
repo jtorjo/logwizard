@@ -581,7 +581,20 @@ namespace LogWizard {
             return all;
         }
 
+        // if at the end of the string, we consider it's not editing anything
+        public static int index_to_line(string s, int test_idx) {
+            if (test_idx >= s.Length)
+                return -1;
 
+            string[] lines = s.Split(new string[] { "\r\n" }, StringSplitOptions.None );
+            int cur_idx = 0;
+            for (int i = 0; i < lines.Length; ++i) {
+                if (cur_idx + lines[i].Length > test_idx)
+                    return i;
+                cur_idx += lines[i].Length + 2;
+            }
+            return lines.Length - 1;
+        }
 
 
 

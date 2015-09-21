@@ -177,6 +177,12 @@
     <Compile Include="ui\log_view_render.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ui\select_color_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\select_color_form.Designer.cs">
+      <DependentUpon>select_color_form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\solid_brush_list.cs" />
     <Compile Include="ui_helpers\log_wizard_serializable_classes.cs" />
     <Compile Include="ui\msg_details_ctrl.cs">
@@ -275,6 +281,9 @@
     <EmbeddedResource Include="ui\search_form.resx">
       <DependentUpon>search_form.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ui\select_color_form.resx">
+      <DependentUpon>select_color_form.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ui\settings_form.resx">
       <DependentUpon>settings_form.cs</DependentUpon>
     </EmbeddedResource>
@@ -301,6 +310,7 @@
     <None Include="icons\bug_disabled.png" />
     <Content Include="app.ico" />
     <Content Include="icons\app.ico" />
+    <None Include="icons\eyedropper.png" />
     <Content Include="logwizard.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

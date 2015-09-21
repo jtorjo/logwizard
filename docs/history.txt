@@ -1,6 +1,14 @@
 
 
 
+1.0.89
+- notes: author name, initials + color ->  in settings
+  - the author has 2 names - the name + a short name, since we will be showing his shot name in discussions (by default, it's he user's initials -> we compute them as he's changing his name)
+- zip extensions -> in settings
+- cool color selector in filter - it updates the correct line (if another color was selected) or adds a new line with the color
+
+
+
 1.0.88
 - https://github.com/jtorjo/logwizard/wiki/Filters
 - added color picker (http://www.codeproject.com/Articles/21965/Color-Picker-with-Color-Wheel-and-Eye-Dropper)

@@ -71,6 +71,15 @@ namespace LogWizard {
         public Color bg_to = Color.AntiqueWhite;
 
 
+        // what extensions to look at - when parsing a zip file (in other words, what files do we consider "probable" logs)
+        public string look_into_zip_files = "";
+
+        // when creating/modifying notes - here is what identifies this author
+        public string notes_author_name = "";
+        public string notes_initials = "";
+        public Color notes_color = Color.Blue;
+
+
         // file-by-file
         public bool bring_to_top_on_restart = false;
         public bool make_topmost_on_restart = false;
@@ -163,6 +172,39 @@ namespace LogWizard {
             load_save(load, ref bg, "bg", Color.White);
             load_save(load, ref bg_from, "bg_from", Color.White);
             load_save(load, ref bg_to, "bg_to", util.str_to_color("#FEFBF8") );
+
+            load_save(load, ref look_into_zip_files, "look_into_zip_files", ".log;.txt");
+            load_save(load, ref notes_author_name, "notes_author_name", Environment.UserName);
+            load_save(load, ref notes_initials, "notes_initials", initials(notes_author_name));
+            load_save(load, ref notes_color, "notes_color", Color.Blue);
+        }
+
+        private string initials(string name) {
+            var by_char = name.Select(c => new string(c,1));
+            
+            string camel = by_char.Select(c => c == c.ToUpper() ? c : "").Aggregate("", (d,s) => d + s);
+            string by_sep = name.Length > 0 ? "" + name[0] : "";
+            for ( int i = 1; i < name.Length; ++i)
+                if ( !Char.IsWhiteSpace(name[i]) && !Char.IsPunctuation(name[i]))
+                    if (Char.IsWhiteSpace(name[i - 1]) || Char.IsPunctuation(name[i - 1]))
+                        by_sep += name[i];
+            if (by_sep.Length == 1)
+                by_sep = "";
+
+            if (camel != "" && by_sep != "")
+                // ... take the shortest
+                return by_sep.Length < camel.Length ? by_sep : camel;
+
+            // JohnTorjo -> JT
+            if (camel != "")
+                return camel;
+            // john_torjo_is_awesome -> jtia
+            if (by_sep != "")
+                return by_sep.ToUpper();
+
+            // take the first 3 letters
+            string ini = name.Length > 3 ? name.Substring(0, 3) : name;
+            return ini.ToUpper();
         }
 
         public void load() {
