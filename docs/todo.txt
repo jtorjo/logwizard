@@ -1,4 +1,34 @@
+
+- dropping a zip file
+  - look for .log + .txt files (prefer .log)      ---------> in settings form, allow override (the extrensions are used in preffered order, like, ".log" first if we have ".log;.txt")
+    - if a single one found, use it. otherwise:
+	  - if shift pressed -> show a dialog with all possible files
+	  - if shift not pressed, open the first one (prefer .log)
+	- iterate subdirs?
+	-------> keep in the history (and basically dropped zip files -> we keep them somewhere in our logwizard subdir + use FRIENDLY NAMES)
+	         see that history_ and history combo are in sync, even when we select another item!
+
+- show_notes (ui_info) -> note: this is mutually exclusive with show_filters (probably have something else show_left)
+  - need to allow resizing the left pane (splitter) and automatically save that
+
+- take some picture with logwizard - to place on github
+
+- (note_user_ctrl) notes: author (in Settings) - by default, username
+  - the author has 2 names - the name + a short name, since we will be showing his shot name in discussions (by default, it's he user's initials -> we compute them as he's changing his name)
+  - show the author username when toggled into notes + specify a color for author (by default, blue)
+    - when showing the other authors, if an author name's color colides with ours, make sure we use something unique (even if several collisions)
+  - allow deleting/UNdeleting notes, even from others (basically, we will HIDE it; hidden notes, if shown, show in ligthtgray) 
+    - have a checkbox - show Hidden Notes (by default, unchecked)
+  - render: the author, bold -> in author's color , the text in the color wanted by the author
+  - when typing a note: first line ( # color) - can specify the color (to make it simpler)
+
+- toggles button + menu!
 - context matches -> in settings dialog (easy, for now)
+
+
+
+
+
 
 - extra.txt -> when holding it locally -> hold the extra-file_name-md5_of_local_file_path.txt
   - first -> try to find the full md5 - if not, try find the name (in case the file got moved)
@@ -11,6 +41,7 @@
     - see if i have the view where the note was made, and if i have the line. if so, i will go there, in that view (since i may be using my own context)
 	- otherwise, go to first view where the note is found, if not found anywhere, open full log and go there
   - notes should be abe to have colors (like - green OK, red BAD, gray ACCEPTED, stuff like that)
+    - note color != author color!
 
 - zip it - zip the file + its notes + its bookmarks + its context
   - zip as ".logwizard" extension - we should automatically recognize this (Open With)
@@ -23,13 +54,6 @@
     if shift is NOT pressed, if we have the context - we preserve our context; if we DON'T have the context, we will load it
   - if context is slightly different and we did not load it, show it in status bar
   - if we do override the context, this is NOT permanent - we will use a temporary context or so
-
-- dropping a zip file
-  - look for .log + .txt files (prefer .log)
-    - if a single one found, use it. otherwise:
-	  - if shift pressed -> show a dialog with all possible files
-	  - if shift not pressed, open the first one (prefer .log)
-	- iterate subdirs?
 
 - allow exporting notes:
   - to be sent to customer - the line(s) + the author(s)
@@ -85,6 +109,12 @@
 
   - new article (about monitoring your own log while debugging) + "bring to top/most on alt-tab"? "Logging and Debugging - they can get along"
 
+  - alert: email? later = command line client that would monitor a certain log? and just do alerts? (include the msg?)
+    - cmd line args: [type-of-log] [log-name]
+	- allow dumping one of hte views?
+	- TOTHINK when should we dump an email? by default, probably not. maybe only on the command line client?
+	- later: in time, allow for this to be very thin (memory-wise), since we don't need to remember the matches - we only need to dump alerts, if needed
+	- cmd line client should also be able to dump a certain view into another file (.txt or .html); this way, you might run it on Test results?
 
 
 

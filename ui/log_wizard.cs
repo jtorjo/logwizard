@@ -2546,7 +2546,8 @@ namespace LogWizard
         }
 
         private void tipsHotkeys_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            new help_form(this).Show();
+            //new help_form(this).Show();
+            Process.Start("https://github.com/jtorjo/logwizard/wiki/Filters");
         }
 
         private void load_bookmarks() {

@@ -345,6 +345,10 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="3rdparty\color_picker\color_picker.csproj">
+      <Project>{5d703fc5-ea9a-4bbb-bf08-e3a80efddaa8}</Project>
+      <Name>color_picker</Name>
+    </ProjectReference>
     <ProjectReference Include="3rdparty\SharpZipLib\src\ICSharpCode.SharpZLib.csproj">
       <Project>{0E7413FF-EB9E-4714-ACF2-BE3A6A7B2FFD}</Project>
       <Name>ICSharpCode.SharpZLib</Name>

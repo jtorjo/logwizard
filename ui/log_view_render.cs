@@ -93,8 +93,8 @@ namespace LogWizard.ui {
 
         private int draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, print_info print) {
             Font f = print.bold ? (print.italic ? bi_font : b_font) : (print.italic ? i_font : font);
+            var i = ListItem.RowObject as log_view.item;
             if (print != default_) {
-                var i = ListItem.RowObject as log_view.item;
                 Color bg = i.bg(parent_);
                 bg = print.bg != util.transparent ? print.bg : util.darker_color(bg);
                 Rectangle here = new Rectangle(r.Location, r.Size);
@@ -103,7 +103,9 @@ namespace LogWizard.ui {
                 here.Width = cur_width;
                 g.FillRectangle(brush_.brush(bg), here);
             }
-            Brush brush = print.fg != util.transparent ? brush_.brush(print.fg) : this.TextBrush;
+
+            Color fg = i.fg(parent_);
+            Brush brush = print.fg != util.transparent ? brush_.brush(print.fg) : brush_.brush( fg);
 
             Rectangle sub_r = new Rectangle(r.Location, r.Size);
             sub_r.X += left;
@@ -149,7 +151,7 @@ namespace LogWizard.ui {
             if (i == null)
                 return;
 
-            Color bg = i.bg(parent_), fg = i.fg(parent_);
+            Color bg = i.bg(parent_);
             bool is_focused = win32.focused_ctrl() == parent_.list;
 
             Color dark_bg = util.darker_color(bg);
@@ -162,8 +164,10 @@ namespace LogWizard.ui {
             if (col_idx == parent_.msgCol.Index) {
                 if (is_sel) 
                     brush = brush_.brush(is_sel ? (is_focused ? darker_bg : dark_bg) : bg);
-                else 
-                    brush = gradient_.brush(r, Color.White, Color.AntiqueWhite);
+                else if (app.inst.use_bg_gradient)
+                    brush = gradient_.brush(r, app.inst.bg_from, app.inst.bg_to);
+                else
+                    brush = brush_.brush(app.inst.bg);
             } else 
                 brush = brush_.brush(is_sel ? (is_focused ? darker_bg : dark_bg) : bg);
             g.FillRectangle(brush, r);

@@ -44,6 +44,13 @@ namespace LogWizard.ui {
                 break;
             }
             syncColorsGrayOutNonActive.Checked = app.inst.sync_colors_all_views_gray_non_active;
+
+            logBgSingleColor.Checked = !app.inst.use_bg_gradient;
+            logBgGradient.Checked = app.inst.use_bg_gradient;
+
+            logBg.SelectedItem = app.inst.bg;
+            logBgFrom.SelectedItem = app.inst.bg_from;
+            logBgTo.SelectedItem = app.inst.bg_to;
         }
 
         private void save() {
@@ -58,6 +65,11 @@ namespace LogWizard.ui {
             else if ( syncColorsAllViews.Checked) app.inst.syncronize_colors = app.synchronize_colors_type.with_all_views;
             else Debug.Assert(false);
             app.inst.sync_colors_all_views_gray_non_active = syncColorsGrayOutNonActive.Checked;
+
+            app.inst.use_bg_gradient = logBgGradient.Checked;
+            app.inst.bg = logBg.SelectedItem;
+            app.inst.bg_from = logBgFrom.SelectedItem;
+            app.inst.bg_to = logBgTo.SelectedItem;
 
             app.inst.save();
         }

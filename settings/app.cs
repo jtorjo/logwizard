@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -63,6 +64,11 @@ namespace LogWizard {
 
         public synchronize_colors_type syncronize_colors = synchronize_colors_type.none;
         public bool sync_colors_all_views_gray_non_active = false;
+
+        public bool use_bg_gradient = true;
+        public Color bg = Color.White;
+        public Color bg_from = Color.White;
+        public Color bg_to = Color.AntiqueWhite;
 
 
         // file-by-file
@@ -131,6 +137,15 @@ namespace LogWizard {
             else 
                 sett.set(name, prop);
         }
+        internal static void load_save(bool load, ref Color prop, string name, Color default_) {
+            var sett = Program.sett;
+            if (load) {
+                string def_str = util.color_to_str(default_);
+                string as_str = sett.get(name, def_str);
+                prop = util.str_to_color(as_str);
+            } else
+                sett.set(name, util.color_to_str( prop));
+        }
 
         private void load_save(bool load) {
             load_save(load, ref show_view_line_count, "show_view_line_count", true);
@@ -143,6 +158,11 @@ namespace LogWizard {
 
             load_save(load, ref syncronize_colors, "synchronize_colors", synchronize_colors_type.with_all_views);
             load_save(load, ref sync_colors_all_views_gray_non_active, "synchronize_colors_gray_non_active", false);
+
+            load_save(load, ref use_bg_gradient, "use_bg_gradient", true);
+            load_save(load, ref bg, "bg", Color.White);
+            load_save(load, ref bg_from, "bg_from", Color.White);
+            load_save(load, ref bg_to, "bg_to", util.str_to_color("#FEFBF8") );
         }
 
         public void load() {

@@ -896,6 +896,8 @@ namespace LogWizard
         }
 
         private void update_line_highlight_color(int idx) {
+            /* 1.0.88+ - we have the log_view_renderer for this
+
             item i = match_at(idx) ;
             if (i == null)
                 return;
@@ -904,6 +906,7 @@ namespace LogWizard
 
             list.HighlightBackgroundColor = util.darker_color(util.darker_color(i.bg(this)));
             list.HighlightForegroundColor = i.fg(this);
+            */
         }
 
         private void list_FormatCell_1(object sender, FormatCellEventArgs e) {

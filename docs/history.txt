@@ -1,7 +1,16 @@
 
 
+
+1.0.88
+- https://github.com/jtorjo/logwizard/wiki/Filters
+- added color picker (http://www.codeproject.com/Articles/21965/Color-Picker-with-Color-Wheel-and-Eye-Dropper)
+- settings -> general / color / Imp/Exp (+ Reset button) / notes
+- no more need for update_line_highlight_color
+
+
+
 1.0.87
-- custome renderer - right now, we can draw custom words/phrases/etc. with different fonts, bold, etc. (list_view_render)
+- custom renderer - right now, we can draw custom words/phrases/etc. with different fonts, bold, etc. (list_view_render)
   we need to make it so that we can match anything a filter or a find matches
 
 
