@@ -26,7 +26,6 @@
             this.picker = new ColorPicker.ColorPickerCtrl();
             this.ok = new System.Windows.Forms.Button();
             this.cancel = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // picker
@@ -60,15 +59,6 @@
             this.cancel.UseVisualStyleBackColor = true;
             this.cancel.Click += new System.EventHandler(this.cancel_Click);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-1, 247);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(217, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "(note: selected color is copied into clipboard)";
-            // 
             // select_color_form
             // 
             this.AcceptButton = this.ok;
@@ -76,7 +66,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancel;
             this.ClientSize = new System.Drawing.Size(512, 271);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.cancel);
             this.Controls.Add(this.ok);
             this.Controls.Add(this.picker);
@@ -85,7 +74,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "select_color_form";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -94,6 +82,5 @@
         private ColorPicker.ColorPickerCtrl picker;
         private System.Windows.Forms.Button ok;
         private System.Windows.Forms.Button cancel;
-        private System.Windows.Forms.Label label1;
     }
 }

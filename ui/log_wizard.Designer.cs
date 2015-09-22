@@ -68,8 +68,6 @@
             this.viewToClipboard = new System.Windows.Forms.Button();
             this.contextFromClipboard = new System.Windows.Forms.Button();
             this.contextToClipboard = new System.Windows.Forms.Button();
-            this.toggleTopmost = new System.Windows.Forms.PictureBox();
-            this.selectColor = new System.Windows.Forms.Button();
             this.settingsCtrl = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.main = new System.Windows.Forms.SplitContainer();
@@ -99,9 +97,10 @@
             this.hotkeys = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.saveTimer = new System.Windows.Forms.Timer(this.components);
+            this.toggleTopmost = new System.Windows.Forms.PictureBox();
+            this.selectColor = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).BeginInit();
             this.filterContextMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.main)).BeginInit();
             this.main.Panel1.SuspendLayout();
             this.main.Panel2.SuspendLayout();
@@ -120,12 +119,13 @@
             this.viewsTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.lower.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             this.SuspendLayout();
             // 
             // delFilter
             // 
             this.delFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.delFilter.Location = new System.Drawing.Point(239, 446);
+            this.delFilter.Location = new System.Drawing.Point(239, 444);
             this.delFilter.Name = "delFilter";
             this.delFilter.Size = new System.Drawing.Size(24, 23);
             this.delFilter.TabIndex = 10;
@@ -137,7 +137,7 @@
             // addFilter
             // 
             this.addFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addFilter.Location = new System.Drawing.Point(211, 446);
+            this.addFilter.Location = new System.Drawing.Point(211, 444);
             this.addFilter.Name = "addFilter";
             this.addFilter.Size = new System.Drawing.Size(24, 23);
             this.addFilter.TabIndex = 9;
@@ -174,7 +174,7 @@
             this.filterCtrl.ShowFilterMenuOnRightClick = false;
             this.filterCtrl.ShowGroups = false;
             this.filterCtrl.ShowImagesOnSubItems = true;
-            this.filterCtrl.Size = new System.Drawing.Size(258, 293);
+            this.filterCtrl.Size = new System.Drawing.Size(258, 291);
             this.filterCtrl.TabIndex = 4;
             this.filterCtrl.UseAlternatingBackColors = true;
             this.filterCtrl.UseCellFormatEvents = true;
@@ -276,7 +276,7 @@
             this.curFilterCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.curFilterCtrl.Enabled = false;
-            this.curFilterCtrl.Location = new System.Drawing.Point(45, 321);
+            this.curFilterCtrl.Location = new System.Drawing.Point(45, 317);
             this.curFilterCtrl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.curFilterCtrl.Multiline = true;
             this.curFilterCtrl.Name = "curFilterCtrl";
@@ -290,7 +290,7 @@
             this.filterLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.filterLabel.AutoSize = true;
             this.filterLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.filterLabel.Location = new System.Drawing.Point(2, 324);
+            this.filterLabel.Location = new System.Drawing.Point(2, 322);
             this.filterLabel.Name = "filterLabel";
             this.filterLabel.Size = new System.Drawing.Size(36, 15);
             this.filterLabel.TabIndex = 2;
@@ -520,7 +520,7 @@
             // viewFromClipboard
             // 
             this.viewFromClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.viewFromClipboard.Location = new System.Drawing.Point(41, 446);
+            this.viewFromClipboard.Location = new System.Drawing.Point(41, 444);
             this.viewFromClipboard.Name = "viewFromClipboard";
             this.viewFromClipboard.Size = new System.Drawing.Size(52, 23);
             this.viewFromClipboard.TabIndex = 14;
@@ -532,7 +532,7 @@
             // viewToClipboard
             // 
             this.viewToClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.viewToClipboard.Location = new System.Drawing.Point(3, 446);
+            this.viewToClipboard.Location = new System.Drawing.Point(3, 444);
             this.viewToClipboard.Name = "viewToClipboard";
             this.viewToClipboard.Size = new System.Drawing.Size(38, 23);
             this.viewToClipboard.TabIndex = 13;
@@ -562,33 +562,6 @@
             this.tip.SetToolTip(this.contextToClipboard, "Copy Context To Clipboard");
             this.contextToClipboard.UseVisualStyleBackColor = true;
             this.contextToClipboard.Click += new System.EventHandler(this.contextToClipboard_Click);
-            // 
-            // toggleTopmost
-            // 
-            this.toggleTopmost.BackColor = System.Drawing.Color.Transparent;
-            this.toggleTopmost.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.toggleTopmost.Image = global::LogWizard.Properties.Resources.bug;
-            this.toggleTopmost.Location = new System.Drawing.Point(0, 0);
-            this.toggleTopmost.Name = "toggleTopmost";
-            this.toggleTopmost.Size = new System.Drawing.Size(24, 24);
-            this.toggleTopmost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.toggleTopmost.TabIndex = 17;
-            this.toggleTopmost.TabStop = false;
-            this.tip.SetToolTip(this.toggleTopmost, "Click it to toggle LogWizard\'s TopMost state");
-            this.toggleTopmost.Visible = false;
-            this.toggleTopmost.Click += new System.EventHandler(this.toggleTopmost_Click);
-            // 
-            // selectColor
-            // 
-            this.selectColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.selectColor.BackgroundImage = global::LogWizard.Properties.Resources.eyedropper;
-            this.selectColor.Location = new System.Drawing.Point(19, 343);
-            this.selectColor.Name = "selectColor";
-            this.selectColor.Size = new System.Drawing.Size(21, 22);
-            this.selectColor.TabIndex = 15;
-            this.tip.SetToolTip(this.selectColor, "Select a Color for this Filter");
-            this.selectColor.UseVisualStyleBackColor = true;
-            this.selectColor.Click += new System.EventHandler(this.selectColor_Click);
             // 
             // settingsCtrl
             // 
@@ -671,7 +644,7 @@
             // 
             this.applyToExistingLines.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.applyToExistingLines.AutoSize = true;
-            this.applyToExistingLines.Location = new System.Drawing.Point(45, 426);
+            this.applyToExistingLines.Location = new System.Drawing.Point(45, 424);
             this.applyToExistingLines.Name = "applyToExistingLines";
             this.applyToExistingLines.Size = new System.Drawing.Size(144, 19);
             this.applyToExistingLines.TabIndex = 12;
@@ -683,7 +656,7 @@
             // 
             this.tipsHotkeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.tipsHotkeys.AutoSize = true;
-            this.tipsHotkeys.Location = new System.Drawing.Point(234, 428);
+            this.tipsHotkeys.Location = new System.Drawing.Point(234, 426);
             this.tipsHotkeys.Name = "tipsHotkeys";
             this.tipsHotkeys.Size = new System.Drawing.Size(29, 15);
             this.tipsHotkeys.TabIndex = 12;
@@ -954,6 +927,34 @@
             this.saveTimer.Interval = 15000;
             this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
+            // toggleTopmost
+            // 
+            this.toggleTopmost.BackColor = System.Drawing.Color.Transparent;
+            this.toggleTopmost.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.toggleTopmost.Image = global::LogWizard.Properties.Resources.bug;
+            this.toggleTopmost.Location = new System.Drawing.Point(0, 0);
+            this.toggleTopmost.Name = "toggleTopmost";
+            this.toggleTopmost.Size = new System.Drawing.Size(24, 24);
+            this.toggleTopmost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.toggleTopmost.TabIndex = 17;
+            this.toggleTopmost.TabStop = false;
+            this.tip.SetToolTip(this.toggleTopmost, "Click it to toggle LogWizard\'s TopMost state");
+            this.toggleTopmost.Visible = false;
+            this.toggleTopmost.Click += new System.EventHandler(this.toggleTopmost_Click);
+            // 
+            // selectColor
+            // 
+            this.selectColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.selectColor.BackgroundImage = global::LogWizard.Properties.Resources.eyedropper;
+            this.selectColor.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.selectColor.Location = new System.Drawing.Point(19, 341);
+            this.selectColor.Name = "selectColor";
+            this.selectColor.Size = new System.Drawing.Size(21, 22);
+            this.selectColor.TabIndex = 15;
+            this.tip.SetToolTip(this.selectColor, "Select a Color for this Filter");
+            this.selectColor.UseVisualStyleBackColor = true;
+            this.selectColor.Click += new System.EventHandler(this.selectColor_Click);
+            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -976,7 +977,6 @@
             this.SizeChanged += new System.EventHandler(this.log_wizard_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).EndInit();
             this.filterContextMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).EndInit();
             this.main.Panel1.ResumeLayout(false);
             this.main.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.main)).EndInit();
@@ -1000,6 +1000,7 @@
             this.tabPage1.ResumeLayout(false);
             this.lower.ResumeLayout(false);
             this.lower.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).EndInit();
             this.ResumeLayout(false);
 
         }

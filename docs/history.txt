@@ -1,5 +1,12 @@
 
 
+- todo: 
+  move filter_ctrl completely in lw_common
+  test notes_ctrl
+
+1.0.90
+- added notes ctrl (scheletron)
+
 
 1.0.89
 - notes: author name, initials + color ->  in settings
