@@ -2843,17 +2843,17 @@ namespace LogWizard
                 if (edited_line == -1) {
                     // it's not with the cursor on a line - find the first line that would actually be a color
                     for ( int i = 0; i < lines.Count && edited_line == -1; ++i)
-                        if (lines[i].StartsWith("color") || lines[i].StartsWith("match_color"))
+                        if (lines[i].Trim().StartsWith("color") || lines[i].Trim().StartsWith("match_color"))
                             edited_line = i;
                 }
                 if (edited_line != -1) {
                     // in this case, he's editing the color from a given line
-                    bool is_color_line = lines[edited_line].StartsWith("color ") || lines[edited_line].StartsWith("match_color ");
+                    bool is_color_line = lines[edited_line].Trim().StartsWith("color ") || lines[edited_line].Trim().StartsWith("match_color ");
                     bool is_replacing = lines[edited_line].Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries).Length == 2 &&
-                                        lines[edited_line].Trim() == lines[edited_line];
+                                        lines[edited_line].TrimEnd() == lines[edited_line];
                     if (is_color_line) {
                         if (is_replacing)
-                            lines[edited_line] = (lines[edited_line].StartsWith("color ") ? "color" : "match_color") + " " + sel_color;
+                            lines[edited_line] = (lines[edited_line].Trim().StartsWith("color ") ? "color" : "match_color") + " " + sel_color;
                         else
                             lines[edited_line] += " " + sel_color;
                     } else
