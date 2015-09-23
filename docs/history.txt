@@ -5,8 +5,15 @@
   move filter_ctrl completely in lw_common
   test notes_ctrl
 
-- to erase 
+
+
+1.0.91f DOES NOT COMPILE
+- BEFORE filter_ctrl have filter_item point directly to ui_view
+
+- moving filter_ctrl into lw_common - step 3
+- done: to erase 
   private void focusOnFilterCtrl_Tick(object sender, EventArgs e) {
+
 
 
 1.0.91e

@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.viewFromClipboard = new System.Windows.Forms.Button();
             this.viewToClipboard = new System.Windows.Forms.Button();
             this.filterCtrl = new BrightIdeasSoftware.ObjectListView();
@@ -38,9 +39,15 @@
             this.filterLabel = new System.Windows.Forms.Label();
             this.addFilter = new System.Windows.Forms.Button();
             this.selectColor = new System.Windows.Forms.Button();
-            this.tip = new System.Windows.Forms.ToolTip();
+            this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.tipsHotkeys = new System.Windows.Forms.LinkLabel();
+            this.filterContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveToTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveToBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).BeginInit();
+            this.filterContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // viewFromClipboard
@@ -185,6 +192,7 @@
             this.curFilterCtrl.Size = new System.Drawing.Size(312, 104);
             this.curFilterCtrl.TabIndex = 17;
             this.curFilterCtrl.TextChanged += new System.EventHandler(this.curFilterCtrl_TextChanged);
+            this.curFilterCtrl.Leave += new System.EventHandler(this.curFilterCtrl_Leave);
             // 
             // delFilter
             // 
@@ -243,6 +251,44 @@
             this.tipsHotkeys.Text = "Tips";
             this.tipsHotkeys.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.tipsHotkeys_LinkClicked);
             // 
+            // filterContextMenu
+            // 
+            this.filterContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.moveUpToolStripMenuItem,
+            this.moveDownToolStripMenuItem,
+            this.moveToTopToolStripMenuItem,
+            this.moveToBottomToolStripMenuItem});
+            this.filterContextMenu.Name = "filterContextMenu";
+            this.filterContextMenu.Size = new System.Drawing.Size(165, 92);
+            // 
+            // moveUpToolStripMenuItem
+            // 
+            this.moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
+            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.moveUpToolStripMenuItem.Text = "Move Up";
+            this.moveUpToolStripMenuItem.Click += new System.EventHandler(this.moveUpToolStripMenuItem_Click);
+            // 
+            // moveDownToolStripMenuItem
+            // 
+            this.moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
+            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.moveDownToolStripMenuItem.Text = "Move Down";
+            this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
+            // 
+            // moveToTopToolStripMenuItem
+            // 
+            this.moveToTopToolStripMenuItem.Name = "moveToTopToolStripMenuItem";
+            this.moveToTopToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.moveToTopToolStripMenuItem.Text = "Move To Top";
+            this.moveToTopToolStripMenuItem.Click += new System.EventHandler(this.moveToTopToolStripMenuItem_Click);
+            // 
+            // moveToBottomToolStripMenuItem
+            // 
+            this.moveToBottomToolStripMenuItem.Name = "moveToBottomToolStripMenuItem";
+            this.moveToBottomToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.moveToBottomToolStripMenuItem.Text = "Move To Bottom";
+            this.moveToBottomToolStripMenuItem.Click += new System.EventHandler(this.moveToBottomToolStripMenuItem_Click);
+            // 
             // filter_ctrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -262,6 +308,7 @@
             this.Size = new System.Drawing.Size(354, 505);
             this.Load += new System.EventHandler(this.filter_ctrl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).EndInit();
+            this.filterContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -286,5 +333,10 @@
         private System.Windows.Forms.Button selectColor;
         private System.Windows.Forms.ToolTip tip;
         private System.Windows.Forms.LinkLabel tipsHotkeys;
+        private System.Windows.Forms.ContextMenuStrip filterContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem moveUpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveToTopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveToBottomToolStripMenuItem;
     }
 }

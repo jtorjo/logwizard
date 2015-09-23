@@ -38,13 +38,20 @@ namespace lw_common.ui {
         private ui_view view_;
         private int ignore_change_ = 0;
 
+        private bool needs_save_ = false;
+
         public delegate void void_func();
+        public delegate void idx_func(int filter_idx);
+
         public void_func do_save;
         public void_func ui_to_view;
         // ... this means the view has changed drastically, and filters need to be re-run
         public void_func rerun_view;
         // ... this means the UI of the view needs refresh
         public void_func refresh_view;
+
+        public idx_func mark_match;
+
 
         public filter_ctrl() {
             InitializeComponent();
@@ -72,6 +79,25 @@ namespace lw_common.ui {
             } 
         }
 
+        public void view_to_ui(ui_view view) {
+            view_ = view;
+
+            ++ignore_change_;
+            List<object> items = new List<object>();
+            var filters = view_.filters;
+            for (int idx = 0; idx < filters.Count; ++idx) {
+                filter_item i = new filter_item { text = filters[idx].text, enabled = filters[idx].enabled, 
+                                                    dimmed = filters[idx].dimmed, apply_to_existing_lines = filters[idx].apply_to_existing_lines };
+                items.Add(i);
+            }
+            filterCtrl.SetObjects(items);
+
+            curFilterCtrl.Text = "";
+            applyToExistingLines.Checked = false;
+            --ignore_change_;
+        }
+
+
         private void filterCtrl_SelectedIndexChanged(object sender, EventArgs e) {
             int sel_filter = filterCtrl.SelectedIndex;
             bool has_sel = sel_filter >= 0;
@@ -84,14 +110,16 @@ namespace lw_common.ui {
             }
 
             filter_item i = filterCtrl.GetItem(sel_filter).RowObject as filter_item;
-            /*
             raw_filter_row filt = new raw_filter_row(i.text, i.apply_to_existing_lines);
             if (filt.is_valid) {
+                /*
                 var lv = ensure_we_have_log_view_for_tab(sel_view);
                 Color fg = util.str_to_color(sett.get("filter_fg", "transparent"));
                 Color bg = util.str_to_color(sett.get("filter_bg", "#faebd7"));
                 lv.mark_match(sel_filter, fg, bg);
-            }*/
+                */
+                mark_match(sel_filter);
+            }
 
             ++ignore_change_;
             applyToExistingLines.Checked = i.apply_to_existing_lines;
@@ -126,6 +154,9 @@ namespace lw_common.ui {
         }
 
         private void filterCtrl_ItemsChanged(object sender, BrightIdeasSoftware.ItemsChangedEventArgs e) {
+            if (win32.focused_ctrl() == curFilterCtrl)
+                return;
+
             do_save();
         }
 
@@ -155,6 +186,8 @@ namespace lw_common.ui {
             if (sel.text != curFilterCtrl.Text) {
                 sel.text = curFilterCtrl.Text;
                 filterCtrl.RefreshObject(sel);
+
+                needs_save_ = true;
             }
 
             var row = new raw_filter_row(curFilterCtrl.Text, applyToExistingLines.Checked);
@@ -274,7 +307,7 @@ namespace lw_common.ui {
                     }
                 }
                 /*
-                load_filters();
+                ui_to_view();
                 refreshFilter_Click(null, null);
                 */
                 ui_to_view();
@@ -340,8 +373,82 @@ namespace lw_common.ui {
 
         }
 
+
         private void filter_ctrl_Load(object sender, EventArgs e) {
-            Debug.Assert(do_save != null && rerun_view != null && refresh_view != null && ui_to_view != null);
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+                return;
+
+            // generates assertion at design time - forget it
+            // Debug.Assert(do_save != null && rerun_view != null && refresh_view != null && ui_to_view != null && mark_match != null);
+        }
+
+        public void select_filter(string name) {
+            for ( int idx = 0; idx < filterCtrl.GetItemCount(); ++idx) {
+                var i = filterCtrl.GetItem(idx).RowObject as filter_item;
+                if ( i.name == name)
+                    filterCtrl.SelectedIndex = idx;
+            }
+        }
+
+        private void moveUpToolStripMenuItem_Click(object sender, EventArgs e) {
+            int sel = filterCtrl.SelectedIndex;
+            if (sel < 1)
+                return;
+            var filters = view_.filters;
+            var cur = filters[sel];
+            filters.RemoveAt(sel);
+            filters.Insert(sel - 1, cur);
+            ui_to_view();
+            // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
+            //       that could interfere with editing the filter - we don't want that
+        }
+        private void moveToTopToolStripMenuItem_Click(object sender, EventArgs e) {
+            int sel = filterCtrl.SelectedIndex;
+            if (sel < 1)
+                return;
+            var filters = view_.filters;
+            var cur = filters[sel];
+            filters.RemoveAt(sel);
+            filters.Insert(0, cur);
+            ui_to_view();
+            // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
+            //       that could interfere with editing the filter - we don't want that
+        }
+
+        private void moveDownToolStripMenuItem_Click(object sender, EventArgs e) {
+            int sel = filterCtrl.SelectedIndex;
+            if (sel < 0)
+                return;
+            if (sel == filterCtrl.GetItemCount() - 1)
+                return;
+            var filters = view_.filters;
+            var cur = filters[sel];
+            filters.RemoveAt(sel);
+            filters.Insert(sel + 1, cur);
+            ui_to_view();
+            // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
+            //       that could interfere with editing the filter - we don't want that
+        }
+        private void moveToBottomToolStripMenuItem_Click(object sender, EventArgs e) {
+            int sel = filterCtrl.SelectedIndex;
+            if (sel < 0)
+                return;
+            if (sel == filterCtrl.GetItemCount() - 1)
+                return;
+            var filters = view_.filters;
+            var cur = filters[sel];
+            filters.RemoveAt(sel);
+            filters.Add(cur);
+            ui_to_view();
+            // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
+            //       that could interfere with editing the filter - we don't want that
+        }
+
+        private void curFilterCtrl_Leave(object sender, EventArgs e) {
+            if (needs_save_) {
+                needs_save_ = false;
+                do_save();
+            }
         }
     }
 }
