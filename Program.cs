@@ -62,12 +62,15 @@ namespace LogWizard
             util.force_break_into_debugger();
             util.init_exceptions();
 
+            // uncomment this to test how we'd behave in release
+            //util.is_debug = false;
+
             if (!util.is_debug) {
                 Environment.CurrentDirectory = local_dir();
                 if ( !File.Exists("logwizard_user.txt"))
                     File.Copy("logwizard.txt", "logwizard_user.txt");
             }
-            app.inst.init( new settings_file(util.is_debug ? "logwizard_debug.txt" : "logwizard.txt") );
+            app.inst.init( new settings_file(util.is_debug ? "logwizard_debug.txt" : "logwizard_user.txt") );
 
             if (args.Length > 0 && args[0] == "showsample") {
                 try {

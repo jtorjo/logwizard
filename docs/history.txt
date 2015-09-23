@@ -5,6 +5,10 @@
   test notes_ctrl
 
 
+1.0.92
+- made and tested setup kit
+
+
 1.0.91h
 - moving filter_ctrl into lw_common - step 4 (fully done and tested)
 - done:  test that we're always synchronized currnetview-filter_ctrl (on tab change -> update filter_ctrl)
