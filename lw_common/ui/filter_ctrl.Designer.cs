@@ -53,6 +53,7 @@
             this.viewFromClipboard.TabIndex = 23;
             this.viewFromClipboard.Text = "FromC";
             this.viewFromClipboard.UseVisualStyleBackColor = true;
+            this.viewFromClipboard.Click += new System.EventHandler(this.viewFromClipboard_Click);
             // 
             // viewToClipboard
             // 
@@ -63,6 +64,7 @@
             this.viewToClipboard.TabIndex = 22;
             this.viewToClipboard.Text = "ToC";
             this.viewToClipboard.UseVisualStyleBackColor = true;
+            this.viewToClipboard.Click += new System.EventHandler(this.viewToClipboard_Click);
             // 
             // filterCtrl
             // 
@@ -99,6 +101,12 @@
             this.filterCtrl.UseCustomSelectionColors = true;
             this.filterCtrl.UseSubItemCheckBoxes = true;
             this.filterCtrl.View = System.Windows.Forms.View.Details;
+            this.filterCtrl.CellEditStarting += new BrightIdeasSoftware.CellEditEventHandler(this.filterCtrl_CellEditStarting);
+            this.filterCtrl.ItemsChanged += new System.EventHandler<BrightIdeasSoftware.ItemsChangedEventArgs>(this.filterCtrl_ItemsChanged);
+            this.filterCtrl.SelectionChanged += new System.EventHandler(this.filterCtrl_SelectionChanged);
+            this.filterCtrl.SelectedIndexChanged += new System.EventHandler(this.filterCtrl_SelectedIndexChanged);
+            this.filterCtrl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.filterCtrl_KeyPress);
+            this.filterCtrl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.filterCtrl_MouseDown);
             // 
             // olvColumn4
             // 
@@ -153,6 +161,7 @@
             this.applyToExistingLines.TabIndex = 21;
             this.applyToExistingLines.Text = "Apply to existing Lines";
             this.applyToExistingLines.UseVisualStyleBackColor = true;
+            this.applyToExistingLines.CheckedChanged += new System.EventHandler(this.applyToExistingLines_CheckedChanged);
             // 
             // label1
             // 
@@ -176,6 +185,7 @@
             this.curFilterCtrl.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.curFilterCtrl.Size = new System.Drawing.Size(312, 104);
             this.curFilterCtrl.TabIndex = 17;
+            this.curFilterCtrl.TextChanged += new System.EventHandler(this.curFilterCtrl_TextChanged);
             // 
             // delFilter
             // 
@@ -186,6 +196,7 @@
             this.delFilter.TabIndex = 20;
             this.delFilter.Text = "-";
             this.delFilter.UseVisualStyleBackColor = true;
+            this.delFilter.Click += new System.EventHandler(this.delFilter_Click);
             // 
             // filterLabel
             // 
@@ -207,6 +218,7 @@
             this.addFilter.TabIndex = 19;
             this.addFilter.Text = "+";
             this.addFilter.UseVisualStyleBackColor = true;
+            this.addFilter.Click += new System.EventHandler(this.addFilter_Click);
             // 
             // selectColor
             // 
@@ -218,6 +230,7 @@
             this.selectColor.Size = new System.Drawing.Size(22, 22);
             this.selectColor.TabIndex = 24;
             this.selectColor.UseVisualStyleBackColor = true;
+            this.selectColor.Click += new System.EventHandler(this.selectColor_Click);
             // 
             // tipsHotkeys
             // 
@@ -229,6 +242,7 @@
             this.tipsHotkeys.TabIndex = 25;
             this.tipsHotkeys.TabStop = true;
             this.tipsHotkeys.Text = "Tips";
+            this.tipsHotkeys.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.tipsHotkeys_LinkClicked);
             // 
             // filter_ctrl
             // 
