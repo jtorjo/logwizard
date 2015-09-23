@@ -54,6 +54,7 @@ namespace lw_common.ui {
 
         public idx_func mark_match;
 
+        public bool design_mode = true;
 
 
         class filter_item {
@@ -143,7 +144,10 @@ namespace lw_common.ui {
             Debug.Assert( filter_idx < view_.filters.Count);
             var i = filterCtrl.GetItem(filter_idx).RowObject as filter_item;
             i.found_count = count > 0 ? "" + count : "";
+
+            ++ignore_change_;
             filterCtrl.RefreshObject(i);
+            --ignore_change_;
         }
 
         public void toggle_enabled_dimmed() {
@@ -195,6 +199,8 @@ namespace lw_common.ui {
             curFilterCtrl.Text = "";
             applyToExistingLines.Checked = false;
             --ignore_change_;
+
+            ui_to_view();
         }
 
 
@@ -255,6 +261,8 @@ namespace lw_common.ui {
 
         private void filterCtrl_ItemsChanged(object sender, BrightIdeasSoftware.ItemsChangedEventArgs e) {
             if (win32.focused_ctrl() == curFilterCtrl)
+                return;
+            if (ignore_change_ > 0)
                 return;
 
             do_save();
@@ -410,10 +418,6 @@ namespace lw_common.ui {
                         }
                     }
                 }
-                /*
-                ui_to_view();
-                refreshFilter_Click(null, null);
-                */
                 ui_to_view();
                 do_save();
                 rerun_view();
@@ -434,6 +438,9 @@ namespace lw_common.ui {
                 var lines = curFilterCtrl.Text.Split( new string[] { "\r\n" }, StringSplitOptions.None ).ToList();
                 int sel_start = curFilterCtrl.SelectionStart;
                 int edited_line = util.index_to_line(curFilterCtrl.Text, sel_start);
+                if (edited_line >= 0 && !filter_line.is_color_line(lines[edited_line]))
+                    // user is editing a line that is not a color line
+                    edited_line = -1;
                 if (edited_line == -1) {
                     // it's not with the cursor on a line - find the first line that would actually be a color
                     for ( int i = 0; i < lines.Count && edited_line == -1; ++i)
@@ -480,11 +487,12 @@ namespace lw_common.ui {
 
 
         private void filter_ctrl_Load(object sender, EventArgs e) {
-            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
-                return;
+            // doesn't work
+            //if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+              //  return;
 
-            // generates assertion at design time - forget it
-            // Debug.Assert(do_save != null && rerun_view != null && refresh_view != null && ui_to_view != null && mark_match != null);
+            if (!design_mode)
+                Debug.Assert(do_save != null && rerun_view != null && refresh_view != null && ui_to_view != null && mark_match != null);
         }
 
         public void select_filter(string name) {
@@ -553,7 +561,12 @@ namespace lw_common.ui {
             if (needs_save_) {
                 needs_save_ = false;
                 do_save();
+                ui_to_view();
             }
+        }
+
+        private void filter_ctrl_SizeChanged(object sender, EventArgs e) {
+            logger.Info("filter pane =" + Width + " x" + Height);
         }
     }
 }

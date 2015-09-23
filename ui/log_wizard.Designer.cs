@@ -55,7 +55,7 @@
             this.about = new System.Windows.Forms.Button();
             this.main = new System.Windows.Forms.SplitContainer();
             this.leftPane = new System.Windows.Forms.TabControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.filtersTab = new System.Windows.Forms.TabPage();
             this.filtCtrl = new lw_common.ui.filter_ctrl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -84,7 +84,7 @@
             this.main.Panel2.SuspendLayout();
             this.main.SuspendLayout();
             this.leftPane.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.filtersTab.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sourceUp)).BeginInit();
@@ -395,7 +395,7 @@
             this.leftPane.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.leftPane.Controls.Add(this.tabPage2);
+            this.leftPane.Controls.Add(this.filtersTab);
             this.leftPane.Controls.Add(this.tabPage3);
             this.leftPane.Controls.Add(this.tabPage4);
             this.leftPane.Location = new System.Drawing.Point(-1, 4);
@@ -403,23 +403,27 @@
             this.leftPane.SelectedIndex = 0;
             this.leftPane.Size = new System.Drawing.Size(277, 513);
             this.leftPane.TabIndex = 13;
+            this.leftPane.SizeChanged += new System.EventHandler(this.leftPane_SizeChanged);
             // 
-            // tabPage2
+            // filtersTab
             // 
-            this.tabPage2.Controls.Add(this.filtCtrl);
-            this.tabPage2.Location = new System.Drawing.Point(4, 24);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(269, 485);
-            this.tabPage2.TabIndex = 0;
-            this.tabPage2.Text = "Filters";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.filtersTab.Controls.Add(this.filtCtrl);
+            this.filtersTab.Location = new System.Drawing.Point(4, 24);
+            this.filtersTab.Name = "filtersTab";
+            this.filtersTab.Padding = new System.Windows.Forms.Padding(3);
+            this.filtersTab.Size = new System.Drawing.Size(269, 485);
+            this.filtersTab.TabIndex = 0;
+            this.filtersTab.Text = "Filters";
+            this.filtersTab.UseVisualStyleBackColor = true;
             // 
             // filtCtrl
             // 
-            this.filtCtrl.Location = new System.Drawing.Point(18, 44);
+            this.filtCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.filtCtrl.Location = new System.Drawing.Point(3, 2);
             this.filtCtrl.Name = "filtCtrl";
-            this.filtCtrl.Size = new System.Drawing.Size(224, 352);
+            this.filtCtrl.Size = new System.Drawing.Size(264, 485);
             this.filtCtrl.TabIndex = 0;
             // 
             // tabPage3
@@ -706,7 +710,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.main)).EndInit();
             this.main.ResumeLayout(false);
             this.leftPane.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
+            this.filtersTab.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
@@ -761,7 +765,7 @@
         private System.Windows.Forms.Timer postFocus;
         private System.Windows.Forms.CheckBox synchronizedWithFullLog;
         private System.Windows.Forms.TabControl leftPane;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage filtersTab;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.Label label4;

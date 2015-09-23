@@ -207,6 +207,22 @@ namespace LogWizard
 
             ++ignore_change_;
 
+            filtCtrl.design_mode = false;
+            filtCtrl.do_save = save;
+            filtCtrl.ui_to_view = () => log_view_for_tab(viewsTab.SelectedIndex).set_filter(filtCtrl.to_filter_row_list());
+            filtCtrl.rerun_view = () => refreshFilter_Click(null, null);
+            filtCtrl.refresh_view = () => {
+                log_view_for_tab(viewsTab.SelectedIndex).Refresh();
+                if (global_ui.show_fulllog) 
+                    sync_full_log_colors(true /* force refresh */);
+            };
+            filtCtrl.mark_match = (filter_idx) => {
+                var lv = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
+                Color fg = util.str_to_color(sett.get("filter_fg", "transparent"));
+                Color bg = util.str_to_color(sett.get("filter_bg", "#faebd7"));
+                lv.mark_match(filter_idx, fg, bg);
+            };
+
             foreach ( ui_context ctx in contexts_)
                 curContextCtrl.Items.Add(ctx.name);
             // just select something
@@ -766,9 +782,9 @@ namespace LogWizard
             sync_full_log_colors();
         }
 
-        private void sync_full_log_colors() {
+        private void sync_full_log_colors(bool force_refresh = false) {
             if (full_log_ctrl != null && global_ui.show_fulllog ) 
-                full_log_ctrl.update_colors(all_log_views(), viewsTab.SelectedIndex);
+                full_log_ctrl.update_colors(all_log_views(), viewsTab.SelectedIndex, force_refresh);
         }
 
         private void save_filters() {
@@ -1134,8 +1150,8 @@ namespace LogWizard
         }
 
         private void update_non_active_filter(int idx) {
-            var view = ensure_we_have_log_view_for_tab(idx);
-            if (view.is_filter_set)
+            var lv = ensure_we_have_log_view_for_tab(idx);
+            if (lv.is_filter_set)
                 return;
 
             ui_context ctx = cur_context();
@@ -1147,7 +1163,7 @@ namespace LogWizard
                 if ( row.is_valid)
                     lvf.Add(row);
             }
-            view.set_filter( lvf);
+            lv.set_filter( lvf);
         }
 
         private void refresh_filter_found() {
@@ -1170,11 +1186,15 @@ namespace LogWizard
         }
 
         private void update_filter( log_view lv) {
+            return;
+            /* 1.0.91+ - we get notified of filter changes
+
             // as long as we're editing the filter, don't update anything
             if (filtCtrl.is_editing_any_filter)
                 return;
 
             lv.set_filter( filtCtrl.to_filter_row_list());
+            */
         }
 
         private void on_move_key_end() {
@@ -2494,6 +2514,10 @@ namespace LogWizard
 
         private void hotkeys_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             Process.Start("https://github.com/jtorjo/logwizard/wiki/Hotkeys");
+        }
+
+        private void leftPane_SizeChanged(object sender, EventArgs e) {
+            logger.Info("left pane = " + leftPane.Width + " x " + leftPane.Height + " [" + filtersTab.Width + " x " + filtersTab.Height + "]");
         }
 
 

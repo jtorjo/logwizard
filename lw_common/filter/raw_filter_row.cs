@@ -62,7 +62,9 @@ namespace lw_common {
         //
         // if it is, we can keep the cached information (about line matches)
         public bool same(raw_filter_row other) {
-            return Enumerable.SequenceEqual(items_, other.items_) && Enumerable.SequenceEqual(additions_, other.additions_) && apply_to_existing_lines == other.apply_to_existing_lines;
+            //return Enumerable.SequenceEqual(items_, other.items_) && Enumerable.SequenceEqual(additions_, other.additions_) && apply_to_existing_lines == other.apply_to_existing_lines;
+            return unique_id == other.unique_id && apply_to_existing_lines == other.apply_to_existing_lines &&
+                   font_ == other.font_;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////

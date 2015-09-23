@@ -2,8 +2,13 @@
 -todo: article license is GPL3
 
 - todo: 
-  test that we're always synchronized currnetview-filter_ctrl (on tab change -> update filter_ctrl)
   test notes_ctrl
+
+
+1.0.91h
+- moving filter_ctrl into lw_common - step 4 (fully done and tested)
+- done:  test that we're always synchronized currnetview-filter_ctrl (on tab change -> update filter_ctrl)
+- refreshing color from a filter (with eyedropper) -> instant update
 
 
 1.0.91g

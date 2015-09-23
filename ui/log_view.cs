@@ -832,7 +832,7 @@ namespace LogWizard
         }
 
 
-        public void update_colors(List<log_view> other_logs, int sel_log_view_idx) {
+        public void update_colors(List<log_view> other_logs, int sel_log_view_idx, bool force_refresh = false) {
             Debug.Assert(is_full_log);
 
             int PAD = 5;
@@ -855,7 +855,7 @@ namespace LogWizard
                 if ( idx < filter_.matches.count)
                     update_colors_for_line(idx, other_logs, sel_log_view_idx, ref needs_refresh);
 
-            if ( needs_refresh)
+            if ( needs_refresh || force_refresh)
                 list.Refresh();
         }
 

@@ -291,8 +291,7 @@
             // 
             // filter_ctrl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.tipsHotkeys);
             this.Controls.Add(this.selectColor);
             this.Controls.Add(this.viewFromClipboard);
@@ -307,6 +306,7 @@
             this.Name = "filter_ctrl";
             this.Size = new System.Drawing.Size(354, 505);
             this.Load += new System.EventHandler(this.filter_ctrl_Load);
+            this.SizeChanged += new System.EventHandler(this.filter_ctrl_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).EndInit();
             this.filterContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);

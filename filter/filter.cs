@@ -258,7 +258,7 @@ namespace LogWizard {
             if (rows_.Count == rows.Count) {
                 same = true;
                 for (int i = 0; i < rows_.Count; ++i)
-                    if (rows[i].enabled != rows_[i].enabled || rows[i].dimmed != rows_[i].dimmed || rows[i].unique_id != rows_[i].unique_id)
+                    if (rows[i].enabled != rows_[i].enabled || rows[i].dimmed != rows_[i].dimmed || rows[i].same(rows_[i]))
                         same = false;
             }
 
