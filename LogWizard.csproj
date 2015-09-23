@@ -144,16 +144,11 @@
   <ItemGroup>
     <Compile Include="context\log_to_default_context.cs" />
     <Compile Include="context\log_to_default_syntax.cs" />
-    <Compile Include="filter\addition.cs" />
     <Compile Include="filter\filter.cs" />
-    <Compile Include="filter\filter_line.cs" />
     <Compile Include="filter\filter_row.cs" />
     <Compile Include="lw_util\lw_util.cs" />
-    <Compile Include="parse\line.cs" />
     <Compile Include="parse\log_line_parser.cs" />
     <Compile Include="readers\simple_file_text_reader2.cs" />
-    <Compile Include="string\large_string.cs" />
-    <Compile Include="string\sub_string.cs" />
     <Compile Include="ui\about_form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -175,12 +170,6 @@
     </Compile>
     <Compile Include="ui\log_view_render.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ui\select_color_form.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ui\select_color_form.Designer.cs">
-      <DependentUpon>select_color_form.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\solid_brush_list.cs" />
     <Compile Include="ui\msg_details_ctrl.cs">
@@ -262,9 +251,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="ui\select_color_form.resx">
-      <DependentUpon>select_color_form.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ui\settings_form.resx">
       <DependentUpon>settings_form.cs</DependentUpon>
     </EmbeddedResource>
@@ -345,9 +331,7 @@
       <Name>lw_common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="settings\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

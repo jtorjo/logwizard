@@ -21,7 +21,7 @@
 using System;
 
 namespace LogWizard {
-    class addition {
+    public class addition {
         protected bool Equals(addition other) {
             return add == other.add && type == other.type && number == other.number;
         }

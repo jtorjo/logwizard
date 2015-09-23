@@ -7,7 +7,7 @@ using lw_common;
 
 namespace LogWizard {
     // ctxX -> context about the message (other than file/func/class)
-    enum info_type { 
+    public enum info_type { 
         time, date, level, 
         // not implemented yet
         thread, 
@@ -19,7 +19,7 @@ namespace LogWizard {
         max 
     }
 
-    class line {
+    public class line {
         private sub_string sub_;
         // note: I could theoretically keep the length as a ubyte - and only the length of the message as a short
         //       however, I don't think it's worth doing, since if in the future, I would parse more complicated logs,

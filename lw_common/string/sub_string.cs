@@ -6,7 +6,7 @@ using System.Text;
 namespace LogWizard
 {
     // represents a line in a large string
-    struct sub_string {
+    public struct sub_string {
         private large_string string_;
         private int line_idx_;
 

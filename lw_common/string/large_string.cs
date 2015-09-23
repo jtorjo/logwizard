@@ -12,7 +12,7 @@ namespace LogWizard
     // holds the lines in a huge string
     //
     // note: at this time, we assume the enter is formed of 2 chars - either \r\n or \n\r
-    class large_string
+    public class large_string
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

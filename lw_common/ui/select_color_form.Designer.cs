@@ -1,4 +1,4 @@
-﻿namespace LogWizard.ui {
+﻿namespace lw_common {
     partial class select_color_form {
         /// <summary>
         /// Required designer variable.

@@ -1,10 +1,16 @@
 
+-todo: article license is GPL3
 
 - todo: 
   move filter_ctrl completely in lw_common
   test notes_ctrl
 
+- to erase 
+  private void focusOnFilterCtrl_Tick(object sender, EventArgs e) {
 
+
+1.0.91d
+- moving filter_ctrl into lw_common - step 1
 
 
 1.0.91c

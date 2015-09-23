@@ -198,10 +198,6 @@
 - parse log4net patterns: example: "%-50file(%4line): %date{HH:mm:ss,fff} %-10thread %-5level - %message%newline"
   if a .config file found, read it from there - prefer the pattern after FileAppender
 
-- bug - sometimes refreshing clears the current view (and the view remains cleared) - clicking it a few times will make it work again, but it's not cool
-
-- bug - log_line_parser.line_at can actually cause assertion -> i should be able to handle the case when line_at returns null (and 'matches' should return false in that case)
-
 - level column -> allow transforming it into pictures
   - this should work on any column - we should be able to transform any context into picts
 
@@ -266,7 +262,6 @@
 
 
 ---------------------------------------------------------------------------------
-- how easy is it to draw with custom font, or on special color?
 
 allow bolding or changing font or color or whatever of certain words/phrases
 like, color=red for all "could not" text
@@ -305,9 +300,20 @@ case in point -> [time.stats] -> numbers -> if too big -> mark them in given col
 
 
 
+- threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
+  - this should basically be by assigning a color to each thread's BACKGROUND. Then update the background for each line accordingly
+    say we have 3 threads: one, two, three and assign to them : red, green, yellow
+	we will have an extra column (perhaps the thread column anyway) what will divide itself into the number or different colors (3)
+	then, based on this, it will show one of the 3 in a certain color (red, green, yellow) - each of the different colors will get a different slot
+	then, 
+	- the background of EACH line will update to a ligher version of the given thread color (like red -> very light red)
+	- whenever a line is selected, all the lines from the same thread will be shown on a slighly darker background than usual (like red -> light red)
+	--> same with any context or anything that can be a "filter". In other words, categorize by something (like, a module or so) (pro_v)
 
 ------------- talk with Vidi
-- threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
+
+
+
 - allow copy-paste of full-log into a cloud
 
 - file:line -> allow showing the actual source code , eventually integrate with visual studio, 
@@ -344,3 +350,10 @@ case in point -> [time.stats] -> numbers -> if too big -> mark them in given col
   - switching from graph to log and vice versa needs to be ***seamless***
   - while in the chart/graph - i should be able to move with hotkeys as well
   
+- timeline (pro_v)
+  - i need to be able to show each view (lines by color?) on timeline - for instance, be able to find where exactly (on the timeline) are most messages, errors, etc
+  - i need to account for several days in this case (care about date/time, not just time)
+
+- merge files - allow merging several files (we will allow up to some decent size, like 50M, then pro_v)
+
+- probably 500Mb+ files (pro_v? optimize some stuff for such files)

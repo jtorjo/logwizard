@@ -43,9 +43,6 @@ namespace lw_common {
         public string name = "";
         // the filters
         public List< ui_filter > filters = new List<ui_filter>();
-
-        // 1.0.77+ - not saved to settings at this time
-        public bool show_msgonly = false;
     }
 
     [Serializable]

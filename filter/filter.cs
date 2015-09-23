@@ -271,8 +271,7 @@ namespace LogWizard {
                 if (old_ids.ContainsKey(id.Key)) {
                     var new_ = id.Value;
                     var old = old_ids[id.Key];
-                    old.enabled = new_.enabled;
-                    old.dimmed = new_.dimmed;
+                    old.preserve_cache_copy(new_);
                     new_rows.Add(old);
                 } else {
                     // this is completely new (or a changed filter row)
@@ -299,11 +298,13 @@ namespace LogWizard {
                     // at this point, see if user has fiddled with Enabled/Dimmed
                     bool same_ed = same_rows(rows);
                     if ( !same_ed)
-                        for (int i = 0; i < rows_.Count; ++i) {
+                        for (int i = 0; i < rows_.Count; ++i) 
                             // note: we want to preserve what we already have cached (in the filter rows)
+                            rows_[i].preserve_cache_copy(rows[i]);
+                            /* old code
                             rows_[i].enabled = rows[i].enabled;
                             rows_[i].dimmed = rows[i].dimmed;
-                        }
+                            */
 
                     if (!same_ed) 
                         rows_changed_ = true;
@@ -442,7 +443,7 @@ namespace LogWizard {
                         for (int filter_idx = 0; filter_idx < matches.Length && any_match; ++filter_idx) {
                             var row = rows[filter_idx];
                             if ((row.enabled || row.dimmed) && row.apply_to_existing_lines) {
-                                bool is_font_only = row.raw_font != null;
+                                bool is_font_only = row.has_font_info;
                                 if (row.line_matches.Contains(line_idx)) {
                                     if (existing_filter_font == null && is_font_only) {
                                         // in this case, use the font from "apply to existing filters" - only if the user has specifically set it

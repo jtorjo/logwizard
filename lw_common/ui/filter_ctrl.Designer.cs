@@ -23,7 +23,6 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.components = new System.ComponentModel.Container();
             this.viewFromClipboard = new System.Windows.Forms.Button();
             this.viewToClipboard = new System.Windows.Forms.Button();
             this.filterCtrl = new BrightIdeasSoftware.ObjectListView();
@@ -39,7 +38,7 @@
             this.filterLabel = new System.Windows.Forms.Label();
             this.addFilter = new System.Windows.Forms.Button();
             this.selectColor = new System.Windows.Forms.Button();
-            this.tip = new System.Windows.Forms.ToolTip(this.components);
+            this.tip = new System.Windows.Forms.ToolTip();
             this.tipsHotkeys = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).BeginInit();
             this.SuspendLayout();

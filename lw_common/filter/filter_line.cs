@@ -28,7 +28,7 @@ using log4net.Repository.Hierarchy;
 using lw_common;
 
 namespace LogWizard {
-    class filter_line {
+    public class filter_line {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 
@@ -157,6 +157,10 @@ namespace LogWizard {
             public static font_info full_log_gray_ = new font_info { bg = Color.White, fg = Color.LightSlateGray };
         }
 
+        public static bool is_color_line(string line) {
+            line = line.Trim();
+            return line.StartsWith("color ") || line.StartsWith("match_color ");
+        }
 
         public static filter_line parse(string line) {
             try {
