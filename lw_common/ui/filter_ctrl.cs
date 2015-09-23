@@ -32,6 +32,8 @@ using System.Xml.Serialization;
 using LogWizard;
 
 namespace lw_common.ui {
+    // 1.0.91+
+    // note: this is fully synchronized with current view (ui_view) - if you need access to the items, you can access the view directly
     public partial class filter_ctrl : UserControl {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -53,16 +55,32 @@ namespace lw_common.ui {
         public idx_func mark_match;
 
 
-        public filter_ctrl() {
-            InitializeComponent();
-        }
 
         class filter_item {
-            public bool enabled = true;
-            public bool dimmed = false;
-            public string text = "";
+            private ui_filter filter_;
+            public filter_item(ui_filter filter) {
+                filter_ = filter;
+            }
 
-            public bool apply_to_existing_lines = false;
+            public bool enabled {
+                get { return filter_.enabled; }
+                set { filter_.enabled = value; }
+            }
+
+            public bool dimmed {
+                get { return filter_.dimmed; }
+                set { filter_.dimmed = value; }
+            }
+
+            public string text {
+                get { return filter_.text; }
+                set { filter_.text = value; }
+            }
+
+            public bool apply_to_existing_lines {
+                get { return filter_.apply_to_existing_lines; }
+                set { filter_.apply_to_existing_lines = value; }
+            }
 
             public string found_count = "";
 
@@ -74,10 +92,93 @@ namespace lw_common.ui {
                     if (filter_name != null)
                         return filter_name.Trim().Substring(3).Trim();
 
-                    return lines.Aggregate("", (current, l) => current + (l + " | "));
+                    return util.concatenate(lines, " | ");
                 }
-            } 
+            }
         }
+
+        public filter_ctrl() {
+            InitializeComponent();
+        }
+
+        // the controls we can navigate through with TAB hotkey
+        public List<Control> tab_navigatable_controls {
+            get {
+                var nav = new List<Control>();
+                nav.Add(filterCtrl);
+                if ( curFilterCtrl.Enabled)
+                    nav.Add(curFilterCtrl);
+                return nav;
+            }
+        }
+
+        public bool is_editing_any_filter {
+            get { return win32.focused_ctrl() == curFilterCtrl; }
+        }
+
+        public bool can_handle_toggle_enable_dimmed_now {
+            get { return win32.focused_ctrl() == filterCtrl; }
+        }
+
+        public int sel {
+            get { return filterCtrl.SelectedIndex;  }
+        }
+
+        public List<raw_filter_row> to_filter_row_list() {
+            List<raw_filter_row> lvf = new List<raw_filter_row>();
+            int count = filterCtrl.GetItemCount();
+            for ( int idx = 0; idx < count; ++idx) {
+                filter_item i = filterCtrl.GetItem(idx).RowObject as filter_item;
+                raw_filter_row filt = new raw_filter_row(i.text, i.apply_to_existing_lines);
+                filt.enabled = i.enabled;
+                filt.dimmed = i.dimmed;
+
+                if ( filt.is_valid)
+                    lvf.Add(filt);
+            }
+            return lvf;
+        } 
+
+        public void new_row_count(int filter_idx, int count) {
+            Debug.Assert( filter_idx < view_.filters.Count);
+            var i = filterCtrl.GetItem(filter_idx).RowObject as filter_item;
+            i.found_count = count > 0 ? "" + count : "";
+            filterCtrl.RefreshObject(i);
+        }
+
+        public void toggle_enabled_dimmed() {
+            int sel = filterCtrl.SelectedIndex;
+            if (sel >= 0) {
+                var filt = view_.filters[sel];
+                bool enabled, dimmed;
+                if (filt.enabled && !filt.dimmed) {
+                    enabled = false;
+                    dimmed = false;
+                }
+                else if (!filt.enabled && !filt.dimmed) {
+                    enabled = false;
+                    dimmed = true;
+                }
+                else if (!filt.enabled && filt.dimmed) {
+                    enabled = true;
+                    dimmed = false;
+                } else {
+                    enabled = false;
+                    dimmed = false;
+                }
+
+                filt.enabled = enabled;
+                filt.dimmed = dimmed;
+
+                var i = filterCtrl.GetItem(sel).RowObject as filter_item;
+                filterCtrl.RefreshObject(i);
+
+                do_save();
+                ui_to_view();
+                rerun_view();
+            }
+        }
+
 
         public void view_to_ui(ui_view view) {
             view_ = view;
@@ -86,8 +187,7 @@ namespace lw_common.ui {
             List<object> items = new List<object>();
             var filters = view_.filters;
             for (int idx = 0; idx < filters.Count; ++idx) {
-                filter_item i = new filter_item { text = filters[idx].text, enabled = filters[idx].enabled, 
-                                                    dimmed = filters[idx].dimmed, apply_to_existing_lines = filters[idx].apply_to_existing_lines };
+                var i = new filter_item(filters[idx]);
                 items.Add(i);
             }
             filterCtrl.SetObjects(items);
@@ -228,13 +328,15 @@ namespace lw_common.ui {
                 return;
             }
 
-            filter_item new_ = new filter_item { enabled = true, dimmed = false, text = "", apply_to_existing_lines = false};
+            filter_item new_ = new filter_item( new ui_filter { enabled = true, dimmed = false, text = "", apply_to_existing_lines = false});
 
             view_.filters.Add( new ui_filter() );
 
+            ++ignore_change_;
             filterCtrl.AddObject(new_);
             filterCtrl.SelectObject(new_);
             curFilterCtrl.Text = "";
+            --ignore_change_;
 
             do_save();
 
@@ -252,6 +354,7 @@ namespace lw_common.ui {
 
             var sel = filterCtrl.SelectedObject as filter_item;
             if ( sel != null) {
+                ++ignore_change_;
                 int idx = filterCtrl.SelectedIndex;
                 view_.filters.RemoveAt(idx);
                 filterCtrl.RemoveObject(sel);
@@ -259,6 +362,7 @@ namespace lw_common.ui {
                 int new_sel = view_.filters.Count > idx ? idx : view_.filters.Count > 0 ? view_.filters.Count - 1 : -1;
                 if (new_sel >= 0)
                     filterCtrl.SelectedIndex = new_sel;
+                --ignore_change_;
             }
 
             do_save();
@@ -356,6 +460,7 @@ namespace lw_common.ui {
                     lines.Add("color " + sel_color);
                     sel_start = -1;
                 }
+
 
                 curFilterCtrl.Text = util.concatenate(lines, "\r\n");
                 if ( sel_start >= 0 && sel_start < curFilterCtrl.TextLength)

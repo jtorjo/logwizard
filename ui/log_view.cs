@@ -400,7 +400,7 @@ namespace LogWizard
         }
 
 
-        public void set_filter(List<filter_row> filter) {
+        public void set_filter(List<raw_filter_row> filter) {
             filter_.name = name;
             filter_.update_rows(filter);
         }

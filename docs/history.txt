@@ -2,9 +2,12 @@
 -todo: article license is GPL3
 
 - todo: 
-  move filter_ctrl completely in lw_common
+  test that we're always synchronized currnetview-filter_ctrl (on tab change -> update filter_ctrl)
   test notes_ctrl
 
+
+1.0.91g
+- compiles - need to properly set the filter_ctrl delegates
 
 
 1.0.91f DOES NOT COMPILE

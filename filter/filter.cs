@@ -241,7 +241,7 @@ namespace LogWizard {
             get { lock(this) return old_log_; }
         }
 
-        private bool same_rows_regarless_enabled_dimmed(List<filter_row> rows) {
+        private bool same_rows_regarless_enabled_dimmed(List<raw_filter_row> rows) {
             bool same = false;
             if (rows_.Count == rows.Count) {
                 same = true;
@@ -253,7 +253,7 @@ namespace LogWizard {
             return same;
         }
 
-        private bool same_rows(List<filter_row> rows) {
+        private bool same_rows(List<raw_filter_row> rows) {
             bool same = false;
             if (rows_.Count == rows.Count) {
                 same = true;
@@ -272,7 +272,7 @@ namespace LogWizard {
             - if you delete a filter row, it will preserve the remaining filter rows
             - if you move a filter row up/down, it wil preserve its computations
         */
-        private void preserve_cache(List<filter_row> rows) {
+        private void preserve_cache(List<raw_filter_row> rows) {
             var old_ids = rows_.ToDictionary(r => r.unique_id, r => r);
             var new_ids = rows.ToDictionary(r => r.unique_id, r => r);
 
@@ -286,7 +286,7 @@ namespace LogWizard {
                     new_rows.Add(old);
                 } else {
                     // this is completely new (or a changed filter row)
-                    new_rows.Add(id.Value);
+                    new_rows.Add( new filter_row(id.Value));
                     ++misses;
                 }
             }
@@ -300,7 +300,7 @@ namespace LogWizard {
         // - enabled/dimmed has changed - from different items in the rows' array
         //
         // in case any of the filter rows changes, we will end up pointing to the new filter_row array
-        public void update_rows(List<filter_row> rows) {
+        public void update_rows(List<raw_filter_row> rows) {
             lock (this) {
                 // note: if filter is the same, we want to preserve anything we have cached, about the filter
                 rows_changed_ = false;

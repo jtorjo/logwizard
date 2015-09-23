@@ -65,8 +65,6 @@ namespace lw_common {
                 else
                     return seach_line.Contains(search_for);
             }
-
-            return false;
         }
     }
 }

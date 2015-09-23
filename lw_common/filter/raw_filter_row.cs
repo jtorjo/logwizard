@@ -105,6 +105,19 @@ namespace lw_common {
             }
         }
 
+        public raw_filter_row(raw_filter_row other) {
+            items_ = other.items_.ToList();
+            additions_ = other.additions.ToList();
+            apply_to_existing_lines = other.apply_to_existing_lines;
+            unique_id_ = other.unique_id;
+            valid_ = other.valid_;
+            enabled_ = other.enabled;
+            dimmed_ = other.dimmed_;
+
+            font_ = filter_line.font_info.default_font_copy;
+            update_font();
+        }
+
         public raw_filter_row(string text, bool apply_to_existing_lines) {
             this.apply_to_existing_lines = apply_to_existing_lines;
             List<filter_line> lines = new List<filter_line>();

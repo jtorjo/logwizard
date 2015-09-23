@@ -31,6 +31,10 @@ namespace LogWizard {
         public filter_row(string text, bool apply_to_existing_lines) : base(text, apply_to_existing_lines) {
         }
 
+        public filter_row(raw_filter_row other) : base(other) {
+            
+        }
+
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // CACHED DATA 
         //

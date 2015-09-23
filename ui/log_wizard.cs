@@ -748,6 +748,13 @@ namespace LogWizard
                 Application.Exit();
         }
 
+        private ui_view cur_view() {
+            ui_context cur = cur_context();
+            int cur_view = viewsTab.SelectedIndex;
+            Debug.Assert(cur_view < cur.views.Count);
+            return cur.views[cur_view];
+
+        }
         private void load_filters() {
             // filter_row Enabled / Used - are context dependent!
 
@@ -765,17 +772,7 @@ namespace LogWizard
         }
 
         private void save_filters() {
-            // filter text / Enabled / Used - are context dependent!
-            ui_context cur = cur_context();
-
-            // now, update enabled / dimmed
-            int cur_view = viewsTab.SelectedIndex;
-
-            cur.views[cur_view].filters.Clear();
-            for ( int idx = 0; idx < filterCtrl.GetItemCount(); ++idx) {
-                filter_item i = filterCtrl.GetItem(idx).RowObject as filter_item;
-                cur.views[cur_view].filters.Add(  new ui_filter { enabled = i.enabled, dimmed = i.dimmed, text = i.text, apply_to_existing_lines = i.apply_to_existing_lines} );
-            }
+            // 1.0.91+ - note: the current view (cur.views[cur_view]) is up to date at all times - that's how filter_ctrl works
         }
 
         private log_view ensure_we_have_log_view_for_tab(int idx) {
@@ -1142,9 +1139,9 @@ namespace LogWizard
                 return;
 
             ui_context ctx = cur_context();
-            List<filter_row> lvf = new List<filter_row>();
+            List<raw_filter_row> lvf = new List<raw_filter_row>();
             foreach (ui_filter filt in ctx.views[idx].filters) {
-                filter_row row = new filter_row(filt.text, filt.apply_to_existing_lines);
+                var row = new raw_filter_row(filt.text, filt.apply_to_existing_lines);
                 row.enabled = filt.enabled;
                 row.dimmed = filt.dimmed;
                 if ( row.is_valid)
@@ -1158,15 +1155,15 @@ namespace LogWizard
             Debug.Assert(lv != null);
             if (old_line_count_ == lv.line_count)
                 return;
-            if (filterCtrl.GetItemCount() != lv.filter_row_count)
+            if (cur_view().filters.Count != lv.filter_row_count)
                 // we can get here if one of the filter rows' text is invalid
                 return;
 
             // recompute line count
-            for (int i = 0; i < filterCtrl.GetItemCount(); ++i) {
+            int filter_count = cur_view().filters.Count;
+            for (int i = 0; i < filter_count; ++i) {
                 int count = lv.filter_row_match_count(i);
-                (filterCtrl.GetItem(i).RowObject as filter_item).found_count = count > 0 ? "" + count : "";
-                filterCtrl.RefreshItem( filterCtrl.GetItem(i) );
+                filtCtrl.new_row_count(i, count);
             }
 
             old_line_count_ = lv.line_count;
@@ -1174,22 +1171,10 @@ namespace LogWizard
 
         private void update_filter( log_view lv) {
             // as long as we're editing the filter, don't update anything
-            if (focused_ctrl() == curfilterCtrl)
+            if (filtCtrl.is_editing_any_filter)
                 return;
 
-            List<filter_row> lvf = new List<filter_row>();
-            int count = filterCtrl.GetItemCount();
-            for ( int idx = 0; idx < count; ++idx) {
-                filter_item i = filterCtrl.GetItem(idx).RowObject as filter_item;
-                filter_row filt = new filter_row(i.text, i.apply_to_existing_lines);
-                filt.enabled = i.enabled;
-                filt.dimmed = i.dimmed;
-
-                if ( filt.is_valid)
-                    lvf.Add(filt);
-            }
-
-            lv.set_filter(lvf);
+            lv.set_filter( filtCtrl.to_filter_row_list());
         }
 
         private void on_move_key_end() {
@@ -1416,7 +1401,7 @@ namespace LogWizard
             log_parser_ = new log_line_parser(text_, logSyntaxCtrl.Text);
             on_new_log_parser();
 
-            full_log_ctrl.set_filter(new List<filter_row>());
+            full_log_ctrl.set_filter(new List<raw_filter_row>());
 
             Text = reader_title() + " - Log Wizard " + version();
             if ( logHistory.SelectedIndex == last_sel)
@@ -1773,7 +1758,7 @@ namespace LogWizard
 
         private bool is_focus_on_filter_panel() {
             var focus = focused_ctrl();
-            return focus == filterCtrl || focus == curfilterCtrl;            
+            return filtCtrl.tab_navigatable_controls.Contains(focus);
         }
 
         private action_type key_to_action(string key_code) {
@@ -1788,7 +1773,7 @@ namespace LogWizard
             case "space":
             case "enter":
             case "escape":
-                if (key_code == "space" && focused_ctrl() == filterCtrl)
+                if (key_code == "space" && filtCtrl.can_handle_toggle_enable_dimmed_now )
                     break;
 
                 if (allow_arrow_to_function_normally())
@@ -1909,7 +1894,7 @@ namespace LogWizard
             case "ctrl-5":
                 return action_type.goto_position_5;
             case "space":
-                if ( focused_ctrl() == filterCtrl)
+                if ( filtCtrl.can_handle_toggle_enable_dimmed_now)
                     return action_type.toggle_enabled_dimmed;
                 break;
             }
@@ -2135,45 +2120,12 @@ namespace LogWizard
                 break;
 
             case action_type.toggle_enabled_dimmed:
-                toggle_enabled_dimmed();
+                filtCtrl.toggle_enabled_dimmed();
                 break;
 
             default:
                 Debug.Assert(false);
                 break;
-            }
-        }
-
-        private void toggle_enabled_dimmed() {
-            var lv = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
-            int sel = filterCtrl.SelectedIndex;
-            if (sel >= 0) {
-                var filt = cur_context().views[viewsTab.SelectedIndex].filters[sel];
-                bool enabled, dimmed;
-                if (filt.enabled && !filt.dimmed) {
-                    enabled = false;
-                    dimmed = false;
-                }
-                else if (!filt.enabled && !filt.dimmed) {
-                    enabled = false;
-                    dimmed = true;
-                }
-                else if (!filt.enabled && filt.dimmed) {
-                    enabled = true;
-                    dimmed = false;
-                } else {
-                    enabled = false;
-                    dimmed = false;
-                }
-
-                filt.enabled = enabled;
-                filt.dimmed = dimmed;
-
-                var i = filterCtrl.GetItem(sel).RowObject as filter_item;
-                i.enabled = enabled;
-                i.dimmed = dimmed;
-                filterCtrl.RefreshObject(i);
-                save();
             }
         }
 
@@ -2217,13 +2169,9 @@ namespace LogWizard
             if( global_ui.show_fulllog)
                 panes.Add(full_log_ctrl.list);
 
-            // third pane - the filters control (if visible)
+            // third/fourth panes - the filters control and edit box (if visible)
             if ( global_ui.show_filter)
-                panes.Add(filterCtrl);
-
-            // fourth pane - the edit box (if enabled)
-            if ( global_ui.show_filter && curfilterCtrl.Enabled)
-                panes.Add(curfilterCtrl);
+                panes.AddRange(filtCtrl.tab_navigatable_controls);
             return panes;
         }
 
@@ -2245,9 +2193,6 @@ namespace LogWizard
         private void switch_pane(bool forward) {
             List<Control> panes = this.panes();
             Control focus_ctrl = focused_ctrl();
-            if (focus_ctrl == filterCtrl && filterCtrl.SelectedIndex < 0)
-                // no filter selected
-                focus_ctrl = null;
             int idx = panes.IndexOf(focus_ctrl);
             if (idx >= 0)
                 // move to next control
@@ -2309,8 +2254,8 @@ namespace LogWizard
                 return;
             if ( search_for_text_ != null)
                 lv.search_for_text_next(search_for_text_);
-            else if ( filterCtrl.SelectedIndex >= 0)
-                lv.search_for_next_match( filterCtrl.SelectedIndex);
+            else if ( filtCtrl.sel >= 0)
+                lv.search_for_next_match( filtCtrl.sel);
         }
 
         private void search_prev() {
@@ -2319,8 +2264,8 @@ namespace LogWizard
                 return;
             if ( search_for_text_ != null)
                 lv.search_for_text_prev(search_for_text_);            
-            else if ( filterCtrl.SelectedIndex >= 0)
-                lv.search_for_prev_match( filterCtrl.SelectedIndex);
+            else if ( filtCtrl.sel >= 0)
+                lv.search_for_prev_match( filtCtrl.sel);
         }
 
 
