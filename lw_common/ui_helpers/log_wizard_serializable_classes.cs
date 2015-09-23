@@ -24,7 +24,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 
-namespace LogWizard {
+namespace lw_common {
     [Serializable]
     public class ui_filter {
         // the filter itself

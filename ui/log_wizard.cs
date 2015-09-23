@@ -32,6 +32,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 using BrightIdeasSoftware;
+using lw_common;
+using lw_common.ui;
 using LogWizard.context;
 using LogWizard.Properties;
 using LogWizard.ui;

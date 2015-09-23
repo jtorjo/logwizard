@@ -4,9 +4,10 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using lw_common.ui;
 using LogWizard.ui;
 
-namespace LogWizard {
+namespace lw_common {
     public class string_search {
         private static bool is_delim_or_does_not_exist(string line, int idx) {
             if (idx >= 0 && idx < line.Length)

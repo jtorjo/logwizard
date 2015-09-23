@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using log4net.Repository.Hierarchy;
+using lw_common;
 
 namespace LogWizard {
     class filter_line {

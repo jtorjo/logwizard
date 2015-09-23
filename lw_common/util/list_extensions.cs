@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using log4net.Util;
 
-namespace LogWizard {
+namespace lw_common {
     public static class list_extensions {
         // http://stackoverflow.com/questions/1766328/can-linq-use-binary-search-when-the-collection-is-ordered
         //

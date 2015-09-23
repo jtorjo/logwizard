@@ -25,7 +25,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace LogWizard {
+namespace lw_common {
 
     public class win32 {
         [StructLayout(LayoutKind.Sequential)]

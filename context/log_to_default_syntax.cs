@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using lw_common;
 
 namespace LogWizard.context {
     // find out information on the file/log - from its header

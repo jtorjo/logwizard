@@ -26,6 +26,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using lw_common;
 
 namespace LogWizard
 {

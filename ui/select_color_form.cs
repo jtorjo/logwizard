@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using lw_common;
 
 namespace LogWizard.ui {
     public partial class select_color_form : Form {

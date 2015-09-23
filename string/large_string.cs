@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Configuration;
 using System.Text;
 using log4net.Repository.Hierarchy;
+using lw_common;
 
 namespace LogWizard
 {

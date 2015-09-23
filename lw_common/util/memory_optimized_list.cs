@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogWizard {
+namespace lw_common {
 
     public class memory_optimized_list_base {
         public static int log_idx = 0;

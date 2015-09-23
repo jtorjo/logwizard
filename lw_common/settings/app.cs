@@ -4,8 +4,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using LogWizard;
 
-namespace LogWizard {
+namespace lw_common {
     // application settings
     public class app {
         private static app inst_= new app();

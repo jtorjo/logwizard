@@ -1,4 +1,4 @@
-﻿namespace LogWizard.ui {
+﻿namespace lw_common.ui {
     public partial class search_form {
         /// <summary>
         /// Required designer variable.

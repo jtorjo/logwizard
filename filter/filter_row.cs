@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using lw_common;
 
 namespace LogWizard {
     // a row in a filter - a filter can have multiple rows

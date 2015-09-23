@@ -26,7 +26,7 @@ using System.Text;
 using System.IO;
 using System.Globalization;
 
-namespace LogWizard
+namespace lw_common
 {
     /** similar to Java properties files 
      */

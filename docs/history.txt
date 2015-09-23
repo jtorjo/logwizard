@@ -5,6 +5,12 @@
   test notes_ctrl
 
 
+
+
+1.0.91c
+- refactoring: names in lw_common should be in lw_common namespace
+
+
 1.0.91b
 - refactoring - moved some UI code into lw_common
   rationale: I want to be able to test parts of the UI separately (like, the control I'm about to do: notes_ctrl)

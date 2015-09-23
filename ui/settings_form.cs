@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using lw_common;
 
 namespace LogWizard.ui {
     partial class settings_form : Form {

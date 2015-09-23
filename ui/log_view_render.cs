@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using lw_common;
 
 namespace LogWizard.ui {
     class log_view_render : BaseRenderer {

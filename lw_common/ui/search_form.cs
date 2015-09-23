@@ -8,8 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using LogWizard;
 
-namespace LogWizard.ui {
+namespace lw_common.ui {
     public partial class search_form : Form {
 
         public class search_for {

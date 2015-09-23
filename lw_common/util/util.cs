@@ -35,7 +35,7 @@ using ColorSchemeExtension;
 using Microsoft.Win32;
 using Timer = System.Windows.Forms.Timer;
 
-namespace LogWizard {
+namespace lw_common {
 
 
     public class util {

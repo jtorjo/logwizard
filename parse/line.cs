@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using lw_common;
 
 namespace LogWizard {
     // ctxX -> context about the message (other than file/func/class)

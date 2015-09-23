@@ -32,6 +32,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using lw_common;
+using lw_common.ui;
 using LogWizard.ui;
 
 namespace LogWizard

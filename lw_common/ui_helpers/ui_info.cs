@@ -24,8 +24,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LogWizard;
 
-namespace LogWizard {
+namespace lw_common {
     // information about the UI of LogWizard - location, toggles, etc.
     public class ui_info {
         public int left, top, width, height = 0;

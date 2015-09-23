@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using lw_common;
 
 namespace LogWizard.ui {
     partial class go_to_line_time_form : Form {
