@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace LogWizard {
 
-    class memory_optimized_list_base {
+    public class memory_optimized_list_base {
         public static int log_idx = 0;
         public static object lock_ = new object();
         // at how many reallocations, show we Gc.collect?
         public const int gc_collect_step = 20;
     }
 
-    class memory_optimized_list<T> : List<T> {
+    public class memory_optimized_list<T> : List<T> {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 

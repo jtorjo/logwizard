@@ -142,17 +142,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="3rdparty\ColorEx.cs" />
     <Compile Include="context\log_to_default_context.cs" />
     <Compile Include="context\log_to_default_syntax.cs" />
     <Compile Include="filter\addition.cs" />
     <Compile Include="filter\filter.cs" />
     <Compile Include="filter\filter_line.cs" />
     <Compile Include="filter\filter_row.cs" />
+    <Compile Include="lw_util\lw_util.cs" />
     <Compile Include="parse\line.cs" />
     <Compile Include="parse\log_line_parser.cs" />
     <Compile Include="readers\simple_file_text_reader2.cs" />
-    <Compile Include="settings\app.cs" />
     <Compile Include="string\large_string.cs" />
     <Compile Include="string\sub_string.cs" />
     <Compile Include="ui\about_form.cs">
@@ -184,7 +183,6 @@
       <DependentUpon>select_color_form.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\solid_brush_list.cs" />
-    <Compile Include="ui_helpers\log_wizard_serializable_classes.cs" />
     <Compile Include="ui\msg_details_ctrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -223,27 +221,13 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ui\search_form.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ui\search_form.Designer.cs">
-      <DependentUpon>search_form.cs</DependentUpon>
-    </Compile>
     <Compile Include="ui\settings_form.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ui\settings_form.Designer.cs">
       <DependentUpon>settings_form.cs</DependentUpon>
     </Compile>
-    <Compile Include="settings\settings_file.cs" />
     <Compile Include="readers\shared_memory_text_reader.cs" />
-    <Compile Include="ui_helpers\ui_info.cs" />
-    <Compile Include="util\zip_util.cs" />
-    <Compile Include="util\list_extensions.cs" />
-    <Compile Include="util\memory_optimized_list.cs" />
-    <Compile Include="util\string_search.cs" />
-    <Compile Include="util\util.cs" />
-    <Compile Include="util\win32.cs" />
     <EmbeddedResource Include="ui\about_form.resx">
       <DependentUpon>about_form.cs</DependentUpon>
     </EmbeddedResource>
@@ -278,9 +262,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="ui\search_form.resx">
-      <DependentUpon>search_form.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ui\select_color_form.resx">
       <DependentUpon>select_color_form.cs</DependentUpon>
     </EmbeddedResource>
@@ -355,18 +336,17 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="3rdparty\color_picker\color_picker.csproj">
+    <ProjectReference Include="lw_common\3rdparty\color_picker\color_picker.csproj">
       <Project>{5d703fc5-ea9a-4bbb-bf08-e3a80efddaa8}</Project>
       <Name>color_picker</Name>
-    </ProjectReference>
-    <ProjectReference Include="3rdparty\SharpZipLib\src\ICSharpCode.SharpZLib.csproj">
-      <Project>{0E7413FF-EB9E-4714-ACF2-BE3A6A7B2FFD}</Project>
-      <Name>ICSharpCode.SharpZLib</Name>
     </ProjectReference>
     <ProjectReference Include="lw_common\lw_common.csproj">
       <Project>{d7c0968b-59ca-4f94-a875-ef9de8f098eb}</Project>
       <Name>lw_common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="settings\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

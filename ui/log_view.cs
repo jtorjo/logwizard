@@ -228,7 +228,7 @@ namespace LogWizard
         }
 
         private void load_font() {
-            string[] font_names = Program.sett.get("font_names").Split(',');
+            string[] font_names = app.inst.sett.get("font_names").Split(',');
             foreach ( string name in font_names)
                 try {
                     var f = new Font(name, font_size_); 

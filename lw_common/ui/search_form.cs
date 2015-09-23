@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace LogWizard.ui {
-    partial class search_form : Form {
+    public partial class search_form : Form {
 
         public class search_for {
             public bool case_sensitive = false;
@@ -24,9 +24,10 @@ namespace LogWizard.ui {
             public bool mark_lines_with_color = false;
         }
         private search_for search_ = new search_for();
-        private settings_file sett = Program.sett;
+        private settings_file sett;
 
-        public search_form(log_wizard parent) {
+        public search_form(Form parent) {
+            this.sett = app.inst.sett;
             InitializeComponent();
             fg.BackColor = util.str_to_color( sett.get("search_fg", "transparent"));
             bg.BackColor = util.str_to_color( sett.get("search_bg", "#faebd7") ); // antiquewhite

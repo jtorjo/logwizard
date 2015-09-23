@@ -1,16 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 
 namespace LogWizard {
     // application settings
-    class app {
+    public class app {
         private static app inst_= new app();
 
         public static app inst {
             get { return inst_; }
+        }
+
+        private settings_file sett_ = null;
+
+        public settings_file sett {
+            get {
+                Debug.Assert(sett_ != null);
+                return sett_;
+            }
         }
 
         // these are settings that are NOT shown in the UI
@@ -80,6 +90,7 @@ namespace LogWizard {
         public Color notes_color = Color.Blue;
 
 
+
         // file-by-file
         public bool bring_to_top_on_restart = false;
         public bool make_topmost_on_restart = false;
@@ -94,7 +105,7 @@ namespace LogWizard {
         }
 
         private void load_save_file_by_file(bool load) {
-            var sett = Program.sett;
+            var sett = inst.sett;
             if (load) {
                 string[] words = sett.get("settings_by_file." + selected_log_file_name_).Split(',');
                 bring_to_top_on_restart = false;
@@ -119,8 +130,13 @@ namespace LogWizard {
             }
         }
 
+        public void init(settings_file sett_file) {
+            Debug.Assert(sett_ == null);
+            sett_ = sett_file;
+        }
+
         internal static void load_save(bool load, ref bool prop, string name, bool default_ = false) {
-            var sett = Program.sett;
+            var sett = inst.sett;
             if (load)
                 prop = sett.get(name, default_ ? "1" : "0") != "0";
             else 
@@ -128,7 +144,7 @@ namespace LogWizard {
         }
 
         internal static void load_save<T>(bool load, ref T prop, string name, T default_) {
-            var sett = Program.sett;
+            var sett = inst.sett;
             if (load) {
                 string val = sett.get(name);
                 if (val == "")
@@ -140,14 +156,14 @@ namespace LogWizard {
                 sett.set(name, "" + (int)(object)prop);
         }
         internal static void load_save(bool load, ref string prop, string name, string default_ = "") {
-            var sett = Program.sett;
+            var sett = inst.sett;
             if (load)
                 prop = sett.get(name, default_);
             else 
                 sett.set(name, prop);
         }
         internal static void load_save(bool load, ref Color prop, string name, Color default_) {
-            var sett = Program.sett;
+            var sett = inst.sett;
             if (load) {
                 string def_str = util.color_to_str(default_);
                 string as_str = sett.get(name, def_str);
@@ -215,7 +231,7 @@ namespace LogWizard {
             load_save(false);
             if ( selected_log_file_name_ != "")
                 load_save_file_by_file(false);
-            var sett = Program.sett;
+            var sett = inst.sett;
             sett.save();            
         }
 

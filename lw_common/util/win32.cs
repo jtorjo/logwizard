@@ -27,7 +27,7 @@ using System.Windows.Forms;
 
 namespace LogWizard {
 
-    class win32 {
+    public class win32 {
         [StructLayout(LayoutKind.Sequential)]
         public struct Point
         {

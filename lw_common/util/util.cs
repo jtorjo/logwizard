@@ -38,7 +38,7 @@ using Timer = System.Windows.Forms.Timer;
 namespace LogWizard {
 
 
-    class util {
+    public class util {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 
@@ -419,32 +419,6 @@ namespace LogWizard {
             return s;
         }
 
-        public static void bring_to_top(log_wizard form) {
-            win32.BringToTop(form);
-            /*
-            form.BringToFront();
-            form.Focus();
-            form.Activate();
-
-            form.TopMost = true;
-            form.TopMost = false;
-            */
-        }
-
-        // ... just setting .TopMost sometimes does not work
-        public static void bring_to_topmost(log_wizard form) {
-            form.TopMost = true;
-            form.update_toggle_topmost_visibility();
-            win32.MakeTopMost(form);
-            /*
-            form.TopMost = false;
-            form.Activated += FormOnActivated;
-
-            form.BringToFront();
-            form.Focus();
-            form.Activate();
-            */
-        }
 
         /*
         private static void FormOnActivated(object sender, EventArgs eventArgs) {
@@ -595,8 +569,5 @@ namespace LogWizard {
             }
             return lines.Length - 1;
         }
-
-
-
     }
 }

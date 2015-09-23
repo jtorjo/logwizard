@@ -131,7 +131,7 @@ namespace LogWizard
             }}
         }
         
-        private settings_file sett = Program.sett;
+        private settings_file sett = app.inst.sett;
 
         private static List<ui_context> contexts_ = new List<ui_context>();
         private static List<history> history_ = new List<history>();
@@ -590,7 +590,7 @@ namespace LogWizard
 
             history_select(file);
             on_new_file_log(file);
-            util.bring_to_top(this);
+            lw_util.bring_to_top(this);
         }
 
         // to show/hide the "details" view - the details view contains all information in the message (that is not usually shown in the list)
@@ -1065,11 +1065,11 @@ namespace LogWizard
             for (int i = 0; i < custom_ui_.Length; ++i)
                 custom_ui_[i].save("ui.custom" + i);
 
-            if ( !Program.sett.dirty)
+            if ( !app.inst.sett.dirty)
                 // no change
                 return;
 
-            Program.sett.save();
+            app.inst.sett.save();
             foreach ( log_wizard lw in forms_)
                 if ( lw != this)
                     lw.load();
@@ -1162,12 +1162,12 @@ namespace LogWizard
         private void on_rewritten_log() {
             if (app.inst.bring_to_top_on_restart) {
                 if (app.inst.make_topmost_on_restart) {
-                    util.bring_to_topmost(this);
+                    lw_util.bring_to_topmost(this);
                     update_topmost_image();
                     update_toggle_topmost_visibility();
                 }
                 else
-                    util.bring_to_top(this);
+                    lw_util.bring_to_top(this);
             }
         }
 

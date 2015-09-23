@@ -31,11 +31,6 @@ namespace LogWizard
 {
     static class Program
     {
-        private static settings_file sett_ = new settings_file(util.is_debug ? "logwizard_debug.txt" : "logwizard.txt");
-
-        public static settings_file sett {
-            get { return sett_; }
-        }
 
         public static string open_file_name {
             get { return open_file_name_; }
@@ -71,7 +66,7 @@ namespace LogWizard
                 if ( !File.Exists("logwizard_user.txt"))
                     File.Copy("logwizard.txt", "logwizard_user.txt");
             }
-            sett_ = new settings_file(util.is_debug ? "logwizard_debug.txt" : "logwizard_user.txt");
+            app.inst.init( new settings_file(util.is_debug ? "logwizard_debug.txt" : "logwizard.txt") );
 
             if (args.Length > 0 && args[0] == "showsample") {
                 try {

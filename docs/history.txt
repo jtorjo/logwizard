@@ -4,6 +4,12 @@
   move filter_ctrl completely in lw_common
   test notes_ctrl
 
+
+1.0.91b
+- refactoring - moved some UI code into lw_common
+  rationale: I want to be able to test parts of the UI separately (like, the control I'm about to do: notes_ctrl)
+
+
 1.0.91a
 - sheletron (filter_ctrl on test_ui)
 
