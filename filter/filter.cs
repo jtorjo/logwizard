@@ -38,13 +38,20 @@ namespace LogWizard {
             // if this is an empty array, then this match is actually an addition (or, the filter contains no rows -> thus, we return the whole file)
             //
             // also used to know how many lines were matched by a filter
-            public BitArray matches = null;
+            public readonly BitArray matches = null;
 
-            public filter_line.font_info font = null;
-            public line line = null;
+            public readonly filter_line.font_info font = null;
+            public readonly line line = null;
             // convention - if we can't find a specific line (match_at), we'll return a line with the index -1
             //              (so that we don't return null)
-            public int line_idx = 0;
+            public readonly int line_idx = 0;
+
+            public match(BitArray matches, filter_line.font_info font, line line, int lineIdx) {
+                this.matches = matches;
+                this.font = font;
+                this.line = line;
+                line_idx = lineIdx;
+            }
         }
 
         // 1.0.84b+ the only thing this provides is thread-safe access - so both of us and the log view can access this fine and dandy
@@ -158,7 +165,7 @@ namespace LogWizard {
         // the filter matches
         private match_list matches_ ;
 
-        public delegate match create_match_func();
+        public delegate match create_match_func(BitArray matches, filter_line.font_info font, line line, int lineIdx);
         private create_match_func create_match;
 
         private bool rows_changed_ = false;
@@ -176,8 +183,12 @@ namespace LogWizard {
         public filter(create_match_func creator) {
             create_match = creator;
 
-            var empty_match = new_match(new BitArray(0), line.empty_line(), -1, filter_line.font_info.default_);
+            var empty_match = new_match(new BitArray(0), line.empty_line(), -1, filter_line.font_info.default_font_copy);
             matches_ = new match_list(empty_match);
+        }
+
+        public override string ToString() {
+            return name_;
         }
 
         public match_list matches {
@@ -475,7 +486,7 @@ namespace LogWizard {
                                 int idx = enabled_idx >= 0 ? enabled_idx : used_idx;
                                 font = rows[idx].get_match(line_idx).font;
                             } else
-                                font = filter_line.font_info.default_;
+                                font = filter_line.font_info.default_font;
                         }
                         new_matches.Add( new_match(new BitArray(matches), new_log.line_at(line_idx), line_idx, font ));
                         continue;
@@ -483,7 +494,7 @@ namespace LogWizard {
 
                     bool any_filter = (rows.Count > 0);
                     if (!any_filter) 
-                        new_matches.Add( new_match(new BitArray(0), new_log.line_at(line_idx), line_idx, filter_line.font_info.default_ ));
+                        new_matches.Add( new_match(new BitArray(0), new_log.line_at(line_idx), line_idx, filter_line.font_info.default_font ));
                 }
 
                 matches_.add_range(new_matches);
@@ -587,11 +598,11 @@ namespace LogWizard {
         */
 
         private match new_match(BitArray ba, line l, int idx, filter_line.font_info f ) {
-            match m = create_match();
-            m.matches = ba;
-            m.line = l;
-            m.line_idx = idx;
-            m.font = f;
+            match m = create_match(ba, f, l, idx);
+
+//            if ( idx >= 0)
+  //              logger.Debug("[filter] " + name + " " + (idx+1) + "-> " + f);
+
             return m;
         }
 

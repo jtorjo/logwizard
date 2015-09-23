@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LogWizard
+namespace lw_common
 {
     // represents a line in a large string
     public struct sub_string {

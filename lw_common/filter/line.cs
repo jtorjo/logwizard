@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using lw_common;
 
-namespace LogWizard {
+namespace lw_common {
     // ctxX -> context about the message (other than file/func/class)
     public enum info_type { 
         time, date, level, 

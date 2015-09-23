@@ -146,6 +146,10 @@ namespace LogWizard {
                 bg = other.bg;
             }
 
+            public override string ToString() {
+                return "fg=" + util.color_to_str(fg) + ", bg=" + util.color_to_str(bg);
+            }
+
             public Color fg = util.transparent, bg = util.transparent;
             // FIXME in the future, allow other font info, such as "bold", font name, etc
             // FIXME for later - allow matching a text within the line - the text will be dumped in a different color (and font, maybe -> like bold?)
@@ -153,8 +157,29 @@ namespace LogWizard {
             // basically this is what "Used" means - dim this filter_row compared to the rest
             public static font_info dimmed = new font_info { bg = Color.White, fg = Color.LightGray };
 
-            public static font_info default_ = new font_info { bg = Color.White, fg = Color.Black };
-            public static font_info full_log_gray_ = new font_info { bg = Color.White, fg = Color.LightSlateGray };
+            private static readonly font_info default_font_ = new font_info { bg = Color.White, fg = Color.Black };
+            private static readonly font_info full_log_gray_ = new font_info { bg = Color.White, fg = Color.LightSlateGray };
+
+            public static font_info default_font {
+                get { return default_font_; }
+            }
+
+            public static font_info default_font_copy {
+                get {
+                    font_info new_ = new font_info();
+                    new_.copy_from(default_font_);
+                    return new_;
+                }
+            }
+
+            public static font_info full_log_gray {
+                get {
+                    font_info new_ = new font_info();
+                    new_.copy_from(full_log_gray_);
+                    return new_;                    
+                }
+            }
+
         }
 
         public static bool is_color_line(string line) {

@@ -19,6 +19,7 @@
  * If you wish to use this code in a closed source application, please contact john.code@torjo.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -60,7 +61,7 @@ namespace LogWizard
 
             public Color override_bg = util.transparent, override_fg = util.transparent;
 
-            public item(log_view parent) {
+            public item(BitArray matches, filter_line.font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx) {
             }
 
             public int line {
@@ -131,7 +132,7 @@ namespace LogWizard
         private class full_log_item : item {
             private readonly log_view parent_ = null;
 
-            public full_log_item(log_view parent) : base(parent) {
+            public full_log_item(BitArray matches, filter_line.font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx, parent) {
                 Debug.Assert(parent != null);
                 parent_ = parent;
             }
@@ -221,8 +222,8 @@ namespace LogWizard
             //render_.set_override("settings", new log_view_render.print_info { fg = Color.Blue, bold = true });
         }
 
-        private filter.match create_match_object() {
-            return is_full_log ? new full_log_item(this) : new item(this);
+        private filter.match create_match_object(BitArray matches, filter_line.font_info font, line line, int lineIdx) {
+            return is_full_log ? new full_log_item(matches, font, line, lineIdx, this) : new item(matches, font, line, lineIdx, this);
         }
 
         public override string ToString() {
@@ -804,8 +805,8 @@ namespace LogWizard
             Debug.Assert(other_logs.Count > 0 && sel_idx < other_logs.Count);
 
             var i = match_at(row_idx) as full_log_item;
-            i.override_bg = filter_line.font_info.full_log_gray_.bg;
-            i.override_fg = filter_line.font_info.full_log_gray_.fg;
+            i.override_bg = filter_line.font_info.full_log_gray.bg;
+            i.override_fg = filter_line.font_info.full_log_gray.fg;
 
             switch (app.inst.syncronize_colors) {
             case app.synchronize_colors_type.none:

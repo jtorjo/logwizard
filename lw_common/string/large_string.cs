@@ -7,7 +7,7 @@ using System.Text;
 using log4net.Repository.Hierarchy;
 using lw_common;
 
-namespace LogWizard
+namespace lw_common
 {
     // holds the lines in a huge string
     //

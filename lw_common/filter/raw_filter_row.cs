@@ -74,8 +74,7 @@ namespace lw_common {
         protected List<filter_line> items_ = new List<filter_line>();
         protected List<addition> additions_ = new List<addition>();
 
-        //FIXME protected readonly filter_line.font_info font_ = null;
-        protected filter_line.font_info font_ = null;
+        protected readonly filter_line.font_info font_ = null;
 
         // if true, this is applied after the normal filters
         //
@@ -94,10 +93,7 @@ namespace lw_common {
         private bool dimmed_ = false;
 
         public override string ToString() {
-            if (valid_)
-                return items_.Aggregate("", (current, line) => "" + current + line.text + "\r\n");
-            else
-                return "invalid";
+            return font_.ToString() + "; " + unique_id_;
         }
 
         // returns a string that **** uniqueyly identifies **** the UNIQUE data of the filter
@@ -132,7 +128,7 @@ namespace lw_common {
                 }
             }
             unique_id_ += "" + apply_to_existing_lines;
-            font_ = filter_line.font_info.default_;
+            font_ = filter_line.font_info.default_font_copy;
             init(lines, additions);
 
             if (items_.Count < 1)
@@ -209,9 +205,8 @@ namespace lw_common {
         private void update_font() {
             // 1.0.91+ - make sure we preserve the same font, since any match matching this filter will point to this font
             //           if the font gets updated, we want all matches to point to the existing font            
-//FIXME            font_.copy_from( get_font_info());
-
-            font_ = get_font_info();
+            var new_font = get_font_info();
+            font_.copy_from( new_font);
         }
 
         private void update_case_sensitive() {

@@ -9,6 +9,11 @@
   private void focusOnFilterCtrl_Tick(object sender, EventArgs e) {
 
 
+1.0.91e
+- moving filter_ctrl into lw_common - step 2
+  (solved font bug)
+
+
 1.0.91d
 - moving filter_ctrl into lw_common - step 1
 

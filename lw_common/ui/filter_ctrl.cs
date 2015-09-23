@@ -1,4 +1,24 @@
-﻿using System;
+﻿/* 
+ * Copyright (C) 2014-2015 John Torjo
+ *
+ * This file is part of LogWizard
+ *
+ * LogWizard is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LogWizard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you wish to use this code in a closed source application, please contact john.code@torjo.com
+*/
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -9,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using LogWizard;
 
 namespace lw_common.ui {
     public partial class filter_ctrl : UserControl {
@@ -279,12 +300,12 @@ namespace lw_common.ui {
                 if (edited_line == -1) {
                     // it's not with the cursor on a line - find the first line that would actually be a color
                     for ( int i = 0; i < lines.Count && edited_line == -1; ++i)
-                        if (lines[i].Trim().StartsWith("color") || lines[i].Trim().StartsWith("match_color"))
+                        if (filter_line.is_color_line( lines[i]))
                             edited_line = i;
                 }
                 if (edited_line != -1) {
                     // in this case, he's editing the color from a given line
-                    bool is_color_line = lines[edited_line].Trim().StartsWith("color ") || lines[edited_line].Trim().StartsWith("match_color ");
+                    bool is_color_line = filter_line.is_color_line( lines[edited_line]);
                     bool is_replacing = lines[edited_line].Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries).Length == 2 &&
                                         lines[edited_line].TrimEnd() == lines[edited_line];
                     if (is_color_line) {
