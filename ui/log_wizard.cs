@@ -204,6 +204,7 @@ namespace LogWizard
                 app.inst.load();
                 load_contexts();
             }
+            notes.set_author( app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
 
             ++ignore_change_;
 
@@ -2231,6 +2232,7 @@ namespace LogWizard
             var old_sync_colors = app.inst.syncronize_colors;
             var old_sync_gray = app.inst.sync_colors_all_views_gray_non_active;
             new settings_form(this).ShowDialog();
+            notes.set_author( app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
 
             bool sync_changed = app.inst.syncronize_colors != old_sync_colors || old_sync_gray != app.inst.sync_colors_all_views_gray_non_active;
             if ( sync_changed)

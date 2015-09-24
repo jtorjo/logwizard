@@ -46,6 +46,7 @@
             this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveToTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveToBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.filterCtrl)).BeginInit();
             this.filterContextMenu.SuspendLayout();
             this.SuspendLayout();
@@ -53,9 +54,10 @@
             // viewFromClipboard
             // 
             this.viewFromClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.viewFromClipboard.Location = new System.Drawing.Point(81, 480);
+            this.viewFromClipboard.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.viewFromClipboard.Location = new System.Drawing.Point(0, 445);
             this.viewFromClipboard.Name = "viewFromClipboard";
-            this.viewFromClipboard.Size = new System.Drawing.Size(52, 23);
+            this.viewFromClipboard.Size = new System.Drawing.Size(44, 23);
             this.viewFromClipboard.TabIndex = 23;
             this.viewFromClipboard.Text = "FromC";
             this.viewFromClipboard.UseVisualStyleBackColor = true;
@@ -64,9 +66,10 @@
             // viewToClipboard
             // 
             this.viewToClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.viewToClipboard.Location = new System.Drawing.Point(43, 480);
+            this.viewToClipboard.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.viewToClipboard.Location = new System.Drawing.Point(0, 423);
             this.viewToClipboard.Name = "viewToClipboard";
-            this.viewToClipboard.Size = new System.Drawing.Size(38, 23);
+            this.viewToClipboard.Size = new System.Drawing.Size(44, 23);
             this.viewToClipboard.TabIndex = 22;
             this.viewToClipboard.Text = "ToC";
             this.viewToClipboard.UseVisualStyleBackColor = true;
@@ -161,7 +164,7 @@
             // 
             this.applyToExistingLines.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.applyToExistingLines.AutoSize = true;
-            this.applyToExistingLines.Location = new System.Drawing.Point(43, 462);
+            this.applyToExistingLines.Location = new System.Drawing.Point(43, 487);
             this.applyToExistingLines.Name = "applyToExistingLines";
             this.applyToExistingLines.Size = new System.Drawing.Size(130, 17);
             this.applyToExistingLines.TabIndex = 21;
@@ -184,12 +187,12 @@
             this.curFilterCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.curFilterCtrl.Enabled = false;
-            this.curFilterCtrl.Location = new System.Drawing.Point(41, 355);
+            this.curFilterCtrl.Location = new System.Drawing.Point(44, 355);
             this.curFilterCtrl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.curFilterCtrl.Multiline = true;
             this.curFilterCtrl.Name = "curFilterCtrl";
             this.curFilterCtrl.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.curFilterCtrl.Size = new System.Drawing.Size(312, 104);
+            this.curFilterCtrl.Size = new System.Drawing.Size(309, 113);
             this.curFilterCtrl.TabIndex = 17;
             this.curFilterCtrl.TextChanged += new System.EventHandler(this.curFilterCtrl_TextChanged);
             this.curFilterCtrl.Leave += new System.EventHandler(this.curFilterCtrl_Leave);
@@ -197,9 +200,9 @@
             // delFilter
             // 
             this.delFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.delFilter.Location = new System.Drawing.Point(327, 480);
+            this.delFilter.Location = new System.Drawing.Point(331, 484);
             this.delFilter.Name = "delFilter";
-            this.delFilter.Size = new System.Drawing.Size(24, 23);
+            this.delFilter.Size = new System.Drawing.Size(22, 22);
             this.delFilter.TabIndex = 20;
             this.delFilter.Text = "-";
             this.delFilter.UseVisualStyleBackColor = true;
@@ -210,7 +213,7 @@
             this.filterLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.filterLabel.AutoSize = true;
             this.filterLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.filterLabel.Location = new System.Drawing.Point(0, 358);
+            this.filterLabel.Location = new System.Drawing.Point(0, 353);
             this.filterLabel.Name = "filterLabel";
             this.filterLabel.Size = new System.Drawing.Size(43, 19);
             this.filterLabel.TabIndex = 16;
@@ -219,9 +222,9 @@
             // addFilter
             // 
             this.addFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addFilter.Location = new System.Drawing.Point(299, 480);
+            this.addFilter.Location = new System.Drawing.Point(308, 484);
             this.addFilter.Name = "addFilter";
-            this.addFilter.Size = new System.Drawing.Size(24, 23);
+            this.addFilter.Size = new System.Drawing.Size(22, 22);
             this.addFilter.TabIndex = 19;
             this.addFilter.Text = "+";
             this.addFilter.UseVisualStyleBackColor = true;
@@ -232,7 +235,7 @@
             this.selectColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.selectColor.BackgroundImage = global::lw_common.Properties.Resources.eyedropper;
             this.selectColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.selectColor.Location = new System.Drawing.Point(15, 380);
+            this.selectColor.Location = new System.Drawing.Point(18, 375);
             this.selectColor.Name = "selectColor";
             this.selectColor.Size = new System.Drawing.Size(22, 22);
             this.selectColor.TabIndex = 24;
@@ -243,7 +246,7 @@
             // 
             this.tipsHotkeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.tipsHotkeys.AutoSize = true;
-            this.tipsHotkeys.Location = new System.Drawing.Point(324, 462);
+            this.tipsHotkeys.Location = new System.Drawing.Point(275, 489);
             this.tipsHotkeys.Name = "tipsHotkeys";
             this.tipsHotkeys.Size = new System.Drawing.Size(27, 13);
             this.tipsHotkeys.TabIndex = 25;
@@ -289,9 +292,20 @@
             this.moveToBottomToolStripMenuItem.Text = "Move To Bottom";
             this.moveToBottomToolStripMenuItem.Click += new System.EventHandler(this.moveToBottomToolStripMenuItem_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(31, 471);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(322, 13);
+            this.label2.TabIndex = 26;
+            this.label2.Text = "Changes are applied after you exit the Filter box, or press Ctrl-Enter.";
+            // 
             // filter_ctrl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.tipsHotkeys);
             this.Controls.Add(this.selectColor);
             this.Controls.Add(this.viewFromClipboard);
@@ -338,5 +352,6 @@
         private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveToTopToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveToBottomToolStripMenuItem;
+        private System.Windows.Forms.Label label2;
     }
 }

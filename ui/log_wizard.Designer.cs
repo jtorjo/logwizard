@@ -61,7 +61,6 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.label4 = new System.Windows.Forms.Label();
             this.sourceUp = new System.Windows.Forms.SplitContainer();
             this.sourceNameCtrl = new System.Windows.Forms.TextBox();
             this.sourceTypeCtrl = new System.Windows.Forms.ComboBox();
@@ -78,6 +77,7 @@
             this.hotkeys = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.saveTimer = new System.Windows.Forms.Timer(this.components);
+            this.notes = new lw_common.ui.note_ctrl();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.main)).BeginInit();
             this.main.Panel1.SuspendLayout();
@@ -458,23 +458,14 @@
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.label4);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Controls.Add(this.notes);
+            this.tabPage4.Location = new System.Drawing.Point(4, 24);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(269, 487);
+            this.tabPage4.Size = new System.Drawing.Size(269, 485);
             this.tabPage4.TabIndex = 2;
             this.tabPage4.Text = "Notes / Bookmarks";
             this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(24, 28);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(151, 15);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "allow notes on bookmarks?";
             // 
             // sourceUp
             // 
@@ -684,6 +675,15 @@
             this.saveTimer.Interval = 15000;
             this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
+            // notes
+            // 
+            this.notes.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.notes.Location = new System.Drawing.Point(4, 3);
+            this.notes.Margin = new System.Windows.Forms.Padding(4);
+            this.notes.Name = "notes";
+            this.notes.Size = new System.Drawing.Size(258, 475);
+            this.notes.TabIndex = 1;
+            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -714,7 +714,6 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
             this.sourceUp.Panel1.ResumeLayout(false);
             this.sourceUp.Panel1.PerformLayout();
             this.sourceUp.Panel2.ResumeLayout(false);
@@ -768,7 +767,6 @@
         private System.Windows.Forms.TabPage filtersTab;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.CheckBox synchronizeWithExistingLogs;
@@ -781,6 +779,7 @@
         private System.Windows.Forms.Timer saveTimer;
         private System.Windows.Forms.LinkLabel hotkeys;
         private lw_common.ui.filter_ctrl filtCtrl;
+        private lw_common.ui.note_ctrl notes;
     }
 }
 

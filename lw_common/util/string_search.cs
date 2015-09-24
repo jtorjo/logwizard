@@ -25,7 +25,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using lw_common.ui;
-using LogWizard.ui;
 
 namespace lw_common {
     public class string_search {

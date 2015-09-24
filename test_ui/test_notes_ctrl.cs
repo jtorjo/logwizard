@@ -11,6 +11,7 @@ namespace test_ui {
     public partial class test_notes_ctrl : Form {
         public test_notes_ctrl() {
             InitializeComponent();
+            notes.set_author("John Torjo", "jt", Color.Blue);
         }
     }
 }

@@ -68,12 +68,6 @@
     <Compile Include="ui\filter_ctrl.Designer.cs">
       <DependentUpon>filter_ctrl.cs</DependentUpon>
     </Compile>
-    <Compile Include="ui\notes_ctrl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ui\notes_ctrl.Designer.cs">
-      <DependentUpon>notes_ctrl.cs</DependentUpon>
-    </Compile>
     <Compile Include="ui\note_ctrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -109,9 +103,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ui\filter_ctrl.resx">
       <DependentUpon>filter_ctrl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ui\notes_ctrl.resx">
-      <DependentUpon>notes_ctrl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\note_ctrl.resx">
       <DependentUpon>note_ctrl.cs</DependentUpon>

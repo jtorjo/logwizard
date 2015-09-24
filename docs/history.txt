@@ -4,6 +4,10 @@
 - todo: 
   test notes_ctrl
 
+1.1.0
+- work on notes_ctrl (not finished)
+- add new context for TN2
+
 
 1.0.92
 - made and tested setup kit

@@ -25,8 +25,10 @@
 
 - toggles button + menu!
 - context matches -> in settings dialog (easy, for now)
+  - easiest way - show the beginning of existing log (or allow user to paste anything)
+                - as he selects something ->just use that (allow adding a context on the fly)
 
-
+- update LogWizardSetupSample with the new hotkeys and such.
 
 
 
@@ -139,6 +141,12 @@
 
 
 
+  - log syntax: should be grayed, so that you edit it in a different more user friendly manner.
+    basically, you would have a "..." button
+	if we can't figure out the syntax (msg[0] or just time+msg), say so in the Status (Err or Warn)
+	perhaps if we can't figure the syntax: auto show the Source pane, otherwise, hide it perhaps?
+
+
 
 
 
@@ -201,12 +209,39 @@
 - level column -> allow transforming it into pictures
   - this should work on any column - we should be able to transform any context into picts
 
-- article: testing with logwizard (command line?) 
+- article: testing with logwizard (allow command line as well?) 
 
 
 
 
 
+
+
+
+
+
+
+
+- ctrl-f3/ ctrl-shift-f3 - start a "mark" from the current line ()
+
+- context menu on any line:
+  - start "mark" from current line
+  - locate the filter that matched this (and open filter view if hidden)
+  - Export This View to Disk...
+  - Create a note on this line
+  - To New Filter (Exclude all lines matching....)
+  - Show all filters that matched this (a bit harder, since we need to select several rows in filter_ctrl; should check that it does not mess with .SelectedIndex)
+  - show what other views contain this line - "Go to Other View Containing this line" -> and show which other views contain it
+  - Change color of all lines .. (basically, create a filter that will show all lines with given color)
+    if right click on a word -> create a filter that "line starts with word" or "line contains with word"
+ 
+- click on a word (basically, anywhere on a line) -> show that in bold (and all its occurences)
+  i need to allow this for the message details form as well
+  the same should be for when bolding something - that should work for the msg details as well.
+
+
+- show/hide views altogether -> allow hiding the views that don't interest you at this time
+  (you might want to re-show them later, but for now, you don't care about them)
 
 - allow editing the message (basically just for copying text) + allow "Exclude [text]" + "Include [text]" (on the Full log)
   -probably listen for keys -> listen for left or right arrow (and start moving cursor from there)
@@ -215,16 +250,13 @@
 
 - save view (ctrl-s) - normalize, allow selecting which rows to save (time, date, etc.)
   - allow saving a certain view as a text file (.txt or .html) -> if html, preserve coloring
+  - save view = "Export This View to Disk..." - have a nead dir
+    - in the dialog, allow to afterwards: auto open file in Explorer (for perhaps attaching in an email), in viewer (based on extension)
+	  - later should have .csv and xml as well
 
 
 
 
-
-
-
-
-- show/hide views altogether -> allow hiding the views that don't interest you at this time
-  (you might want to re-show them later, but for now, you don't care about them)
 
 
 

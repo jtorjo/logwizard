@@ -32,6 +32,7 @@ namespace LogWizard {
             { "HM3 Version=3", "HM3" },
             { "Welcome to TableNinja!", "TableNinja" },
             { "This is a LogWizard Setup sample!", "SetupSample" },
+            { "[find] Starting ScrapeFindPot", "TN2ScrapeFindPot" },
             //{ "", "" },
         }; 
 
