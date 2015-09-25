@@ -4,6 +4,25 @@
 - todo: 
   test notes_ctrl
 
+- todo: retest creating a new filter (copy of existing) - does not seem to work correctly
+ - (creating a new filter) sometimes it shows pretty much nothing - works quite badly
+
+- renaming filter - the name text box is too big - overrides +/-/etc. buttons
+
+- bug: real time monitoring does not scroll to end
+
+- bug: sometimes filter is not saved when exiting curFilter
+  - i don't think i get notified when edit control loses focus which fucks things up'
+    - i think the issue happens only when i navigate with tab
+	- also, when the column is not selected, curFilter should be disabled
+  [NOTE] I think i saved this, but need to properly retest
+
+
+1.1.2
+- made it easy to test the filter_ctrl in test_ui, solved minor bugs
+  - still need to retest starting a context from scratch (TN2ScrapeFind)
+
+
 1.1.0
 - work on notes_ctrl (not finished)
 - add new context for TN2

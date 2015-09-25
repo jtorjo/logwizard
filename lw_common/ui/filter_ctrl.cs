@@ -38,19 +38,21 @@ namespace lw_common.ui {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private ui_view view_;
+        private int view_idx_ = -1;
         private int ignore_change_ = 0;
 
         private bool needs_save_ = false;
 
         public delegate void void_func();
         public delegate void idx_func(int filter_idx);
+        public delegate void view_idx_func(int view_idx);
 
         public void_func do_save;
-        public void_func ui_to_view;
+        public view_idx_func ui_to_view;
         // ... this means the view has changed drastically, and filters need to be re-run
-        public void_func rerun_view;
+        public view_idx_func rerun_view;
         // ... this means the UI of the view needs refresh
-        public void_func refresh_view;
+        public view_idx_func refresh_view;
 
         public idx_func mark_match;
 
@@ -178,14 +180,21 @@ namespace lw_common.ui {
                 filterCtrl.RefreshObject(i);
 
                 do_save();
-                ui_to_view();
-                rerun_view();
+                ui_to_view(view_idx_);
+                rerun_view(view_idx_);
             }
         }
 
 
-        public void view_to_ui(ui_view view) {
+        public void view_to_ui(ui_view view, int view_idx) {
+            if ( view_ != view && view_ != null)
+                if (needs_save_) {
+                    do_save();
+                    ui_to_view(view_idx_);
+                }
+
             view_ = view;
+            view_idx_ = view_idx;
 
             ++ignore_change_;
             List<object> items = new List<object>();
@@ -198,9 +207,10 @@ namespace lw_common.ui {
 
             curFilterCtrl.Text = "";
             applyToExistingLines.Checked = false;
+            curFilterCtrl.Enabled = filterCtrl.SelectedIndex >= 0;
             --ignore_change_;
 
-            ui_to_view();
+            ui_to_view(view_idx_);
         }
 
 
@@ -326,6 +336,8 @@ namespace lw_common.ui {
 
             if (sel.apply_to_existing_lines != applyToExistingLines.Checked) {
                 sel.apply_to_existing_lines = applyToExistingLines.Checked;
+                filterCtrl.RefreshObject(sel);
+                needs_save_ = true;
                 do_save();
             }
         }
@@ -418,9 +430,9 @@ namespace lw_common.ui {
                         }
                     }
                 }
-                ui_to_view();
+                ui_to_view(view_idx_);
                 do_save();
-                rerun_view();
+                rerun_view(view_idx_);
             } catch(Exception e) {
                 logger.Error("can't copy from clipboard: " + e.Message);
                 util.beep(util.beep_type.err);
@@ -474,9 +486,9 @@ namespace lw_common.ui {
                     curFilterCtrl.SelectionStart = sel_start;
 
 
-                ui_to_view();
+                ui_to_view(view_idx_);
                 do_save();
-                refresh_view();
+                refresh_view(view_idx_);
                 /*
                 selected_view().Refresh();
                 log_view_for_tab(viewsTab.SelectedIndex).Refresh();
@@ -511,7 +523,7 @@ namespace lw_common.ui {
             var cur = filters[sel];
             filters.RemoveAt(sel);
             filters.Insert(sel - 1, cur);
-            ui_to_view();
+            ui_to_view(view_idx_);
             // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
             //       that could interfere with editing the filter - we don't want that
         }
@@ -523,7 +535,7 @@ namespace lw_common.ui {
             var cur = filters[sel];
             filters.RemoveAt(sel);
             filters.Insert(0, cur);
-            ui_to_view();
+            ui_to_view(view_idx_);
             // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
             //       that could interfere with editing the filter - we don't want that
         }
@@ -538,7 +550,7 @@ namespace lw_common.ui {
             var cur = filters[sel];
             filters.RemoveAt(sel);
             filters.Insert(sel + 1, cur);
-            ui_to_view();
+            ui_to_view(view_idx_);
             // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
             //       that could interfere with editing the filter - we don't want that
         }
@@ -552,21 +564,52 @@ namespace lw_common.ui {
             var cur = filters[sel];
             filters.RemoveAt(sel);
             filters.Add(cur);
-            ui_to_view();
+            ui_to_view(view_idx_);
             // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
             //       that could interfere with editing the filter - we don't want that
         }
 
-        private void curFilterCtrl_Leave(object sender, EventArgs e) {
+        private void save_if_user_left() {
             if (needs_save_) {
-                needs_save_ = false;
-                do_save();
-                ui_to_view();
+                var focus = win32.focused_ctrl();
+                bool is_ours = focus == curFilterCtrl || focus == applyToExistingLines || focus == filterCtrl || focus == addFilter || focus == delFilter;
+                if (!is_ours) {
+                    needs_save_ = false;
+                    do_save();
+                    ui_to_view(view_idx_);
+                    curFilterCtrl.Enabled = filterCtrl.SelectedIndex >= 0;
+                }
             }
         }
 
+        private void curFilterCtrl_Leave(object sender, EventArgs e) {
+            if (needs_save_) 
+                util.postpone(save_if_user_left, 10);
+        }
+
+
         private void filter_ctrl_SizeChanged(object sender, EventArgs e) {
             logger.Info("filter pane =" + Width + " x" + Height);
+        }
+
+        private void applyToExistingLines_Leave(object sender, EventArgs e) {
+            if (needs_save_) 
+                util.postpone(save_if_user_left, 10);
+        }
+
+        private void filterCtrl_Leave(object sender, EventArgs e) {
+            if (needs_save_) 
+                util.postpone(save_if_user_left, 10);
+        }
+
+        private void addFilter_Leave(object sender, EventArgs e) {
+            if (needs_save_) 
+                util.postpone(save_if_user_left, 10);
+        }
+
+        private void delFilter_Leave(object sender, EventArgs e) {
+            if (needs_save_) 
+                util.postpone(save_if_user_left, 10);
         }
     }
 }

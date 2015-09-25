@@ -210,10 +210,10 @@ namespace LogWizard
 
             filtCtrl.design_mode = false;
             filtCtrl.do_save = save;
-            filtCtrl.ui_to_view = () => log_view_for_tab(viewsTab.SelectedIndex).set_filter(filtCtrl.to_filter_row_list());
-            filtCtrl.rerun_view = () => refreshFilter_Click(null, null);
-            filtCtrl.refresh_view = () => {
-                log_view_for_tab(viewsTab.SelectedIndex).Refresh();
+            filtCtrl.ui_to_view = (view_idx) => log_view_for_tab(view_idx).set_filter(filtCtrl.to_filter_row_list());
+            filtCtrl.rerun_view = (view_idx) => refreshFilter_Click(null, null);
+            filtCtrl.refresh_view = (view_idx) => {
+                log_view_for_tab(view_idx).Refresh();
                 if (global_ui.show_fulllog) 
                     sync_full_log_colors(true /* force refresh */);
             };
@@ -778,7 +778,7 @@ namespace LogWizard
             ui_context cur = cur_context();
             int cur_view = viewsTab.SelectedIndex;
             if (cur_view < cur.views.Count) 
-                filtCtrl.view_to_ui( cur.views[cur_view]);
+                filtCtrl.view_to_ui( cur.views[cur_view], cur_view);
 
             sync_full_log_colors();
         }

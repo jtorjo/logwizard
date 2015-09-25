@@ -30,9 +30,9 @@ namespace LogWizard {
         private static Dictionary<string, string> file_to_context_ = new Dictionary<string, string>() {
             { "HM2 Version: 2.", "HM2" },
             { "HM3 Version=3", "HM3" },
+            { "[find] Starting ScrapeFindPot", "TN2ScrapeFindPot" },
             { "Welcome to TableNinja!", "TableNinja" },
             { "This is a LogWizard Setup sample!", "SetupSample" },
-            { "[find] Starting ScrapeFindPot", "TN2ScrapeFindPot" },
             //{ "", "" },
         }; 
 

@@ -115,6 +115,7 @@
             this.filterCtrl.SelectionChanged += new System.EventHandler(this.filterCtrl_SelectionChanged);
             this.filterCtrl.SelectedIndexChanged += new System.EventHandler(this.filterCtrl_SelectedIndexChanged);
             this.filterCtrl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.filterCtrl_KeyPress);
+            this.filterCtrl.Leave += new System.EventHandler(this.filterCtrl_Leave);
             this.filterCtrl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.filterCtrl_MouseDown);
             // 
             // olvColumn4
@@ -171,6 +172,7 @@
             this.applyToExistingLines.Text = "Apply to existing Lines";
             this.applyToExistingLines.UseVisualStyleBackColor = true;
             this.applyToExistingLines.CheckedChanged += new System.EventHandler(this.applyToExistingLines_CheckedChanged);
+            this.applyToExistingLines.Leave += new System.EventHandler(this.applyToExistingLines_Leave);
             // 
             // label1
             // 
@@ -207,6 +209,7 @@
             this.delFilter.Text = "-";
             this.delFilter.UseVisualStyleBackColor = true;
             this.delFilter.Click += new System.EventHandler(this.delFilter_Click);
+            this.delFilter.Leave += new System.EventHandler(this.delFilter_Leave);
             // 
             // filterLabel
             // 
@@ -229,6 +232,7 @@
             this.addFilter.Text = "+";
             this.addFilter.UseVisualStyleBackColor = true;
             this.addFilter.Click += new System.EventHandler(this.addFilter_Click);
+            this.addFilter.Leave += new System.EventHandler(this.addFilter_Leave);
             // 
             // selectColor
             // 
@@ -294,9 +298,10 @@
             // 
             // label2
             // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(31, 471);
+            this.label2.Location = new System.Drawing.Point(-2, 471);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(322, 13);
             this.label2.TabIndex = 26;

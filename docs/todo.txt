@@ -33,6 +33,16 @@
 
 
 
+- editing: have a smart text box (readonly text) - typing something in there will go to the first word you typed
+  - esc - get out of there
+  - think what hotkeys for moving between columns
+  maybe smart edit? like, type anything and it will take you where that msg is
+   - if turned off, perhaps something like "f2" or "right-arrow" would take you to editing mode
+  i need to account for other hotkeys (such as up/down/pgup/pgdown etc - just need to test it, cause probably the fact that they are already handled is ok)
+  - however, when on editing, and pressing up-arrow, for instance, i need to preserve caret position (if i' on char 10, i should go to char 10 on the other line (or less if don't have 10 chars))
+
+
+
 
 
 - extra.txt -> when holding it locally -> hold the extra-file_name-md5_of_local_file_path.txt
@@ -225,6 +235,8 @@
 - ctrl-f3/ ctrl-shift-f3 - start a "mark" from the current line ()
 
 - context menu on any line:
+  - Rename View -> to rename the view, show source pane, after user presses enter, hide source pane (if it was not visible)
+    - when editing view name, show "Press Enter to save"
   - start "mark" from current line
   - locate the filter that matched this (and open filter view if hidden)
   - Export This View to Disk...
