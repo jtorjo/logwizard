@@ -18,6 +18,10 @@
   [NOTE] I think i saved this, but need to properly retest
 
 
+1.1.3a
+- small note_ctrl improvements - NOT tested
+
+
 1.1.2
 - made it easy to test the filter_ctrl in test_ui, solved minor bugs
   - still need to retest starting a context from scratch (TN2ScrapeFind)

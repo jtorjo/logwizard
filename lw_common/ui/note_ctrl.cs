@@ -40,9 +40,51 @@ namespace lw_common.ui {
             public Color author_color = util.transparent;
 
             public string note_text = "";
+
+            // NOT persisted: if this were persisted, all notes would end up as being added by current user
+            //
+            // if true, we always use the existing author name/initials/color
+            // the reason we have this: if this was made by current user, always use the most up-to-date name/initials/color
+            public bool made_by_current_user = false;
+
+            public bool deleted = false;
+
+            // NOT persisted
+            //
+            // if true, it's a note added in this session 
+            // IMPORTANT: the notes added in this session are always added at the end (if they are new notes, to new lines)
+            public bool is_new = false;
         }
 
-        private class line {
+        public class line {
+            protected bool Equals(line other) {
+                return idx == other.idx && string.Equals(view_name, other.view_name) && string.Equals(msg, other.msg);
+            }
+
+            public override bool Equals(object obj) {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((line) obj);
+            }
+
+            public override int GetHashCode() {
+                unchecked {
+                    var hashCode = idx;
+                    hashCode = (hashCode * 397) ^ (view_name != null ? view_name.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (msg != null ? msg.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+
+            public static bool operator ==(line left, line right) {
+                return Equals(left, right);
+            }
+
+            public static bool operator !=(line left, line right) {
+                return !Equals(left, right);
+            }
+
             public int idx = -1;
             public string view_name = "";
             public string msg = "";
@@ -60,6 +102,9 @@ namespace lw_common.ui {
             // in case this is a note that is in reply to another note, this contains the ID of the other note we're replying to
             public readonly int reply_id;
 
+            // pointer to a line - each line has a unique ID (different from its index)
+            public readonly int line_id;
+
             // when was this note added (could be useful when sorting by time)
             public readonly DateTime utc_added = DateTime.UtcNow;
 
@@ -67,16 +112,8 @@ namespace lw_common.ui {
             public bool is_note_header {
                 get { return the_note == null; }
             }
-        
-            // pointer to a line - each line has a unique ID (different from its index)
-            public readonly int line_id;
 
-            // if true, we always use the existing author name/initials/color
-            //
-            // NOT persisted: if this were persisted, all notes would end up as being added by current user
-            public readonly bool made_by_current_user = false;
-
-            public bool deleted = false;
+            public readonly bool is_cur_line = false;
 
             public int indent {
                 get {
@@ -113,21 +150,21 @@ namespace lw_common.ui {
                 }
             }
 
-            public note_item(note_ctrl self, note n, int unique_id, int reply_id, int line_id, bool made_by_current_user, bool deleted) {
+            public note_item(note_ctrl self, note n, int unique_id, int reply_id, int line_id) {
                 the_note = n;
                 this.self = self;
                 this.note_id = unique_id;
                 this.line_id = line_id;
                 this.reply_id = reply_id;
-                this.made_by_current_user = made_by_current_user;
-                this.deleted = deleted;
             }
 
-            public note_item(note_ctrl self, int line_id) {
+            public note_item(note_ctrl self, int line_id, bool is_cur_line) {
                 this.self = self;
                 this.line_id = line_id;
+                this.is_cur_line = is_cur_line;
                 the_note = null;
             }
+
         }
 
         private Dictionary<int, line> lines_ = new Dictionary<int,line>();
@@ -142,6 +179,10 @@ namespace lw_common.ui {
         private List<note_item> notes_sorted_by_line_id_ = new List<note_item>();
 
         private int next_note_id_ = 0, next_line_id_ = 0;
+
+        private line cur_line_ = null;
+
+        private bool dirty_ = false;
 
         public note_ctrl() {
             InitializeComponent();
@@ -158,7 +199,7 @@ namespace lw_common.ui {
             author_color_ = notes_color;
             // update anything that was added by me before the changes were made
             foreach (note_item n in notes_sorted_by_line_id_)
-                if (n.made_by_current_user) {
+                if (n.the_note != null && n.the_note.made_by_current_user) {
                     n.the_note.author_name = author_name;
                     n.the_note.author_initials = author_initials;
                     n.the_note.author_color = notes_color;
@@ -166,9 +207,21 @@ namespace lw_common.ui {
             notesCtrl.Refresh();
         }
 
+        // helper - add to the currently selected line
+        public int add_note(note n, int note_id, int reply_to_note_id) {
+            Debug.Assert(cur_line_ != null);
+            if (cur_line_ == null)
+                return -1;
+
+            return add_note(cur_line_, n, note_id, reply_to_note_id);
+        }
+
         // returns the ID assigned to this note that we're adding;
         // if -1, something went wrong
-        public int add_note(note n, int note_id, int line_id, int reply_to_note_id, bool deleted) {
+        //
+        // note_id - the unique ID of the note, or -1 if a new unique ID is to be created
+        //           the reason we have this is that we can persist notes (together with their IDs)
+        public int add_note(line l, note n, int note_id, int reply_to_note_id) {
             // a note: can be added on a line, or as reply to someone
             // new notes: always at the end
             if (selected_log_line_ == null) {
@@ -177,10 +230,30 @@ namespace lw_common.ui {
                 return -1;
             }
 
+            int line_id = -1;
+            var found_line = lines_.FirstOrDefault(x => x.Value == l);
+            if (found_line.Value == null) {
+                // could not find the line
+                if (cur_line_ == l) {
+                    // it's the current line
+                    line_id = ++next_line_id_;
+                    lines_.Add(line_id, l);
+                } 
+                else {
+                    Debug.Assert(false);
+                    return -1;
+                }
+            }
+            line_id = found_line.Key;
 
-            bool is_current_user = n.author_name == author_name_;
-            int id = note_id >= 0 ? note_id : ++next_note_id_;
-            var new_ = new note_item(this, n, note_id, reply_to_note_id, selected_log_line_.line_id, is_current_user, deleted);
+            note_id = note_id >= 0 ? note_id : ++next_note_id_;
+            // ... this note should not exist already
+            Debug.Assert( notes_sorted_by_line_id_.Count(x => x.note_id == note_id) == 0);
+            if ( reply_to_note_id >= 0)
+                // note we're replying to should exist already
+                Debug.Assert( notes_sorted_by_line_id_.Count(x => x.note_id == reply_to_note_id) == 1);
+
+            var new_ = new note_item(this, n, note_id, reply_to_note_id, selected_log_line_.line_id);
             if (next_note_id_ <= note_id)
                 next_note_id_ = note_id + 1;
 
@@ -212,7 +285,6 @@ namespace lw_common.ui {
                         } else
                             // went to next line
                             break;
-                    Debug.Assert(inserted);
                 } else {
                     // this is the first entry that relates to this line
                     // ... find the note beore which we should insert ourselves
@@ -233,6 +305,7 @@ namespace lw_common.ui {
             if (inserted)
                 update_ui();
 
+            dirty_ = true;
             return new_.note_id;
         }
 
@@ -244,6 +317,9 @@ namespace lw_common.ui {
 
                 if (showDeletedLines.Checked)
                     ;
+
+            // if i delete a note from line ,and no other notes on that line:
+            // if it was from current user, delete the line note as well ; otherwise, just hide it
         }
 
 
@@ -251,15 +327,20 @@ namespace lw_common.ui {
             // note: delete someone else's note -> it's grayed (hidden)
             //       delete your note: it's fully deleted + copied to clipboard -> ALL THE notes you delete - keep them internally and the user should be able to access them
             //       (just in case he did a mistake)
-            
+
+            dirty_ = true;
         }
 
         // this sets the line the user is viewing - by default, this is what the user is commenting on
-        public void set_cur_line(int line_idx, string view_name, string line_msg) {
+        public void set_cur_line(line l) {
+            dirty_ = true;
             // if no notes, perhaps show the current line in teh view - just for the user to see what he would be commenting on? tothink
             // perhaps I should always show the current line as the last line possible (so that the user would know he'd be editing it?)
 
+            //  ......... if last line is "is_cur_line", update it; otherwise, insert
+
             // if already there + selection relates to it, don't change the selection 
+            cur_line_ = l;
         }
 
         // when saving a line - save the line index + the view it was in
@@ -287,10 +368,14 @@ namespace lw_common.ui {
         public void load(string file_name) {
         
             // update last_note_id and last_line_id
+            dirty_ = false;
         }
 
         public void save() {
+            if (!dirty_)
+                return;
             // needs to be loaded first
+            dirty_ = false;
         }
 
     }
