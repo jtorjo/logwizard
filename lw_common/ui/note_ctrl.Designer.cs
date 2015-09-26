@@ -66,7 +66,9 @@
             this.notesCtrl.View = System.Windows.Forms.View.Details;
             this.notesCtrl.SelectedIndexChanged += new System.EventHandler(this.notesCtrl_SelectedIndexChanged);
             this.notesCtrl.Enter += new System.EventHandler(this.notesCtrl_Enter);
+            this.notesCtrl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.notesCtrl_KeyDown);
             this.notesCtrl.Leave += new System.EventHandler(this.notesCtrl_Leave);
+            this.notesCtrl.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.notesCtrl_PreviewKeyDown);
             // 
             // olvColumn1
             // 

@@ -20,6 +20,12 @@
 - todo: show/hide deleted notes
 - todo: colors and such
 
+
+
+1.1.3f
+- deleting notes - works (when "show deleted notes disabled")
+
+
 1.1.3e
 - BEFORE: new idea for deleting notes - mark the note(s) as deleted, then recreate the UI
 

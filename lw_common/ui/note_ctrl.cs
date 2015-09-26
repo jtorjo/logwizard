@@ -296,7 +296,7 @@ namespace lw_common.ui {
         }
 
         // the only time this can get called is when loading an already saved configuration
-        private note_item add_note_header(int line_id, note n, int note_id) {
+        private note_item add_note_header(int line_id, int note_id) {
             Debug.Assert(note_id >= 0);
             Debug.Assert(line_id != cur_line_id_ && lines_.ContainsKey(line_id));
             var new_ = new note_item(this, note_id, line_id );
@@ -490,45 +490,85 @@ namespace lw_common.ui {
         }
 
 
-        private void toggle_del_note(int note_id, bool delete_replies_as_well) {
+        private void toggle_del_note(int note_id) {
             var toggle_note = notes_sorted_by_line_id_.FirstOrDefault(x => x.note_id == note_id);
             if (toggle_note == null) {
                 Debug.Assert(false);
                 return;
             }
 
-            if (toggle_note.the_note == null) {
-                // in this case, pressed on a line header - toggle all its sub-children
-                foreach ( var n in notes_sorted_by_line_id_.ToList())
-                    if ( n.line_id == toggle_note.line_id && n.the_note != null) 
-                        toggle_del_note(n.note_id, false);
-                return;
-            }
-
-            // here, we're sure we're on a note (not on a header line)
             dirty_ = true;
 
-            // UI - refresh this note's color or delete it if needed
-            toggle_note.the_note.deleted = !toggle_note.the_note.deleted;
-            for (int idx = 0; idx < notesCtrl.GetItemCount(); ++idx) {
-                var i = notesCtrl.GetItem(idx).RowObject as note_item;
-                if (i.note_id == note_id) {
-                    if (!showDeletedLines.Checked) {
-                        Debug.Assert( toggle_note.the_note.deleted);
-                        notesCtrl.RemoveObject(i);
-                    } else
-                        refresh_note(i);
-                    break;
+            if (toggle_note.the_note == null) {
+                // in this case, pressed on a line header - toggle all its sub-children
+                foreach (var n in notes_sorted_by_line_id_)
+                    if (n.line_id == toggle_note.line_id && n.the_note != null)
+                        n.the_note.deleted = !n.the_note.deleted;
+            } else {
+                // pressed on a note - find all replies on that note
+                List<int> ids = new List<int>();
+                ids.Add(note_id);
+                bool reply_found = true;
+                while (reply_found) {
+                    reply_found = false;
+                    foreach ( var n in notes_sorted_by_line_id_)
+                        if (ids.Contains(n.reply_id)) {
+                            ids.Add(n.note_id);
+                            reply_found = true;
+                        }
+                }
+                int delete_count = notes_sorted_by_line_id_.Count(x => ids.Contains(x.note_id) && x.the_note != null && !x.the_note.deleted);
+                bool do_delete = delete_count == ids.Count;
+                foreach ( var n in notes_sorted_by_line_id_)
+                    if (ids.Contains(n.note_id) && n.the_note != null)
+                        n.the_note.deleted = do_delete;
+            }
+
+            // at this point, I have all the notes in "sorted notes" set up correctly - I need to show them in the UI
+            var copy = notes_sorted_by_line_id_.ToList();
+
+            var sel_note_id = notesCtrl.SelectedIndex >= 0 ? (notesCtrl.GetItem(notesCtrl.SelectedIndex).RowObject as note_item).note_id : -1;
+            var sel_note_id_above = find_note_id_above_selection();
+
+            ++ignore_change_;
+            notes_sorted_by_line_id_.Clear();
+            notesCtrl.ClearObjects();
+
+            // ... re-add everything
+            foreach ( var n in copy) {
+                bool do_add = showDeletedLines.Checked;
+                if ( !do_add)
+                    if (n.the_note != null)
+                        do_add = !n.the_note.deleted;
+                    else 
+                        do_add = has_notes(copy, n.line_id);
+                
+                if (do_add) {
+                    if (n.is_note_header)
+                        add_note_header(n.line_id, n.note_id);
+                    else
+                        add_note(lines_[n.line_id], n.the_note, n.note_id, n.reply_id);
                 }
             }
-            
-            // UI - if this is a single note on a line, delete it altogether
-            if (toggle_note.the_note.deleted && !showDeletedLines.Checked) {
-                int count = notes_sorted_by_line_id_.Count(x => x.line_id == toggle_note.line_id);
 
-            }
+            // set current line
+            if (showDeletedLines.Checked) {
+                var cur_line_copy = new line();
+                cur_line_copy.copy_from(cur_line);
+                cur_line.clear();
+                set_current_line(cur_line_copy);
+            } else
+                cur_line.clear();
 
+            int new_sel = showDeletedLines.Checked ? sel_note_id : sel_note_id_above;
+            if ( new_sel >= 0)
+                for ( int idx = 0; idx < notesCtrl.GetItemCount(); ++idx)
+                    if ((notesCtrl.GetItem(idx).RowObject as note_item).note_id == new_sel) {
+                        notesCtrl.SelectedIndex = idx;
+                        break;
+                    }
 
+            --ignore_change_;
 
             // note: delete someone else's note -> it's grayed (hidden)
             //       delete your note: it's fully deleted + copied to clipboard -> ALL THE notes you delete - keep them internally and the user should be able to access them
@@ -536,6 +576,29 @@ namespace lw_common.ui {
 
             // if i delete a note from line ,and no other notes on that line:
             // if it was from current user, delete the line note as well ; otherwise, just hide it
+        }
+
+        private bool has_notes(List<note_item> notes, int line_id) {
+            return notes.Count(x => x.line_id == line_id && (x.the_note == null || !x.the_note.deleted)) > 1; // if just 1 - it's just the line, no notes
+        }
+
+        private int find_note_id_above_selection() {
+            if (notesCtrl.SelectedIndex < 0) {
+                // nothing was selected
+                if (notesCtrl.GetItemCount() > 0)
+                    return (notesCtrl.GetItem(notesCtrl.GetItemCount() - 1).RowObject as note_item).note_id;
+                return -1;
+            }
+
+            var sel_note = notesCtrl.SelectedItem.RowObject as note_item;
+            for ( int i = 0; i < notesCtrl.GetItemCount() - 1; ++i)
+                if (notesCtrl.GetItem(i + 1).RowObject == sel_note)
+                    return (notesCtrl.GetItem(i).RowObject as note_item).note_id ;
+
+            if (notesCtrl.GetItemCount() > 0)
+                return (notesCtrl.GetItem(notesCtrl.GetItemCount() - 1).RowObject as note_item).note_id;
+            else
+                return -1;
         }
 
         // this sets the line the user is viewing - by default, this is what the user is commenting on
@@ -687,7 +750,7 @@ namespace lw_common.ui {
                 if (n != null)
                     note = add_note(lines_[line_id], n, note_id, reply_id);
                 else
-                    note = add_note_header(line_id, n, note_id);
+                    note = add_note_header(line_id, note_id);
                 note.utc_added = new DateTime(ticks);
             }
             next_note_id_ = notes_sorted_by_line_id_.Count > 0 ? notes_sorted_by_line_id_.Max(x => x.note_id) + 1 : 0;
@@ -842,6 +905,22 @@ namespace lw_common.ui {
 
         private void showDeletedLines_CheckedChanged(object sender, EventArgs e) {
             // optimize - if nothing deleted
+        }
+
+        private void notesCtrl_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
+            string key = util.key_to_action(e);
+            bool del = key == "delete" || key == "back";
+            if (del)
+                e.IsInputKey = true;
+        }
+
+        private void notesCtrl_KeyDown(object sender, KeyEventArgs e) {
+            string key = util.key_to_action(e);
+            bool del = key == "delete" || key == "back";
+            if ( del)
+                if ( notesCtrl.SelectedIndex >= 0)
+                    toggle_del_note( (notesCtrl.GetItem(notesCtrl.SelectedIndex).RowObject as note_item).note_id);
+
         }
 
 
