@@ -16,6 +16,17 @@
 
 
 
+- todo: test replying to a note
+- todo: show/hide deleted notes
+- todo: colors and such
+
+
+1.1.3d
+- load/save works
+- synchronizing note to views / views to note works
+- saving done correctly (sorted by line)
+
+
 1.1.3c
 - note_ctrl - more testing/bug fixing
 

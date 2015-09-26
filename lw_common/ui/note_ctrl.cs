@@ -123,7 +123,7 @@ namespace lw_common.ui {
             private int line_id_;
 
             // when was this note added (could be useful when sorting by time)
-            public readonly DateTime utc_added = DateTime.UtcNow;
+            public DateTime utc_added = DateTime.UtcNow;
 
             // if true, this is the header (information about the line itself)
             public bool is_note_header {
@@ -162,6 +162,7 @@ namespace lw_common.ui {
                 this.self = self;
                 note_id = unique_id;
                 line_id_ = line_id;
+                reply_id = -1;
                 the_note = null;
             }
             /////////////////////////////////////////////////////////////////////////////////////////
@@ -294,11 +295,25 @@ namespace lw_common.ui {
             notesCtrl.Refresh();
         }
 
+        // the only time this can get called is when loading an already saved configuration
+        private note_item add_note_header(int line_id, note n, int note_id) {
+            Debug.Assert(note_id >= 0);
+            Debug.Assert(line_id != cur_line_id_ && lines_.ContainsKey(line_id));
+            var new_ = new note_item(this, note_id, line_id );
+            if (next_note_id_ < note_id)
+                next_note_id_ = note_id;
+            notes_sorted_by_line_id_.Add(new_);
+            add_note_to_ui(new_);
+            return new_;
+        }
+
         // helper - add to the currently selected line
-        public int add_note(note n, int note_id, int reply_to_note_id) {
+        private note_item add_note(note n, int note_id, int reply_to_note_id) {
             Debug.Assert(cur_line != null);
-            if (cur_line == null)
-                return -1;
+            if (cur_line == null) {
+                Debug.Assert(false);
+                return null;
+            }
 
             line new_ = new line();
             new_.copy_from(cur_line);
@@ -310,7 +325,7 @@ namespace lw_common.ui {
         //
         // note_id - the unique ID of the note, or -1 if a new unique ID is to be created
         //           the reason we have this is that we can persist notes (together with their IDs)
-        public int add_note(line l, note n, int note_id, int reply_to_note_id) {
+        private note_item add_note(line l, note n, int note_id, int reply_to_note_id) {
             // a note: can be added on a line, or as reply to someone
             // new notes: always at the end
 
@@ -388,14 +403,20 @@ namespace lw_common.ui {
                     inserted = true;
                 } else {
                     // this is the first entry that relates to this line
-                    var header = new note_item(this,  ++next_note_id_, line_id);
-
                     // ... find the note before which we should insert ourselves
-                    note = notes_sorted_by_line_id_.FirstOrDefault(x => x.line_id > line_id);
+                    int line_index = lines_[line_id].idx;
+                    note = notes_sorted_by_line_id_.FirstOrDefault(x => lines_[x.line_id].idx > line_index);
+
+                    var header = new note_item(this,  ++next_note_id_, line_id);
                     if (note != null) {
                         int idx = notes_sorted_by_line_id_.IndexOf(note);
-                        notes_sorted_by_line_id_.Insert(idx, header);
-                        notes_sorted_by_line_id_.Insert(idx + 1, new_);
+                        bool has_header = note.is_note_header && note.line_id == line_id;
+                        if (!has_header) {
+                            notes_sorted_by_line_id_.Insert(idx, header);
+                            notes_sorted_by_line_id_.Insert(idx + 1, new_);
+                        }
+                        else 
+                            notes_sorted_by_line_id_.Insert(idx, new_);
                     } else {
                         notes_sorted_by_line_id_.Add(header);
                         notes_sorted_by_line_id_.Add(new_);
@@ -410,11 +431,11 @@ namespace lw_common.ui {
                 add_note_to_ui(new_);
 
             dirty_ = true;
-            return new_.note_id;
+            return new_;
         }
 
         private void add_note_to_ui(note_item last_note) {
-            bool add_to_ui = !last_note.the_note.deleted || (last_note.the_note.deleted && showDeletedLines.Checked);
+            bool add_to_ui = last_note.the_note == null || !last_note.the_note.deleted || (last_note.the_note.deleted && showDeletedLines.Checked);
             if (!add_to_ui)
                 return;
 
@@ -428,19 +449,23 @@ namespace lw_common.ui {
                 }
             } else {
                 // new note
-                for (int note_idx = 0; note_idx < notesCtrl.GetItemCount(); ++note_idx) {
-                    var i = notesCtrl.GetItem(note_idx).RowObject as note_item;
-                    int line_id = i.line_id != cur_line_id_ ? i.line_id : find_cur_line_id();
-                    
-                    if (line_id == last_note.line_id) {
-                        insert_idx = note_idx + 1;
-                        bool insert_at_the_end = i.line_id == cur_line_id_;
-                        if (insert_at_the_end) {
-                            // we need to update the line, so that it does not point to current-line anymore
-                            i.line_id = line_id;
+                if (!last_note.is_note_header)
+                    for (int note_idx = 0; note_idx < notesCtrl.GetItemCount(); ++note_idx) {
+                        var i = notesCtrl.GetItem(note_idx).RowObject as note_item;
+                        int line_id = i.line_id != cur_line_id_ ? i.line_id : find_cur_line_id();
+
+                        if (line_id == last_note.line_id) {
+                            insert_idx = note_idx + 1;
+                            bool insert_at_the_end = i.line_id == cur_line_id_;
+                            if (insert_at_the_end) {
+                                // we need to update the line, so that it does not point to current-line anymore
+                                i.line_id = line_id;
+                            }
                         }
                     }
-                }
+                else
+                    // it's a new note header, add at the end
+                    insert_idx = notesCtrl.GetItemCount();
             }
             Debug.Assert( insert_idx >= 0);
             if (insert_idx >= 0) {
@@ -449,6 +474,7 @@ namespace lw_common.ui {
                 // now, select it as well
                 notesCtrl.SelectObject(last_note);
                 --ignore_change_;
+                notesCtrl.EnsureVisible(insert_idx);
             }
         }
 
@@ -512,7 +538,9 @@ namespace lw_common.ui {
 
                 // 1b - on a note from another line
                 // I will select the last note from this user
-                notesCtrl.SelectObject( ui_find_last_note_from_cur_user(header.line_id));
+                var last = ui_find_last_note_from_cur_user(header.line_id);
+                notesCtrl.SelectObject( last);
+                notesCtrl.EnsureModelVisible(last);
             } else {
                 // 2 - no notes on this line
                 if ( !last_note_is_cur_line) 
@@ -521,9 +549,11 @@ namespace lw_common.ui {
                 refresh_note(last);
 
                 bool focus_on_notes = win32.focused_ctrl() == notesCtrl;
-                if (notesCtrl.SelectedIndex < 0 || !focus_on_notes)
+                if (notesCtrl.SelectedIndex < 0 || !focus_on_notes) {
                     // select the "last line"
                     notesCtrl.SelectedIndex = notesCtrl.GetItemCount() - 1;
+                    notesCtrl.EnsureVisible( notesCtrl.GetItemCount() - 1);
+                }
             }
 
             update_cur_note_controls();
@@ -581,12 +611,56 @@ namespace lw_common.ui {
             notes_sorted_by_line_id_.Clear();
             notesCtrl.ClearObjects();
             cur_line.clear();
+            
+            lines_.Clear();
+            lines_.Add(cur_line_id_, new line());
 
+            settings_file sett = new settings_file(file_name_);
+            // first, load lines
+            int line_count = int.Parse(sett.get("line_count", "0"));
+            for (int idx = 0; idx < line_count; ++idx) {
+                string prefix = "line." + idx + ".";
+                line l = new line();
+                l.idx = int.Parse(sett.get(prefix + "index", "0"));
+                l.view_name = sett.get(prefix + "view_name");
+                l.msg = sett.get(prefix + "msg");
+                int id = int.Parse(sett.get(prefix + "id", "0"));
+                lines_.Add(id, l);
+            }
+            next_line_id_ = lines_.Max(x => x.Key != cur_line_id_ ? x.Key : -1) + 1;
+
+            // load notes
             // if author name = ourselves -> made_by_current_user = true
+            int note_count = int.Parse(sett.get("note_count", "0"));
+            for (int idx = 0; idx < note_count; ++idx) {
+                string prefix = "note." + idx + ".";
+                note n = null;
+                string author_name = sett.get(prefix + "author_name");
+                if (author_name != "") {
+                    n = new note() {author_name = author_name};
+                    n.author_initials = sett.get(prefix + "author_initials");
+                    n.author_color = util.str_to_color(sett.get(prefix + "author_color"));
+                    n.note_text = sett.get(prefix + "note_text");
+                    n.deleted = sett.get(prefix + "deleted", "0") != "0";
+                }
+                int note_id = int.Parse(sett.get(prefix + "note_id", "-1"));
+                int reply_id = int.Parse(sett.get(prefix + "reply_id", "-1"));
+                int line_id = int.Parse(sett.get(prefix + "line_id", "0"));
+                long ticks = long.Parse(sett.get(prefix + "added_at", "0"));
+                note_item note;
+                if (n != null)
+                    note = add_note(lines_[line_id], n, note_id, reply_id);
+                else
+                    note = add_note_header(line_id, n, note_id);
+                note.utc_added = new DateTime(ticks);
+            }
+            next_note_id_ = notes_sorted_by_line_id_.Count > 0 ? notes_sorted_by_line_id_.Max(x => x.note_id) + 1 : 0;
         
             // update last_note_id and last_line_id
             dirty_ = false;
             --ignore_change_;
+
+            notesCtrl.Refresh();
         }
 
         public void save() {
@@ -596,7 +670,40 @@ namespace lw_common.ui {
             if (!dirty_)
                 return;
 
-            // don't save the cur_line
+            settings_file sett = new settings_file(file_name_);
+
+            // first, save lines - don't save the cur_line
+            sett.set("line_count", "" + (lines_.Count - 1));
+            int line_idx = 0;
+            foreach ( var l in lines_)
+                if (l.Key != cur_line_id_) {
+                    string prefix = "line." + line_idx + ".";
+                    sett.set(prefix + "id", "" + l.Key);
+                    sett.set(prefix + "index", "" + l.Value.idx);
+                    sett.set(prefix + "view_name", l.Value.view_name);
+                    sett.set(prefix + "msg", l.Value.msg);
+                    ++line_idx;
+                }
+
+            // save notes
+            sett.set("note_count", "" + notes_sorted_by_line_id_.Count);
+            for (int idx = 0; idx < notes_sorted_by_line_id_.Count; ++idx) {
+                string prefix = "note." + idx + ".";
+                note_item n = notes_sorted_by_line_id_[idx];
+                if (n.the_note != null) {
+                    sett.set(prefix + "author_name", n.the_note.author_name);
+                    sett.set(prefix + "author_initials", n.the_note.author_initials);
+                    sett.set(prefix + "author_color", util.color_to_str(n.the_note.author_color));
+                    sett.set(prefix + "note_text", n.the_note.note_text);
+                    sett.set(prefix + "deleted", n.the_note.deleted ? "1" : "0");
+                }
+
+                sett.set(prefix + "note_id", "" + n.note_id);
+                sett.set(prefix + "reply_id", "" + n.reply_id);
+                sett.set(prefix + "line_id", "" + n.line_id);
+                sett.set(prefix + "added_at", "" + n.utc_added.Ticks);
+            }
+            sett.save();
 
             dirty_ = false;
         }

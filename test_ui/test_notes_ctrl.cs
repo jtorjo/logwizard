@@ -46,6 +46,8 @@ namespace test_ui {
             dummyView.AddObject( new dummy_note() { idx = 145, view = "err", msg = "[pot] Pot string could not be parsed [] : Input string was not in a correct format." });
             dummyView.AddObject( new dummy_note() { idx = 155, view = "err", msg = "[pot] Pot string could not be parsed [__] : Input string was not in a correct format." });
             dummyView.AddObject( new dummy_note() { idx = 156, view = "err", msg = "this is the last error" });
+
+            notes.load("test_notes_ui.txt");
         }
 
         private void on_note_selected(int line_idx, string msg) {
