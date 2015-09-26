@@ -276,6 +276,7 @@
     <None Include="icons\bug.png" />
     <None Include="icons\bug_disabled.png" />
     <Content Include="app.ico" />
+    <Content Include="docs\todo_lowpriority.txt" />
     <Content Include="icons\app.ico" />
     <None Include="icons\eyedropper.png" />
     <Content Include="logwizard.txt">

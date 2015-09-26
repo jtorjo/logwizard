@@ -569,5 +569,50 @@ namespace lw_common {
             }
             return lines.Length - 1;
         }
+
+
+
+
+
+
+
+
+
+
+
+        private static string key_to_action(Keys code, string prefix) {
+            string s = code.ToString().ToLower();
+            if ( code >= Keys.D0 && code <= Keys.D9)
+                s = code.ToString().ToLower().Substring(1);
+            return prefix + s;
+        }
+
+        public static string key_to_action(PreviewKeyDownEventArgs e) {
+            if (e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu || e.KeyCode == Keys.ShiftKey)
+                return "";
+            string prefix = "";
+            if (e.Control)
+                prefix += "ctrl-";
+            if (e.Shift)
+                prefix += "shift-";
+            if (e.Alt)
+                prefix += "alt-";
+            return key_to_action(e.KeyCode, prefix);
+        }
+        public static string key_to_action(KeyEventArgs e) {
+            if (e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu || e.KeyCode == Keys.ShiftKey)
+                return "";
+            string prefix = "";
+            if (e.Control)
+                prefix += "ctrl-";
+            if (e.Shift)
+                prefix += "shift-";
+            if (e.Alt)
+                prefix += "alt-";
+            return key_to_action(e.KeyCode, prefix);
+        }
+
+
+
     }
 }

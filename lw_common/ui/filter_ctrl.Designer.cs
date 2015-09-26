@@ -197,7 +197,9 @@
             this.curFilterCtrl.Size = new System.Drawing.Size(309, 113);
             this.curFilterCtrl.TabIndex = 17;
             this.curFilterCtrl.TextChanged += new System.EventHandler(this.curFilterCtrl_TextChanged);
+            this.curFilterCtrl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.curFilterCtrl_KeyDown);
             this.curFilterCtrl.Leave += new System.EventHandler(this.curFilterCtrl_Leave);
+            this.curFilterCtrl.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.curFilterCtrl_PreviewKeyDown);
             // 
             // delFilter
             // 

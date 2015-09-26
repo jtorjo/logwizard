@@ -611,5 +611,19 @@ namespace lw_common.ui {
             if (needs_save_) 
                 util.postpone(save_if_user_left, 10);
         }
+
+        private void curFilterCtrl_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
+            string s = util.key_to_action(e);
+            if (s == "ctrl-enter")
+                e.IsInputKey = true;
+        }
+
+        private void curFilterCtrl_KeyDown(object sender, KeyEventArgs e) {
+            string s = util.key_to_action(e);
+            if (s == "ctrl-enter") {
+                // set filter
+            }
+
+        }
     }
 }

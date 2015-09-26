@@ -1706,36 +1706,12 @@ namespace LogWizard
                 handle_subcontrol_keys(sub);
         }
 
-        private action_type key_to_action(Keys code, string prefix) {
-            string s = code.ToString().ToLower();
-            if ( code >= Keys.D0 && code <= Keys.D9)
-                s = code.ToString().ToLower().Substring(1);
-            return key_to_action(prefix + s);
-        }
 
-        private action_type key_to_action(PreviewKeyDownEventArgs e) {
-            if (e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu || e.KeyCode == Keys.ShiftKey)
-                return action_type.none;
-            string prefix = "";
-            if (e.Control)
-                prefix += "ctrl-";
-            if (e.Shift)
-                prefix += "shift-";
-            if (e.Alt)
-                prefix += "alt-";
-            return key_to_action(e.KeyCode, prefix);
-        }
         private action_type key_to_action(KeyEventArgs e) {
-            if (e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu || e.KeyCode == Keys.ShiftKey)
-                return action_type.none;
-            string prefix = "";
-            if (e.Control)
-                prefix += "ctrl-";
-            if (e.Shift)
-                prefix += "shift-";
-            if (e.Alt)
-                prefix += "alt-";
-            return key_to_action(e.KeyCode, prefix);
+            return key_to_action( util.key_to_action(e));
+        }
+        private action_type key_to_action(PreviewKeyDownEventArgs e) {
+            return key_to_action( util.key_to_action(e));
         }
 
         private Control focused_ctrl() {
@@ -1792,7 +1768,7 @@ namespace LogWizard
             case "home":
             case "end":
             case "space":
-            case "enter":
+            case "return":
             case "escape":
                 if (key_code == "space" && filtCtrl.can_handle_toggle_enable_dimmed_now )
                     break;

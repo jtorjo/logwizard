@@ -1,4 +1,5 @@
 
+
 - dropping a zip file
   - look for .log + .txt files (prefer .log)      ---------> in settings form, allow override (the extrensions are used in preffered order, like, ".log" first if we have ".log;.txt")
     - if a single one found, use it. otherwise:
@@ -23,15 +24,12 @@
 
 - ctrl-c / shift-ctrl-c -> if in edit menu, we should not do anything
 
-- toggles button + menu!
-- context matches -> in settings dialog (easy, for now)
-  - easiest way - show the beginning of existing log (or allow user to paste anything)
-                - as he selects something ->just use that (allow adding a context on the fly)
-
-- update LogWizardSetupSample with the new hotkeys and such.
 
 
 
+- notes: 
+  - allow of editing the notes you're creating
+  - selecting a note: if mine -> i edit. if another one's, i'm replying
 
 
 - extra.txt -> when holding it locally -> hold the extra-file_name-md5_of_local_file_path.txt
@@ -73,12 +71,25 @@
   - allow exporting settings like this by default (ToC/FromC -> do this somehow to save to file -> maybe from Settings dialog?)
   - probably both import/export should be done via Settings dialog - if dropped, just ask a question - do you want to import blabla?
 
+- notes: what if  i already have the notes locally? in this case - see if new notes are a superset of existing notes -if so, use new notes and save locally
+         if not, say a msg. (if you choose to override local notes -> create a backup just in case; write this in the msg)
 
 
 
 
 
 
+
+- toggles button + menu!
+- context matches -> in settings dialog (easy, for now)
+  - easiest way - show the beginning of existing log (or allow user to paste anything)
+                - as he selects something ->just use that (allow adding a context on the fly)
+
+- update LogWizardSetupSample with the new hotkeys and such.
+
+- if i'm launching a new instances of logwizard, and an existing one is already running, bring the already running one to top (basically, force a "New" on the existing instance)
+  - bonus: each "New" will start on a new "custom" position, so you can tweak each position in any way you want
+  - i want a single LW instance, since running several can mess up the settings
 
 
 
@@ -252,18 +263,18 @@
 
 
 
+- creating your filters? in that case, it would be quite useful to have a smaller log (so that when filters refresh, this happens quicker)
+  we should have something that will only take 2Mb or so from the log. then, when toggled again, it will go back to the full log (and refresh)
+
+
+- creating filters tutorial - have 2 tutorials for creating the same views (the views for TN2scrapepot) - one when editing filters manually, one with selecting words, and converting them to filters
 
 
 
 
 
-
-
-- loading large files -> optimize logwizard to load stuff 100% in the background, and show in the status bar as we're loading stuff (first file, then filters)
 
 - defaults: retest when using logwizard for first time 
-  - by default, MAYBE, we should show levels in color (red=ERROR, darkred=FATAL, etc) - have a setting that if checked(default), we would do that.
-    - perhaps we should do htis on small files (like, 50Mb or less)
   - also, Find -> have a button "Append to Filter" or something -> if the view name is "New_...", rename this as the contents of the search or something TOTHINK
   - right click on a column -> have an easy "Filter In/Out" dialog where the user can choose to execute something on that column
     - make sure we can do this with keys - i need to have a way to select a certain column with keys - so that when rightclicking on it, it would then open the Filter In/Out dialog
@@ -282,13 +293,9 @@
 
 - settings page: 
   - font for showing the message (like, Courier New?)
-  - default color for "Include text"
-  - show column "Filter(s)" on full log (it takes more time to synchronize)
+  - show column "Filter(s)" on full log (it takes more time to synchronize) (Speed tab)
   - colors for bookmarks
-  - if to add "*" to the tab title when something changed -> this forces refresh of all  tabs all the time
-
-- parse log4net patterns: example: "%-50file(%4line): %date{HH:mm:ss,fff} %-10thread %-5level - %message%newline"
-  if a .config file found, read it from there - prefer the pattern after FileAppender
+  - if to add "*" to the tab title when something changed -> this forces refresh of all  tabs all the time (Speed tab)
 
 - level column -> allow transforming it into pictures
   - this should work on any column - we should be able to transform any context into picts
@@ -300,59 +307,11 @@
 
 
 
-
-
-
-
-
-
-
-
-- show/hide views altogether -> allow hiding the views that don't interest you at this time
-  (you might want to re-show them later, but for now, you don't care about them)
-
-
 - save view (ctrl-s) - normalize, allow selecting which rows to save (time, date, etc.)
   - allow saving a certain view as a text file (.txt or .html) -> if html, preserve coloring
   - save view = "Export This View to Disk..." - have a nead dir
     - in the dialog, allow to afterwards: auto open file in Explorer (for perhaps attaching in an email), in viewer (based on extension)
 	  - later should have .csv and xml as well
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- allow hiding views - in case we have too many (we can show them at any time)
-- mark views as "should never happen" - the idea is that we would want something like this:
-    - have alerts on this view -> if any alert triggers, show this view - otherwise, keep it hidden
-    = run on command line as well?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

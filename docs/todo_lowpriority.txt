@@ -1,0 +1,14 @@
+- loading large files -> optimize logwizard to load stuff 100% in the background, and show in the status bar as we're loading stuff (first file, then filters)
+
+- show/hide views altogether -> allow hiding the views that don't interest you at this time
+  (you might want to re-show them later, but for now, you don't care about them)
+
+- allow hiding views - in case we have too many (we can show them at any time)
+- mark views as "should never happen" - the idea is that we would want something like this:
+    - have alerts on this view -> if any alert triggers, show this view - otherwise, keep it hidden
+    = run on command line as well?
+
+- parse log4net patterns: example: "%-50file(%4line): %date{HH:mm:ss,fff} %-10thread %-5level - %message%newline"
+  if a .config file found, read it from there - prefer the pattern after FileAppender
+
+

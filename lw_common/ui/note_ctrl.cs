@@ -25,10 +25,12 @@ using System.Drawing;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Configuration;
 using System.Text;
 using System.Windows.Forms;
 
 namespace lw_common.ui {
+    // Show by time - not implemented yet
     public partial class note_ctrl : UserControl {
 
         private string author_name_ = "", author_initials_ = "";
@@ -85,6 +87,17 @@ namespace lw_common.ui {
                 return !Equals(left, right);
             }
 
+            public void copy_from(line other) {
+                idx = other.idx;
+                view_name = other.view_name;
+                msg = other.msg;
+            }
+
+            public void clear() {
+                idx = -1;
+                view_name = msg = "";
+            }
+
             public int idx = -1;
             public string view_name = "";
             public string msg = "";
@@ -93,8 +106,8 @@ namespace lw_common.ui {
         private class note_item {
             public readonly note_ctrl self = null;
 
-            // if null, it's teh header
-            public readonly note the_note = null;
+            // if null, it's the header
+            public note the_note = null;
 
             // each note has a unique ID -this can be used when adding a note that is in reply to someone
             public readonly int note_id;
@@ -103,7 +116,7 @@ namespace lw_common.ui {
             public readonly int reply_id;
 
             // pointer to a line - each line has a unique ID (different from its index)
-            public readonly int line_id;
+            private int line_id_;
 
             // when was this note added (could be useful when sorting by time)
             public readonly DateTime utc_added = DateTime.UtcNow;
@@ -113,7 +126,67 @@ namespace lw_common.ui {
                 get { return the_note == null; }
             }
 
-            public readonly bool is_cur_line = false;
+            public bool is_cur_line {
+                get { return line_id_ == self.cur_line_id_; }
+            }
+
+            public int line_id {
+                get { return line_id_; }
+                set {
+                    // you can only reset the line ID - if it is the current line
+                    Debug.Assert(line_id_ == self.cur_line_id_);
+                    line_id_ = value;
+                }
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////
+            // Constructor
+
+            public note_item(note_ctrl self, note n, int unique_id, int reply_id, int line_id) {
+                Debug.Assert( self.lines_.ContainsKey(line_id));
+
+                the_note = n;
+                this.self = self;
+                note_id = unique_id;
+                line_id_ = line_id;
+                this.reply_id = reply_id;
+            }
+
+            public note_item(note_ctrl self, int line_id) {
+                Debug.Assert( self.lines_.ContainsKey(line_id));
+
+                this.self = self;
+                line_id_ = line_id;
+                the_note = null;
+            }
+            /////////////////////////////////////////////////////////////////////////////////////////
+            // remaining - getters
+
+            public string the_idx {
+                get {
+                    if (is_note_header)
+                        return "";
+                    int idx = 0;
+
+                    for (int other_idx = 0; other_idx < self.notesCtrl.GetItemCount(); ++other_idx) {
+                        var i = self.notesCtrl.GetItem(other_idx).RowObject as note_item;
+                        if (i == this)
+                            break;
+
+                        if (!i.is_note_header)
+                            ++idx;
+                    }
+
+                    return "" + (idx + 1);
+                }
+            }
+
+            public string the_line {
+                get {
+                    return the_note != null ? the_note.author_initials : "" + (self.lines_[line_id].idx + 1);
+                }
+            }
+
 
             public int indent {
                 get {
@@ -130,11 +203,14 @@ namespace lw_common.ui {
             }
 
 
-            public string text {
+            public string the_text {
                 get {
-                    // gets the note that is printed on screen - on the list
-                    // ignore #... at beginning of msg
-                    return "";
+                    if (the_note != null) {
+                        // gets the note that is printed on screen - on the list
+                        // ignore #... at beginning of msg
+                        return the_note.note_text;
+                    } else
+                        return self.lines_[line_id].msg;
                 }
             }
 
@@ -149,49 +225,47 @@ namespace lw_common.ui {
                     return Color.Blue;                     
                 }
             }
-
-            public note_item(note_ctrl self, note n, int unique_id, int reply_id, int line_id) {
-                the_note = n;
-                this.self = self;
-                this.note_id = unique_id;
-                this.line_id = line_id;
-                this.reply_id = reply_id;
-            }
-
-            public note_item(note_ctrl self, int line_id, bool is_cur_line) {
-                this.self = self;
-                this.line_id = line_id;
-                this.is_cur_line = is_cur_line;
-                the_note = null;
-            }
-
         }
 
         private Dictionary<int, line> lines_ = new Dictionary<int,line>();
-        // this is always the last note - in case we're on a NEW line, this will contain the new line (so that the user visually sees what he's about to make a note on)
-        //                                if we're on an existing line, this wil always be null
-        private note_item last_note_ = null;
-
-        // this is the note corresponding to the selected line in the current view/full log
-        private note_item selected_log_line_ = null;
 
         // the are kept as if they were sorted by line, then time - first the line (header), then all the notes related to that line
         private List<note_item> notes_sorted_by_line_id_ = new List<note_item>();
 
         private int next_note_id_ = 0, next_line_id_ = 0;
 
-        private line cur_line_ = null;
+        // special ID for the current line
+        private int cur_line_id_ = int.MaxValue - 1;
+
+        private string file_name_ = "";
+
+        private int ignore_change_ = 0;
+
+        private line cur_line {
+            get { return lines_[cur_line_id_]; }
+        }
 
         private bool dirty_ = false;
 
         public note_ctrl() {
             InitializeComponent();
+            lines_.Add(cur_line_id_, new line());
+            update_cur_note_controls();
         }
 
         private void note_ctrl_Load(object sender, EventArgs e) {
         }
 
-
+        // the controls we can navigate through with TAB hotkey
+        public List<Control> tab_navigatable_controls {
+            get {
+                var nav = new List<Control>();
+                nav.Add(notesCtrl);
+                if ( curNote.Enabled)
+                    nav.Add(curNote);
+                return nav;
+            }
+        }
 
         public void set_author(string author_name, string author_initials, Color notes_color) {
             author_name_ = author_name;
@@ -209,11 +283,13 @@ namespace lw_common.ui {
 
         // helper - add to the currently selected line
         public int add_note(note n, int note_id, int reply_to_note_id) {
-            Debug.Assert(cur_line_ != null);
-            if (cur_line_ == null)
+            Debug.Assert(cur_line != null);
+            if (cur_line == null)
                 return -1;
 
-            return add_note(cur_line_, n, note_id, reply_to_note_id);
+            line new_ = new line();
+            new_.copy_from(cur_line);
+            return add_note(new_, n, note_id, reply_to_note_id);
         }
 
         // returns the ID assigned to this note that we're adding;
@@ -224,27 +300,17 @@ namespace lw_common.ui {
         public int add_note(line l, note n, int note_id, int reply_to_note_id) {
             // a note: can be added on a line, or as reply to someone
             // new notes: always at the end
-            if (selected_log_line_ == null) {
-                // the user has not selected any line at this time
-                Debug.Assert(false);
-                return -1;
-            }
 
             int line_id = -1;
             var found_line = lines_.FirstOrDefault(x => x.Value == l);
-            if (found_line.Value == null) {
-                // could not find the line
-                if (cur_line_ == l) {
-                    // it's the current line
-                    line_id = ++next_line_id_;
-                    lines_.Add(line_id, l);
-                } 
-                else {
-                    Debug.Assert(false);
-                    return -1;
-                }
-            }
-            line_id = found_line.Key;
+            Debug.Assert(found_line.Value != null);
+            if (cur_line == l) {
+                // it's the current line
+                line_id = ++next_line_id_;
+                lines_.Add(line_id, l);
+            } 
+            else 
+                line_id = found_line.Key;
 
             note_id = note_id >= 0 ? note_id : ++next_note_id_;
             // ... this note should not exist already
@@ -253,14 +319,16 @@ namespace lw_common.ui {
                 // note we're replying to should exist already
                 Debug.Assert( notes_sorted_by_line_id_.Count(x => x.note_id == reply_to_note_id) == 1);
 
-            var new_ = new note_item(this, n, note_id, reply_to_note_id, selected_log_line_.line_id);
-            if (next_note_id_ <= note_id)
-                next_note_id_ = note_id + 1;
+            var new_ = new note_item(this, n, note_id, reply_to_note_id, line_id);
+            if (next_note_id_ < note_id)
+                next_note_id_ = note_id;
 
             bool inserted = false;
             if (reply_to_note_id > 0) {
                 // add this note as the last reply to this reply note
                 var note = notes_sorted_by_line_id_.FirstOrDefault(x => x.line_id == line_id);
+                // when it's a reply, we need to find the original note!
+                Debug.Assert(note != null);
                 if (note != null) {
                     Debug.Assert(note.is_note_header);
                     // everything following this, is related to this line (until we get to next line)
@@ -285,6 +353,23 @@ namespace lw_common.ui {
                         } else
                             // went to next line
                             break;
+                }
+            }
+            else {
+                var note = notes_sorted_by_line_id_.FirstOrDefault(x => x.line_id == line_id);
+                if (note != null) {
+                    // in this case, there may be other notes - we're adding it to the end (as last note on this line)
+                    Debug.Assert(note.is_note_header);
+                    int idx = notes_sorted_by_line_id_.IndexOf(note);
+                    for ( ; idx < notes_sorted_by_line_id_.Count; ++idx)
+                        if ( idx < notes_sorted_by_line_id_.Count - 1)
+                            if (notes_sorted_by_line_id_[idx + 1].line_id != line_id)
+                                break;
+                    if ( idx < notes_sorted_by_line_id_.Count)
+                        notes_sorted_by_line_id_.Insert(idx, new_);
+                    else 
+                        notes_sorted_by_line_id_.Add(new_);
+                    inserted = true;
                 } else {
                     // this is the first entry that relates to this line
                     // ... find the note beore which we should insert ourselves
@@ -292,34 +377,70 @@ namespace lw_common.ui {
                     if (note != null) {
                         int idx = notes_sorted_by_line_id_.IndexOf(note);
                         notes_sorted_by_line_id_.Insert(idx, new_);
-                        inserted = true;
                     } else {
                         notes_sorted_by_line_id_.Add(new_);
-                        inserted = true;
                     }
+                    inserted = true;
                 }
             }
             Debug.Assert(inserted);
 
             // update the UI
             if (inserted)
-                update_ui();
+                add_note_to_ui(new_);
 
             dirty_ = true;
             return new_.note_id;
         }
 
-        private void update_ui() {
-            
-            // care about sorting
-            // also, new lines are always added last!!!!!!!!!!!!!!
-            // also, care about selected_log_line_ / last_line_ ???
+        private void add_note_to_ui(note_item last_note) {
+            bool add_to_ui = !last_note.the_note.deleted || (last_note.the_note.deleted && showDeletedLines.Checked);
+            if (!add_to_ui)
+                return;
 
-                if (showDeletedLines.Checked)
-                    ;
+            int insert_idx = -1;
+            if (last_note.reply_id >= 0) {
+                // it's a note on reply to another note
+                for (int note_idx = 0; note_idx < notesCtrl.GetItemCount() && insert_idx < 0; ++note_idx) {
+                    var i = notesCtrl.GetItem(note_idx).RowObject as note_item;
+                    if (i.note_id == last_note.reply_id) 
+                        insert_idx = note_idx + 1;
+                }
+            } else {
+                // new note
+                for (int note_idx = 0; note_idx < notesCtrl.GetItemCount(); ++note_idx) {
+                    var i = notesCtrl.GetItem(note_idx).RowObject as note_item;
+                    int line_id = i.line_id != cur_line_id_ ? i.line_id : find_cur_line_id();
+                    
+                    if (line_id == last_note.line_id) {
+                        insert_idx = note_idx + 1;
+                        bool insert_at_the_end = i.line_id == cur_line_id_;
+                        if (insert_at_the_end) {
+                            // we need to update the line, so that it does not point to current-line anymore
+                            i.line_id = line_id;
+                        }
+                    }
+                }
+            }
+            Debug.Assert( insert_idx >= 0);
+            if (insert_idx >= 0) {
+                ++ignore_change_;
+                notesCtrl.InsertObjects(insert_idx, new object[] {last_note});
+                // now, select it as well
+                notesCtrl.SelectObject(last_note);
+                --ignore_change_;
+            }
+        }
 
-            // if i delete a note from line ,and no other notes on that line:
-            // if it was from current user, delete the line note as well ; otherwise, just hide it
+        private int find_cur_line_id() {
+            // the last line - is always the last
+            Debug.Assert(lines_.Count >= 2);
+            foreach ( var l in lines_)
+                if (l.Key != cur_line_id_ && l.Value == cur_line)
+                    return l.Key;
+            // we could not find it!
+            Debug.Assert(false);
+            return cur_line_id_;
         }
 
 
@@ -328,22 +449,61 @@ namespace lw_common.ui {
             //       delete your note: it's fully deleted + copied to clipboard -> ALL THE notes you delete - keep them internally and the user should be able to access them
             //       (just in case he did a mistake)
 
+            // if i delete a note from line ,and no other notes on that line:
+            // if it was from current user, delete the line note as well ; otherwise, just hide it
             dirty_ = true;
         }
 
         // this sets the line the user is viewing - by default, this is what the user is commenting on
-        public void set_cur_line(line l) {
-            dirty_ = true;
-            // if no notes, perhaps show the current line in teh view - just for the user to see what he would be commenting on? tothink
-            // perhaps I should always show the current line as the last line possible (so that the user would know he'd be editing it?)
+        public void set_current_line(line l) {
+            cur_line.copy_from(l);
 
-            //  ......... if last line is "is_cur_line", update it; otherwise, insert
+            /* Possibilities:
+            
+            - case 1 - there are already notes on this line
 
-            // if already there + selection relates to it, don't change the selection 
-            cur_line_ = l;
+                1a - there are already notes on this line, and the selection is already one of them
+                1b - there are already notes on this line, and the selection is on another note (or nowhere)
+
+            - case 2 - there are no notes on this line
+            */
+            note_item header = null;
+            for (int idx = 0; idx < notesCtrl.GetItemCount() && header == null ; ++idx) {
+                var i = notesCtrl.GetItem(idx).RowObject as note_item;
+                if (i.is_note_header && lines_[i.line_id].idx == l.idx && !i.is_cur_line)
+                    header = i;
+            }
+
+            bool last_note_is_cur_line = notesCtrl.GetItemCount() > 0 && (notesCtrl.GetItem(notesCtrl.GetItemCount() - 1).RowObject as note_item).is_cur_line;
+            if (header != null) {
+                // already a note on this line, not needed now
+                if (last_note_is_cur_line)
+                    notesCtrl.RemoveObject(notesCtrl.GetItem(notesCtrl.GetItemCount() - 1).RowObject);
+
+                int sel = notesCtrl.SelectedIndex;
+                var sel_item = sel >= 0 ? notesCtrl.GetItem(sel).RowObject as note_item : null;
+                if (sel_item != null && sel_item.line_id == header.line_id)
+                    // 1a - on a note from this line
+                    return;
+
+                // 1b - on a note from another note
+                // I will select this note
+                notesCtrl.SelectObject(header);
+            } else {
+                // 2 - no notes on this line
+                if ( !last_note_is_cur_line) 
+                    notesCtrl.AddObject( new note_item(this, cur_line_id_));
+                var last = notesCtrl.GetItem(notesCtrl.GetItemCount() - 1).RowObject as note_item;
+                refresh_note(last);
+
+                if (notesCtrl.SelectedIndex < 0)
+                    // select the "last line"
+                    notesCtrl.SelectedIndex = notesCtrl.GetItemCount() - 1;
+            }
+
+            update_cur_note_controls();
         }
 
-        // when saving a line - save the line index + the view it was in
 
 
 
@@ -366,17 +526,122 @@ namespace lw_common.ui {
         }
 
         public void load(string file_name) {
+            ++ignore_change_;
+            if (file_name_ != "")
+                // in this case, we're loading the notes from somewhere else, save existing first
+                save();
+
+            file_name_ = file_name;
+
+            notes_sorted_by_line_id_.Clear();
+            notesCtrl.ClearObjects();
+            cur_line.clear();
+
+            // if author name = ourselves -> made_by_current_user = true
         
             // update last_note_id and last_line_id
             dirty_ = false;
+            --ignore_change_;
         }
 
         public void save() {
+            // needs to be loaded first
+            if (file_name_ == "")
+                return;
             if (!dirty_)
                 return;
-            // needs to be loaded first
+
+            // don't save the cur_line
+
             dirty_ = false;
         }
+
+        private void refresh_note(note_item i) {
+            notesCtrl.RefreshObject(i);
+            // FIXME fg + bg - see about whether is deleted or not
+        }
+
+        private void curNote_KeyDown(object sender, KeyEventArgs e) {
+            string s = util.key_to_action(e);
+            if (s == "return") {
+                // add note
+                string note_text = curNote.Text.Trim();
+                if (note_text == "")
+                    return;
+                // see if I'm on a user's note (thus, i'm updating), or on a line (thus, i'm adding a note for that line)
+                int reply_to_note_id = -1;
+                int sel = notesCtrl.SelectedIndex;
+                if (sel >= 0) {
+                    var i = notesCtrl.GetItem(sel).RowObject as note_item;
+                    bool is_edit = i.the_note != null && i.the_note.made_by_current_user;
+                    if (is_edit) {
+                        dirty_ = true;
+                        i.the_note.note_text = note_text;
+                        refresh_note(i);
+                        return;
+                    }
+                    bool is_reply = i.the_note != null && !i.the_note.made_by_current_user;
+                    if (is_reply)
+                        reply_to_note_id = i.note_id;
+                }
+
+                note new_ = new note() { author_name = author_name_, author_initials = author_initials_, 
+                    author_color = author_color_, note_text = note_text, made_by_current_user = true, is_new = true };
+                add_note(new_, -1, reply_to_note_id);
+            }
+        }
+
+        private void curNote_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
+            string s = util.key_to_action(e);
+            if (s == "return")
+                e.IsInputKey = true;
+        }
+        private void curNote_KeyUp(object sender, KeyEventArgs e) {
+            string s = util.key_to_action(e);
+            if (s == "return") 
+                notesCtrl.Focus();
+        }
+
+        private void notesCtrl_SelectedIndexChanged(object sender, EventArgs e) {
+            if (ignore_change_ > 0)
+                return;
+
+            update_cur_note_controls();
+        }
+
+        private void update_cur_note_controls() {
+            int sel = notesCtrl.SelectedIndex;
+
+            // note: the only time when sel < 0 is possible only when the user hasn't selected any line yet
+            //       (thus, even cur_line is pointing nowhere)
+            curNote.Enabled = sel >= 0;
+            addNoteToLine.Visible = sel >= 0;
+            addNoteToLineLabel.Visible = sel >= 0;
+
+            addNoteToLine.Text = "";
+            if (sel >= 0) {
+                var i = notesCtrl.GetItem(sel).RowObject as note_item;
+                if ( i.the_note != null)
+                    addNoteToLineLabel.Text = i.the_note.made_by_current_user ? "Edit Note to Line" : "Reply to Note from " + i.the_note.author_initials;
+                else
+                    addNoteToLineLabel.Text = "Add Note to Line";
+                addNoteToLine.Text = "[" + (lines_[i.line_id].idx + 1) + "]";
+            }
+        }
+
+        private void saveTimer_Tick(object sender, EventArgs e) {
+            if (dirty_)
+                save();
+        }
+
+        private void notesCtrl_Enter(object sender, EventArgs e) {
+            curNote.BackColor = Color.AliceBlue;
+        }
+
+        private void notesCtrl_Leave(object sender, EventArgs e) {
+            curNote.BackColor = Color.White;
+        }
+
 
     }
 }

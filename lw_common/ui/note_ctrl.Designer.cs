@@ -23,11 +23,12 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.notesCtrl = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.label1 = new System.Windows.Forms.Label();
+            this.addNoteToLineLabel = new System.Windows.Forms.Label();
             this.addNoteToLine = new System.Windows.Forms.Label();
             this.showDeletedLines = new System.Windows.Forms.CheckBox();
             this.curNote = new System.Windows.Forms.TextBox();
@@ -35,6 +36,7 @@
             this.selectColor = new System.Windows.Forms.Button();
             this.sortByTime = new System.Windows.Forms.RadioButton();
             this.sortByLine = new System.Windows.Forms.RadioButton();
+            this.saveTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.notesCtrl)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,44 +52,52 @@
             this.olvColumn1,
             this.olvColumn2,
             this.olvColumn3});
+            this.notesCtrl.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.notesCtrl.FullRowSelect = true;
+            this.notesCtrl.HideSelection = false;
             this.notesCtrl.Location = new System.Drawing.Point(0, 0);
             this.notesCtrl.Margin = new System.Windows.Forms.Padding(4);
+            this.notesCtrl.MultiSelect = false;
             this.notesCtrl.Name = "notesCtrl";
+            this.notesCtrl.ShowGroups = false;
             this.notesCtrl.Size = new System.Drawing.Size(431, 443);
             this.notesCtrl.TabIndex = 0;
             this.notesCtrl.UseCompatibleStateImageBehavior = false;
             this.notesCtrl.View = System.Windows.Forms.View.Details;
+            this.notesCtrl.SelectedIndexChanged += new System.EventHandler(this.notesCtrl_SelectedIndexChanged);
+            this.notesCtrl.Enter += new System.EventHandler(this.notesCtrl_Enter);
+            this.notesCtrl.Leave += new System.EventHandler(this.notesCtrl_Leave);
             // 
             // olvColumn1
             // 
-            this.olvColumn1.AspectName = "idx";
+            this.olvColumn1.AspectName = "the_idx";
             this.olvColumn1.IsEditable = false;
             this.olvColumn1.Text = " ";
             this.olvColumn1.Width = 40;
             // 
             // olvColumn2
             // 
-            this.olvColumn2.AspectName = "line";
+            this.olvColumn2.AspectName = "the_line";
             this.olvColumn2.IsEditable = false;
             this.olvColumn2.Text = "Line";
             this.olvColumn2.Width = 50;
             // 
             // olvColumn3
             // 
-            this.olvColumn3.AspectName = "note";
+            this.olvColumn3.AspectName = "the_text";
             this.olvColumn3.FillsFreeSpace = true;
             this.olvColumn3.IsEditable = false;
             this.olvColumn3.Text = "Note";
             // 
-            // label1
+            // addNoteToLineLabel
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-3, 478);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(114, 17);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Add Note to Line";
+            this.addNoteToLineLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.addNoteToLineLabel.AutoSize = true;
+            this.addNoteToLineLabel.Location = new System.Drawing.Point(-3, 478);
+            this.addNoteToLineLabel.Name = "addNoteToLineLabel";
+            this.addNoteToLineLabel.Size = new System.Drawing.Size(114, 17);
+            this.addNoteToLineLabel.TabIndex = 1;
+            this.addNoteToLineLabel.Text = "Add Note to Line";
             // 
             // addNoteToLine
             // 
@@ -120,6 +130,9 @@
             this.curNote.Name = "curNote";
             this.curNote.Size = new System.Drawing.Size(406, 151);
             this.curNote.TabIndex = 4;
+            this.curNote.KeyDown += new System.Windows.Forms.KeyEventHandler(this.curNote_KeyDown);
+            this.curNote.KeyUp += new System.Windows.Forms.KeyEventHandler(this.curNote_KeyUp);
+            this.curNote.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.curNote_PreviewKeyDown);
             // 
             // label3
             // 
@@ -148,12 +161,12 @@
             this.sortByTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.sortByTime.Appearance = System.Windows.Forms.Appearance.Button;
             this.sortByTime.AutoSize = true;
+            this.sortByTime.Enabled = false;
             this.sortByTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sortByTime.Location = new System.Drawing.Point(283, 450);
             this.sortByTime.Name = "sortByTime";
             this.sortByTime.Size = new System.Drawing.Size(74, 23);
             this.sortByTime.TabIndex = 7;
-            this.sortByTime.TabStop = true;
             this.sortByTime.Text = "Sort by Time";
             this.sortByTime.UseVisualStyleBackColor = true;
             // 
@@ -162,6 +175,7 @@
             this.sortByLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.sortByLine.Appearance = System.Windows.Forms.Appearance.Button;
             this.sortByLine.AutoSize = true;
+            this.sortByLine.Checked = true;
             this.sortByLine.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sortByLine.Location = new System.Drawing.Point(358, 450);
             this.sortByLine.Name = "sortByLine";
@@ -170,6 +184,12 @@
             this.sortByLine.TabStop = true;
             this.sortByLine.Text = "Sort by Line";
             this.sortByLine.UseVisualStyleBackColor = true;
+            // 
+            // saveTimer
+            // 
+            this.saveTimer.Enabled = true;
+            this.saveTimer.Interval = 1000;
+            this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
             // note_ctrl
             // 
@@ -181,7 +201,7 @@
             this.Controls.Add(this.curNote);
             this.Controls.Add(this.showDeletedLines);
             this.Controls.Add(this.addNoteToLine);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.addNoteToLineLabel);
             this.Controls.Add(this.notesCtrl);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -200,7 +220,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn1;
         private BrightIdeasSoftware.OLVColumn olvColumn2;
         private BrightIdeasSoftware.OLVColumn olvColumn3;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label addNoteToLineLabel;
         private System.Windows.Forms.Label addNoteToLine;
         private System.Windows.Forms.CheckBox showDeletedLines;
         private System.Windows.Forms.TextBox curNote;
@@ -208,5 +228,6 @@
         private System.Windows.Forms.Button selectColor;
         private System.Windows.Forms.RadioButton sortByTime;
         private System.Windows.Forms.RadioButton sortByLine;
+        private System.Windows.Forms.Timer saveTimer;
     }
 }

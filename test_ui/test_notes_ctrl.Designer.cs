@@ -23,8 +23,51 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.dummyView = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.notes = new lw_common.ui.note_ctrl();
+            ((System.ComponentModel.ISupportInitialize)(this.dummyView)).BeginInit();
             this.SuspendLayout();
+            // 
+            // dummyView
+            // 
+            this.dummyView.AllColumns.Add(this.olvColumn1);
+            this.dummyView.AllColumns.Add(this.olvColumn2);
+            this.dummyView.AllColumns.Add(this.olvColumn3);
+            this.dummyView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn1,
+            this.olvColumn2,
+            this.olvColumn3});
+            this.dummyView.FullRowSelect = true;
+            this.dummyView.Location = new System.Drawing.Point(431, 3);
+            this.dummyView.Name = "dummyView";
+            this.dummyView.ShowGroups = false;
+            this.dummyView.Size = new System.Drawing.Size(332, 461);
+            this.dummyView.TabIndex = 1;
+            this.dummyView.UseCompatibleStateImageBehavior = false;
+            this.dummyView.View = System.Windows.Forms.View.Details;
+            this.dummyView.SelectedIndexChanged += new System.EventHandler(this.dummyView_SelectedIndexChanged);
+            // 
+            // olvColumn1
+            // 
+            this.olvColumn1.AspectName = "idx";
+            this.olvColumn1.IsEditable = false;
+            this.olvColumn1.Text = "idx";
+            // 
+            // olvColumn2
+            // 
+            this.olvColumn2.AspectName = "view";
+            this.olvColumn2.IsEditable = false;
+            this.olvColumn2.Text = "view";
+            // 
+            // olvColumn3
+            // 
+            this.olvColumn3.AspectName = "msg";
+            this.olvColumn3.FillsFreeSpace = true;
+            this.olvColumn3.IsEditable = false;
+            this.olvColumn3.Text = "msg";
             // 
             // notes
             // 
@@ -39,10 +82,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(643, 476);
+            this.ClientSize = new System.Drawing.Size(1063, 476);
+            this.Controls.Add(this.dummyView);
             this.Controls.Add(this.notes);
             this.Name = "test_notes_ctrl";
             this.Text = "Test Notes control";
+            ((System.ComponentModel.ISupportInitialize)(this.dummyView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -50,6 +95,10 @@
         #endregion
 
         private lw_common.ui.note_ctrl notes;
+        private BrightIdeasSoftware.ObjectListView dummyView;
+        private BrightIdeasSoftware.OLVColumn olvColumn1;
+        private BrightIdeasSoftware.OLVColumn olvColumn2;
+        private BrightIdeasSoftware.OLVColumn olvColumn3;
     }
 }
 

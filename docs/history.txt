@@ -1,9 +1,6 @@
 
 -todo: article license is GPL3
 
-- todo: 
-  test notes_ctrl
-
 - todo: retest creating a new filter (copy of existing) - does not seem to work correctly
  - (creating a new filter) sometimes it shows pretty much nothing - works quite badly
 
@@ -16,6 +13,12 @@
     - i think the issue happens only when i navigate with tab
 	- also, when the column is not selected, curFilter should be disabled
   [NOTE] I think i saved this, but need to properly retest
+
+
+
+
+1.1.3b
+- small note_ctrl improvements - add_note tested a bit
 
 
 1.1.3a
