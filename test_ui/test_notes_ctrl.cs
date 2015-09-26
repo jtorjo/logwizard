@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,10 @@ namespace test_ui {
         public test_notes_ctrl() {
             InitializeComponent();
             notes.set_author("John Torjo", "jt", Color.Blue);
+            //notes.set_author("Denny", "dd", Color.Blue);
+            //notes.set_author("Vlad", "vv", Color.Blue);
+
+            notes.on_note_selected = on_note_selected;
 
             dummyView.AddObject( new dummy_note() { idx = 5, view = "err", msg = "this is error 1" });
             dummyView.AddObject( new dummy_note() { idx = 6, view = "err", msg = "alig is in the house" });
@@ -43,12 +48,26 @@ namespace test_ui {
             dummyView.AddObject( new dummy_note() { idx = 156, view = "err", msg = "this is the last error" });
         }
 
+        private void on_note_selected(int line_idx, string msg) {
+            for ( int idx = 0; idx < dummyView.GetItemCount(); ++idx)
+                if ((dummyView.GetItem(idx).RowObject as dummy_note).idx == line_idx+1) {
+                    dummyView.SelectedIndex = idx;
+                    return;
+                }
+
+            Debug.Assert(false);
+        }
+
         private void dummyView_SelectedIndexChanged(object sender, EventArgs e) {
             int sel = dummyView.SelectedIndex;
             if (sel >= 0) {
                 var note = dummyView.GetItem(sel).RowObject as dummy_note;
                 notes.set_current_line( new note_ctrl.line { idx = note.idx -1, msg = note.msg, view_name = note.view });
             }
+        }
+
+        private void undo_Click(object sender, EventArgs e) {
+            notes.undo();
         }
     }
 }

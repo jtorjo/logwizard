@@ -56,6 +56,9 @@ namespace lw_common {
         public int selected_row_idx = -1;
         public int full_log_splitter_pos = -1;
 
+        public bool show_left_pane = true;
+        public bool show_notes = false;
+
         public enum show_row_type {
             msg_only, 
             // ... this makes sense only for the full-log
@@ -85,6 +88,9 @@ namespace lw_common {
             selected_view = other.selected_view;
             selected_row_idx = other.selected_row_idx;
             full_log_splitter_pos = other.full_log_splitter_pos;
+
+            show_left_pane = other.show_left_pane;
+            show_notes = other.show_notes;
         }
 
         public show_row_type show_row_for_view(string name) {
@@ -142,6 +148,9 @@ namespace lw_common {
             app.load_save(load, ref log_name, prefix + "log_name");
             app.load_save(load, ref selected_row_idx, prefix + "selected_row_idx", -1);
             app.load_save(load, ref full_log_splitter_pos, prefix + "full_log_splitter_pos", -1);
+
+            app.load_save(load, ref show_left_pane, prefix + ".show_left_pane", true);
+            app.load_save(load, ref show_notes, "show_notes", false);
 
             if (load)
                 load_show_row(prefix);

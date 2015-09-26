@@ -104,6 +104,10 @@ namespace lw_common.ui {
             InitializeComponent();
         }
 
+        public void undo() {
+            // FIXME
+        }
+
         // the controls we can navigate through with TAB hotkey
         public List<Control> tab_navigatable_controls {
             get {

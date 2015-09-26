@@ -108,6 +108,8 @@ namespace LogWizard
  
             toggle_enabled_dimmed,
 
+            undo,
+
             none,
         }
 
@@ -1894,6 +1896,8 @@ namespace LogWizard
                 if ( filtCtrl.can_handle_toggle_enable_dimmed_now)
                     return action_type.toggle_enabled_dimmed;
                 break;
+            case "ctrl-z":
+                return action_type.undo;
             }
 
             return action_type.none;
@@ -2120,6 +2124,11 @@ namespace LogWizard
                 filtCtrl.toggle_enabled_dimmed();
                 break;
 
+            case action_type.undo:
+                if (global_ui.show_filter)
+                    filtCtrl.undo();
+                else if ( global_ui.show_notes)
+                break;
             default:
                 Debug.Assert(false);
                 break;

@@ -28,6 +28,7 @@
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.notes = new lw_common.ui.note_ctrl();
+            this.undo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dummyView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -41,10 +42,11 @@
             this.olvColumn2,
             this.olvColumn3});
             this.dummyView.FullRowSelect = true;
+            this.dummyView.HideSelection = false;
             this.dummyView.Location = new System.Drawing.Point(431, 3);
             this.dummyView.Name = "dummyView";
             this.dummyView.ShowGroups = false;
-            this.dummyView.Size = new System.Drawing.Size(332, 461);
+            this.dummyView.Size = new System.Drawing.Size(332, 433);
             this.dummyView.TabIndex = 1;
             this.dummyView.UseCompatibleStateImageBehavior = false;
             this.dummyView.View = System.Windows.Forms.View.Details;
@@ -78,11 +80,22 @@
             this.notes.Size = new System.Drawing.Size(411, 460);
             this.notes.TabIndex = 0;
             // 
+            // undo
+            // 
+            this.undo.Location = new System.Drawing.Point(688, 441);
+            this.undo.Name = "undo";
+            this.undo.Size = new System.Drawing.Size(75, 23);
+            this.undo.TabIndex = 2;
+            this.undo.Text = "Undo";
+            this.undo.UseVisualStyleBackColor = true;
+            this.undo.Click += new System.EventHandler(this.undo_Click);
+            // 
             // test_notes_ctrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1063, 476);
+            this.ClientSize = new System.Drawing.Size(776, 476);
+            this.Controls.Add(this.undo);
             this.Controls.Add(this.dummyView);
             this.Controls.Add(this.notes);
             this.Name = "test_notes_ctrl";
@@ -99,6 +112,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn1;
         private BrightIdeasSoftware.OLVColumn olvColumn2;
         private BrightIdeasSoftware.OLVColumn olvColumn3;
+        private System.Windows.Forms.Button undo;
     }
 }
 

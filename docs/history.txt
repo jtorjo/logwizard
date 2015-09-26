@@ -16,6 +16,9 @@
 
 
 
+1.1.3c
+- note_ctrl - more testing/bug fixing
+
 
 1.1.3b
 - small note_ctrl improvements - add_note tested a bit
