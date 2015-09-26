@@ -490,8 +490,45 @@ namespace lw_common.ui {
         }
 
 
-        public void del_note(int note_id) {
-            // FIXME
+        private void toggle_del_note(int note_id, bool delete_replies_as_well) {
+            var toggle_note = notes_sorted_by_line_id_.FirstOrDefault(x => x.note_id == note_id);
+            if (toggle_note == null) {
+                Debug.Assert(false);
+                return;
+            }
+
+            if (toggle_note.the_note == null) {
+                // in this case, pressed on a line header - toggle all its sub-children
+                foreach ( var n in notes_sorted_by_line_id_.ToList())
+                    if ( n.line_id == toggle_note.line_id && n.the_note != null) 
+                        toggle_del_note(n.note_id, false);
+                return;
+            }
+
+            // here, we're sure we're on a note (not on a header line)
+            dirty_ = true;
+
+            // UI - refresh this note's color or delete it if needed
+            toggle_note.the_note.deleted = !toggle_note.the_note.deleted;
+            for (int idx = 0; idx < notesCtrl.GetItemCount(); ++idx) {
+                var i = notesCtrl.GetItem(idx).RowObject as note_item;
+                if (i.note_id == note_id) {
+                    if (!showDeletedLines.Checked) {
+                        Debug.Assert( toggle_note.the_note.deleted);
+                        notesCtrl.RemoveObject(i);
+                    } else
+                        refresh_note(i);
+                    break;
+                }
+            }
+            
+            // UI - if this is a single note on a line, delete it altogether
+            if (toggle_note.the_note.deleted && !showDeletedLines.Checked) {
+                int count = notes_sorted_by_line_id_.Count(x => x.line_id == toggle_note.line_id);
+
+            }
+
+
 
             // note: delete someone else's note -> it's grayed (hidden)
             //       delete your note: it's fully deleted + copied to clipboard -> ALL THE notes you delete - keep them internally and the user should be able to access them
@@ -499,7 +536,6 @@ namespace lw_common.ui {
 
             // if i delete a note from line ,and no other notes on that line:
             // if it was from current user, delete the line note as well ; otherwise, just hide it
-            dirty_ = true;
         }
 
         // this sets the line the user is viewing - by default, this is what the user is commenting on
@@ -802,6 +838,10 @@ namespace lw_common.ui {
 
         private void notesCtrl_Leave(object sender, EventArgs e) {
             curNote.BackColor = Color.White;
+        }
+
+        private void showDeletedLines_CheckedChanged(object sender, EventArgs e) {
+            // optimize - if nothing deleted
         }
 
 

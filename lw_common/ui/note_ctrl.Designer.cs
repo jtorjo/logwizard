@@ -120,6 +120,7 @@
             this.showDeletedLines.TabIndex = 3;
             this.showDeletedLines.Text = "Show Deleted Lines";
             this.showDeletedLines.UseVisualStyleBackColor = true;
+            this.showDeletedLines.CheckedChanged += new System.EventHandler(this.showDeletedLines_CheckedChanged);
             // 
             // curNote
             // 
