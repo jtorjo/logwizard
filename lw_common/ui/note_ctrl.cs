@@ -100,8 +100,6 @@ namespace lw_common.ui {
                 view_name = msg = "";
             }
 
-            public string guid = "";
-
             public int idx = -1;
             public string view_name = "";
             public string msg = "";
@@ -109,8 +107,6 @@ namespace lw_common.ui {
 
         private class note_item {
             public readonly note_ctrl self = null;
-
-            public string guid = "";
 
             // if true, someone else made this note, and we just merged it
             public bool is_merged = false;
@@ -122,13 +118,14 @@ namespace lw_common.ui {
             public note the_note = null;
 
             // each note has a unique ID -this can be used when adding a note that is in reply to someone
-            public readonly int note_id;
+            public readonly string note_id;
 
-            // in case this is a note that is in reply to another note, this contains the ID of the other note we're replying to
-            public readonly int reply_id;
+            // in case this is a note that is in reply to another note, this contains the ID of the other note we're replying to;
+            // if empty, it's not a reply
+            public readonly string reply_id;
 
             // pointer to a line - each line has a unique ID (different from its index)
-            private int line_id_;
+            private string line_id_;
 
             // when was this note added (could be useful when sorting by time)
             public DateTime utc_added = DateTime.UtcNow;
@@ -142,7 +139,7 @@ namespace lw_common.ui {
                 get { return line_id_ == self.cur_line_id_; }
             }
 
-            public int line_id {
+            public string line_id {
                 get { return line_id_; }
                 set {
                     // you can only reset the line ID - if it is the current line
@@ -154,7 +151,7 @@ namespace lw_common.ui {
             /////////////////////////////////////////////////////////////////////////////////////////
             // Constructor
 
-            public note_item(note_ctrl self, note n, int unique_id, int reply_id, int line_id, bool deleted) {
+            public note_item(note_ctrl self, note n, string unique_id, string reply_id, string line_id, bool deleted) {
                 Debug.Assert( self.lines_.ContainsKey(line_id));
 
                 the_note = n;
@@ -165,13 +162,13 @@ namespace lw_common.ui {
                 this.deleted = deleted;
             }
 
-            public note_item(note_ctrl self, int unique_id, int line_id, bool deleted) {
+            public note_item(note_ctrl self, string unique_id, string line_id, bool deleted) {
                 Debug.Assert( self.lines_.ContainsKey(line_id));
 
                 this.self = self;
                 note_id = unique_id;
                 line_id_ = line_id;
-                reply_id = -1;
+                reply_id = "";
                 this.deleted = deleted;
                 the_note = null;
             }
@@ -208,9 +205,9 @@ namespace lw_common.ui {
                 get {
                     int ind = 0;
                     note_item cur = this;
-                    while (cur.reply_id > 0) {
+                    while (cur.reply_id != "") {
                         ++ind;
-                        cur = self.notes_sorted_by_line_id_.FirstOrDefault(x => x.note_id == reply_id);
+                        cur = self.notes_sorted_by_line_index_.FirstOrDefault(x => x.note_id == reply_id);
                         if (cur == null)
                             break;
                     }
@@ -243,15 +240,13 @@ namespace lw_common.ui {
             }
         }
 
-        private Dictionary<int, line> lines_ = new Dictionary<int,line>();
+        private Dictionary<string, line> lines_ = new Dictionary<string,line>();
 
         // the are kept as if they were sorted by line, then time - first the line (header), then all the notes related to that line
-        private List<note_item> notes_sorted_by_line_id_ = new List<note_item>();
-
-        private int next_note_id_ = 0, next_line_id_ = 0;
+        private List<note_item> notes_sorted_by_line_index_ = new List<note_item>();
 
         // special ID for the current line
-        private int cur_line_id_ = int.MaxValue - 1;
+        private string cur_line_id_ = "cur_line";
 
         private string file_name_ = "";
 
@@ -267,7 +262,15 @@ namespace lw_common.ui {
 
         public on_note_selected_func on_note_selected;
 
-
+        // use friendly GUIDs - use numbers instead
+        private static bool use_friendly_guids = false;// util.is_debug;
+        private static long next_guid_ = DateTime.Now.Ticks;
+        private static string next_guid {
+            get {
+                string next = use_friendly_guids ? "" + ++next_guid_ : "{" + Guid.NewGuid().ToString() + "}";
+                return next;
+            }
+        }
 
 
 
@@ -296,7 +299,7 @@ namespace lw_common.ui {
             author_initials_ = author_initials;
             author_color_ = notes_color;
             // update anything that was added by me before the changes were made
-            foreach (note_item n in notes_sorted_by_line_id_)
+            foreach (note_item n in notes_sorted_by_line_index_)
                 if (n.the_note != null && n.the_note.made_by_current_user) {
                     n.the_note.author_name = author_name;
                     n.the_note.author_initials = author_initials;
@@ -306,19 +309,17 @@ namespace lw_common.ui {
         }
 
         // the only time this can get called is when loading an already saved configuration
-        private note_item add_note_header(int line_id, int note_id, bool deleted) {
-            Debug.Assert(note_id >= 0);
+        private note_item add_note_header(string line_id, string note_id, bool deleted) {
+            Debug.Assert(note_id != "");
             Debug.Assert(line_id != cur_line_id_ && lines_.ContainsKey(line_id));
             var new_ = new note_item(this, note_id, line_id, deleted );
-            if (next_note_id_ < note_id)
-                next_note_id_ = note_id;
-            notes_sorted_by_line_id_.Add(new_);
+            notes_sorted_by_line_index_.Add(new_);
             add_note_to_ui(new_);
             return new_;
         }
 
         // helper - add to the currently selected line
-        private note_item add_note(note n, int note_id, int reply_to_note_id, bool deleted) {
+        private note_item add_note(note n, string note_id, string reply_to_note_id, bool deleted) {
             Debug.Assert(cur_line != null);
             if (cur_line == null) {
                 Debug.Assert(false);
@@ -331,15 +332,15 @@ namespace lw_common.ui {
         }
 
         // returns the ID assigned to this note that we're adding;
-        // if -1, something went wrong
+        // if null, something went wrong
         //
-        // note_id - the unique ID of the note, or -1 if a new unique ID is to be created
+        // note_id - the unique ID of the note, or "" if a new unique ID is to be created
         //           the reason we have this is that we can persist notes (together with their IDs)
-        private note_item add_note(line l, note n, int note_id, int reply_to_note_id, bool deleted) {
+        private note_item add_note(line l, note n, string note_id, string reply_to_note_id, bool deleted) {
             // a note: can be added on a line, or as reply to someone
             // new notes: always at the end
 
-            int line_id = -1;
+            string line_id = "";
             // ... first, try to see if we already have a valid line
             var found_line = lines_.FirstOrDefault(x => x.Key != cur_line_id_ && x.Value == l);
             if ( found_line.Value == null)
@@ -347,47 +348,44 @@ namespace lw_common.ui {
             Debug.Assert(found_line.Value != null);
             if (found_line.Key == cur_line_id_) {
                 // it's the current line
-                line_id = ++next_line_id_;
+                line_id = next_guid;
                 lines_.Add(line_id, l);
             } 
             else 
                 line_id = found_line.Key;
 
-            note_id = note_id >= 0 ? note_id : ++next_note_id_;
+            note_id = note_id != "" ? note_id : next_guid;
             // ... this note should not exist already
-            Debug.Assert( notes_sorted_by_line_id_.Count(x => x.note_id == note_id) == 0);
-            if ( reply_to_note_id >= 0)
+            Debug.Assert( notes_sorted_by_line_index_.Count(x => x.note_id == note_id) == 0);
+            if ( reply_to_note_id != "")
                 // note we're replying to should exist already
-                Debug.Assert( notes_sorted_by_line_id_.Count(x => x.note_id == reply_to_note_id) == 1);
+                Debug.Assert( notes_sorted_by_line_index_.Count(x => x.note_id == reply_to_note_id) == 1);
 
             var new_ = new note_item(this, n, note_id, reply_to_note_id, line_id, deleted);
-            if (next_note_id_ < note_id)
-                next_note_id_ = note_id;
-
             bool inserted = false;
-            if (reply_to_note_id > 0) {
+            if (reply_to_note_id != "") {
                 // add this note as the last reply to this reply note
-                var note = notes_sorted_by_line_id_.FirstOrDefault(x => x.line_id == line_id);
+                var note = notes_sorted_by_line_index_.FirstOrDefault(x => x.line_id == line_id);
                 // when it's a reply, we need to find the original note!
                 Debug.Assert(note != null);
                 if (note != null) {
                     Debug.Assert(note.is_note_header);
                     // everything following this, is related to this line (until we get to next line)
-                    int idx_note = notes_sorted_by_line_id_.IndexOf(note);
-                    for (; idx_note < notes_sorted_by_line_id_.Count && !inserted; idx_note++)
-                        if (notes_sorted_by_line_id_[idx_note].line_id == line_id) {
-                            if (reply_to_note_id > 0) {
+                    int idx_note = notes_sorted_by_line_index_.IndexOf(note);
+                    for (; idx_note < notes_sorted_by_line_index_.Count && !inserted; idx_note++)
+                        if (notes_sorted_by_line_index_[idx_note].line_id == line_id) {
+                            if (reply_to_note_id != "") {
                                 // in this case, look for this note (that we're replying to)
-                                if (notes_sorted_by_line_id_[idx_note].note_id == reply_to_note_id) {
-                                    notes_sorted_by_line_id_.Insert(idx_note + 1, new_);
+                                if (notes_sorted_by_line_index_[idx_note].note_id == reply_to_note_id) {
+                                    notes_sorted_by_line_index_.Insert(idx_note + 1, new_);
                                     inserted = true;
                                 }
                             } else {
                                 // look for the last note about this line, and insert it after that
-                                if ( idx_note < notes_sorted_by_line_id_.Count - 1)
-                                    if (notes_sorted_by_line_id_[idx_note + 1].line_id != line_id) {
+                                if ( idx_note < notes_sorted_by_line_index_.Count - 1)
+                                    if (notes_sorted_by_line_index_[idx_note + 1].line_id != line_id) {
                                         // found the last note that relates to this line
-                                        notes_sorted_by_line_id_.Insert(idx_note + 1, new_);
+                                        notes_sorted_by_line_index_.Insert(idx_note + 1, new_);
                                         inserted = true;                                        
                                     }
                             }
@@ -397,39 +395,39 @@ namespace lw_common.ui {
                 }
             }
             else {
-                var note = notes_sorted_by_line_id_.FirstOrDefault(x => x.line_id == line_id);
+                var note = notes_sorted_by_line_index_.FirstOrDefault(x => x.line_id == line_id);
                 if (note != null) {
                     // in this case, there may be other notes - we're adding it to the end (as last note on this line)
                     Debug.Assert(note.is_note_header);
-                    int idx = notes_sorted_by_line_id_.IndexOf(note);
-                    for ( ; idx < notes_sorted_by_line_id_.Count; ++idx)
-                        if ( idx < notes_sorted_by_line_id_.Count - 1)
-                            if (notes_sorted_by_line_id_[idx + 1].line_id != line_id)
+                    int idx = notes_sorted_by_line_index_.IndexOf(note);
+                    for ( ; idx < notes_sorted_by_line_index_.Count; ++idx)
+                        if ( idx < notes_sorted_by_line_index_.Count - 1)
+                            if (notes_sorted_by_line_index_[idx + 1].line_id != line_id)
                                 break;
-                    if ( idx < notes_sorted_by_line_id_.Count)
-                        notes_sorted_by_line_id_.Insert(idx, new_);
+                    if ( idx < notes_sorted_by_line_index_.Count)
+                        notes_sorted_by_line_index_.Insert(idx, new_);
                     else 
-                        notes_sorted_by_line_id_.Add(new_);
+                        notes_sorted_by_line_index_.Add(new_);
                     inserted = true;
                 } else {
                     // this is the first entry that relates to this line
                     // ... find the note before which we should insert ourselves
                     int line_index = lines_[line_id].idx;
-                    note = notes_sorted_by_line_id_.FirstOrDefault(x => lines_[x.line_id].idx > line_index);
+                    note = notes_sorted_by_line_index_.FirstOrDefault(x => lines_[x.line_id].idx > line_index);
 
-                    var header = new note_item(this,  ++next_note_id_, line_id, deleted);
+                    var header = new note_item(this,  next_guid, line_id, deleted);
                     if (note != null) {
-                        int idx = notes_sorted_by_line_id_.IndexOf(note);
+                        int idx = notes_sorted_by_line_index_.IndexOf(note);
                         bool has_header = note.is_note_header && note.line_id == line_id;
                         if (!has_header) {
-                            notes_sorted_by_line_id_.Insert(idx, header);
-                            notes_sorted_by_line_id_.Insert(idx + 1, new_);
+                            notes_sorted_by_line_index_.Insert(idx, header);
+                            notes_sorted_by_line_index_.Insert(idx + 1, new_);
                         }
                         else 
-                            notes_sorted_by_line_id_.Insert(idx, new_);
+                            notes_sorted_by_line_index_.Insert(idx, new_);
                     } else {
-                        notes_sorted_by_line_id_.Add(header);
-                        notes_sorted_by_line_id_.Add(new_);
+                        notes_sorted_by_line_index_.Add(header);
+                        notes_sorted_by_line_index_.Add(new_);
                     }
                     inserted = true;
                 }
@@ -450,7 +448,7 @@ namespace lw_common.ui {
                 return;
 
             int insert_idx = -1;
-            if (last_note.reply_id >= 0) {
+            if (last_note.reply_id != "") {
                 // it's a note on reply to another note
                 for (int note_idx = 0; note_idx < notesCtrl.GetItemCount() && insert_idx < 0; ++note_idx) {
                     var i = notesCtrl.GetItem(note_idx).RowObject as note_item;
@@ -462,7 +460,7 @@ namespace lw_common.ui {
                 if (!last_note.is_note_header)
                     for (int note_idx = 0; note_idx < notesCtrl.GetItemCount(); ++note_idx) {
                         var i = notesCtrl.GetItem(note_idx).RowObject as note_item;
-                        int line_id = i.line_id != cur_line_id_ ? i.line_id : find_cur_line_id();
+                        string line_id = i.line_id != cur_line_id_ ? i.line_id : find_cur_line_id();
 
                         if (line_id == last_note.line_id) {
                             insert_idx = note_idx + 1;
@@ -488,7 +486,7 @@ namespace lw_common.ui {
             }
         }
 
-        private int find_cur_line_id() {
+        private string find_cur_line_id() {
             // the last line - is always the last
             Debug.Assert(lines_.Count >= 2);
             foreach ( var l in lines_)
@@ -500,8 +498,8 @@ namespace lw_common.ui {
         }
 
 
-        private void toggle_del_note(int note_id) {
-            var toggle_note = notes_sorted_by_line_id_.FirstOrDefault(x => x.note_id == note_id);
+        private void toggle_del_note(string note_id) {
+            var toggle_note = notes_sorted_by_line_index_.FirstOrDefault(x => x.note_id == note_id);
             if (toggle_note == null) {
                 Debug.Assert(false);
                 return;
@@ -509,37 +507,37 @@ namespace lw_common.ui {
 
             dirty_ = true;
 
-            int line_id = notes_sorted_by_line_id_.First(x => x.note_id == note_id).line_id;
-            int same_line_count = notes_sorted_by_line_id_.Count(x => x.line_id == line_id);
+            string line_id = notes_sorted_by_line_index_.First(x => x.note_id == note_id).line_id;
+            int same_line_count = notes_sorted_by_line_index_.Count(x => x.line_id == line_id);
             // at least the line + a note on that line
             Debug.Assert(same_line_count >= 2); 
             bool is_single = same_line_count == 2;
             if (is_single) {
-                foreach (var n in notes_sorted_by_line_id_)
+                foreach (var n in notes_sorted_by_line_index_)
                     if (n.line_id == line_id)
                         n.deleted = !n.deleted;
             }
             else if (toggle_note.the_note == null) {
                 // in this case, pressed on a line header - toggle all its sub-children
-                foreach (var n in notes_sorted_by_line_id_)
+                foreach (var n in notes_sorted_by_line_index_)
                     if (n.line_id == toggle_note.line_id && n.the_note != null)
                         n.deleted = !n.deleted;
             } else {
                 // pressed on a note - find all replies on that note
-                List<int> ids = new List<int>();
+                List<string> ids = new List<string>();
                 ids.Add(note_id);
                 bool reply_found = true;
                 while (reply_found) {
                     reply_found = false;
-                    foreach ( var n in notes_sorted_by_line_id_)
-                        if (ids.Contains(n.reply_id)) {
+                    foreach ( var n in notes_sorted_by_line_index_)
+                        if (n.reply_id != "" && ids.Contains(n.reply_id)) {
                             ids.Add(n.note_id);
                             reply_found = true;
                         }
                 }
-                int delete_count = notes_sorted_by_line_id_.Count(x => ids.Contains(x.note_id) && !x.deleted);
+                int delete_count = notes_sorted_by_line_index_.Count(x => ids.Contains(x.note_id) && !x.deleted);
                 bool do_delete = delete_count == ids.Count;
-                foreach ( var n in notes_sorted_by_line_id_)
+                foreach ( var n in notes_sorted_by_line_index_)
                     if (ids.Contains(n.note_id) && n.the_note != null)
                         n.deleted = do_delete;
             }
@@ -556,13 +554,13 @@ namespace lw_common.ui {
 
         private void readd_everything() {
             // at this point, I have all the notes in "sorted notes" set up correctly - I need to show them in the UI
-            var copy = notes_sorted_by_line_id_.ToList();
+            var copy = notes_sorted_by_line_index_.ToList();
 
-            var sel_note_id = notesCtrl.SelectedIndex >= 0 ? (notesCtrl.GetItem(notesCtrl.SelectedIndex).RowObject as note_item).note_id : -1;
+            var sel_note_id = notesCtrl.SelectedIndex >= 0 ? (notesCtrl.GetItem(notesCtrl.SelectedIndex).RowObject as note_item).note_id : "";
             var sel_note_id_above = find_note_id_above_selection();
 
             ++ignore_change_;
-            notes_sorted_by_line_id_.Clear();
+            notes_sorted_by_line_index_.Clear();
             notesCtrl.ClearObjects();
 
             // ... re-add everything
@@ -572,7 +570,7 @@ namespace lw_common.ui {
                 else
                     add_note(lines_[n.line_id], n.the_note, n.note_id, n.reply_id, n.deleted);
             }
-            Debug.Assert(notes_sorted_by_line_id_.Count == copy.Count);
+            Debug.Assert(notes_sorted_by_line_index_.Count == copy.Count);
 
             // set current line
             if (showDeletedLines.Checked) {
@@ -583,8 +581,8 @@ namespace lw_common.ui {
             } else
                 cur_line.clear();
 
-            int new_sel = showDeletedLines.Checked ? sel_note_id : sel_note_id_above;
-            if ( new_sel >= 0)
+            string new_sel = showDeletedLines.Checked ? sel_note_id : sel_note_id_above;
+            if ( new_sel != "")
                 for ( int idx = 0; idx < notesCtrl.GetItemCount(); ++idx)
                     if ((notesCtrl.GetItem(idx).RowObject as note_item).note_id == new_sel) {
                         notesCtrl.SelectedIndex = idx;
@@ -596,12 +594,12 @@ namespace lw_common.ui {
         }
 
 
-        private int find_note_id_above_selection() {
+        private string find_note_id_above_selection() {
             if (notesCtrl.SelectedIndex < 0) {
                 // nothing was selected
                 if (notesCtrl.GetItemCount() > 0)
                     return (notesCtrl.GetItem(notesCtrl.GetItemCount() - 1).RowObject as note_item).note_id;
-                return -1;
+                return "";
             }
 
             var sel_note = notesCtrl.SelectedItem.RowObject as note_item;
@@ -612,7 +610,7 @@ namespace lw_common.ui {
             if (notesCtrl.GetItemCount() > 0)
                 return (notesCtrl.GetItem(notesCtrl.GetItemCount() - 1).RowObject as note_item).note_id;
             else
-                return -1;
+                return "";
         }
 
         // this sets the line the user is viewing - by default, this is what the user is commenting on
@@ -657,7 +655,7 @@ namespace lw_common.ui {
             } else {
                 // 2 - no notes on this line
                 if ( !last_note_is_cur_line) 
-                    notesCtrl.AddObject( new note_item(this, ++next_note_id_, cur_line_id_, false));
+                    notesCtrl.AddObject( new note_item(this, next_guid, cur_line_id_, false));
                 var last = notesCtrl.GetItem(notesCtrl.GetItemCount() - 1).RowObject as note_item;
                 refresh_note(last);
 
@@ -672,7 +670,7 @@ namespace lw_common.ui {
             update_cur_note_controls();
         }
 
-        private note_item ui_find_last_note_from_cur_user(int line_id) {
+        private note_item ui_find_last_note_from_cur_user(string line_id) {
             note_item last_note = null;
             for (int idx = 0; idx < notesCtrl.GetItemCount(); ++idx) {
                 var i = notesCtrl.GetItem(idx).RowObject as note_item;
@@ -721,7 +719,7 @@ namespace lw_common.ui {
 
             file_name_ = file_name;
 
-            notes_sorted_by_line_id_.Clear();
+            notes_sorted_by_line_index_.Clear();
             notesCtrl.ClearObjects();
             cur_line.clear();
             
@@ -737,10 +735,9 @@ namespace lw_common.ui {
                 l.idx = int.Parse(sett.get(prefix + "index", "0"));
                 l.view_name = sett.get(prefix + "view_name");
                 l.msg = sett.get(prefix + "msg");
-                int id = int.Parse(sett.get(prefix + "id", "0"));
+                var id = sett.get(prefix + "id", "");
                 lines_.Add(id, l);
             }
-            next_line_id_ = lines_.Max(x => x.Key != cur_line_id_ ? x.Key : -1) + 1;
 
             // load notes
             // if author name = ourselves -> made_by_current_user = true
@@ -756,9 +753,9 @@ namespace lw_common.ui {
                     n.note_text = sett.get(prefix + "note_text");
                 }
                 bool deleted = sett.get(prefix + "deleted", "0") != "0";
-                int note_id = int.Parse(sett.get(prefix + "note_id", "-1"));
-                int reply_id = int.Parse(sett.get(prefix + "reply_id", "-1"));
-                int line_id = int.Parse(sett.get(prefix + "line_id", "0"));
+                var note_id = sett.get(prefix + "note_id", "");
+                var reply_id = sett.get(prefix + "reply_id", "");
+                var line_id = sett.get(prefix + "line_id", "");
                 long ticks = long.Parse(sett.get(prefix + "added_at", "0"));
                 note_item note;
                 if (n != null)
@@ -767,7 +764,6 @@ namespace lw_common.ui {
                     note = add_note_header(line_id, note_id, deleted);
                 note.utc_added = new DateTime(ticks);
             }
-            next_note_id_ = notes_sorted_by_line_id_.Count > 0 ? notes_sorted_by_line_id_.Max(x => x.note_id) + 1 : 0;
         
             // update last_note_id and last_line_id
             dirty_ = false;
@@ -799,10 +795,10 @@ namespace lw_common.ui {
                 }
 
             // save notes
-            sett.set("note_count", "" + notes_sorted_by_line_id_.Count);
-            for (int idx = 0; idx < notes_sorted_by_line_id_.Count; ++idx) {
+            sett.set("note_count", "" + notes_sorted_by_line_index_.Count);
+            for (int idx = 0; idx < notes_sorted_by_line_index_.Count; ++idx) {
                 string prefix = "note." + idx + ".";
-                note_item n = notes_sorted_by_line_id_[idx];
+                note_item n = notes_sorted_by_line_index_[idx];
                 if (n.the_note != null) {
                     sett.set(prefix + "author_name", n.the_note.author_name);
                     sett.set(prefix + "author_initials", n.the_note.author_initials);
@@ -834,7 +830,7 @@ namespace lw_common.ui {
                 if (note_text == "")
                     return;
                 // see if I'm on a user's note (thus, i'm updating), or on a line (thus, i'm adding a note for that line)
-                int reply_to_note_id = -1;
+                string reply_to_note_id = "";
                 int sel = notesCtrl.SelectedIndex;
                 if (sel >= 0) {
                     var i = notesCtrl.GetItem(sel).RowObject as note_item;
@@ -854,7 +850,7 @@ namespace lw_common.ui {
 
                 note new_ = new note() { author_name = author_name_, author_initials = author_initials_, 
                     author_color = author_color_, note_text = note_text, made_by_current_user = true, is_new = true };
-                add_note(new_, -1, reply_to_note_id, false);
+                add_note(new_, "", reply_to_note_id, false);
             }
         }
 

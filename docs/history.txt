@@ -32,6 +32,12 @@
   it's very likely due to wrong insertion (dd is not inserted correctly)
   only dd2 is not inserted correctly
 
+
+
+1.1.3h
+- using GUIDs for line_id/note_id - so that merging will be extremely easy
+
+
 1.1.3g
 - before converting line_id/note_id to GUIDs
 
