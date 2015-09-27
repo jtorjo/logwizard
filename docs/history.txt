@@ -27,6 +27,11 @@
 
 - merging
 
+1.1.3r
+- fix: allow editing your own notes
+- test: replying works awesome (small fixes)
+
+
 1.1.3p
 - retested deleting: works
 - tested with notes from 3 people - works (except for replying; replying not tested)

@@ -137,6 +137,7 @@
             this.curNote.Name = "curNote";
             this.curNote.Size = new System.Drawing.Size(406, 151);
             this.curNote.TabIndex = 4;
+            this.curNote.Enter += new System.EventHandler(this.curNote_Enter);
             this.curNote.KeyDown += new System.Windows.Forms.KeyEventHandler(this.curNote_KeyDown);
             this.curNote.KeyUp += new System.Windows.Forms.KeyEventHandler(this.curNote_KeyUp);
             this.curNote.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.curNote_PreviewKeyDown);

@@ -224,7 +224,7 @@ namespace lw_common.ui {
                 while (reply_found) {
                     reply_found = false;
                     foreach ( var n in self.notes_sorted_by_line_index_)
-                        if (ids.Contains(n.reply_id)) {
+                        if (!ids.Contains(n.note_id) && ids.Contains(n.reply_id)) {
                             ids.Add(n.note_id);
                             reply_found = true;
                         }
@@ -269,7 +269,7 @@ namespace lw_common.ui {
                     note_item cur = this;
                     while (cur.reply_id != "") {
                         ++ind;
-                        cur = self.notes_sorted_by_line_index_.FirstOrDefault(x => x.note_id == reply_id);
+                        cur = self.notes_sorted_by_line_index_.FirstOrDefault(x => x.note_id == cur.reply_id);
                         if (cur == null)
                             break;
                     }
@@ -291,6 +291,9 @@ namespace lw_common.ui {
             private static Color deleted_fg = Color.LightGray;
             private static Color header_fg = Color.DarkViolet;
             private static Color msg_idx_fg = Color.DarkGray;
+
+            private static Color author_bg = Color.FloralWhite;
+            private static Color merged_bg = Color.WhiteSmoke;
 
             private Color note_color() {
                 Debug.Assert(the_note != null);
@@ -321,6 +324,23 @@ namespace lw_common.ui {
                     }
                 }
                 return the_note.note_text;
+            }
+
+            public Color bg {
+                get {
+                    int sel = self.notesCtrl.SelectedIndex;
+                    if (sel >= 0) {
+                        var i = self.notesCtrl.GetItem(sel).RowObject as note_item;
+                        string author = i.the_note != null ? i.the_note.author_name : "" ;
+                        if (author != "" && the_note != null && the_note.author_name == author)
+                            return author_bg;
+                    }
+
+                    if (is_merged)
+                        return merged_bg;
+
+                    return Color.White;
+                }
             }
 
             public Color idx_fg {
@@ -480,7 +500,7 @@ namespace lw_common.ui {
 
 
         private void log_notes_sorted_idx(int idx, note_item n) {
-            if (idx >= 0) 
+            if (idx >= 0 && idx < notes_sorted_by_line_index_.Count) 
                 logger.Info("[notes] insert " + n.friendly_note + " before " + notes_sorted_by_line_index_[idx].friendly_note);
             else 
                 logger.Info("[notes] adding " + n.friendly_note + " at the end");
@@ -1053,12 +1073,11 @@ namespace lw_common.ui {
             var item = notesCtrl.ModelToItem(i);
 
             OLVListSubItem idx = item.GetSubItem(0), line = item.GetSubItem(1), text = item.GetSubItem(2);
-            if ( idx.ForeColor.ToArgb() != i.idx_fg.ToArgb())
-                idx.ForeColor = i.idx_fg;
-            if ( line.ForeColor.ToArgb() != i.line_fg.ToArgb())
-                line.ForeColor = i.line_fg;
-            if ( text.ForeColor.ToArgb() != i.text_fg.ToArgb())
-                text.ForeColor = i.text_fg;
+            idx.ForeColor = i.idx_fg;
+            line.ForeColor = i.line_fg;
+            text.ForeColor = i.text_fg;
+
+            idx.BackColor = line.BackColor = text.BackColor = i.bg;
 
             line.Font = i.the_note != null ? note_font_ : header_font_;
             text.Font = i.the_note != null ? note_font_ : header_font_;
@@ -1088,7 +1107,7 @@ namespace lw_common.ui {
                 int sel = notesCtrl.SelectedIndex;
                 if (sel >= 0) {
                     var i = notesCtrl.GetItem(sel).RowObject as note_item;
-                    bool is_edit = i.the_note != null && i.the_note.made_by_current_user;
+                    bool is_edit = i.the_note != null && i.the_note.author_name == author_name_;
                     if (is_edit) {
                         dirty_ = true;
                         i.the_note.note_text = note_text;
@@ -1097,7 +1116,7 @@ namespace lw_common.ui {
                         refresh_note(i);
                         return;
                     }
-                    bool is_reply = i.the_note != null && !i.the_note.made_by_current_user;
+                    bool is_reply = i.the_note != null && i.the_note.author_name != author_name_;
                     if (is_reply)
                         reply_to_note_id = i.note_id;
                 }
@@ -1105,6 +1124,7 @@ namespace lw_common.ui {
                 note new_ = new note() { author_name = author_name_, author_initials = author_initials_, 
                     author_color = author_color_, note_text = note_text, made_by_current_user = true, is_new = true };
                 add_note(new_, "", reply_to_note_id, false);
+                refresh_notes();
             }
         }
 
@@ -1116,7 +1136,7 @@ namespace lw_common.ui {
         private void curNote_KeyUp(object sender, KeyEventArgs e) {
             string s = util.key_to_action(e);
             if (s == "return") {
-                refresh_notes();
+                update_cur_note_controls();
                 notesCtrl.Focus();
             }
         }
@@ -1126,8 +1146,10 @@ namespace lw_common.ui {
                 return;
 
             update_cur_note_controls();
-            if (win32.focused_ctrl() == notesCtrl)
+            refresh_notes();
+            if (win32.focused_ctrl() == notesCtrl) 
                 sync_to_views();
+            
         }
 
         private void update_cur_note_controls() {
@@ -1148,8 +1170,7 @@ namespace lw_common.ui {
                     addNoteToLineLabel.Text = "Add Note to Line";
                 addNoteToLine.Text = "[" + (lines_[i.line_id].idx + 1) + "]";
                 curNote.Text = i.the_note != null ? i.the_note.note_text : "";
-                // if note made by someone else, don't allow changing it
-                curNote.Enabled = i.the_note == null || i.the_note.made_by_current_user;
+                curNote.Enabled = true;
             } else {
                 curNote.Enabled = false;
                 curNote.Text = "";
@@ -1178,6 +1199,7 @@ namespace lw_common.ui {
                 return;
 
             readd_everything();
+            util.postpone( () => notesCtrl.Focus(), 10);
         }
 
         private void notesCtrl_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
@@ -1198,6 +1220,22 @@ namespace lw_common.ui {
         private Color author_color(string name) {
             Debug.Assert(author_colors_.ContainsKey(name));
             return author_colors_[name];
+        }
+
+        private void curNote_Enter(object sender, EventArgs e) {
+            int sel = notesCtrl.SelectedIndex;
+            if (sel < 0) {
+                Debug.Assert(false);
+                curNote.Enabled = false;
+                return;
+            }
+
+            var i = notesCtrl.GetItem(sel).RowObject as note_item;
+            if (i.the_note != null && i.the_note.author_name != author_name_) {
+                ++ignore_change_;
+                curNote.Text = "";
+                --ignore_change_;
+            }
         }
 
 
