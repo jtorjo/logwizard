@@ -49,8 +49,6 @@ namespace lw_common.ui {
             // the reason we have this: if this was made by current user, always use the most up-to-date name/initials/color
             public bool made_by_current_user = false;
 
-            public bool deleted = false;
-
             // NOT persisted
             //
             // if true, it's a note added in this session 
@@ -102,6 +100,8 @@ namespace lw_common.ui {
                 view_name = msg = "";
             }
 
+            public string guid = "";
+
             public int idx = -1;
             public string view_name = "";
             public string msg = "";
@@ -109,6 +109,14 @@ namespace lw_common.ui {
 
         private class note_item {
             public readonly note_ctrl self = null;
+
+            public string guid = "";
+
+            // if true, someone else made this note, and we just merged it
+            public bool is_merged = false;
+
+            // any note or line can be deleted
+            public bool deleted = false;
 
             // if null, it's the header
             public note the_note = null;
@@ -146,7 +154,7 @@ namespace lw_common.ui {
             /////////////////////////////////////////////////////////////////////////////////////////
             // Constructor
 
-            public note_item(note_ctrl self, note n, int unique_id, int reply_id, int line_id) {
+            public note_item(note_ctrl self, note n, int unique_id, int reply_id, int line_id, bool deleted) {
                 Debug.Assert( self.lines_.ContainsKey(line_id));
 
                 the_note = n;
@@ -154,15 +162,17 @@ namespace lw_common.ui {
                 note_id = unique_id;
                 line_id_ = line_id;
                 this.reply_id = reply_id;
+                this.deleted = deleted;
             }
 
-            public note_item(note_ctrl self, int unique_id, int line_id) {
+            public note_item(note_ctrl self, int unique_id, int line_id, bool deleted) {
                 Debug.Assert( self.lines_.ContainsKey(line_id));
 
                 this.self = self;
                 note_id = unique_id;
                 line_id_ = line_id;
                 reply_id = -1;
+                this.deleted = deleted;
                 the_note = null;
             }
             /////////////////////////////////////////////////////////////////////////////////////////
@@ -296,10 +306,10 @@ namespace lw_common.ui {
         }
 
         // the only time this can get called is when loading an already saved configuration
-        private note_item add_note_header(int line_id, int note_id) {
+        private note_item add_note_header(int line_id, int note_id, bool deleted) {
             Debug.Assert(note_id >= 0);
             Debug.Assert(line_id != cur_line_id_ && lines_.ContainsKey(line_id));
-            var new_ = new note_item(this, note_id, line_id );
+            var new_ = new note_item(this, note_id, line_id, deleted );
             if (next_note_id_ < note_id)
                 next_note_id_ = note_id;
             notes_sorted_by_line_id_.Add(new_);
@@ -308,7 +318,7 @@ namespace lw_common.ui {
         }
 
         // helper - add to the currently selected line
-        private note_item add_note(note n, int note_id, int reply_to_note_id) {
+        private note_item add_note(note n, int note_id, int reply_to_note_id, bool deleted) {
             Debug.Assert(cur_line != null);
             if (cur_line == null) {
                 Debug.Assert(false);
@@ -317,7 +327,7 @@ namespace lw_common.ui {
 
             line new_ = new line();
             new_.copy_from(cur_line);
-            return add_note(new_, n, note_id, reply_to_note_id);
+            return add_note(new_, n, note_id, reply_to_note_id, deleted);
         }
 
         // returns the ID assigned to this note that we're adding;
@@ -325,7 +335,7 @@ namespace lw_common.ui {
         //
         // note_id - the unique ID of the note, or -1 if a new unique ID is to be created
         //           the reason we have this is that we can persist notes (together with their IDs)
-        private note_item add_note(line l, note n, int note_id, int reply_to_note_id) {
+        private note_item add_note(line l, note n, int note_id, int reply_to_note_id, bool deleted) {
             // a note: can be added on a line, or as reply to someone
             // new notes: always at the end
 
@@ -350,7 +360,7 @@ namespace lw_common.ui {
                 // note we're replying to should exist already
                 Debug.Assert( notes_sorted_by_line_id_.Count(x => x.note_id == reply_to_note_id) == 1);
 
-            var new_ = new note_item(this, n, note_id, reply_to_note_id, line_id);
+            var new_ = new note_item(this, n, note_id, reply_to_note_id, line_id, deleted);
             if (next_note_id_ < note_id)
                 next_note_id_ = note_id;
 
@@ -407,7 +417,7 @@ namespace lw_common.ui {
                     int line_index = lines_[line_id].idx;
                     note = notes_sorted_by_line_id_.FirstOrDefault(x => lines_[x.line_id].idx > line_index);
 
-                    var header = new note_item(this,  ++next_note_id_, line_id);
+                    var header = new note_item(this,  ++next_note_id_, line_id, deleted);
                     if (note != null) {
                         int idx = notes_sorted_by_line_id_.IndexOf(note);
                         bool has_header = note.is_note_header && note.line_id == line_id;
@@ -435,7 +445,7 @@ namespace lw_common.ui {
         }
 
         private void add_note_to_ui(note_item last_note) {
-            bool add_to_ui = last_note.the_note == null || !last_note.the_note.deleted || (last_note.the_note.deleted && showDeletedLines.Checked);
+            bool add_to_ui = !last_note.deleted || (last_note.deleted && showDeletedLines.Checked);
             if (!add_to_ui)
                 return;
 
@@ -499,11 +509,21 @@ namespace lw_common.ui {
 
             dirty_ = true;
 
-            if (toggle_note.the_note == null) {
+            int line_id = notes_sorted_by_line_id_.First(x => x.note_id == note_id).line_id;
+            int same_line_count = notes_sorted_by_line_id_.Count(x => x.line_id == line_id);
+            // at least the line + a note on that line
+            Debug.Assert(same_line_count >= 2); 
+            bool is_single = same_line_count == 2;
+            if (is_single) {
+                foreach (var n in notes_sorted_by_line_id_)
+                    if (n.line_id == line_id)
+                        n.deleted = !n.deleted;
+            }
+            else if (toggle_note.the_note == null) {
                 // in this case, pressed on a line header - toggle all its sub-children
                 foreach (var n in notes_sorted_by_line_id_)
                     if (n.line_id == toggle_note.line_id && n.the_note != null)
-                        n.the_note.deleted = !n.the_note.deleted;
+                        n.deleted = !n.deleted;
             } else {
                 // pressed on a note - find all replies on that note
                 List<int> ids = new List<int>();
@@ -517,13 +537,24 @@ namespace lw_common.ui {
                             reply_found = true;
                         }
                 }
-                int delete_count = notes_sorted_by_line_id_.Count(x => ids.Contains(x.note_id) && x.the_note != null && !x.the_note.deleted);
+                int delete_count = notes_sorted_by_line_id_.Count(x => ids.Contains(x.note_id) && !x.deleted);
                 bool do_delete = delete_count == ids.Count;
                 foreach ( var n in notes_sorted_by_line_id_)
                     if (ids.Contains(n.note_id) && n.the_note != null)
-                        n.the_note.deleted = do_delete;
+                        n.deleted = do_delete;
             }
 
+            readd_everything();
+
+            // note: delete someone else's note -> it's grayed (hidden)
+            //       delete your note: it's fully deleted + copied to clipboard -> ALL THE notes you delete - keep them internally and the user should be able to access them
+            //       (just in case he did a mistake)
+
+            // if i delete a note from line ,and no other notes on that line:
+            // if it was from current user, delete the line note as well ; otherwise, just hide it
+        }
+
+        private void readd_everything() {
             // at this point, I have all the notes in "sorted notes" set up correctly - I need to show them in the UI
             var copy = notes_sorted_by_line_id_.ToList();
 
@@ -535,21 +566,13 @@ namespace lw_common.ui {
             notesCtrl.ClearObjects();
 
             // ... re-add everything
-            foreach ( var n in copy) {
-                bool do_add = showDeletedLines.Checked;
-                if ( !do_add)
-                    if (n.the_note != null)
-                        do_add = !n.the_note.deleted;
-                    else 
-                        do_add = has_notes(copy, n.line_id);
-                
-                if (do_add) {
-                    if (n.is_note_header)
-                        add_note_header(n.line_id, n.note_id);
-                    else
-                        add_note(lines_[n.line_id], n.the_note, n.note_id, n.reply_id);
-                }
+            foreach ( var n in copy) {                
+                if (n.is_note_header)
+                    add_note_header(n.line_id, n.note_id, n.deleted);
+                else
+                    add_note(lines_[n.line_id], n.the_note, n.note_id, n.reply_id, n.deleted);
             }
+            Debug.Assert(notes_sorted_by_line_id_.Count == copy.Count);
 
             // set current line
             if (showDeletedLines.Checked) {
@@ -569,18 +592,9 @@ namespace lw_common.ui {
                     }
 
             --ignore_change_;
-
-            // note: delete someone else's note -> it's grayed (hidden)
-            //       delete your note: it's fully deleted + copied to clipboard -> ALL THE notes you delete - keep them internally and the user should be able to access them
-            //       (just in case he did a mistake)
-
-            // if i delete a note from line ,and no other notes on that line:
-            // if it was from current user, delete the line note as well ; otherwise, just hide it
+            
         }
 
-        private bool has_notes(List<note_item> notes, int line_id) {
-            return notes.Count(x => x.line_id == line_id && (x.the_note == null || !x.the_note.deleted)) > 1; // if just 1 - it's just the line, no notes
-        }
 
         private int find_note_id_above_selection() {
             if (notesCtrl.SelectedIndex < 0) {
@@ -643,7 +657,7 @@ namespace lw_common.ui {
             } else {
                 // 2 - no notes on this line
                 if ( !last_note_is_cur_line) 
-                    notesCtrl.AddObject( new note_item(this, ++next_note_id_, cur_line_id_));
+                    notesCtrl.AddObject( new note_item(this, ++next_note_id_, cur_line_id_, false));
                 var last = notesCtrl.GetItem(notesCtrl.GetItemCount() - 1).RowObject as note_item;
                 refresh_note(last);
 
@@ -740,17 +754,17 @@ namespace lw_common.ui {
                     n.author_initials = sett.get(prefix + "author_initials");
                     n.author_color = util.str_to_color(sett.get(prefix + "author_color"));
                     n.note_text = sett.get(prefix + "note_text");
-                    n.deleted = sett.get(prefix + "deleted", "0") != "0";
                 }
+                bool deleted = sett.get(prefix + "deleted", "0") != "0";
                 int note_id = int.Parse(sett.get(prefix + "note_id", "-1"));
                 int reply_id = int.Parse(sett.get(prefix + "reply_id", "-1"));
                 int line_id = int.Parse(sett.get(prefix + "line_id", "0"));
                 long ticks = long.Parse(sett.get(prefix + "added_at", "0"));
                 note_item note;
                 if (n != null)
-                    note = add_note(lines_[line_id], n, note_id, reply_id);
+                    note = add_note(lines_[line_id], n, note_id, reply_id, deleted);
                 else
-                    note = add_note_header(line_id, note_id);
+                    note = add_note_header(line_id, note_id, deleted);
                 note.utc_added = new DateTime(ticks);
             }
             next_note_id_ = notes_sorted_by_line_id_.Count > 0 ? notes_sorted_by_line_id_.Max(x => x.note_id) + 1 : 0;
@@ -794,9 +808,9 @@ namespace lw_common.ui {
                     sett.set(prefix + "author_initials", n.the_note.author_initials);
                     sett.set(prefix + "author_color", util.color_to_str(n.the_note.author_color));
                     sett.set(prefix + "note_text", n.the_note.note_text);
-                    sett.set(prefix + "deleted", n.the_note.deleted ? "1" : "0");
                 }
 
+                sett.set(prefix + "deleted", n.deleted ? "1" : "0");
                 sett.set(prefix + "note_id", "" + n.note_id);
                 sett.set(prefix + "reply_id", "" + n.reply_id);
                 sett.set(prefix + "line_id", "" + n.line_id);
@@ -828,6 +842,8 @@ namespace lw_common.ui {
                     if (is_edit) {
                         dirty_ = true;
                         i.the_note.note_text = note_text;
+                        // user modified the note
+                        i.utc_added = DateTime.UtcNow;
                         refresh_note(i);
                         return;
                     }
@@ -838,7 +854,7 @@ namespace lw_common.ui {
 
                 note new_ = new note() { author_name = author_name_, author_initials = author_initials_, 
                     author_color = author_color_, note_text = note_text, made_by_current_user = true, is_new = true };
-                add_note(new_, -1, reply_to_note_id);
+                add_note(new_, -1, reply_to_note_id, false);
             }
         }
 

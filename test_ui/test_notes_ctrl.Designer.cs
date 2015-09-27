@@ -27,8 +27,8 @@
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.notes = new lw_common.ui.note_ctrl();
             this.undo = new System.Windows.Forms.Button();
+            this.notes = new lw_common.ui.note_ctrl();
             ((System.ComponentModel.ISupportInitialize)(this.dummyView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -37,6 +37,8 @@
             this.dummyView.AllColumns.Add(this.olvColumn1);
             this.dummyView.AllColumns.Add(this.olvColumn2);
             this.dummyView.AllColumns.Add(this.olvColumn3);
+            this.dummyView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dummyView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,
             this.olvColumn2,
@@ -71,17 +73,9 @@
             this.olvColumn3.IsEditable = false;
             this.olvColumn3.Text = "msg";
             // 
-            // notes
-            // 
-            this.notes.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.notes.Location = new System.Drawing.Point(13, 3);
-            this.notes.Margin = new System.Windows.Forms.Padding(4);
-            this.notes.Name = "notes";
-            this.notes.Size = new System.Drawing.Size(411, 460);
-            this.notes.TabIndex = 0;
-            // 
             // undo
             // 
+            this.undo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.undo.Location = new System.Drawing.Point(688, 441);
             this.undo.Name = "undo";
             this.undo.Size = new System.Drawing.Size(75, 23);
@@ -89,6 +83,18 @@
             this.undo.Text = "Undo";
             this.undo.UseVisualStyleBackColor = true;
             this.undo.Click += new System.EventHandler(this.undo_Click);
+            // 
+            // notes
+            // 
+            this.notes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.notes.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.notes.Location = new System.Drawing.Point(13, 3);
+            this.notes.Margin = new System.Windows.Forms.Padding(4);
+            this.notes.Name = "notes";
+            this.notes.Size = new System.Drawing.Size(411, 460);
+            this.notes.TabIndex = 0;
             // 
             // test_notes_ctrl
             // 

@@ -22,6 +22,20 @@
 
 
 
+
+- todo : guids + merging
+         saving md5 : fast (last 8192 + first 8192 chars, + file name + file size), slow (full md5)
+
+
+- bug:
+  adding an extra note to each line will generate an error at loading next time
+  it's very likely due to wrong insertion (dd is not inserted correctly)
+  only dd2 is not inserted correctly
+
+1.1.3g
+- before converting line_id/note_id to GUIDs
+
+
 1.1.3f
 - deleting notes - works (when "show deleted notes disabled")
 
