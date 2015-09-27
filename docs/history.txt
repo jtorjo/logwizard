@@ -26,7 +26,14 @@
 - todo : guids + merging
          saving md5 : fast (last 8192 + first 8192 chars, + file name + file size), slow (full md5)
 
-- bug: when on a valid note from me, instead of "Edit note" i see "Reply to..."
+
+1.1.3o
+- fix: bug: clicking outside the notes control on a line would gray out all notes
+
+
+1.1.3n
+- fix: bug: when on a valid note from me, instead of "Edit note" i see "Reply to..."
+
 
 
 1.1.3m

@@ -65,6 +65,7 @@ namespace test_ui {
             if (sel >= 0) {
                 var note = dummyView.GetItem(sel).RowObject as dummy_note;
                 notes.set_current_line( new note_ctrl.line { idx = note.idx -1, msg = note.msg, view_name = note.view });
+                notes.refresh_notes();
             }
         }
 

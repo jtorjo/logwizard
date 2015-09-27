@@ -714,7 +714,7 @@ namespace lw_common.ui {
                 var cur_line_copy = new line();
                 cur_line_copy.copy_from(cur_line);
                 cur_line.clear();
-                set_current_line(cur_line_copy);
+                set_current_line_impl(cur_line_copy);
             } else
                 cur_line.clear();
 
@@ -752,8 +752,16 @@ namespace lw_common.ui {
                 return "";
         }
 
-        // this sets the line the user is viewing - by default, this is what the user is commenting on
         public void set_current_line(line l) {
+            set_current_line_impl(l);
+            // for some extremely strange reason, we need to refresh the notes
+            // otherwise, they would be shown as gray
+            refresh_notes();
+        }
+
+
+        // this sets the line the user is viewing - by default, this is what the user is commenting on
+        private void set_current_line_impl(line l) {
             if (cur_line.idx == l.idx && cur_line.view_name == l.view_name)
                 return; // we're already there
             cur_line.copy_from(l);
@@ -793,8 +801,11 @@ namespace lw_common.ui {
                 notesCtrl.EnsureModelVisible(last);
             } else {
                 // 2 - no notes on this line
-                if ( !last_note_is_cur_line) 
-                    notesCtrl.AddObject( new note_item(this, next_guid, cur_line_id_, false));
+                if (!last_note_is_cur_line) {
+                    var new_ = new note_item(this, next_guid, cur_line_id_, false);
+                    notesCtrl.AddObject(new_);
+                    refresh_note( new_);
+                }
                 var last = notesCtrl.GetItem(notesCtrl.GetItemCount() - 1).RowObject as note_item;
                 refresh_note(last);
 
@@ -852,7 +863,7 @@ namespace lw_common.ui {
             // set author name / color first!
             Debug.Assert(author_name_ != "" && author_color_ != util.transparent);
 
-            /*  by default, we preser the current user's author color
+            /*  by default, we prefer the current user's author color
                 for the rest of the colors - just use them from the following array
 
                 the reason I'm not using the author's selected color: the problem with that is that someone could select
@@ -1052,7 +1063,7 @@ namespace lw_common.ui {
                 notesCtrl.RefreshObject( notesCtrl.GetItem(idx).RowObject );
         }
 
-        private void refresh_notes() {
+        public void refresh_notes() {
             // so that the UI indexes (first column) are recomputed - in case of an insert
             for ( int idx = 0; idx < notesCtrl.GetItemCount(); ++idx)
                 refresh_note( notesCtrl.GetItem(idx).RowObject as note_item);
@@ -1125,7 +1136,7 @@ namespace lw_common.ui {
             if (sel >= 0) {
                 var i = notesCtrl.GetItem(sel).RowObject as note_item;
                 if (i.the_note != null)
-                    addNoteToLineLabel.Text = i.the_note.made_by_current_user ? "Edit Note to Line" : "Reply to Note from " + i.the_note.author_initials;
+                    addNoteToLineLabel.Text = i.the_note.author_name == author_name_ ? "Edit Note to Line" : "Reply to Note from " + i.the_note.author_initials;
                 else
                     addNoteToLineLabel.Text = "Add Note to Line";
                 addNoteToLine.Text = "[" + (lines_[i.line_id].idx + 1) + "]";
