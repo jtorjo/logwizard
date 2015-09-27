@@ -20,9 +20,9 @@ namespace test_ui {
 
         public test_notes_ctrl() {
             InitializeComponent();
-            notes.set_author("John Torjo", "jt", Color.Blue);
+            //notes.set_author("John Torjo", "jt", Color.Blue);
             //notes.set_author("Denny", "dd", Color.Blue);
-            //notes.set_author("Vlad", "vv", Color.Blue);
+            notes.set_author("Vlad", "vv", Color.Blue);
 
             notes.on_note_selected = on_note_selected;
 

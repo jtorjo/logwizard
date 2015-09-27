@@ -381,6 +381,25 @@ namespace lw_common.ui {
         private Font header_font_ = null;
         private Font note_font_ = null;
 
+        private readonly Color[] default_author_colors_ = new Color[] {
+            Color.Blue,
+            Color.MediumPurple, 
+            Color.Red,
+            Color.Maroon,
+            Color.RosyBrown, 
+            Color.SteelBlue, 
+            Color.Brown, 
+            Color.Magenta, 
+            Color.Chocolate,
+            Color.DarkMagenta,
+            Color.Coral, 
+            Color.Violet, 
+            Color.Pink, 
+            Color.Green, 
+            Color.DarkOrange,
+            Color.Indigo, 
+        };
+
         // what color to use for authors whose color clashes with ours 
         // - say I'm marked blue, and another user is also marked blue
         //   in this case, I will preserve myself as blue, and use another color for the other guy
@@ -859,6 +878,21 @@ namespace lw_common.ui {
             // no need - just toggle "Show Deleted Notes"
         }
 
+        private void add_color_for_author(string author_name, Color default_color) {
+            if (author_colors_.ContainsKey(author_name))
+                // already have it
+                return;
+
+            // these are the colors that are not used by existing authors at this point
+            List<Color> new_colors = default_author_colors_.Where(x => x.ToArgb() != author_color_.ToArgb() && !author_colors_.Values.Contains(x) ).ToList();
+
+            if (new_colors.Count > 0) {
+                author_colors_.Add(author_name, new_colors[0]);
+            } else 
+                // at this point - way too many authors - we don't have enough colors - just use what he originally set
+                author_colors_.Add(author_name, default_color);
+        }
+
         private void update_author_colors() {
             // set author name / color first!
             Debug.Assert(author_name_ != "" && author_color_ != util.transparent);
@@ -875,29 +909,6 @@ namespace lw_common.ui {
                 In my solution, I just preserve the user's color. The other colors - use them from this list.
             */
 
-            Color[] defaults_ = new Color[] {
-                Color.Blue,
-                Color.MediumPurple, 
-                Color.Red,
-                Color.Maroon,
-                Color.RosyBrown, 
-                Color.SteelBlue, 
-                Color.Brown, 
-                Color.Magenta, 
-                Color.Chocolate,
-                Color.DarkMagenta,
-                Color.Coral, 
-                Color.Violet, 
-                Color.Pink, 
-                Color.Green, 
-                Color.DarkOrange,
-                Color.Indigo, 
-            };
-            int default_idx = 0;
-
-            // these are the colors that are not used by existing authors at this point
-            List<Color> new_colors = defaults_.Where(x => x.ToArgb() != author_color_.ToArgb() ).ToList();
-
             // any color used more than once - we'll have to end up using another color
             author_colors_.Clear();
             // current author - preserves his color
@@ -909,12 +920,7 @@ namespace lw_common.ui {
                         continue;
 
                     // it's a new author
-                    if (new_colors.Count > 0) {
-                        author_colors_.Add(n.the_note.author_name, new_colors[0]);
-                        new_colors.RemoveAt(0);
-                    } else 
-                        // at this point - way too many authors - we don't have enough colors - just use what he originally set
-                        author_colors_.Add(n.the_note.author_name, n.the_note.author_color);
+                    add_color_for_author(n.the_note.author_name, n.the_note.author_color);
                 }
         }
 
@@ -961,6 +967,7 @@ namespace lw_common.ui {
                     n.author_initials = sett.get(prefix + "author_initials");
                     n.author_color = util.str_to_color(sett.get(prefix + "author_color"));
                     n.note_text = sett.get(prefix + "note_text");
+                    add_color_for_author(n.author_name, n.author_color);
                 }
                 bool deleted = sett.get(prefix + "deleted", "0") != "0";
                 var note_id = sett.get(prefix + "note_id", "");
@@ -1109,7 +1116,7 @@ namespace lw_common.ui {
         private void curNote_KeyUp(object sender, KeyEventArgs e) {
             string s = util.key_to_action(e);
             if (s == "return") {
-                refresh_note_indexes();
+                refresh_notes();
                 notesCtrl.Focus();
             }
         }
@@ -1136,7 +1143,7 @@ namespace lw_common.ui {
             if (sel >= 0) {
                 var i = notesCtrl.GetItem(sel).RowObject as note_item;
                 if (i.the_note != null)
-                    addNoteToLineLabel.Text = i.the_note.author_name == author_name_ ? "Edit Note to Line" : "Reply to Note from " + i.the_note.author_initials;
+                    addNoteToLineLabel.Text = i.the_note.author_name == author_name_ ? "Edit Note to Line" : "Reply to " + i.the_note.author_initials;
                 else
                     addNoteToLineLabel.Text = "Add Note to Line";
                 addNoteToLine.Text = "[" + (lines_[i.line_id].idx + 1) + "]";

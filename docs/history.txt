@@ -17,14 +17,22 @@
 
 
 - todo: test replying to a note
-- todo: show/hide deleted notes
-- todo: colors and such
 
 
 
 
 - todo : guids + merging
          saving md5 : fast (last 8192 + first 8192 chars, + file name + file size), slow (full md5)
+
+
+- merging
+
+1.1.3p
+- retested deleting: works
+- tested with notes from 3 people - works (except for replying; replying not tested)
+- fixes (worked on 1.1.3o):
+  - show/hide deleted notes
+  - colors and such
 
 
 1.1.3o
