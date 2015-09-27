@@ -16,7 +16,6 @@
 
 
 
-- todo: test replying to a note
 
 
 
@@ -26,6 +25,11 @@
 
 
 - merging
+
+1.1.3s
+- merge - notes for lines that don't have any notes from me are appended to the end
+          (that should not happen)
+
 
 1.1.3r
 - fix: allow editing your own notes

@@ -20,9 +20,9 @@ namespace test_ui {
 
         public test_notes_ctrl() {
             InitializeComponent();
-            notes.set_author("John Torjo", "jt", Color.Blue);
+            //notes.set_author("John Torjo", "jt", Color.Blue);
             //notes.set_author("Denny", "dd", Color.Blue);
-            //notes.set_author("Vlad", "vv", Color.Blue);
+            notes.set_author("Vlad", "vv", Color.Blue);
 
             notes.on_note_selected = on_note_selected;
 
@@ -47,7 +47,14 @@ namespace test_ui {
             dummyView.AddObject( new dummy_note() { idx = 155, view = "err", msg = "[pot] Pot string could not be parsed [__] : Input string was not in a correct format." });
             dummyView.AddObject( new dummy_note() { idx = 156, view = "err", msg = "this is the last error" });
 
+            //notes.load("test_notes_ui.txt");
+            //notes.load("test_notes_ui-2.txt");
+
             notes.load("test_notes_ui.txt");
+            notes.merge("test_notes_ui-2.txt");
+
+//            notes.load("test_notes_ui-2.txt");
+  //          notes.merge("test_notes_ui.txt");
         }
 
         private void on_note_selected(int line_idx, string msg) {

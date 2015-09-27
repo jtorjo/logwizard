@@ -45,6 +45,10 @@ namespace lw_common.ui {
 
             public string note_text = "";
 
+            public override string ToString() {
+                return "[" + author_initials + "] " + note_text;
+            }
+
             // NOT persisted: if this were persisted, all notes would end up as being added by current user
             //
             // if true, we always use the existing author name/initials/color
@@ -127,10 +131,10 @@ namespace lw_common.ui {
             public readonly string reply_id;
 
             // pointer to a line - each line has a unique ID (different from its index)
-            private string line_id_;
+            public string line_id;
 
             // when was this note added (could be useful when sorting by time)
-            public DateTime utc_added = DateTime.UtcNow;
+            public DateTime utc_last_edited = DateTime.UtcNow;
 
             // for debugging
             public string friendly_note {
@@ -149,41 +153,30 @@ namespace lw_common.ui {
             }
 
             public bool is_cur_line {
-                get { return line_id_ == self.cur_line_id_; }
-            }
-
-            public string line_id {
-                get { return line_id_; }
-                set {
-                    // you can only reset the line ID - if it is the current line
-                    Debug.Assert(line_id_ == self.cur_line_id_);
-                    line_id_ = value;
-                }
+                get { return line_id == self.cur_line_id_; }
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////
             // Constructor
 
-            public note_item(note_ctrl self, note n, string unique_id, string reply_id, string line_id, bool deleted) {
-                Debug.Assert( self.lines_.ContainsKey(line_id));
-
+            public note_item(note_ctrl self, note n, string unique_id, string reply_id, string line_id, bool deleted, DateTime utc_added) {
                 the_note = n;
                 this.self = self;
                 note_id = unique_id;
-                line_id_ = line_id;
+                this.line_id = line_id;
                 this.reply_id = reply_id;
                 this.deleted = deleted;
+                this.utc_last_edited = utc_added;
             }
 
-            public note_item(note_ctrl self, string unique_id, string line_id, bool deleted) {
-                Debug.Assert( self.lines_.ContainsKey(line_id));
-
+            public note_item(note_ctrl self, string unique_id, string line_id, bool deleted, DateTime utc_added) {
                 this.self = self;
                 note_id = unique_id;
-                line_id_ = line_id;
+                this.line_id = line_id;
                 reply_id = "";
                 this.deleted = deleted;
                 the_note = null;
+                this.utc_last_edited = utc_added;
             }
             /////////////////////////////////////////////////////////////////////////////////////////
             // remaining - getters
@@ -476,17 +469,17 @@ namespace lw_common.ui {
         }
 
         // the only time this can get called is when loading an already saved configuration
-        private note_item add_note_header(string line_id, string note_id, bool deleted) {
+        private note_item add_note_header(string line_id, string note_id, bool deleted, DateTime utc_added) {
             Debug.Assert(note_id != "");
             Debug.Assert(line_id != cur_line_id_ && lines_.ContainsKey(line_id));
-            var new_ = new note_item(this, note_id, line_id, deleted );
+            var new_ = new note_item(this, note_id, line_id, deleted, utc_added );
             notes_sorted_by_line_index_.Add(new_);
             add_note_to_ui(new_);
             return new_;
         }
 
         // helper - add to the currently selected line
-        private note_item add_note(note n, string note_id, string reply_to_note_id, bool deleted) {
+        private note_item add_note(note n, string note_id, string reply_to_note_id, bool deleted, DateTime utc_added) {
             Debug.Assert(cur_line != null);
             if (cur_line == null) {
                 Debug.Assert(false);
@@ -495,7 +488,7 @@ namespace lw_common.ui {
 
             line new_ = new line();
             new_.copy_from(cur_line);
-            return add_note(new_, n, note_id, reply_to_note_id, deleted);
+            return add_note(new_, n, note_id, reply_to_note_id, deleted, utc_added);
         }
 
 
@@ -511,7 +504,7 @@ namespace lw_common.ui {
         //
         // note_id - the unique ID of the note, or "" if a new unique ID is to be created
         //           the reason we have this is that we can persist notes (together with their IDs)
-        private note_item add_note(line l, note n, string note_id, string reply_to_note_id, bool deleted) {
+        private note_item add_note(line l, note n, string note_id, string reply_to_note_id, bool deleted, DateTime utc_added) {
             // a note: can be added on a line, or as reply to someone
             // new notes: always at the end
 
@@ -536,7 +529,7 @@ namespace lw_common.ui {
                 // note we're replying to should exist already
                 Debug.Assert( notes_sorted_by_line_index_.Count(x => x.note_id == reply_to_note_id) == 1);
 
-            var new_ = new note_item(this, n, note_id, reply_to_note_id, line_id, deleted);
+            var new_ = new note_item(this, n, note_id, reply_to_note_id, line_id, deleted, utc_added);
             bool inserted = false;
             if (reply_to_note_id != "") {
                 // add this note as the last reply to this reply note
@@ -595,7 +588,7 @@ namespace lw_common.ui {
                     int line_index = lines_[line_id].idx;
                     note = notes_sorted_by_line_index_.FirstOrDefault(x => lines_[x.line_id].idx > line_index);
 
-                    var header = new note_item(this, next_guid, line_id, deleted);
+                    var header = new note_item(this, next_guid, line_id, deleted, utc_added);
                     if (note != null) {
                         int idx = notes_sorted_by_line_index_.IndexOf(note);
                         bool has_header = note.is_note_header && note.line_id == line_id;
@@ -742,9 +735,9 @@ namespace lw_common.ui {
             //       say X deletes note N, but Y replies on it
             foreach ( var n in copy) {
                 if (n.is_note_header)
-                    add_note_header(n.line_id, n.note_id, n.ui_deleted).deleted = n.deleted;
+                    add_note_header(n.line_id, n.note_id, n.ui_deleted, n.utc_last_edited).deleted = n.deleted;
                 else
-                    add_note(lines_[n.line_id], n.the_note, n.note_id, n.reply_id, n.ui_deleted).deleted = n.deleted;
+                    add_note(lines_[n.line_id], n.the_note, n.note_id, n.reply_id, n.ui_deleted, n.utc_last_edited).deleted = n.deleted;
             }
             Debug.Assert(notes_sorted_by_line_index_.Count == copy.Count);
 
@@ -841,7 +834,7 @@ namespace lw_common.ui {
             } else {
                 // 2 - no notes on this line
                 if (!last_note_is_cur_line) {
-                    var new_ = new note_item(this, next_guid, cur_line_id_, false);
+                    var new_ = new note_item(this, next_guid, cur_line_id_, false, DateTime.UtcNow);
                     notesCtrl.AddObject(new_);
                     refresh_note( new_);
                 }
@@ -865,7 +858,7 @@ namespace lw_common.ui {
                 var i = notesCtrl.GetItem(idx).RowObject as note_item;
                 if (i.line_id == line_id) {
                     if (last_note != null) {
-                        if (i.utc_added > last_note.utc_added)
+                        if (i.utc_last_edited > last_note.utc_last_edited)
                             last_note = i;
                     } else
                         last_note = i;
@@ -944,25 +937,11 @@ namespace lw_common.ui {
                 }
         }
 
-        public void load(string file_name) {
-            // set the author color first!
-            Debug.Assert(author_color_ != util.transparent);
+        private static Tuple<Dictionary<string, line>, List<note_item>> load_settings_file(note_ctrl self, string file_name) {
+            Dictionary<string, line> lines = new Dictionary<string, line>();
+            List<note_item> notes = new List<note_item>();
 
-            ++ignore_change_;
-            if (file_name_ != "")
-                // in this case, we're loading the notes from somewhere else, save existing first
-                save();
-
-            file_name_ = file_name;
-
-            notes_sorted_by_line_index_.Clear();
-            notesCtrl.ClearObjects();
-            cur_line.clear();
-            
-            lines_.Clear();
-            lines_.Add(cur_line_id_, new line());
-
-            settings_file sett = new settings_file(file_name_);
+            settings_file sett = new settings_file(file_name);
             // first, load lines
             int line_count = int.Parse(sett.get("line_count", "0"));
             for (int idx = 0; idx < line_count; ++idx) {
@@ -972,7 +951,7 @@ namespace lw_common.ui {
                 l.view_name = sett.get(prefix + "view_name");
                 l.msg = sett.get(prefix + "msg");
                 var id = sett.get(prefix + "id", "");
-                lines_.Add(id, l);
+                lines.Add(id, l);
             }
 
             // load notes
@@ -987,7 +966,6 @@ namespace lw_common.ui {
                     n.author_initials = sett.get(prefix + "author_initials");
                     n.author_color = util.str_to_color(sett.get(prefix + "author_color"));
                     n.note_text = sett.get(prefix + "note_text");
-                    add_color_for_author(n.author_name, n.author_color);
                 }
                 bool deleted = sett.get(prefix + "deleted", "0") != "0";
                 var note_id = sett.get(prefix + "note_id", "");
@@ -996,37 +974,131 @@ namespace lw_common.ui {
                 long ticks = long.Parse(sett.get(prefix + "added_at", "0"));
                 note_item note;
                 if (n != null)
-                    note = add_note(lines_[line_id], n, note_id, reply_id, deleted);
+                    note = new note_item(self, n, note_id, reply_id, line_id, deleted, new DateTime(ticks));
                 else
-                    note = add_note_header(line_id, note_id, deleted);
-                note.utc_added = new DateTime(ticks);
+                    note = new note_item(self, note_id, line_id, deleted, new DateTime(ticks));
+                notes.Add(note);
+            }
+            return new Tuple<Dictionary<string, line>, List<note_item>>(lines, notes);
+        }
+
+        public void load(string file_name) {
+            // set the author color first!
+            Debug.Assert(author_color_ != util.transparent);
+
+            ++ignore_change_;
+            if (file_name_ != "")
+                // in this case, we're loading the notes from somewhere else, save existing first
+                save();
+
+            file_name_ = file_name;
+
+            notes_sorted_by_line_index_.Clear();
+            notesCtrl.ClearObjects();
+            cur_line.clear();
+
+            var loaded = load_settings_file(this, file_name);
+            lines_ = loaded.Item1;
+            lines_.Add(cur_line_id_, new line());
+
+            foreach (var n in loaded.Item2) {
+                if (n.the_note != null) {
+                    add_color_for_author(n.the_note.author_name, n.the_note.author_color);
+                    add_note(lines_[n.line_id], n.the_note, n.note_id, n.reply_id, n.deleted, n.utc_last_edited);
+                } else
+                    add_note_header(n.line_id, n.note_id, n.deleted, n.utc_last_edited);
             }
         
             // update last_note_id and last_line_id
             dirty_ = false;
             --ignore_change_;
 
-            update_author_colors();
             refresh_notes();
             notesCtrl.Refresh();
+        }
+
+        private Tuple<Dictionary<string, line>, List<note_item>> adjust_guids_before_merge(Tuple<Dictionary<string, line>, List<note_item>> merge_from) {
+            // problem : two different people can enter a note on the same line
+            //           in this case, each will get its own GUID for the line they added teh note on
+            //           we need to merge the two GUIDs, since they literally point to the same line
+            Dictionary<string,string> merge_to_local_line_id = new Dictionary<string, string>();
+            foreach (var l in merge_from.Item1) {
+                var local = lines_.FirstOrDefault(x => x.Value.idx == l.Value.idx);
+                if ( local.Value != null)
+                    merge_to_local_line_id.Add( l.Key, local.Key);
+                else 
+                    merge_to_local_line_id.Add( l.Key, l.Key);
+            }
+
+            Dictionary<string, line> updated_lines = merge_from.Item1.ToDictionary(x => merge_to_local_line_id[x.Key], x => x.Value);
+            foreach (var n in merge_from.Item2)
+                n.line_id = merge_to_local_line_id[n.line_id];
+
+            return new Tuple<Dictionary<string, line>, List<note_item>>(updated_lines, merge_from.Item2);
         }
 
         public void merge(string other_file) {
+            // create a backup, just in case something could go wrong
+            save(file_name_ + ".backup." + DateTime.Now.Ticks);
+
             // update is_merged!
+            ++ignore_change_;
             
-            update_author_colors();
-            refresh_notes();
+            var merge_from = adjust_guids_before_merge( load_settings_file(this, other_file));
+            // first, merge lines
+            foreach ( var new_line in merge_from.Item1)
+                if ( !lines_.ContainsKey(new_line.Key))
+                    lines_.Add(new_line.Key, new_line.Value);
+
+            // now, merge notes
+            //
+            foreach (var new_note in merge_from.Item2) {                
+                if (!new_note.is_note_header) {
+                    var found = notes_sorted_by_line_index_.FindIndex(x => x.note_id == new_note.note_id);
+                    if (found != -1) {
+                        // in this case, look at last_edited -> if bigger than ours, take that (someone else updated the entry after us)
+                        Debug.Assert(notes_sorted_by_line_index_[found].line_id == new_note.line_id);
+                        Debug.Assert(notes_sorted_by_line_index_[found].reply_id == new_note.reply_id);
+                        if (new_note.utc_last_edited > notes_sorted_by_line_index_[found].utc_last_edited)
+                            notes_sorted_by_line_index_[found] = new_note;
+                    } else {
+                        // it's a new note, just add it
+                        // the way we keep the sorted lines (sorted by line index), we should never encounter a line with a reply pointing to an inexisting line
+                        Debug.Assert(lines_.ContainsKey(new_note.line_id));
+                        add_color_for_author(new_note.the_note.author_name, new_note.the_note.author_color);
+                        add_note(lines_[new_note.line_id], new_note.the_note, new_note.note_id, new_note.reply_id, new_note.deleted, new_note.utc_last_edited);
+                    }
+                } else {
+                    // it's a note header
+                    // note headers are the same everywhere - so if found, ours is good
+                    var found = notes_sorted_by_line_index_.FirstOrDefault(x => x.line_id == new_note.line_id);
+                    if ( found == null)
+                        add_note_header(new_note.line_id, new_note.note_id, new_note.deleted, new_note.utc_last_edited);
+                }
+            }
+            dirty_ = false;
+            --ignore_change_;
+
+            // the reason we readd everything - the merged notes would end up being appended to the end, no matter what line they were appended to
+            // we want to show them sorted by line
+            readd_everything();
             notesCtrl.Refresh();
+
+            save();
         }
 
-        public void save() {
+        // saves the settings - you can specify another file name (in case you're making a backup)
+        public void save(string file_name = "") {
+            if (file_name == "")
+                file_name = file_name_;
+
             // needs to be loaded first
-            if (file_name_ == "")
+            if (file_name == "")
                 return;
             if (!dirty_)
                 return;
 
-            settings_file sett = new settings_file(file_name_) { log_each_set = false };
+            settings_file sett = new settings_file(file_name) { log_each_set = false };
 
             // first, save lines - don't save the cur_line
             sett.set("line_count", "" + (lines_.Count - 1));
@@ -1060,11 +1132,12 @@ namespace lw_common.ui {
                 sett.set(prefix + "note_id", "" + n.note_id);
                 sett.set(prefix + "reply_id", "" + n.reply_id);
                 sett.set(prefix + "line_id", "" + n.line_id);
-                sett.set(prefix + "added_at", "" + n.utc_added.Ticks);
+                sett.set(prefix + "added_at", "" + n.utc_last_edited.Ticks);
             }
             sett.save();
 
-            dirty_ = false;
+            if ( file_name == file_name_)
+                dirty_ = false;
         }
 
         private void refresh_note(note_item i) {
@@ -1112,7 +1185,7 @@ namespace lw_common.ui {
                         dirty_ = true;
                         i.the_note.note_text = note_text;
                         // user modified the note
-                        i.utc_added = DateTime.UtcNow;
+                        i.utc_last_edited = DateTime.UtcNow;
                         refresh_note(i);
                         return;
                     }
@@ -1123,7 +1196,7 @@ namespace lw_common.ui {
 
                 note new_ = new note() { author_name = author_name_, author_initials = author_initials_, 
                     author_color = author_color_, note_text = note_text, made_by_current_user = true, is_new = true };
-                add_note(new_, "", reply_to_note_id, false);
+                add_note(new_, "", reply_to_note_id, false, DateTime.UtcNow);
                 refresh_notes();
             }
         }
