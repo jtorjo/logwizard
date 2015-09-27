@@ -32,6 +32,7 @@ using System.Windows.Forms;
 namespace lw_common.ui {
     // Show by time - not implemented yet
     public partial class note_ctrl : UserControl {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private string author_name_ = "", author_initials_ = "";
         private Color author_color_ = util.transparent;
@@ -129,6 +130,17 @@ namespace lw_common.ui {
 
             // when was this note added (could be useful when sorting by time)
             public DateTime utc_added = DateTime.UtcNow;
+
+            // for debugging
+            public string friendly_note {
+                get {
+                    string sub = "";
+                    if (the_note != null)
+                        sub = the_note.note_text.Length > 10 ? the_note.note_text.Substring(0, 10) : the_note.note_text;
+                    string friendly_n = the_note != null ? "[" + sub + "...]" : "l-" + self.lines_[line_id].idx;
+                    return friendly_n;
+                }
+            }
 
             // if true, this is the header (information about the line itself)
             public bool is_note_header {
@@ -263,7 +275,7 @@ namespace lw_common.ui {
         public on_note_selected_func on_note_selected;
 
         // use friendly GUIDs - use numbers instead
-        private static bool use_friendly_guids = false;// util.is_debug;
+        private static bool use_friendly_guids = util.is_debug;
         private static long next_guid_ = DateTime.Now.Ticks;
         private static string next_guid {
             get {
@@ -331,6 +343,14 @@ namespace lw_common.ui {
             return add_note(new_, n, note_id, reply_to_note_id, deleted);
         }
 
+
+        private void log_notes_sorted_idx(int idx, note_item n) {
+            if (idx >= 0) 
+                logger.Info("[notes] insert " + n.friendly_note + " before " + notes_sorted_by_line_index_[idx].friendly_note);
+            else 
+                logger.Info("[notes] adding " + n.friendly_note + " at the end");
+        }
+
         // returns the ID assigned to this note that we're adding;
         // if null, something went wrong
         //
@@ -377,7 +397,8 @@ namespace lw_common.ui {
                             if (reply_to_note_id != "") {
                                 // in this case, look for this note (that we're replying to)
                                 if (notes_sorted_by_line_index_[idx_note].note_id == reply_to_note_id) {
-                                    notes_sorted_by_line_index_.Insert(idx_note + 1, new_);
+                                    log_notes_sorted_idx(idx_note + 1, new_);
+                                    notes_sorted_by_line_index_.Insert(idx_note + 1, new_);                                    
                                     inserted = true;
                                 }
                             } else {
@@ -386,6 +407,7 @@ namespace lw_common.ui {
                                     if (notes_sorted_by_line_index_[idx_note + 1].line_id != line_id) {
                                         // found the last note that relates to this line
                                         notes_sorted_by_line_index_.Insert(idx_note + 1, new_);
+                                        log_notes_sorted_idx(idx_note + 1, new_);
                                         inserted = true;                                        
                                     }
                             }
@@ -404,10 +426,13 @@ namespace lw_common.ui {
                         if ( idx < notes_sorted_by_line_index_.Count - 1)
                             if (notes_sorted_by_line_index_[idx + 1].line_id != line_id)
                                 break;
-                    if ( idx < notes_sorted_by_line_index_.Count)
-                        notes_sorted_by_line_index_.Insert(idx, new_);
-                    else 
+                    if (idx < notes_sorted_by_line_index_.Count) {
+                        log_notes_sorted_idx(idx + 1, new_);
+                        notes_sorted_by_line_index_.Insert(idx + 1, new_);
+                    } else {
+                        log_notes_sorted_idx(-1, new_);
                         notes_sorted_by_line_index_.Add(new_);
+                    }
                     inserted = true;
                 } else {
                     // this is the first entry that relates to this line
@@ -415,17 +440,27 @@ namespace lw_common.ui {
                     int line_index = lines_[line_id].idx;
                     note = notes_sorted_by_line_index_.FirstOrDefault(x => lines_[x.line_id].idx > line_index);
 
-                    var header = new note_item(this,  next_guid, line_id, deleted);
+                    var header = new note_item(this, next_guid, line_id, deleted);
                     if (note != null) {
                         int idx = notes_sorted_by_line_index_.IndexOf(note);
                         bool has_header = note.is_note_header && note.line_id == line_id;
                         if (!has_header) {
+                            log_notes_sorted_idx(idx, header);
                             notes_sorted_by_line_index_.Insert(idx, header);
+                            log_notes_sorted_idx(idx + 1, new_);
                             notes_sorted_by_line_index_.Insert(idx + 1, new_);
-                        }
-                        else 
+                        } else {
+                            // header is already added
+                            if (header.deleted && !deleted)
+                                // in this case, the header was deleted (probably we removed all items related to this line a while ago,
+                                // and now we have added a new note here)
+                                header.deleted = false;
+                            log_notes_sorted_idx(idx, new_);
                             notes_sorted_by_line_index_.Insert(idx, new_);
+                        }
                     } else {
+                        log_notes_sorted_idx(-1, header);
+                        log_notes_sorted_idx(-1, new_);
                         notes_sorted_by_line_index_.Add(header);
                         notes_sorted_by_line_index_.Add(new_);
                     }
@@ -481,8 +516,11 @@ namespace lw_common.ui {
                 notesCtrl.InsertObjects(insert_idx, new object[] {last_note});
                 // now, select it as well
                 notesCtrl.SelectObject(last_note);
+                // ... so that it recomputes its UI index correctly
+                notesCtrl.RefreshObject(last_note);
                 --ignore_change_;
                 notesCtrl.EnsureVisible(insert_idx);
+                refresh_note(last_note);
             }
         }
 
@@ -590,7 +628,8 @@ namespace lw_common.ui {
                     }
 
             --ignore_change_;
-            
+
+            refresh_note_indexes();
         }
 
 
@@ -706,9 +745,7 @@ namespace lw_common.ui {
 
 
         public void undo() {
-            // FIXME
-
-            // Ctrl-Z -> write a msg "All your deleted notes have been copied to clipboard - first your own, then the ones from the other authors"
+            // no need - just toggle "Show Deleted Notes"
         }
 
         public void load(string file_name) {
@@ -769,6 +806,7 @@ namespace lw_common.ui {
             dirty_ = false;
             --ignore_change_;
 
+            refresh_note_indexes();
             notesCtrl.Refresh();
         }
 
@@ -779,7 +817,7 @@ namespace lw_common.ui {
             if (!dirty_)
                 return;
 
-            settings_file sett = new settings_file(file_name_);
+            settings_file sett = new settings_file(file_name_) { log_each_set = false };
 
             // first, save lines - don't save the cur_line
             sett.set("line_count", "" + (lines_.Count - 1));
@@ -805,6 +843,9 @@ namespace lw_common.ui {
                     sett.set(prefix + "author_color", util.color_to_str(n.the_note.author_color));
                     sett.set(prefix + "note_text", n.the_note.note_text);
                 }
+                else 
+                    // clear the author name, so we know it's not a note (it's a line)
+                    sett.set(prefix + "author_name", "");
 
                 sett.set(prefix + "deleted", n.deleted ? "1" : "0");
                 sett.set(prefix + "note_id", "" + n.note_id);
@@ -820,6 +861,12 @@ namespace lw_common.ui {
         private void refresh_note(note_item i) {
             notesCtrl.RefreshObject(i);
             // FIXME fg + bg - see about whether is deleted or not
+        }
+
+        private void refresh_note_indexes() {
+            // so that the UI indexes (first column) are recomputed - in case of an insert
+            for ( int idx = 0; idx < notesCtrl.GetItemCount(); ++idx)
+                notesCtrl.RefreshObject( notesCtrl.GetItem(idx).RowObject );
         }
 
         private void curNote_KeyDown(object sender, KeyEventArgs e) {
@@ -861,8 +908,10 @@ namespace lw_common.ui {
         }
         private void curNote_KeyUp(object sender, KeyEventArgs e) {
             string s = util.key_to_action(e);
-            if (s == "return") 
+            if (s == "return") {
+                refresh_note_indexes();
                 notesCtrl.Focus();
+            }
         }
 
         private void notesCtrl_SelectedIndexChanged(object sender, EventArgs e) {
@@ -917,6 +966,11 @@ namespace lw_common.ui {
 
         private void showDeletedLines_CheckedChanged(object sender, EventArgs e) {
             // optimize - if nothing deleted
+            int del_count = notes_sorted_by_line_index_.Count(x => x.deleted);
+            if (del_count == 0)
+                return;
+
+            readd_everything();
         }
 
         private void notesCtrl_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
@@ -932,7 +986,6 @@ namespace lw_common.ui {
             if ( del)
                 if ( notesCtrl.SelectedIndex >= 0)
                     toggle_del_note( (notesCtrl.GetItem(notesCtrl.SelectedIndex).RowObject as note_item).note_id);
-
         }
 
 

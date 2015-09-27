@@ -81,6 +81,9 @@
     <EmbeddedResource Include="test_notes_ctrl.resx">
       <DependentUpon>test_notes_ctrl.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

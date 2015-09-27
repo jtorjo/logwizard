@@ -12,3 +12,6 @@
   if a .config file found, read it from there - prefer the pattern after FileAppender
 
 
+- notes: have a setting: don't show deleted notes older than X days/hours - so that when toggling this ON, when you see hte deleted notes,
+  you probably don't care about old ones - this probably makes sense when having lots of notes over the course of several days and so
+  - it's so that i don't have to UNDO ever - even notes written by yourself, if you delete them, they are still visible

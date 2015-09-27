@@ -42,7 +42,7 @@ namespace lw_common
         public bool dirty = false;
 
         // if true, we log each time we modify something - for debugging only
-        bool log_each_set = false;
+        public bool log_each_set = true;
 
         private const string VERSION_NAME = "_settings_version";
         /* 1.0.66+ added versioning
@@ -123,8 +123,6 @@ namespace lw_common
             } catch(Exception e) {
                 logger.Error("Could not read " + file_name + " : " + e.Message);
             }
-
-            log_each_set = true;
         }
 
         public string get(string text, string default_ = "") {

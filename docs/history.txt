@@ -33,6 +33,10 @@
   only dd2 is not inserted correctly
 
 
+1.1.3i
+- solved some bugs: adding works correctly now, and tested delete - seems to work
+- "Show Deleted Notes" - note fully tested
+
 
 1.1.3h
 - using GUIDs for line_id/note_id - so that merging will be extremely easy
