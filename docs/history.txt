@@ -26,11 +26,11 @@
 - todo : guids + merging
          saving md5 : fast (last 8192 + first 8192 chars, + file name + file size), slow (full md5)
 
+- bug: when on a valid note from me, instead of "Edit note" i see "Reply to..."
 
-- bug:
-  adding an extra note to each line will generate an error at loading next time
-  it's very likely due to wrong insertion (dd is not inserted correctly)
-  only dd2 is not inserted correctly
+
+1.1.3j
+- set color fg/bg, updated font - looks pretty awesome
 
 
 1.1.3i

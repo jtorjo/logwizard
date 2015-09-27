@@ -212,20 +212,22 @@ namespace lw_common {
 
         public static Color str_to_color(string s) {
             Color name = str_to_namecolor(s);
-            if (name.ToArgb() != transparent.ToArgb())
+            if (name != transparent)
                 return name;
 
             if (s[0] == '#')
                 s = s.Substring(1);
 
             if (s.Length == 6) {
-                string r = s.Substring(0, 2);
-                string g = s.Substring(2, 2);
-                string b = s.Substring(4, 2);
-                int ri = Convert.ToInt16(r, 16);
-                int gi = Convert.ToInt16(g, 16);
-                int bi = Convert.ToInt16(b, 16);
-                return Color.FromArgb(ri, gi, bi);
+                try {
+                    string r = s.Substring(0, 2);
+                    string g = s.Substring(2, 2);
+                    string b = s.Substring(4, 2);
+                    int ri = Convert.ToInt16(r, 16);
+                    int gi = Convert.ToInt16(g, 16);
+                    int bi = Convert.ToInt16(b, 16);
+                    return Color.FromArgb(ri, gi, bi);
+                } catch {}
             }
 
             return transparent;

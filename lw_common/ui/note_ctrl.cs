@@ -28,6 +28,7 @@ using System.Linq;
 using System.Net.Configuration;
 using System.Text;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
 
 namespace lw_common.ui {
     // Show by time - not implemented yet
@@ -187,6 +188,52 @@ namespace lw_common.ui {
             /////////////////////////////////////////////////////////////////////////////////////////
             // remaining - getters
 
+            // note: if any chidren of a deleted note/line is !deleted, we need to show that note/line (even if shown in gray)
+            //       normally, this should not happen - however, I see this as a possibility when merging two notes files
+            //       say X deletes note N, but Y replies on it - in this case, I want to see the note, even if marked "Deleted"
+            public bool ui_deleted {
+                get {
+                    if (!deleted)
+                        // in this case, we're clearly visible
+                        return deleted;
+
+                    // in this case, we're deleted - look for any descendants that are not deleted
+                    foreach ( var n in descendants())
+                        if (!n.deleted)
+                            // found a non-deleted descendant
+                            return false;
+
+                    return deleted;
+                }
+            }
+
+            public List<note_item> descendants() {
+
+                if (the_note == null) {
+                    List<note_item> desc = new List<note_item>();
+                    // in this case, a line header 
+                    foreach (var n in self.notes_sorted_by_line_index_)
+                        if (n.line_id == line_id)
+                            desc.Add(n);
+                    return desc;
+                }
+
+                List<string> ids = new List<string>();
+                ids.Add(note_id);
+                bool reply_found = true;
+                while (reply_found) {
+                    reply_found = false;
+                    foreach ( var n in self.notes_sorted_by_line_index_)
+                        if (ids.Contains(n.reply_id)) {
+                            ids.Add(n.note_id);
+                            reply_found = true;
+                        }
+                }
+                // exclude itself
+                ids.RemoveAt(0);
+                return self.notes_sorted_by_line_index_.Where(x => ids.Contains(x.note_id)).ToList();
+            } 
+
             public string the_idx {
                 get {
                     if (is_note_header)
@@ -215,6 +262,9 @@ namespace lw_common.ui {
 
             public int indent {
                 get {
+                    if (the_note == null)
+                        return 0;
+
                     int ind = 0;
                     note_item cur = this;
                     while (cur.reply_id != "") {
@@ -223,31 +273,85 @@ namespace lw_common.ui {
                         if (cur == null)
                             break;
                     }
-                    return ind;
+                    return ind + 1;
                 }
             }
 
 
             public string the_text {
                 get {
-                    if (the_note != null) {
-                        // gets the note that is printed on screen - on the list
-                        // ignore #... at beginning of msg
-                        return the_note.note_text;
-                    } else
-                        return self.lines_[line_id].msg;
+                    string txt = the_note != null ? note_no_color() : self.lines_[line_id].msg;
+                    int indent = this.indent;
+                    if ( indent > 0)
+                        txt = new string(' ', indent * 2) + txt;
+                    return txt;
                 }
+            }
+
+            private static Color deleted_fg = Color.LightGray;
+            private static Color header_fg = Color.DarkViolet;
+            private static Color msg_idx_fg = Color.DarkGray;
+
+            private Color note_color() {
+                Debug.Assert(the_note != null);
+                // look into # at beginning of msg
+                string msg = the_note.note_text.Trim();
+                if (msg.StartsWith("#")) {
+                    int space = msg.IndexOf(' ');
+                    if (space > 0) {
+                        string color_str = msg.Substring(1, space - 1);
+                        return util.str_to_color(color_str);
+                    }
+                }
+
+                return util.transparent;
+            }
+
+            private string note_no_color() {
+                Debug.Assert(the_note != null);
+                // look into # at beginning of msg
+                string msg = the_note.note_text.Trim();
+                if (msg.StartsWith("#")) {
+                    int space = msg.IndexOf(' ');
+                    if (space > 0) {
+                        string color_str = msg.Substring(1, space - 1);
+                        if (util.str_to_color(color_str) != util.transparent) 
+                            // in this case, there was a valid color set in the text
+                            return msg.Substring(space + 1).Trim();                        
+                    }
+                }
+                return the_note.note_text;
+            }
+
+            public Color idx_fg {
+                get { return msg_idx_fg; }
             }
 
             public Color text_fg {
                 get {
-                    // look into # at beginning of msg
-                    return Color.Blue;                     
+                    if (ui_deleted)
+                        return deleted_fg;
+
+                    if ( the_note == null)                         
+                        return header_fg; // it's the note header
+
+                    // it's a note
+                    Color c = note_color();
+                    if (c != util.transparent)
+                        return c;
+
+                    return self.author_color(the_note.author_name);
                 }
             }
             public Color line_fg {
                 get {
-                    return Color.Blue;                     
+                    if (ui_deleted)
+                        return deleted_fg;
+                    if ( the_note == null)                         
+                        return header_fg; // it's the note header
+                    // it's a note
+
+                    return self.author_color(the_note.author_name);
                 }
             }
         }
@@ -274,7 +378,10 @@ namespace lw_common.ui {
 
         public on_note_selected_func on_note_selected;
 
-        // use friendly GUIDs - use numbers instead
+        private Font header_font_ = null;
+        private Font note_font_ = null;
+
+        // if use friendly GUIDs - use numbers instead - this should never be on production!
         private static bool use_friendly_guids = util.is_debug;
         private static long next_guid_ = DateTime.Now.Ticks;
         private static string next_guid {
@@ -289,6 +396,8 @@ namespace lw_common.ui {
         public note_ctrl() {
             InitializeComponent();
             lines_.Add(cur_line_id_, new line());
+            header_font_ = notesCtrl.Font;
+            note_font_ = new Font("Tahoma", header_font_.Size, FontStyle.Bold);
             update_cur_note_controls();
         }
 
@@ -535,7 +644,9 @@ namespace lw_common.ui {
             return cur_line_id_;
         }
 
-
+        /* we NEVER delete any note. We mark the note as DELETED, and based on "Show Deleted Notes", we can show them as well, or not.
+            This simply eliminates the need to UNDO
+        */
         private void toggle_del_note(string note_id) {
             var toggle_note = notes_sorted_by_line_index_.FirstOrDefault(x => x.note_id == note_id);
             if (toggle_note == null) {
@@ -549,45 +660,22 @@ namespace lw_common.ui {
             int same_line_count = notes_sorted_by_line_index_.Count(x => x.line_id == line_id);
             // at least the line + a note on that line
             Debug.Assert(same_line_count >= 2); 
-            bool is_single = same_line_count == 2;
+            bool is_single = same_line_count <= 2;
             if (is_single) {
+                // in this case - either pressed on the Note itself, or on the header -> should still delete both lines
                 foreach (var n in notes_sorted_by_line_index_)
                     if (n.line_id == line_id)
                         n.deleted = !n.deleted;
             }
-            else if (toggle_note.the_note == null) {
+            else {
                 // in this case, pressed on a line header - toggle all its sub-children
-                foreach (var n in notes_sorted_by_line_index_)
-                    if (n.line_id == toggle_note.line_id && n.the_note != null)
-                        n.deleted = !n.deleted;
-            } else {
-                // pressed on a note - find all replies on that note
-                List<string> ids = new List<string>();
-                ids.Add(note_id);
-                bool reply_found = true;
-                while (reply_found) {
-                    reply_found = false;
-                    foreach ( var n in notes_sorted_by_line_index_)
-                        if (n.reply_id != "" && ids.Contains(n.reply_id)) {
-                            ids.Add(n.note_id);
-                            reply_found = true;
-                        }
-                }
-                int delete_count = notes_sorted_by_line_index_.Count(x => ids.Contains(x.note_id) && !x.deleted);
-                bool do_delete = delete_count == ids.Count;
-                foreach ( var n in notes_sorted_by_line_index_)
-                    if (ids.Contains(n.note_id) && n.the_note != null)
-                        n.deleted = do_delete;
+                bool deleted = !toggle_note.deleted;
+                toggle_note.deleted = deleted;
+                foreach (var n in toggle_note.descendants())
+                    n.deleted = deleted;
             }
 
             readd_everything();
-
-            // note: delete someone else's note -> it's grayed (hidden)
-            //       delete your note: it's fully deleted + copied to clipboard -> ALL THE notes you delete - keep them internally and the user should be able to access them
-            //       (just in case he did a mistake)
-
-            // if i delete a note from line ,and no other notes on that line:
-            // if it was from current user, delete the line note as well ; otherwise, just hide it
         }
 
         private void readd_everything() {
@@ -602,11 +690,15 @@ namespace lw_common.ui {
             notesCtrl.ClearObjects();
 
             // ... re-add everything
-            foreach ( var n in copy) {                
+            //
+            // note: if any chidren of a deleted note/line is !deleted, we need to show that note/line (even if shown in gray)
+            //       normally, this should not happen - however, I see this as a possibility when merging two notes files
+            //       say X deletes note N, but Y replies on it
+            foreach ( var n in copy) {
                 if (n.is_note_header)
-                    add_note_header(n.line_id, n.note_id, n.deleted);
+                    add_note_header(n.line_id, n.note_id, n.ui_deleted).deleted = n.deleted;
                 else
-                    add_note(lines_[n.line_id], n.the_note, n.note_id, n.reply_id, n.deleted);
+                    add_note(lines_[n.line_id], n.the_note, n.note_id, n.reply_id, n.ui_deleted).deleted = n.deleted;
             }
             Debug.Assert(notes_sorted_by_line_index_.Count == copy.Count);
 
@@ -624,12 +716,13 @@ namespace lw_common.ui {
                 for ( int idx = 0; idx < notesCtrl.GetItemCount(); ++idx)
                     if ((notesCtrl.GetItem(idx).RowObject as note_item).note_id == new_sel) {
                         notesCtrl.SelectedIndex = idx;
+                        notesCtrl.EnsureVisible(idx);
                         break;
                     }
 
             --ignore_change_;
 
-            refresh_note_indexes();
+            refresh_notes();
         }
 
 
@@ -806,7 +899,7 @@ namespace lw_common.ui {
             dirty_ = false;
             --ignore_change_;
 
-            refresh_note_indexes();
+            refresh_notes();
             notesCtrl.Refresh();
         }
 
@@ -860,13 +953,31 @@ namespace lw_common.ui {
 
         private void refresh_note(note_item i) {
             notesCtrl.RefreshObject(i);
-            // FIXME fg + bg - see about whether is deleted or not
+
+            var item = notesCtrl.ModelToItem(i);
+
+            OLVListSubItem idx = item.GetSubItem(0), line = item.GetSubItem(1), text = item.GetSubItem(2);
+            if ( idx.ForeColor.ToArgb() != i.idx_fg.ToArgb())
+                idx.ForeColor = i.idx_fg;
+            if ( line.ForeColor.ToArgb() != i.line_fg.ToArgb())
+                line.ForeColor = i.line_fg;
+            if ( text.ForeColor.ToArgb() != i.text_fg.ToArgb())
+                text.ForeColor = i.text_fg;
+
+            line.Font = i.the_note != null ? note_font_ : header_font_;
+            text.Font = i.the_note != null ? note_font_ : header_font_;
         }
 
         private void refresh_note_indexes() {
             // so that the UI indexes (first column) are recomputed - in case of an insert
             for ( int idx = 0; idx < notesCtrl.GetItemCount(); ++idx)
                 notesCtrl.RefreshObject( notesCtrl.GetItem(idx).RowObject );
+        }
+
+        private void refresh_notes() {
+            // so that the UI indexes (first column) are recomputed - in case of an insert
+            for ( int idx = 0; idx < notesCtrl.GetItemCount(); ++idx)
+                refresh_note( notesCtrl.GetItem(idx).RowObject as note_item);
         }
 
         private void curNote_KeyDown(object sender, KeyEventArgs e) {
@@ -986,6 +1097,11 @@ namespace lw_common.ui {
             if ( del)
                 if ( notesCtrl.SelectedIndex >= 0)
                     toggle_del_note( (notesCtrl.GetItem(notesCtrl.SelectedIndex).RowObject as note_item).note_id);
+        }
+
+        private Color author_color(string name) {
+            // FIXME
+            return Color.Blue;
         }
 
 

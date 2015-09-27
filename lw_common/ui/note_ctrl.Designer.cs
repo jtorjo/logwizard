@@ -55,14 +55,18 @@
             this.notesCtrl.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.notesCtrl.FullRowSelect = true;
             this.notesCtrl.HideSelection = false;
+            this.notesCtrl.IsSearchOnSortColumn = false;
             this.notesCtrl.Location = new System.Drawing.Point(0, 0);
             this.notesCtrl.Margin = new System.Windows.Forms.Padding(4);
             this.notesCtrl.MultiSelect = false;
             this.notesCtrl.Name = "notesCtrl";
+            this.notesCtrl.OwnerDraw = true;
             this.notesCtrl.ShowGroups = false;
             this.notesCtrl.Size = new System.Drawing.Size(431, 443);
             this.notesCtrl.TabIndex = 0;
+            this.notesCtrl.UseCellFormatEvents = true;
             this.notesCtrl.UseCompatibleStateImageBehavior = false;
+            this.notesCtrl.UseCustomSelectionColors = true;
             this.notesCtrl.View = System.Windows.Forms.View.Details;
             this.notesCtrl.SelectedIndexChanged += new System.EventHandler(this.notesCtrl_SelectedIndexChanged);
             this.notesCtrl.Enter += new System.EventHandler(this.notesCtrl_Enter);
@@ -82,7 +86,7 @@
             this.olvColumn2.AspectName = "the_line";
             this.olvColumn2.IsEditable = false;
             this.olvColumn2.Text = "Line";
-            this.olvColumn2.Width = 50;
+            this.olvColumn2.Width = 70;
             // 
             // olvColumn3
             // 
