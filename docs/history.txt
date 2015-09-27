@@ -29,6 +29,10 @@
 - bug: when on a valid note from me, instead of "Edit note" i see "Reply to..."
 
 
+1.1.3m
+- author colors: compute them - care only about the current author's color; the rest - select from predefined list
+
+
 1.1.3k
 - author colors we have unique colors for each author, even if they clash
 

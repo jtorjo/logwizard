@@ -432,7 +432,7 @@ namespace lw_common.ui {
                     n.the_note.author_color = notes_color;
                 }
 
-            update_author_default_colors();
+            update_author_colors();
             notesCtrl.Refresh();
         }
 
@@ -848,9 +848,21 @@ namespace lw_common.ui {
             // no need - just toggle "Show Deleted Notes"
         }
 
-        private void update_author_default_colors() {
+        private void update_author_colors() {
             // set author name / color first!
             Debug.Assert(author_name_ != "" && author_color_ != util.transparent);
+
+            /*  by default, we preser the current user's author color
+                for the rest of the colors - just use them from the following array
+
+                the reason I'm not using the author's selected color: the problem with that is that someone could select
+                some color very close to another existing color, like - something realy close to blue, and the current user's color is blue.
+
+                In this case, we'd end up having two DIFFERENT colors, but visually they would look very the same, thus the user 
+                would need to look very careful to distinguish his notes from the other user's.
+
+                In my solution, I just preserve the user's color. The other colors - use them from this list.
+            */
 
             Color[] defaults_ = new Color[] {
                 Color.Blue,
@@ -872,13 +884,8 @@ namespace lw_common.ui {
             };
             int default_idx = 0;
 
-            HashSet<Color> colors = new HashSet<Color>();
-            foreach ( var n in notes_sorted_by_line_index_)
-                if (n.the_note != null)
-                    colors.Add(n.the_note.author_color);
-
             // these are the colors that are not used by existing authors at this point
-            List<Color> new_colors = defaults_.Where(x => !colors.Contains(x)).ToList();
+            List<Color> new_colors = defaults_.Where(x => x.ToArgb() != author_color_.ToArgb() ).ToList();
 
             // any color used more than once - we'll have to end up using another color
             author_colors_.Clear();
@@ -889,11 +896,9 @@ namespace lw_common.ui {
                     if (author_colors_.ContainsKey(n.the_note.author_name))
                         // we already know the color for this author
                         continue;
+
                     // it's a new author
-                    bool is_color_used = author_colors_.Values.Contains(n.the_note.author_color);
-                    if ( !is_color_used)
-                        author_colors_.Add(n.the_note.author_name, n.the_note.author_color);
-                    else if (new_colors.Count > 0) {
+                    if (new_colors.Count > 0) {
                         author_colors_.Add(n.the_note.author_name, new_colors[0]);
                         new_colors.RemoveAt(0);
                     } else 
@@ -963,7 +968,7 @@ namespace lw_common.ui {
             dirty_ = false;
             --ignore_change_;
 
-            update_author_default_colors();
+            update_author_colors();
             refresh_notes();
             notesCtrl.Refresh();
         }
@@ -971,7 +976,7 @@ namespace lw_common.ui {
         public void merge(string other_file) {
             // update is_merged!
             
-            update_author_default_colors();
+            update_author_colors();
             refresh_notes();
             notesCtrl.Refresh();
         }
