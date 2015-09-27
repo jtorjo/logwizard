@@ -381,6 +381,11 @@ namespace lw_common.ui {
         private Font header_font_ = null;
         private Font note_font_ = null;
 
+        // what color to use for authors whose color clashes with ours 
+        // - say I'm marked blue, and another user is also marked blue
+        //   in this case, I will preserve myself as blue, and use another color for the other guy
+        private SortedDictionary<string, Color> author_colors_ = new SortedDictionary<string, Color>(); 
+
         // if use friendly GUIDs - use numbers instead - this should never be on production!
         private static bool use_friendly_guids = util.is_debug;
         private static long next_guid_ = DateTime.Now.Ticks;
@@ -426,6 +431,8 @@ namespace lw_common.ui {
                     n.the_note.author_initials = author_initials;
                     n.the_note.author_color = notes_color;
                 }
+
+            update_author_default_colors();
             notesCtrl.Refresh();
         }
 
@@ -841,7 +848,64 @@ namespace lw_common.ui {
             // no need - just toggle "Show Deleted Notes"
         }
 
+        private void update_author_default_colors() {
+            // set author name / color first!
+            Debug.Assert(author_name_ != "" && author_color_ != util.transparent);
+
+            Color[] defaults_ = new Color[] {
+                Color.Blue,
+                Color.MediumPurple, 
+                Color.Red,
+                Color.Maroon,
+                Color.RosyBrown, 
+                Color.SteelBlue, 
+                Color.Brown, 
+                Color.Magenta, 
+                Color.Chocolate,
+                Color.DarkMagenta,
+                Color.Coral, 
+                Color.Violet, 
+                Color.Pink, 
+                Color.Green, 
+                Color.DarkOrange,
+                Color.Indigo, 
+            };
+            int default_idx = 0;
+
+            HashSet<Color> colors = new HashSet<Color>();
+            foreach ( var n in notes_sorted_by_line_index_)
+                if (n.the_note != null)
+                    colors.Add(n.the_note.author_color);
+
+            // these are the colors that are not used by existing authors at this point
+            List<Color> new_colors = defaults_.Where(x => !colors.Contains(x)).ToList();
+
+            // any color used more than once - we'll have to end up using another color
+            author_colors_.Clear();
+            // current author - preserves his color
+            author_colors_.Add(author_name_, author_color_);
+            foreach ( var n in notes_sorted_by_line_index_)
+                if (n.the_note != null) {
+                    if (author_colors_.ContainsKey(n.the_note.author_name))
+                        // we already know the color for this author
+                        continue;
+                    // it's a new author
+                    bool is_color_used = author_colors_.Values.Contains(n.the_note.author_color);
+                    if ( !is_color_used)
+                        author_colors_.Add(n.the_note.author_name, n.the_note.author_color);
+                    else if (new_colors.Count > 0) {
+                        author_colors_.Add(n.the_note.author_name, new_colors[0]);
+                        new_colors.RemoveAt(0);
+                    } else 
+                        // at this point - way too many authors - we don't have enough colors - just use what he originally set
+                        author_colors_.Add(n.the_note.author_name, n.the_note.author_color);
+                }
+        }
+
         public void load(string file_name) {
+            // set the author color first!
+            Debug.Assert(author_color_ != util.transparent);
+
             ++ignore_change_;
             if (file_name_ != "")
                 // in this case, we're loading the notes from somewhere else, save existing first
@@ -899,6 +963,15 @@ namespace lw_common.ui {
             dirty_ = false;
             --ignore_change_;
 
+            update_author_default_colors();
+            refresh_notes();
+            notesCtrl.Refresh();
+        }
+
+        public void merge(string other_file) {
+            // update is_merged!
+            
+            update_author_default_colors();
             refresh_notes();
             notesCtrl.Refresh();
         }
@@ -1100,8 +1173,8 @@ namespace lw_common.ui {
         }
 
         private Color author_color(string name) {
-            // FIXME
-            return Color.Blue;
+            Debug.Assert(author_colors_.ContainsKey(name));
+            return author_colors_[name];
         }
 
 

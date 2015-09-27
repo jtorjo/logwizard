@@ -29,6 +29,10 @@
 - bug: when on a valid note from me, instead of "Edit note" i see "Reply to..."
 
 
+1.1.3k
+- author colors we have unique colors for each author, even if they clash
+
+
 1.1.3j
 - set color fg/bg, updated font - looks pretty awesome
 

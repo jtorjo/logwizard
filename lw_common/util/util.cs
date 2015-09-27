@@ -203,6 +203,14 @@ namespace lw_common {
                 return light ? Color.LightPink : dark ? transparent : Color.Pink;
             case "whitesmoke":
                 return light ? transparent : dark ? transparent : Color.WhiteSmoke;
+
+            case "brown": 
+                return light ? Color.SandyBrown : dark ? Color.SaddleBrown : Color.Brown;
+
+//            case "green":
+  //              return light ? Color.LightGreen : dark ? Color.DarkGreen : Color.Green;
+
+
             case "transparent":
                 return transparent;
             }
