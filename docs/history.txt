@@ -21,8 +21,12 @@
 
 - todo: clicking the eyedropper
 
-- todo : saving md5 : fast (last 8192 + first 8192 chars, + file name + file size), slow (full md5)
 
+
+1.1.5b
+- md5 - fast -> include file name+size
+- now we can get from a file to its notes (no matter what the md5 method, or where the file is from (if not local, that is))
+- in settings: disabled "By File Name" - it's pretty dangerous to use, and until I document it better, I don't want people to use it
 
 
 1.1.5a

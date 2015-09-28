@@ -58,6 +58,21 @@ namespace LogWizard.ui {
             noteColor.SelectedItem = app.inst.notes_color;
 
             zipExtensions.Text = app.inst.look_into_zip_files;
+
+            switch (app.inst.identify_notes_files) {
+            case md5_log_keeper.md5_type.fast:
+                noteFast.Checked = true;
+                break;
+            case md5_log_keeper.md5_type.slow:
+                noteSlow.Checked = true;
+                break;
+            case md5_log_keeper.md5_type.by_file_name:
+                noteByFileName.Checked = true;
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+            }
         }
 
         private void save() {
@@ -69,7 +84,7 @@ namespace LogWizard.ui {
 
             if (syncColorsNone.Checked) app.inst.syncronize_colors = app.synchronize_colors_type.none;
             else if (syncColorsCurView.Checked) app.inst.syncronize_colors = app.synchronize_colors_type.with_current_view;
-            else if ( syncColorsAllViews.Checked) app.inst.syncronize_colors = app.synchronize_colors_type.with_all_views;
+            else if (syncColorsAllViews.Checked) app.inst.syncronize_colors = app.synchronize_colors_type.with_all_views;
             else Debug.Assert(false);
             app.inst.sync_colors_all_views_gray_non_active = syncColorsGrayOutNonActive.Checked;
 
@@ -83,6 +98,11 @@ namespace LogWizard.ui {
             app.inst.notes_color = noteColor.SelectedItem;
 
             app.inst.look_into_zip_files = zipExtensions.Text;
+
+            if (noteFast.Checked) app.inst.identify_notes_files = md5_log_keeper.md5_type.fast;
+            else if ( noteSlow.Checked) app.inst.identify_notes_files = md5_log_keeper.md5_type.slow;
+            else if ( noteByFileName.Checked) app.inst.identify_notes_files = md5_log_keeper.md5_type.by_file_name;
+            else Debug.Assert(false);
 
             app.inst.save();
         }

@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using lw_common;
 using lw_common.ui;
 
 namespace test_ui {
@@ -47,10 +48,13 @@ namespace test_ui {
             dummyView.AddObject( new dummy_note() { idx = 155, view = "err", msg = "[pot] Pot string could not be parsed [__] : Input string was not in a correct format." });
             dummyView.AddObject( new dummy_note() { idx = 156, view = "err", msg = "this is the last error" });
 
+            notes_keeper.inst.init(@"C:\john\code\logwiz\logwizard\test_ui\bin\Debug\notes", md5_log_keeper.md5_type.fast);
+            notes.load( notes_keeper.inst.notes_file_for_file(@"C:\john\code\logwiz\logwizard\test_ui\bin\Debug\test_ui2.jpg"));
+
   //          notes.load("test_notes_ui.txt");
             //notes.load("test_notes_ui-2.txt");
 
-            notes.load("test_notes_ui.txt");
+//            notes.load("test_notes_ui.txt");
     //        notes.merge("test_notes_ui-2.txt");
 
 //            notes.load("test_notes_ui-2.txt");

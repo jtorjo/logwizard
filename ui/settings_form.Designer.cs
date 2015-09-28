@@ -65,7 +65,20 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.noteByFileName = new System.Windows.Forms.RadioButton();
+            this.noteSlow = new System.Windows.Forms.RadioButton();
+            this.noteFast = new System.Windows.Forms.RadioButton();
+            this.noteColor = new ColorPicker.ColorPickerCombobox();
+            this.noteInitials = new System.Windows.Forms.TextBox();
+            this.noteAuthorName = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.zipExtensions = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
             this.objectListView2 = new BrightIdeasSoftware.ObjectListView();
@@ -78,15 +91,6 @@
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.label12 = new System.Windows.Forms.Label();
-            this.zipExtensions = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.noteAuthorName = new System.Windows.Forms.TextBox();
-            this.noteInitials = new System.Windows.Forms.TextBox();
-            this.noteColor = new ColorPicker.ColorPickerCombobox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -97,6 +101,7 @@
             this.groupBox5.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
@@ -523,6 +528,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.groupBox6);
             this.tabPage4.Controls.Add(this.noteColor);
             this.tabPage4.Controls.Add(this.noteInitials);
             this.tabPage4.Controls.Add(this.noteAuthorName);
@@ -538,6 +544,111 @@
             this.tabPage4.Text = "Notes";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.noteByFileName);
+            this.groupBox6.Controls.Add(this.noteSlow);
+            this.groupBox6.Controls.Add(this.noteFast);
+            this.groupBox6.Location = new System.Drawing.Point(15, 89);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(519, 121);
+            this.groupBox6.TabIndex = 7;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Uniquely Identify Note Files (ADVANCED)";
+            // 
+            // noteByFileName
+            // 
+            this.noteByFileName.AutoSize = true;
+            this.noteByFileName.Enabled = false;
+            this.noteByFileName.Location = new System.Drawing.Point(14, 80);
+            this.noteByFileName.Name = "noteByFileName";
+            this.noteByFileName.Size = new System.Drawing.Size(379, 21);
+            this.noteByFileName.TabIndex = 2;
+            this.noteByFileName.TabStop = true;
+            this.noteByFileName.Text = "By File Name (only if your Log File Names are UNIQUE!)";
+            this.noteByFileName.UseVisualStyleBackColor = true;
+            // 
+            // noteSlow
+            // 
+            this.noteSlow.AutoSize = true;
+            this.noteSlow.Location = new System.Drawing.Point(14, 57);
+            this.noteSlow.Name = "noteSlow";
+            this.noteSlow.Size = new System.Drawing.Size(241, 21);
+            this.noteSlow.TabIndex = 1;
+            this.noteSlow.TabStop = true;
+            this.noteSlow.Text = "Slow and accurate (MD5 of all file)";
+            this.noteSlow.UseVisualStyleBackColor = true;
+            // 
+            // noteFast
+            // 
+            this.noteFast.AutoSize = true;
+            this.noteFast.Location = new System.Drawing.Point(14, 35);
+            this.noteFast.Name = "noteFast";
+            this.noteFast.Size = new System.Drawing.Size(439, 21);
+            this.noteFast.TabIndex = 0;
+            this.noteFast.TabStop = true;
+            this.noteFast.Text = "Fast (compute from a bit of beginning, bit of end, file name + size)";
+            this.noteFast.UseVisualStyleBackColor = true;
+            // 
+            // noteColor
+            // 
+            this.noteColor.Location = new System.Drawing.Point(409, 44);
+            this.noteColor.Name = "noteColor";
+            this.noteColor.SelectedItem = System.Drawing.Color.Wheat;
+            this.noteColor.Size = new System.Drawing.Size(55, 23);
+            this.noteColor.TabIndex = 6;
+            this.noteColor.Text = "colorPickerCombobox1";
+            // 
+            // noteInitials
+            // 
+            this.noteInitials.Location = new System.Drawing.Point(306, 44);
+            this.noteInitials.Name = "noteInitials";
+            this.noteInitials.Size = new System.Drawing.Size(50, 23);
+            this.noteInitials.TabIndex = 5;
+            // 
+            // noteAuthorName
+            // 
+            this.noteAuthorName.Location = new System.Drawing.Point(78, 44);
+            this.noteAuthorName.Name = "noteAuthorName";
+            this.noteAuthorName.Size = new System.Drawing.Size(169, 23);
+            this.noteAuthorName.TabIndex = 4;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(362, 47);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(41, 17);
+            this.label17.TabIndex = 3;
+            this.label17.Text = "Color";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(253, 47);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(47, 17);
+            this.label16.TabIndex = 2;
+            this.label16.Text = "Initials";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(12, 47);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(45, 17);
+            this.label15.TabIndex = 1;
+            this.label15.Text = "Name";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(12, 17);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(304, 17);
+            this.label14.TabIndex = 0;
+            this.label14.Text = "When making notes over a Log, identify me as:";
+            // 
             // tabPage7
             // 
             this.tabPage7.Controls.Add(this.zipExtensions);
@@ -549,6 +660,24 @@
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "Zip Files";
             this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // zipExtensions
+            // 
+            this.zipExtensions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.zipExtensions.Location = new System.Drawing.Point(386, 9);
+            this.zipExtensions.Name = "zipExtensions";
+            this.zipExtensions.Size = new System.Drawing.Size(274, 23);
+            this.zipExtensions.TabIndex = 1;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 12);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(374, 17);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "Parsing Zip Files. Care only about the following extensions";
             // 
             // tabPage5
             // 
@@ -674,83 +803,6 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(6, 12);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(374, 17);
-            this.label12.TabIndex = 0;
-            this.label12.Text = "Parsing Zip Files. Care only about the following extensions";
-            // 
-            // zipExtensions
-            // 
-            this.zipExtensions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.zipExtensions.Location = new System.Drawing.Point(386, 9);
-            this.zipExtensions.Name = "zipExtensions";
-            this.zipExtensions.Size = new System.Drawing.Size(274, 23);
-            this.zipExtensions.TabIndex = 1;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(12, 17);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(304, 17);
-            this.label14.TabIndex = 0;
-            this.label14.Text = "When making notes over a Log, identify me as:";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(12, 47);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(45, 17);
-            this.label15.TabIndex = 1;
-            this.label15.Text = "Name";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(253, 47);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(47, 17);
-            this.label16.TabIndex = 2;
-            this.label16.Text = "Initials";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(362, 47);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(41, 17);
-            this.label17.TabIndex = 3;
-            this.label17.Text = "Color";
-            // 
-            // noteAuthorName
-            // 
-            this.noteAuthorName.Location = new System.Drawing.Point(78, 44);
-            this.noteAuthorName.Name = "noteAuthorName";
-            this.noteAuthorName.Size = new System.Drawing.Size(169, 23);
-            this.noteAuthorName.TabIndex = 4;
-            // 
-            // noteInitials
-            // 
-            this.noteInitials.Location = new System.Drawing.Point(306, 44);
-            this.noteInitials.Name = "noteInitials";
-            this.noteInitials.Size = new System.Drawing.Size(50, 23);
-            this.noteInitials.TabIndex = 5;
-            // 
-            // noteColor
-            // 
-            this.noteColor.Location = new System.Drawing.Point(409, 44);
-            this.noteColor.Name = "noteColor";
-            this.noteColor.SelectedItem = System.Drawing.Color.Wheat;
-            this.noteColor.Size = new System.Drawing.Size(55, 23);
-            this.noteColor.TabIndex = 6;
-            this.noteColor.Text = "colorPickerCombobox1";
-            // 
             // settings_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -781,6 +833,8 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.tabPage7.ResumeLayout(false);
             this.tabPage7.PerformLayout();
             this.tabPage5.ResumeLayout(false);
@@ -857,6 +911,10 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.RadioButton noteSlow;
+        private System.Windows.Forms.RadioButton noteFast;
+        private System.Windows.Forms.RadioButton noteByFileName;
 
     }
 }

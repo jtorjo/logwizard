@@ -24,3 +24,6 @@
 
 - when allowing more types of logs (like: not just from file)
   - at this point, it would make sense to have an option to save the log (the full log) to file
+
+- notes: whether we keep fast/slow/by-file-name
+  - this should be context dependent! it makes sense - for a certain type of files, we probably want just to have 'by file name'

@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Configuration;
 using System.Text;
@@ -1008,6 +1009,8 @@ namespace lw_common.ui {
                 // in this case, we're loading the notes from somewhere else, save existing first
                 save();
 
+            // we need to specify the full name!
+            Debug.Assert(file_name == new FileInfo(file_name).FullName);
             file_name_ = file_name;
 
             notes_sorted_by_line_index_.Clear();
@@ -1137,6 +1140,8 @@ namespace lw_common.ui {
                 return;
             if (!dirty_)
                 return;
+            if (notes_sorted_by_line_index_.Count < 1)
+                return; // optimization - nothing to save
 
             settings_file sett = new settings_file(file_name) { log_each_set = false };
 

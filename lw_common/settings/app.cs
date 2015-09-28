@@ -90,6 +90,8 @@ namespace lw_common {
         public string notes_initials = "";
         public Color notes_color = Color.Blue;
 
+        // how do we uniquely identify the notes file for a certain log?
+        public md5_log_keeper.md5_type identify_notes_files = md5_log_keeper.md5_type.fast;
 
 
         // file-by-file
@@ -194,6 +196,7 @@ namespace lw_common {
             load_save(load, ref notes_author_name, "notes_author_name", Environment.UserName);
             load_save(load, ref notes_initials, "notes_initials", initials(notes_author_name));
             load_save(load, ref notes_color, "notes_color", Color.Blue);
+            load_save(load, ref identify_notes_files, "identify_notes_files", md5_log_keeper.md5_type.fast);
         }
 
         private string initials(string name) {

@@ -29,8 +29,51 @@ namespace lw_common {
             public string fast = "";
             public string slow = "";
             public string by_file_name = "";
+
+            public string by_md5(md5_type type) {
+                switch (type) {
+                case md5_type.fast:
+                    return fast;
+                case md5_type.slow:
+                    return slow;
+                case md5_type.by_file_name:
+                    return by_file_name;
+                default:
+                    Debug.Assert(false);
+                    return "";
+                }
+            }
         }
+
         private Dictionary<string, md5_info> file_md5_ = new Dictionary<string, md5_info>();
+
+        public List<string> local_md5s_for_file(string file) {
+            file = new FileInfo(file).FullName;
+            if (!file_md5_.ContainsKey(file))
+                compute_default_md5s_for_file(file);
+
+            md5_info md5 = file_md5_[file];
+            List<string> result = new List<string>();
+            if (md5.fast != "")
+                result.Add(md5.fast);
+            if (md5.slow != "")
+                result.Add(md5.slow);
+            if (md5.by_file_name != "")
+                result.Add(md5.by_file_name);
+            return result;
+        }
+
+        public string get_md5_for_file(string file, md5_type type) {
+            file = new FileInfo(file).FullName;
+            if (!file_md5_.ContainsKey(file))
+                compute_default_md5s_for_file(file);
+
+            if (file_md5_[file].by_md5(type) == "")
+                compute_md5_for_file(file, type);
+
+            Debug.Assert( file_md5_[file].by_md5(type) != "");
+            return file_md5_[file].by_md5(type);
+        }
 
 
         // finds all files matching the given MD5s
@@ -38,11 +81,11 @@ namespace lw_common {
         // you will call this with all the MD5s received from another user's notes
         public List<string> find_files_with_md5(string[] md5s) {
             Dictionary<string, List<string>> found = new Dictionary<string, List<string>>();
-            foreach (string search_md5 in md5s) 
-                if ( search_md5 != "") {
+            foreach (string search_md5 in md5s)
+                if (search_md5 != "") {
                     found.Add(search_md5, new List<string>());
                     foreach (var md5 in file_md5_)
-                        if ( md5.Value.fast == search_md5 || md5.Value.slow == search_md5 || md5.Value.by_file_name == search_md5)
+                        if (md5.Value.fast == search_md5 || md5.Value.slow == search_md5 || md5.Value.by_file_name == search_md5)
                             found[search_md5].Add(md5.Key);
 
                     if (found[search_md5].Count == 0)
@@ -56,8 +99,7 @@ namespace lw_common {
                 foreach (var files in found)
                     result = result.Intersect(files.Value).ToList();
                 return result;
-            }
-            else 
+            } else
                 return new List<string>();
         }
 
@@ -67,13 +109,13 @@ namespace lw_common {
 
             // testing
             //if ( util.is_debug)
-              //  compute_md5_for_file(file, md5_type.slow);
+            //  compute_md5_for_file(file, md5_type.slow);
         }
 
         public void compute_md5_for_file(string file, md5_type type) {
             file = new FileInfo(file).FullName;
 
-            if ( !file_md5_.ContainsKey(file))
+            if (!file_md5_.ContainsKey(file))
                 file_md5_.Add(file, new md5_info());
             md5_info md5 = file_md5_[file];
 
@@ -128,7 +170,7 @@ namespace lw_common {
                     return "";
                 }
 
-                string md5 = util.md5_hash(buff);
+                string md5 = util.md5_hash(buff) + "-" + size + "-" + new FileInfo(file).Name;
                 return "Fast-" + md5;
             } catch (Exception e) {
                 logger.Error("[md5] can't compute md5-fast for " + file + " : " + e.Message);
