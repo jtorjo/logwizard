@@ -24,6 +24,10 @@
 - todo : saving md5 : fast (last 8192 + first 8192 chars, + file name + file size), slow (full md5)
 
 
+1.1.4
+- small improvements on the colors
+
+
 1.1.3v
 - show merged lines with different background - works
 - coloring of notes: works (still todo - clicking no eyedropper)

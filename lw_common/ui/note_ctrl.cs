@@ -276,17 +276,18 @@ namespace lw_common.ui {
                     string txt = the_note != null ? note_no_color() : self.lines_[line_id].msg;
                     int indent = this.indent;
                     if ( indent > 0)
-                        txt = new string(' ', indent * 2) + txt;
+                        txt = new string(' ', indent * 4) + txt;
                     return txt;
                 }
             }
 
             private static Color deleted_fg = Color.LightGray;
-            private static Color header_fg = Color.DarkViolet;
+            private static Color header_fg = Color.DarkSlateGray;
             private static Color msg_idx_fg = Color.DarkGray;
 
             private static Color author_bg = Color.FloralWhite;
             private static Color merged_bg = Color.WhiteSmoke;
+            private static Color header_bg = Color.WhiteSmoke;
 
             private Color note_color() {
                 Debug.Assert(the_note != null);
@@ -321,6 +322,9 @@ namespace lw_common.ui {
 
             public Color bg {
                 get {
+                    if (the_note == null)
+                        return header_bg;
+
                     int sel = self.notesCtrl.SelectedIndex;
                     if (sel >= 0) {
                         var i = self.notesCtrl.GetItem(sel).RowObject as note_item;
@@ -329,7 +333,7 @@ namespace lw_common.ui {
                             return author_bg;
                     }
 
-                    if (the_note != null && the_note.is_merged)
+                    if (the_note.is_merged)
                         return merged_bg;
 
                     return Color.White;
