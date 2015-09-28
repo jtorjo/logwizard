@@ -61,6 +61,7 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.notes = new lw_common.ui.note_ctrl();
             this.sourceUp = new System.Windows.Forms.SplitContainer();
             this.sourceNameCtrl = new System.Windows.Forms.TextBox();
             this.sourceTypeCtrl = new System.Windows.Forms.ComboBox();
@@ -77,7 +78,7 @@
             this.hotkeys = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.saveTimer = new System.Windows.Forms.Timer(this.components);
-            this.notes = new lw_common.ui.note_ctrl();
+            this.export = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.main)).BeginInit();
             this.main.Panel1.SuspendLayout();
@@ -125,7 +126,7 @@
             this.logHistory.FormattingEnabled = true;
             this.logHistory.Location = new System.Drawing.Point(189, 3);
             this.logHistory.Name = "logHistory";
-            this.logHistory.Size = new System.Drawing.Size(724, 23);
+            this.logHistory.Size = new System.Drawing.Size(653, 23);
             this.logHistory.TabIndex = 7;
             this.tip.SetToolTip(this.logHistory, "History - just select any of the previous logs, and they instantly load");
             this.logHistory.SelectedIndexChanged += new System.EventHandler(this.logHistory_SelectedIndexChanged);
@@ -362,7 +363,7 @@
             // about
             // 
             this.about.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.about.Location = new System.Drawing.Point(975, 3);
+            this.about.Location = new System.Drawing.Point(902, 3);
             this.about.Name = "about";
             this.about.Size = new System.Drawing.Size(68, 23);
             this.about.TabIndex = 13;
@@ -459,13 +460,25 @@
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.notes);
-            this.tabPage4.Location = new System.Drawing.Point(4, 24);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(269, 485);
+            this.tabPage4.Size = new System.Drawing.Size(269, 487);
             this.tabPage4.TabIndex = 2;
             this.tabPage4.Text = "Notes / Bookmarks";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // notes
+            // 
+            this.notes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.notes.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.notes.Location = new System.Drawing.Point(4, 3);
+            this.notes.Margin = new System.Windows.Forms.Padding(4);
+            this.notes.Name = "notes";
+            this.notes.Size = new System.Drawing.Size(258, 477);
+            this.notes.TabIndex = 1;
             // 
             // sourceUp
             // 
@@ -631,6 +644,7 @@
             // 
             this.lower.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lower.Controls.Add(this.export);
             this.lower.Controls.Add(this.hotkeys);
             this.lower.Controls.Add(this.logHistory);
             this.lower.Controls.Add(this.newView);
@@ -650,7 +664,7 @@
             // 
             this.hotkeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.hotkeys.AutoSize = true;
-            this.hotkeys.Location = new System.Drawing.Point(919, 8);
+            this.hotkeys.Location = new System.Drawing.Point(848, 8);
             this.hotkeys.Name = "hotkeys";
             this.hotkeys.Size = new System.Drawing.Size(50, 15);
             this.hotkeys.TabIndex = 15;
@@ -675,14 +689,16 @@
             this.saveTimer.Interval = 15000;
             this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
-            // notes
+            // export
             // 
-            this.notes.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.notes.Location = new System.Drawing.Point(4, 3);
-            this.notes.Margin = new System.Windows.Forms.Padding(4);
-            this.notes.Name = "notes";
-            this.notes.Size = new System.Drawing.Size(258, 475);
-            this.notes.TabIndex = 1;
+            this.export.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.export.Location = new System.Drawing.Point(974, 3);
+            this.export.Name = "export";
+            this.export.Size = new System.Drawing.Size(68, 23);
+            this.export.TabIndex = 16;
+            this.export.Text = "Export";
+            this.export.UseVisualStyleBackColor = true;
+            this.export.Click += new System.EventHandler(this.export_Click);
             // 
             // log_wizard
             // 
@@ -780,6 +796,7 @@
         private System.Windows.Forms.LinkLabel hotkeys;
         private lw_common.ui.filter_ctrl filtCtrl;
         private lw_common.ui.note_ctrl notes;
+        private System.Windows.Forms.Button export;
     }
 }
 

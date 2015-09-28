@@ -28,7 +28,7 @@ namespace test_ui {
         }
 
         private void save() {
-            add_callback("save ");
+            add_callback("save_to ");
         }
 
         private void rerun(int view_idx) {

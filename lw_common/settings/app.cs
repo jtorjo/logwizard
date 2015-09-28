@@ -100,7 +100,7 @@ namespace lw_common {
 
         public void set_log_file(string file) {
             if (selected_log_file_name_ != "") 
-                // save old settings
+                // save_to old settings
                 load_save_file_by_file(false);
 
             selected_log_file_name_ = file;

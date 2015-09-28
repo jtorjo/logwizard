@@ -53,7 +53,7 @@ namespace LogWizard
             home, end,
             pageup, pagedown,
             arrow_up, arrow_down,
-            toggle_filters, toggle_source, toggle_fulllog, 
+            toggle_filters, toggle_source, toggle_fulllog, toggle_notes,
 
             toggle_bookmark, next_bookmark, prev_bookmark, clear_bookmarks,
 
@@ -109,6 +109,8 @@ namespace LogWizard
             toggle_enabled_dimmed,
 
             undo,
+
+            export_notes,
 
             none,
         }
@@ -207,6 +209,8 @@ namespace LogWizard
                 load_contexts();
             }
             notes.set_author( app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
+            notes_keeper.inst.init( util.is_debug ? "notes" : Program.local_dir(), app.inst.identify_notes_files);
+            notes.on_note_selected = on_note_selected;
 
             ++ignore_change_;
 
@@ -268,6 +272,36 @@ namespace LogWizard
                 if (open_cmd_line_file)
                     on_file_drop(Program.open_file_name);
             }, 10);
+        }
+
+        private void on_note_selected(int line_idx, string view_name) {
+            if (line_idx >= 0) {
+                ++ignore_change_;
+
+                // select the view that has this note
+                log_view lv = log_view_by_name(view_name);
+                if (lv != null) {
+                    int lv_idx = all_log_views().FindIndex(x => x.name == view_name);
+                    Debug.Assert(lv_idx >= 0);
+                    viewsTab.SelectedIndex = lv_idx;
+                    lv.go_to_closest_line(line_idx, log_view.select_type.do_not_notify_parent);
+                }
+                else if (full_log_ctrl != null) {
+                    // in this case, we don't have that view - go to the full log
+                    if ( !global_ui.show_fulllog)
+                        show_full_log(show_full_log_type.both);
+                    full_log_ctrl.go_to_closest_line(line_idx, log_view.select_type.do_not_notify_parent);
+                } 
+
+                --ignore_change_;
+            }
+        }
+
+        private log_view log_view_by_name(string view_name) {
+            foreach ( log_view lv in all_log_views())
+                if (lv.name == view_name)
+                    return lv;
+            return null;
         }
 
         private void load_location() {
@@ -429,10 +463,11 @@ namespace LogWizard
             }
         }
 
-        private bool filters_shown { get { return toggleFilters.Text[0] == '-'; }}
         private bool source_shown { get { return toggleSource.Text[0] == '-'; }}
 
-        private void show_filters(bool show) {
+        private void show_left_pane(bool show) {
+            update_left_pane();
+
             toggleFilters.Text = show ? "-F" : "+F";
             ++ignore_change_;
             if ( show) {
@@ -444,7 +479,6 @@ namespace LogWizard
                 main.Panel1.Hide();
             }
             --ignore_change_;
-            global_ui.show_filter = show;
         }
         private void show_source(bool show) {
             toggleSource.Text = show ? "-S" : "+S";
@@ -603,6 +637,15 @@ namespace LogWizard
         }
 
         private void on_file_drop(string file) {
+            if (file.ToLower().EndsWith(".zip")) {
+                on_zip_drop(file);
+                return;
+            }
+            else if (file.ToLower().EndsWith(".logwizard")) {
+                import_notes(file);
+                return;
+            }
+
             ++ignore_change_;
             sourceNameCtrl.Text = file;
             sourceTypeCtrl.SelectedIndex = 0;
@@ -737,9 +780,18 @@ namespace LogWizard
             toggleTopmost.Image = TopMost ? Resources.bug : Resources.bug_disabled;
         }
 
+        private void toggle_notes() {
+            global_ui.show_notes = !global_ui.show_notes;            
+            show_left_pane( global_ui.show_left_pane);
+
+            save();
+            update_msg_details(true);            
+        }
         private void toggleFilters_Click(object sender, EventArgs e)
         {
-            show_filters( toggleFilters.Text[0] == '+');
+            global_ui.show_filter = !global_ui.show_filter;            
+            show_left_pane( global_ui.show_left_pane);
+
             save();
             update_msg_details(true);
         }
@@ -898,13 +950,27 @@ namespace LogWizard
             }
         }
 
+        private void update_left_pane() {
+            if (!global_ui.show_left_pane)
+                return;
+
+            if (global_ui.show_filter)
+                leftPane.SelectedIndex = 0;
+            else if (global_ui.show_notes)
+                leftPane.SelectedIndex = 2;
+            else {
+                Debug.Assert(false);
+                leftPane.SelectedIndex = 0;
+            }
+        }
+
         private void load_ui() {
             var cur = cur_context();
             if (!cur.has_views)
                 return;
 
             ++ignore_change_;
-            show_filters(global_ui.show_filter);
+            show_left_pane(global_ui.show_left_pane);
             show_source(global_ui.show_source);
 
             if ( global_ui.show_fulllog && global_ui.show_current_view)
@@ -1205,6 +1271,8 @@ namespace LogWizard
 
         private void on_move_key_end() {
             var sel = selected_view();
+            notes.set_current_line( new note_ctrl.line { idx = sel.sel_line_idx, msg = sel.sel_line_text, view_name = sel.name });
+
             if (sel == full_log_ctrl)
                 return;
 
@@ -1402,7 +1470,7 @@ namespace LogWizard
 
         private int last_sel = -1;
         private void on_new_log() {
-            string size = text_ is file_text_reader ? " (" + new FileInfo((text_ as file_text_reader).name).Length + " bytes)" : "";
+            string size = text_ is file_text_reader ? " (" + new FileInfo(text_.name).Length + " bytes)" : "";
             set_status_forever("Log: " + text_.name + size);
             dropHere.Visible = false;
 
@@ -1443,6 +1511,10 @@ namespace LogWizard
 
             // at this point, some file has been dropped
             log_view_for_tab(0).Visible = true;
+
+            notes.Enabled = text_ is file_text_reader;
+            if ( notes.Enabled)
+                notes.load( notes_keeper.inst.notes_file_for_file(text_.name) );
         }
 
         private void add_reader_to_history() {
@@ -1783,6 +1855,9 @@ namespace LogWizard
                 break;
             case "ctrl-right":
             case "ctrl-left":
+
+            case "ctrl-c":
+            case "ctrl-shift-c":
                 if ( is_focus_on_edit())
                     return action_type.none;
                 break;
@@ -1867,6 +1942,8 @@ namespace LogWizard
 
             case "alt-f":
                 return action_type.toggle_filters;
+            case "alt-n":
+                return action_type.toggle_notes;
             case "alt-o":
                 return action_type.toggle_source;
             case "alt-l":
@@ -1899,6 +1976,8 @@ namespace LogWizard
                 if ( filtCtrl.can_handle_toggle_enable_dimmed_now)
                     return action_type.toggle_enabled_dimmed;
                 break;
+            case "ctrl-e":
+                return action_type.export_notes;
             case "ctrl-z":
                 return action_type.undo;
             }
@@ -1970,6 +2049,9 @@ namespace LogWizard
 
             case action_type.toggle_filters:
                 toggleFilters_Click(null,null);
+                break;
+            case action_type.toggle_notes:
+                toggle_notes();
                 break;
             case action_type.toggle_fulllog:
                 toggleFullLog_Click(null,null);
@@ -2127,6 +2209,10 @@ namespace LogWizard
                 filtCtrl.toggle_enabled_dimmed();
                 break;
 
+            case action_type.export_notes:
+                export_notes();
+                break;
+
             case action_type.undo:
                 if (global_ui.show_filter)
                     filtCtrl.undo();
@@ -2182,6 +2268,8 @@ namespace LogWizard
             // third/fourth panes - the filters control and edit box (if visible)
             if ( global_ui.show_filter)
                 panes.AddRange(filtCtrl.tab_navigatable_controls);
+            else if ( global_ui.show_notes)
+                panes.AddRange(notes.tab_navigatable_controls);
             return panes;
         }
 
@@ -2344,21 +2432,26 @@ namespace LogWizard
             app.inst.save();
         }
 
-
-        private void contextToClipboard_Click(object sender, EventArgs e) {
+        private string cur_context_to_string() {
             ui_context cur = cur_context();
             if (cur.views.Count < 1)
-                return; // no views
+                return ""; // no views
             var formatter = new XmlSerializer( typeof(ui_context));
-            string to_copy = "";
+            string str = "";
             using (var stream = new MemoryStream()) {
                 formatter.Serialize(stream, cur);
                 stream.Flush();
                 stream.Position = 0;
                 using (var reader = new StreamReader(stream))
-                    to_copy = reader.ReadToEnd();
+                    str = reader.ReadToEnd();
             }
-            Clipboard.SetText(to_copy);
+            return str;
+        }
+
+        private void contextToClipboard_Click(object sender, EventArgs e) {
+            string to_copy = cur_context_to_string();
+            if ( to_copy != "")
+                Clipboard.SetText(to_copy);
         }
 
         private void contextFromClipboard_Click(object sender, EventArgs ea) {
@@ -2510,7 +2603,65 @@ namespace LogWizard
         private void leftPane_SizeChanged(object sender, EventArgs e) {
             logger.Info("left pane = " + leftPane.Width + " x " + leftPane.Height + " [" + filtersTab.Width + " x " + filtersTab.Height + "]");
         }
+            
+        private void export_Click(object sender, EventArgs e) {
+            export_notes();
+        }
 
+        private void export_notes() {
+            if (!(text_ is file_text_reader)) {
+                Debug.Assert(false);
+                return;
+            }
+
+            string dir = util.create_temp_dir(Program.local_dir());
+            notes.save_to(dir + "\\__notes.txt");
+            string ctx_as_string = cur_context_to_string();
+            util.create_file(dir + "\\__context.txt", cur_context().name + "\r\n" + ctx_as_string);
+
+            string full_name = text_.name;
+            string file_name = new FileInfo(full_name).Name;
+
+            // if the user wants slow md5s, we need to include that as well
+            if (app.inst.identify_notes_files == md5_log_keeper.md5_type.slow)
+                md5_log_keeper.inst.get_md5_for_file(full_name, md5_log_keeper.md5_type.slow);
+
+            var md5s = md5_log_keeper.inst.local_md5s_for_file(full_name);
+            util.create_file(dir + "\\__md5.txt",  util.concatenate(md5s, "\r\n") );
+
+            // here, we have all needed files
+            string zip_dir = Program.local_dir() + "export";
+            util.create_dir(zip_dir);
+            string prefix = zip_dir + "\\" + file_name + "." + DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss-fff") + ".";
+
+            Dictionary<string,string> files = new Dictionary<string, string>();
+            files.Add(dir + "\\__notes.txt", "__notes.txt");
+            files.Add(dir + "\\__context.txt", "__context.txt");
+            files.Add(dir + "\\__md5.txt", "__md5.txt");
+            files.Add(full_name, file_name);
+            zip_util.create_zip(prefix + "long.logwizard", files);
+            files.Remove(full_name);
+            zip_util.create_zip(prefix + "short.logwizard", files);
+
+            try {
+                Directory.Delete(dir, true);
+            } catch {
+            }
+
+            try {
+                string args = "/select,\"" + prefix + "long.logwizard" + "\"";
+                Process.Start("explorer", args);
+            } catch {
+            }
+        }
+
+        private void on_zip_drop(string file) {
+            // FIXME
+        }
+
+        private void import_notes(string file) {
+            // FIXME
+        }
 
 
     }

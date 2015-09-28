@@ -120,11 +120,11 @@
             // 
             this.showDeletedLines.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.showDeletedLines.AutoSize = true;
-            this.showDeletedLines.Location = new System.Drawing.Point(283, 481);
+            this.showDeletedLines.Location = new System.Drawing.Point(311, 478);
             this.showDeletedLines.Name = "showDeletedLines";
-            this.showDeletedLines.Size = new System.Drawing.Size(152, 21);
+            this.showDeletedLines.Size = new System.Drawing.Size(124, 21);
             this.showDeletedLines.TabIndex = 3;
-            this.showDeletedLines.Text = "Show Deleted Lines";
+            this.showDeletedLines.Text = "Show Del Lines";
             this.showDeletedLines.UseVisualStyleBackColor = true;
             this.showDeletedLines.CheckedChanged += new System.EventHandler(this.showDeletedLines_CheckedChanged);
             // 
@@ -163,6 +163,7 @@
             this.selectColor.Size = new System.Drawing.Size(22, 22);
             this.selectColor.TabIndex = 6;
             this.selectColor.UseVisualStyleBackColor = true;
+            this.selectColor.Click += new System.EventHandler(this.selectColor_Click);
             // 
             // sortByTime
             // 

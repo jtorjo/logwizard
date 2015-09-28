@@ -92,6 +92,9 @@ namespace LogWizard
 
             util.set_association(".log", "Log_file", Application.ExecutablePath, "Log File");
             util.set_association(".txt", "Text_file", Application.ExecutablePath, "Text File");
+            // 1.1.5+
+            util.set_association(".zip", "Zip_file", Application.ExecutablePath, "Zip File");
+            util.set_association(".logwizard", "LogWizard_file", Application.ExecutablePath, "LogWizard File");
             util.create_shortcut("LogWizard", appdata_dir() + @"Microsoft\Windows\SendTo", "Send To LogWizard", null, Application.ExecutablePath, null);
 
             Application.Run(new Dummy());

@@ -170,7 +170,9 @@ namespace lw_common {
                     return "";
                 }
 
-                string md5 = util.md5_hash(buff) + "-" + size + "-" + new FileInfo(file).Name;
+                // 1.1.5c -IMPORTANT: don't include the file name, since our file name might be different
+                //         (for instance, say you send the file to someone, and he renames it)
+                string md5 = util.md5_hash(buff) + "-" + size ;
                 return "Fast-" + md5;
             } catch (Exception e) {
                 logger.Error("[md5] can't compute md5-fast for " + file + " : " + e.Message);

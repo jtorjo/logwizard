@@ -1375,7 +1375,7 @@ namespace LogWizard
 
         public void show_row(ui_info.show_row_type show) {
             if (full_widths_.Count < 1) 
-                // save them now
+                // save_to them now
                 for (int idx = 0; idx < list.Columns.Count; ++idx)
                     full_widths_.Add(list.Columns[idx].Width);                
             

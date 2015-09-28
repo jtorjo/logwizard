@@ -1,16 +1,6 @@
-- ctrl-c / shift-ctrl-c -> if in edit box, we should not do anything
-
-in .logwizard
-- when exporting - 2 files: long (including the log file) + short (just the notes)
- (the second one - when communicating a bit, no point in resending hte log over and over)
-  - i should also have in .logwizard file : - the notes + the full context 
-  - the context: if found locally, I ignore it completely (let the current user use his context; if not found, add it and automatically use it)
-  - short one - contain some md5 so that i know who the notes relate to
-    - in settings UI - show visually in "Notes" tab - that md5 should be carefully considered, and that it works from now on.
-
 
 - dropping a zip file
-  - look for .log + .txt files (prefer .log)      ---------> in settings form, allow override (the extrensions are used in preffered order, like, ".log" first if we have ".log;.txt")
+  - look for .log + .txt files (prefer .log) - already in settings
     - if a single one found, use it. otherwise:
 	  - if shift pressed -> show a dialog with all possible files
 	  - if shift not pressed, open the first one (prefer .log)
@@ -18,72 +8,48 @@ in .logwizard
 	-------> keep in the history (and basically dropped zip files -> we keep them somewhere in our logwizard subdir + use FRIENDLY NAMES)
 	         see that history_ and history combo are in sync, even when we select another item!
 
-- show_notes (ui_info) -> note: this is mutually exclusive with show_filters (probably have something else show_left)
-  - need to allow resizing the left pane (splitter) and automatically save that
-
-
-
-- zip it - zip the file + its notes + its bookmarks + its context
-  - zip as ".logwizard" extension - we should automatically recognize this (Open With)
   - should we auto-open .zip files? (Open With?) 
-
-- unzip it (only .logwizard files, BUT SEE ABOVE)
-  - if dropping a zip file onto us -> if it contains 2 files (extra.txt and another one) -> load notes/etc. from extra.txt + load the other file
-    - this should also work as "double click in explorer"
-  - if shift is pressed, override the context, otherwise, we preserve our context.
-    if shift is NOT pressed, if we have the context - we preserve our context; if we DON'T have the context, we will load it
-  - if context is slightly different and we did not load it, show it in status bar
-  - if we do override the context, this is NOT permanent - we will use a temporary context or so
 
 ********* allow exporting notes:
   - to be sent to customer - the line(s) + the author(s)
   - allow export as .txt or .html
   - also, export to clipboard
 
-  - article: 
-    - update existing article
-    - sharing thy log with coworkers/customer support/customers (two articles: Share with Coleagues / Customer Support)
-	  - customer support - explain that they can have the developers look at the logs as well.
 
-- .logwizard -> if a single file is found (extra.txt) -> parse it for - context settings or filter settings (import them, and say so visually)
-  - allow exporting settings like this by default (ToC/FromC -> do this somehow to save to file -> maybe from Settings dialog?)
-  - probably both import/export should be done via Settings dialog - if dropped, just ask a question - do you want to import blabla?
+- Open With? (double click on .logwizard file)
+    - if double clicked and Logwizard already running, send it to that instance
+	- if opening a .logwizard and have MERGED notes -> open notes automatically
 
 - retest bugs shown in history.txt
-- take some picture with logwizard - to place on github
-
-
-
-
-
-
-
-
+- take some picture(s) with logwizard - to place on github
 
 - toggles button + menu!
+	- toggles - have them as a single context menu - to be shown at the press of a button or when right-clicking on our "bug" icon
+	  - when showing the menu, the hotkeys for each toggle, show them in [] , like, [F]ilter Pane
+	  - include 'm' as well - explain for current view only
+	  - tooltip -> explain that toggles are shown when right clicking the icon as well
+	  - rethink : where do i keep all toggles? (context? or file itself?)
+	  - write on github - toggles
+	- option to turn off hotkeys
+
 - context matches -> in settings dialog (easy, for now)
   - easiest way - show the beginning of existing log (or allow user to paste anything)
                 - as he selects something ->just use that (allow adding a context on the fly)
 
 - update LogWizardSetupSample with the new hotkeys and such.
 
+  - article: 
+    - update existing article
+    - sharing thy log with coworkers/customer support/customers (two articles: Share with Coleagues / Customer Support)
+	  - customer support - explain that they can have the developers look at the logs as well.
+
+-------------------------------------------------------
 
 
 
 
 
 
-
-
-
-
-- toggles - have them as a single context menu - to be shown at the press of a button or when right-clicking on our "bug" icon
-  - when showing the menu, the hotkeys for each toggle, show them in [] , like, [F]ilter Pane
-  - include 'm' as well - explain for current view only
-  - tooltip -> explain that toggles are shown when right clicking the icon as well
-  - rethink : where do i keep all toggles? (context? or file itself?)
-  - write on github - toggles
-- option to turn off hotkeys
 
 - take log_view into lw_common, so we can test it standalone
   - make it possible to load a certain log + a certain view

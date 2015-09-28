@@ -73,8 +73,8 @@ namespace LogWizard {
 
             // the filter matches
             //
-            // 1.0.84+ the log view accesses this list directly for its items; I'm doing this to save memory on large files
-            //         this will save us quite a few extra pointers, which on x64 can add up to a LOT
+            // 1.0.84+ the log view accesses this list directly for its items; I'm doing this to save_to memory on large files
+            //         this will save_to us quite a few extra pointers, which on x64 can add up to a LOT
             private memory_optimized_list<match> matches_ = new memory_optimized_list<match>() {
                 min_capacity = app.inst.no_ui.min_list_data_source_capacity, increase_percentage = 0.4            
             };

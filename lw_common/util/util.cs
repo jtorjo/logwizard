@@ -639,6 +639,35 @@ namespace lw_common {
         }
 
 
+        public static string create_temp_dir(string parent_dir) {
+            string dir = Path.Combine( parent_dir , "" + DateTime.Now.Ticks);
+            try {
+                Directory.CreateDirectory(dir);
+            } catch(Exception e) {
+                logger.Fatal("can't create dir " + dir + " : " + e.Message);
+            }
+            return dir;
+        }
+
+        public static bool create_dir(string dir) {
+            try {
+                Directory.CreateDirectory(dir);
+                return true;
+            } catch(Exception e) {
+                logger.Fatal("can't create dir " + dir + " : " + e.Message);
+                return false;
+            }
+        }
+
+        public static void create_file(string file, string text) {
+
+            try {
+                create_dir(new FileInfo(file).DirectoryName);
+                File.WriteAllText(file, text);
+            } catch (Exception e) {
+                logger.Fatal("can't create file " + file + " : " + e.Message);
+            }
+        }
 
     }
 }

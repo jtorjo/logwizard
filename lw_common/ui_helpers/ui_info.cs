@@ -36,8 +36,35 @@ namespace lw_common {
             get { return width > 0; }
         }
 
+        public bool show_left_pane {
+            get { return show_left_pane_; }
+        }
+
+        public bool show_filter {
+            get { return show_filter_; }
+            set {
+                show_filter_ = value;
+                if (show_filter_) {
+                    show_notes_ = false;
+                    show_left_pane_ = true;
+                } else
+                    show_left_pane_ = false;
+            }
+        }
+
+        public bool show_notes {
+            get { return show_notes_; }
+            set {
+                show_notes_ = value;
+                if (show_notes_) {
+                    show_filter_ = false;
+                    show_left_pane_ = true;
+                } else
+                    show_left_pane_ = false;
+            }
+        }
+
         // show/hide toggles
-        public bool show_filter = true;
         public bool show_source = true;
         public bool show_fulllog = false;
 
@@ -56,8 +83,9 @@ namespace lw_common {
         public int selected_row_idx = -1;
         public int full_log_splitter_pos = -1;
 
-        public bool show_left_pane = true;
-        public bool show_notes = false;
+        private bool show_filter_ = true;
+        private bool show_left_pane_ = true;
+        private bool show_notes_ = false;
 
         public enum show_row_type {
             msg_only, 
@@ -72,7 +100,7 @@ namespace lw_common {
             width = other.width;
             height = other.height;
 
-            show_filter = other.show_filter;
+            show_filter_ = other.show_filter_;
             show_source = other.show_source;
             show_fulllog = other.show_fulllog;
 
@@ -89,8 +117,8 @@ namespace lw_common {
             selected_row_idx = other.selected_row_idx;
             full_log_splitter_pos = other.full_log_splitter_pos;
 
-            show_left_pane = other.show_left_pane;
-            show_notes = other.show_notes;
+            show_left_pane_ = other.show_left_pane_;
+            show_notes_ = other.show_notes_;
         }
 
         public show_row_type show_row_for_view(string name) {
@@ -132,7 +160,7 @@ namespace lw_common {
             app.load_save(load, ref height, prefix + ".height", -1);
             app.load_save(load, ref maximized, prefix + "maximized", false);
 
-            app.load_save(load, ref show_filter, prefix + ".show_filter", true);
+            app.load_save(load, ref show_filter_, prefix + ".show_filter", true);
             app.load_save(load, ref show_source, prefix + ".show_source", true);
             app.load_save(load, ref show_fulllog, prefix + ".show_fulllog", false);
 
@@ -149,8 +177,8 @@ namespace lw_common {
             app.load_save(load, ref selected_row_idx, prefix + "selected_row_idx", -1);
             app.load_save(load, ref full_log_splitter_pos, prefix + "full_log_splitter_pos", -1);
 
-            app.load_save(load, ref show_left_pane, prefix + ".show_left_pane", true);
-            app.load_save(load, ref show_notes, "show_notes", false);
+            app.load_save(load, ref show_left_pane_, prefix + ".show_left_pane", true);
+            app.load_save(load, ref show_notes_, prefix + "show_notes", false);
 
             if (load)
                 load_show_row(prefix);

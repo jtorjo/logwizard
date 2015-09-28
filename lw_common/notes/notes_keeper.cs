@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using log4net.Repository.Hierarchy;
 
 namespace lw_common {
     /* what this does:
@@ -16,6 +17,8 @@ namespace lw_common {
         (since basically a different md5 computing method will result in a new md5)
     */
     public class notes_keeper {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static notes_keeper inst_ = new notes_keeper();
 
         public static notes_keeper inst {
@@ -32,8 +35,10 @@ namespace lw_common {
             // only call once!
             Debug.Assert(sett_ == null);
             try {
+                dir = new DirectoryInfo(dir).FullName;
                 Directory.CreateDirectory(dir);
-            } catch {
+            } catch(Exception e) {
+                logger.Fatal("[md5] can't init notes keeper " + dir + " : " + e.Message);
             }
 
             dir_ = dir;

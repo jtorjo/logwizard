@@ -5,6 +5,7 @@
  - (creating a new filter) sometimes it shows pretty much nothing - works quite badly
 
 - renaming filter - the name text box is too big - overrides +/-/etc. buttons
+  - make sure the dark bg is not visible, when renaming filter (put light-colored panel below)
 
 - bug: real time monitoring does not scroll to end
 
@@ -16,10 +17,49 @@
 
 
 
+- bug - clicking on a line in a view -> need to update notes line
+- bug - typing in notes list flickers the full-log (even when pressing Alt key????) - perhaps from my keydown/up handlers???????
+- bug - interpret up/down etc. keys correctly on notes-crtl (now they move through the current view)
 
 
 
-- todo: clicking the eyedropper
+
+
+
+- import (import_notes):
+  _notes.txt -> merge - if don't find the local notes -> dump an error msg
+  _context.txt - parse
+    - if new context name + it also contains a log file, import and use
+	- if context exists, or there is no file, ignore (means i already have the file locally)
+  log-file
+    - if i have it locally, i don't care
+	- if i don't have it locally, add it to some "local_dir\imported" location and keep it there (preserve the name)
+
+
+
+
+
+
+1.1.5c
+- md5-fast - don't include file name
+- on new log file -> reload notes
+- allow toggling notes (show_note) alt-n
+- clicking the eyedropper - works
+- ctrl-c / shift-ctrl-c -> if in edit box, we should not do anything
+- todo: tab/shift-tab - care about the notes ctrl (if only cur note selected -> ignore notesctrl)
+- associate with .zip and .logwizard extensions 
+
+done:
+- export (alt-e) + "Export" button -> export 2 files TOTHINK what to put there:
+  (long)
+  _notes.txt
+  _context.txt - the current context: first line - context name, remaining: (as if copied to clipboard)
+  the-log-itself
+  (short)
+  _notes.txt
+  _context.txt - the current context: first line - context name, remaining: (as if copied to clipboard)
+  --> create a temp dir, create the two zip files, then remove temp dir
+  open it in explorer, select the (long) one
 
 
 

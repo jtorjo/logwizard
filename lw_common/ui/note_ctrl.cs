@@ -402,7 +402,7 @@ namespace lw_common.ui {
 
         private bool dirty_ = false;
 
-        public delegate void on_note_selected_func(int line_idx, string msg);
+        public delegate void on_note_selected_func(int line_idx, string view_name);
 
         public on_note_selected_func on_note_selected;
 
@@ -463,7 +463,18 @@ namespace lw_common.ui {
         public List<Control> tab_navigatable_controls {
             get {
                 var nav = new List<Control>();
-                nav.Add(notesCtrl);
+
+                bool select_notes_ctrl = true;
+                if (notesCtrl.SelectedIndex < 0)
+                    select_notes_ctrl = false;
+                else {
+                    var line_id = (notesCtrl.GetItem(notesCtrl.SelectedIndex).RowObject as note_item).line_id;
+                    if (line_id == cur_line_id_)
+                        select_notes_ctrl = false;
+                }
+                if ( select_notes_ctrl)
+                    nav.Add(notesCtrl);
+
                 if ( curNote.Enabled)
                     nav.Add(curNote);
                 return nav;
@@ -900,8 +911,8 @@ namespace lw_common.ui {
                 return;
 
             int line_idx = lines_[i.line_id].idx;
-            string msg = lines_[i.line_id].msg;
-            on_note_selected(line_idx, msg);
+            string view_name = lines_[i.line_id].view_name;
+            on_note_selected(line_idx, view_name);
         }
 
 
@@ -1006,7 +1017,7 @@ namespace lw_common.ui {
 
             ++ignore_change_;
             if (file_name_ != "")
-                // in this case, we're loading the notes from somewhere else, save existing first
+                // in this case, we're loading the notes from somewhere else, save_to existing first
                 save();
 
             // we need to specify the full name!
@@ -1059,7 +1070,7 @@ namespace lw_common.ui {
 
         public void merge(string other_file) {
             // create a backup, just in case something could go wrong
-            save(file_name_ + ".backup." + DateTime.Now.Ticks);
+            save_to(file_name_ + ".backup." + DateTime.Now.Ticks);
 
             // update is_merged!
             ++ignore_change_;
@@ -1130,22 +1141,27 @@ namespace lw_common.ui {
             save();
         }
 
+        private void save() {
+            save_to(file_name_);
+        }
+
         // saves the settings - you can specify another file name (in case you're making a backup)
-        public void save(string file_name = "") {
+        public void save_to(string file_name) {
             if (file_name == "")
                 file_name = file_name_;
 
             // needs to be loaded first
             if (file_name == "")
                 return;
-            if (!dirty_)
+            bool force_save = file_name != file_name_;
+            if (!dirty_ && !force_save)
                 return;
             if (notes_sorted_by_line_index_.Count < 1)
-                return; // optimization - nothing to save
+                return; // optimization - nothing to save_to
 
             settings_file sett = new settings_file(file_name) { log_each_set = false };
 
-            // first, save lines - don't save the cur_line
+            // first, save_to lines - don't save_to the cur_line
             sett.set("line_count", "" + (lines_.Count - 1));
             int line_idx = 0;
             foreach ( var l in lines_)
@@ -1158,7 +1174,7 @@ namespace lw_common.ui {
                     ++line_idx;
                 }
 
-            // save notes
+            // save_to notes
             sett.set("note_count", "" + notes_sorted_by_line_index_.Count);
             for (int idx = 0; idx < notes_sorted_by_line_index_.Count; ++idx) {
                 string prefix = "note." + idx + ".";
@@ -1289,7 +1305,9 @@ namespace lw_common.ui {
                 addNoteToLine.Text = "[" + (lines_[i.line_id].idx + 1) + "]";
                 curNote.Text = i.the_note != null ? i.the_note.note_text : "";
                 curNote.Enabled = true;
+                selectColor.Visible = i.the_note != null && i.the_note.author_name == author_name_ && i.the_note.note_text.Trim() != "";
             } else {
+                selectColor.Visible = false;
                 curNote.Enabled = false;
                 curNote.Text = "";
             }
@@ -1352,6 +1370,43 @@ namespace lw_common.ui {
             if (i.the_note != null && i.the_note.author_name != author_name_) {
                 ++ignore_change_;
                 curNote.Text = "";
+                --ignore_change_;
+            }
+        }
+
+        private void selectColor_Click(object sender, EventArgs e) {
+            if (notesCtrl.SelectedIndex < 0)
+                return;
+            var i = notesCtrl.GetItem(notesCtrl.SelectedIndex).RowObject as note_item;
+            if (i.the_note == null) {
+                Debug.Assert(false);
+                return;
+            }
+
+            var sel = new select_color_form();
+            if (sel.ShowDialog() == DialogResult.OK) {
+                string sel_color = util.color_to_str( sel.SelectedColor);
+
+                string old_text = i.the_note.note_text;
+                string new_text = old_text;
+                if (old_text.Trim().StartsWith("#")) {
+                    old_text = old_text.Trim();
+                    int space = old_text.IndexOf(' ');
+                    if (space > 0)
+                        old_text = old_text.Substring(space + 1).Trim();
+                    else
+                        old_text = ""; // it contained only the color
+                    new_text = old_text;
+                }
+
+                i.the_note.note_text = "#" + sel_color + " " + new_text;
+                refresh_note(i);
+                dirty_ = true;
+
+                ++ignore_change_;
+                curNote.Text = i.the_note.note_text;
+                curNote.SelectionStart = curNote.TextLength;
+                curNote.Focus();
                 --ignore_change_;
             }
         }

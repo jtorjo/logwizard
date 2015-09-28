@@ -27,3 +27,7 @@
 
 - notes: whether we keep fast/slow/by-file-name
   - this should be context dependent! it makes sense - for a certain type of files, we probably want just to have 'by file name'
+
+- .logwizard -> should save bookmarks as well
+
+
