@@ -1051,8 +1051,18 @@ namespace lw_common.ui {
                     lines_.Add(new_line.Key, new_line.Value);
 
             // now, merge notes
-            //
+
+            // Step 1: insert notes to what we already have here
+            //         (replies to existing notes, and notes on lines that already have notes)
+            List<note_item> still_to_add = new List<note_item>();
             foreach (var new_note in merge_from.Item2) {                
+                var found_line = notes_sorted_by_line_index_.FirstOrDefault(x => x.line_id == new_note.line_id);
+                if (found_line == null) {
+                    // it's a completely new line - we'll add it later
+                    still_to_add.Add(new_note);
+                    continue;
+                }
+
                 if (!new_note.is_note_header) {
                     var found = notes_sorted_by_line_index_.FindIndex(x => x.note_id == new_note.note_id);
                     if (found != -1) {
@@ -1069,13 +1079,21 @@ namespace lw_common.ui {
                         add_note(lines_[new_note.line_id], new_note.the_note, new_note.note_id, new_note.reply_id, new_note.deleted, new_note.utc_last_edited);
                     }
                 } else {
-                    // it's a note header
-                    // note headers are the same everywhere - so if found, ours is good
-                    var found = notes_sorted_by_line_index_.FirstOrDefault(x => x.line_id == new_note.line_id);
-                    if ( found == null)
-                        add_note_header(new_note.line_id, new_note.note_id, new_note.deleted, new_note.utc_last_edited);
+                    // it's a note header - we already have it
                 }
             }
+
+            // Step 2: insert notes to completely new lines
+            List<note_item> copy = notes_sorted_by_line_index_.ToList();
+            foreach (var n in still_to_add) {
+                var idx = copy.FindIndex(x => lines_[x.line_id].idx > lines_[n.line_id].idx);
+                if ( idx >= 0)
+                    copy.Insert(idx, n);
+                else 
+                    copy.Add(n);
+            }
+            notes_sorted_by_line_index_ = copy;
+ 
             dirty_ = false;
             --ignore_change_;
 

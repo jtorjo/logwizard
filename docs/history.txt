@@ -19,12 +19,37 @@
 
 
 
+- todo: test coloring of notes (+ clicking the eyedropper)
 
-- todo : guids + merging
-         saving md5 : fast (last 8192 + first 8192 chars, + file name + file size), slow (full md5)
+- todo : saving md5 : fast (last 8192 + first 8192 chars, + file name + file size), slow (full md5)
+
+					--> merged ? different color
 
 
-- merging
+1.1.3t
+- merging: works AWESOMELY
+
+DONE:
+- (note_user_ctrl) notes: author (in Settings) - by default, username
+  - show the author username when toggled into notes + specify a color for author (by default, blue)
+    - when showing the other authors, if an author name's color colides with ours, make sure we use something unique (even if several collisions)
+  - allow deleting/UNdeleting notes, even from others (basically, we will HIDE it; hidden notes, if shown, show in ligthtgray) 
+    - have a checkbox - show Hidden Notes (by default, unchecked)
+  - render: the author, bold -> in author's color , the text in the color wanted by the author
+  - when typing a note: first line ( # color) - can specify the color (to make it simpler)
+- notes: 
+  - allow of editing the notes you're creating
+  - selecting a note: if mine -> i edit. if another one's, i'm replying
+- allow notes - on any line even if bookmark or not
+  - clicking on a note - will take you there - notes are prefixed by username (by default, its the windows username)
+  - several people can comment on a line
+  - clicking on a note: 
+    - see if i have the view where the note was made, and if i have the line. if so, i will go there, in that view (since i may be using my own context)
+	- otherwise, go to first view where the note is found, if not found anywhere, open full log and go there
+  - notes should be abe to have colors (like - green OK, red BAD, gray ACCEPTED, stuff like that)
+    - note color != author color!
+
+
 
 1.1.3s
 - merge - notes for lines that don't have any notes from me are appended to the end
