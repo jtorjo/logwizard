@@ -48,7 +48,7 @@
             this.dummyView.Location = new System.Drawing.Point(431, 3);
             this.dummyView.Name = "dummyView";
             this.dummyView.ShowGroups = false;
-            this.dummyView.Size = new System.Drawing.Size(332, 433);
+            this.dummyView.Size = new System.Drawing.Size(332, 705);
             this.dummyView.TabIndex = 1;
             this.dummyView.UseCompatibleStateImageBehavior = false;
             this.dummyView.View = System.Windows.Forms.View.Details;
@@ -76,7 +76,7 @@
             // undo
             // 
             this.undo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.undo.Location = new System.Drawing.Point(688, 441);
+            this.undo.Location = new System.Drawing.Point(688, 713);
             this.undo.Name = "undo";
             this.undo.Size = new System.Drawing.Size(75, 23);
             this.undo.TabIndex = 2;
@@ -93,14 +93,14 @@
             this.notes.Location = new System.Drawing.Point(13, 3);
             this.notes.Margin = new System.Windows.Forms.Padding(4);
             this.notes.Name = "notes";
-            this.notes.Size = new System.Drawing.Size(411, 460);
+            this.notes.Size = new System.Drawing.Size(411, 732);
             this.notes.TabIndex = 0;
             // 
             // test_notes_ctrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(776, 476);
+            this.ClientSize = new System.Drawing.Size(776, 748);
             this.Controls.Add(this.undo);
             this.Controls.Add(this.dummyView);
             this.Controls.Add(this.notes);

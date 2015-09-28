@@ -60,6 +60,9 @@ namespace lw_common.ui {
             // if true, it's a note added in this session 
             // IMPORTANT: the notes added in this session are always added at the end (if they are new notes, to new lines)
             public bool is_new = false;
+
+            // if true, someone else made this note, and we just merged it
+            public bool is_merged = false;
         }
 
         public class line {
@@ -113,9 +116,6 @@ namespace lw_common.ui {
 
         private class note_item {
             public readonly note_ctrl self = null;
-
-            // if true, someone else made this note, and we just merged it
-            public bool is_merged = false;
 
             // any note or line can be deleted
             public bool deleted = false;
@@ -329,10 +329,20 @@ namespace lw_common.ui {
                             return author_bg;
                     }
 
-                    if (is_merged)
+                    if (the_note != null && the_note.is_merged)
                         return merged_bg;
 
                     return Color.White;
+                }
+            }
+
+            public Font font {
+                get {
+                    if ( the_note != null)
+                        if (note_color() != util.transparent)
+                            return self.note_bold_font_;
+
+                    return the_note != null ? self.note_font_ : self.header_font_;
                 }
             }
 
@@ -393,6 +403,8 @@ namespace lw_common.ui {
 
         private Font header_font_ = null;
         private Font note_font_ = null;
+        // this is to be used only when we override the color of the note, to basically make it stand out
+        private Font note_bold_font_ = null;
 
         private readonly Color[] default_author_colors_ = new Color[] {
             Color.Blue,
@@ -434,7 +446,8 @@ namespace lw_common.ui {
             InitializeComponent();
             lines_.Add(cur_line_id_, new line());
             header_font_ = notesCtrl.Font;
-            note_font_ = new Font("Tahoma", header_font_.Size, FontStyle.Bold);
+            note_font_ = new Font("Tahoma", header_font_.Size, FontStyle.Regular);
+            note_bold_font_ = new Font("Tahoma", header_font_.Size, FontStyle.Bold);
             update_cur_note_controls();
         }
 
@@ -1052,6 +1065,11 @@ namespace lw_common.ui {
 
             // now, merge notes
 
+            // Step 0: mark all new notes as merged
+            foreach (var new_note in merge_from.Item2)
+                if (new_note.the_note != null)
+                    new_note.the_note.is_merged = true;
+
             // Step 1: insert notes to what we already have here
             //         (replies to existing notes, and notes on lines that already have notes)
             List<note_item> still_to_add = new List<note_item>();
@@ -1069,7 +1087,7 @@ namespace lw_common.ui {
                         // in this case, look at last_edited -> if bigger than ours, take that (someone else updated the entry after us)
                         Debug.Assert(notes_sorted_by_line_index_[found].line_id == new_note.line_id);
                         Debug.Assert(notes_sorted_by_line_index_[found].reply_id == new_note.reply_id);
-                        if (new_note.utc_last_edited > notes_sorted_by_line_index_[found].utc_last_edited)
+                        if (new_note.utc_last_edited > notes_sorted_by_line_index_[found].utc_last_edited) 
                             notes_sorted_by_line_index_[found] = new_note;
                     } else {
                         // it's a new note, just add it
@@ -1170,8 +1188,8 @@ namespace lw_common.ui {
 
             idx.BackColor = line.BackColor = text.BackColor = i.bg;
 
-            line.Font = i.the_note != null ? note_font_ : header_font_;
-            text.Font = i.the_note != null ? note_font_ : header_font_;
+            line.Font = i.font;
+            text.Font = i.font;
         }
 
         private void refresh_note_indexes() {

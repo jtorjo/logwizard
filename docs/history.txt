@@ -19,11 +19,14 @@
 
 
 
-- todo: test coloring of notes (+ clicking the eyedropper)
+- todo: clicking the eyedropper
 
 - todo : saving md5 : fast (last 8192 + first 8192 chars, + file name + file size), slow (full md5)
 
-					--> merged ? different color
+
+1.1.3v
+- show merged lines with different background - works
+- coloring of notes: works (still todo - clicking no eyedropper)
 
 
 1.1.3t
@@ -48,7 +51,6 @@ DONE:
 	- otherwise, go to first view where the note is found, if not found anywhere, open full log and go there
   - notes should be abe to have colors (like - green OK, red BAD, gray ACCEPTED, stuff like that)
     - note color != author color!
-
 
 
 1.1.3s
