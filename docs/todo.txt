@@ -1,3 +1,5 @@
+- ctrl-c / shift-ctrl-c -> if in edit box, we should not do anything
+
 in .logwizard
 - when exporting - 2 files: long (including the log file) + short (just the notes)
  (the second one - when communicating a bit, no point in resending hte log over and over)
@@ -19,9 +21,7 @@ in .logwizard
 - show_notes (ui_info) -> note: this is mutually exclusive with show_filters (probably have something else show_left)
   - need to allow resizing the left pane (splitter) and automatically save that
 
-- take some picture with logwizard - to place on github
 
-- ctrl-c / shift-ctrl-c -> if in edit box, we should not do anything
 
 - zip it - zip the file + its notes + its bookmarks + its context
   - zip as ".logwizard" extension - we should automatically recognize this (Open With)
@@ -49,6 +49,8 @@ in .logwizard
   - allow exporting settings like this by default (ToC/FromC -> do this somehow to save to file -> maybe from Settings dialog?)
   - probably both import/export should be done via Settings dialog - if dropped, just ask a question - do you want to import blabla?
 
+- retest bugs shown in history.txt
+- take some picture with logwizard - to place on github
 
 
 
@@ -75,6 +77,13 @@ in .logwizard
 
 
 
+- toggles - have them as a single context menu - to be shown at the press of a button or when right-clicking on our "bug" icon
+  - when showing the menu, the hotkeys for each toggle, show them in [] , like, [F]ilter Pane
+  - include 'm' as well - explain for current view only
+  - tooltip -> explain that toggles are shown when right clicking the icon as well
+  - rethink : where do i keep all toggles? (context? or file itself?)
+  - write on github - toggles
+- option to turn off hotkeys
 
 - take log_view into lw_common, so we can test it standalone
   - make it possible to load a certain log + a certain view
@@ -133,13 +142,6 @@ in .logwizard
   i need to allow this for the message details form as well
   the same should be for when bolding something - that should work for the msg details as well.
 
-- toggles - have them as a single context menu - to be shown at the press of a button or when right-clicking on our "bug" icon
-  - when showing the menu, the hotkeys for each toggle, show them in [] , like, [F]ilter Pane
-  - include 'm' as well - explain for current view only
-  - tooltip -> explain that toggles are shown when right clicking the icon as well
-  - rethink : where do i keep all toggles? (context? or file itself?)
-  - write on github - toggles
-- option to turn off hotkeys
 
 
 

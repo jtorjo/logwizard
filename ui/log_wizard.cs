@@ -363,7 +363,10 @@ namespace LogWizard
             }
             history_ = history_.Where(h => {
                 if (h.type == history.entry_type.file)
-                    if( !File.Exists(h.name))
+                    if( File.Exists(h.name))
+                        // 1.1.5+ - compute md5s for this
+                        md5_log_keeper.inst.compute_default_md5s_for_file(h.name);
+                    else
                         return false;
                 return true;
             }).ToList();
@@ -2127,7 +2130,8 @@ namespace LogWizard
             case action_type.undo:
                 if (global_ui.show_filter)
                     filtCtrl.undo();
-                else if ( global_ui.show_notes)
+                else if (global_ui.show_notes)
+                    notes.undo();
                 break;
             default:
                 Debug.Assert(false);

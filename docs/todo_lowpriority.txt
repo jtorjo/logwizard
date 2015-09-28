@@ -21,3 +21,6 @@
 		tihs will mark the note as "empty" and purged. 
 		When you merge such a note, it's marked as PURGED.
 		If there are replies on such a note, they won't be deleted, the text of the purged note will become "NOTE PURGED."
+
+- when allowing more types of logs (like: not just from file)
+  - at this point, it would make sense to have an option to save the log (the full log) to file

@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -620,6 +621,21 @@ namespace lw_common {
             if (e.Alt)
                 prefix += "alt-";
             return key_to_action(e.KeyCode, prefix);
+        }
+
+        public static string md5_hash(string msg) {
+            return md5_hash(Encoding.ASCII.GetBytes(msg));
+        }
+
+        public static string md5_hash(byte[] msg)
+        {
+            var md5 = new MD5CryptoServiceProvider();
+            var hashBytes = md5.ComputeHash(msg);
+            var hash = new StringBuilder();
+
+            foreach (var b in hashBytes)
+                hash.AppendFormat("{0:x2}", b);
+            return hash.ToString();
         }
 
 
