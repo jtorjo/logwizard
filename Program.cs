@@ -66,25 +66,28 @@ namespace LogWizard
             // uncomment this to test how we'd behave in release
             //util.is_debug = false;
 
-            var running_already = Process.GetProcessesByName("LogWizard").ToDictionary(x => x.Id, x => x);
-            running_already.Remove(Process.GetCurrentProcess().Id);
-            if (running_already.Count > 0) {
-                // there's another instance running
-                if (args.Length == 0)
-                    // just let the other instance run
-                    return;
-                // for the other instance - what to open
-                string open = args[0];
+            // if "Open With" and LogWizard is already running -> send this to the existing running application
+            // the reason for this: if multiple instances running, they can mess up the settings file - we don't want that!
+            if (!util.is_debug) {
+                var running_already = Process.GetProcessesByName("LogWizard").ToDictionary(x => x.Id, x => x);
+                running_already.Remove(Process.GetCurrentProcess().Id);
+                if (running_already.Count > 0) {
+                    // there's another instance running
+                    if (args.Length == 0)
+                        // just let the other instance run
+                        return;
+                    // for the other instance - what to open
+                    string open = args[0];
 
-                var cds = new win32.COPYDATASTRUCT {
-                                                    dwData = new IntPtr(open.Length * 2 + 1),
-                                                    cbData = open.Length * 2 + 1,
-                                                    lpData = open
-                                                    };
-                var handle = running_already.First().Value.MainWindowHandle;
-                win32.SendMessage( handle, win32.WM_COPYDATA, IntPtr.Zero, ref cds);
-                Thread.Sleep(2000);
-                return;
+                    var cds = new win32.COPYDATASTRUCT {
+                        dwData = new IntPtr(0),
+                        cbData = open.Length * 2 + 1,
+                        lpData = open
+                    };
+                    var handle = running_already.First().Value.MainWindowHandle;
+                    win32.SendMessage(handle, win32.WM_COPYDATA, IntPtr.Zero, ref cds);
+                    return;
+                }
             }
 
             if (!util.is_debug) {

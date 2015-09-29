@@ -16,14 +16,6 @@
   - also, export to clipboard
 
 
-- Open With? (double click on .logwizard file)
-    - if double clicked and Logwizard already running, send it to that instance
-
-	- if i'm launching a new instances of logwizard, and an existing one is already running, bring the already running one to top (basically, force a "New" on the existing instance)
-	  - i want a single LW instance, since running several can mess up the settings
-	  - (low priority, very likely,it would be complicated, because we would need to test having several lw windows, and saving settings might end up problematic) 
-		- bonus: each "New" will start on a new "custom" position, so you can tweak each position in any way you want
-		- the easiest thing I can do is to start on a new "custom position", but not save stuff like that TOTHINK
 
 
 

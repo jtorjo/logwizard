@@ -44,8 +44,8 @@ namespace lw_common {
         // http://stackoverflow.com/questions/6779731/c-sharp-using-sendmessage-problem-with-wm-copydata
         [StructLayout(LayoutKind.Sequential)]
         public struct COPYDATASTRUCT {
-          public int cbData;
           public IntPtr dwData;
+          public int cbData;
           [MarshalAs(UnmanagedType.LPStr)] public string lpData;
         }
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]

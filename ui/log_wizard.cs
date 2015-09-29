@@ -2878,7 +2878,8 @@ namespace LogWizard
                 var st = (win32.COPYDATASTRUCT)Marshal.PtrToStructure(m.LParam, typeof(win32.COPYDATASTRUCT));
                 string open = st.lpData;
 
-                util.postpone(() => MessageBox.Show(open), 100);
+                // util.postpone(() => MessageBox.Show(open), 100);
+                util.postpone(() => on_file_drop(open), 100);
             }
 
             base.WndProc(ref m);
