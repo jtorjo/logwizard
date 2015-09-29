@@ -30,4 +30,5 @@
 
 - .logwizard -> should save bookmarks as well
 
+- merging - keep stuff in the cloud? automatically merge (pro_v)
 

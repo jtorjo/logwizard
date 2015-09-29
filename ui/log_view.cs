@@ -587,34 +587,65 @@ namespace LogWizard
             return false;
         }
 
+        string cell_value(item i, int column_idx) {
+            switch (column_idx) {
+            case 0:
+                return "" + i.line;
+            case 1:
+                return i.view;
+            case 2:
+                return i.date;
+            case 3:
+                return i.time;
+            case 4:
+                return i.level;
+            case 5:
+                return i.file;
+            case 6:
+                return i.func;
+            case 7:
+                return i.class_;
+            case 8:
+                return i.ctx1;
+            case 9:
+                return i.ctx2;
+            case 10:
+                return i.ctx3;
+            case 11:
+                return i.msg;
+            default:
+                Debug.Assert(false);
+                return "";
+            }
+        }
 
-        private string column_value(item col, info_type type) {
+        private string cell_value_by_type(item i, info_type type) {
             switch (type) {
             case info_type.msg:
-                return col.msg;
+                return i.msg;
             case info_type.time:
-                return col.time;
+                return i.time;
             case info_type.date:
-                return col.date;
+                return i.date;
             case info_type.level:
-                return col.level;
+                return i.level;
             case info_type.class_:
-                return col.class_;
+                return i.class_;
             case info_type.file:
-                return col.file;
+                return i.file;
             case info_type.func:
-                return col.func;
+                return i.func;
             case info_type.ctx1:
-                return col.ctx1;
+                return i.ctx1;
             case info_type.ctx2:
-                return col.ctx2;
+                return i.ctx2;
             case info_type.ctx3:
-                return col.ctx3;
+                return i.ctx3;
             case info_type.thread:
-                return col.thread;
+                return i.thread;
             }
             Debug.Assert(false);
-            return col.msg;
+            return i.msg;
         }
 
         OLVColumn column(info_type type) {
@@ -648,6 +679,7 @@ namespace LogWizard
         }
 
 
+
         // when we have a number of columns - based on the info on each column, we hide or show them
         private void refresh_visible_columns() {
             if (visible_columns_refreshed_)
@@ -663,7 +695,7 @@ namespace LogWizard
                             var i = match_at(idx) ;
                             if (i.line_idx < 0)
                                 return;
-                            if (column_value(i, type) != "")
+                            if (cell_value_by_type(i, type) != "")
                                 ++value_count;
                         }
                         bool has_values = (value_count > 0);
@@ -1450,6 +1482,28 @@ namespace LogWizard
 
         public void set_focus() {
             list.Focus();
+        }
+
+        public export_text export() {
+            export_text export = new export_text();
+
+            int count = filter_.match_count;
+            for (int idx = 0; idx < count; ++idx) {
+                item i = match_at(idx) ;
+
+                int visible_idx = 0;
+                string font = list.Font.Name;
+                for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
+                    if (list.Columns[column_idx].Width > 0) {
+                        string txt = cell_value(i, column_idx);
+                        export_text.cell c = new export_text.cell(idx, visible_idx, txt) { fg = i.fg(this), bg = i.bg(this), font = font, font_size = 7 };
+                        export.add_cell(c);
+                        ++visible_idx;
+                    }
+                }
+            }
+
+            return export;
         }
     }
 }

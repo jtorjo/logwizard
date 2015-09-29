@@ -675,5 +675,34 @@ namespace lw_common {
             }
         }
 
+        /*  my solution does not work . however, the code in teh below link might work. I may import it someday
+        http://stackoverflow.com/questions/3018002/c-how-to-use-shopenfolderandselectitems
+
+        public static void open_in_explorer(List<string> names) {
+            Debug.Assert(names.Count > 0);
+
+            try {
+                string cmd = "\"" + concatenate(names, "\",\"") + "\"";
+                Process.Start("explorer", "/select," + cmd );
+            } catch (Exception e) {
+                logger.Error("can't open in explorer " + e.Message);
+            }            
+        }
+        */
+        public static void open_in_explorer(string name) {
+            try {
+                Process.Start("explorer", "/select,\"" + name + "\"");
+            } catch (Exception e) {
+                logger.Error("can't open in explorer " + e.Message);
+            }            
+        }
+
+        public static string remove_disallowed_filename_chars(string file_name) {
+            foreach ( char c in "|\\/:*?\"<>|")
+                file_name = file_name.Replace("" + c, "");
+
+            return file_name;
+        }
+
     }
 }

@@ -75,10 +75,14 @@
             this.postFocus = new System.Windows.Forms.Timer(this.components);
             this.monitor = new System.Windows.Forms.Button();
             this.lower = new System.Windows.Forms.Panel();
+            this.export = new System.Windows.Forms.Button();
             this.hotkeys = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.saveTimer = new System.Windows.Forms.Timer(this.components);
-            this.export = new System.Windows.Forms.Button();
+            this.exportMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportLogNotestoLogWizardFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportNotestotxtAndhtmlFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.main)).BeginInit();
             this.main.Panel1.SuspendLayout();
@@ -98,6 +102,7 @@
             this.viewsTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.lower.SuspendLayout();
+            this.exportMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tip
@@ -660,6 +665,18 @@
             this.lower.Size = new System.Drawing.Size(1261, 27);
             this.lower.TabIndex = 15;
             // 
+            // export
+            // 
+            this.export.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.export.ContextMenuStrip = this.exportMenu;
+            this.export.Location = new System.Drawing.Point(974, 3);
+            this.export.Name = "export";
+            this.export.Size = new System.Drawing.Size(68, 23);
+            this.export.TabIndex = 16;
+            this.export.Text = "Export";
+            this.export.UseVisualStyleBackColor = true;
+            this.export.Click += new System.EventHandler(this.export_Click);
+            // 
             // hotkeys
             // 
             this.hotkeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -689,16 +706,35 @@
             this.saveTimer.Interval = 15000;
             this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
-            // export
+            // exportMenu
             // 
-            this.export.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.export.Location = new System.Drawing.Point(974, 3);
-            this.export.Name = "export";
-            this.export.Size = new System.Drawing.Size(68, 23);
-            this.export.TabIndex = 16;
-            this.export.Text = "Export";
-            this.export.UseVisualStyleBackColor = true;
-            this.export.Click += new System.EventHandler(this.export_Click);
+            this.exportMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportLogNotestoLogWizardFileToolStripMenuItem,
+            this.exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem,
+            this.exportNotestotxtAndhtmlFilesToolStripMenuItem});
+            this.exportMenu.Name = "exportMenu";
+            this.exportMenu.Size = new System.Drawing.Size(298, 70);
+            // 
+            // exportLogNotestoLogWizardFileToolStripMenuItem
+            // 
+            this.exportLogNotestoLogWizardFileToolStripMenuItem.Name = "exportLogNotestoLogWizardFileToolStripMenuItem";
+            this.exportLogNotestoLogWizardFileToolStripMenuItem.Size = new System.Drawing.Size(297, 22);
+            this.exportLogNotestoLogWizardFileToolStripMenuItem.Text = "Export Log + Notes (to .LogWizard file)";
+            this.exportLogNotestoLogWizardFileToolStripMenuItem.Click += new System.EventHandler(this.exportLogNotestoLogWizardFileToolStripMenuItem_Click);
+            // 
+            // exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem
+            // 
+            this.exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem.Name = "exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem";
+            this.exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem.Size = new System.Drawing.Size(297, 22);
+            this.exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem.Text = "Export Current View (to .txt and .html files)";
+            this.exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem.Click += new System.EventHandler(this.exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem_Click);
+            // 
+            // exportNotestotxtAndhtmlFilesToolStripMenuItem
+            // 
+            this.exportNotestotxtAndhtmlFilesToolStripMenuItem.Name = "exportNotestotxtAndhtmlFilesToolStripMenuItem";
+            this.exportNotestotxtAndhtmlFilesToolStripMenuItem.Size = new System.Drawing.Size(297, 22);
+            this.exportNotestotxtAndhtmlFilesToolStripMenuItem.Text = "Export Notes (to .txt and .html files)";
+            this.exportNotestotxtAndhtmlFilesToolStripMenuItem.Click += new System.EventHandler(this.exportNotestotxtAndhtmlFilesToolStripMenuItem_Click);
             // 
             // log_wizard
             // 
@@ -742,6 +778,7 @@
             this.tabPage1.ResumeLayout(false);
             this.lower.ResumeLayout(false);
             this.lower.PerformLayout();
+            this.exportMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -797,6 +834,10 @@
         private lw_common.ui.filter_ctrl filtCtrl;
         private lw_common.ui.note_ctrl notes;
         private System.Windows.Forms.Button export;
+        private System.Windows.Forms.ContextMenuStrip exportMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportLogNotestoLogWizardFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportNotestotxtAndhtmlFilesToolStripMenuItem;
     }
 }
 

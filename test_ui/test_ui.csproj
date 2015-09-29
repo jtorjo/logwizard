@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="test_export.cs" />
     <Compile Include="test_filter_ctrl.cs">
       <SubType>Form</SubType>
     </Compile>

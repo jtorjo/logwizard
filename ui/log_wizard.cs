@@ -2258,12 +2258,8 @@ namespace LogWizard
                 break;
 
             case action_type.open_in_explorer:
-                try {
-                    string name = text_ != null ? text_.name : "";
-                    Process.Start("explorer", "/select,\"" + name + "\"");
-                } catch (Exception e) {
-                    logger.Error("can't open in explorer " + e.Message);
-                }
+                if ( text_ != null)
+                    util.open_in_explorer(text_.name);
                 break;
 
             case action_type.none:
@@ -2290,7 +2286,7 @@ namespace LogWizard
                 break;
 
             case action_type.export_notes:
-                export_notes();
+                export_notes_to_logwizard_file();
                 break;
 
             case action_type.undo:
@@ -2737,12 +2733,13 @@ namespace LogWizard
         }
             
         private void export_Click(object sender, EventArgs e) {
-            export_notes();
+            //export_notes();
+            exportMenu.Show(Cursor.Position);
         }
 
         // within our .logwizard file - easily identify our files
         private const string log_wizard_zip_file_prefix = "___logwizard___";
-        private void export_notes() {
+        private void export_notes_to_logwizard_file() {
             if (!(text_ is file_text_reader)) {
                 Debug.Assert(false);
                 return;
@@ -2766,7 +2763,7 @@ namespace LogWizard
             // here, we have all needed files
             string zip_dir = Program.local_dir() + "export";
             util.create_dir(zip_dir);
-            string prefix = zip_dir + "\\" + file_name + "." + DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss-fff") + ".";
+            string prefix = zip_dir + "\\" + file_name + "." + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss-fff") + ".";
 
             Dictionary<string,string> files = new Dictionary<string, string>();
             files.Add(dir + "\\notes.txt", log_wizard_zip_file_prefix + "notes.txt");
@@ -2778,11 +2775,7 @@ namespace LogWizard
             zip_util.create_zip(prefix + "short.logwizard", files);
 
             util.del_dir(dir);
-            try {
-                string args = "/select,\"" + prefix + "long.logwizard" + "\"";
-                Process.Start("explorer", args);
-            } catch {
-            }
+            util.open_in_explorer(prefix + "long.logwizard");
         }
 
         private void import_notes(string file) {
@@ -2887,6 +2880,44 @@ namespace LogWizard
 
         private void on_zip_drop(string file) {
             // FIXME
+        }
+
+        private void exportLogNotestoLogWizardFileToolStripMenuItem_Click(object sender, EventArgs e) {
+            export_notes_to_logwizard_file();
+        }
+
+        private void exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem_Click(object sender, EventArgs ea) {
+            var lv = selected_view();
+            try {
+                string prefix = Program.local_dir() + "exported_views";
+                util.create_dir(prefix);
+                prefix += "\\View " + util.remove_disallowed_filename_chars(lv.name) + " from " + new FileInfo(selected_file_name()).Name + " (" + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ")";
+
+                var export = selected_view().export();
+
+                File.WriteAllText( prefix + ".txt", export.to_text());
+                File.WriteAllText( prefix + ".html", export.to_html());
+
+                util.open_in_explorer(prefix + ".html");
+            } catch (Exception e) {
+                logger.Error("can't export notes to txt/html " + e.Message);
+            }
+
+        }
+
+        private void exportNotestotxtAndhtmlFilesToolStripMenuItem_Click(object sender, EventArgs ea) {
+            try {
+                string prefix = Program.local_dir() + "exported_notes";
+                util.create_dir(prefix);
+                prefix += "\\Notes on " + new FileInfo(selected_file_name()).Name + " (" + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ")";
+                var export = notes.export_notes();
+                File.WriteAllText( prefix + ".txt", export.to_text());
+                File.WriteAllText( prefix + ".html", export.to_html());
+
+                util.open_in_explorer(prefix + ".html");
+            } catch (Exception e) {
+                logger.Error("can't export notes to txt/html " + e.Message);
+            }
         }
 
     }

@@ -1,4 +1,3 @@
-
 - dropping a zip file
   - look for .log + .txt files (prefer .log) - already in settings
     - if a single one found, use it. otherwise:
@@ -8,34 +7,38 @@
 	-------> keep in the history (and basically dropped zip files -> we keep them somewhere in our logwizard subdir + use FRIENDLY NAMES)
 	         see that history_ and history combo are in sync, even when we select another item!
 
-
-********* allow exporting notes:
-  is there an easy way to write html (see codeproject)
-  - to be sent to customer - the line(s) + the author(s)
-  - allow export as .txt or .html
-  - also, export to clipboard
-
-
-
-
-
-
-
-- retest bugs shown in history.txt
-- take some picture(s) with logwizard - to place on github
-
 - toggles button + menu!
 	- toggles - have them as a single context menu - to be shown at the press of a button or when right-clicking on our "bug" icon
 	  - when showing the menu, the hotkeys for each toggle, show them in [] , like, [F]ilter Pane
 	  - include 'm' as well - explain for current view only
 	  - tooltip -> explain that toggles are shown when right clicking the icon as well
-	  - rethink : where do i keep all toggles? (context? or file itself?)
 	  - write on github - toggles
 	- option to turn off hotkeys
+
+
+
+
+
 
 - context matches -> in settings dialog (easy, for now)
   - easiest way - show the beginning of existing log (or allow user to paste anything)
                 - as he selects something ->just use that (allow adding a context on the fly)
+- syntax matches
+
+- test on PT4 file
+
+
+
+
+- retest bugs shown in history.txt
+
+
+
+
+
+- take some picture(s) with logwizard - to place on github
+
+- default: don't use gradient
 
 - update LogWizardSetupSample with the new hotkeys and such.
 

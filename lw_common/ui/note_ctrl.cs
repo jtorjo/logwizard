@@ -1421,6 +1421,23 @@ namespace lw_common.ui {
             }
         }
 
+        public export_text export_notes() {
+            export_text export = new export_text();
+            int line_idx = 0;
+            foreach (var n in notes_sorted_by_line_index_) {
+                if ( n.deleted)
+                    if (!showDeletedLines.Checked)
+                        continue;
+
+                export.add_cell( new export_text.cell(line_idx, 0, n.the_idx) { fg = n.idx_fg, bg = n.bg, font = n.font.Name, font_size = (int)n.font.Size });
+                export.add_cell( new export_text.cell(line_idx, 1, n.the_line) { fg = n.line_fg, bg = n.bg, font = n.font.Name, font_size = (int)n.font.Size } );
+                export.add_cell( new export_text.cell(line_idx, 2, n.the_text) { fg = n.text_fg, bg = n.bg, font = n.font.Name, font_size = (int)n.font.Size });
+
+                ++line_idx;
+            }
+            return export;
+        }
+
 
     }
 }

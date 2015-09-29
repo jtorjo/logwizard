@@ -24,6 +24,12 @@
 - bug - sometimes we don't draw correctly - it seems to happen especially if I click another tab with the mouse
 
 
+1.1.9
+- saving to html works like a charm (test_export)
+- saving notes to .txt and .html
+- saving current view to .txt and .html - works
+
+
 1.1.8
 - opening .logwizard files works as expected (even if double clicked in Windows Explorer)
 
