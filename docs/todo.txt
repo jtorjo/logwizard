@@ -8,9 +8,10 @@
 	-------> keep in the history (and basically dropped zip files -> we keep them somewhere in our logwizard subdir + use FRIENDLY NAMES)
 	         see that history_ and history combo are in sync, even when we select another item!
 
-  - should we auto-open .zip files? (Open With?) 
+  - should we auto-open .zip files? (Open With?) --------------> see what happens (what is the cmd arg)
 
 ********* allow exporting notes:
+  is there an easy way to write html (see codeproject)
   - to be sent to customer - the line(s) + the author(s)
   - allow export as .txt or .html
   - also, export to clipboard

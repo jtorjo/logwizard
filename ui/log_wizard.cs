@@ -163,7 +163,10 @@ namespace LogWizard
         private action_type last_action_ = action_type.none;
 
         // the status(es) to be shown
-        private List< Tuple<string,DateTime>> statuses_ = new List<Tuple<string, DateTime>>();
+        private enum status_type {
+            msg, warn, err
+        }
+        private List< Tuple<string, status_type, DateTime>> statuses_ = new List<Tuple<string, status_type, DateTime>>();
         // what to be shown behind ALL statuses
         private string status_prefix_ = "";
 
@@ -2489,28 +2492,58 @@ namespace LogWizard
 
         // sets the status for a given period - after that ends, the previous status is shown
         // if < 0, it's forever
-        private void set_status(string msg, int set_status_for_ms = 5000) {
+        private void set_status(string msg, status_type type = status_type.msg, int set_status_for_ms = 5000) {
             if (set_status_for_ms <= 0)
                 statuses_.Clear();
 
-            statuses_.Add( new Tuple<string, DateTime>(msg,  set_status_for_ms > 0 ? DateTime.Now.AddMilliseconds(set_status_for_ms) : DateTime.MaxValue));
+            if (type == status_type.err)
+                // show errors longer
+                set_status_for_ms = Math.Max(set_status_for_ms, 15000);
+            statuses_.Add( new Tuple<string, status_type, DateTime>(msg, type, set_status_for_ms > 0 ? DateTime.Now.AddMilliseconds(set_status_for_ms) : DateTime.MaxValue));
             status.Text = status_prefix_ + msg;
-            status.ForeColor = msg.ToLower().StartsWith("err") ? Color.Red : Color.Black;
+            status.ForeColor = status_color(type);
+            status.BackColor = status_bg_color(type);
+            if (type == status_type.err && !global_ui.show_status) {
+                global_ui.temporarily_show_status = true;
+                show_status(global_ui.temporarily_show_status);
+            }
+
+            if ( type == status_type.err)
+                util.beep(util.beep_type.err);
+        }
+
+        private Color status_color(status_type type) {
+            return type == status_type.err ? Color.DarkRed : Color.Black;
+        }
+        private Color status_bg_color(status_type type) {
+            return type == status_type.err ? Color.Yellow : Color.White;
         }
 
         private void set_status_forever(string msg) {
-            set_status(msg, -1);
+            set_status(msg, status_type.msg, -1);
         }
 
         private void update_status_text(bool force = false) {
             bool needs_update = false;
-            while (statuses_.Count > 0 && statuses_.Last().Item2 < DateTime.Now) {
+            while (statuses_.Count > 0 && statuses_.Last().Item3 < DateTime.Now) {
                 statuses_.RemoveAt(statuses_.Count - 1);
                 needs_update = true;
             }
 
-            if (needs_update || force)
+            if (needs_update || force) {
                 status.Text = statuses_.Count > 0 ? status_prefix_ + statuses_.Last().Item1 : "";
+                if (statuses_.Count > 0) {
+                    status.ForeColor = status_color(statuses_.Last().Item2);
+                    status.BackColor = status_bg_color(statuses_.Last().Item2);
+                }
+
+                bool is_err = statuses_.Count > 0 && statuses_.Last().Item2 == status_type.err;
+                if ( !is_err)
+                    if (global_ui.temporarily_show_status && !global_ui.show_status) {
+                        global_ui.temporarily_show_status = false;
+                        show_status(false);
+                    }
+            }
         }
 
         private void force_udpate_status_text() {
@@ -2608,16 +2641,20 @@ namespace LogWizard
             export_notes();
         }
 
+        // within our .logwizard file - easily identify our files
+        private const string log_wizard_zip_file_prefix = "___logwizard___";
         private void export_notes() {
             if (!(text_ is file_text_reader)) {
                 Debug.Assert(false);
                 return;
             }
 
+            // convention: our files start with "___"
+
             string dir = util.create_temp_dir(Program.local_dir());
-            notes.save_to(dir + "\\__notes.txt");
+            notes.save_to(dir + "\\notes.txt");
             string ctx_as_string = cur_context_to_string();
-            util.create_file(dir + "\\__context.txt", cur_context().name + "\r\n" + ctx_as_string);
+            util.create_file(dir + "\\context.txt", cur_context().name + "\r\n" + ctx_as_string);
 
             string full_name = text_.name;
             string file_name = new FileInfo(full_name).Name;
@@ -2627,7 +2664,7 @@ namespace LogWizard
                 md5_log_keeper.inst.get_md5_for_file(full_name, md5_log_keeper.md5_type.slow);
 
             var md5s = md5_log_keeper.inst.local_md5s_for_file(full_name);
-            util.create_file(dir + "\\__md5.txt",  util.concatenate(md5s, "\r\n") );
+            util.create_file(dir + "\\md5.txt",  util.concatenate(md5s, "\r\n") );
 
             // here, we have all needed files
             string zip_dir = Program.local_dir() + "export";
@@ -2635,19 +2672,15 @@ namespace LogWizard
             string prefix = zip_dir + "\\" + file_name + "." + DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss-fff") + ".";
 
             Dictionary<string,string> files = new Dictionary<string, string>();
-            files.Add(dir + "\\__notes.txt", "__notes.txt");
-            files.Add(dir + "\\__context.txt", "__context.txt");
-            files.Add(dir + "\\__md5.txt", "__md5.txt");
+            files.Add(dir + "\\notes.txt", log_wizard_zip_file_prefix + "notes.txt");
+            files.Add(dir + "\\context.txt", log_wizard_zip_file_prefix + "context.txt");
+            files.Add(dir + "\\md5.txt", log_wizard_zip_file_prefix + "md5.txt");
             files.Add(full_name, file_name);
             zip_util.create_zip(prefix + "long.logwizard", files);
             files.Remove(full_name);
             zip_util.create_zip(prefix + "short.logwizard", files);
 
-            try {
-                Directory.Delete(dir, true);
-            } catch {
-            }
-
+            util.del_dir(dir);
             try {
                 string args = "/select,\"" + prefix + "long.logwizard" + "\"";
                 Process.Start("explorer", args);
@@ -2655,14 +2688,56 @@ namespace LogWizard
             }
         }
 
+        private void import_notes(string file) {
+            var files = zip_util.enum_file_names_in_zip(file);
+            bool valid = files.Contains(log_wizard_zip_file_prefix + "md5.txt") 
+                && files.Contains(log_wizard_zip_file_prefix + "context.txt") && files.Contains(log_wizard_zip_file_prefix + "notes.txt");
+            if (!valid) {
+                set_status("Invalid .LogWizard file: " + file, status_type.err);
+                return;
+            }
+            string import_dir = Program.local_dir() + "import";
+            util.create_dir(import_dir);
+
+            string dir = util.create_temp_dir(Program.local_dir());
+            // ... extract our files (md5 / context / notes)
+            zip_util.try_extract_file_names_in_zip(file, dir, files.Where(x => x.StartsWith(log_wizard_zip_file_prefix)).ToDictionary(x => x, x => x));
+
+            // see if I know what the file is, locally - if not, see if it's in the .logwizard file
+            var md5 = File.ReadAllLines(dir + "\\" + log_wizard_zip_file_prefix + "md5.txt").Where(x => x.Trim() != "").ToArray();
+            List<string> local_files = md5_log_keeper.inst.find_files_with_md5(md5);
+            // if we have the local file, we'll just go to it
+            bool found_local_file = local_files.Count == 1;
+
+            if (!found_local_file) {
+                // at this point, try to load the file from the .zip
+                int log_file_count = files.Count(x => !x.StartsWith(log_wizard_zip_file_prefix));
+                if (log_file_count > 1) {
+                    set_status("Invalid .LogWizard file: " + file, status_type.err);
+                    return;
+                }
+                if (log_file_count == 0) {
+                    set_status("Please ask your colleague to send you the LONG .LogWizard File - so we can auto-import and show you the Log together with the notes.", status_type.err);
+                    return;
+                }
+                // at this point - we know we have the log file as well
+                string name = files.First(x => !x.StartsWith(log_wizard_zip_file_prefix));
+                // ...make it unique
+                string unique_name = name + "." + DateTime.Now.Ticks + ".txt";
+                string friendly_name = name + " (Imported)";
+                zip_util.try_extract_file_names_in_zip(file, import_dir, new Dictionary<string, string>() { { name, unique_name } });
+
+                on_file_drop(import_dir + "\\" + unique_name);
+            }
+            else 
+                on_new_file_log( local_files[0]);
+
+            util.del_dir(dir);
+        }
+
         private void on_zip_drop(string file) {
             // FIXME
         }
-
-        private void import_notes(string file) {
-            // FIXME
-        }
-
 
     }
 }

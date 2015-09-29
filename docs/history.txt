@@ -38,6 +38,11 @@
 
 
 
+1.1.5d
+- import (import_notes):
+  importing works, but it does not care about context and friendly names yet
+- showing status: if error, show it even if it was hidden
+- showing status: show visually that it's an error
 
 
 1.1.5c

@@ -64,6 +64,10 @@ namespace lw_common {
             }
         }
 
+        // if true, we show the status, but only for a short while (probably to show an error)
+        // we DO NOT persist this
+        public bool temporarily_show_status = false;
+
         // show/hide toggles
         public bool show_source = true;
         public bool show_fulllog = false;

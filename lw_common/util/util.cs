@@ -638,6 +638,12 @@ namespace lw_common {
             return hash.ToString();
         }
 
+        public static void del_dir(string dir) {
+            try {
+                Directory.Delete(dir, true);
+            } catch {
+            }            
+        }
 
         public static string create_temp_dir(string parent_dir) {
             string dir = Path.Combine( parent_dir , "" + DateTime.Now.Ticks);
