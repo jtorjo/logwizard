@@ -181,6 +181,9 @@ namespace LogWizard
         private ui_info default_ui_ = new ui_info();
         private ui_info[] custom_ui_ = new ui_info[] { new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info() };
 
+        // if non-empty, we need to merge our notes with other notes
+        private string post_merge_file_ = "";
+
         private enum show_full_log_type {
             both, just_view, just_full_log
         }
@@ -1364,9 +1367,11 @@ namespace LogWizard
 
 
         private void on_new_file_log(string name) {
-            if (text_ != null && text_.name == name)
+            if (text_ != null && text_.name == name) {
+                merge_notes();
                 return;
-            
+            }
+
             if ( text_ != null)
                 text_.Dispose();
 
@@ -1557,8 +1562,24 @@ namespace LogWizard
             log_view_for_tab(0).Visible = true;
 
             notes.Enabled = text_ is file_text_reader;
-            if ( notes.Enabled)
-                notes.load( notes_keeper.inst.notes_file_for_file(text_.name) );
+            if (notes.Enabled) {
+                notes.load(notes_keeper.inst.notes_file_for_file(text_.name));
+                merge_notes();
+            }
+        }
+
+        private void merge_notes() {
+            if (post_merge_file_ != "" && File.Exists(post_merge_file_)) {
+                notes.merge(post_merge_file_);
+                post_merge_file_ = "";
+                // has merged notes?
+                if (notes.has_merged_notes) {
+                    if (!global_ui.show_notes) {
+                        global_ui.show_notes = true;
+                        show_left_pane(true);
+                    }
+                }
+            }            
         }
 
         private void add_reader_to_history() {
@@ -2795,6 +2816,9 @@ namespace LogWizard
             // if we have the local file, we'll just go to it
             bool found_local_file = local_files.Count == 1;
 
+            string notes_file = import_dir + "\\notes.txt." + DateTime.Now.Ticks + ".txt";
+            File.Copy(dir + "\\" + log_wizard_zip_file_prefix + "notes.txt", notes_file);
+
             if (!found_local_file) {
                 // at this point, try to load the file from the .zip
                 int log_file_count = files.Count(x => !x.StartsWith(log_wizard_zip_file_prefix));
@@ -2803,7 +2827,9 @@ namespace LogWizard
                     return;
                 }
                 if (log_file_count == 0) {
-                    set_status("Please ask your colleague to send you the LONG .LogWizard File - so we can auto-import and show you the Log together with the notes.", status_type.err);
+                    set_status(
+                        "Please ask your colleague to send you the LONG .LogWizard File - so we can auto-import and show you the Log together with the notes.",
+                        status_type.err);
                     return;
                 }
                 // at this point - we know we have the log file as well
@@ -2811,7 +2837,7 @@ namespace LogWizard
                 // ...make it unique
                 string unique_name = name + "." + DateTime.Now.Ticks + ".txt";
                 string friendly_name = name + " (Imported)";
-                zip_util.try_extract_file_names_in_zip(file, import_dir, new Dictionary<string, string>() { { name, unique_name } });
+                zip_util.try_extract_file_names_in_zip(file, import_dir, new Dictionary<string, string>() {{name, unique_name}});
 
                 // creating the context
                 var imported_context_lines = File.ReadAllLines(dir + "\\" + log_wizard_zip_file_prefix + "context.txt").ToList();
@@ -2837,12 +2863,12 @@ namespace LogWizard
                     save();
                 }
 
+                post_merge_file_ = notes_file;
                 on_file_drop(import_dir + "\\" + unique_name);
+            } else {
+                post_merge_file_ = notes_file;
+                on_file_drop(local_files[0]);
             }
-            else 
-                on_file_drop( local_files[0]);
-
-            // FIXME do merge of notes!
 
             util.del_dir(dir);
         }

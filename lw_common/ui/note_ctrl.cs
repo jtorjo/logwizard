@@ -481,6 +481,14 @@ namespace lw_common.ui {
             }
         }
 
+        public bool has_merged_notes {
+            get {
+                bool has_non_deleted_merges = notes_sorted_by_line_index_.Count(x => x.the_note != null && x.the_note.is_merged && !x.deleted) > 0;
+                bool has_merges = notes_sorted_by_line_index_.Count(x => x.the_note != null && x.the_note.is_merged) > 0;
+                return showDeletedLines.Checked ? has_merges : has_non_deleted_merges;
+            }
+        }
+
         public void set_author(string author_name, string author_initials, Color notes_color) {
             author_name_ = author_name;
             author_initials_ = author_initials;
@@ -1095,6 +1103,8 @@ namespace lw_common.ui {
                 var found_line = notes_sorted_by_line_index_.FirstOrDefault(x => x.line_id == new_note.line_id);
                 if (found_line == null) {
                     // it's a completely new line - we'll add it later
+                    if ( new_note.the_note != null)
+                        add_color_for_author(new_note.the_note.author_name, new_note.the_note.author_color);
                     still_to_add.Add(new_note);
                     continue;
                 }
