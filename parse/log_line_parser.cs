@@ -180,8 +180,12 @@ namespace LogWizard
 
         public line line_at(int idx) {
             lock (this) {
-                Debug.Assert(idx < lines_.Count);
-                return lines_[idx];
+                if (idx < lines_.Count)
+                    return lines_[idx];
+                else {
+                    logger.Error("[log] invalid line request " + idx + " / " + lines_.Count);
+                    return line.empty_line();
+                }
             }
         }
 

@@ -1156,7 +1156,7 @@ namespace lw_common.ui {
             bool force_save = file_name != file_name_;
             if (!dirty_ && !force_save)
                 return;
-            if (notes_sorted_by_line_index_.Count < 1)
+            if (file_name == file_name_ && notes_sorted_by_line_index_.Count < 1)
                 return; // optimization - nothing to save_to
 
             settings_file sett = new settings_file(file_name) { log_each_set = false };

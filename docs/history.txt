@@ -26,6 +26,13 @@
 
 
 
+
+
+
+1.1.5e
+- forced context:
+  if i manually change the context for a file, we'll always use that! (forced_file_to_context_)
+Done:
 - import (import_notes):
   _notes.txt -> merge - if don't find the local notes -> dump an error msg
   _context.txt - parse
@@ -34,8 +41,6 @@
   log-file
     - if i have it locally, i don't care
 	- if i don't have it locally, add it to some "local_dir\imported" location and keep it there (preserve the name)
-
-
 
 
 1.1.5d

@@ -85,7 +85,9 @@ namespace lw_common {
                 if (search_md5 != "") {
                     found.Add(search_md5, new List<string>());
                     foreach (var md5 in file_md5_)
-                        if (md5.Value.fast == search_md5 || md5.Value.slow == search_md5 || md5.Value.by_file_name == search_md5)
+                        // 1.1.5+ - until i properly think the "by_file_name" through, ignore it
+                        //         I think by_file_name should be context dependent
+                        if (md5.Value.fast == search_md5 || md5.Value.slow == search_md5) // || md5.Value.by_file_name == search_md5)
                             found[search_md5].Add(md5.Key);
 
                     if (found[search_md5].Count == 0)
@@ -121,7 +123,8 @@ namespace lw_common {
 
             switch (type) {
             case md5_type.fast:
-                md5.fast = compute_md5_for_file_fast(file);
+                if ( md5.fast == "")
+                    md5.fast = compute_md5_for_file_fast(file);
                 logger.Debug("[md5] computed md5 for " + file + " -> " + md5.fast);
                 break;
             case md5_type.slow:

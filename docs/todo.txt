@@ -141,7 +141,6 @@
 
 
 
-
 - option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?; probably - yes)
 
 - alert -> allow showing a msg, beep, etc. when a certain msg is found

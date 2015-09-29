@@ -126,6 +126,11 @@ namespace LogWizard
             public string friendly_name = "";
             public string log_syntax  = "";
 
+            // returns the file name, or empty if it's not a file
+            public string file_name {
+                get { return type == entry_type.file ? name : ""; }
+            }
+
             public string combo_name { get {
                 if ( friendly_name != "") return friendly_name;
                 switch ( type) {
@@ -139,6 +144,8 @@ namespace LogWizard
         
         private settings_file sett = app.inst.sett;
 
+        // 1.1.5+ - forced contexts (for instance, when imported from .logwizard files)
+        private static Dictionary<string,string> forced_file_to_context_ = new Dictionary<string, string>();
         private static List<ui_context> contexts_ = new List<ui_context>();
         private static List<history> history_ = new List<history>();
 
@@ -209,7 +216,7 @@ namespace LogWizard
             bool first_time = contexts_.Count == 0;
             if (first_time) {
                 app.inst.load();
-                load_contexts();
+                load_contexts(sett);
             }
             notes.set_author( app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
             notes_keeper.inst.init( util.is_debug ? "notes" : Program.local_dir(), app.inst.identify_notes_files);
@@ -386,7 +393,7 @@ namespace LogWizard
             return version_;
         }
 
-        private void load_contexts() {
+        private static void load_contexts(settings_file sett) {
             logger.Debug("loading contexts");
 
             int history_count = int.Parse( sett.get("history_count", "0"));
@@ -407,6 +414,13 @@ namespace LogWizard
                         return false;
                 return true;
             }).ToList();
+
+            int forced_count = int.Parse(sett.get("forced_count", "0"));
+            for (int i = 0; i < forced_count; ++i) {
+                string name = sett.get("forced." + i + ".name");
+                string context = sett.get("forced." + i + ".context");
+                forced_file_to_context_.Add(name, context);
+            }
 
             int count = int.Parse( sett.get("context_count", "1"));
             for ( int i = 0; i < count ; ++i) {
@@ -439,6 +453,14 @@ namespace LogWizard
                 sett.set("history." + idx + "name", history_[idx].name);
                 sett.set("history." + idx + "friendly_name", history_[idx].friendly_name);
                 sett.set("history." + idx + "log_syntax", history_[idx].log_syntax);
+            }
+
+            sett.set("forced_count", "" + forced_file_to_context_.Count);
+            int forced_idx = 0;
+            foreach (var forced in forced_file_to_context_) {
+                sett.set("forced." + forced_idx + ".name" , forced.Key);
+                sett.set("forced." + forced_idx + ".context", forced.Value);
+                ++forced_idx;
             }
 
             sett.set("context_count", "" + contexts_.Count);
@@ -622,6 +644,18 @@ namespace LogWizard
         }
 
         private ui_context file_to_context(string name) {
+            var default_ = contexts_.FirstOrDefault(x => x.name == "Default");
+            if (!File.Exists(name))
+                return default_;
+
+            if (forced_file_to_context_.ContainsKey(name)) {
+                string forced = forced_file_to_context_[name];
+                var context_from_forced = contexts_.FirstOrDefault(x => x.name == forced);
+                if (context_from_forced != null)
+                    // return it, only if we have a specific Template for it
+                    return context_from_forced;
+            }
+
             string from_header = log_to_default_context.file_to_context(name);
             if (from_header != null) {
                 var context_from_header = contexts_.FirstOrDefault(x => x.name == from_header);
@@ -635,7 +669,6 @@ namespace LogWizard
             if (found != null)
                 return found;
 
-            var default_ = contexts_.FirstOrDefault(x => x.name == "Default");           
             return default_ ?? contexts_[0];
         }
 
@@ -656,7 +689,7 @@ namespace LogWizard
             logSyntaxCtrl.Text = "";
             --ignore_change_;
             // this will force us to process this change
-            last_sel = -2;
+            last_sel_ = -2;
 
             history_select(file);
             on_new_file_log(file);
@@ -1012,7 +1045,7 @@ namespace LogWizard
             util.postpone( () => show_row_based_on_global_ui(), 100);
 
             if (global_ui.selected_row_idx > 0)
-                if ( logHistory.SelectedIndex >= 0 && history_[logHistory.SelectedIndex].name == global_ui.log_name)
+                if ( selected_file_name() == global_ui.log_name)
                     util.postpone( () => try_to_go_to_selected_line(global_ui.selected_row_idx), 250);
 
             util.postpone( () => show_tabs(global_ui.show_tabs), 100);
@@ -1068,8 +1101,16 @@ namespace LogWizard
         }
 
         private void remove_all_log_views() {
+            ++ignore_change_;
+
             for ( int idx = 0; idx < viewsTab.TabCount; ++idx)
                 remove_log_view_from_tab(idx);
+
+            // 1.1.5+ - if we had too many tabs, remove them
+            int new_count = Math.Max( cur_context().views.Count, 1);
+            while ( viewsTab.TabCount > new_count)
+                viewsTab.TabPages.Remove( viewsTab.TabPages[viewsTab.TabCount - 1]);
+            --ignore_change_;
         }
 
         private void newFilteredView_Click(object sender, EventArgs e)
@@ -1471,7 +1512,7 @@ namespace LogWizard
             return logHistory.SelectedIndex;
         }
 
-        private int last_sel = -1;
+        private int last_sel_ = -1;
         private void on_new_log() {
             string size = text_ is file_text_reader ? " (" + new FileInfo(text_.name).Length + " bytes)" : "";
             set_status_forever("Log: " + text_.name + size);
@@ -1501,10 +1542,10 @@ namespace LogWizard
             full_log_ctrl.set_filter(new List<raw_filter_row>());
 
             Text = reader_title() + " - Log Wizard " + version();
-            if ( logHistory.SelectedIndex == last_sel)
+            if ( logHistory.SelectedIndex == last_sel_)
                 // note: sometimes this gets called twice - for instance, when user drops the combo and then selects an entry with the mouse
                 return;
-            last_sel = logHistory.SelectedIndex;
+            last_sel_ = logHistory.SelectedIndex;
             add_reader_to_history();
             ui_context cur = cur_context();
             for ( int idx = 0; idx < cur.views.Count; ++idx)
@@ -1579,7 +1620,7 @@ namespace LogWizard
         private void on_log_listory_changed() {
             if (logHistory.SelectedIndex >= 0) {
                 history_select(history_[logHistory.SelectedIndex].name);
-                app.inst.set_log_file( history_[ logHistory.SelectedIndex].name );
+                app.inst.set_log_file( selected_file_name() );
             }
 
             sourceTypeCtrl.SelectedIndex = (int) history_[ logHistory.SelectedIndex].type;
@@ -1662,10 +1703,25 @@ namespace LogWizard
             curContextCtrl.SelectedIndex = curContextCtrl.Items.Count > sel ? sel : 0;
         }
 
+        private string selected_file_name() {
+            if (logHistory.SelectedIndex >= 0)
+                return history_[logHistory.SelectedIndex].file_name;
+            else
+                return "";
+        }
+
         private void curContextCtrl_SelectedIndexChanged(object sender, EventArgs e)
         {
             // first, remove all log views, so that the new filters (from the new context) are loaded
             remove_all_log_views();
+
+            string name = selected_file_name();
+            int default_context = contexts_.IndexOf( file_to_context(name));
+            if (name != "" && default_context != curContextCtrl.SelectedIndex) {
+                if (!forced_file_to_context_.ContainsKey(name))
+                    forced_file_to_context_.Add(name, "");
+                forced_file_to_context_[name] = contexts_[curContextCtrl.SelectedIndex].name;
+            }
 
             load();
             
@@ -2435,8 +2491,7 @@ namespace LogWizard
             app.inst.save();
         }
 
-        private string cur_context_to_string() {
-            ui_context cur = cur_context();
+        private string ui_context_to_str(ui_context cur) {
             if (cur.views.Count < 1)
                 return ""; // no views
             var formatter = new XmlSerializer( typeof(ui_context));
@@ -2451,8 +2506,31 @@ namespace LogWizard
             return str;
         }
 
+        private ui_context str_to_ui_context(string txt) {
+            try {
+                var formatter = new XmlSerializer( typeof(ui_context));
+                using (var stream = new MemoryStream()) {
+                    using (var writer = new StreamWriter(stream)) {
+                        writer.Write(txt);
+                        writer.Flush();
+                        stream.Position = 0;
+                        using (var reader = new StreamReader(stream)) {
+                            var new_ctx = (ui_context) formatter.Deserialize(reader);
+                            // we don't care about the name, just the filters
+                            foreach ( var view in new_ctx.views)
+                                view.filters.ForEach(f => f.text = util.normalize_enters(f.text));
+                            return new_ctx;
+                        }
+                    }
+                }
+            } catch(Exception e) {
+                logger.Error("can't convert to UI-context " + e.Message);
+            }
+            return null;
+        }
+
         private void contextToClipboard_Click(object sender, EventArgs e) {
-            string to_copy = cur_context_to_string();
+            string to_copy = ui_context_to_str( cur_context() );
             if ( to_copy != "")
                 Clipboard.SetText(to_copy);
         }
@@ -2649,11 +2727,9 @@ namespace LogWizard
                 return;
             }
 
-            // convention: our files start with "___"
-
             string dir = util.create_temp_dir(Program.local_dir());
             notes.save_to(dir + "\\notes.txt");
-            string ctx_as_string = cur_context_to_string();
+            string ctx_as_string = ui_context_to_str( cur_context());
             util.create_file(dir + "\\context.txt", cur_context().name + "\r\n" + ctx_as_string);
 
             string full_name = text_.name;
@@ -2689,6 +2765,16 @@ namespace LogWizard
         }
 
         private void import_notes(string file) {
+            try {
+                import_notes_impl(file);
+            } catch (Exception e) {
+                logger.Fatal("could not import file " + file  + " : " + e.Message);
+                set_status("An internal error occured. Please contact the author.", status_type.err);
+            }
+        }
+
+
+        private void import_notes_impl(string file) {
             var files = zip_util.enum_file_names_in_zip(file);
             bool valid = files.Contains(log_wizard_zip_file_prefix + "md5.txt") 
                 && files.Contains(log_wizard_zip_file_prefix + "context.txt") && files.Contains(log_wizard_zip_file_prefix + "notes.txt");
@@ -2727,10 +2813,36 @@ namespace LogWizard
                 string friendly_name = name + " (Imported)";
                 zip_util.try_extract_file_names_in_zip(file, import_dir, new Dictionary<string, string>() { { name, unique_name } });
 
+                // creating the context
+                var imported_context_lines = File.ReadAllLines(dir + "\\" + log_wizard_zip_file_prefix + "context.txt").ToList();
+                // first line - context name ; the others -> the context itself
+                Debug.Assert(imported_context_lines.Count > 1);
+                string imported_context_name = imported_context_lines[0] + " (Imported)";
+                imported_context_lines.RemoveAt(0);
+                var imported_context = str_to_ui_context(util.concatenate(imported_context_lines, "\r\n"));
+
+                var can_we_find_context = file_to_context(import_dir + "\\" + unique_name);
+                if (can_we_find_context.name == "Default") {
+                    // at this point - we have to force the imported context for this file
+                    var exists = contexts_.Find(x => x.name == imported_context_name);
+                    if (exists == null) {
+                        // we don't yet have this context - create it
+                        imported_context.name = imported_context_name;
+                        ++ignore_change_;
+                        contexts_.Add(imported_context);
+                        curContextCtrl.Items.Add(imported_context_name);
+                        --ignore_change_;
+                    }
+                    forced_file_to_context_.Add(import_dir + "\\" + unique_name, imported_context_name);
+                    save();
+                }
+
                 on_file_drop(import_dir + "\\" + unique_name);
             }
             else 
-                on_new_file_log( local_files[0]);
+                on_file_drop( local_files[0]);
+
+            // FIXME do merge of notes!
 
             util.del_dir(dir);
         }
