@@ -2873,6 +2873,17 @@ namespace LogWizard
             util.del_dir(dir);
         }
 
+        protected override void WndProc(ref Message m) {
+            if (m.Msg == win32.WM_COPYDATA) {
+                var st = (win32.COPYDATASTRUCT)Marshal.PtrToStructure(m.LParam, typeof(win32.COPYDATASTRUCT));
+                string open = st.lpData;
+
+                util.postpone(() => MessageBox.Show(open), 100);
+            }
+
+            base.WndProc(ref m);
+        }
+
         private void on_zip_drop(string file) {
             // FIXME
         }

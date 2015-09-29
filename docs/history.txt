@@ -25,6 +25,10 @@
 
 
 
+1.1.7
+- passing arg to another logwizard instance
+  - SEEMS TO WORK, but the order in COPYDATASTRUCT is wrong
+
 
 1.1.5f
 - merging notes: now works seamlessly

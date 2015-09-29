@@ -24,8 +24,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using lw_common;
 
 namespace LogWizard
 {
@@ -41,6 +43,13 @@ namespace LogWizard
 
         private void Dummy_VisibleChanged(object sender, EventArgs e) {
             Visible = false;
+        }
+
+        protected override void WndProc(ref Message m) {
+            if (m.Msg == win32.WM_COPYDATA) {
+            }
+
+            base.WndProc(ref m);
         }
     }
 }

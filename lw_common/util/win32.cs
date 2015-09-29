@@ -41,6 +41,24 @@ namespace lw_common {
             }
         }
 
+        // http://stackoverflow.com/questions/6779731/c-sharp-using-sendmessage-problem-with-wm-copydata
+        [StructLayout(LayoutKind.Sequential)]
+        public struct COPYDATASTRUCT {
+          public int cbData;
+          public IntPtr dwData;
+          [MarshalAs(UnmanagedType.LPStr)] public string lpData;
+        }
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, ref COPYDATASTRUCT lParam);
+
+
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr LocalFree(IntPtr p);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr LocalAlloc(int flag, int size);
+
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(ref Point p_point);
 
@@ -80,6 +98,8 @@ namespace lw_common {
 
         const UInt32 SWP_NOMOVE = 0x0002;
         const UInt32 TOPMOST_FLAGS = SWP_NOMOVE | SWP_NOSIZE;
+
+        public const int WM_COPYDATA = 0x004A;
 
         public static void BringToTop(Form form) {
             IntPtr hWnd = form.Handle;
