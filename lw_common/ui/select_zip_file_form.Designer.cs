@@ -43,11 +43,12 @@
             this.olvColumn2});
             this.list.FullRowSelect = true;
             this.list.HideSelection = false;
-            this.list.Location = new System.Drawing.Point(12, 13);
+            this.list.Location = new System.Drawing.Point(6, 6);
+            this.list.Margin = new System.Windows.Forms.Padding(4);
             this.list.MultiSelect = false;
             this.list.Name = "list";
             this.list.ShowGroups = false;
-            this.list.Size = new System.Drawing.Size(462, 405);
+            this.list.Size = new System.Drawing.Size(436, 430);
             this.list.TabIndex = 0;
             this.list.UseCompatibleStateImageBehavior = false;
             this.list.View = System.Windows.Forms.View.Details;
@@ -63,16 +64,20 @@
             // olvColumn2
             // 
             this.olvColumn2.AspectName = "size_str";
+            this.olvColumn2.HeaderTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.olvColumn2.IsEditable = false;
             this.olvColumn2.Text = "Size";
+            this.olvColumn2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.olvColumn2.Width = 100;
             // 
             // ok
             // 
             this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ok.Enabled = false;
-            this.ok.Location = new System.Drawing.Point(319, 423);
+            this.ok.Location = new System.Drawing.Point(235, 440);
+            this.ok.Margin = new System.Windows.Forms.Padding(4);
             this.ok.Name = "ok";
-            this.ok.Size = new System.Drawing.Size(75, 23);
+            this.ok.Size = new System.Drawing.Size(100, 28);
             this.ok.TabIndex = 1;
             this.ok.Text = "Ok";
             this.ok.UseVisualStyleBackColor = true;
@@ -82,9 +87,10 @@
             // 
             this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancel.Location = new System.Drawing.Point(399, 423);
+            this.cancel.Location = new System.Drawing.Point(342, 440);
+            this.cancel.Margin = new System.Windows.Forms.Padding(4);
             this.cancel.Name = "cancel";
-            this.cancel.Size = new System.Drawing.Size(75, 23);
+            this.cancel.Size = new System.Drawing.Size(100, 28);
             this.cancel.TabIndex = 2;
             this.cancel.Text = "Cancel";
             this.cancel.UseVisualStyleBackColor = true;
@@ -93,13 +99,15 @@
             // select_zip_file_form
             // 
             this.AcceptButton = this.ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancel;
-            this.ClientSize = new System.Drawing.Size(486, 451);
+            this.ClientSize = new System.Drawing.Size(449, 473);
             this.Controls.Add(this.cancel);
             this.Controls.Add(this.ok);
             this.Controls.Add(this.list);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "select_zip_file_form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select Log File From Zip";

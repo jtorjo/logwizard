@@ -28,6 +28,8 @@ namespace lw_common.ui {
                 item i = new item() { file = file.Item1, size = file.Item2 };
                 list.AddObject(i);
             }
+            list.SelectedIndex = 0;
+            util.postpone( () => list.Focus(), 10);
         }
 
         public string selected_file {

@@ -708,8 +708,8 @@ namespace lw_common {
             if (size > 2 * 1024 * 1024)
                 return (size / (1024 * 1024)) + " MB";
             if (size > 10 * 1024 )
-                return "   " + (size / (1024 )) + " KB";
-            return "      " + size + " B";
+                return "" + (size / (1024 )) + " kb";
+            return "" + size + " bytes";
         }
 
         public static int matched_string_index(string msg, List<string> search) {

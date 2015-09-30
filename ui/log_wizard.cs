@@ -2870,8 +2870,6 @@ namespace LogWizard
             if (m.Msg == win32.WM_COPYDATA) {
                 var st = (win32.COPYDATASTRUCT)Marshal.PtrToStructure(m.LParam, typeof(win32.COPYDATASTRUCT));
                 string open = st.lpData;
-
-                // util.postpone(() => MessageBox.Show(open), 100);
                 util.postpone(() => on_file_drop(open), 100);
             }
 
@@ -2880,31 +2878,6 @@ namespace LogWizard
 
 
 
-        private void on_zip_drop(string file) {
-            bool shift = win32.IsKeyPushedDown(Keys.ShiftKey);
-            if (shift) {
-                on_shift_zip_drop(file);
-                return;
-            }
-
-            // on_file_drop
-            var matches = app.inst.look_into_zip_files;
-            var in_zip = zip_util.enum_file_names_and_sizes_in_zip(file).Where(x => file_contains_pattern(x.Item1, matches)).ToList();
-            in_zip.Sort((x,y) => {
-                int m1 = util.matched_string_index(x.Item1, matches), m2 = util.matched_string_index(y.Item1, matches);       
-                if (m1 != m2)
-                    // by extension
-                    return m1 - m2;
-
-                return string.CompareOrdinal(x.Item1, y.Item1);
-            });
-            // care about which file is shown first
-
-            select_zip_file_form sel = new select_zip_file_form(file, in_zip);
-            if (sel.ShowDialog() == DialogResult.OK) 
-                on_zip_file_drop(file, sel.selected_file);            
-        }
-
         private static bool file_contains_pattern(string file, IEnumerable<string> pattern) {
             foreach(string patt in pattern)
                 if (file.Contains(patt))
@@ -2912,14 +2885,9 @@ namespace LogWizard
             return false;
         }
 
-        private void on_shift_zip_drop(string file) {
-            // in this case, just take the first file that matches
-            // on_file_drop
+        List<Tuple<string, long>> in_zip(string file) {
             var matches = app.inst.look_into_zip_files;
             var in_zip = zip_util.enum_file_names_and_sizes_in_zip(file).Where(x => file_contains_pattern(x.Item1, matches)).ToList();
-            if (in_zip.Count < 1)
-                return; // no files
-
             in_zip.Sort((x,y) => {
                 int m1 = util.matched_string_index(x.Item1, matches), m2 = util.matched_string_index(y.Item1, matches);       
                 if (m1 != m2)
@@ -2928,8 +2896,39 @@ namespace LogWizard
 
                 return string.CompareOrdinal(x.Item1, y.Item1);
             });
+            return in_zip;
+        }
 
+        private void on_zip_drop(string file) {
+            bool shift = win32.IsKeyPushedDown(Keys.ShiftKey);
+            if (shift) {
+                on_shift_zip_drop(file);
+                return;
+            }
+
+            // in this case, just take the first file that matches
+            var in_zip = this.in_zip(file);
+            if (in_zip.Count < 1)
+                return; // no files
+
+            lw_util.bring_to_top(this);
             on_zip_file_drop(file, in_zip[0].Item1);
+            set_status("Taking the first file that matches the [" + app.inst.look_into_zip_files_str + "] pattern. A Shift-[drag-and-drop] will show you a list of files.");
+        }
+
+        private void on_shift_zip_drop(string file) {
+            var in_zip = this.in_zip(file);
+            if (in_zip.Count < 1)
+                return; // no files
+            if (in_zip.Count == 1) {
+                on_zip_file_drop(file, in_zip[0].Item1);
+                return;
+            }
+
+            lw_util.bring_to_top(this);
+            select_zip_file_form sel = new select_zip_file_form(file, in_zip);
+            if (sel.ShowDialog() == DialogResult.OK) 
+                on_zip_file_drop(file, sel.selected_file);
         }
 
         private void on_zip_file_drop(string zip_file, string sub_file_name) {
