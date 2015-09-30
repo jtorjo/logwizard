@@ -131,15 +131,25 @@ namespace LogWizard
                 get { return type == entry_type.file ? name : ""; }
             }
 
-            public string combo_name { get {
-                if ( friendly_name != "") return friendly_name;
-                switch ( type) {
-                    case entry_type.file: return name; // the name of the type
-                    case entry_type.shmem: return "Shared Memory: " + name;
-                    default: Debug.Assert(false); break;
+            public string ui_friendly_name {
+                get {
+                    if (friendly_name != "")
+                        return friendly_name;
+
+                    switch ( type) {
+                        case entry_type.file: 
+                            var fi = new FileInfo(name);
+                            string ui = fi.Name + " - " + util.friendly_size(fi.Length) + " (" + fi.DirectoryName + ")";
+                            return ui;
+
+                        case entry_type.shmem: return "Shared Memory: " + name;
+                        default: Debug.Assert(false); break;
+                    }
+
+                    return name;
                 }
-                return "invalid";
-            }}
+            }
+
         }
         
         private settings_file sett = app.inst.sett;
@@ -249,7 +259,7 @@ namespace LogWizard
             curContextCtrl.SelectedIndex = 0;
 
             foreach ( history hist in history_)
-                logHistory.Items.Add(hist.combo_name);
+                logHistory.Items.Add(hist.ui_friendly_name);
 
             --ignore_change_;
             load();
@@ -675,7 +685,7 @@ namespace LogWizard
             return default_ ?? contexts_[0];
         }
 
-        private void on_file_drop(string file) {
+        private void on_file_drop(string file, string friendly_name = "") {
             if (file.ToLower().EndsWith(".zip")) {
                 on_zip_drop(file);
                 return;
@@ -694,7 +704,7 @@ namespace LogWizard
             // this will force us to process this change
             last_sel_ = -2;
 
-            history_select(file);
+            history_select(file, friendly_name);
             on_new_file_log(file);
             lw_util.bring_to_top(this);
         }
@@ -1462,6 +1472,10 @@ namespace LogWizard
         }
 
         private string reader_title() {
+            int sel = logHistory.SelectedIndex;
+            if (sel >= 0)
+                return history_[sel].ui_friendly_name;
+
             var file = text_ as file_text_reader;
             if (file != null)
                 return file.name;
@@ -1484,34 +1498,53 @@ namespace LogWizard
             }
         }
 
-        private int history_select(string name) {
+        private int history_select(string name, string friendly_name = "") {
             ++ignore_change_;
             bool needs_save = false;
             logHistory.SelectedIndex = -1;
-            for ( int i = 0; i < logHistory.Items.Count; ++i)
-                if (logHistory.Items[i].ToString() == name) {
-                    bool is_sample = name.ToLower().EndsWith("logwizardsetupsample.log");
-                    if (is_sample)
-                        logHistory.SelectedIndex = i;
-                    else {
-                        // whatever the user selects, move it to the end
-                        history h = history_[i];
-                        history_.RemoveAt(i);
-                        history_.Add(h);
-                        logHistory.Items.RemoveAt(i);
-                        logHistory.Items.Add(name);
-                        logHistory.SelectedIndex = logHistory.Items.Count - 1;
-                        needs_save = true;
-                    }
-                    break;
+
+            bool found = false;
+            for ( int i = 0; i < history_.Count && !found; ++i)
+                if (history_[i].name == name) {
+                    found = true;
+
+                    // whatever the user selects, move it to the end
+                    history h = history_[i];
+                    history_.RemoveAt(i);
+                    history_.Add(h);
+                    logHistory.Items.RemoveAt(i);
+                    logHistory.Items.Add( h.ui_friendly_name);
+                    logHistory.SelectedIndex = logHistory.Items.Count - 1;
+                    needs_save = true;
                 }
 
+            if ( !found)
+                // note: normally, we should never end up here, should be handled by above code
+                for ( int i = 0; i < logHistory.Items.Count; ++i)
+                    if (logHistory.Items[i].ToString() == name) {
+                        bool is_sample = name.ToLower().EndsWith("logwizardsetupsample.log");
+                        if (is_sample)
+                            logHistory.SelectedIndex = i;
+                        else {
+                            // whatever the user selects, move it to the end
+                            history h = history_[i];
+                            history_.RemoveAt(i);
+                            history_.Add(h);
+                            logHistory.Items.RemoveAt(i);
+                            logHistory.Items.Add( h.ui_friendly_name);
+                            logHistory.SelectedIndex = logHistory.Items.Count - 1;
+                            needs_save = true;
+                        }
+                        break;
+                    }
+
             if (logHistory.SelectedIndex < 0) {
-                history_.Add(new history {name = name, type = 0});
-                logHistory.Items.Add(name);
+                history_.Add(new history {name = name, type = 0, friendly_name = friendly_name});
+                logHistory.Items.Add( history_.Last().ui_friendly_name);
                 logHistory.SelectedIndex = logHistory.Items.Count - 1;
             }
             --ignore_change_;
+
             if (needs_save)
                 save();
             return logHistory.SelectedIndex;
@@ -1604,7 +1637,7 @@ namespace LogWizard
             if ( history_idx < 0) {
                 history_.Add(new_);
                 history_idx = history_.Count - 1;
-                logHistory.Items.Add(new_.combo_name);
+                logHistory.Items.Add(new_.ui_friendly_name);
             }
             else {
                 ++ignore_change_;
@@ -1624,7 +1657,7 @@ namespace LogWizard
             ++ignore_change_;
             logHistory.Items.Clear();
             foreach ( history hist in history_)
-                logHistory.Items.Add(hist.combo_name);
+                logHistory.Items.Add(hist.ui_friendly_name);
             logHistory.SelectedIndex = history_idx;
             --ignore_change_;
         }
@@ -1687,8 +1720,9 @@ namespace LogWizard
             }, 100);
         }
 
-        private void filteredViews_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void filteredViews_SelectedIndexChanged(object sender, EventArgs e) {
+            if (ignore_change_ > 0)
+                return;
             load_filters();
 
             string name = log_view_for_tab(viewsTab.SelectedIndex).name;
@@ -2857,7 +2891,7 @@ namespace LogWizard
                 }
 
                 post_merge_file_ = notes_file;
-                on_file_drop(import_dir + "\\" + unique_name);
+                on_file_drop(import_dir + "\\" + unique_name, friendly_name);
             } else {
                 post_merge_file_ = notes_file;
                 on_file_drop(local_files[0]);
@@ -2938,7 +2972,9 @@ namespace LogWizard
             string unique = sub_file_name + "." + DateTime.Now.Ticks + ".txt";
             single_zip.Add(sub_file_name, unique);
             zip_util.try_extract_file_names_in_zip(zip_file, zip_dir, single_zip);
-            on_file_drop(zip_dir + "\\" + unique);
+            var fi = new FileInfo(zip_file);
+            string friendly_name = sub_file_name + " From ZIP - " + util.friendly_size(fi.Length) + " (" + zip_file + ")";
+            on_file_drop(zip_dir + "\\" + unique, friendly_name);
         }
 
         private void exportLogNotestoLogWizardFileToolStripMenuItem_Click(object sender, EventArgs e) {
