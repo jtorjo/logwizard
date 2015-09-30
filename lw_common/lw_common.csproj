@@ -88,6 +88,12 @@
     <Compile Include="ui\select_color_form.Designer.cs">
       <DependentUpon>select_color_form.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\select_zip_file_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\select_zip_file_form.Designer.cs">
+      <DependentUpon>select_zip_file_form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui_helpers\log_wizard_serializable_classes.cs" />
     <Compile Include="ui_helpers\ui_info.cs" />
     <Compile Include="util\export_text.cs" />
@@ -115,6 +121,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ui\select_color_form.resx">
       <DependentUpon>select_color_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\select_zip_file_form.resx">
+      <DependentUpon>select_zip_file_form.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

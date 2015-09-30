@@ -2878,8 +2878,68 @@ namespace LogWizard
             base.WndProc(ref m);
         }
 
+
+
         private void on_zip_drop(string file) {
-            // FIXME
+            bool shift = win32.IsKeyPushedDown(Keys.ShiftKey);
+            if (shift) {
+                on_shift_zip_drop(file);
+                return;
+            }
+
+            // on_file_drop
+            var matches = app.inst.look_into_zip_files;
+            var in_zip = zip_util.enum_file_names_and_sizes_in_zip(file).Where(x => file_contains_pattern(x.Item1, matches)).ToList();
+            in_zip.Sort((x,y) => {
+                int m1 = util.matched_string_index(x.Item1, matches), m2 = util.matched_string_index(y.Item1, matches);       
+                if (m1 != m2)
+                    // by extension
+                    return m1 - m2;
+
+                return string.CompareOrdinal(x.Item1, y.Item1);
+            });
+            // care about which file is shown first
+
+            select_zip_file_form sel = new select_zip_file_form(file, in_zip);
+            if (sel.ShowDialog() == DialogResult.OK) 
+                on_zip_file_drop(file, sel.selected_file);            
+        }
+
+        private static bool file_contains_pattern(string file, IEnumerable<string> pattern) {
+            foreach(string patt in pattern)
+                if (file.Contains(patt))
+                    return true;
+            return false;
+        }
+
+        private void on_shift_zip_drop(string file) {
+            // in this case, just take the first file that matches
+            // on_file_drop
+            var matches = app.inst.look_into_zip_files;
+            var in_zip = zip_util.enum_file_names_and_sizes_in_zip(file).Where(x => file_contains_pattern(x.Item1, matches)).ToList();
+            if (in_zip.Count < 1)
+                return; // no files
+
+            in_zip.Sort((x,y) => {
+                int m1 = util.matched_string_index(x.Item1, matches), m2 = util.matched_string_index(y.Item1, matches);       
+                if (m1 != m2)
+                    // by extension
+                    return m1 - m2;
+
+                return string.CompareOrdinal(x.Item1, y.Item1);
+            });
+
+            on_zip_file_drop(file, in_zip[0].Item1);
+        }
+
+        private void on_zip_file_drop(string zip_file, string sub_file_name) {
+            string zip_dir = Program.local_dir() + "zip";
+            util.create_dir(zip_dir);
+            Dictionary<string,string> single_zip = new Dictionary<string, string>();
+            string unique = sub_file_name + "." + DateTime.Now.Ticks + ".txt";
+            single_zip.Add(sub_file_name, unique);
+            zip_util.try_extract_file_names_in_zip(zip_file, zip_dir, single_zip);
+            on_file_drop(zip_dir + "\\" + unique);
         }
 
         private void exportLogNotestoLogWizardFileToolStripMenuItem_Click(object sender, EventArgs e) {

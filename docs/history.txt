@@ -24,6 +24,11 @@
 - bug - sometimes we don't draw correctly - it seems to happen especially if I click another tab with the mouse
 
 
+1.1.10
+- looked at the competion again. all I can say is LOL
+- dropping zip files seems to work correctly; need more testing
+
+
 1.1.9
 - saving to html works like a charm (test_export)
 - saving notes to .txt and .html

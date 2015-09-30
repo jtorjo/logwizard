@@ -704,5 +704,25 @@ namespace lw_common {
             return file_name;
         }
 
+        public static string friendly_size(long size) {
+            if (size > 2 * 1024 * 1024)
+                return (size / (1024 * 1024)) + " MB";
+            if (size > 10 * 1024 )
+                return "   " + (size / (1024 )) + " KB";
+            return "      " + size + " B";
+        }
+
+        public static int matched_string_index(string msg, List<string> search) {
+            int idx = 0;
+            foreach (string s in search) {
+                if (msg.Contains(s))
+                    return idx;
+
+                ++idx;
+            }
+
+            return -1;
+        }
+
     }
 }

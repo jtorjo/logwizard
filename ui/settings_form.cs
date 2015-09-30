@@ -57,7 +57,7 @@ namespace LogWizard.ui {
             noteInitials.Text = app.inst.notes_initials;
             noteColor.SelectedItem = app.inst.notes_color;
 
-            zipExtensions.Text = app.inst.look_into_zip_files;
+            zipExtensions.Text = app.inst.look_into_zip_files_str;
 
             switch (app.inst.identify_notes_files) {
             case md5_log_keeper.md5_type.fast:
@@ -97,7 +97,7 @@ namespace LogWizard.ui {
             app.inst.notes_initials = noteInitials.Text;
             app.inst.notes_color = noteColor.SelectedItem;
 
-            app.inst.look_into_zip_files = zipExtensions.Text;
+            app.inst.look_into_zip_files_str = zipExtensions.Text;
 
             if (noteFast.Checked) app.inst.identify_notes_files = md5_log_keeper.md5_type.fast;
             else if ( noteSlow.Checked) app.inst.identify_notes_files = md5_log_keeper.md5_type.slow;

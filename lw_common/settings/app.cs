@@ -83,7 +83,11 @@ namespace lw_common {
 
 
         // what extensions to look at - when parsing a zip file (in other words, what files do we consider "probable" logs)
-        public string look_into_zip_files = "";
+        public string look_into_zip_files_str = "";
+
+        public List<string> look_into_zip_files {
+            get { return look_into_zip_files_str.Split(';').ToList(); }
+        } 
 
         // when creating/modifying notes - here is what identifies this author
         public string notes_author_name = "";
@@ -192,7 +196,7 @@ namespace lw_common {
             load_save(load, ref bg_from, "bg_from", Color.White);
             load_save(load, ref bg_to, "bg_to", util.str_to_color("#FEFBF8") );
 
-            load_save(load, ref look_into_zip_files, "look_into_zip_files", ".log;.txt");
+            load_save(load, ref look_into_zip_files_str, "look_into_zip_files", ".log;.txt");
             load_save(load, ref notes_author_name, "notes_author_name", Environment.UserName);
             load_save(load, ref notes_initials, "notes_initials", initials(notes_author_name));
             load_save(load, ref notes_color, "notes_color", Color.Blue);

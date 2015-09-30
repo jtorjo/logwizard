@@ -32,3 +32,8 @@
 
 - merging - keep stuff in the cloud? automatically merge (pro_v)
 
+- navigate to stacktrace (pro_v)
+  also, recognize it
+  allow navigating to each line
+- navigate to file:line (pro_v)
+- navigate to message (pro_v) - try to find where the message came from, based on anything we can - like, file, class, function, etc.
