@@ -28,6 +28,7 @@ using lw_common;
 namespace LogWizard.context {
     // find out information on the file/log - from its header
     class log_to_default_syntax {
+        /*
         private static Dictionary<string, string> file_to_syntax_ = new Dictionary<string, string>() {
             { "HM2 Version: 2.", "$time[0,12] $ctx1['[','-'] $func[' ',']'] $ctx2['[[','] ]'] $msg" },
             {"HM3 Version=3", "$time[0,12] $ctx1['[',']'] $ctx2['[','] '] $msg|$time[0,12] $ctx1['[',']'] $msg['---']|$time[0,12] $ctx1['[',']'] $msg['  ']"},
@@ -37,11 +38,11 @@ namespace LogWizard.context {
             //{ "", "" },
             { "logging started: \nCalling process: \nmsiexec.exe ===", "$ctx1['MSI (',') '] $ctx2['(',')'] $time['[',']: ']  $msg" },
         }; 
-
+        */
         public static string file_to_syntax(string name) {
             string file_header = util.read_beginning_of_file(name, 8192);
-            foreach (var fts in file_to_syntax_) {
-                var phrases = fts.Key.Split('\n');
+            foreach (var fts in app.inst.file_to_syntax) {
+                var phrases = fts.Key.Split('|');
                 int count = 0;
                 foreach (string sub in phrases)
                     if (file_header.Contains(sub))

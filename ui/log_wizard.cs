@@ -154,8 +154,6 @@ namespace LogWizard
         
         private settings_file sett = app.inst.sett;
 
-        // 1.1.5+ - forced contexts (for instance, when imported from .logwizard files)
-        private static Dictionary<string,string> forced_file_to_context_ = new Dictionary<string, string>();
         private static List<ui_context> contexts_ = new List<ui_context>();
         private static List<history> history_ = new List<history>();
 
@@ -428,12 +426,6 @@ namespace LogWizard
                 return true;
             }).ToList();
 
-            int forced_count = int.Parse(sett.get("forced_count", "0"));
-            for (int i = 0; i < forced_count; ++i) {
-                string name = sett.get("forced." + i + ".name");
-                string context = sett.get("forced." + i + ".context");
-                forced_file_to_context_.Add(name, context);
-            }
 
             int count = int.Parse( sett.get("context_count", "1"));
             for ( int i = 0; i < count ; ++i) {
@@ -466,14 +458,6 @@ namespace LogWizard
                 sett.set("history." + idx + "name", history_[idx].name);
                 sett.set("history." + idx + "friendly_name", history_[idx].friendly_name);
                 sett.set("history." + idx + "log_syntax", history_[idx].log_syntax);
-            }
-
-            sett.set("forced_count", "" + forced_file_to_context_.Count);
-            int forced_idx = 0;
-            foreach (var forced in forced_file_to_context_) {
-                sett.set("forced." + forced_idx + ".name" , forced.Key);
-                sett.set("forced." + forced_idx + ".context", forced.Value);
-                ++forced_idx;
             }
 
             sett.set("context_count", "" + contexts_.Count);
@@ -645,8 +629,8 @@ namespace LogWizard
             if (!File.Exists(name))
                 return default_;
 
-            if (forced_file_to_context_.ContainsKey(name)) {
-                string forced = forced_file_to_context_[name];
+            if ( app.inst.forced_file_to_context.ContainsKey(name)) {
+                string forced = app.inst.forced_file_to_context[name];
                 var context_from_forced = contexts_.FirstOrDefault(x => x.name == forced);
                 if (context_from_forced != null)
                     // return it, only if we have a specific Template for it
@@ -1174,11 +1158,13 @@ namespace LogWizard
             for (int i = 0; i < custom_ui_.Length; ++i)
                 custom_ui_[i].save("ui.custom" + i);
 
-            if ( !app.inst.sett.dirty)
+            bool dirty = app.inst.sett.dirty;
+            app.inst.save();
+
+            if ( !dirty)
                 // no change
                 return;
 
-            app.inst.sett.save();
             foreach ( log_wizard lw in forms_)
                 if ( lw != this)
                     lw.load();
@@ -1754,9 +1740,9 @@ namespace LogWizard
             string name = selected_file_name();
             int default_context = contexts_.IndexOf( file_to_context(name));
             if (name != "" && default_context != curContextCtrl.SelectedIndex) {
-                if (!forced_file_to_context_.ContainsKey(name))
-                    forced_file_to_context_.Add(name, "");
-                forced_file_to_context_[name] = contexts_[curContextCtrl.SelectedIndex].name;
+                if (!app.inst.forced_file_to_context.ContainsKey(name))
+                    app.inst.forced_file_to_context.Add(name, "");
+                app.inst.forced_file_to_context[name] = contexts_[curContextCtrl.SelectedIndex].name;
             }
 
             load();
@@ -1931,6 +1917,8 @@ namespace LogWizard
         }
 
         private action_type key_to_action(string key_code) {
+            if (!app.inst.use_hotkeys)
+                return action_type.none;
 
             switch (key_code) {
             case "up":
@@ -2877,7 +2865,7 @@ namespace LogWizard
                         curContextCtrl.Items.Add(imported_context_name);
                         --ignore_change_;
                     }
-                    forced_file_to_context_.Add(import_dir + "\\" + unique_name, imported_context_name);
+                    app.inst.forced_file_to_context.Add(import_dir + "\\" + unique_name, imported_context_name);
                     save();
                 }
 

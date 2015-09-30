@@ -27,6 +27,7 @@ using lw_common;
 namespace LogWizard {
     // find out information on the file/log - from its header
     class log_to_default_context {
+        /*
         private static Dictionary<string, string> file_to_context_ = new Dictionary<string, string>() {
             { "HM2 Version: 2.", "HM2" },
             { "HM3 Version=3", "HM3" },
@@ -35,10 +36,10 @@ namespace LogWizard {
             { "This is a LogWizard Setup sample!", "SetupSample" },
             //{ "", "" },
         }; 
-
+        */
         public static string file_to_context(string name) {
             string file_header = util.read_beginning_of_file(name, 8192);
-            foreach ( var ftc in file_to_context_)
+            foreach ( var ftc in app.inst.file_to_context)
                 if (file_header.Contains(ftc.Key))
                     return ftc.Value;
 

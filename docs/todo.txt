@@ -1,17 +1,3 @@
-
-	  - write on github - toggles
-	- option to turn off hotkeys
-
-
-
-
-
-
-- context matches -> in settings dialog (easy, for now)
-  - easiest way - show the beginning of existing log (or allow user to paste anything)
-                - as he selects something ->just use that (allow adding a context on the fly)
-- syntax matches
-
 - test on PT4 file
 
 

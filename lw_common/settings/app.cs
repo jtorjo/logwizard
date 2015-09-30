@@ -4,11 +4,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using log4net.Repository.Hierarchy;
 using LogWizard;
 
 namespace lw_common {
     // application settings
     public class app {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static app inst_= new app();
 
         public static app inst {
@@ -97,6 +100,13 @@ namespace lw_common {
         // how do we uniquely identify the notes file for a certain log?
         public md5_log_keeper.md5_type identify_notes_files = md5_log_keeper.md5_type.fast;
 
+        public bool use_hotkeys = true;
+
+        public Dictionary<string, string> file_to_context = new Dictionary<string, string>();
+        public Dictionary<string, string> file_to_syntax = new Dictionary<string, string>();
+        
+        // 1.1.5+ - forced contexts (for instance, when imported from .logwizard files)
+        public Dictionary<string,string> forced_file_to_context = new Dictionary<string, string>();
 
         // file-by-file
         public bool bring_to_top_on_restart = false;
@@ -179,6 +189,31 @@ namespace lw_common {
                 sett.set(name, util.color_to_str( prop));
         }
 
+        internal static void load_save(bool load, ref Dictionary<string,string> prop, string name) {
+            var sett = inst.sett;
+            if (load) {
+                prop.Clear();
+                int count = int.Parse( sett.get(name + ".count", "0"));
+                for (int i = 0; i < count; ++i) {
+                    string key = sett.get(name + "." + i + ".key");
+                    string value = sett.get(name + "." + i + ".value");
+                    if ( !prop.ContainsKey(key))
+                        prop.Add(key, value);
+                    else 
+                        logger.Error("invalid settings " + key + "/" + value);
+                }
+            } else {
+                sett.set(name + ".count", "" + prop.Count);
+                int i = 0;
+                foreach (var val in prop) {
+                    sett.set(name + "." + i + ".key", val.Key);
+                    sett.set(name + "." + i + ".value", val.Value);
+                    ++i;
+                }
+            }
+        }
+
+
         private void load_save(bool load) {
             load_save(load, ref show_view_line_count, "show_view_line_count", true);
             load_save(load, ref show_view_selected_line, "show_view_selected_line", true);
@@ -201,6 +236,12 @@ namespace lw_common {
             load_save(load, ref notes_initials, "notes_initials", initials(notes_author_name));
             load_save(load, ref notes_color, "notes_color", Color.Blue);
             load_save(load, ref identify_notes_files, "identify_notes_files", md5_log_keeper.md5_type.fast);
+
+            load_save(load, ref use_hotkeys, "use_hotkeys", true);
+
+            load_save(load, ref file_to_context, "file_to_context");
+            load_save(load, ref file_to_syntax, "file_to_syntax");
+            load_save(load, ref forced_file_to_context, "forced_file_to_context");
         }
 
         private string initials(string name) {

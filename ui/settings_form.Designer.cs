@@ -53,6 +53,9 @@
             this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.hotkeyslink = new System.Windows.Forms.LinkLabel();
+            this.useHotkeys = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.logBgTo = new ColorPicker.ColorPickerCombobox();
@@ -81,14 +84,14 @@
             this.label12 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
-            this.objectListView2 = new BrightIdeasSoftware.ObjectListView();
+            this.fileToContext = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.button3 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
+            this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.groupBox1.SuspendLayout();
@@ -97,6 +100,7 @@
             this.groupBox4.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -104,15 +108,15 @@
             this.groupBox6.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fileToContext)).BeginInit();
             this.tabPage6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).BeginInit();
             this.SuspendLayout();
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 19);
+            this.label2.Location = new System.Drawing.Point(9, 63);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(157, 17);
             this.label2.TabIndex = 1;
@@ -124,7 +128,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.viewIndex);
             this.groupBox1.Controls.Add(this.viewLineCount);
-            this.groupBox1.Location = new System.Drawing.Point(6, 246);
+            this.groupBox1.Location = new System.Drawing.Point(6, 314);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(628, 122);
             this.groupBox1.TabIndex = 2;
@@ -187,12 +191,12 @@
             this.groupBox2.Controls.Add(this.bringToTopOnRestart);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.toggleTopmost);
-            this.groupBox2.Location = new System.Drawing.Point(6, 48);
+            this.groupBox2.Location = new System.Drawing.Point(6, 113);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(628, 192);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "General";
+            this.groupBox2.Text = "Top / Topmost";
             // 
             // makeTopmostOnRestart
             // 
@@ -397,9 +401,9 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox7);
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -407,6 +411,39 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.hotkeyslink);
+            this.groupBox7.Controls.Add(this.useHotkeys);
+            this.groupBox7.Controls.Add(this.label2);
+            this.groupBox7.Location = new System.Drawing.Point(6, 6);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(628, 96);
+            this.groupBox7.TabIndex = 5;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "General";
+            // 
+            // hotkeyslink
+            // 
+            this.hotkeyslink.AutoSize = true;
+            this.hotkeyslink.Location = new System.Drawing.Point(57, 31);
+            this.hotkeyslink.Name = "hotkeyslink";
+            this.hotkeyslink.Size = new System.Drawing.Size(59, 17);
+            this.hotkeyslink.TabIndex = 3;
+            this.hotkeyslink.TabStop = true;
+            this.hotkeyslink.Text = "Hotkeys";
+            this.hotkeyslink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.hotkeyslink_LinkClicked);
+            // 
+            // useHotkeys
+            // 
+            this.useHotkeys.AutoSize = true;
+            this.useHotkeys.Location = new System.Drawing.Point(10, 30);
+            this.useHotkeys.Name = "useHotkeys";
+            this.useHotkeys.Size = new System.Drawing.Size(52, 21);
+            this.useHotkeys.TabIndex = 2;
+            this.useHotkeys.Text = "Use";
+            this.useHotkeys.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
@@ -682,7 +719,7 @@
             // tabPage5
             // 
             this.tabPage5.Controls.Add(this.label11);
-            this.tabPage5.Controls.Add(this.objectListView2);
+            this.tabPage5.Controls.Add(this.fileToContext);
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
@@ -700,32 +737,43 @@
             this.label11.TabIndex = 3;
             this.label11.Text = "Text Found in File Header -> Template";
             // 
-            // objectListView2
+            // fileToContext
             // 
-            this.objectListView2.AllColumns.Add(this.olvColumn3);
-            this.objectListView2.AllColumns.Add(this.olvColumn4);
-            this.objectListView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.fileToContext.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.fileToContext.AllColumns.Add(this.olvColumn3);
+            this.fileToContext.AllColumns.Add(this.olvColumn4);
+            this.fileToContext.AlternateRowBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.fileToContext.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.fileToContext.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
+            this.fileToContext.CellEditEnterChangesRows = true;
+            this.fileToContext.CellEditTabChangesRows = true;
+            this.fileToContext.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn3,
             this.olvColumn4});
-            this.objectListView2.Location = new System.Drawing.Point(6, 45);
-            this.objectListView2.Name = "objectListView2";
-            this.objectListView2.Size = new System.Drawing.Size(654, 405);
-            this.objectListView2.TabIndex = 2;
-            this.objectListView2.UseCompatibleStateImageBehavior = false;
-            this.objectListView2.View = System.Windows.Forms.View.Details;
+            this.fileToContext.FullRowSelect = true;
+            this.fileToContext.HideSelection = false;
+            this.fileToContext.Location = new System.Drawing.Point(6, 45);
+            this.fileToContext.MultiSelect = false;
+            this.fileToContext.Name = "fileToContext";
+            this.fileToContext.OwnerDraw = true;
+            this.fileToContext.ShowGroups = false;
+            this.fileToContext.Size = new System.Drawing.Size(654, 405);
+            this.fileToContext.TabIndex = 2;
+            this.fileToContext.UseAlternatingBackColors = true;
+            this.fileToContext.UseCompatibleStateImageBehavior = false;
+            this.fileToContext.View = System.Windows.Forms.View.Details;
             // 
             // olvColumn3
             // 
-            this.olvColumn3.AspectName = "text";
+            this.olvColumn3.AspectName = "key";
             this.olvColumn3.Text = "Text";
             this.olvColumn3.Width = 250;
             // 
             // olvColumn4
             // 
-            this.olvColumn4.AspectName = "syntax";
+            this.olvColumn4.AspectName = "value";
             this.olvColumn4.FillsFreeSpace = true;
             this.olvColumn4.Text = "Template";
             // 
@@ -734,7 +782,7 @@
             this.tabPage6.Controls.Add(this.button3);
             this.tabPage6.Controls.Add(this.textBox1);
             this.tabPage6.Controls.Add(this.label10);
-            this.tabPage6.Controls.Add(this.objectListView1);
+            this.tabPage6.Controls.Add(this.fileToSyntax);
             this.tabPage6.Location = new System.Drawing.Point(4, 25);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
@@ -762,6 +810,7 @@
             this.textBox1.Location = new System.Drawing.Point(9, 285);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBox1.Size = new System.Drawing.Size(651, 144);
             this.textBox1.TabIndex = 2;
             // 
@@ -774,32 +823,42 @@
             this.label10.TabIndex = 1;
             this.label10.Text = "Text Found in File Header -> Syntax";
             // 
-            // objectListView1
+            // fileToSyntax
             // 
-            this.objectListView1.AllColumns.Add(this.olvColumn1);
-            this.objectListView1.AllColumns.Add(this.olvColumn2);
-            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.fileToSyntax.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.fileToSyntax.AllColumns.Add(this.olvColumn1);
+            this.fileToSyntax.AllColumns.Add(this.olvColumn2);
+            this.fileToSyntax.AlternateRowBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.fileToSyntax.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.fileToSyntax.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
+            this.fileToSyntax.CellEditEnterChangesRows = true;
+            this.fileToSyntax.CellEditTabChangesRows = true;
+            this.fileToSyntax.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,
             this.olvColumn2});
-            this.objectListView1.Location = new System.Drawing.Point(6, 43);
-            this.objectListView1.Name = "objectListView1";
-            this.objectListView1.Size = new System.Drawing.Size(654, 236);
-            this.objectListView1.TabIndex = 0;
-            this.objectListView1.UseCompatibleStateImageBehavior = false;
-            this.objectListView1.View = System.Windows.Forms.View.Details;
+            this.fileToSyntax.FullRowSelect = true;
+            this.fileToSyntax.Location = new System.Drawing.Point(6, 43);
+            this.fileToSyntax.MultiSelect = false;
+            this.fileToSyntax.Name = "fileToSyntax";
+            this.fileToSyntax.OwnerDraw = true;
+            this.fileToSyntax.ShowGroups = false;
+            this.fileToSyntax.Size = new System.Drawing.Size(654, 236);
+            this.fileToSyntax.TabIndex = 0;
+            this.fileToSyntax.UseAlternatingBackColors = true;
+            this.fileToSyntax.UseCompatibleStateImageBehavior = false;
+            this.fileToSyntax.View = System.Windows.Forms.View.Details;
             // 
             // olvColumn1
             // 
-            this.olvColumn1.AspectName = "text";
+            this.olvColumn1.AspectName = "key";
             this.olvColumn1.Text = "Text";
             this.olvColumn1.Width = 250;
             // 
             // olvColumn2
             // 
-            this.olvColumn2.AspectName = "syntax";
+            this.olvColumn2.AspectName = "value";
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
@@ -826,7 +885,8 @@
             this.groupBox4.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
@@ -839,10 +899,10 @@
             this.tabPage7.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fileToContext)).EndInit();
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -894,11 +954,11 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label10;
-        private BrightIdeasSoftware.ObjectListView objectListView1;
+        private BrightIdeasSoftware.ObjectListView fileToSyntax;
         private BrightIdeasSoftware.OLVColumn olvColumn1;
         private BrightIdeasSoftware.OLVColumn olvColumn2;
         private System.Windows.Forms.Label label11;
-        private BrightIdeasSoftware.ObjectListView objectListView2;
+        private BrightIdeasSoftware.ObjectListView fileToContext;
         private BrightIdeasSoftware.OLVColumn olvColumn3;
         private BrightIdeasSoftware.OLVColumn olvColumn4;
         private System.Windows.Forms.TabPage tabPage7;
@@ -915,6 +975,9 @@
         private System.Windows.Forms.RadioButton noteSlow;
         private System.Windows.Forms.RadioButton noteFast;
         private System.Windows.Forms.RadioButton noteByFileName;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.LinkLabel hotkeyslink;
+        private System.Windows.Forms.CheckBox useHotkeys;
 
     }
 }

@@ -238,3 +238,28 @@ context.1.view9.filt4.enabled=1
 context.1.view9.filt4.text="$msg startswith [hk] Target\r\ncolor blue"
 context.1.view9.filter_count=5
 context.1.view9.name=zorder
+
+file_to_context.0.key=HM2 Version: 2.
+file_to_context.0.value=HM2
+file_to_context.1.key=HM3 Version=3
+file_to_context.1.value=HM3
+file_to_context.2.key=[find] Starting ScrapeFindPot
+file_to_context.2.value=TN2ScrapeFindPot
+file_to_context.3.key=Welcome to TableNinja!
+file_to_context.3.value=TableNinja
+file_to_context.4.key=This is a LogWizard Setup sample!
+file_to_context.4.value=SetupSample
+file_to_context.5.key=[System] PokerTracker v
+file_to_context.5.value=PT4
+file_to_context.count=6
+file_to_syntax.0.key=HM2 Version: 2.
+file_to_syntax.0.value=$time[0,12] $ctx1['[','-'] $func[' ',']'] $ctx2['[[','] ]'] $msg
+file_to_syntax.1.key=HM3 Version=3
+file_to_syntax.1.value=$time[0,12] $ctx1['[',']'] $ctx2['[','] '] $msg|$time[0,12] $ctx1['[',']'] $msg['---']|$time[0,12] $ctx1['[',']'] $msg['  ']
+file_to_syntax.2.key=This is a LogWizard Setup sample
+file_to_syntax.2.value=$time[0,12] $ctx1[13,10] $level[24,5] $class[' ','- '] $msg
+file_to_syntax.3.key=Welcome to TableNinja! debug
+file_to_syntax.3.value=$file[0,': '] $time['',12] $ctx1[' ',10] $level[' ','- '] $msg
+file_to_syntax.4.key=logging started: |Calling process: |msiexec.exe ===
+file_to_syntax.4.value=$ctx1['MSI (',') '] $ctx2['(',')'] $time['[',']: ']  $msg
+file_to_syntax.count=5
