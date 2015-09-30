@@ -1,11 +1,3 @@
-- dropping a zip file
-  - look for .log + .txt files (prefer .log) - already in settings
-    - if a single one found, use it. otherwise:
-	  - if shift pressed -> show a dialog with all possible files
-	  - if shift not pressed, open the first one (prefer .log)
-	- iterate subdirs?
-	-------> keep in the history (and basically dropped zip files -> we keep them somewhere in our logwizard subdir + use FRIENDLY NAMES)
-	         see that history_ and history combo are in sync, even when we select another item!
 
 - toggles button + menu!
 	- toggles - have them as a single context menu - to be shown at the press of a button or when right-clicking on our "bug" icon
@@ -193,6 +185,9 @@
 
 
 
+
+- (pro_v) show delta - that is, how many millisecs from start? (maybe in secs or so?)
+  this should be possible to be shown also from selected line (like, above are with "-", below with "+")
 
 
 

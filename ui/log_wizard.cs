@@ -501,12 +501,9 @@ namespace LogWizard
             }
         }
 
-        private bool source_shown { get { return toggleSource.Text[0] == '-'; }}
-
         private void show_left_pane(bool show) {
             update_left_pane();
 
-            toggleFilters.Text = show ? "-F" : "+F";
             ++ignore_change_;
             if ( show) {
                 main.Panel1Collapsed = false;
@@ -519,7 +516,6 @@ namespace LogWizard
             --ignore_change_;
         }
         private void show_source(bool show) {
-            toggleSource.Text = show ? "-S" : "+S";
             if ( show) {
                 sourceUp.Panel1Collapsed = false;
                 sourceUp.Panel1.Show();
@@ -534,7 +530,6 @@ namespace LogWizard
                     if ( lv != null)
                         lv.show_name = show;
                 }
-            global_ui.show_source = show;
         }
 
         private void show_filteredleft_pane1(bool show) {
@@ -590,7 +585,6 @@ namespace LogWizard
                 Debug.Assert(false);
                 break;
             }
-            toggleFullLog.Text = show_full_log_type_to_str(show);
 
             // can't focus now, it would sometimes get the hotkey ('L') to be sent twice, and we'd end up toggling twice with a single press
             if ( to_focus != null)
@@ -603,27 +597,14 @@ namespace LogWizard
                 }, 100);
         }
 
-        private show_full_log_type str_to_show_full_log_type(string s) {
-            return s == "+L"
-                ? show_full_log_type.just_view
-                : s == "-L" ? show_full_log_type.both : show_full_log_type.just_full_log;            
+        show_full_log_type shown_full_log_now() {
+            if (global_ui.show_current_view && global_ui.show_fulllog)
+                return show_full_log_type.both;
+            return global_ui.show_current_view ? show_full_log_type.just_view : show_full_log_type.just_full_log;
         }
-
-        private string show_full_log_type_to_str(show_full_log_type type) {
-            switch (type) {
-            case show_full_log_type.both:
-                return "-L";
-            case show_full_log_type.just_view:
-                return "+L";
-            case show_full_log_type.just_full_log:
-                return "L";
-            default:
-                Debug.Assert(false);
-                return "-L";
-            }
-        }
+        
         private void toggle_full_log() {
-            show_full_log_type now = str_to_show_full_log_type(toggleFullLog.Text);
+            show_full_log_type now = shown_full_log_now();
             show_full_log_type next = now;
             switch (now) {
             case show_full_log_type.both: next = show_full_log_type.just_full_log; 
@@ -637,6 +618,9 @@ namespace LogWizard
                 break;
             }
             show_full_log(next);
+
+            save();
+            update_msg_details(true);
         }
 
         private void filteredViews_DragEnter(object sender, DragEventArgs e)
@@ -836,18 +820,17 @@ namespace LogWizard
             save();
             update_msg_details(true);            
         }
-        private void toggleFilters_Click(object sender, EventArgs e)
-        {
+
+        private void toggle_filters() {
             global_ui.show_filter = !global_ui.show_filter;            
             show_left_pane( global_ui.show_left_pane);
 
             save();
             update_msg_details(true);
         }
-
-        private void toggleSource_Click(object sender, EventArgs e)
-        {
-            show_source( toggleSource.Text[0] == '+');
+        private void toggle_source() {
+            global_ui.show_source = !global_ui.show_source;
+            show_source( global_ui.show_source);
             save();
             update_msg_details(true);
         }
@@ -855,8 +838,6 @@ namespace LogWizard
         private void toggleFullLog_Click(object sender, EventArgs e)
         {
             toggle_full_log();
-            save();
-            update_msg_details(true);
         }
 
         private void newView_Click(object sender, EventArgs e)
@@ -912,7 +893,7 @@ namespace LogWizard
             log_view new_ = new log_view( this, viewsTab.TabPages[idx].Text );
             new_.Dock = DockStyle.Fill;
             tab.Controls.Add(new_);
-            new_.show_name = source_shown;
+            new_.show_name = global_ui.show_source;
             new_.set_bookmarks(bookmarks_.ToList());
             if ( log_parser_ != null)
                 new_.set_log( new log_line_reader(log_parser_));
@@ -2162,16 +2143,16 @@ namespace LogWizard
                 break;
 
             case action_type.toggle_filters:
-                toggleFilters_Click(null,null);
+                toggle_filters();
                 break;
             case action_type.toggle_notes:
                 toggle_notes();
                 break;
             case action_type.toggle_fulllog:
-                toggleFullLog_Click(null,null);
+                toggle_full_log();
                 break;
             case action_type.toggle_source:
-                toggleSource_Click(null,null);
+                toggle_source();
                 break;
 
             case action_type.copy_to_clipboard:
@@ -2704,8 +2685,13 @@ namespace LogWizard
         }
 
         private void toggleTopmost_Click(object sender, EventArgs e) {
-            TopMost = !TopMost;
-            update_topmost_image();
+            bool is_right_click = win32.IsKeyPushedDown(Keys.RButton);
+            if (!is_right_click) {
+                TopMost = !TopMost;
+                update_topmost_image();
+            }
+            else 
+                toggleMenu.Show(Cursor.Position);
         }
 
         private void log_wizard_SizeChanged(object sender, EventArgs e) {
@@ -3014,6 +3000,101 @@ namespace LogWizard
                 logger.Error("can't export notes to txt/html " + e.Message);
             }
         }
+
+
+        private void update_toggles() {
+            currentViewToolStripMenuItem.Checked = global_ui.show_current_view;
+            fullLogToolStripMenuItem.Checked = global_ui.show_fulllog;
+            tableHeaderToolStripMenuItem.Checked = global_ui.show_header;
+            tabsToolStripMenuItem.Checked = global_ui.show_tabs;
+            titleToolStripMenuItem.Checked = global_ui.show_title;
+            statusToolStripMenuItem.Checked = global_ui.show_status;
+            filterPaneToolStripMenuItem.Checked = global_ui.show_filter;
+            notesPaneToolStripMenuItem.Checked = global_ui.show_notes;
+            sourcePanetopmostToolStripMenuItem.Checked = global_ui.show_source;
+            topmostToolStripMenuItem.Checked = global_ui.topmost;
+            detailsToolStripMenuItem.Checked = global_ui.show_details;
+            // we don't have this pane yet
+            detailsToolStripMenuItem.Enabled = false;
+        }
+
+
+        private void currentViewToolStripMenuItem_Click(object sender, EventArgs e) {
+            show_full_log_type now = shown_full_log_now();
+            show_full_log_type next = now;
+            switch (now) {
+            case show_full_log_type.both: next = show_full_log_type.just_full_log; 
+                break;
+            case show_full_log_type.just_view: next = show_full_log_type.just_full_log;
+                break;
+            case show_full_log_type.just_full_log: next = show_full_log_type.both;
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+            }
+            show_full_log(next);
+        }
+        private void fullLogToolStripMenuItem_Click(object sender, EventArgs e) {
+            show_full_log_type now = shown_full_log_now();
+            show_full_log_type next = now;
+            switch (now) {
+            case show_full_log_type.both: next = show_full_log_type.just_view; 
+                break;
+            case show_full_log_type.just_view: next = show_full_log_type.both;
+                break;
+            case show_full_log_type.just_full_log: next = show_full_log_type.just_view;
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+            }
+            show_full_log(next);
+        }
+
+        private void tableHeaderToolStripMenuItem_Click(object sender, EventArgs e) {
+            toggle_view_header();
+        }
+
+        private void tabsToolStripMenuItem_Click(object sender, EventArgs e) {
+            toggle_view_tabs();
+        }
+
+        private void titleToolStripMenuItem_Click(object sender, EventArgs e) {
+            toggle_title();
+        }
+
+        private void filterPaneToolStripMenuItem_Click(object sender, EventArgs e) {
+            global_ui.show_filter = !global_ui.show_filter;
+            show_left_pane(global_ui.show_left_pane);
+        }
+
+        private void notesPaneToolStripMenuItem_Click(object sender, EventArgs e) {
+            global_ui.show_notes = !global_ui.show_notes;
+            show_left_pane(global_ui.show_left_pane);
+        }
+
+        private void sourcePanetopmostToolStripMenuItem_Click(object sender, EventArgs e) {
+            global_ui.show_source = !global_ui.show_source;
+            show_source(global_ui.show_source);
+        }
+        private void statusToolStripMenuItem_Click(object sender, EventArgs e) {
+            toggle_status();
+        }
+
+        private void topmostToolStripMenuItem_Click(object sender, EventArgs e) {
+            toggleTopmost_Click(null,null);
+        }
+
+        private void detailsToolStripMenuItem_Click(object sender, EventArgs e) {
+            toggle_details();
+        }
+
+        private void toggles_Click(object sender, EventArgs e) {
+            update_toggles();
+            toggleMenu.Show(Cursor.Position);
+        }
+
 
     }
 }

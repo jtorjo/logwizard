@@ -91,6 +91,8 @@ namespace lw_common {
         private bool show_left_pane_ = true;
         private bool show_notes_ = false;
 
+        // IMPORTANT: Update Toggles UI when adding stuff here!
+
         public enum show_row_type {
             msg_only, 
             // ... this makes sense only for the full-log

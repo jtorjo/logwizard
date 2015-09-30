@@ -36,9 +36,6 @@
             this.newFilteredView = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.friendlyNameCtrl = new System.Windows.Forms.TextBox();
-            this.toggleFilters = new System.Windows.Forms.Button();
-            this.toggleSource = new System.Windows.Forms.Button();
-            this.toggleFullLog = new System.Windows.Forms.Button();
             this.logSyntaxCtrl = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.delFilteredView = new System.Windows.Forms.Button();
@@ -51,6 +48,19 @@
             this.contextFromClipboard = new System.Windows.Forms.Button();
             this.contextToClipboard = new System.Windows.Forms.Button();
             this.toggleTopmost = new System.Windows.Forms.PictureBox();
+            this.toggles = new System.Windows.Forms.Button();
+            this.toggleMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.currentViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fullLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tableHeaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.titleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.filterPaneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.notesPaneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sourcePanetopmostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.topmostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsCtrl = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.main = new System.Windows.Forms.SplitContainer();
@@ -76,14 +86,15 @@
             this.monitor = new System.Windows.Forms.Button();
             this.lower = new System.Windows.Forms.Panel();
             this.export = new System.Windows.Forms.Button();
-            this.hotkeys = new System.Windows.Forms.LinkLabel();
-            this.status = new System.Windows.Forms.Label();
-            this.saveTimer = new System.Windows.Forms.Timer(this.components);
             this.exportMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportLogNotestoLogWizardFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportNotestotxtAndhtmlFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hotkeys = new System.Windows.Forms.LinkLabel();
+            this.status = new System.Windows.Forms.Label();
+            this.saveTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
+            this.toggleMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.main)).BeginInit();
             this.main.Panel1.SuspendLayout();
             this.main.Panel2.SuspendLayout();
@@ -129,9 +140,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.logHistory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.logHistory.FormattingEnabled = true;
-            this.logHistory.Location = new System.Drawing.Point(189, 3);
+            this.logHistory.Location = new System.Drawing.Point(134, 3);
             this.logHistory.Name = "logHistory";
-            this.logHistory.Size = new System.Drawing.Size(653, 23);
+            this.logHistory.Size = new System.Drawing.Size(708, 23);
             this.logHistory.TabIndex = 7;
             this.tip.SetToolTip(this.logHistory, "History - just select any of the previous logs, and they instantly load");
             this.logHistory.SelectedIndexChanged += new System.EventHandler(this.logHistory_SelectedIndexChanged);
@@ -172,39 +183,6 @@
             this.tip.SetToolTip(this.friendlyNameCtrl, "You can assign a friendlier name to this log_line_parser, so you can easier locat" +
         "e it in history");
             this.friendlyNameCtrl.TextChanged += new System.EventHandler(this.friendlyName_TextChanged);
-            // 
-            // toggleFilters
-            // 
-            this.toggleFilters.Location = new System.Drawing.Point(9, 2);
-            this.toggleFilters.Name = "toggleFilters";
-            this.toggleFilters.Size = new System.Drawing.Size(32, 23);
-            this.toggleFilters.TabIndex = 8;
-            this.toggleFilters.Text = "+F";
-            this.tip.SetToolTip(this.toggleFilters, "Show/Hide Filters");
-            this.toggleFilters.UseVisualStyleBackColor = true;
-            this.toggleFilters.Click += new System.EventHandler(this.toggleFilters_Click);
-            // 
-            // toggleSource
-            // 
-            this.toggleSource.Location = new System.Drawing.Point(47, 2);
-            this.toggleSource.Name = "toggleSource";
-            this.toggleSource.Size = new System.Drawing.Size(32, 23);
-            this.toggleSource.TabIndex = 9;
-            this.toggleSource.Text = "+S";
-            this.tip.SetToolTip(this.toggleSource, "Show/Hide Source");
-            this.toggleSource.UseVisualStyleBackColor = true;
-            this.toggleSource.Click += new System.EventHandler(this.toggleSource_Click);
-            // 
-            // toggleFullLog
-            // 
-            this.toggleFullLog.Location = new System.Drawing.Point(85, 2);
-            this.toggleFullLog.Name = "toggleFullLog";
-            this.toggleFullLog.Size = new System.Drawing.Size(32, 23);
-            this.toggleFullLog.TabIndex = 10;
-            this.toggleFullLog.Text = "+L";
-            this.tip.SetToolTip(this.toggleFullLog, "Show/Hide Full Log");
-            this.toggleFullLog.UseVisualStyleBackColor = true;
-            this.toggleFullLog.Click += new System.EventHandler(this.toggleFullLog_Click);
             // 
             // logSyntaxCtrl
             // 
@@ -354,6 +332,113 @@
             this.toggleTopmost.Visible = false;
             this.toggleTopmost.Click += new System.EventHandler(this.toggleTopmost_Click);
             // 
+            // toggles
+            // 
+            this.toggles.ContextMenuStrip = this.toggleMenu;
+            this.toggles.Location = new System.Drawing.Point(4, 2);
+            this.toggles.Name = "toggles";
+            this.toggles.Size = new System.Drawing.Size(60, 23);
+            this.toggles.TabIndex = 17;
+            this.toggles.Text = "Toggles";
+            this.tip.SetToolTip(this.toggles, "When Title is not visible, this menu is available by right-clicking the bug on to" +
+        "p-left");
+            this.toggles.UseVisualStyleBackColor = true;
+            this.toggles.Click += new System.EventHandler(this.toggles_Click);
+            // 
+            // toggleMenu
+            // 
+            this.toggleMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.currentViewToolStripMenuItem,
+            this.fullLogToolStripMenuItem,
+            this.tableHeaderToolStripMenuItem,
+            this.tabsToolStripMenuItem,
+            this.titleToolStripMenuItem,
+            this.statusToolStripMenuItem,
+            this.filterPaneToolStripMenuItem,
+            this.notesPaneToolStripMenuItem,
+            this.sourcePanetopmostToolStripMenuItem,
+            this.topmostToolStripMenuItem,
+            this.detailsToolStripMenuItem});
+            this.toggleMenu.Name = "toggleMenu";
+            this.toggleMenu.Size = new System.Drawing.Size(178, 246);
+            // 
+            // currentViewToolStripMenuItem
+            // 
+            this.currentViewToolStripMenuItem.Name = "currentViewToolStripMenuItem";
+            this.currentViewToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.currentViewToolStripMenuItem.Text = "Current View";
+            this.currentViewToolStripMenuItem.Click += new System.EventHandler(this.currentViewToolStripMenuItem_Click);
+            // 
+            // fullLogToolStripMenuItem
+            // 
+            this.fullLogToolStripMenuItem.Name = "fullLogToolStripMenuItem";
+            this.fullLogToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.fullLogToolStripMenuItem.Text = "Full Log View";
+            this.fullLogToolStripMenuItem.Click += new System.EventHandler(this.fullLogToolStripMenuItem_Click);
+            // 
+            // tableHeaderToolStripMenuItem
+            // 
+            this.tableHeaderToolStripMenuItem.Name = "tableHeaderToolStripMenuItem";
+            this.tableHeaderToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.tableHeaderToolStripMenuItem.Text = "Table [H]eader";
+            this.tableHeaderToolStripMenuItem.Click += new System.EventHandler(this.tableHeaderToolStripMenuItem_Click);
+            // 
+            // tabsToolStripMenuItem
+            // 
+            this.tabsToolStripMenuItem.Name = "tabsToolStripMenuItem";
+            this.tabsToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.tabsToolStripMenuItem.Text = "[V]iew Tabs";
+            this.tabsToolStripMenuItem.Click += new System.EventHandler(this.tabsToolStripMenuItem_Click);
+            // 
+            // titleToolStripMenuItem
+            // 
+            this.titleToolStripMenuItem.Name = "titleToolStripMenuItem";
+            this.titleToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.titleToolStripMenuItem.Text = "[T]itle";
+            this.titleToolStripMenuItem.Click += new System.EventHandler(this.titleToolStripMenuItem_Click);
+            // 
+            // statusToolStripMenuItem
+            // 
+            this.statusToolStripMenuItem.Name = "statusToolStripMenuItem";
+            this.statusToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.statusToolStripMenuItem.Text = "[S]tatus";
+            this.statusToolStripMenuItem.Click += new System.EventHandler(this.statusToolStripMenuItem_Click);
+            // 
+            // filterPaneToolStripMenuItem
+            // 
+            this.filterPaneToolStripMenuItem.Name = "filterPaneToolStripMenuItem";
+            this.filterPaneToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.filterPaneToolStripMenuItem.Text = "[F]ilter Pane (left)";
+            this.filterPaneToolStripMenuItem.Click += new System.EventHandler(this.filterPaneToolStripMenuItem_Click);
+            // 
+            // notesPaneToolStripMenuItem
+            // 
+            this.notesPaneToolStripMenuItem.Name = "notesPaneToolStripMenuItem";
+            this.notesPaneToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.notesPaneToolStripMenuItem.Text = "[N]otes Pane (left)";
+            this.notesPaneToolStripMenuItem.Click += new System.EventHandler(this.notesPaneToolStripMenuItem_Click);
+            // 
+            // sourcePanetopmostToolStripMenuItem
+            // 
+            this.sourcePanetopmostToolStripMenuItem.Name = "sourcePanetopmostToolStripMenuItem";
+            this.sourcePanetopmostToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.sourcePanetopmostToolStripMenuItem.Text = "s[O]urce Pane (top)";
+            this.sourcePanetopmostToolStripMenuItem.Click += new System.EventHandler(this.sourcePanetopmostToolStripMenuItem_Click);
+            // 
+            // topmostToolStripMenuItem
+            // 
+            this.topmostToolStripMenuItem.Name = "topmostToolStripMenuItem";
+            this.topmostToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.topmostToolStripMenuItem.Text = "Topmost";
+            this.topmostToolStripMenuItem.Click += new System.EventHandler(this.topmostToolStripMenuItem_Click);
+            // 
+            // detailsToolStripMenuItem
+            // 
+            this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.detailsToolStripMenuItem.Text = "[D]etails";
+            this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
+            // 
             // settingsCtrl
             // 
             this.settingsCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -368,7 +453,7 @@
             // about
             // 
             this.about.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.about.Location = new System.Drawing.Point(902, 3);
+            this.about.Location = new System.Drawing.Point(904, 3);
             this.about.Name = "about";
             this.about.Size = new System.Drawing.Size(68, 23);
             this.about.TabIndex = 13;
@@ -615,7 +700,7 @@
             // 
             // refreshFilter
             // 
-            this.refreshFilter.Location = new System.Drawing.Point(123, 2);
+            this.refreshFilter.Location = new System.Drawing.Point(68, 2);
             this.refreshFilter.Name = "refreshFilter";
             this.refreshFilter.Size = new System.Drawing.Size(60, 23);
             this.refreshFilter.TabIndex = 11;
@@ -649,15 +734,13 @@
             // 
             this.lower.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lower.Controls.Add(this.toggles);
             this.lower.Controls.Add(this.export);
             this.lower.Controls.Add(this.hotkeys);
             this.lower.Controls.Add(this.logHistory);
             this.lower.Controls.Add(this.newView);
             this.lower.Controls.Add(this.monitor);
-            this.lower.Controls.Add(this.toggleFilters);
             this.lower.Controls.Add(this.about);
-            this.lower.Controls.Add(this.toggleSource);
-            this.lower.Controls.Add(this.toggleFullLog);
             this.lower.Controls.Add(this.settingsCtrl);
             this.lower.Controls.Add(this.refreshFilter);
             this.lower.Location = new System.Drawing.Point(0, 520);
@@ -676,35 +759,6 @@
             this.export.Text = "Export";
             this.export.UseVisualStyleBackColor = true;
             this.export.Click += new System.EventHandler(this.export_Click);
-            // 
-            // hotkeys
-            // 
-            this.hotkeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.hotkeys.AutoSize = true;
-            this.hotkeys.Location = new System.Drawing.Point(848, 8);
-            this.hotkeys.Name = "hotkeys";
-            this.hotkeys.Size = new System.Drawing.Size(50, 15);
-            this.hotkeys.TabIndex = 15;
-            this.hotkeys.TabStop = true;
-            this.hotkeys.Text = "Hotkeys";
-            this.hotkeys.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.hotkeys_LinkClicked);
-            // 
-            // status
-            // 
-            this.status.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.status.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.status.Location = new System.Drawing.Point(-4, 549);
-            this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(1264, 19);
-            this.status.TabIndex = 18;
-            this.status.Text = " ";
-            // 
-            // saveTimer
-            // 
-            this.saveTimer.Enabled = true;
-            this.saveTimer.Interval = 15000;
-            this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
             // exportMenu
             // 
@@ -736,6 +790,35 @@
             this.exportNotestotxtAndhtmlFilesToolStripMenuItem.Text = "Export Notes (to .txt and .html files)";
             this.exportNotestotxtAndhtmlFilesToolStripMenuItem.Click += new System.EventHandler(this.exportNotestotxtAndhtmlFilesToolStripMenuItem_Click);
             // 
+            // hotkeys
+            // 
+            this.hotkeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.hotkeys.AutoSize = true;
+            this.hotkeys.Location = new System.Drawing.Point(848, 8);
+            this.hotkeys.Name = "hotkeys";
+            this.hotkeys.Size = new System.Drawing.Size(50, 15);
+            this.hotkeys.TabIndex = 15;
+            this.hotkeys.TabStop = true;
+            this.hotkeys.Text = "Hotkeys";
+            this.hotkeys.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.hotkeys_LinkClicked);
+            // 
+            // status
+            // 
+            this.status.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.status.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.status.Location = new System.Drawing.Point(-4, 549);
+            this.status.Name = "status";
+            this.status.Size = new System.Drawing.Size(1264, 19);
+            this.status.TabIndex = 18;
+            this.status.Text = " ";
+            // 
+            // saveTimer
+            // 
+            this.saveTimer.Enabled = true;
+            this.saveTimer.Interval = 15000;
+            this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
+            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -757,6 +840,7 @@
             this.LocationChanged += new System.EventHandler(this.log_wizard_LocationChanged);
             this.SizeChanged += new System.EventHandler(this.log_wizard_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).EndInit();
+            this.toggleMenu.ResumeLayout(false);
             this.main.Panel1.ResumeLayout(false);
             this.main.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.main)).EndInit();
@@ -801,9 +885,6 @@
         private System.Windows.Forms.Button newFilteredView;
         private System.Windows.Forms.TabControl viewsTab;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.Button toggleFilters;
-        private System.Windows.Forms.Button toggleSource;
-        private System.Windows.Forms.Button toggleFullLog;
         private System.Windows.Forms.TextBox logSyntaxCtrl;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label dropHere;
@@ -838,6 +919,19 @@
         private System.Windows.Forms.ToolStripMenuItem exportLogNotestoLogWizardFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportNotestotxtAndhtmlFilesToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip toggleMenu;
+        private System.Windows.Forms.ToolStripMenuItem currentViewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fullLogToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tableHeaderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tabsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem titleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem statusToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem filterPaneToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem notesPaneToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sourcePanetopmostToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem topmostToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem detailsToolStripMenuItem;
+        private System.Windows.Forms.Button toggles;
     }
 }
 
