@@ -1,9 +1,4 @@
 
-- toggles button + menu!
-	- toggles - have them as a single context menu - to be shown at the press of a button or when right-clicking on our "bug" icon
-	  - when showing the menu, the hotkeys for each toggle, show them in [] , like, [F]ilter Pane
-	  - include 'm' as well - explain for current view only
-	  - tooltip -> explain that toggles are shown when right clicking the icon as well
 	  - write on github - toggles
 	- option to turn off hotkeys
 

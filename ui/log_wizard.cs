@@ -2684,14 +2684,19 @@ namespace LogWizard
             monitor.ContextMenu.Show(monitor, monitor.PointToClient(Cursor.Position) );
         }
 
-        private void toggleTopmost_Click(object sender, EventArgs e) {
-            bool is_right_click = win32.IsKeyPushedDown(Keys.RButton);
+        private void toggleTopmost_MouseClick(object sender, MouseEventArgs e) {
+            bool is_right_click = (e.Button & MouseButtons.Right) == MouseButtons.Right;
             if (!is_right_click) {
                 TopMost = !TopMost;
+                global_ui.topmost = TopMost;
                 update_topmost_image();
-            }
-            else 
+            } else {
+                update_toggles();
                 toggleMenu.Show(Cursor.Position);
+            }
+        }
+
+        private void toggleTopmost_Click(object sender, EventArgs e) {
         }
 
         private void log_wizard_SizeChanged(object sender, EventArgs e) {
@@ -3083,7 +3088,9 @@ namespace LogWizard
         }
 
         private void topmostToolStripMenuItem_Click(object sender, EventArgs e) {
-            toggleTopmost_Click(null,null);
+            TopMost = !TopMost;
+            global_ui.topmost = TopMost;
+            update_topmost_image();
         }
 
         private void detailsToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -3094,6 +3101,11 @@ namespace LogWizard
             update_toggles();
             toggleMenu.Show(Cursor.Position);
         }
+
+        private void whatIsThisToolStripMenuItem_Click(object sender, EventArgs e) {
+            Process.Start("https://github.com/jtorjo/logwizard/wiki/Toggles");
+        }
+
 
 
     }

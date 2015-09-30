@@ -93,6 +93,8 @@
             this.hotkeys = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.saveTimer = new System.Windows.Forms.Timer(this.components);
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.whatIsThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             this.toggleMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.main)).BeginInit();
@@ -328,9 +330,11 @@
             this.toggleTopmost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.toggleTopmost.TabIndex = 17;
             this.toggleTopmost.TabStop = false;
-            this.tip.SetToolTip(this.toggleTopmost, "Click it to toggle LogWizard\'s TopMost state");
+            this.tip.SetToolTip(this.toggleTopmost, "Click it to toggle LogWizard\'s TopMost state\r\nRight-Click to show the Toggles Men" +
+        "u");
             this.toggleTopmost.Visible = false;
             this.toggleTopmost.Click += new System.EventHandler(this.toggleTopmost_Click);
+            this.toggleTopmost.MouseClick += new System.Windows.Forms.MouseEventHandler(this.toggleTopmost_MouseClick);
             // 
             // toggles
             // 
@@ -358,9 +362,11 @@
             this.notesPaneToolStripMenuItem,
             this.sourcePanetopmostToolStripMenuItem,
             this.topmostToolStripMenuItem,
-            this.detailsToolStripMenuItem});
+            this.detailsToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.whatIsThisToolStripMenuItem});
             this.toggleMenu.Name = "toggleMenu";
-            this.toggleMenu.Size = new System.Drawing.Size(178, 246);
+            this.toggleMenu.Size = new System.Drawing.Size(178, 296);
             // 
             // currentViewToolStripMenuItem
             // 
@@ -819,6 +825,18 @@
             this.saveTimer.Interval = 15000;
             this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(174, 6);
+            // 
+            // whatIsThisToolStripMenuItem
+            // 
+            this.whatIsThisToolStripMenuItem.Name = "whatIsThisToolStripMenuItem";
+            this.whatIsThisToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.whatIsThisToolStripMenuItem.Text = "What is this?";
+            this.whatIsThisToolStripMenuItem.Click += new System.EventHandler(this.whatIsThisToolStripMenuItem_Click);
+            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -932,6 +950,8 @@
         private System.Windows.Forms.ToolStripMenuItem topmostToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem detailsToolStripMenuItem;
         private System.Windows.Forms.Button toggles;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem whatIsThisToolStripMenuItem;
     }
 }
 
