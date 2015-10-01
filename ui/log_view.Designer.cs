@@ -45,12 +45,14 @@
             this.ctx2Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.ctx3Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.msgCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.list)).BeginInit();
             this.SuspendLayout();
             // 
             // labelName
             // 
             this.labelName.AutoSize = true;
+            this.labelName.BackColor = System.Drawing.Color.WhiteSmoke;
             this.labelName.Location = new System.Drawing.Point(3, 3);
             this.labelName.Name = "labelName";
             this.labelName.Size = new System.Drawing.Size(30, 13);
@@ -62,7 +64,7 @@
             // 
             this.viewName.Location = new System.Drawing.Point(51, 0);
             this.viewName.Name = "viewName";
-            this.viewName.Size = new System.Drawing.Size(265, 20);
+            this.viewName.Size = new System.Drawing.Size(225, 20);
             this.viewName.TabIndex = 2;
             this.tip.SetToolTip(this.viewName, "Name of the Filtered View (shows up as the tab name)");
             this.viewName.TextChanged += new System.EventHandler(this.filterName_TextChanged);
@@ -199,6 +201,16 @@
             this.msgCol.FillsFreeSpace = true;
             this.msgCol.Text = "Message";
             // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Location = new System.Drawing.Point(2, -1);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(693, 23);
+            this.panel1.TabIndex = 4;
+            // 
             // log_view
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -207,6 +219,7 @@
             this.Controls.Add(this.list);
             this.Controls.Add(this.viewName);
             this.Controls.Add(this.labelName);
+            this.Controls.Add(this.panel1);
             this.Name = "log_view";
             this.Size = new System.Drawing.Size(697, 427);
             this.Load += new System.EventHandler(this.log_view_Load);
@@ -234,5 +247,6 @@
         private BrightIdeasSoftware.OLVColumn viewCol;
         internal BrightIdeasSoftware.VirtualObjectListView list;
         internal BrightIdeasSoftware.OLVColumn msgCol;
+        private System.Windows.Forms.Panel panel1;
     }
 }
