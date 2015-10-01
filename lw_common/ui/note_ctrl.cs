@@ -943,7 +943,11 @@ namespace lw_common.ui {
 
             int line_idx = lines_[i.line_id].idx;
             string view_name = lines_[i.line_id].view_name;
+            ++ignore_change_;
             on_note_selected(line_idx, view_name);
+            // ... just in case we lost focus
+            notesCtrl.Focus();
+            --ignore_change_;
         }
 
 
@@ -1315,8 +1319,7 @@ namespace lw_common.ui {
             update_cur_note_controls();
             refresh_notes();
             if (win32.focused_ctrl() == notesCtrl) 
-                sync_to_views();
-            
+                sync_to_views();        
         }
 
         private void update_cur_note_controls() {
@@ -1358,6 +1361,8 @@ namespace lw_common.ui {
         }
 
         private void notesCtrl_Leave(object sender, EventArgs e) {
+            if (ignore_change_ > 0)
+                return;
             curNote.BackColor = Color.White;
         }
 

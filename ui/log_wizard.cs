@@ -1949,6 +1949,10 @@ namespace LogWizard
             if (notes.is_focus_on_notes_list)
                 return action_type.none;
 
+            if (any_moving_key_still_down()) 
+                if (notes.is_focus_on_notes_list)
+                    return action_type.none;
+
             switch (key_code) {
             case "up":
             case "down":
