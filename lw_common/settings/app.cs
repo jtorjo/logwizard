@@ -226,7 +226,7 @@ namespace lw_common {
             load_save(load, ref syncronize_colors, "synchronize_colors", synchronize_colors_type.with_all_views);
             load_save(load, ref sync_colors_all_views_gray_non_active, "synchronize_colors_gray_non_active", false);
 
-            load_save(load, ref use_bg_gradient, "use_bg_gradient", true);
+            load_save(load, ref use_bg_gradient, "use_bg_gradient", false);
             load_save(load, ref bg, "bg", Color.White);
             load_save(load, ref bg_from, "bg_from", Color.White);
             load_save(load, ref bg_to, "bg_to", util.str_to_color("#FEFBF8") );
