@@ -1,7 +1,3 @@
-- test on PT4 file
-
-
-
 
 - retest bugs shown in history.txt
 
@@ -9,11 +5,13 @@
 
 
 
-- take some picture(s) with logwizard - to place on github
 
-- default: don't use gradient
 
 - update LogWizardSetupSample with the new hotkeys and such.
+
+- take some picture(s) with logwizard - to place on github
+
+- test on PT4 file
 
   - article: 
     - update existing article
@@ -53,6 +51,8 @@
   - the way i show the text box -> blend in the background (no 3d effects)
   - Esc -> if there was something shown in bold -> stop showing it
   - ctrl-f -> if there's something selected, just have that text entered by default (ctrl-shift-f should do that implicitly)
+  - should skip those columns that are image only (for future - since i will allow this)
+  - if caret at beginning + arrow-left -> move to the column on the left; if caret at end + arrowright -> move to column on right
 
 - create new filter: show menu: Copy Existing one, Start from scratch
   - filter name - smart naming (TOTHINK)
@@ -76,7 +76,8 @@
 	- in time, we can actually have an extra menu option: "Show Back" - which will show all the things the user removed (and a "Show Back" command would just remove that)
   - Start Filter From Here (basically this creates the basic filter, and puts you into the driver seat -> takes you to edit the filter, after we have created it)
     example: user has selected "[find] pots", we'll create the default filter "$msg contains [find] pots", and show the Filters view, and then allow the user to tweak it
-
+  - Just Show lines containing/starting with...
+  - to alert?
 - context menu on full log -> New Filter containing [...]/starting with [...]
 
 
@@ -236,12 +237,9 @@
 
 
 
-- save view (ctrl-s) - normalize, allow selecting which rows to save (time, date, etc.)
-  - allow saving a certain view as a text file (.txt or .html) -> if html, preserve coloring
-  - save view = "Export This View to Disk..." - have a nead dir
-    - in the dialog, allow to afterwards: auto open file in Explorer (for perhaps attaching in an email), in viewer (based on extension)
-	  - later should have .csv and xml as well
-
+- move file locally (toggle its location? - between current location/saved location)
+  the idea is to move the file to a logwizard location and store it there - in case you usually keep logs in a temp dir which is sometimes deleted
+  maybe i could have this automatically for logs having notes (only those not imported - those imported are already saved locally)?
 
 
 

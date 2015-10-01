@@ -545,7 +545,7 @@ namespace LogWizard
                     int existing = selected_indices_array().Min();
                     if (existing > 0) {
                         list.SelectedIndices.Add(existing - 1);
-                        list.EnsureVisible(existing);
+                        ensure_line_visible(existing);
                     }
                     return;
                 }
@@ -556,7 +556,7 @@ namespace LogWizard
                     int existing = selected_indices_array().Max();
                     if (existing < count - 1) {
                         list.SelectedIndices.Add(existing + 1);
-                        list.EnsureVisible(existing);                        
+                        ensure_line_visible(existing);                        
                     }
                     return;
                 }
@@ -565,7 +565,7 @@ namespace LogWizard
             }
             if (sel >= 0 && sel_row_idx != sel) {
                 select_idx( sel, select_type.notify_parent);
-                list.EnsureVisible(sel);
+                ensure_line_visible(sel);
             }
         }
 
@@ -863,6 +863,24 @@ namespace LogWizard
                 needed_refresh = true;
         }
 
+        // returns the rows that are visible
+        private Tuple<int, int> visible_row_indexes() {
+            int PAD = 5;
+            var top = list.GetItemAt(PAD, list.HeaderControl.ClientRectangle.Height + PAD);
+            if (top == null)
+                return new Tuple<int, int>(0,0);
+            
+            int top_idx = top.Index;
+            int height = list.Height - list.HeaderControl.ClientRectangle.Height;
+            int row_height = top.Bounds.Height;
+            int rows_per_page = height / row_height;
+
+            int bottom_idx = top_idx + rows_per_page;
+            if (top_idx < 0)
+                top_idx = 0;
+
+            return new Tuple<int, int>(top_idx, bottom_idx);
+        }
 
         public void update_colors(List<log_view> other_logs, int sel_log_view_idx, bool force_refresh = false) {
             Debug.Assert(is_full_log);
@@ -903,7 +921,7 @@ namespace LogWizard
         private void go_last() {
             var count = filter_.match_count;
             if (count > 0 && count < list.GetItemCount()) {
-                list.EnsureVisible(count - 1);
+                ensure_line_visible(count - 1);
                 select_idx(count - 1, select_type.do_not_notify_parent);
             }
         }
@@ -988,8 +1006,23 @@ namespace LogWizard
 
             if (select_nofify_ == select_type.notify_parent) {
                 int line_idx = match_at(sel) .match.line_idx;
-                //parent.go_to_line(line_idx, this);
+                parent.on_sel_line(this, line_idx);
             }
+        }
+
+        private bool is_line_visible(int line_idx) {
+            var visible = visible_row_indexes();
+            return (visible.Item1 <= line_idx && visible.Item2 >= line_idx);
+        }
+
+
+        private void ensure_line_visible(int line_idx) {
+            if (is_line_visible(line_idx))
+                return;
+            var visible = visible_row_indexes();
+            logger.Debug("[view] visible indexes for " + name + " : " + visible.Item1 + " - " + visible.Item2);
+            // 1.1.15+ note : this sometimes flickers, we want to avoid this as much as possible
+            list.EnsureVisible(line_idx);
         }
 
         public void go_to_line(int line_idx, select_type notify) {
@@ -997,7 +1030,9 @@ namespace LogWizard
                 return;
 
             select_idx(line_idx, notify);
-            //list.EnsureVisible(line_idx);
+            if (is_line_visible(line_idx))
+                // already visible
+                return;
 
             int rows = list.Height / list.RowHeight;
             int bottom_idx = line_idx + rows / 2;
@@ -1008,9 +1043,9 @@ namespace LogWizard
                 top_idx = 0;
             // we want to show the line in the *middle* of the control (height-wise)
             if( top_idx < list.GetItemCount())
-                list.EnsureVisible(top_idx);
+                ensure_line_visible(top_idx);
             if( bottom_idx < list.GetItemCount())
-                list.EnsureVisible(bottom_idx);
+                ensure_line_visible(bottom_idx);
         }
 
 
@@ -1194,7 +1229,7 @@ namespace LogWizard
             item i = match_at(0) ;
             if ( string_search.matches( i.match.line.part(info_type.msg), search)) {
                 // line zero contains the text already
-                list.EnsureVisible(0);
+                ensure_line_visible(0);
                 return;
             } else
                 search_for_text_next(search);
@@ -1214,7 +1249,7 @@ namespace LogWizard
                 }
             if (found >= 0) {
                 select_idx(found, select_type.notify_parent);
-                list.EnsureVisible(found);
+                ensure_line_visible(found);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1233,7 +1268,7 @@ namespace LogWizard
                 }
             if (found >= 0) {
                 select_idx(found, select_type.notify_parent);
-                list.EnsureVisible(found);
+                ensure_line_visible(found);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1271,7 +1306,7 @@ namespace LogWizard
                 }
             if (found >= 0) {
                 select_idx(found, select_type.notify_parent);
-                list.EnsureVisible(found);
+                ensure_line_visible(found);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1289,7 +1324,7 @@ namespace LogWizard
                 }
             if (found >= 0) {
                 select_idx(found, select_type.notify_parent);
-                list.EnsureVisible(found);
+                ensure_line_visible(found);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1368,7 +1403,7 @@ namespace LogWizard
             if (mark >= 0) {
                 int idx = row_by_line_idx(mark).Index;
                 select_idx(idx, select_type.notify_parent);
-                list.EnsureVisible(idx);
+                ensure_line_visible(idx);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1387,7 +1422,7 @@ namespace LogWizard
             if (mark >= 0) {
                 int idx = row_by_line_idx(mark).Index;
                 select_idx(idx, select_type.notify_parent);
-                list.EnsureVisible(idx);
+                ensure_line_visible(idx);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1449,7 +1484,7 @@ namespace LogWizard
             var r = list.GetItem(sel).Bounds;
             if (r.Bottom + r.Height < list.ClientRectangle.Height) {
                 list.LowLevelScroll(0, -r.Height);
-                list.EnsureVisible(sel);
+                ensure_line_visible(sel);
             } else
                 on_action(log_wizard.action_type.arrow_up);
         }
@@ -1465,7 +1500,7 @@ namespace LogWizard
             var r = list.GetItem(sel).Bounds;
             if (r.Bottom + r.Height < list.ClientRectangle.Height) {
                 list.LowLevelScroll(0, r.Height);
-                list.EnsureVisible(sel);
+                ensure_line_visible(sel);
             } else
                 on_action(log_wizard.action_type.arrow_down);
         }

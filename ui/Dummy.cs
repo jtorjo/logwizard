@@ -33,10 +33,16 @@ namespace LogWizard
 {
     public partial class Dummy : Form
     {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public Dummy()
         {
             InitializeComponent();
             WindowState = FormWindowState.Minimized;
+
+            // so that we can match log files to this (syntax/context)
+            logger.Info("Started LogWizard v" + log_wizard.version());
+
             // the point of this is that we don't close when the first Form is closed
             new log_wizard().Show();
         }

@@ -1295,7 +1295,7 @@ namespace LogWizard
 
         private void on_move_key_end() {
             var sel = selected_view();
-            notes.set_current_line( new note_ctrl.line { idx = sel.sel_line_idx, msg = sel.sel_line_text, view_name = sel.name });
+            update_notes_current_line();
 
             if (sel == full_log_ctrl)
                 return;
@@ -1306,6 +1306,23 @@ namespace LogWizard
             if (logHistory.SelectedIndex >= 0)
                 global_ui.log_name = global_ui.log_name = history_[logHistory.SelectedIndex].name;
             sel.list.Refresh();
+        }
+
+        private void update_notes_current_line() {
+            var sel = selected_view();
+            if ( sel.sel_line_idx >= 0)
+                notes.set_current_line( new note_ctrl.line { idx = sel.sel_line_idx, msg = sel.sel_line_text, view_name = sel.name });
+            else 
+                notes.set_current_line( new note_ctrl.line { idx = -1, msg = "", view_name = ""} );
+        }
+
+        public void on_sel_line(log_view lv, int line_idx) {
+            if (any_moving_key_still_down())
+                // user is still moving the selection
+                return;
+
+            logger.Debug("[log] new line " + lv.name + " = " + line_idx);
+            update_notes_current_line();
         }
 
         public void go_to_line(int line_idx, log_view from) {
@@ -1687,7 +1704,7 @@ namespace LogWizard
             }, 100);
         }
 
-        private void filteredViews_SelectedIndexChanged(object sender, EventArgs e) {
+        private void viewsTab_SelectedIndexChanged(object sender, EventArgs e) {
             if (ignore_change_ > 0)
                 return;
             load_filters();
@@ -1695,6 +1712,7 @@ namespace LogWizard
             string name = log_view_for_tab(viewsTab.SelectedIndex).name;
             // in this case - even if in a custom UI, we still want to remember the last selected view
             global_ui.selected_view = global_ui.selected_view = name;
+            update_notes_current_line();
         }
 
 
@@ -1825,11 +1843,17 @@ namespace LogWizard
                 }
             }
         }
+
+        private bool any_moving_key_still_down() {
+            return win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || win32.IsKeyPushedDown(Keys.PageUp) ||
+                                        win32.IsKeyPushedDown(Keys.PageDown) || win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
+        }
         private void log_wizard_KeyUp(object sender, KeyEventArgs e) {
             // see if any of the moving keys is still down
-            bool any_moving_key_still_down = win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || win32.IsKeyPushedDown(Keys.PageUp) ||
-                                        win32.IsKeyPushedDown(Keys.PageDown) || win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
-            if ( !any_moving_key_still_down)
+            if (!any_moving_key_still_down()) {
+                if (notes.is_focus_on_notes_list)
+                    return;
+
                 switch (last_action_) {
                 case log_wizard.action_type.home:
                 case log_wizard.action_type.end:
@@ -1840,6 +1864,7 @@ namespace LogWizard
                     on_move_key_end();
                     break;
                 }
+            }
         }
 
 
@@ -1918,6 +1943,10 @@ namespace LogWizard
 
         private action_type key_to_action(string key_code) {
             if (!app.inst.use_hotkeys)
+                return action_type.none;
+
+            // 1.1.15+ - let notes take care of navigating keys
+            if (notes.is_focus_on_notes_list)
                 return action_type.none;
 
             switch (key_code) {

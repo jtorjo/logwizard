@@ -481,6 +481,10 @@ namespace lw_common.ui {
             }
         }
 
+        public bool is_focus_on_notes_list {
+            get { return win32.focused_ctrl() == notesCtrl; }
+        }
+
         public bool has_merged_notes {
             get {
                 bool has_non_deleted_merges = notes_sorted_by_line_index_.Count(x => x.the_note != null && x.the_note.is_merged && !x.deleted) > 0;
@@ -833,7 +837,26 @@ namespace lw_common.ui {
         private void set_current_line_impl(line l) {
             if (cur_line.idx == l.idx && cur_line.view_name == l.view_name)
                 return; // we're already there
+
+            if (l.idx < 0) {
+                ++ignore_change_;
+                for (int idx = 0; idx < notesCtrl.GetItemCount(); ++idx) {
+                    var i = notesCtrl.GetItem(idx).RowObject as note_item; 
+                    if ( i.is_cur_line)
+                        notesCtrl.RemoveObject(i);
+                }
+                --ignore_change_;
+            }
+
             cur_line.copy_from(l);
+
+            if (l.idx < 0) {
+                ++ignore_change_;
+                notesCtrl.SelectedIndex = -1;
+                --ignore_change_;
+                update_cur_note_controls();
+                return;
+            }
 
             /* Possibilities:
             

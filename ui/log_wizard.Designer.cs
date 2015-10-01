@@ -672,7 +672,7 @@
             this.viewsTab.SelectedIndex = 0;
             this.viewsTab.Size = new System.Drawing.Size(553, 449);
             this.viewsTab.TabIndex = 0;
-            this.viewsTab.SelectedIndexChanged += new System.EventHandler(this.filteredViews_SelectedIndexChanged);
+            this.viewsTab.SelectedIndexChanged += new System.EventHandler(this.viewsTab_SelectedIndexChanged);
             this.viewsTab.DragDrop += new System.Windows.Forms.DragEventHandler(this.filteredViews_DragDrop);
             this.viewsTab.DragEnter += new System.Windows.Forms.DragEventHandler(this.filteredViews_DragEnter);
             // 
