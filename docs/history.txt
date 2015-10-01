@@ -3,15 +3,20 @@
 
 
 
-- bug: real time monitoring does not scroll to end
-
 - creating new filter (+) - new / copy
+
+- bug - drag drop new file (first time) - full log shows empty?
+- filter: ctrl-enter would save
+- bug: real time monitoring does not scroll to end
 
 - copy to clipboard - html also
   - write status -"text copied to clipoard, as text and html"
 
-- bug - drag drop new file (first time) - full log shows empty?
-- filter: ctrl-enter would save
+- bug: on release settings -> the left pane is shown too low
+- bug: logsetupsameple -> after shown after setup, next time, it's still shown (the former log should be shown on re-run)
+
+1.1.18c
+- before several fixes
 
 
 1.1.18b
