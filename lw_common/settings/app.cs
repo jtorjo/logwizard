@@ -216,7 +216,7 @@ namespace lw_common {
 
         private void load_save(bool load) {
             load_save(load, ref show_view_line_count, "show_view_line_count", true);
-            load_save(load, ref show_view_selected_line, "show_view_selected_line", true);
+            load_save(load, ref show_view_selected_line, "show_view_selected_line", false);
             load_save(load, ref show_view_selected_index, "show_view_selected_index", true);
             load_save(load, ref sync_all_views, "sync_all_views");
             load_save(load, ref sync_full_log_view, "sync_full_log_view", true);

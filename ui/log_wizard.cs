@@ -1135,8 +1135,8 @@ namespace LogWizard
 
         private void load() {
             load_tabs();
-            load_filters();
             load_global_settings();
+            load_filters();
             load_ui();
         }
 
@@ -1707,6 +1707,9 @@ namespace LogWizard
         private void viewsTab_SelectedIndexChanged(object sender, EventArgs e) {
             if (ignore_change_ > 0)
                 return;
+            // we should never arrive at "no tab"
+            Debug.Assert(viewsTab.SelectedIndex >= 0);
+            ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
             load_filters();
 
             string name = log_view_for_tab(viewsTab.SelectedIndex).name;

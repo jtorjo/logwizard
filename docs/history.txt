@@ -1,8 +1,6 @@
 
 -todo: article license is GPL3
 
-- todo: retest creating a new filter (copy of existing) - does not seem to work correctly
- - (creating a new filter) sometimes it shows pretty much nothing - works quite badly
 
 - renaming filter - the name text box is too big - overrides +/-/etc. buttons
   - make sure the dark bg is not visible, when renaming filter (put light-colored panel below)
@@ -20,9 +18,15 @@
 - copy to clipboard - html also
   - write status -"text copied to clipoard, as text and html"
 
+- bug - drag drop new file (first time) - full log shows empty?
+- filter: ctrl-enter would save
+
+1.1.18a
+- todo: retest creating a new filter (copy of existing) - does not seem to work correctly
+ - (creating a new filter) sometimes it shows pretty much nothing - works quite badly
+
 1.1.17
 - added possibility to copy to clipboard as html as well
-
 
 
 1.1.16

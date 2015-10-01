@@ -352,9 +352,10 @@ namespace lw_common.ui {
                 return;
             }
 
-            filter_item new_ = new filter_item( new ui_filter { enabled = true, dimmed = false, text = "", apply_to_existing_lines = false});
+            ui_filter new_ui = new ui_filter {enabled = true, dimmed = false, text = "", apply_to_existing_lines = false};
+            filter_item new_ = new filter_item( new_ui);
 
-            view_.filters.Add( new ui_filter() );
+            view_.filters.Add( new_ui );
 
             ++ignore_change_;
             filterCtrl.AddObject(new_);

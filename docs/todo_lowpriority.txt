@@ -37,3 +37,5 @@
   allow navigating to each line
 - navigate to file:line (pro_v)
 - navigate to message (pro_v) - try to find where the message came from, based on anything we can - like, file, class, function, etc.
+
+- notes: disable sorting in the notesctrl

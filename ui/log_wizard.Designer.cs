@@ -61,6 +61,8 @@
             this.sourcePanetopmostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.topmostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.whatIsThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsCtrl = new System.Windows.Forms.Button();
             this.about = new System.Windows.Forms.Button();
             this.main = new System.Windows.Forms.SplitContainer();
@@ -93,8 +95,6 @@
             this.hotkeys = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.saveTimer = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.whatIsThisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             this.toggleMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.main)).BeginInit();
@@ -366,7 +366,7 @@
             this.toolStripSeparator1,
             this.whatIsThisToolStripMenuItem});
             this.toggleMenu.Name = "toggleMenu";
-            this.toggleMenu.Size = new System.Drawing.Size(178, 296);
+            this.toggleMenu.Size = new System.Drawing.Size(178, 274);
             // 
             // currentViewToolStripMenuItem
             // 
@@ -444,6 +444,18 @@
             this.detailsToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.detailsToolStripMenuItem.Text = "[D]etails";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.detailsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(174, 6);
+            // 
+            // whatIsThisToolStripMenuItem
+            // 
+            this.whatIsThisToolStripMenuItem.Name = "whatIsThisToolStripMenuItem";
+            this.whatIsThisToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.whatIsThisToolStripMenuItem.Text = "What is this?";
+            this.whatIsThisToolStripMenuItem.Click += new System.EventHandler(this.whatIsThisToolStripMenuItem_Click);
             // 
             // settingsCtrl
             // 
@@ -825,18 +837,6 @@
             this.saveTimer.Interval = 15000;
             this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(174, 6);
-            // 
-            // whatIsThisToolStripMenuItem
-            // 
-            this.whatIsThisToolStripMenuItem.Name = "whatIsThisToolStripMenuItem";
-            this.whatIsThisToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
-            this.whatIsThisToolStripMenuItem.Text = "What is this?";
-            this.whatIsThisToolStripMenuItem.Click += new System.EventHandler(this.whatIsThisToolStripMenuItem_Click);
-            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -850,6 +850,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "log_wizard";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Log Wizard";
             this.Activated += new System.EventHandler(this.log_wizard_Activated);
             this.Deactivate += new System.EventHandler(this.log_wizard_Deactivate);
