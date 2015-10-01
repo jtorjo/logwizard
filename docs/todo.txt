@@ -2,11 +2,6 @@
 - retest bugs shown in history.txt
 
 
-
-
-
-
-
 - update LogWizardSetupSample with the new hotkeys and such.
 
 - take some picture(s) with logwizard - to place on github

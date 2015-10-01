@@ -15,6 +15,13 @@
 	- also, when the column is not selected, curFilter should be disabled
   [NOTE] I think i saved this, but need to properly retest
 
+- creating new filter (+) - new / copy
+
+- copy to clipboard - html also
+  - write status -"text copied to clipoard, as text and html"
+
+1.1.17
+- added possibility to copy to clipboard as html as well
 
 
 

@@ -33,8 +33,12 @@ namespace test_ui {
             e.add_cell(new export_text.cell(5,3, "this is the last error") { font_size = 12, font = "Courier New", fg = Color.CornflowerBlue});
             e.add_cell(new export_text.cell(6,3, "[hk] key handler created - 410D2") { font_size = 13, font = "Courier New", fg = Color.Red});
 
-            File.WriteAllText("out.txt", e.to_text());
-            File.WriteAllText("out.html", e.to_html());
+            string txt = e.to_text();
+            File.WriteAllText("out.txt", txt);
+            string html = e.to_html();
+            File.WriteAllText("out.html", html);
+
+            clipboard_util.copy(html, txt);
         }
 
     }

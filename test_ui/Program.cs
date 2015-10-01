@@ -19,7 +19,7 @@ namespace test_ui {
             util.force_break_into_debugger();
             util.init_exceptions();
 
- //           test_export.test();
+            test_export.test();
 
             Application.Run(new test_notes_ctrl());
 //            Application.Run(new test_filter_ctrl());

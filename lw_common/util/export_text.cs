@@ -84,16 +84,14 @@ namespace lw_common {
         }
 
         public string to_html() {
-            string prefix = "<html><head> <table style=\"width:100%\">";
-            string suffix = "</table> </body></html>";
-            string body = "";
+            string prefix = "<html> <body> <table style=\"width:100%\">";
+            string suffix = "</table> </body> </html>";
 
             
             StringBuilder txt = new StringBuilder();
             foreach (var row in cells_) {
                 txt.Append(" <tr> ");
                 for (int col = 0; col < columns_; ++col) {
-                    int cell_len = 0;
                     string attributes = "", font_prefix = "";
                     if (row[col] != null) {
                         cell c = row[col];
