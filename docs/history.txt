@@ -3,7 +3,6 @@
 
 
 
-- creating new filter (+) - new / copy
 
 - bug - drag drop new file (first time) - full log shows empty?
 - filter: ctrl-enter would save
@@ -30,6 +29,10 @@
   - at app start - delete empty contexts
   - contexts - case-insensitive (when file -> context)
 
+
+1.1.19b
+- fix: if a view that is not the first view was selected, it would show all log (first time)
+- creating new filter (+) - new / copy
 
 
 1.1.19a

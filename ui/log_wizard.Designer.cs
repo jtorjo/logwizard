@@ -157,6 +157,7 @@
             // newFilteredView
             // 
             this.newFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.newFilteredView.ContextMenuStrip = this.newViewMenu;
             this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.newFilteredView.Location = new System.Drawing.Point(387, 29);
             this.newFilteredView.Name = "newFilteredView";
@@ -847,7 +848,7 @@
             this.createACopyOfTheExistingViewToolStripMenuItem,
             this.createANewViewFromScratchToolStripMenuItem});
             this.newViewMenu.Name = "newViewMenu";
-            this.newViewMenu.Size = new System.Drawing.Size(256, 70);
+            this.newViewMenu.Size = new System.Drawing.Size(256, 48);
             // 
             // createACopyOfTheExistingViewToolStripMenuItem
             // 

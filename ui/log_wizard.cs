@@ -1100,17 +1100,7 @@ namespace LogWizard
 
         private void new_view_Click(object sender, EventArgs e)
         {
-            ui_context cur = cur_context();
-            int cur_view = viewsTab.SelectedIndex;
-            var filters = cur_view >= 0 ? cur.views[cur_view].filters : new List<ui_filter>();
-
-            ui_view new_ = new ui_view() { name = "New_" + cur.views.Count, filters = filters.ToList() };
-            cur.views.Insert(cur_view + 1, new_);
-
-            viewsTab.TabPages.Insert(cur_view + 1, new_.name);
-            viewsTab.SelectedIndex = cur_view + 1;
-            ensure_we_have_log_view_for_tab( cur_view + 1);
-            save();
+            newViewMenu.Show(Cursor.Position);
         }
 
         private void delView_Click(object sender, EventArgs e)
@@ -1136,15 +1126,12 @@ namespace LogWizard
             }
         }
 
-        private void select_filter(string name) {
-            filtCtrl.select_filter(name);
-        }
 
         private void load() {
             load_tabs();
             load_global_settings();
-            load_filters();
             load_ui();
+            load_filters();
         }
 
         public void stop_saving() {
@@ -3169,9 +3156,7 @@ namespace LogWizard
         private void createANewViewFromScratchToolStripMenuItem_Click(object sender, EventArgs e) {
             ui_context cur = cur_context();
             int cur_view = viewsTab.SelectedIndex;
-            var filters = cur_view >= 0 ? cur.views[cur_view].filters : new List<ui_filter>();
-
-            ui_view new_ = new ui_view() { name = new_view_name(), filters = filters.ToList() };
+            ui_view new_ = new ui_view() { name = new_view_name(), filters = new List<ui_filter>() };
             cur.views.Insert(cur_view + 1, new_);
 
             viewsTab.TabPages.Insert(cur_view + 1, new_.name);
