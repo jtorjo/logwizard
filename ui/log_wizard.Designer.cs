@@ -95,6 +95,9 @@
             this.hotkeys = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.saveTimer = new System.Windows.Forms.Timer(this.components);
+            this.newViewMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.createACopyOfTheExistingViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createANewViewFromScratchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             this.toggleMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.main)).BeginInit();
@@ -116,6 +119,7 @@
             this.tabPage1.SuspendLayout();
             this.lower.SuspendLayout();
             this.exportMenu.SuspendLayout();
+            this.newViewMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tip
@@ -161,7 +165,7 @@
             this.newFilteredView.Text = "+";
             this.tip.SetToolTip(this.newFilteredView, "New Filtered View of the same Log");
             this.newFilteredView.UseVisualStyleBackColor = true;
-            this.newFilteredView.Click += new System.EventHandler(this.newFilteredView_Click);
+            this.newFilteredView.Click += new System.EventHandler(this.new_view_Click);
             // 
             // label7
             // 
@@ -218,7 +222,7 @@
             this.delFilteredView.Text = "-";
             this.tip.SetToolTip(this.delFilteredView, "Delete this View");
             this.delFilteredView.UseVisualStyleBackColor = true;
-            this.delFilteredView.Click += new System.EventHandler(this.delFilteredView_Click);
+            this.delFilteredView.Click += new System.EventHandler(this.delView_Click);
             // 
             // curContextCtrl
             // 
@@ -837,6 +841,28 @@
             this.saveTimer.Interval = 15000;
             this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
+            // newViewMenu
+            // 
+            this.newViewMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createACopyOfTheExistingViewToolStripMenuItem,
+            this.createANewViewFromScratchToolStripMenuItem});
+            this.newViewMenu.Name = "newViewMenu";
+            this.newViewMenu.Size = new System.Drawing.Size(256, 70);
+            // 
+            // createACopyOfTheExistingViewToolStripMenuItem
+            // 
+            this.createACopyOfTheExistingViewToolStripMenuItem.Name = "createACopyOfTheExistingViewToolStripMenuItem";
+            this.createACopyOfTheExistingViewToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.createACopyOfTheExistingViewToolStripMenuItem.Text = "Create A Copy of the Existing View";
+            this.createACopyOfTheExistingViewToolStripMenuItem.Click += new System.EventHandler(this.createACopyOfTheExistingViewToolStripMenuItem_Click);
+            // 
+            // createANewViewFromScratchToolStripMenuItem
+            // 
+            this.createANewViewFromScratchToolStripMenuItem.Name = "createANewViewFromScratchToolStripMenuItem";
+            this.createANewViewFromScratchToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.createANewViewFromScratchToolStripMenuItem.Text = "Create A New View From Scratch";
+            this.createANewViewFromScratchToolStripMenuItem.Click += new System.EventHandler(this.createANewViewFromScratchToolStripMenuItem_Click);
+            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -882,6 +908,7 @@
             this.lower.ResumeLayout(false);
             this.lower.PerformLayout();
             this.exportMenu.ResumeLayout(false);
+            this.newViewMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -953,6 +980,9 @@
         private System.Windows.Forms.Button toggles;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem whatIsThisToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip newViewMenu;
+        private System.Windows.Forms.ToolStripMenuItem createACopyOfTheExistingViewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createANewViewFromScratchToolStripMenuItem;
     }
 }
 

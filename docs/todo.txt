@@ -19,7 +19,8 @@
 
 
 
-
+- search - allow starting from here (=default) or from top
+- search - synchronize with full log
 
 - take log_view into lw_common, so we can test it standalone
   - make it possible to load a certain log + a certain view
@@ -35,7 +36,7 @@
   - (smart type) click on a character on a row, should take me to edit mode just there
     - smart typing should be CASE-INSENSITIVE!!!
   - caret: on any line - be "edit caret"; on empty space (like, we have less lines than available height) -> be arrow - this should work on any column
-    - selecting a word -> show it in bold (+darker bg) in all lines (however, make sure we match the column in which it is)
+    - selecting a word -> show it in bold (+darker bg) in all lines (however, make sure we match the column in which it is -----> it has to be "whole word" search)
 	  - right click -> To Filter / To different color (show lines containing word in different color -> filter)
 	  - if i'm on a word -> but did not select it (show it in a slightly darker background just as if it was selected, but a bit less dark)
 	     --> this should probably happen the same as in VS2013 - i should do this only if the position does not change for a short while (like, 750ms or so)
@@ -73,6 +74,7 @@
     example: user has selected "[find] pots", we'll create the default filter "$msg contains [find] pots", and show the Filters view, and then allow the user to tweak it
   - Just Show lines containing/starting with...
   - to alert?
+  - view: Rename, move to left, move to right
 - context menu on full log -> New Filter containing [...]/starting with [...]
 
 

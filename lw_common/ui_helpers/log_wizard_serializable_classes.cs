@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Windows.Forms;
 
 namespace lw_common {
     [Serializable]
@@ -35,14 +36,57 @@ namespace lw_common {
         public bool dimmed = false;
 
         public bool apply_to_existing_lines = false;
+
+        internal void load_save(bool load, string prefix) {
+            app.load_save(load, ref text, prefix + "text");
+            app.load_save(load, ref enabled, prefix + "enabled", true);
+            app.load_save(load, ref dimmed, prefix + "dimmed", false);
+            app.load_save(load, ref apply_to_existing_lines, "apply_to_existing_lines", false);
+        }
+
+        public void load(string prefix) {
+            load_save(true, prefix);
+        }
+
+        public void save(string prefix) {
+            load_save(false, prefix);
+        }
+
     }
 
     [Serializable]
     public class ui_view {
         // friendlly name
         public string name = "";
+        // if true, this is the default name (user hasn't manually changed it yet)
+        public bool is_default_name = false;
         // the filters
         public List< ui_filter > filters = new List<ui_filter>();
+
+        internal void load_save(bool load, string prefix) {
+            app.load_save(load, ref is_default_name, prefix + "is_default_name", false);
+            app.load_save(load, ref name, prefix + "name");
+
+            int filter_count = filters.Count;
+            app.load_save(load, ref filter_count, prefix + "filter_count", 0);
+            if (load) {
+                filters.Clear();
+                while ( filters.Count < filter_count)
+                    filters.Add( new ui_filter());
+            }
+
+            for ( int i = 0; i < filter_count; ++i)
+                filters[i].load_save(load, prefix + "filt" + i + ".");
+        }
+
+        public void load(string prefix) {
+            load_save(true, prefix);
+        }
+
+        public void save(string prefix) {
+            load_save(false, prefix);
+        }
+
     }
 
     [Serializable]
@@ -57,12 +101,12 @@ namespace lw_common {
                 // never allow "no view" whatsoever
                 if (name != "Default")
                     return true;
-
                 if (views.Count < 1)
                     return false;
-
                 // in this case, we have a single view
-                if (views[0].name == "New_1" && views[0].filters.Count < 1)
+//                if (views[0].name == "New_1" && views[0].filters.Count < 1)
+  //                  return false;
+                if (views[0].is_default_name && views[0].filters.Count < 1)
                     return false;
 
                 return true;
@@ -78,6 +122,20 @@ namespace lw_common {
         private void load_save(bool load, string prefix) {
             app.load_save(load, ref name, prefix + ".name", "Default" );
             app.load_save(load, ref auto_match, prefix + ".auto_match");
+
+            int view_count = views.Count;
+            app.load_save(load, ref view_count, prefix + ".view_count", 0);
+            if (load) {
+                views.Clear();
+                while ( views.Count < view_count)
+                    views.Add( new ui_view());
+            }
+
+            for (int i = 0; i < view_count; ++i) 
+                views[i].load_save(load, prefix + ".view" + i + ".");
+
+            if ( load && views.Count == 0)
+                views.Add( new ui_view() { is_default_name = true, name = "View_1" });
         }
 
         public void load(string prefix) {

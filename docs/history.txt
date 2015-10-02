@@ -12,8 +12,30 @@
 - copy to clipboard - html also
   - write status -"text copied to clipoard, as text and html"
 
-- bug: on release settings -> the left pane is shown too low
+- bug: on release settings -> the left pane is shown too low (very likely - if shown from the beginning)
 - bug: logsetupsameple -> after shown after setup, next time, it's still shown (the former log should be shown on re-run)
+
+- bug: render: when choosing background and item not selected -> if bg != white -> use that (test with marking some lines as bookmarks)
+      look into why we're rending too little height-wise (compare original rect with what we're rendering)
+
+- small bug: when enforcing the selection (select_idx) - if i'm on the last visible line - i should actually bring it to middle (since last visible line usually means partially visible)
+
+- change ctrl-c / ctrl-shift-c (should be the other way around)
+
+- on new file (that does not match any context)
+  - we will create a context matching the name of the file (if one exists, we will automatically select it)
+  - by default, we'll never go to the "Default" context
+  - the idea is for the uesr not to have to mistakenly delete a context when he's selecting a different type of file,
+    (since he would want new filters). thus, just create a new context where he can do anything
+  - at app start - delete empty contexts
+  - contexts - case-insensitive (when file -> context)
+
+
+
+1.1.19a
+- moved load/save of contexts inside the log_wizard_serializable_classes file
+
+
 
 1.1.18c
 - before several fixes

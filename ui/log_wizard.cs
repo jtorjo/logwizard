@@ -131,6 +131,10 @@ namespace LogWizard
                 get { return type == entry_type.file ? name : ""; }
             }
 
+            public bool is_file {
+                get { return type == entry_type.file; }
+            }
+
             public string ui_friendly_name {
                 get {
                     if (friendly_name != "")
@@ -431,7 +435,7 @@ namespace LogWizard
             for ( int i = 0; i < count ; ++i) {
                 ui_context ctx = new ui_context();
                 ctx.load("context." + i);
-
+                /*
                 int view_count = int.Parse( sett.get("context." + i + ".view_count", "1"));
                 for ( int v = 0; v < view_count; ++v) {
                     ui_view lv = new ui_view();
@@ -447,6 +451,7 @@ namespace LogWizard
                     }
                     ctx.views.Add(lv);
                 }
+                */
                 contexts_.Add(ctx);
             }
         }
@@ -464,6 +469,7 @@ namespace LogWizard
             for ( int i = 0; i < contexts_.Count; ++i) {
                 contexts_[i].save("context." + i);
 
+                /*
                 int view_count = contexts_[i].views.Count;
                 if ( view_count == 1)
                     if (contexts_[i].views[0].filters.Count < 1)
@@ -482,6 +488,7 @@ namespace LogWizard
                         sett.set(prefix + "text", lv.filters[f].text);
                     }
                 }
+                */
             }
         }
 
@@ -1091,7 +1098,7 @@ namespace LogWizard
             --ignore_change_;
         }
 
-        private void newFilteredView_Click(object sender, EventArgs e)
+        private void new_view_Click(object sender, EventArgs e)
         {
             ui_context cur = cur_context();
             int cur_view = viewsTab.SelectedIndex;
@@ -1106,7 +1113,7 @@ namespace LogWizard
             save();
         }
 
-        private void delFilteredView_Click(object sender, EventArgs e)
+        private void delView_Click(object sender, EventArgs e)
         {
             int idx = viewsTab.SelectedIndex;
             if ( idx < 0)
@@ -3128,6 +3135,49 @@ namespace LogWizard
 
         private void whatIsThisToolStripMenuItem_Click(object sender, EventArgs e) {
             Process.Start("https://github.com/jtorjo/logwizard/wiki/Toggles");
+        }
+
+        // if copy_of_view is not null, we're creating a copy of that view
+        private string new_view_name(ui_view copy_of_view = null) {
+            if (copy_of_view != null)
+                return copy_of_view.name + "_Copy";
+
+            // I want to visually show to the user that we're dealing with views
+            ui_context cur = cur_context();
+            string name = name = "View_" + (cur.views.Count+1);
+            if (history_[logHistory.SelectedIndex].is_file) {
+                name = Path.GetFileNameWithoutExtension( new FileInfo( selected_file_name()).Name) + "_View" + (cur.views.Count + 1);
+            }
+
+            return name;
+        }
+
+        private void createACopyOfTheExistingViewToolStripMenuItem_Click(object sender, EventArgs e) {
+            ui_context cur = cur_context();
+            int cur_view = viewsTab.SelectedIndex;
+            var filters = cur_view >= 0 ? cur.views[cur_view].filters : new List<ui_filter>();
+
+            ui_view new_ = new ui_view() { name = new_view_name(cur.views[cur_view]), filters = filters.ToList() };
+            cur.views.Insert(cur_view + 1, new_);
+
+            viewsTab.TabPages.Insert(cur_view + 1, new_.name);
+            viewsTab.SelectedIndex = cur_view + 1;
+            ensure_we_have_log_view_for_tab( cur_view + 1);
+            save();
+        }
+
+        private void createANewViewFromScratchToolStripMenuItem_Click(object sender, EventArgs e) {
+            ui_context cur = cur_context();
+            int cur_view = viewsTab.SelectedIndex;
+            var filters = cur_view >= 0 ? cur.views[cur_view].filters : new List<ui_filter>();
+
+            ui_view new_ = new ui_view() { name = new_view_name(), filters = filters.ToList() };
+            cur.views.Insert(cur_view + 1, new_);
+
+            viewsTab.TabPages.Insert(cur_view + 1, new_.name);
+            viewsTab.SelectedIndex = cur_view + 1;
+            ensure_we_have_log_view_for_tab( cur_view + 1);
+            save();
         }
 
 
