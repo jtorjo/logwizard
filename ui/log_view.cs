@@ -920,7 +920,7 @@ namespace LogWizard
 
         private void go_last() {
             var count = filter_.match_count;
-            if (count > 0 && count < list.GetItemCount()) {
+            if (count > 0 ) {
                 ensure_line_visible(count - 1);
                 select_idx(count - 1, select_type.do_not_notify_parent);
             }
@@ -1022,6 +1022,8 @@ namespace LogWizard
             var visible = visible_row_indexes();
             logger.Debug("[view] visible indexes for " + name + " : " + visible.Item1 + " - " + visible.Item2);
             // 1.1.15+ note : this sometimes flickers, we want to avoid this as much as possible
+
+            //FIXME really weird - this seems to sometimes cause issues when scrolling to last item? (off-by-one errors?)
             list.EnsureVisible(line_idx);
         }
 

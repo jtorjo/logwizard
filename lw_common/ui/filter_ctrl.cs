@@ -58,6 +58,8 @@ namespace lw_common.ui {
 
         public bool design_mode = true;
 
+        private string before_ctrl_enter_ = null;
+
 
         class filter_item {
             private ui_filter filter_;
@@ -291,6 +293,16 @@ namespace lw_common.ui {
         }
 
         private void curFilterCtrl_TextChanged(object sender, EventArgs e) {
+            if (before_ctrl_enter_ != null) {
+                ++ignore_change_;
+                string before = before_ctrl_enter_;
+                before_ctrl_enter_ = null;
+                curFilterCtrl.Text = before;
+                curFilterCtrl.SelectionStart = curFilterCtrl.TextLength;
+                --ignore_change_;
+                return;
+            }
+
             if (ignore_change_ > 0)
                 return;
 
@@ -494,10 +506,6 @@ namespace lw_common.ui {
                 ui_to_view(view_idx_);
                 do_save();
                 refresh_view(view_idx_);
-                /*
-                selected_view().Refresh();
-                log_view_for_tab(viewsTab.SelectedIndex).Refresh();
-                */
             }
 
         }
@@ -619,14 +627,18 @@ namespace lw_common.ui {
 
         private void curFilterCtrl_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
             string s = util.key_to_action(e);
-            if (s == "ctrl-enter")
+            if (s == "ctrl-return")
                 e.IsInputKey = true;
         }
 
         private void curFilterCtrl_KeyDown(object sender, KeyEventArgs e) {
             string s = util.key_to_action(e);
-            if (s == "ctrl-enter") {
-                // set filter
+            if (s == "ctrl-return") {
+                before_ctrl_enter_ = curFilterCtrl.Text;
+                e.Handled = true;
+                ui_to_view(view_idx_);
+                do_save();
+                refresh_view(view_idx_);
             }
 
         }

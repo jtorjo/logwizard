@@ -26,8 +26,44 @@ using System.Text;
 using System.Threading;
 
 namespace rewritelogfile {
-    class Program {
-        /*  takes a file, and rewrites it over and over, writing a certain amount of text at a certain time interval.
+    internal class Program {
+        private static void Main(string[] args) {
+            if (args.Length > 0) {
+                string source_file = args[0];
+                string dest_file = source_file + ".rewritten.log";
+                int write_lines = args.Length > 1 ? int.Parse(args[1]) : 100;
+                int wait_secs = args.Length > 2 ? int.Parse(args[2]) : 0;
+                rewrite_file(source_file, dest_file, write_lines, wait_secs);
+            }
+        }
+
+        private static void rewrite_file(string source, string dest, int write_lines, int wait_secs) {
+            if (!File.Exists(source))
+                return;
+            var lines = File.ReadAllLines(source).ToList();
+            for (int i = 0; i < lines.Count; i += write_lines) {
+                int write_now = i + write_lines < lines.Count ? write_lines : lines.Count - i;
+                Console.WriteLine("writing " + i + " , " + write_now + " lines");
+                if ( i == 0)
+                    File.WriteAllLines(dest, lines.GetRange(i, write_now));
+                else 
+                    File.AppendAllLines(dest, lines.GetRange(i, write_now));
+                if (wait_secs > 0)
+                    Thread.Sleep(wait_secs);
+                else
+                    Console.ReadLine();
+            }
+
+        }
+
+
+
+
+
+
+
+#if old_code
+    /*  takes a file, and rewrites it over and over, writing a certain amount of text at a certain time interval.
 
             we're doing this to test that LogWizard updates correctly:
             * once more info is written to the file
@@ -39,6 +75,7 @@ namespace rewritelogfile {
             3. how much to wait after each write (default = 1000ms)
             4. how much to wait after a complete write (default = 10000ms)
         */
+
         static void Main(string[] args) {
             if (args.Length > 0) {
                 string source_file = args[0];
@@ -77,5 +114,6 @@ namespace rewritelogfile {
                     Thread.Sleep(wait_after_each_write_ms);
             }
         }
+#endif
     }
 }

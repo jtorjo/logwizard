@@ -4,8 +4,6 @@
 
 
 
-- bug - drag drop new file (first time) - full log shows empty?
-- filter: ctrl-enter would save
 - bug: real time monitoring does not scroll to end
 
 - copy to clipboard - html also
@@ -28,6 +26,14 @@
     (since he would want new filters). thus, just create a new context where he can do anything
   - at app start - delete empty contexts
   - contexts - case-insensitive (when file -> context)
+
+- allow resizing left pane (and auto-save it)
+
+
+1.1.19c
+- got fixed: bug - drag drop new file (first time) - full log shows empty?
+- filter: ctrl-enter would save
+- updated rewrite app to test with lines
 
 
 1.1.19b
