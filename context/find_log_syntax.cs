@@ -32,10 +32,10 @@ namespace LogWizard.readers {
 
         public const int READ_TO_GUESS_SYNTAX = 8192;
 
-        public string try_to_find_log_syntax(string file) {
+        public string try_find_log_syntax_file(string file) {
             try {
                 using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
-                    string found = new find_log_syntax().try_find_log_syntax(fs);
+                    string found = try_find_log_syntax(fs);
                     if (found != UNKNOWN_SYNTAX)
                         return  found;
                 }

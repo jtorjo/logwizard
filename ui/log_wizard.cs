@@ -125,7 +125,7 @@ namespace LogWizard
             public entry_type type;
             public string name = "";
             public string friendly_name = "";
-            public string log_syntax  = "";
+            //public string log_syntax  = "";
 
             // returns the file name, or empty if it's not a file
             public string file_name {
@@ -298,6 +298,7 @@ namespace LogWizard
             }, 10);
         }
 
+
         private void on_note_selected(int line_idx, string view_name) {
             if (line_idx >= 0) {
                 ++ignore_change_;
@@ -402,7 +403,6 @@ namespace LogWizard
                 hist.type = (history.entry_type) int.Parse( sett.get("history." + idx + "type", "0"));
                 hist.name = sett.get("history." + idx + "name");
                 hist.friendly_name = sett.get("history." + idx + "friendly_name");
-                hist.log_syntax = sett.get("history." + idx + "log_syntax");
                 history_.Add( hist );
             }
             history_ = history_.Where(h => {
@@ -420,25 +420,10 @@ namespace LogWizard
             for ( int i = 0; i < count ; ++i) {
                 ui_context ctx = new ui_context();
                 ctx.load("context." + i);
-                /*
-                int view_count = int.Parse( sett.get("context." + i + ".view_count", "1"));
-                for ( int v = 0; v < view_count; ++v) {
-                    ui_view lv = new ui_view();
-                    lv.name = sett.get("context." + i + ".view" + v + ".name");
-                    int filter_count = int.Parse( sett.get("context." + i  + ".view" + v + ".filter_count", "0"));
-                    for ( int f = 0; f < filter_count; ++f) {
-                        string prefix = "context." + i + ".view" + v + ".filt" + f + ".";
-                        bool enabled = int.Parse( sett.get(prefix + "enabled", "1")) != 0;
-                        bool dimmed = int.Parse( sett.get(prefix + "dimmed", "0")) != 0;
-                        string text = sett.get(prefix + "text");
-                        bool apply_to_existing_lines = int.Parse( sett.get(prefix + "apply_to_existing_lines", "0")) != 0;
-                        lv.filters.Add( new ui_filter { enabled = enabled, dimmed = dimmed, text = text, apply_to_existing_lines = apply_to_existing_lines } );
-                    }
-                    ctx.views.Add(lv);
-                }
-                */
                 contexts_.Add(ctx);
             }
+            // 1.1.25 - at application start - remove empty contexts (like, the user may have dragged a file, not what he wanted, dragged another)
+            contexts_ = contexts_.Where(x => x.has_not_empty_views || x.name == "Default").ToList();
         }
 
         private void save_contexts() {
@@ -447,7 +432,6 @@ namespace LogWizard
                 sett.set("history." + idx + "type", "" + (int)history_[idx].type);
                 sett.set("history." + idx + "name", history_[idx].name);
                 sett.set("history." + idx + "friendly_name", history_[idx].friendly_name);
-                sett.set("history." + idx + "log_syntax", history_[idx].log_syntax);
             }
 
             sett.set("context_count", "" + contexts_.Count);
@@ -639,14 +623,16 @@ namespace LogWizard
 
             string from_header = log_to_default_context.file_to_context(name);
             if (from_header != null) {
-                var context_from_header = contexts_.FirstOrDefault(x => x.name == from_header);
+                // ... case-insensitive search (easier for user)
+                var context_from_header = contexts_.FirstOrDefault(x => x.name.ToLower() == from_header.ToLower());
                 if (context_from_header != null)
                     // return it, only if we have a specific Template for it
                     return context_from_header;
             }
 
-            string file_name_no_dir = new FileInfo(name).Name;
-            var found = contexts_.FirstOrDefault(x => file_name_no_dir.Contains( x.name));
+            // 1.1.25+ - match the context that matches the name completely
+            string name_no_ext = Path.GetFileNameWithoutExtension( new FileInfo(name).Name);
+            var found = contexts_.FirstOrDefault(x => x.name == name_no_ext);
             if (found != null)
                 return found;
 
@@ -667,7 +653,6 @@ namespace LogWizard
             sourceNameCtrl.Text = file;
             sourceTypeCtrl.SelectedIndex = 0;
             friendlyNameCtrl.Text = "";
-            logSyntaxCtrl.Text = "";
             --ignore_change_;
             // this will force us to process this change
             last_sel_ = -2;
@@ -941,7 +926,7 @@ namespace LogWizard
             // never allow "no view" whatsoever
             bool has_views = cur.views.Count > 0 || cur.name != "Default";
             if (cur.views.Count < 1) 
-                cur.views.Add(new ui_view() { name = "New_1", filters = new List<ui_filter>() });
+                cur.views.Add(new ui_view() { name = "View_1", is_default_name = true });
 
             for ( int idx = 0; idx < cur.views.Count; ++idx) 
                 if ( viewsTab.TabCount < idx + 1) 
@@ -1354,6 +1339,28 @@ namespace LogWizard
                 on_new_debug_log();
         }
 
+        /* 1.1.25+
+            - on new file (that does not match any context)
+              - we will create a context matching the name of the file (if one exists, we will automatically select it)
+              - by default, we'll never go to the "Default" context
+              - the idea is for the uesr not to have to mistakenly delete a context when he's selecting a different type of file,
+                (since he would want new filters). thus, just create a new context where he can do anything
+        */
+        private void create_context_for_file(string name) {
+            ui_context file_ctx = file_to_context(name);
+            if (file_ctx.name != "Default")
+                // we already have a context
+                return;
+
+            ui_context new_ctx = new ui_context();
+            new_ctx.name = Path.GetFileNameWithoutExtension( new FileInfo(name).Name);
+            contexts_.Add(new_ctx);
+            var syntax = new find_log_syntax().try_find_log_syntax_file(name);
+            if (syntax != find_log_syntax.UNKNOWN_SYNTAX)
+                new_ctx.default_syntax = syntax;
+            curContextCtrl.Items.Add( new_ctx.name);
+
+        }
 
         private void on_new_file_log(string name) {
             if (text_ != null && text_.name == name) {
@@ -1364,23 +1371,22 @@ namespace LogWizard
             if ( text_ != null)
                 text_.Dispose();
 
+            create_context_for_file(name);
+
             text_ = new file_text_reader(name);
             on_new_log();
-
-            // testing
-//            if ( util.is_debug)
-  //              testSyntax_Click(null,null);
 
             ui_context file_ctx = file_to_context(name);
             if (file_ctx != cur_context())
                 // update context based on file name
                 curContextCtrl.SelectedIndex = contexts_.IndexOf(file_ctx);
 
-            logSyntaxCtrl.ForeColor = logSyntaxCtrl.Text != find_log_syntax.UNKNOWN_SYNTAX ? Color.Black : Color.Red;
             if (logSyntaxCtrl.Text == find_log_syntax.UNKNOWN_SYNTAX) {
                 set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Test' button on the top-right.", status_type.err);
                 show_source(true);
             }
+            else if ( !cur_context().has_not_empty_views)
+                set_status("Don't the columns look ok? Perpaps LogWizard did not correctly parse them... If so, Toggle the Source Pane ON (Alt-O), anc click on 'Test'.", status_type.warn, 15000);
 
             force_initial_refresh_of_all_views();
         }
@@ -1542,13 +1548,19 @@ namespace LogWizard
             if (history_.Count < 1) 
                 history_select(name);
 
-            if ( logSyntaxCtrl.Text == "")
-                logSyntaxCtrl.Text = syntax;
-            if ( util.is_debug) 
-                logSyntaxCtrl.Text = syntax;
+            // 1.1.25+ if I can't find the syntax from file-to-syntax, or by parsing the log, see if the context associated with this file has log-syntax
+            Debug.Assert(syntax != null);
+            if (syntax == find_log_syntax.UNKNOWN_SYNTAX) {
+                ui_context file_ctx = file_to_context(name);
+                if ( syntax == find_log_syntax.UNKNOWN_SYNTAX)
+                    if (file_ctx.default_syntax != "")
+                        syntax = file_ctx.default_syntax;
+            }
+            logSyntaxCtrl.Text = syntax;
+            logSyntaxCtrl.ForeColor = logSyntaxCtrl.Text != find_log_syntax.UNKNOWN_SYNTAX ? Color.Black : Color.Red;
 
             // note: we recreate the log, so that cached filters know to rebuild
-            log_parser_ = new log_line_parser(text_, logSyntaxCtrl.Text);
+            log_parser_ = new log_line_parser(text_, syntax);
             on_new_log_parser();
 
             full_log_ctrl.set_filter(new List<raw_filter_row>());
@@ -1616,7 +1628,6 @@ namespace LogWizard
             else {
                 ++ignore_change_;
                 friendlyNameCtrl.Text = history_[ history_idx].friendly_name;
-                logSyntaxCtrl.Text = history_[ history_idx].log_syntax;
                 --ignore_change_;
             }
 
@@ -1654,7 +1665,6 @@ namespace LogWizard
             sourceTypeCtrl.SelectedIndex = (int) history_[ logHistory.SelectedIndex].type;
             sourceNameCtrl.Text = history_[ logHistory.SelectedIndex].name;
             friendlyNameCtrl.Text = history_[ logHistory.SelectedIndex].friendly_name;
-            logSyntaxCtrl.Text = history_[ logHistory.SelectedIndex].log_syntax;
             sourceName_TextChanged(null,null);
         }
 
@@ -1669,11 +1679,8 @@ namespace LogWizard
 
         private void logSyntax_TextChanged(object sender, EventArgs e)
         {
-            logSyntaxCtrl.ForeColor = logSyntaxCtrl.Text != find_log_syntax.UNKNOWN_SYNTAX ? Color.Black : Color.Red;
             if (ignore_change_ > 0)
                 return;
-            history_[ logHistory.SelectedIndex].log_syntax = logSyntaxCtrl.Text;
-            save();
         }
 
         private void LogWizard_FormClosing(object sender, FormClosingEventArgs e) {
@@ -3212,6 +3219,16 @@ namespace LogWizard
             var test = new test_syntax_form(guess);
             if (test.ShowDialog() == DialogResult.OK) {
                 // use the syntax
+                cur_context().default_syntax = test.found_syntax;
+                save();
+
+                // force complete refresh
+                text_.Dispose();
+                text_ = null;
+                remove_all_log_views();
+                on_file_drop(selected_file_name()); 
+                // we want to refresh it only after it's been loaded, so that it visually shows that
+                util.postpone(() => full_log_ctrl.force_refresh_visible_columns(), 2000);
             }
         }
 

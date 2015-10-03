@@ -64,7 +64,7 @@
             // 
             this.viewName.Location = new System.Drawing.Point(51, 0);
             this.viewName.Name = "viewName";
-            this.viewName.Size = new System.Drawing.Size(225, 20);
+            this.viewName.Size = new System.Drawing.Size(172, 20);
             this.viewName.TabIndex = 2;
             this.tip.SetToolTip(this.viewName, "Name of the Filtered View (shows up as the tab name)");
             this.viewName.TextChanged += new System.EventHandler(this.filterName_TextChanged);

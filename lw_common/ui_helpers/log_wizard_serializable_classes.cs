@@ -94,6 +94,8 @@ namespace lw_common {
         public string name  = "";
         public string auto_match = "";
 
+        public string default_syntax = "";
+
         public List<ui_view> views = new List<ui_view>();
 
         public bool has_views {
@@ -104,12 +106,22 @@ namespace lw_common {
                 if (views.Count < 1)
                     return false;
                 // in this case, we have a single view
-//                if (views[0].name == "New_1" && views[0].filters.Count < 1)
-  //                  return false;
                 if (views[0].is_default_name && views[0].filters.Count < 1)
                     return false;
 
                 return true;
+            }
+        }
+
+        public bool has_not_empty_views {
+            get {
+                if (views.Count < 1)
+                    return false;
+                // in this case, we have a single view
+                if (views[0].is_default_name && views[0].filters.Count < 1)
+                    return false;
+
+                return true;                
             }
         }
 
@@ -122,6 +134,7 @@ namespace lw_common {
         private void load_save(bool load, string prefix) {
             app.load_save(load, ref name, prefix + ".name", "Default" );
             app.load_save(load, ref auto_match, prefix + ".auto_match");
+            app.load_save(load, ref default_syntax, prefix + ".default_syntax");
 
             int view_count = views.Count;
             app.load_save(load, ref view_count, prefix + ".view_count", 0);

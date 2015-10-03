@@ -6,17 +6,27 @@
 
 
 
+
+
+
+
+1.1.25
+- logSyntaxCtrl - made read-only. It will always point to the syntax we've found for the current log, and the user can't change that.
+  - if the user sets a certain syntax, it will be applied to *the whole context*.
+    The idea is that it doesn't make any sense to have two different files from the same context have different syntax.
+	Even if theoretically that would happen, you can still have an extra choice: file-to-syntax. You'll just add an entry that 
+	finds the syntax based on something found in the file header.
+done:
 - on new file (that does not match any context)
   - we will create a context matching the name of the file (if one exists, we will automatically select it)
   - by default, we'll never go to the "Default" context
   - the idea is for the uesr not to have to mistakenly delete a context when he's selecting a different type of file,
     (since he would want new filters). thus, just create a new context where he can do anything
-  - at app start - delete empty contexts
   - contexts - case-insensitive (when file -> context)
   - syntax: if current context does not have any, use the one the user has set for this log
-
 - syntax: when changed -> refresh everything (even syntax!)
-- q: should i keep log_syntax in the file or in the context??? (probably i should, but initially use context's default)
+- test syntax : "Use it" -> if the context did not have a default syntax(= invalid syntax) -> use it also
+- at app start - delete empty contexts
 
 
 1.1.24b

@@ -230,6 +230,11 @@ namespace LogWizard
             return name;
         }
 
+        public void force_refresh_visible_columns() {
+            visible_columns_refreshed_ = false;
+            refresh_visible_columns();
+        }
+
         private void load_font() {
             string[] font_names = app.inst.sett.get("font_names").Split(',');
             foreach ( string name in font_names)
