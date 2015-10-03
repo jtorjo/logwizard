@@ -34,6 +34,9 @@
             this.newView = new System.Windows.Forms.Button();
             this.logHistory = new System.Windows.Forms.ComboBox();
             this.newFilteredView = new System.Windows.Forms.Button();
+            this.newViewMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.createACopyOfTheExistingViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createANewViewFromScratchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label7 = new System.Windows.Forms.Label();
             this.friendlyNameCtrl = new System.Windows.Forms.TextBox();
             this.logSyntaxCtrl = new System.Windows.Forms.TextBox();
@@ -95,9 +98,7 @@
             this.hotkeys = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.saveTimer = new System.Windows.Forms.Timer(this.components);
-            this.newViewMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.createACopyOfTheExistingViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createANewViewFromScratchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newViewMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             this.toggleMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.main)).BeginInit();
@@ -119,7 +120,6 @@
             this.tabPage1.SuspendLayout();
             this.lower.SuspendLayout();
             this.exportMenu.SuspendLayout();
-            this.newViewMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tip
@@ -159,7 +159,7 @@
             this.newFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.newFilteredView.ContextMenuStrip = this.newViewMenu;
             this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.newFilteredView.Location = new System.Drawing.Point(387, 29);
+            this.newFilteredView.Location = new System.Drawing.Point(385, 29);
             this.newFilteredView.Name = "newFilteredView";
             this.newFilteredView.Size = new System.Drawing.Size(18, 20);
             this.newFilteredView.TabIndex = 1;
@@ -168,11 +168,33 @@
             this.newFilteredView.UseVisualStyleBackColor = true;
             this.newFilteredView.Click += new System.EventHandler(this.new_view_Click);
             // 
+            // newViewMenu
+            // 
+            this.newViewMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createACopyOfTheExistingViewToolStripMenuItem,
+            this.createANewViewFromScratchToolStripMenuItem});
+            this.newViewMenu.Name = "newViewMenu";
+            this.newViewMenu.Size = new System.Drawing.Size(256, 48);
+            // 
+            // createACopyOfTheExistingViewToolStripMenuItem
+            // 
+            this.createACopyOfTheExistingViewToolStripMenuItem.Name = "createACopyOfTheExistingViewToolStripMenuItem";
+            this.createACopyOfTheExistingViewToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.createACopyOfTheExistingViewToolStripMenuItem.Text = "Create A Copy of the Existing View";
+            this.createACopyOfTheExistingViewToolStripMenuItem.Click += new System.EventHandler(this.createACopyOfTheExistingViewToolStripMenuItem_Click);
+            // 
+            // createANewViewFromScratchToolStripMenuItem
+            // 
+            this.createANewViewFromScratchToolStripMenuItem.Name = "createANewViewFromScratchToolStripMenuItem";
+            this.createANewViewFromScratchToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.createANewViewFromScratchToolStripMenuItem.Text = "Create A New View From Scratch";
+            this.createANewViewFromScratchToolStripMenuItem.Click += new System.EventHandler(this.createANewViewFromScratchToolStripMenuItem_Click);
+            // 
             // label7
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(743, 11);
+            this.label7.Location = new System.Drawing.Point(741, 11);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(113, 15);
             this.label7.TabIndex = 7;
@@ -183,7 +205,7 @@
             // friendlyNameCtrl
             // 
             this.friendlyNameCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.friendlyNameCtrl.Location = new System.Drawing.Point(860, 9);
+            this.friendlyNameCtrl.Location = new System.Drawing.Point(858, 9);
             this.friendlyNameCtrl.Name = "friendlyNameCtrl";
             this.friendlyNameCtrl.Size = new System.Drawing.Size(111, 23);
             this.friendlyNameCtrl.TabIndex = 8;
@@ -197,7 +219,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.logSyntaxCtrl.Location = new System.Drawing.Point(206, 35);
             this.logSyntaxCtrl.Name = "logSyntaxCtrl";
-            this.logSyntaxCtrl.Size = new System.Drawing.Size(765, 23);
+            this.logSyntaxCtrl.Size = new System.Drawing.Size(763, 23);
             this.logSyntaxCtrl.TabIndex = 10;
             this.tip.SetToolTip(this.logSyntaxCtrl, "The syntax of each line");
             this.logSyntaxCtrl.TextChanged += new System.EventHandler(this.logSyntax_TextChanged);
@@ -216,7 +238,7 @@
             // 
             this.delFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.delFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.delFilteredView.Location = new System.Drawing.Point(405, 29);
+            this.delFilteredView.Location = new System.Drawing.Point(403, 29);
             this.delFilteredView.Name = "delFilteredView";
             this.delFilteredView.Size = new System.Drawing.Size(18, 20);
             this.delFilteredView.TabIndex = 2;
@@ -276,7 +298,7 @@
             this.synchronizedWithFullLog.Checked = true;
             this.synchronizedWithFullLog.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizedWithFullLog.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizedWithFullLog.Location = new System.Drawing.Point(474, 29);
+            this.synchronizedWithFullLog.Location = new System.Drawing.Point(472, 29);
             this.synchronizedWithFullLog.Name = "synchronizedWithFullLog";
             this.synchronizedWithFullLog.Size = new System.Drawing.Size(46, 20);
             this.synchronizedWithFullLog.TabIndex = 1;
@@ -292,7 +314,7 @@
             this.synchronizeWithExistingLogs.Checked = true;
             this.synchronizeWithExistingLogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizeWithExistingLogs.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(428, 29);
+            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(426, 29);
             this.synchronizeWithExistingLogs.Name = "synchronizeWithExistingLogs";
             this.synchronizeWithExistingLogs.Size = new System.Drawing.Size(46, 20);
             this.synchronizeWithExistingLogs.TabIndex = 3;
@@ -489,7 +511,7 @@
             this.main.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.main.IsSplitterFixed = true;
+            this.main.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.main.Location = new System.Drawing.Point(2, 0);
             this.main.Name = "main";
             // 
@@ -502,7 +524,9 @@
             this.main.Panel2.Controls.Add(this.sourceUp);
             this.main.Size = new System.Drawing.Size(1258, 520);
             this.main.SplitterDistance = 273;
+            this.main.SplitterWidth = 6;
             this.main.TabIndex = 4;
+            this.main.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.main_SplitterMoved);
             // 
             // leftPane
             // 
@@ -621,7 +645,7 @@
             // sourceUp.Panel2
             // 
             this.sourceUp.Panel2.Controls.Add(this.filteredLeft);
-            this.sourceUp.Size = new System.Drawing.Size(981, 520);
+            this.sourceUp.Size = new System.Drawing.Size(979, 520);
             this.sourceUp.SplitterDistance = 65;
             this.sourceUp.TabIndex = 0;
             // 
@@ -631,7 +655,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.sourceNameCtrl.Location = new System.Drawing.Point(486, 6);
             this.sourceNameCtrl.Name = "sourceNameCtrl";
-            this.sourceNameCtrl.Size = new System.Drawing.Size(255, 23);
+            this.sourceNameCtrl.Size = new System.Drawing.Size(253, 23);
             this.sourceNameCtrl.TabIndex = 2;
             this.sourceNameCtrl.TextChanged += new System.EventHandler(this.sourceName_TextChanged);
             // 
@@ -661,6 +685,7 @@
             // filteredLeft
             // 
             this.filteredLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.filteredLeft.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.filteredLeft.Location = new System.Drawing.Point(0, 0);
             this.filteredLeft.Name = "filteredLeft";
             // 
@@ -671,8 +696,9 @@
             this.filteredLeft.Panel1.Controls.Add(this.delFilteredView);
             this.filteredLeft.Panel1.Controls.Add(this.newFilteredView);
             this.filteredLeft.Panel1.Controls.Add(this.viewsTab);
-            this.filteredLeft.Size = new System.Drawing.Size(981, 451);
-            this.filteredLeft.SplitterDistance = 558;
+            this.filteredLeft.Size = new System.Drawing.Size(979, 451);
+            this.filteredLeft.SplitterDistance = 556;
+            this.filteredLeft.SplitterWidth = 6;
             this.filteredLeft.TabIndex = 0;
             this.filteredLeft.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.filteredLeft_SplitterMoved);
             // 
@@ -687,7 +713,7 @@
             this.viewsTab.Location = new System.Drawing.Point(0, 3);
             this.viewsTab.Name = "viewsTab";
             this.viewsTab.SelectedIndex = 0;
-            this.viewsTab.Size = new System.Drawing.Size(553, 449);
+            this.viewsTab.Size = new System.Drawing.Size(551, 449);
             this.viewsTab.TabIndex = 0;
             this.viewsTab.SelectedIndexChanged += new System.EventHandler(this.viewsTab_SelectedIndexChanged);
             this.viewsTab.DragDrop += new System.Windows.Forms.DragEventHandler(this.filteredViews_DragDrop);
@@ -699,7 +725,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(545, 421);
+            this.tabPage1.Size = new System.Drawing.Size(543, 421);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -714,7 +740,7 @@
             this.dropHere.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.dropHere.Location = new System.Drawing.Point(3, 3);
             this.dropHere.Name = "dropHere";
-            this.dropHere.Size = new System.Drawing.Size(534, 421);
+            this.dropHere.Size = new System.Drawing.Size(532, 421);
             this.dropHere.TabIndex = 0;
             this.dropHere.Text = "Drop it Like it\'s Hot!\r\nJust drop a file here, and get to work!\r\n";
             this.dropHere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -842,28 +868,6 @@
             this.saveTimer.Interval = 15000;
             this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
-            // newViewMenu
-            // 
-            this.newViewMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createACopyOfTheExistingViewToolStripMenuItem,
-            this.createANewViewFromScratchToolStripMenuItem});
-            this.newViewMenu.Name = "newViewMenu";
-            this.newViewMenu.Size = new System.Drawing.Size(256, 48);
-            // 
-            // createACopyOfTheExistingViewToolStripMenuItem
-            // 
-            this.createACopyOfTheExistingViewToolStripMenuItem.Name = "createACopyOfTheExistingViewToolStripMenuItem";
-            this.createACopyOfTheExistingViewToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.createACopyOfTheExistingViewToolStripMenuItem.Text = "Create A Copy of the Existing View";
-            this.createACopyOfTheExistingViewToolStripMenuItem.Click += new System.EventHandler(this.createACopyOfTheExistingViewToolStripMenuItem_Click);
-            // 
-            // createANewViewFromScratchToolStripMenuItem
-            // 
-            this.createANewViewFromScratchToolStripMenuItem.Name = "createANewViewFromScratchToolStripMenuItem";
-            this.createANewViewFromScratchToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.createANewViewFromScratchToolStripMenuItem.Text = "Create A New View From Scratch";
-            this.createANewViewFromScratchToolStripMenuItem.Click += new System.EventHandler(this.createANewViewFromScratchToolStripMenuItem_Click);
-            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -885,6 +889,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LogNinja_FormClosed);
             this.LocationChanged += new System.EventHandler(this.log_wizard_LocationChanged);
             this.SizeChanged += new System.EventHandler(this.log_wizard_SizeChanged);
+            this.newViewMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).EndInit();
             this.toggleMenu.ResumeLayout(false);
             this.main.Panel1.ResumeLayout(false);
@@ -909,7 +914,6 @@
             this.lower.ResumeLayout(false);
             this.lower.PerformLayout();
             this.exportMenu.ResumeLayout(false);
-            this.newViewMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

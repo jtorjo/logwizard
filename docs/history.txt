@@ -2,7 +2,6 @@
 -todo: article license is GPL3
 
 
-- allow resizing left pane (and auto-save it)
 
 - syntax: allow testing + small article on github
 
@@ -14,6 +13,13 @@
     (since he would want new filters). thus, just create a new context where he can do anything
   - at app start - delete empty contexts
   - contexts - case-insensitive (when file -> context)
+
+
+1.1.23
+- finally, managed to supress ctrl-tab/ctrl-shift-tab (so that we use ctrl-leftarrow/ctrl-rightarrow to navigate amongst tabs)
+  - probably i could have used ProcessCmdKey all along
+    anyway, I will probably keep ctrl-tab/ctrl-shift-tab for navigating between existing logs (in case the user has several logs open)
+- allow resizing left pane (and auto-save it)
 
 
 1.1.22

@@ -1015,8 +1015,13 @@ namespace LogWizard
             --ignore_change_;
 
             util.suspend_layout(this, false);
+
+            ++ignore_change_;
+            if (global_ui.left_pane_pos >= 0)
+                main.SplitterDistance = global_ui.left_pane_pos;
             if ( global_ui.full_log_splitter_pos >= 0)
                 filteredLeft.SplitterDistance = global_ui.full_log_splitter_pos;
+            --ignore_change_;
 
             util.postpone( () => show_row_based_on_global_ui(), 100);
 
@@ -1815,6 +1820,13 @@ namespace LogWizard
                     logger.Info("action by key - " + action); // + " from " + sender);
                 }
             }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+            if(keyData == (Keys.Control | Keys.Tab) || keyData == (Keys.Control | Keys.Shift | Keys.Tab) ) 
+                return true;
+            
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private bool any_moving_key_still_down() {
@@ -2735,17 +2747,6 @@ namespace LogWizard
 
         }
 
-        private void filteredLeft_SplitterMoved(object sender, SplitterEventArgs e) {
-            if (ignore_change_ > 0)
-                return;
-            //logger.Debug("[splitter] filteredleft=" + filteredLeft.SplitterDistance  );
-            if (filteredLeft.SplitterDistance >= 0) {
-                global_ui.full_log_splitter_pos = global_ui.full_log_splitter_pos = filteredLeft.SplitterDistance;
-                save();
-            }
-            else
-                Debug.Assert(false);
-        }
 
         private void hotkeys_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             Process.Start("https://github.com/jtorjo/logwizard/wiki/Hotkeys");
@@ -3143,6 +3144,32 @@ namespace LogWizard
             viewsTab.SelectedIndex = cur_view + 1;
             ensure_we_have_log_view_for_tab( cur_view + 1);
             save();
+        }
+
+        private void filteredLeft_SplitterMoved(object sender, SplitterEventArgs e) {
+            update_msg_details(true);
+            if (ignore_change_ > 0)
+                return;
+            //logger.Debug("[splitter] filteredleft=" + filteredLeft.SplitterDistance  );
+            if (filteredLeft.SplitterDistance >= 0) {
+                global_ui.full_log_splitter_pos = filteredLeft.SplitterDistance;
+                save();
+            }
+            else
+                Debug.Assert(false);
+        }
+
+        private void main_SplitterMoved(object sender, SplitterEventArgs e) {
+            update_msg_details(true);
+            if (ignore_change_ > 0)
+                return;
+            //logger.Debug("[splitter] main=" + main.SplitterDistance  );
+            if (main.SplitterDistance >= 0) {
+                global_ui.left_pane_pos = main.SplitterDistance;
+                save();
+            }
+            else
+                Debug.Assert(false);
         }
 
 

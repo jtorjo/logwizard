@@ -34,7 +34,6 @@ namespace LogWizard
         public new_context_form(log_wizard parent)
         {
             InitializeComponent();
-            matchType.SelectedIndex = 0;
             TopMost = parent.TopMost;
         }
 

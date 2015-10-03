@@ -86,6 +86,7 @@ namespace lw_common {
         public string log_name = ""; // the name of the log 
         public int selected_row_idx = -1;
         public int full_log_splitter_pos = -1;
+        public int left_pane_pos = -1;
 
         private bool show_filter_ = true;
         private bool show_left_pane_ = true;
@@ -122,6 +123,7 @@ namespace lw_common {
             selected_view = other.selected_view;
             selected_row_idx = other.selected_row_idx;
             full_log_splitter_pos = other.full_log_splitter_pos;
+            left_pane_pos = other.left_pane_pos;
 
             show_left_pane_ = other.show_left_pane_;
             show_notes_ = other.show_notes_;
@@ -182,6 +184,7 @@ namespace lw_common {
             app.load_save(load, ref log_name, prefix + "log_name");
             app.load_save(load, ref selected_row_idx, prefix + "selected_row_idx", -1);
             app.load_save(load, ref full_log_splitter_pos, prefix + "full_log_splitter_pos", -1);
+            app.load_save(load, ref left_pane_pos, prefix + "left_pane_pos", -1);
 
             app.load_save(load, ref show_left_pane_, prefix + ".show_left_pane", true);
             app.load_save(load, ref show_notes_, prefix + "show_notes", false);
