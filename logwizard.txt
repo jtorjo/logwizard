@@ -700,3 +700,18 @@ file_to_syntax.4.value=$ctx1['MSI (',') '] $ctx2['(',')'] $time['[',']: ']  $msg
 file_to_syntax.5.key=[System] PokerTracker v
 file_to_syntax.5.value=$date[0,' '] $time['',' '] $ctx1['[',']:'] $ctx2['[',']'] $ctx3['[','] '] $msg
 file_to_syntax.count=6
+
+
+
+
+ui.default.show_current_view=1
+ui.default.show_details=0
+ui.default.show_filter=0
+ui.default.show_fulllog=0
+ui.default.show_header=1
+ui.default.show_left_pane=0
+ui.default.show_source=0
+ui.default.show_status=1
+ui.default.show_tabs=1
+ui.default.show_title=1
+

@@ -1,9 +1,10 @@
 11:06:12,939 main       INFO  wizard_intro - 
-11:06:12,939 main       INFO  wizard_intro - This is a LogWizard Setup sample. Load it in your "Log Wizard" application, 
+11:06:12,939 main       INFO  wizard_intro - This is a LogWizard Setup sample! Load it in your "Log Wizard" application, 
 11:06:12,939 main       INFO  wizard_intro - to see what LogWizard can do!
+11:06:12,939 main       INFO  wizard_intro - 
 11:06:12,939 main       INFO  wizard_intro - https://github.com/jtorjo/logwizard/wiki
 11:06:12,939 main       INFO  wizard_intro - 
-11:06:12,939 main       INFO  wizard_intro - You might see this, when you run the LogWizard setup kit.
+11:06:12,939 main       INFO  wizard_intro - You will see this each time you run the LogWizard setup kit.
 11:06:12,939 main       INFO  wizard_intro - 
 11:06:12,939 main       INFO  wizard_intro - LogWizard's purpose is to help you easily focus on what's important, 
 11:06:12,939 main       INFO  wizard_intro - when it comes to viewing your log(s).
@@ -30,7 +31,8 @@
 11:06:12,939 main       INFO  wi2a - 
 11:06:12,939 main       INFO  wi2a - Dealing with filters.
 11:06:12,939 main       INFO  wi2a - 
-11:06:12,939 main       INFO  wi2a - The Filters Pane is shown on the left, and can be toggled on/off ('F' hotkey)
+11:06:12,939 main       INFO  wi2a - The Filters Pane is shown on the left, and can be toggled on/off ('Alf-F' hotkey)
+11:06:12,939 main       INFO  wi2a - (or via 'Toggles' button -> select "Filter Pane")
 11:06:12,939 main       INFO  wi2a - 
 11:06:12,939 main       INFO  wi2a - You can have as many filters as you want, just remember that all of them are 'OR'ed,
 11:06:12,939 main       INFO  wi2a - when it comes to creating the view.
@@ -45,8 +47,9 @@
 11:06:12,939 main       INFO  wi2b - In the filter itself, you can also specify the color, by adding a special line: 
 11:06:12,939 main       INFO  wi2b - 'color #rrggbb' or 'color name' 
 11:06:12,939 main       INFO  wi2b - (name = we allow some predefined color names, such as 'blue', 'lightgray', 'darkred', etc.)
+11:06:12,939 main       INFO  wi2b - Or, just click on the "eyedropper" button, select a color, and press Enter. That's it!
 11:06:12,939 main       INFO  wi2b - 
-11:06:12,939 main       INFO  wi2b - For more tips on dealing with filters, check out "Tips / hotkeys" (on the bottom-right).
+11:06:12,939 main       INFO  wi2b - For more tips on dealing with filters, check out "Tips" (the link shown below the filter).
 11:06:12,939 main       INFO  wi2b - Enabling/disabling a specific filter is very easy - just Check/uncheck its "Enb" box.
 11:06:12,939 main       INFO  wi2b - 
 11:06:12,939 main       INFO  wi2b - For instance, just go and disable - first the first filter, then the second one. 
@@ -65,21 +68,22 @@
 11:06:12,939 main       INFO  wi3 - This is the main pane, that is always visible. Going between views is extremly easy:
 11:06:12,939 main       INFO  wi3 - just use Ctrl-RightArrow or Ctrl-LeftArrow.
 11:06:12,939 main       INFO  wi3 - 
-11:06:12,939 main       INFO  wi3 - To create a new view, just use '+' on the rightmost of all views. This will create a
-11:06:12,939 main       INFO  wi3 - copy of the existing view - it allows you to preserve what you have (the existing view), 
-11:06:12,939 main       INFO  wi3 - and furthermore filter the log, in order to find exactly what you want on this specific log.
+11:06:12,939 main       INFO  wi3 - To create a new view, just use '+' on the rightmost of all views. This will let you choose to either create a
+11:06:12,939 main       INFO  wi3 - copy of the existing view (thus allowing you to further customize it), or to start a new view from scratch.
 11:06:12,939 main       INFO  wi3 - 
 11:06:12,939 main       INFO  wi3 - You would probably want to use this when you have a log that is a bit out of the ordinary,
 11:06:12,939 main       INFO  wi3 - and while existing log views work for 95% of the logs you view, this one needs a few different filters.
 11:06:12,939 main       INFO  wi3 - 
 11:06:12,939 main       INFO  wi3 - Changing the name of a view is easy - make sure you see the Edit box below the View's default name,
-11:06:12,939 main       INFO  wi3 - edit it and write whatever you want. If there's no edit box, toggle the "Source Pane" on ('S' hotkey)
+11:06:12,939 main       INFO  wi3 - edit it and write whatever you want. If there's no edit box, toggle the "Source Pane" on ('Alt-S' hotkey)
 11:06:12,939 main       INFO  wi3 - 
 11:06:12,939 main       INFO  wi3 - In case you want to see both the existing view and an overview of the log (that is, 
-11:06:12,939 main       INFO  wi3 - see both your specific View and the Full Log), just toggle the "Full Log" Pane ('L' hotkey).
+11:06:12,939 main       INFO  wi3 - see both your specific View and the Full Log), just toggle the "Full Log" Pane ('Alt-L' hotkey).
 11:06:12,939 main       INFO  wi3 - 
 11:06:12,939 main       INFO  wi3 - This will show you the Full Log, and is synchronized with your Existing View. In other words,
 11:06:12,939 main       INFO  wi3 - selecting a line in your existing View, will show that lin in the Full Log as well.
+11:06:12,939 main       INFO  wi3 - 
+11:06:12,939 main       INFO  wi3 - Toggling the panes (Source Pane/Full Log) is also possible via the "Toggles" button.
 11:06:12,939 main       INFO  wi3 - 
 11:06:12,939 main       INFO  wi3 - Now, press "Ctrl-RightArrow" to move to the next view.
 11:06:12,939 main       INFO  wi4 - 
@@ -90,11 +94,11 @@
 11:06:12,939 main       INFO  wi4 - 
 11:06:12,939 main       INFO  wi4 - For most of the time, you won't need to care about this. 
 11:06:12,939 main       INFO  wi4 - 
-11:06:12,939 main       INFO  wi4 - You can just toggle it off for now ('S' hotkey).
+11:06:12,939 main       INFO  wi4 - You can just toggle it off for now ('Alt-S' hotkey).
 11:06:12,939 main       INFO  wi4 - 
 11:06:12,939 main       INFO  wi4 - 
-11:06:12,939 main       INFO  wi4 - [TODO] Explain about Log Syntax and Templates
-11:06:12,939 main       INFO  wi4 - 
+11:06:12,939 main       INFO  wi4 - More info about the Syntax: https://github.com/jtorjo/logwizard/wiki/Syntax
+11:06:12,939 main       INFO  wi4 - More info about Templates: http://www.codeproject.com/Articles/1023815/LogWizard-Log-Viewing-Made-Easy#LogWizardTemplates%28Advanced%2912
 11:06:12,939 main       INFO  wi4 - 
 11:06:12,939 main       INFO  wi4 - 
 11:06:12,939 main       INFO  wi4 - Now, press "Ctrl-RightArrow" to move to the next view.
@@ -104,7 +108,7 @@
 11:06:12,939 main       INFO  wi5 - This is where LogWizard truly shines. It's extremely easy to navigate through
 11:06:12,939 main       INFO  wi5 - the existing View, the Full Log, move to next/previous View and and so on.
 11:06:12,939 main       INFO  wi5 - 
-11:06:12,939 main       INFO  wi5 - For more information about the Hotkeys, just click on at the "Tips/ Hotkeys" at the bottom of the page
+11:06:12,939 main       INFO  wi5 - For more information about the Hotkeys, just click on at the "Hotkeys" at the bottom of the application.
 11:06:12,939 main       INFO  wi5 - 
 11:06:12,939 main       INFO  wi5 - In the following views, you'll see how you can combine Filters, create different views
 11:06:12,939 main       INFO  wi5 - based on your needs

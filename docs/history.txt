@@ -6,8 +6,13 @@
 
 
 
+1.2.3
+- updated logwizardsetupsample
+- generated new public release
 
 
+1.2.1
+- before updating main article on codeproject
 
 
 1.1.25

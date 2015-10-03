@@ -1571,6 +1571,7 @@ namespace LogWizard
                 return;
             last_sel_ = logHistory.SelectedIndex;
             add_reader_to_history();
+            // FIXME I don't think this is needed
             ui_context cur = cur_context();
             for ( int idx = 0; idx < cur.views.Count; ++idx)
                 ensure_we_have_log_view_for_tab(idx);
