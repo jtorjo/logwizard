@@ -921,8 +921,11 @@ namespace LogWizard
         private void go_last() {
             var count = filter_.match_count;
             if (count > 0 ) {
-                ensure_line_visible(count - 1);
-                select_idx(count - 1, select_type.do_not_notify_parent);
+                if ( ensure_line_visible(count - 1))
+                    select_idx(count - 1, select_type.do_not_notify_parent);
+                else 
+                    // in this case, we failed to go to the last item - try again ASAP
+                    util.postpone( go_last, 10);
             }
         }
 
@@ -1012,19 +1015,28 @@ namespace LogWizard
 
         private bool is_line_visible(int line_idx) {
             var visible = visible_row_indexes();
-            return (visible.Item1 <= line_idx && visible.Item2 >= line_idx);
+            // 1.1.20+ - if it's the last visible line (it's only shown partially - in that case, force it into view
+            return (visible.Item1 <= line_idx && visible.Item2 - 1 >= line_idx);
         }
 
 
-        private void ensure_line_visible(int line_idx) {
+        private bool ensure_line_visible(int line_idx) {
             if (is_line_visible(line_idx))
-                return;
+                return true;
             var visible = visible_row_indexes();
             logger.Debug("[view] visible indexes for " + name + " : " + visible.Item1 + " - " + visible.Item2);
             // 1.1.15+ note : this sometimes flickers, we want to avoid this as much as possible
 
-            //FIXME really weird - this seems to sometimes cause issues when scrolling to last item? (off-by-one errors?)
-            list.EnsureVisible(line_idx);
+            if (line_idx >= list.GetItemCount())
+                // can happen if list isn't fully refreshed
+                return false;
+
+            try {
+                list.EnsureVisible(line_idx);
+                return true;
+            } catch {
+                return false;
+            }
         }
 
         public void go_to_line(int line_idx, select_type notify) {

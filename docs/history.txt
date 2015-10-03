@@ -4,7 +4,6 @@
 
 
 
-- bug: real time monitoring does not scroll to end
 
 - copy to clipboard - html also
   - write status -"text copied to clipoard, as text and html"
@@ -17,7 +16,6 @@
 
 - small bug: when enforcing the selection (select_idx) - if i'm on the last visible line - i should actually bring it to middle (since last visible line usually means partially visible)
 
-- change ctrl-c / ctrl-shift-c (should be the other way around)
 
 - on new file (that does not match any context)
   - we will create a context matching the name of the file (if one exists, we will automatically select it)
@@ -28,6 +26,11 @@
   - contexts - case-insensitive (when file -> context)
 
 - allow resizing left pane (and auto-save it)
+
+
+1.1.19d
+- fix: bug: real time monitoring does not scroll to end
+- change ctrl-c / ctrl-shift-c (should be the other way around)
 
 
 1.1.19c

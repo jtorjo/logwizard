@@ -2000,9 +2000,9 @@ namespace LogWizard
             case "ctrl-shift-f2":
                 return action_type.clear_bookmarks;
 
-            case "ctrl-shift-c":
-                return action_type.copy_full_line_to_clipboard;
             case "ctrl-c":
+                return action_type.copy_full_line_to_clipboard;
+            case "ctrl-shift-c":
                 return action_type.copy_to_clipboard;
 
                 // for some strange reason, ctrl-tab/ctrl-shift-tab are caught by the viewsTab - even if I remove the event handlers

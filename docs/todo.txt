@@ -178,6 +178,11 @@
 
 
 
+- bug: when using rewritefile - using the C:\john\code\buff\win10-3\TableNinja2.log.7.rewritten.log -> writing 100 items at once, when they are added to a view that has no filters
+  the line ending in 98 is sometimes not written fully (doing a refresh fixes the issue)
+  i think the problem is that i'm reading a partial line and matching against that - very likely i should not include the last line until some time has passed or fully read
+
+
 
 - log friendly name -> retest, useful for Denise (also, will be useful in the future, when we'll have several text readers)
 
