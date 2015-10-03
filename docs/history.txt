@@ -4,7 +4,6 @@
 
 
 
-- syntax: allow testing + small article on github
 
 
 - on new file (that does not match any context)
@@ -18,6 +17,10 @@
 
 - syntax: when changed -> refresh everything (even syntax!)
 - q: should i keep log_syntax in the file or in the context??? (probably i should, but initially use context's default)
+
+
+1.1.24b
+- added small article on github about syntax
 
 
 1.1.24a
