@@ -6,8 +6,6 @@
 
 
 
-- bug: on release settings -> the left pane is shown too low (very likely - if shown from the beginning)
-- bug: logsetupsameple -> after shown after setup, next time, it's still shown (the former log should be shown on re-run)
 
 - bug: render: when choosing background and item not selected -> if bg != white -> use that (test with marking some lines as bookmarks)
       look into why we're rending too little height-wise (compare original rect with what we're rendering)
@@ -24,11 +22,22 @@
 
 - allow resizing left pane (and auto-save it)
 
+- syntax: allow testing + small article on github
+
+1.1.21
+- suspend/resume layout - so that thee's no bad flickering
+- fix: bug: on release settings -> the left pane is shown too low (very likely - if shown from the beginning)
+- removed load_location - we don't need it anymore
+- fix: bug: logsetupsameple -> after shown after setup, next time, it's still shown (the former log should be shown on re-run)
+
+
+
 1.1.20
 - copy to clipboard - html also
   - write status -"text copied to clipoard, as text and html"
 - small bug: when enforcing the selection (select_idx) - if i'm on the last visible line - i should actually bring it to middle (since last visible line usually means partially visible)
   (not tested)
+
 
 1.1.19d
 - fix: bug: real time monitoring does not scroll to end

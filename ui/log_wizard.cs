@@ -273,7 +273,7 @@ namespace LogWizard
             full_log_ctrl.show_name = false;
             full_log_ctrl.show_view(true);
 
-            set_tabs_visible(leftPane, false);
+            util.postpone(() => set_tabs_visible(leftPane, false), 1);
 
             msg_details_ = new msg_details_ctrl(this);
             Controls.Add(msg_details_);
@@ -284,8 +284,6 @@ namespace LogWizard
 
             update_topmost_image();
             update_toggle_topmost_visibility();
-
-            load_location();
             --ignore_change_;
 
             // 1.0.80d+ - the reason we postpone this is so taht we don't set up all UI in the constructor - the splitters would get extra SplitterMove() events,
@@ -327,20 +325,6 @@ namespace LogWizard
                 if (lv.name == view_name)
                     return lv;
             return null;
-        }
-
-        private void load_location() {
-            int left = int.Parse(sett.get("location.left", "-1"));
-            int top = int.Parse(sett.get("location.top", "-1"));
-
-            int width = int.Parse(sett.get("location.width", "-1"));
-            int height = int.Parse(sett.get("location.height", "-1"));
-
-            if ( left != -1)
-                Location = new Point(left, top);
-
-            if ( width > 0)
-                Size = new Size(width, height);
         }
 
         private Brush views_brush_ = new SolidBrush(Color.Black), views_something_changed_brush_ = new SolidBrush(Color.DarkRed);
@@ -494,6 +478,10 @@ namespace LogWizard
 
         private void show_left_pane(bool show) {
             update_left_pane();
+
+            bool shown = !main.Panel1Collapsed;
+            if (show == shown)
+                return;
 
             ++ignore_change_;
             if ( show) {
@@ -990,6 +978,8 @@ namespace LogWizard
             if (!cur.has_views)
                 return;
 
+            util.suspend_layout(this, true);
+
             ++ignore_change_;
             show_left_pane(global_ui.show_left_pane);
             show_source(global_ui.show_source);
@@ -1012,9 +1002,6 @@ namespace LogWizard
                 WindowState = global_ui.maximized ? FormWindowState.Maximized : FormWindowState.Normal;
             }
 
-            if ( global_ui.full_log_splitter_pos >= 0)
-                filteredLeft.SplitterDistance = global_ui.full_log_splitter_pos;
-
             bool view_name_found = false;
             if (global_ui.selected_view != "") 
                 for (int idx = 0; idx < viewsTab.TabCount && !view_name_found; ++idx)
@@ -1026,6 +1013,10 @@ namespace LogWizard
                 viewsTab.SelectedIndex = 0;
 
             --ignore_change_;
+
+            util.suspend_layout(this, false);
+            if ( global_ui.full_log_splitter_pos >= 0)
+                filteredLeft.SplitterDistance = global_ui.full_log_splitter_pos;
 
             util.postpone( () => show_row_based_on_global_ui(), 100);
 
@@ -1485,36 +1476,21 @@ namespace LogWizard
             for ( int i = 0; i < history_.Count && !found; ++i)
                 if (history_[i].name == name) {
                     found = true;
+                    bool is_sample = name.ToLower().EndsWith("logwizardsetupsample.log");
+                    if (is_sample)
+                        logHistory.SelectedIndex = i;
+                    else {
 
-                    // whatever the user selects, move it to the end
-                    history h = history_[i];
-                    history_.RemoveAt(i);
-                    history_.Add(h);
-                    logHistory.Items.RemoveAt(i);
-                    logHistory.Items.Add( h.ui_friendly_name);
-                    logHistory.SelectedIndex = logHistory.Items.Count - 1;
-                    needs_save = true;
-                }
-
-            if ( !found)
-                // note: normally, we should never end up here, should be handled by above code
-                for ( int i = 0; i < logHistory.Items.Count; ++i)
-                    if (logHistory.Items[i].ToString() == name) {
-                        bool is_sample = name.ToLower().EndsWith("logwizardsetupsample.log");
-                        if (is_sample)
-                            logHistory.SelectedIndex = i;
-                        else {
-                            // whatever the user selects, move it to the end
-                            history h = history_[i];
-                            history_.RemoveAt(i);
-                            history_.Add(h);
-                            logHistory.Items.RemoveAt(i);
-                            logHistory.Items.Add( h.ui_friendly_name);
-                            logHistory.SelectedIndex = logHistory.Items.Count - 1;
-                            needs_save = true;
-                        }
-                        break;
+                        // whatever the user selects, move it to the end
+                        history h = history_[i];
+                        history_.RemoveAt(i);
+                        history_.Add(h);
+                        logHistory.Items.RemoveAt(i);
+                        logHistory.Items.Add(h.ui_friendly_name);
+                        logHistory.SelectedIndex = logHistory.Items.Count - 1;
+                        needs_save = true;
                     }
+                }
 
             if (logHistory.SelectedIndex < 0) {
                 history_.Add(new history {name = name, type = 0, friendly_name = friendly_name});

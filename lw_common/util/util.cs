@@ -724,5 +724,25 @@ namespace lw_common {
             return -1;
         }
 
+        public static void suspend_layout(Control c, bool suspend) {
+            bool suspend_this = 
+                c is Form 
+                || c is ContextMenuStrip 
+                || c is SplitterPanel
+                || c is SplitContainer
+                || c is TabControl
+                || c is TabPage
+                ;
+
+            if (suspend_this && suspend)
+                c.SuspendLayout();
+
+            foreach ( Control child in c.Controls)
+                suspend_layout(child, suspend);
+
+            if (suspend_this && !suspend)
+                c.ResumeLayout(true);
+        }
+
     }
 }

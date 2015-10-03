@@ -39,3 +39,7 @@
 - navigate to message (pro_v) - try to find where the message came from, based on anything we can - like, file, class, function, etc.
 
 - notes: disable sorting in the notesctrl
+
+- (pro_v) comparing logs/view?
+  do a diff of two views -see what is different in each - select which cols to compare (probably you would not want to compare times?)
+
