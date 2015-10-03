@@ -110,7 +110,7 @@ namespace LogWizard
             }
         }
 
-        public override bool has_read_next_text() {
+        public override bool has_more_cached_text() {
             lock (this)
                 return last_part_.Length > 0;
         }

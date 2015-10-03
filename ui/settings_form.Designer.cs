@@ -88,8 +88,6 @@
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.button3 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -779,8 +777,6 @@
             // 
             // tabPage6
             // 
-            this.tabPage6.Controls.Add(this.button3);
-            this.tabPage6.Controls.Add(this.textBox1);
             this.tabPage6.Controls.Add(this.label10);
             this.tabPage6.Controls.Add(this.fileToSyntax);
             this.tabPage6.Location = new System.Drawing.Point(4, 25);
@@ -790,29 +786,6 @@
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Auto Match Syntax";
             this.tabPage6.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(585, 435);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Test";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(9, 285);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(651, 144);
-            this.textBox1.TabIndex = 2;
             // 
             // label10
             // 
@@ -844,7 +817,7 @@
             this.fileToSyntax.Name = "fileToSyntax";
             this.fileToSyntax.OwnerDraw = true;
             this.fileToSyntax.ShowGroups = false;
-            this.fileToSyntax.Size = new System.Drawing.Size(654, 236);
+            this.fileToSyntax.Size = new System.Drawing.Size(654, 425);
             this.fileToSyntax.TabIndex = 0;
             this.fileToSyntax.UseAlternatingBackColors = true;
             this.fileToSyntax.UseCompatibleStateImageBehavior = false;
@@ -951,8 +924,6 @@
         private ColorPicker.ColorPickerCombobox logBg;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.TabPage tabPage6;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label10;
         private BrightIdeasSoftware.ObjectListView fileToSyntax;
         private BrightIdeasSoftware.OLVColumn olvColumn1;

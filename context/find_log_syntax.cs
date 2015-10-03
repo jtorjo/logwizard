@@ -24,20 +24,38 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using lw_common;
 
 namespace LogWizard.readers {
     class find_log_syntax {
         public const string UNKNOWN_SYNTAX = "$msg[0]";
 
+        public const int READ_TO_GUESS_SYNTAX = 8192;
+
+        public string try_to_find_log_syntax(string file) {
+            try {
+                using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+                    string found = new find_log_syntax().try_find_log_syntax(fs);
+                    if (found != UNKNOWN_SYNTAX)
+                        return  found;
+                }
+            } catch {
+            }            
+            return UNKNOWN_SYNTAX;
+        }
+
         public string try_find_log_syntax(FileStream fs) {
             try {
+                var encoding = util.file_encoding(fs);
+                if (encoding == null)
+                    encoding = Encoding.Default;
                 long pos = fs.Position;
                 fs.Seek(0, SeekOrigin.Begin);
             
                 // read a few lines from the beginning
-                byte[] readBuffer = new byte[4096];
-                int bytes = fs.Read(readBuffer, 0, 4096);
-                string now = System.Text.Encoding.Default.GetString(readBuffer, 0, bytes);
+                byte[] readBuffer = new byte[READ_TO_GUESS_SYNTAX];
+                int bytes = fs.Read(readBuffer, 0, READ_TO_GUESS_SYNTAX);
+                string now = encoding.GetString(readBuffer, 0, bytes);
                 string[] lines = now.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
                 // go back to where we were
@@ -49,7 +67,7 @@ namespace LogWizard.readers {
             }
         }
 
-        private string try_find_log_syntax(string[] lines) {
+        public string try_find_log_syntax(string[] lines) {
             if ( lines.Length < 5)
                 return UNKNOWN_SYNTAX;
 

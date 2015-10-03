@@ -33,7 +33,7 @@ namespace LogWizard
         // reads text at position - and updates position
         public abstract string read_next_text() ;
 
-        public virtual bool has_read_next_text() {
+        public virtual bool has_more_cached_text() {
             return false;
         }
 

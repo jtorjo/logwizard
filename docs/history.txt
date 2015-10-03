@@ -3,6 +3,7 @@
 
 
 
+
 - syntax: allow testing + small article on github
 
 
@@ -13,6 +14,16 @@
     (since he would want new filters). thus, just create a new context where he can do anything
   - at app start - delete empty contexts
   - contexts - case-insensitive (when file -> context)
+  - syntax: if current context does not have any, use the one the user has set for this log
+
+- syntax: when changed -> refresh everything (even syntax!)
+- q: should i keep log_syntax in the file or in the context??? (probably i should, but initially use context's default)
+
+
+1.1.24a
+- syntax: allow testing 
+  - take from existing file
+  - if default syntax -> show in red + show the "sourrce pane" + show error in status pane
 
 
 1.1.23

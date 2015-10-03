@@ -452,12 +452,19 @@ namespace lw_common {
         //               http://www.codeproject.com/Articles/17201/Detect-Encoding-for-In-and-Outgoing-Text    
         public static Encoding file_encoding(string filename)
         {
+            using (var file = new FileStream(filename, FileMode.Open, FileAccess.Read))
+                return file_encoding(file);
+        }
+
+        public static Encoding file_encoding(FileStream file) {
             try {
                 // Read the BOM
                 var bom = new byte[4];
                 int read = 0;
-                using (var file = new FileStream(filename, FileMode.Open, FileAccess.Read)) 
-                    read = file.Read(bom, 0, 4);
+                var pos = file.Position;
+                file.Seek(0, SeekOrigin.Begin);
+                read = file.Read(bom, 0, 4);
+                file.Seek(pos, SeekOrigin.Begin);
 
                 if (read < 4)
                     return null;
@@ -471,7 +478,7 @@ namespace lw_common {
                 return Encoding.ASCII;
             } catch {
                 return null;
-            }
+            }            
         }
 
 

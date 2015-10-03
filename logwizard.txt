@@ -697,6 +697,6 @@ file_to_syntax.3.key=Welcome to TableNinja! debug
 file_to_syntax.3.value=$file[0,': '] $time['',12] $ctx1[' ',10] $level[' ','- '] $msg
 file_to_syntax.4.key=logging started: |Calling process: |msiexec.exe ===
 file_to_syntax.4.value=$ctx1['MSI (',') '] $ctx2['(',')'] $time['[',']: ']  $msg
-file_to_syntax.count=5
-
-
+file_to_syntax.5.key=[System] PokerTracker v
+file_to_syntax.5.value=$date[0,' '] $time['',' '] $ctx1['[',']:'] $ctx2['[',']'] $ctx3['[','] '] $msg
+file_to_syntax.count=6

@@ -148,7 +148,7 @@
     <Compile Include="filter\filter_row.cs" />
     <Compile Include="lw_util\lw_util.cs" />
     <Compile Include="parse\log_line_parser.cs" />
-    <Compile Include="readers\simple_file_text_reader2.cs" />
+    <Compile Include="readers\inmem_text_reader.cs" />
     <Compile Include="ui\about_form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,7 +194,6 @@
     </Compile>
     <Compile Include="readers\file_text_reader.cs" />
     <Compile Include="context\find_log_syntax.cs" />
-    <Compile Include="readers\simple_file_text_reader.cs" />
     <Compile Include="readers\text_reader.cs" />
     <Compile Include="ui\log_wizard.cs">
       <SubType>Form</SubType>
@@ -217,6 +216,12 @@
       <DependentUpon>settings_form.cs</DependentUpon>
     </Compile>
     <Compile Include="readers\shared_memory_text_reader.cs" />
+    <Compile Include="ui\test_syntax_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\test_syntax_form.Designer.cs">
+      <DependentUpon>test_syntax_form.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ui\about_form.resx">
       <DependentUpon>about_form.cs</DependentUpon>
     </EmbeddedResource>
@@ -253,6 +258,9 @@
     </Compile>
     <EmbeddedResource Include="ui\settings_form.resx">
       <DependentUpon>settings_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\test_syntax_form.resx">
+      <DependentUpon>test_syntax_form.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>

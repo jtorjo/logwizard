@@ -36,6 +36,7 @@ using lw_common;
 using lw_common.ui;
 using LogWizard.context;
 using LogWizard.Properties;
+using LogWizard.readers;
 using LogWizard.ui;
 
 namespace LogWizard
@@ -495,6 +496,10 @@ namespace LogWizard
             --ignore_change_;
         }
         private void show_source(bool show) {
+            bool shown = !sourceUp.Panel1Collapsed;
+            if (show == shown)
+                return;
+
             if ( show) {
                 sourceUp.Panel1Collapsed = false;
                 sourceUp.Panel1.Show();
@@ -1362,10 +1367,20 @@ namespace LogWizard
             text_ = new file_text_reader(name);
             on_new_log();
 
+            // testing
+//            if ( util.is_debug)
+  //              testSyntax_Click(null,null);
+
             ui_context file_ctx = file_to_context(name);
             if (file_ctx != cur_context())
                 // update context based on file name
                 curContextCtrl.SelectedIndex = contexts_.IndexOf(file_ctx);
+
+            logSyntaxCtrl.ForeColor = logSyntaxCtrl.Text != find_log_syntax.UNKNOWN_SYNTAX ? Color.Black : Color.Red;
+            if (logSyntaxCtrl.Text == find_log_syntax.UNKNOWN_SYNTAX) {
+                set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Test' button on the top-right.", status_type.err);
+                show_source(true);
+            }
 
             force_initial_refresh_of_all_views();
         }
@@ -1654,6 +1669,7 @@ namespace LogWizard
 
         private void logSyntax_TextChanged(object sender, EventArgs e)
         {
+            logSyntaxCtrl.ForeColor = logSyntaxCtrl.Text != find_log_syntax.UNKNOWN_SYNTAX ? Color.Black : Color.Red;
             if (ignore_change_ > 0)
                 return;
             history_[ logHistory.SelectedIndex].log_syntax = logSyntaxCtrl.Text;
@@ -3170,6 +3186,33 @@ namespace LogWizard
             }
             else
                 Debug.Assert(false);
+        }
+
+        private void helpSyntax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            Process.Start("https://github.com/jtorjo/logwizard/wiki/Syntax");
+        }
+
+        private void testSyntax_Click(object sender, EventArgs e) {
+            string file = selected_file_name();
+
+            string guess = "";
+            try {
+                using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+                    // read a few lines from the beginning
+                    byte[] readBuffer = new byte[find_log_syntax.READ_TO_GUESS_SYNTAX];
+                    int bytes = fs.Read(readBuffer, 0, find_log_syntax.READ_TO_GUESS_SYNTAX);
+                    var encoding = util.file_encoding(file);
+                    if (encoding == null)
+                        encoding = Encoding.Default;
+                    guess = encoding.GetString(readBuffer, 0, bytes);
+                }
+            } catch {
+            }
+
+            var test = new test_syntax_form(guess);
+            if (test.ShowDialog() == DialogResult.OK) {
+                // use the syntax
+            }
         }
 
 

@@ -387,7 +387,7 @@ namespace LogWizard
 
             bool fully_read = old_len == new_len && text_reader_.is_up_to_date();
 
-            if ( !text_reader_.has_read_next_text()) {
+            if ( !text_reader_.has_more_cached_text()) {
                 lock (this) {
                     up_to_date_ = fully_read;
                     if ( up_to_date_)
