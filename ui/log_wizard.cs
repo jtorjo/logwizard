@@ -2174,12 +2174,16 @@ namespace LogWizard
                 break;
 
             case action_type.copy_to_clipboard:
-                if (lv != null)
+                if (lv != null) {
                     lv.copy_to_clipboard();
+                    set_status("Lines copied to Clipboard, as text and html");
+                }
                 break;
             case action_type.copy_full_line_to_clipboard:
-                if (lv != null)
+                if (lv != null) {
                     lv.copy_full_line_to_clipboard();
+                    set_status("Full Lines copied to Clipboard, as text and html");
+                }
                 break;
 
             case action_type.toggle_bookmark:

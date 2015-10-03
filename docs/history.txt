@@ -5,8 +5,6 @@
 
 
 
-- copy to clipboard - html also
-  - write status -"text copied to clipoard, as text and html"
 
 - bug: on release settings -> the left pane is shown too low (very likely - if shown from the beginning)
 - bug: logsetupsameple -> after shown after setup, next time, it's still shown (the former log should be shown on re-run)
@@ -26,6 +24,10 @@
   - contexts - case-insensitive (when file -> context)
 
 - allow resizing left pane (and auto-save it)
+
+1.1.20
+- copy to clipboard - html also
+  - write status -"text copied to clipoard, as text and html"
 
 
 1.1.19d

@@ -1343,11 +1343,42 @@ namespace LogWizard
                 util.beep(util.beep_type.err);
         }
 
+        public export_text export(List<int> indices, bool msg_only) {
+            export_text export = new export_text();
+
+            int row_idx = 0;
+            foreach ( int idx in indices) {
+                item i = match_at(idx) ;
+
+                int visible_idx = 0;
+                string font = list.Font.Name;
+                for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
+                    bool do_print = list.Columns[column_idx].Width > 0;
+                    if (msg_only)
+                        do_print = column_idx == msgCol.Index;
+                    if (do_print) {
+                        string txt = cell_value(i, column_idx);
+                        export_text.cell c = new export_text.cell(row_idx, visible_idx, txt) { fg = i.fg(this), bg = i.bg(this), font = font, font_size = 7 };
+                        export.add_cell(c);
+                        ++visible_idx;
+                    }
+                }
+                ++row_idx;
+            }
+
+            return export;
+        }
+
         public void copy_to_clipboard() {
             var sel = selected_indices_array();
             if (sel.Count < 1)
                 return;
 
+            var export = this.export(sel, true);
+            string html = export.to_html(), text = export.to_text();
+            clipboard_util.copy( html, text );
+
+#if old_code
             string full = "";
             foreach (int row in sel) {
                 item i = match_at(row) ;
@@ -1360,6 +1391,7 @@ namespace LogWizard
                 Clipboard.SetText(full);
             } catch {
             }
+#endif
         }
 
         public void copy_full_line_to_clipboard() {
@@ -1367,6 +1399,11 @@ namespace LogWizard
             if (sel.Count < 1)
                 return;
 
+            var export = this.export(sel, false);
+            string html = export.to_html(), text = export.to_text();
+            clipboard_util.copy( html, text );
+
+#if old_code
             string full = "";
             foreach (int row in sel) {
                 item i = match_at(row) ;
@@ -1379,6 +1416,7 @@ namespace LogWizard
                 Clipboard.SetText(full);
             } catch {
             }
+#endif
         }
 
         public void set_bookmarks(List<int> line_idxs) {
