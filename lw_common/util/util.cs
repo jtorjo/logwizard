@@ -306,7 +306,11 @@ namespace lw_common {
             }
 
             int sep1 = time.IndexOf(':');
-            Debug.Assert(sep1 >= 1 && sep1 <= 2);
+            bool ok = sep1 >= 1 && sep1 <= 2;
+            if (!ok)
+                // invalid time string
+                return time;
+
             if (sep1 == 1)
                 time = "0" + time;
             // hh:mm:ss or hh:m:s
@@ -317,7 +321,9 @@ namespace lw_common {
             if (sep2 > 0) {
                 // look for seconds:  hh:mm:ss.zzz or hh:mm:s.zzz
                 int sep3 = time.IndexOfAny( time_ms_separators, 6);
-                Debug.Assert(sep3 == -1 || sep3 == 7 || sep3 == 8);
+                ok = (sep3 == -1 || sep3 == 7 || sep3 == 8);
+                if (!ok)
+                    return time;
                 if (sep3 == 7 || time.Length == 7)
                     time = time.Substring(0, 6) + "0" + time.Substring(6);
             } else
@@ -341,7 +347,7 @@ namespace lw_common {
                 break;
             }
             
-            if ( time[8] != '.')
+            if ( time.Length > 8 && time[8] != '.')
                 time = time.Substring(0,8) + "." + time.Substring(9);
             
             return time;

@@ -2,14 +2,9 @@
 -todo: article license is GPL3
 
 
+- allow resizing left pane (and auto-save it)
 
-
-
-
-
-- bug: render: when choosing background and item not selected -> if bg != white -> use that (test with marking some lines as bookmarks)
-      look into why we're rending too little height-wise (compare original rect with what we're rendering)
-
+- syntax: allow testing + small article on github
 
 
 - on new file (that does not match any context)
@@ -20,9 +15,10 @@
   - at app start - delete empty contexts
   - contexts - case-insensitive (when file -> context)
 
-- allow resizing left pane (and auto-save it)
 
-- syntax: allow testing + small article on github
+1.1.22
+- bug: render: when choosing background and item not selected -> if bg != white -> use that (test with marking some lines as bookmarks)
+
 
 1.1.21
 - suspend/resume layout - so that thee's no bad flickering

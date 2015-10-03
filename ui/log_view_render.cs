@@ -168,7 +168,7 @@ namespace LogWizard.ui {
                 else if (app.inst.use_bg_gradient)
                     brush = gradient_.brush(r, app.inst.bg_from, app.inst.bg_to);
                 else
-                    brush = brush_.brush(app.inst.bg);
+                    brush = brush_.brush(bg);
             } else 
                 brush = brush_.brush(is_sel ? (is_focused ? darker_bg : dark_bg) : bg);
             g.FillRectangle(brush, r);
