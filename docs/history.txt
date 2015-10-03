@@ -12,7 +12,6 @@
 - bug: render: when choosing background and item not selected -> if bg != white -> use that (test with marking some lines as bookmarks)
       look into why we're rending too little height-wise (compare original rect with what we're rendering)
 
-- small bug: when enforcing the selection (select_idx) - if i'm on the last visible line - i should actually bring it to middle (since last visible line usually means partially visible)
 
 
 - on new file (that does not match any context)
@@ -28,7 +27,8 @@
 1.1.20
 - copy to clipboard - html also
   - write status -"text copied to clipoard, as text and html"
-
+- small bug: when enforcing the selection (select_idx) - if i'm on the last visible line - i should actually bring it to middle (since last visible line usually means partially visible)
+  (not tested)
 
 1.1.19d
 - fix: bug: real time monitoring does not scroll to end
