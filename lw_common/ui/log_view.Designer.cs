@@ -236,7 +236,6 @@
             this.Name = "log_view";
             this.Size = new System.Drawing.Size(697, 427);
             this.Load += new System.EventHandler(this.log_view_Load);
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.log_view_MouseClick);
             ((System.ComponentModel.ISupportInitialize)(this.list)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

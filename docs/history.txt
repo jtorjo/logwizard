@@ -1,14 +1,23 @@
 
 
 
+- when on first char + move right -> do move right
 
 - note: i overode the hotkeys left/up/down/right/pgup/pgdn/home/end - so that they would work even if the control does not have focus
         this might not be the case now, so perhaps i don't really need to do it now? TOTHINK
 
-- todo: handle click -> go directly to letter on click
  - the selection of the edit box - make it a bit darker than what already shown
 
 - allow "edit mode" (always, with_f2, with_right_arrow)
+
+
+
+
+
+
+
+1.2.5c
+- fix: todo: handle click -> go directly to letter on click
 
 
 1.2.5b

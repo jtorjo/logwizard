@@ -1700,24 +1700,29 @@ namespace lw_common
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void log_view_MouseClick(object sender, MouseEventArgs e) {
-            /*
-            var mouse = list.PointToClient(Cursor.Position);
-            if (mouse.X >= 0 && mouse.Y >= 0) {
-                var hit = list.OlvHitTest(mouse.X, mouse.Y);
-                if (hit.SubItem != null) {
-                    cur_col_ = hit.ColumnIndex;
-                    util.postpone(edit.update_ui,1);
-                }
-            }*/
-        }
-
         private void list_CellClick(object sender, CellClickEventArgs e) {
-            int idx = e.ColumnIndex;
-            if (idx >= 0) {
-                cur_col_ = idx;
-                edit.update_ui();
+            int col_idx = e.ColumnIndex;
+            if (col_idx >= 0) {
+                var mouse = list.PointToClient(Cursor.Position);
+                using (Graphics g = CreateGraphics()) {
+                    string text = list.GetItem(e.RowIndex).GetSubItem(e.ColumnIndex).Text;
+                    var widths = render_.text_width(g, text);
+                    int offset_x = list.GetItem(e.RowIndex).GetSubItemBounds(e.ColumnIndex).X;
+
+                    for (int i = 0; i < widths.Count; ++i)
+                        widths[i] += offset_x;
+
+                    int char_idx = widths.FindLastIndex(x => x < mouse.X);
+                    if (widths.Last() < mouse.X)
+                        char_idx = widths.Count;
+
+                    cur_col_ = col_idx;
+                    edit.update_ui();
+                    edit.go_to_char(char_idx);
+                    util.postpone(() => edit.Focus() , 1);
+                }
             }
         }
+
     }
 }

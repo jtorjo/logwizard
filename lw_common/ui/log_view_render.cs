@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -146,6 +147,21 @@ namespace lw_common.ui {
                 }
             }
         }
+
+        // for each character of the printed text, see how many pixels it takes
+        public List<int> text_width(Graphics g ,string text) {
+            // IMPORTANT: at this time, we assume we have a fixed font
+            var ab = g.MeasureString("ab", font).Width;
+            var abc = g.MeasureString("abc", font).Width;
+            var abcd = g.MeasureString("abcd", font).Width;
+            Debug.Assert( (int)((abc - ab) * 100) == (int)((abcd - abc) * 100)) ;
+
+            var char_size = abc - ab;
+            List<int> widths = new List<int>();
+            for ( int i = 0; i < text.Length; ++i)
+                widths.Add((int)(char_size * i));
+            return widths;
+        } 
 
         public override void Render(Graphics g, Rectangle r) {
             var i = ListItem.RowObject as log_view.item;

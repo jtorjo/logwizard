@@ -53,5 +53,13 @@ namespace lw_common.ui {
             ForeColor = i.fg(parent_);
             BackColor = i.sel_bg(parent_);
         }
+
+        public void go_to_char(int char_idx) {
+            if (char_idx <= TextLength) {
+                SelectionStart = char_idx;
+                SelectionLength = 0;
+            }    
+        }
+
     }
 }
