@@ -14,13 +14,18 @@
 - scrolling (scroll bar) - handle it
 
 
-1.2.5f
+1.2.5h
+
+
+1.2.5g
 - tested edit mode:
 	Always - We're always in Edit mode. Cursor is always visible
 	With F2 - Use F2 to toggle Edit mode ON/OFF
 	With Right Arrow - turn the Edit mode ON. Move to another line, and it will be turned OFF
 - IMPORTANT:
   when in edit mode, ctrl->arrows does not work
+
+- in lw application : f2 does NOT work
 
 
 1.2.5e

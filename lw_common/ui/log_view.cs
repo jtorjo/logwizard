@@ -1701,6 +1701,7 @@ namespace lw_common
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+
             if (!is_editing) {
                 // see if the current key will start editing
                 if (keyData == Keys.F2 && app.inst.edit_mode == app.edit_mode_type.with_f2) {

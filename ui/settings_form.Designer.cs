@@ -442,6 +442,7 @@
             // 
             // editMode
             // 
+            this.editMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.editMode.FormattingEnabled = true;
             this.editMode.Items.AddRange(new object[] {
             "Always",
