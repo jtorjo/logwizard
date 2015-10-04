@@ -22,11 +22,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using LogWizard.readers;
 
 namespace LogWizard
 {
-    abstract class text_reader : IDisposable
+    public abstract class text_reader : IDisposable
     {
         public const string UNKNOWN_SYNTAX = find_log_syntax.UNKNOWN_SYNTAX;
 

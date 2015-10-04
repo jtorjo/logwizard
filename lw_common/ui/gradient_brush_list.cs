@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogWizard.ui {
+namespace lw_common.ui {
     class gradient_brush_list {
         private Dictionary< Tuple<Rectangle,Color,Color> , LinearGradientBrush > brushes_ = new Dictionary<Tuple<Rectangle,Color, Color>, LinearGradientBrush>();
 

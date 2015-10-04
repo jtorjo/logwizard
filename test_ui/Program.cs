@@ -19,9 +19,12 @@ namespace test_ui {
             util.force_break_into_debugger();
             util.init_exceptions();
 
-            test_export.test();
+            //test_export.test();
 
-            Application.Run(new test_notes_ctrl());
+            app.inst.init(new settings_file( @"C:\john\code\logwiz\logwizard\bin\x64\Dbg64\logwizard_debug.txt"));
+
+            Application.Run(new test_log_view());
+//            Application.Run(new test_notes_ctrl());
 //            Application.Run(new test_filter_ctrl());
         }
     }

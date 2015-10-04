@@ -34,7 +34,8 @@ namespace LogWizard
 
     /* reads everything in the log_line_parser, and allows easy access to its lines
     */
-    class log_line_parser : IDisposable {
+
+    public class log_line_parser : IDisposable {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private class syntax_info {

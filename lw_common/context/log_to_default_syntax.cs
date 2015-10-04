@@ -27,7 +27,7 @@ using lw_common;
 
 namespace LogWizard.context {
     // find out information on the file/log - from its header
-    class log_to_default_syntax {
+    public class log_to_default_syntax {
         /*
         private static Dictionary<string, string> file_to_syntax_ = new Dictionary<string, string>() {
             { "HM2 Version: 2.", "$time[0,12] $ctx1['[','-'] $func[' ',']'] $ctx2['[[','] ]'] $msg" },

@@ -26,7 +26,7 @@ using lw_common;
 
 namespace LogWizard {
     // find out information on the file/log - from its header
-    class log_to_default_context {
+    public class log_to_default_context {
         /*
         private static Dictionary<string, string> file_to_context_ = new Dictionary<string, string>() {
             { "HM2 Version: 2.", "HM2" },

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LogWizard.readers;
 
 namespace LogWizard {
     // in-memory text - mainly for guessing the log syntax
     //
-    class inmem_text_reader : text_reader {
+    public class inmem_text_reader : text_reader {
         private string lines_;
         private ulong len_;
 

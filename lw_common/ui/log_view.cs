@@ -35,15 +35,15 @@ using System.Windows.Forms;
 using BrightIdeasSoftware;
 using lw_common;
 using lw_common.ui;
-using LogWizard.ui;
+using LogWizard;
 
-namespace LogWizard
+namespace lw_common
 {
-    partial class log_view : UserControl
+    public partial class log_view : UserControl
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private log_wizard parent;
+        private Form parent;
         private filter filter_ ;
         private log_line_reader log_ = null;
 
@@ -139,7 +139,7 @@ namespace LogWizard
 
             public override string view {
                 get {
-                    return parent_.parent.matched_logs(line_idx);
+                    return parent_.lv_parent.matched_logs(line_idx);
                 }
             }
         }
@@ -201,8 +201,10 @@ namespace LogWizard
 
         private int old_item_count_ = 0;
 
-        public log_view(log_wizard parent, string name)
+        public log_view(Form parent, string name)
         {
+            Debug.Assert(parent as log_view_parent != null);
+
             filter_ = new filter(this.create_match_object);
             InitializeComponent();
             this.parent = parent;
@@ -212,7 +214,7 @@ namespace LogWizard
             list.RowHeight = 18;
 
             load_font();
-            parent.handle_subcontrol_keys(this);
+            lv_parent.handle_subcontrol_keys(this);
 
             render_ = new log_view_render(this);
             foreach (var col in list.Columns)
@@ -220,6 +222,12 @@ namespace LogWizard
 
             // just an example:
             //render_.set_override("settings", new log_view_render.print_info { fg = Color.Blue, bold = true });
+        }
+
+        private log_view_parent lv_parent {
+            get {
+                return parent as log_view_parent;
+            }
         }
 
         private filter.match create_match_object(BitArray matches, filter_line.font_info font, line line, int lineIdx) {
@@ -249,7 +257,7 @@ namespace LogWizard
 
         private void filterName_TextChanged(object sender, EventArgs e)
         {
-            parent.on_view_name_changed(this, viewName.Text);
+            lv_parent.on_view_name_changed(this, viewName.Text);
         }
 
         public bool is_filter_set {
@@ -410,7 +418,7 @@ namespace LogWizard
             filter_.update_rows(filter);
         }
 
-        internal void set_log(log_line_reader log) {
+        public void set_log(log_line_reader log) {
             if (log_ != log) {
                 log_ = log;
                 last_item_count_while_current_view_ = 0;
@@ -481,16 +489,16 @@ namespace LogWizard
         }
 
 
-        public void on_action(log_wizard.action_type action) {
+        public void on_action(action_type action) {
             switch (action) {
-            case log_wizard.action_type.home:
-            case log_wizard.action_type.end:
-            case log_wizard.action_type.pageup:
-            case log_wizard.action_type.pagedown:
-            case log_wizard.action_type.arrow_up:
-            case log_wizard.action_type.arrow_down:
-            case log_wizard.action_type.shift_arrow_down:
-            case log_wizard.action_type.shift_arrow_up:
+            case action_type.home:
+            case action_type.end:
+            case action_type.pageup:
+            case action_type.pagedown:
+            case action_type.arrow_up:
+            case action_type.arrow_down:
+            case action_type.shift_arrow_down:
+            case action_type.shift_arrow_up:
                 break;
             default:
                 Debug.Assert(false);
@@ -505,13 +513,13 @@ namespace LogWizard
             // int rows_per_page = list.RowsPerPage;
             int height = list.Height - list.HeaderControl.ClientRectangle.Height;
             switch (action) {
-            case log_wizard.action_type.home:
+            case action_type.home:
                 sel = 0;
                 break;
-            case log_wizard.action_type.end:
+            case action_type.end:
                 sel = count - 1;
                 break;
-            case log_wizard.action_type.pageup:
+            case action_type.pageup:
                 if (sel >= 0) {
                     var r = list.GetItem(sel).Bounds;
                     var middle = new Point( r.Left + r.Width / 2, r.Top + r.Height / 2 );
@@ -523,7 +531,7 @@ namespace LogWizard
                         sel = 0; // reached top
                 }
                 break;
-            case log_wizard.action_type.pagedown:
+            case action_type.pagedown:
                 if (sel < count - 1) {
                     var r = list.GetItem(sel).Bounds;
                     var middle = new Point( r.Left + r.Width / 2, r.Top + r.Height / 2 );
@@ -535,17 +543,17 @@ namespace LogWizard
                         sel = count - 1; // reached bottom
                 }
                 break;
-            case log_wizard.action_type.arrow_up:
+            case action_type.arrow_up:
                 if ( sel > 0)
                     --sel;
                 break;
-            case log_wizard.action_type.arrow_down:
+            case action_type.arrow_down:
                 if ( sel < count - 1)
                     ++sel;
                 break;
 
             // default list behavior is wrong, we need to override
-            case log_wizard.action_type.shift_arrow_up:                
+            case action_type.shift_arrow_up:                
                 if (sel > 0) {
                     int existing = selected_indices_array().Min();
                     if (existing > 0) {
@@ -556,7 +564,7 @@ namespace LogWizard
                 }
                 break;
             // default list behavior is wrong, we need to override
-            case log_wizard.action_type.shift_arrow_down:
+            case action_type.shift_arrow_down:
                 if (sel < count - 1) {
                     int existing = selected_indices_array().Max();
                     if (existing < count - 1) {
@@ -1014,7 +1022,7 @@ namespace LogWizard
 
             if (select_nofify_ == select_type.notify_parent) {
                 int line_idx = match_at(sel) .match.line_idx;
-                parent.on_sel_line(this, line_idx);
+                lv_parent.on_sel_line(this, line_idx);
             }
         }
 
@@ -1543,7 +1551,7 @@ namespace LogWizard
                 list.LowLevelScroll(0, -r.Height);
                 ensure_line_visible(sel);
             } else
-                on_action(log_wizard.action_type.arrow_up);
+                on_action(action_type.arrow_up);
         }
 
         public void scroll_down() {
@@ -1559,7 +1567,7 @@ namespace LogWizard
                 list.LowLevelScroll(0, r.Height);
                 ensure_line_visible(sel);
             } else
-                on_action(log_wizard.action_type.arrow_down);
+                on_action(action_type.arrow_down);
         }
 
         private void list_Enter(object sender, EventArgs e) {
@@ -1597,5 +1605,6 @@ namespace LogWizard
 
             return export;
         }
+
     }
 }

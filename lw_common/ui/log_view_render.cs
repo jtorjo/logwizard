@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using BrightIdeasSoftware;
 using lw_common;
 
-namespace LogWizard.ui {
+namespace lw_common.ui {
     class log_view_render : BaseRenderer {
 
         private solid_brush_list brush_ = new solid_brush_list();

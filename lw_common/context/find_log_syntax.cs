@@ -26,8 +26,8 @@ using System.Linq;
 using System.Text;
 using lw_common;
 
-namespace LogWizard.readers {
-    class find_log_syntax {
+namespace LogWizard {
+    public class find_log_syntax {
         public const string UNKNOWN_SYNTAX = "$msg[0]";
 
         public const int READ_TO_GUESS_SYNTAX = 8192;

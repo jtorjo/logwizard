@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using lw_common;
-using LogWizard.readers;
 
 namespace LogWizard.ui {
     public partial class test_syntax_form : Form {

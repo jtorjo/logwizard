@@ -1,17 +1,12 @@
 
-- retest bugs shown in history.txt
-
-
-- update LogWizardSetupSample with the new hotkeys and such.
-
 - take some picture(s) with logwizard - to place on github
 
-- test on PT4 file
-
   - article: 
-    - update existing article
     - sharing thy log with coworkers/customer support/customers (two articles: Share with Coleagues / Customer Support)
 	  - customer support - explain that they can have the developers look at the logs as well.
+
+- search - allow starting from here (=default) or from top
+- search - synchronize with full log
 
 -------------------------------------------------------
 
@@ -19,11 +14,7 @@
 
 
 
-- search - allow starting from here (=default) or from top
-- search - synchronize with full log
 
-- take log_view into lw_common, so we can test it standalone
-  - make it possible to load a certain log + a certain view
 
 
 - editing: have a smart text box (readonly text) - typing something in there will go to the first word you typed
@@ -49,6 +40,7 @@
   - ctrl-f -> if there's something selected, just have that text entered by default (ctrl-shift-f should do that implicitly)
   - should skip those columns that are image only (for future - since i will allow this)
   - if caret at beginning + arrow-left -> move to the column on the left; if caret at end + arrowright -> move to column on right
+  - allow toggling on/off - what is selected and what not
 
 - create new filter: show menu: Copy Existing one, Start from scratch
   - filter name - smart naming (TOTHINK)

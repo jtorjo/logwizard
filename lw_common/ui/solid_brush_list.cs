@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogWizard.ui {
+namespace lw_common.ui {
     class solid_brush_list {
         private Dictionary<Color, Brush> brushes_ = new Dictionary<Color, Brush>();
 

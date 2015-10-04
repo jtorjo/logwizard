@@ -59,6 +59,12 @@
     <Compile Include="test_filter_ctrl.Designer.cs">
       <DependentUpon>test_filter_ctrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="test_log_view.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="test_log_view.Designer.cs">
+      <DependentUpon>test_log_view.cs</DependentUpon>
+    </Compile>
     <Compile Include="test_notes_ctrl.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,6 +84,9 @@
     </Compile>
     <EmbeddedResource Include="test_filter_ctrl.resx">
       <DependentUpon>test_filter_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="test_log_view.resx">
+      <DependentUpon>test_log_view.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="test_notes_ctrl.resx">
       <DependentUpon>test_notes_ctrl.cs</DependentUpon>

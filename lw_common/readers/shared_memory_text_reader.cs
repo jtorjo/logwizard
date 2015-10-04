@@ -25,10 +25,23 @@ using System.Text;
 
 namespace LogWizard
 {
-    class debug_text_reader : text_reader
+    public class shared_memory_text_reader : text_reader
     {
-        public debug_text_reader() {
+        // keep all the log_line_parser in memory
+        StringBuilder full_log = new StringBuilder();
+        private string name_ = "";
+
+        public shared_memory_text_reader() {
         }
+        public override string name {
+            get { return name_; }
+        }
+
+        public void set_memory_name(string name) {
+            name_ = name;
+        }
+
+
         public override string read_next_text() {
             return "";
         }
@@ -44,5 +57,6 @@ namespace LogWizard
             get { return 0; } 
             
         }
+
     }
 }

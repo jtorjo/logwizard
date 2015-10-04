@@ -1,9 +1,10 @@
 
--todo: article license is GPL3
 
 
 
 
+1.2.4
+- moved log_view into lw_common, so I can easily test it
 
 
 1.2.3

@@ -31,7 +31,8 @@ namespace LogWizard {
 
        1.0.42 made thread-safe
     */
-    class log_line_reader {
+
+    public class log_line_reader {
 
         private log_line_parser parser_;
         private int line_count_ = 0;

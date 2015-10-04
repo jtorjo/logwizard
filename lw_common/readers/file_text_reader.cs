@@ -26,7 +26,6 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading;
 using lw_common;
-using LogWizard.readers;
 
 namespace LogWizard
 {
@@ -40,7 +39,7 @@ namespace LogWizard
     - very important assumption: we always assume that when the file is "encoding-complete" - in other words,
       we never end up in the scenario where a character (that can occupy several bytes) is not fully written into the file
     */
-    class file_text_reader : text_reader
+    public class file_text_reader : text_reader
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
