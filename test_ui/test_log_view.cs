@@ -28,6 +28,9 @@ namespace test_ui {
             lv_.set_log( new log_line_reader( new log_line_parser(new file_text_reader(file), syntax ) ));
             var filter = new List<raw_filter_row>();
             lv_.set_filter( filter  );
+
+            app.inst.edit_mode = app.edit_mode_type.always;
+//            app.inst.edit_mode = app.edit_mode_type.with_f2;
         }
 
         public void handle_subcontrol_keys(Control c) {

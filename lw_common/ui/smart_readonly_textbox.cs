@@ -32,7 +32,7 @@ namespace lw_common.ui {
 
             int sel = parent_.sel_row_idx;
             var bounds = parent_.sel_subrect_bounds;
-            Visible = sel >= 0 && bounds.Width > 0 && bounds.Height > 0;
+            Visible = sel >= 0 && bounds.Width > 0 && bounds.Height > 0 && parent_.is_editing;
             if (!Visible) 
                 return;
 

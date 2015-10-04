@@ -54,6 +54,9 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.editMode = new System.Windows.Forms.ComboBox();
+            this.label18 = new System.Windows.Forms.Label();
             this.hotkeyslink = new System.Windows.Forms.LinkLabel();
             this.useHotkeys = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -114,7 +117,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 63);
+            this.label2.Location = new System.Drawing.Point(397, 22);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(157, 17);
             this.label2.TabIndex = 1;
@@ -126,7 +129,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.viewIndex);
             this.groupBox1.Controls.Add(this.viewLineCount);
-            this.groupBox1.Location = new System.Drawing.Point(6, 314);
+            this.groupBox1.Location = new System.Drawing.Point(6, 339);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(628, 122);
             this.groupBox1.TabIndex = 2;
@@ -189,7 +192,7 @@
             this.groupBox2.Controls.Add(this.bringToTopOnRestart);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.toggleTopmost);
-            this.groupBox2.Location = new System.Drawing.Point(6, 113);
+            this.groupBox2.Location = new System.Drawing.Point(6, 142);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(628, 192);
             this.groupBox2.TabIndex = 4;
@@ -412,20 +415,56 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.label19);
+            this.groupBox7.Controls.Add(this.editMode);
+            this.groupBox7.Controls.Add(this.label18);
             this.groupBox7.Controls.Add(this.hotkeyslink);
             this.groupBox7.Controls.Add(this.useHotkeys);
             this.groupBox7.Controls.Add(this.label2);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(628, 96);
+            this.groupBox7.Size = new System.Drawing.Size(628, 130);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General";
             // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(97, 72);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(424, 52);
+            this.label19.TabIndex = 6;
+            this.label19.Text = "Always - We\'re always in Edit mode. Cursor is always visible\r\nWith F2 - Use F2 to" +
+    " toggle Edit mode ON/OFF\r\n\r\nWith Right Arrow - turn the Edit mode ON. Move to an" +
+    "other line, and it will be turned OFF\r\n";
+            // 
+            // editMode
+            // 
+            this.editMode.FormattingEnabled = true;
+            this.editMode.Items.AddRange(new object[] {
+            "Always",
+            "With F2 key",
+            "With RightArrow key"});
+            this.editMode.Location = new System.Drawing.Point(100, 44);
+            this.editMode.Name = "editMode";
+            this.editMode.Size = new System.Drawing.Size(275, 24);
+            this.editMode.TabIndex = 5;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(6, 47);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(71, 17);
+            this.label18.TabIndex = 4;
+            this.label18.Text = "Edit Mode";
+            // 
             // hotkeyslink
             // 
             this.hotkeyslink.AutoSize = true;
-            this.hotkeyslink.Location = new System.Drawing.Point(57, 31);
+            this.hotkeyslink.Location = new System.Drawing.Point(57, 19);
             this.hotkeyslink.Name = "hotkeyslink";
             this.hotkeyslink.Size = new System.Drawing.Size(59, 17);
             this.hotkeyslink.TabIndex = 3;
@@ -436,7 +475,7 @@
             // useHotkeys
             // 
             this.useHotkeys.AutoSize = true;
-            this.useHotkeys.Location = new System.Drawing.Point(10, 30);
+            this.useHotkeys.Location = new System.Drawing.Point(10, 18);
             this.useHotkeys.Name = "useHotkeys";
             this.useHotkeys.Size = new System.Drawing.Size(52, 21);
             this.useHotkeys.TabIndex = 2;
@@ -949,6 +988,9 @@
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.LinkLabel hotkeyslink;
         private System.Windows.Forms.CheckBox useHotkeys;
+        private System.Windows.Forms.ComboBox editMode;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
 
     }
 }

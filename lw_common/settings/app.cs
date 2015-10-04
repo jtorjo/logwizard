@@ -108,6 +108,13 @@ namespace lw_common {
         // 1.1.5+ - forced contexts (for instance, when imported from .logwizard files)
         public Dictionary<string,string> forced_file_to_context = new Dictionary<string, string>();
 
+        public enum edit_mode_type {
+            always, with_f2, with_right_arrow
+        }
+        public edit_mode_type edit_mode = edit_mode_type.always;
+
+
+
         // file-by-file
         public bool bring_to_top_on_restart = false;
         public bool make_topmost_on_restart = false;
@@ -242,6 +249,8 @@ namespace lw_common {
             load_save(load, ref file_to_context, "file_to_context");
             load_save(load, ref file_to_syntax, "file_to_syntax");
             load_save(load, ref forced_file_to_context, "forced_file_to_context");
+
+            load_save(load, ref edit_mode, "edit_mode", edit_mode_type.always);
         }
 
         private string initials(string name) {

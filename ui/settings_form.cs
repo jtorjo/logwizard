@@ -93,6 +93,8 @@ namespace LogWizard.ui {
                 fileToContext.AddObject(new item());
             while ( fileToSyntax.GetItemCount() < MAX_ITEMS)
                 fileToSyntax.AddObject(new item());
+
+            editMode.SelectedIndex = (int)app.inst.edit_mode;
         }
 
         private void save() {
@@ -153,6 +155,8 @@ namespace LogWizard.ui {
             }
             if ( error)
                 util.beep(util.beep_type.err);
+
+            app.inst.edit_mode = (app.edit_mode_type) editMode.SelectedIndex;
 
             app.inst.save();
         }

@@ -1,7 +1,6 @@
 
 
 
-- when on first char + move right -> do move right
 
 - note: i overode the hotkeys left/up/down/right/pgup/pgdn/home/end - so that they would work even if the control does not have focus
         this might not be the case now, so perhaps i don't really need to do it now? TOTHINK
@@ -10,6 +9,18 @@
 
 - allow "edit mode" (always, with_f2, with_right_arrow)
 
+- edit mode or note -update cursor!!!!!!!!!!
+
+- scrolling (scroll bar) - handle it
+
+
+1.2.5f
+- tested edit mode:
+	Always - We're always in Edit mode. Cursor is always visible
+	With F2 - Use F2 to toggle Edit mode ON/OFF
+	With Right Arrow - turn the Edit mode ON. Move to another line, and it will be turned OFF
+- IMPORTANT:
+  when in edit mode, ctrl->arrows does not work
 
 
 1.2.5e

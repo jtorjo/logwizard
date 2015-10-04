@@ -213,6 +213,9 @@ namespace lw_common
         // it's the subitem column that is currently selected (for smart readonly editing)
         private int cur_col_ = 0;
 
+        private bool is_editing_ = false;
+        private int editing_row_ = -1;
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent as log_view_parent != null);
@@ -1083,6 +1086,14 @@ namespace lw_common
                 int line_idx = match_at(sel) .match.line_idx;
                 lv_parent.on_sel_line(this, line_idx);
             }
+
+            if (is_editing_ && app.inst.edit_mode == app.edit_mode_type.with_right_arrow) {
+                if (sel != editing_row_) {
+                    is_editing_ = false;
+                    edit.update_ui();
+                }
+                
+            }
         }
 
         private bool is_line_visible(int line_idx) {
@@ -1235,6 +1246,7 @@ namespace lw_common
             }
         }
 
+    
 
         // returns how many lines this filter has found
         public int filter_row_match_count(int row_idx) {
@@ -1670,65 +1682,139 @@ namespace lw_common
             edit.update_sel();
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
-            if (keyData == Keys.Left || keyData == Keys.Right) {
-                if (edit.Visible && edit.SelectionLength == 0) {
-                    bool left = keyData == Keys.Left;
-                    bool can_move = (left && edit.SelectionStart == 0 && edit.SelectionLength == 0) || (!left && edit.SelectionStart == edit.TextLength);
+        public bool is_editing {
+            get {
+                switch (app.inst.edit_mode) {
+                case app.edit_mode_type.always:
+                    return true;
 
-                    if (can_move) {
-                        for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
-                            int next = left
-                                ? (cur_col_ - column_idx - 1 + list.Columns.Count) % list.Columns.Count
-                                : (cur_col_ + column_idx + 1) % list.Columns.Count;
-                            if (list.Columns[next].Width > 0) {
-                                cur_col_ = next;
-                                break;
-                            }
-                        }
-                        util.postpone(() => {
-                            edit.go_to_char(0);
-                            edit.update_ui();
-                            focus_to_edit();
-                        }, 1);
-                        return true;
-                    }
+                case app.edit_mode_type.with_f2:
+                    return is_editing_;
+
+                case app.edit_mode_type.with_right_arrow:
+                    return is_editing_;
+                default:
+                    Debug.Assert(false);
+                    return false;
                 }
-                util.postpone(edit.force_update_sel,1);
+            }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+            if (!is_editing) {
+                // see if the current key will start editing
+                if (keyData == Keys.F2 && app.inst.edit_mode == app.edit_mode_type.with_f2) {
+                    is_editing_ = true;
+                    cur_col_ = msgCol.Index;
+                    edit.update_ui();
+                    focus_to_edit();
+                    return true;
+                } 
+                else if (keyData == Keys.Right && app.inst.edit_mode == app.edit_mode_type.with_right_arrow) {
+                    is_editing_ = true;
+                    editing_row_ = sel_row_idx;
+                    cur_col_ = msgCol.Index;
+                    edit.go_to_char(0);
+                    edit.update_ui();
+                    focus_to_edit();
+                    return true;
+                }
             }
 
-            switch (keyData) {
-            case Keys.Up:
-                on_action(action_type.arrow_up);
-                return true;
-            case Keys.Down:
-                on_action(action_type.arrow_down);
-                return true;
-            case Keys.PageUp:
-                on_action(action_type.pageup);
-                return true;
-            case Keys.PageDown:
-                on_action(action_type.pagedown);
-                return true;
+            if (is_editing) {
+                // see if user wants to turn off editing
+                switch (app.inst.edit_mode) {
+                case app.edit_mode_type.always:
+                    // in this case, we're always in edit-mode
+                    break;
 
-            case Keys.Home:
-                if (edit.SelectionStart == 0 && edit.SelectionLength == 0) {
-                    on_action(action_type.home);
-                    return true;
+                    // F2 - toggle this edit mode OFF
+                case app.edit_mode_type.with_f2:
+                    if (keyData == Keys.F2) {
+                        is_editing_ = false;
+                        edit.update_ui();
+                        return true;
+                    }
+                    break;
+
+                    // moving to another line will toggle this edit mode off
+                case app.edit_mode_type.with_right_arrow:
+                    switch (keyData) {
+                    case Keys.Up:
+                    case Keys.Down:
+                    case Keys.PageUp:
+                    case Keys.PageDown:
+                    case Keys.Home:
+                    case Keys.End:
+                        is_editing_ = false;
+                        edit.update_ui();
+                        break;
+                    }
+                    break;
                 }
-                break;
-            case Keys.End:
-                if (edit.SelectionStart == edit.TextLength) {
-                    on_action(action_type.end);
-                    return true;
+            }
+
+            if (is_editing) {
+                if (keyData == Keys.Left || keyData == Keys.Right) {
+                    if (edit.Visible && edit.SelectionLength == 0) {
+                        bool left = keyData == Keys.Left;
+                        bool can_move = (left && edit.SelectionStart == 0 && edit.SelectionLength == 0) || (!left && edit.SelectionStart == edit.TextLength);
+
+                        if (can_move) {
+                            for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
+                                int next = left ? (cur_col_ - column_idx - 1 + list.Columns.Count) % list.Columns.Count : (cur_col_ + column_idx + 1) % list.Columns.Count;
+                                if (list.Columns[next].Width > 0) {
+                                    cur_col_ = next;
+                                    break;
+                                }
+                            }
+                            util.postpone(() => {
+                                edit.go_to_char(0);
+                                edit.update_ui();
+                                focus_to_edit();
+                            }, 1);
+                            return true;
+                        }
+                    }
+                    util.postpone(edit.force_update_sel, 1);
                 }
-                break;
+
+                switch (keyData) {
+                case Keys.Up:
+                    on_action(action_type.arrow_up);
+                    return true;
+                case Keys.Down:
+                    on_action(action_type.arrow_down);
+                    return true;
+                case Keys.PageUp:
+                    on_action(action_type.pageup);
+                    return true;
+                case Keys.PageDown:
+                    on_action(action_type.pagedown);
+                    return true;
+
+                case Keys.Home:
+                    if (edit.SelectionStart == 0 && edit.SelectionLength == 0) {
+                        on_action(action_type.home);
+                        return true;
+                    }
+                    break;
+                case Keys.End:
+                    if (edit.SelectionStart == edit.TextLength) {
+                        on_action(action_type.end);
+                        return true;
+                    }
+                    break;
+                }
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void list_CellClick(object sender, CellClickEventArgs e) {
+            if (!is_editing)
+                return;
+
             int col_idx = e.ColumnIndex;
             if (col_idx >= 0) {
                 var mouse = list.PointToClient(Cursor.Position);
@@ -1747,10 +1833,9 @@ namespace lw_common
                     cur_col_ = col_idx;
                     edit.update_ui();
                     edit.go_to_char(char_idx);
-                    util.postpone(() => edit.Focus() , 1);
+                    util.postpone(() => edit.Focus(), 1);
                 }
             }
         }
-
     }
 }
