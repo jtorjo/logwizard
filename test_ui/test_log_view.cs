@@ -30,7 +30,7 @@ namespace test_ui {
             lv_.set_filter( filter  );
 
             app.inst.edit_mode = app.edit_mode_type.always;
-//            app.inst.edit_mode = app.edit_mode_type.with_f2;
+//            app.inst.edit_mode = app.edit_mode_type.with_space;
         }
 
         public void handle_subcontrol_keys(Control c) {

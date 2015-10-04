@@ -1688,7 +1688,7 @@ namespace lw_common
                 case app.edit_mode_type.always:
                     return true;
 
-                case app.edit_mode_type.with_f2:
+                case app.edit_mode_type.with_space:
                     return is_editing_;
 
                 case app.edit_mode_type.with_right_arrow:
@@ -1704,7 +1704,7 @@ namespace lw_common
 
             if (!is_editing) {
                 // see if the current key will start editing
-                if (keyData == Keys.F2 && app.inst.edit_mode == app.edit_mode_type.with_f2) {
+                if (keyData == Keys.Space && app.inst.edit_mode == app.edit_mode_type.with_space) {
                     is_editing_ = true;
                     cur_col_ = msgCol.Index;
                     edit.update_ui();
@@ -1729,9 +1729,9 @@ namespace lw_common
                     // in this case, we're always in edit-mode
                     break;
 
-                    // F2 - toggle this edit mode OFF
-                case app.edit_mode_type.with_f2:
-                    if (keyData == Keys.F2) {
+                    // toggle this edit mode OFF
+                case app.edit_mode_type.with_space:
+                    if (keyData == Keys.Space) {
                         is_editing_ = false;
                         edit.update_ui();
                         return true;

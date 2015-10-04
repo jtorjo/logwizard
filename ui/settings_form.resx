@@ -132,6 +132,12 @@ If no view matches, they are shown in dark gray.
   <metadata name="tip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="label19.Text" xml:space="preserve">
+    <value>Always - We're always in Edit mode. Cursor is always visible
+With Space - Use Space hotkey to toggle Edit mode ON/OFF
+With Right Arrow - turn the Edit mode ON. Move to another line, and it will be turned OFF
+</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

@@ -431,14 +431,12 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(97, 72);
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(97, 76);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(424, 52);
+            this.label19.Size = new System.Drawing.Size(513, 39);
             this.label19.TabIndex = 6;
-            this.label19.Text = "Always - We\'re always in Edit mode. Cursor is always visible\r\nWith F2 - Use F2 to" +
-    " toggle Edit mode ON/OFF\r\n\r\nWith Right Arrow - turn the Edit mode ON. Move to an" +
-    "other line, and it will be turned OFF\r\n";
+            this.label19.Text = resources.GetString("label19.Text");
             // 
             // editMode
             // 
@@ -446,7 +444,7 @@
             this.editMode.FormattingEnabled = true;
             this.editMode.Items.AddRange(new object[] {
             "Always",
-            "With F2 key",
+            "With SPACE key",
             "With RightArrow key"});
             this.editMode.Location = new System.Drawing.Point(100, 44);
             this.editMode.Name = "editMode";

@@ -109,7 +109,7 @@ namespace lw_common {
         public Dictionary<string,string> forced_file_to_context = new Dictionary<string, string>();
 
         public enum edit_mode_type {
-            always, with_f2, with_right_arrow
+            always, with_space, with_right_arrow
         }
         public edit_mode_type edit_mode = edit_mode_type.always;
 

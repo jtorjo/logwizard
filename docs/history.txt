@@ -5,17 +5,16 @@
 - note: i overode the hotkeys left/up/down/right/pgup/pgdn/home/end - so that they would work even if the control does not have focus
         this might not be the case now, so perhaps i don't really need to do it now? TOTHINK
 
+
+
  - the selection of the edit box - make it a bit darker than what already shown
 
-- allow "edit mode" (always, with_f2, with_right_arrow)
-
-- edit mode or note -update cursor!!!!!!!!!!
 
 - scrolling (scroll bar) - handle it
 
 
 1.2.5h
-
+- using SPACE instead of F2 (f2 already used in bookmars)
 
 1.2.5g
 - tested edit mode:
