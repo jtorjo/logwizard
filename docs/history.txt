@@ -2,6 +2,9 @@
 
 
 
+1.2.4b
+- removed keys_debug - added by mistake
+
 
 1.2.4
 - moved log_view into lw_common, so I can easily test it
