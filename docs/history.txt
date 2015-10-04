@@ -2,6 +2,14 @@
 
 
 
+- note: i overode the hotkeys left/up/down/right/pgup/pgdn/home/end - so that they would work even if the control does not have focus
+        this might not be the case now, so perhaps i don't really need to do it now? TOTHINK
+
+
+1.2.5a
+- handling navigation keys in log_view - so that i update the smart edit box.
+
+
 1.2.4b
 - removed keys_debug - added by mistake
 

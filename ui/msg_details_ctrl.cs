@@ -81,7 +81,7 @@ namespace LogWizard {
             Size = new_size;
             txt.Text = sel;
 
-            Rectangle line_rect = view.sel_rect;
+            Rectangle line_rect = view.sel_rect_screen;
             if (can_text_fit_in_width(sel, line_rect.Width)) {
                 show(false);
                 return;

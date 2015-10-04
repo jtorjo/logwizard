@@ -201,6 +201,9 @@ namespace lw_common
 
         private int old_item_count_ = 0;
 
+        // it's the subitem column that is currently selected (for smart readonly editing)
+        private int cur_col_ = 0;
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent as log_view_parent != null);
@@ -222,6 +225,8 @@ namespace lw_common
 
             // just an example:
             //render_.set_override("settings", new log_view_render.print_info { fg = Color.Blue, bold = true });
+            cur_col_ = msgCol.Index;
+            edit.init(this);
         }
 
         private log_view_parent lv_parent {
@@ -304,6 +309,43 @@ namespace lw_common
             }
         }
 
+        internal item sel {
+            get {
+                int idx = sel_row_idx;
+                if (idx >= 0)
+                    return match_at(idx);
+                else
+                    return null;
+            }
+        }
+        internal Rectangle sel_subrect_bounds {
+            get {
+                Debug.Assert(cur_col_ >= 0 && cur_col_ < list.Columns.Count);
+
+                int sel = sel_row_idx;
+                if (sel >= 0) {
+                    var r = list.GetItem(sel).GetSubItemBounds(cur_col_);
+                    if (r.Height == 0) {
+                        // this can happen when the message is not visible at all
+                        r = list.GetItem(sel).Bounds;
+                        r.Width = 0;
+                    }
+                    return r;
+                }
+                return new Rectangle();
+            }
+        }
+
+        internal string sel_subitem_text {
+            get {
+                int sel = sel_row_idx;
+                if (sel >= 0)
+                    return list.GetItem(sel).GetSubItem(cur_col_).Text;
+                else
+                    return "";
+            }
+        }
+
         // returns the line index of the current selection
         public int sel_line_idx {
             get {
@@ -324,7 +366,8 @@ namespace lw_common
                 return "";
             }
         }
-        public Rectangle sel_rect {
+        // returns the sel rectangle, in screen coordinates
+        public Rectangle sel_rect_screen {
             get {
                 int sel = sel_row_idx;
                 if (sel >= 0) {
@@ -1011,11 +1054,13 @@ namespace lw_common
                 list.SelectedIndex = idx;
                 update_line_highlight_color(idx);
                 update_x_of_y();
+                util.postpone(edit.update_ui, 1);
             }
             select_nofify_ = select_type.notify_parent;
         }
 
         private void list_SelectedIndexChanged(object sender, EventArgs e) {
+            edit.update_ui();
             int sel = sel_row_idx;
             if (sel < 0)
                 return;
@@ -1606,5 +1651,44 @@ namespace lw_common
             return export;
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+            if (keyData == Keys.Left || keyData == Keys.Right) {
+                if (edit.Visible && edit.SelectionStart == 0 && edit.SelectionLength == 0) {
+                    bool left = keyData == Keys.Left;
+                    for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
+                        int next = left ? (cur_col_ - column_idx - 1 + list.Columns.Count) % list.Columns.Count : (cur_col_ + column_idx + 1) % list.Columns.Count;
+                        if (list.Columns[next].Width > 0) {
+                            cur_col_ = next;
+                            break;
+                        }
+                    }
+                    util.postpone(edit.update_ui, 1);
+                    return true;
+                }
+            }
+
+            switch (keyData) {
+            case Keys.Up:       
+                on_action(action_type.arrow_up);
+                return true;
+            case Keys.Down:
+                on_action(action_type.arrow_down);
+                return true;
+            case Keys.PageUp:
+                on_action(action_type.pageup);
+                return true;
+            case Keys.PageDown:
+                on_action(action_type.pagedown);
+                return true;
+            case Keys.Home:
+                on_action(action_type.home);
+                return true;
+            case Keys.End:
+                on_action(action_type.end);
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
 }

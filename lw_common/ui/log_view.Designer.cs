@@ -46,7 +46,7 @@
             this.ctx3Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.msgCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.smart_readonly_textbox1 = new lw_common.ui.smart_readonly_textbox();
+            this.edit = new lw_common.ui.smart_readonly_textbox();
             ((System.ComponentModel.ISupportInitialize)(this.list)).BeginInit();
             this.SuspendLayout();
             // 
@@ -100,6 +100,7 @@
             this.ctx2Col,
             this.ctx3Col,
             this.msgCol});
+            this.list.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.list.FullRowSelect = true;
             this.list.HideSelection = false;
             this.list.Location = new System.Drawing.Point(2, 22);
@@ -212,21 +213,21 @@
             this.panel1.Size = new System.Drawing.Size(693, 23);
             this.panel1.TabIndex = 4;
             // 
-            // smart_readonly_textbox1
+            // edit
             // 
-            this.smart_readonly_textbox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.smart_readonly_textbox1.Location = new System.Drawing.Point(220, 29);
-            this.smart_readonly_textbox1.Name = "smart_readonly_textbox1";
-            this.smart_readonly_textbox1.ReadOnly = true;
-            this.smart_readonly_textbox1.Size = new System.Drawing.Size(50, 20);
-            this.smart_readonly_textbox1.TabIndex = 5;
+            this.edit.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.edit.Location = new System.Drawing.Point(-200, 29);
+            this.edit.Name = "edit";
+            this.edit.ReadOnly = true;
+            this.edit.Size = new System.Drawing.Size(50, 20);
+            this.edit.TabIndex = 5;
             // 
             // log_view
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.smart_readonly_textbox1);
+            this.Controls.Add(this.edit);
             this.Controls.Add(this.list);
             this.Controls.Add(this.viewName);
             this.Controls.Add(this.labelName);
@@ -259,6 +260,6 @@
         internal BrightIdeasSoftware.OLVColumn msgCol;
         private System.Windows.Forms.Panel panel1;
         public BrightIdeasSoftware.VirtualObjectListView list;
-        private ui.smart_readonly_textbox smart_readonly_textbox1;
+        private ui.smart_readonly_textbox edit;
     }
 }
