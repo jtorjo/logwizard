@@ -1671,11 +1671,10 @@ namespace lw_common
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
-            edit.update_sel();
             if (keyData == Keys.Left || keyData == Keys.Right) {
                 if (edit.Visible && edit.SelectionLength == 0) {
                     bool left = keyData == Keys.Left;
-                    bool can_move = (left && edit.SelectionStart == 0) || (!left && edit.SelectionStart == edit.TextLength);
+                    bool can_move = (left && edit.SelectionStart == 0 && edit.SelectionLength == 0) || (!left && edit.SelectionStart == edit.TextLength);
 
                     if (can_move) {
                         for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
@@ -1695,6 +1694,7 @@ namespace lw_common
                         return true;
                     }
                 }
+                util.postpone(edit.force_update_sel,1);
             }
 
             switch (keyData) {
@@ -1710,12 +1710,19 @@ namespace lw_common
             case Keys.PageDown:
                 on_action(action_type.pagedown);
                 return true;
+
             case Keys.Home:
-                on_action(action_type.home);
-                return true;
+                if (edit.SelectionStart == 0 && edit.SelectionLength == 0) {
+                    on_action(action_type.home);
+                    return true;
+                }
+                break;
             case Keys.End:
-                on_action(action_type.end);
-                return true;
+                if (edit.SelectionStart == edit.TextLength) {
+                    on_action(action_type.end);
+                    return true;
+                }
+                break;
             }
 
             return base.ProcessCmdKey(ref msg, keyData);

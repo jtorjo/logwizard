@@ -12,9 +12,16 @@
 
 
 
+1.2.5e
+- navigation keys work - all of them (arrows/pgup/pgdown/home/end)
+ - special cases: home/end - if at home (selectionstart=0) -> go home (first item)
+                           -if at end (selectionstart=endofline) -> go end (last line)
 
 
 1.2.5d
+- several fixes when handling navigation keys
+- bug: if for a cell my selection start is bigger than len + i navigate to that cell +  press left-arrow:
+  it will navigate to cell on its left, instead of going one char to left.
 
 
 1.2.5c

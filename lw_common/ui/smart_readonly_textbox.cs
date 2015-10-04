@@ -80,6 +80,12 @@ namespace lw_common.ui {
             }    
         }
 
+        public void force_update_sel() {
+            sel_col_ = parent_.sel_col;
+            sel_start_ = SelectionStart;
+            sel_len_ = SelectionLength;            
+        }
+
         public void update_sel() {
             logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
 
@@ -88,9 +94,11 @@ namespace lw_common.ui {
                 if (sel_start_ <= TextLength) {
                     sel_start_ = SelectionStart;
                     sel_len_ = SelectionLength;
-                } else
+                } else {
                     // we're bigger than current row
-                    SelectionStart = SelectionLength;
+                    SelectionStart = TextLength;
+                    SelectionLength = 0;
+                }
             } else {
                 sel_col_ = parent_.sel_col;
                 sel_start_ = SelectionStart;
