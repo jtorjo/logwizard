@@ -107,6 +107,15 @@ namespace lw_common
                 get { return base.line.part(info_type.thread); }
             }
 
+            public Color sel_bg(log_view parent) {
+                var bg = this.bg(parent);
+                Color dark_bg = util.darker_color(bg);
+                Color darker_bg = util.darker_color(dark_bg);
+                bool is_focused = win32.focused_ctrl() == parent.list;
+                return is_focused ? darker_bg : dark_bg;
+            }
+
+
             public Color bg(log_view parent) {
                 if (parent.bookmarks_.Contains(base.line_idx))
                     return parent.bookmark_bg_;
@@ -1689,6 +1698,26 @@ namespace lw_common
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void log_view_MouseClick(object sender, MouseEventArgs e) {
+            /*
+            var mouse = list.PointToClient(Cursor.Position);
+            if (mouse.X >= 0 && mouse.Y >= 0) {
+                var hit = list.OlvHitTest(mouse.X, mouse.Y);
+                if (hit.SubItem != null) {
+                    cur_col_ = hit.ColumnIndex;
+                    util.postpone(edit.update_ui,1);
+                }
+            }*/
+        }
+
+        private void list_CellClick(object sender, CellClickEventArgs e) {
+            int idx = e.ColumnIndex;
+            if (idx >= 0) {
+                cur_col_ = idx;
+                edit.update_ui();
+            }
         }
     }
 }

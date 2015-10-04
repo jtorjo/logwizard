@@ -113,6 +113,7 @@
             this.list.UseCompatibleStateImageBehavior = false;
             this.list.View = System.Windows.Forms.View.Details;
             this.list.VirtualMode = true;
+            this.list.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.list_CellClick);
             this.list.CellOver += new System.EventHandler<BrightIdeasSoftware.CellOverEventArgs>(this.list_CellOver);
             this.list.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.list_CellToolTipShowing);
             this.list.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.list_FormatCell_1);
@@ -235,6 +236,7 @@
             this.Name = "log_view";
             this.Size = new System.Drawing.Size(697, 427);
             this.Load += new System.EventHandler(this.log_view_Load);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.log_view_MouseClick);
             ((System.ComponentModel.ISupportInitialize)(this.list)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
