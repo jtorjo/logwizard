@@ -6,10 +6,14 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using log4net.Repository.Hierarchy;
 
 namespace lw_common.ui {
     public partial class smart_readonly_textbox : TextBox {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private log_view parent_;
+        private int sel_start_ = -1, sel_len_ = -1, sel_col_ = -1;
 
         public smart_readonly_textbox() {
             InitializeComponent();
@@ -52,13 +56,46 @@ namespace lw_common.ui {
             log_view.item i = parent_.sel;
             ForeColor = i.fg(parent_);
             BackColor = i.sel_bg(parent_);
+
+            if (sel_start_ >= 0 && sel_start_ <= TextLength)
+                SelectionStart = sel_start_;
+            else if (TextLength > 0) {
+                // our selection is bigger than what we have in the current cell
+                SelectionStart = TextLength;
+                return;
+            }
+
+            if (sel_start_ >= 0 && sel_start_ <= TextLength)
+                if (sel_len_ >= 0 && sel_len_ + sel_start_ <= TextLength)
+                    SelectionLength = sel_len_;
         }
 
         public void go_to_char(int char_idx) {
             if (char_idx <= TextLength) {
                 SelectionStart = char_idx;
                 SelectionLength = 0;
+                sel_col_ = parent_.sel_col;
+                sel_start_ = SelectionStart;
+                sel_len_ = 0;
             }    
+        }
+
+        public void update_sel() {
+            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
+
+            if (sel_col_ == parent_.sel_col) {
+                // at this point - see if we already have a selection higher than what we selected now
+                if (sel_start_ <= TextLength) {
+                    sel_start_ = SelectionStart;
+                    sel_len_ = SelectionLength;
+                } else
+                    // we're bigger than current row
+                    SelectionStart = SelectionLength;
+            } else {
+                sel_col_ = parent_.sel_col;
+                sel_start_ = SelectionStart;
+                sel_len_ = SelectionLength;
+            }
         }
 
     }

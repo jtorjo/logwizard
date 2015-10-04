@@ -345,6 +345,10 @@ namespace lw_common
             }
         }
 
+        internal int sel_col {
+            get { return cur_col_; }
+        }
+
         internal string sel_subitem_text {
             get {
                 int sel = sel_row_idx;
@@ -632,6 +636,7 @@ namespace lw_common
                 select_idx( sel, select_type.notify_parent);
                 ensure_line_visible(sel);
             }
+            focus_to_edit();
         }
 
         private List<int> selected_indices_array() {
@@ -1660,24 +1665,40 @@ namespace lw_common
             return export;
         }
 
+        private void focus_to_edit() {
+            edit.Focus();
+            edit.update_sel();
+        }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+            edit.update_sel();
             if (keyData == Keys.Left || keyData == Keys.Right) {
-                if (edit.Visible && edit.SelectionStart == 0 && edit.SelectionLength == 0) {
+                if (edit.Visible && edit.SelectionLength == 0) {
                     bool left = keyData == Keys.Left;
-                    for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
-                        int next = left ? (cur_col_ - column_idx - 1 + list.Columns.Count) % list.Columns.Count : (cur_col_ + column_idx + 1) % list.Columns.Count;
-                        if (list.Columns[next].Width > 0) {
-                            cur_col_ = next;
-                            break;
+                    bool can_move = (left && edit.SelectionStart == 0) || (!left && edit.SelectionStart == edit.TextLength);
+
+                    if (can_move) {
+                        for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
+                            int next = left
+                                ? (cur_col_ - column_idx - 1 + list.Columns.Count) % list.Columns.Count
+                                : (cur_col_ + column_idx + 1) % list.Columns.Count;
+                            if (list.Columns[next].Width > 0) {
+                                cur_col_ = next;
+                                break;
+                            }
                         }
+                        util.postpone(() => {
+                            edit.go_to_char(0);
+                            edit.update_ui();
+                            focus_to_edit();
+                        }, 1);
+                        return true;
                     }
-                    util.postpone(edit.update_ui, 1);
-                    return true;
                 }
             }
 
             switch (keyData) {
-            case Keys.Up:       
+            case Keys.Up:
                 on_action(action_type.arrow_up);
                 return true;
             case Keys.Down:
