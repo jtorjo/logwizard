@@ -53,6 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="test_edit_ctrl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="test_edit_ctrl.Designer.cs">
+      <DependentUpon>test_edit_ctrl.cs</DependentUpon>
+    </Compile>
     <Compile Include="test_export.cs" />
     <Compile Include="test_filter_ctrl.cs">
       <SubType>Form</SubType>
@@ -83,6 +89,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="test_edit_ctrl.resx">
+      <DependentUpon>test_edit_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="test_filter_ctrl.resx">
       <DependentUpon>test_filter_ctrl.cs</DependentUpon>
     </EmbeddedResource>

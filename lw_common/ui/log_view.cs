@@ -1760,13 +1760,13 @@ namespace lw_common
                 bool is_left_or_right = keyData == Keys.Left || keyData == Keys.Right || keyData == (Keys.Left | Keys.Alt) || keyData == (Keys.Right | Keys.Alt);
                 if (is_left_or_right) {
                     bool is_alt_left_or_right = keyData == (Keys.Left | Keys.Alt) || keyData == (Keys.Right | Keys.Alt);
+                    bool is_left = keyData == Keys.Left || keyData == (Keys.Left | Keys.Alt);
                     if (edit.Visible && (edit.SelectionLength == 0 || is_alt_left_or_right)) {
-                        bool left = keyData == Keys.Left || keyData == (Keys.Left | Keys.Alt);
-                        bool can_move = (left && edit.SelectionStart == 0 && edit.SelectionLength == 0) || (!left && edit.SelectionStart == edit.TextLength) || is_alt_left_or_right;
+                        bool can_move = (is_left && edit.SelectionStart == 0 && edit.SelectionLength == 0) || (!is_left && edit.SelectionStart == edit.TextLength) || is_alt_left_or_right;
 
                         if (can_move) {
                             for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
-                                int next = left ? (cur_col_ - column_idx - 1 + list.Columns.Count) % list.Columns.Count : (cur_col_ + column_idx + 1) % list.Columns.Count;
+                                int next = is_left ? (cur_col_ - column_idx - 1 + list.Columns.Count) % list.Columns.Count : (cur_col_ + column_idx + 1) % list.Columns.Count;
                                 if (list.Columns[next].Width > 0) {
                                     cur_col_ = next;
                                     break;
@@ -1780,7 +1780,19 @@ namespace lw_common
                             return true;
                         }
                     }
+
                     util.postpone(edit.force_update_sel, 1);
+                }
+
+                bool is_shift_right = keyData == (Keys.Right | Keys.Shift);
+                bool is_shift_left = keyData == (Keys.Left | Keys.Shift);
+                if (is_shift_left && edit.Visible) {
+                    edit.sel_to_left();
+                    return true;
+                }
+                if (is_shift_right && edit.Visible) {
+                    edit.sel_to_right();
+                    return true;
                 }
 
                 switch (keyData) {

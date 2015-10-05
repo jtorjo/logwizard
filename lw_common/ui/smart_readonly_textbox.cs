@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -95,6 +96,8 @@ namespace lw_common.ui {
         }
 
         public void force_update_sel() {
+            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
+
             sel_col_ = parent_.sel_col;
             sel_start_ = SelectionStart;
             sel_len_ = SelectionLength;            
@@ -120,21 +123,43 @@ namespace lw_common.ui {
             }
         }
 
+        public void sel_to_left() {
+            if (sel_start_ > 0) {
+                ++sel_len_;
+                --sel_start_;
+                Select(sel_start_, sel_len_);
+            }
+        }
+
+        public void sel_to_right() {
+            if (sel_start_ + sel_len_ < TextLength) {
+                ++sel_len_;
+                Select(sel_start_, sel_len_);
+            }
+        }
+
         private void smart_readonly_textbox_SelectionChanged(object sender, EventArgs e) {
             if (ignore_change_ > 0)
                 return;
+
+            logger.Debug("[smart] before sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
 
             if (SelectionLength > 0) {
                 ++ignore_change_;
                 SelectionBackColor = util.darker_color(BackColor);
                 SelectionColor = util.darker_color(ForeColor);
+
                 string txt = SelectedText;
                 SelectedText = txt;
+                
                 changed_sel_background_ = true;
+                
                 --ignore_change_;
             }
             else if (changed_sel_background_) 
                 util.postpone(check_empty_sel, 10);
+
+            logger.Debug("[smart] after  sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
         }
 
         private void check_empty_sel() {
@@ -148,6 +173,7 @@ namespace lw_common.ui {
                 string txt = Text;
                 Text = txt;
                 SelectionStart = sel;
+                force_update_sel();
             }
         }
 
