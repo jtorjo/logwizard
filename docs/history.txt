@@ -9,14 +9,17 @@
 
 
 
-- esc - clear selection
-- bksp - one char before (if space last char, delete that too)
-- if pressing a char and we're at the end of a word, automatically add space
-  - first, search for char appended to text - if nothing found, but adding ' ' and the char finds something, go there
-- type space in middle of word + no selection -> select that word
 - search ahead (the next 100 rows - on the same column)
 
 - click on a word - if user doesn't leave that place for a while (like, 750ms), we should mark that word!
+
+1.2.5m
+- if pressing a char and we're at the end of a word, automatically add space
+  - first, search for char appended to text - if nothing found, but adding ' ' and the char finds something, go there
+- type space in middle of word + no selection -> select that word
+- esc - clear selection
+- bksp - one char before (if space last char, delete that too)
+
 
 1.2.5l
 - fix: the selection of edit box a bit darker : now selection is correct (sel_start_ + sel_end_) 

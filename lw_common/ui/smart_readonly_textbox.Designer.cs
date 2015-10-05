@@ -33,6 +33,7 @@
             this.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.Size = new System.Drawing.Size(493, 20);
             this.SelectionChanged += new System.EventHandler(this.smart_readonly_textbox_SelectionChanged);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.smart_readonly_textbox_KeyPress);
             this.ResumeLayout(false);
 
         }

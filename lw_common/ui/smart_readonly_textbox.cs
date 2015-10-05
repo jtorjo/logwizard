@@ -20,6 +20,11 @@ namespace lw_common.ui {
 
         private int ignore_change_ = 0;
 
+        public delegate void void_func();
+
+        // called when selection has changed
+        public void_func on_sel_changed;
+
         public smart_readonly_textbox() {
             InitializeComponent();
             BorderStyle = BorderStyle.None;
@@ -59,6 +64,8 @@ namespace lw_common.ui {
                 return;
             }
 
+            ++ignore_change_;
+
             Location = location;
             Size = new Size(bounds.Width, bounds.Height);
             Font = parent_.list.Font;
@@ -77,12 +84,13 @@ namespace lw_common.ui {
             else if (TextLength > 0) {
                 // our selection is bigger than what we have in the current cell
                 SelectionStart = TextLength;
-                return;
             }
 
             if (sel_start_ >= 0 && sel_start_ <= TextLength)
                 if (sel_len_ >= 0 && sel_len_ + sel_start_ <= TextLength)
                     SelectionLength = sel_len_;
+
+            --ignore_change_;
         }
 
         public void go_to_char(int char_idx) {
@@ -95,16 +103,40 @@ namespace lw_common.ui {
             }    
         }
 
-        public void force_update_sel() {
-            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
+        public string sel_text {
+            get {
+                if (sel_len_ < 1)
+                    return "";
 
+                if (sel_start_ + sel_len_ <= TextLength)
+                    return Text.Substring(sel_start_, sel_len_);
+                if (sel_start_ < TextLength)
+                    return Text.Substring(sel_start_);
+
+                return "";
+            }
+        }
+
+        public void force_update_sel() {
+//            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
+
+            var old_sel = sel_text;
             sel_col_ = parent_.sel_col;
             sel_start_ = SelectionStart;
-            sel_len_ = SelectionLength;            
+            sel_len_ = SelectionLength;
+
+            if (old_sel != sel_text)
+                on_sel_changed();
+        }
+
+        public void clear_sel() {
+            sel_len_ = 0;
         }
 
         public void update_sel() {
-            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
+//            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
+
+            var old_sel = sel_text;
 
             if (sel_col_ == parent_.sel_col) {
                 // at this point - see if we already have a selection higher than what we selected now
@@ -121,28 +153,36 @@ namespace lw_common.ui {
                 sel_start_ = SelectionStart;
                 sel_len_ = SelectionLength;
             }
+
+            if (old_sel != sel_text)
+                on_sel_changed();
         }
 
         public void sel_to_left() {
             if (sel_start_ > 0) {
                 ++sel_len_;
                 --sel_start_;
-                Select(sel_start_, sel_len_);
+                update_selected_text();
             }
         }
 
         public void sel_to_right() {
             if (sel_start_ + sel_len_ < TextLength) {
                 ++sel_len_;
-                Select(sel_start_, sel_len_);
+                update_selected_text();
             }
+        }
+
+        private void update_selected_text() {
+            Select(sel_start_, sel_len_);
+            util.postpone(() => on_sel_changed(), 1);
         }
 
         private void smart_readonly_textbox_SelectionChanged(object sender, EventArgs e) {
             if (ignore_change_ > 0)
                 return;
 
-            logger.Debug("[smart] before sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
+//            logger.Debug("[smart] before sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
 
             if (SelectionLength > 0) {
                 ++ignore_change_;
@@ -156,25 +196,109 @@ namespace lw_common.ui {
                 
                 --ignore_change_;
             }
-            else if (changed_sel_background_) 
+            else if (changed_sel_background_)
                 util.postpone(check_empty_sel, 10);
-
-            logger.Debug("[smart] after  sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
+            else 
+                force_update_sel();
+           
+//            logger.Debug("[smart] after  sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
         }
 
         private void check_empty_sel() {
-            if (!changed_sel_background_)
+            if (!changed_sel_background_) {
                 return;
+            }
 
             if (SelectedText == "") {
                 // the idea is that we need to re-add the whole text, otherwise, the former selection will remain
                 changed_sel_background_ = false;
-                int sel = SelectionStart;
-                string txt = Text;
-                Text = txt;
-                SelectionStart = sel;
+
+                readd_all_text();
                 force_update_sel();
             }
+        }
+
+        // the richedit control does not clear selection, even if we went somewhere else (thus, selection length would become zero)
+        private void readd_all_text() {
+            // ... this would actually be funny if it wasn't so fucking stupid...
+            ++ignore_change_;
+
+            int sel = SelectionStart;
+            string full_txt = Text;
+            Text = full_txt;
+            SelectionStart = sel;
+            
+            --ignore_change_;
+        }
+
+        private void smart_readonly_textbox_KeyPress(object sender, KeyPressEventArgs e) {
+            if ( e.KeyChar == '\x8') {
+                // backspace
+                if (sel_len_ > 0) {
+                    --sel_len_;
+                    // delete last space, if any
+                    if (sel_text.EndsWith(" "))
+                        --sel_len_;
+                    readd_all_text();
+                    update_selected_text();
+                }
+                return;
+            }
+
+            if ( e.KeyChar == '\x1b') {
+                // escape
+                if (sel_len_ > 0) {
+                    sel_len_ = 0;
+                    readd_all_text();
+                    update_selected_text();
+                }
+                return;
+            }
+
+            string new_text = sel_text + e.KeyChar, new_text_with_space = "";
+            if (sel_text != "")
+                new_text_with_space = sel_text + " " + e.KeyChar;
+
+            // all searches are case-insensitive
+            new_text_with_space = new_text_with_space.ToLower();
+            new_text = new_text.ToLower();
+
+            // first, search ahead
+            string txt = Text.ToLower();
+            int pos_ahead = txt.IndexOf(new_text, sel_start_);
+            int pos_ahead_space = new_text_with_space != "" ? txt.IndexOf(new_text_with_space, sel_start_) : -1;
+
+            if (pos_ahead >= 0 || pos_ahead_space >= 0) {
+                int new_sel_start = pos_ahead >= 0 ? pos_ahead : pos_ahead_space;
+                bool moving = new_sel_start != sel_start_;
+                sel_start_ = new_sel_start;
+                sel_len_ = pos_ahead >= 0 ? sel_len_ + 1 : sel_len_ + 2;
+
+                if (moving)
+                    readd_all_text();
+
+                update_selected_text();
+                return;
+            }
+
+            //second, search from start
+            pos_ahead = txt.IndexOf(new_text);
+            pos_ahead_space = new_text_with_space != "" ? txt.IndexOf(new_text_with_space) : -1;
+
+            if (pos_ahead >= 0 || pos_ahead_space >= 0) {
+                int new_sel_start = pos_ahead >= 0 ? pos_ahead : pos_ahead_space;
+                bool moving = new_sel_start != sel_start_;
+                sel_start_ = new_sel_start;
+                sel_len_ = pos_ahead >= 0 ? sel_len_ + 1 : sel_len_ + 2;
+
+                if (moving)
+                    readd_all_text();
+
+                update_selected_text();
+                return;                
+            }
+
+            // did not find anything, let parent know
         }
 
     }

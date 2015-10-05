@@ -239,6 +239,7 @@ namespace lw_common
             // just an example:
             //render_.set_override("settings", new log_view_render.print_info { fg = Color.Blue, bold = true });
             cur_col_ = msgCol.Index;
+            edit.on_sel_changed = on_edit_sel_changed;
             edit.init(this);
         }
 
@@ -1797,26 +1798,32 @@ namespace lw_common
 
                 switch (keyData) {
                 case Keys.Up:
+                    edit.clear_sel();
                     on_action(action_type.arrow_up);
                     return true;
                 case Keys.Down:
+                    edit.clear_sel();
                     on_action(action_type.arrow_down);
                     return true;
                 case Keys.PageUp:
+                    edit.clear_sel();
                     on_action(action_type.pageup);
                     return true;
                 case Keys.PageDown:
+                    edit.clear_sel();
                     on_action(action_type.pagedown);
                     return true;
 
                 case Keys.Home:
                     if (edit.SelectionStart == 0 && edit.SelectionLength == 0) {
+                        edit.clear_sel();
                         on_action(action_type.home);
                         return true;
                     }
                     break;
                 case Keys.End:
                     if (edit.SelectionStart == edit.TextLength) {
+                        edit.clear_sel();
                         on_action(action_type.end);
                         return true;
                     }
@@ -1852,6 +1859,10 @@ namespace lw_common
                     util.postpone(() => edit.Focus(), 1);
                 }
             }
+        }
+
+        private void on_edit_sel_changed() {
+            
         }
 
         private void list_Scroll(object sender, ScrollEventArgs e) {
