@@ -111,7 +111,8 @@ namespace lw_common
                 var bg = this.bg(parent);
                 Color dark_bg = util.darker_color(bg);
                 Color darker_bg = util.darker_color(dark_bg);
-                bool is_focused = win32.focused_ctrl() == parent.list;
+                var focus = win32.focused_ctrl();
+                bool is_focused = focus == parent.list || focus == parent.edit;
                 return is_focused ? darker_bg : dark_bg;
             }
 

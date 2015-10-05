@@ -217,12 +217,15 @@
             // 
             // edit
             // 
-            this.edit.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.edit.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.edit.Location = new System.Drawing.Point(-200, 29);
+            this.edit.Multiline = false;
             this.edit.Name = "edit";
             this.edit.ReadOnly = true;
+            this.edit.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.edit.Size = new System.Drawing.Size(50, 20);
             this.edit.TabIndex = 5;
+            this.edit.Text = "";
             // 
             // log_view
             // 
@@ -262,6 +265,6 @@
         internal BrightIdeasSoftware.OLVColumn msgCol;
         private System.Windows.Forms.Panel panel1;
         public BrightIdeasSoftware.VirtualObjectListView list;
-        private ui.smart_readonly_textbox edit;
+        internal ui.smart_readonly_textbox edit;
     }
 }

@@ -7,8 +7,17 @@
 
 
 
- - the selection of the edit box - make it a bit darker than what already shown
 
+
+- search ahead (the next 100 rows - on the same column)
+- esc - clear selection
+- bksp - one char before (if space last char, delete that too)
+- if pressing a char and we're at the end of a word, automatically add space
+
+
+1.2.5k
+- the selection of the edit box - make it a bit darker than what already shown
+- using richtextbox now
 
 1.2.5j
 - smart text box: handles scrolling (from the scroll bar)

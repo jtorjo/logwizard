@@ -9,14 +9,20 @@ using System.Windows.Forms;
 using log4net.Repository.Hierarchy;
 
 namespace lw_common.ui {
-    public partial class smart_readonly_textbox : TextBox {
+    public partial class smart_readonly_textbox : RichTextBox {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private log_view parent_;
         private int sel_start_ = -1, sel_len_ = -1, sel_col_ = -1;
 
+        private bool changed_sel_background_ = false;
+
+        private int ignore_change_ = 0;
+
         public smart_readonly_textbox() {
             InitializeComponent();
+            BorderStyle = BorderStyle.None;
+
             // initially, until initialized,should be hidden
             util.postpone(() => Left = -200, 1);
         }
@@ -39,7 +45,7 @@ namespace lw_common.ui {
 
             int offset_x = parent_.list.Left;
             int offset_y = parent_.list.Top;
-            var location = new Point(offset_x + bounds.X, offset_y + bounds.Y);
+            var location = new Point(offset_x + bounds.X, offset_y + bounds.Y + 2);
             if (location.Y + bounds.Height > parent_.Height) {
                 // it was the last row when user is moving down (down arrow) - we'll get notified again
                 Visible = false;
@@ -54,12 +60,16 @@ namespace lw_common.ui {
 
             Location = location;
             Size = new Size(bounds.Width, bounds.Height);
-            Text = parent_.sel_subitem_text;
             Font = parent_.list.Font;
 
             log_view.item i = parent_.sel;
             ForeColor = i.fg(parent_);
             BackColor = i.sel_bg(parent_);
+
+            Text = parent_.sel_subitem_text;
+            SelectionBackColor = util.darker_color(BackColor);
+            SelectionColor = util.darker_color(ForeColor);
+            changed_sel_background_ = false;
 
             if (sel_start_ >= 0 && sel_start_ <= TextLength)
                 SelectionStart = sel_start_;
@@ -107,6 +117,37 @@ namespace lw_common.ui {
                 sel_col_ = parent_.sel_col;
                 sel_start_ = SelectionStart;
                 sel_len_ = SelectionLength;
+            }
+        }
+
+        private void smart_readonly_textbox_SelectionChanged(object sender, EventArgs e) {
+            if (ignore_change_ > 0)
+                return;
+
+            if (SelectionLength > 0) {
+                ++ignore_change_;
+                SelectionBackColor = util.darker_color(BackColor);
+                SelectionColor = util.darker_color(ForeColor);
+                string txt = SelectedText;
+                SelectedText = txt;
+                changed_sel_background_ = true;
+                --ignore_change_;
+            }
+            else if (changed_sel_background_) 
+                util.postpone(check_empty_sel, 10);
+        }
+
+        private void check_empty_sel() {
+            if (!changed_sel_background_)
+                return;
+
+            if (SelectedText == "") {
+                // the idea is that we need to re-add the whole text, otherwise, the former selection will remain
+                changed_sel_background_ = false;
+                int sel = SelectionStart;
+                string txt = Text;
+                Text = txt;
+                SelectionStart = sel;
             }
         }
 

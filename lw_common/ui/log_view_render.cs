@@ -169,7 +169,8 @@ namespace lw_common.ui {
                 return;
 
             Color bg = i.bg(parent_);
-            bool is_focused = win32.focused_ctrl() == parent_.list;
+            var focus_ctrl = win32.focused_ctrl();
+            bool is_focused = focus_ctrl == parent_.list || focus_ctrl == parent_.edit;
 
             Color dark_bg = util.darker_color(bg);
             Color darker_bg = util.darker_color(dark_bg);
