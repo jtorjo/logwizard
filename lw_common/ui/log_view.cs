@@ -240,6 +240,7 @@ namespace lw_common
             //render_.set_override("settings", new log_view_render.print_info { fg = Color.Blue, bold = true });
             cur_col_ = msgCol.Index;
             edit.on_sel_changed = on_edit_sel_changed;
+            edit.on_search_ahead = search_ahead;
             edit.init(this);
         }
 
@@ -1862,6 +1863,10 @@ namespace lw_common
         }
 
         private void on_edit_sel_changed() {
+            // logger.Debug("[lv] sel= [" + edit.sel_text + "]");
+        }
+
+        private void search_ahead(string txt) {
             
         }
 

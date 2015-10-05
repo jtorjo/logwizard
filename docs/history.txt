@@ -1,6 +1,4 @@
 
-- note: i overode the hotkeys left/up/down/right/pgup/pgdn/home/end - so that they would work even if the control does not have focus
-        this might not be the case now, so perhaps i don't really need to do it now? TOTHINK
 
 
 
@@ -12,6 +10,10 @@
 - search ahead (the next 100 rows - on the same column)
 
 - click on a word - if user doesn't leave that place for a while (like, 750ms), we should mark that word!
+
+1.2.5n
+- fix: small bug - on_edit_sel_changed sometimes not called
+
 
 1.2.5m
 - if pressing a char and we're at the end of a word, automatically add space

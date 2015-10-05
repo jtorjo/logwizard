@@ -22,8 +22,12 @@ namespace lw_common.ui {
 
         public delegate void void_func();
 
+        public delegate void search_func(string text);
+
         // called when selection has changed
         public void_func on_sel_changed;
+
+        public search_func on_search_ahead;
 
         public smart_readonly_textbox() {
             InitializeComponent();
@@ -64,6 +68,8 @@ namespace lw_common.ui {
                 return;
             }
 
+            var old_sel = sel_text;
+
             ++ignore_change_;
 
             Location = location;
@@ -91,6 +97,9 @@ namespace lw_common.ui {
                     SelectionLength = sel_len_;
 
             --ignore_change_;
+
+            if (old_sel != sel_text)
+                on_sel_changed();
         }
 
         public void go_to_char(int char_idx) {
@@ -130,7 +139,10 @@ namespace lw_common.ui {
         }
 
         public void clear_sel() {
-            sel_len_ = 0;
+            if (sel_len_ > 0) {
+                sel_len_ = 0;
+                on_sel_changed();
+            }
         }
 
         public void update_sel() {
@@ -299,6 +311,7 @@ namespace lw_common.ui {
             }
 
             // did not find anything, let parent know
+            on_search_ahead(new_text);
         }
 
     }
