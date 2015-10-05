@@ -43,6 +43,9 @@ namespace lw_common
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        // how many rows to search ahead (smart search)
+        private const int SEARCH_AHEAD_ROWS = 100;
+
         private Form parent;
         private filter filter_ ;
         private log_line_reader log_ = null;
@@ -1060,8 +1063,8 @@ namespace lw_common
         // by default, notify parent
         private select_type select_nofify_ = select_type.notify_parent;
 
-        private void select_idx(int idx, select_type notify) {
-            if (sel_row_idx == idx)
+        private void select_idx(int row_idx, select_type notify) {
+            if (sel_row_idx == row_idx)
                 return; // already selected
 
             // 1.0.67+ - there's a bug in objectlistview - if we're not the current view, we can't really select a row
@@ -1069,10 +1072,10 @@ namespace lw_common
                 return;
 
             select_nofify_ = notify;
-            if (idx >= 0 && idx < filter_.match_count) {
-                logger.Debug("[view] " + name + " sel=" + idx);
-                list.SelectedIndex = idx;
-                update_line_highlight_color(idx);
+            if (row_idx >= 0 && row_idx < filter_.match_count) {
+                logger.Debug("[view] " + name + " sel=" + row_idx);
+                list.SelectedIndex = row_idx;
+                update_line_highlight_color(row_idx);
                 update_x_of_y();
                 util.postpone(edit.update_ui, 1);
             }
@@ -1125,17 +1128,17 @@ namespace lw_common
             }
         }
 
-        public void go_to_line(int line_idx, select_type notify) {
-            if (line_idx >= filter_.match_count)
+        public void go_to_row(int row_idx, select_type notify) {
+            if (row_idx >= filter_.match_count)
                 return;
 
-            select_idx(line_idx, notify);
-            if (is_line_visible(line_idx))
+            select_idx(row_idx, notify);
+            if (is_line_visible(row_idx))
                 // already visible
                 return;
 
             int rows = list.Height / list.RowHeight;
-            int bottom_idx = line_idx + rows / 2;
+            int bottom_idx = row_idx + rows / 2;
             if (bottom_idx >= filter_.match_count)
                 bottom_idx = filter_.match_count - 1;
             int top_idx = bottom_idx - rows;
@@ -1155,7 +1158,7 @@ namespace lw_common
             
             var closest = filter_.matches.binary_search_closest(line_idx);
             if ( closest.Item2 >= 0)
-                go_to_line(closest.Item2, notify);
+                go_to_row(closest.Item2, notify);
         }
 
         public bool matches_line(int line_idx) {
@@ -1169,7 +1172,7 @@ namespace lw_common
         public void go_to_closest_time(DateTime time) {
             var closest = filter_.matches.binary_search_closest(time);
             if ( closest.Item2 >= 0)
-                go_to_line(closest.Item2, select_type.notify_parent);
+                go_to_row(closest.Item2, select_type.notify_parent);
         }
 
         public void offset_closest_time(int time_ms, bool forward) {
@@ -1866,8 +1869,21 @@ namespace lw_common
             // logger.Debug("[lv] sel= [" + edit.sel_text + "]");
         }
 
+        // note: searches in the current column
         private void search_ahead(string txt) {
-            
+            Debug.Assert(txt == txt.ToLower());
+
+            int count = filter_.match_count;
+            int max = Math.Min(sel_row_idx + SEARCH_AHEAD_ROWS, count);
+            for (int cur_row = sel_row_idx + 1; cur_row < max; ++cur_row) {
+                string col_text = list.GetItem(cur_row).GetSubItem(cur_col_).Text.ToLower();
+                int pos = col_text.IndexOf(txt);
+                if (pos >= 0) {
+                    go_to_row(cur_row, select_type.notify_parent);
+                    edit.go_to_text(txt);
+                    return;
+                }
+            }
         }
 
         private void list_Scroll(object sender, ScrollEventArgs e) {

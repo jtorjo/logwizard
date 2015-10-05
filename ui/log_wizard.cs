@@ -961,7 +961,7 @@ namespace LogWizard
         private void try_to_go_to_selected_line(int selected_row_idx) {
             var lv = log_view_for_tab(viewsTab.SelectedIndex);
             if (lv.is_filter_up_to_date) {
-                lv.go_to_line(selected_row_idx, log_view.select_type.do_not_notify_parent);
+                lv.go_to_row(selected_row_idx, log_view.select_type.do_not_notify_parent);
                 if ( lv.sel_line_idx >= 0)
                     go_to_line( lv.sel_line_idx, lv);
             }
@@ -1237,7 +1237,7 @@ namespace LogWizard
 
         public void go_to_line(int line_idx, log_view from) {
             if (global_ui.show_fulllog && from != full_log_ctrl && app.inst.sync_full_log_view) {
-                full_log_ctrl.go_to_line(line_idx, log_view.select_type.do_not_notify_parent);
+                full_log_ctrl.go_to_row(line_idx, log_view.select_type.do_not_notify_parent);
                 sync_full_log_colors();
             }
 

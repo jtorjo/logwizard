@@ -7,9 +7,14 @@
 
 
 
-- search ahead (the next 100 rows - on the same column)
 
 - click on a word - if user doesn't leave that place for a while (like, 750ms), we should mark that word!
+
+
+1.2.5o
+- search ahead (the next 100 rows - on the same column)
+  - this works, but it's really weird: after a while, everything will be selected - i "love" this richtextbox
+
 
 1.2.5n
 - fix: small bug - on_edit_sel_changed sometimes not called

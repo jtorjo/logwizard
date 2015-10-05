@@ -81,8 +81,8 @@ namespace lw_common.ui {
             BackColor = i.sel_bg(parent_);
 
             Text = parent_.sel_subitem_text;
-            SelectionBackColor = util.darker_color(BackColor);
-            SelectionColor = util.darker_color(ForeColor);
+            SelectionBackColor = BackColor;
+            SelectionColor = ForeColor;
             changed_sel_background_ = false;
 
             if (sel_start_ >= 0 && sel_start_ <= TextLength)
@@ -143,6 +143,23 @@ namespace lw_common.ui {
                 sel_len_ = 0;
                 on_sel_changed();
             }
+        }
+
+        public void go_to_text(string text_to_select) {
+            update_ui();
+
+            int pos = Text.ToLower().IndexOf(text_to_select);
+            Debug.Assert(pos >= 0);
+
+            sel_start_ = pos;
+            sel_len_ = text_to_select.Length;
+            Focus();
+
+            util.postpone(() => {
+                readd_all_text();
+                update_selected_text();
+                on_sel_changed();
+            }, 20);
         }
 
         public void update_sel() {
@@ -277,8 +294,8 @@ namespace lw_common.ui {
 
             // first, search ahead
             string txt = Text.ToLower();
-            int pos_ahead = txt.IndexOf(new_text, sel_start_);
-            int pos_ahead_space = new_text_with_space != "" ? txt.IndexOf(new_text_with_space, sel_start_) : -1;
+            int pos_ahead = sel_start_ < txt.Length ? txt.IndexOf(new_text, sel_start_) : -1;
+            int pos_ahead_space = new_text_with_space != "" && sel_start_ < txt.Length ? txt.IndexOf(new_text_with_space, sel_start_) : -1;
 
             if (pos_ahead >= 0 || pos_ahead_space >= 0) {
                 int new_sel_start = pos_ahead >= 0 ? pos_ahead : pos_ahead_space;
