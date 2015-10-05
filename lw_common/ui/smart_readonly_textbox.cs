@@ -47,7 +47,6 @@ namespace lw_common.ui {
                 // it was the first row when user is moving up (up arrow), we'll get notified again
                 return;
 
-
             Location = location;
             Size = new Size(bounds.Width, bounds.Height);
             Text = parent_.sel_subitem_text;

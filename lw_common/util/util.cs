@@ -129,6 +129,7 @@ namespace lw_common {
             ex.S = (byte)(ex.S / 5);
             return ex.Color;
         }
+
         public static Color darker_color(Color col) {
             var argb = col.ToArgb();
             if (argb  == Color.White.ToArgb())
@@ -143,7 +144,13 @@ namespace lw_common {
             ColorEx ex = new ColorEx(col);
             const double mul_by = 2.3;
             ex.S = (byte)(ex.S * mul_by > 100 ? 100 : ex.S * mul_by);
-            return ex.Color;
+            Color darker = ex.Color;
+
+            if ( darker.ToArgb() == col.ToArgb())
+                // basically, we never want to return the same color
+                return grayer_color(col);
+
+            return darker;
         }
 
         public static string read_beginning_of_file(string file, int len) {
