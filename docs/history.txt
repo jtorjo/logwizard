@@ -4,12 +4,15 @@
 
 
 
+
+
+
  - the selection of the edit box - make it a bit darker than what already shown
 
 
-- scrolling (scroll bar) - handle it
-
 1.2.5j
+- smart text box: handles scrolling (from the scroll bar)
+- alt->arrow - works
 
 
 1.2.5h

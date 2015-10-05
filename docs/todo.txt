@@ -22,7 +22,7 @@
   - think what hotkeys for moving between columns
   maybe smart edit? like, type anything and it will take you where that msg is
    - if turned off, perhaps something like "f2" or "right-arrow" would take you to editing mode
-  i need to account for other hotkeys (such as up/down/pgup/pgdown etc - just need to test it, cause probably the fact that they are already handled is ok)
+l  i need to account for other hotkeys (such as up/down/pgup/pgdown etc - just need to test it, cause probably the fact that they are already handled is ok)
   - however, when on editing, and pressing up-arrow, for instance, i need to preserve caret position (if i' on char 10, i should go to char 10 on the other line (or less if don't have 10 chars))
   - (smart type) click on a character on a row, should take me to edit mode just there
     - smart typing should be CASE-INSENSITIVE!!!

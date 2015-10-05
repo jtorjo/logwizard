@@ -1756,10 +1756,12 @@ namespace lw_common
             }
 
             if (is_editing) {
-                if (keyData == Keys.Left || keyData == Keys.Right) {
-                    if (edit.Visible && edit.SelectionLength == 0) {
-                        bool left = keyData == Keys.Left;
-                        bool can_move = (left && edit.SelectionStart == 0 && edit.SelectionLength == 0) || (!left && edit.SelectionStart == edit.TextLength);
+                bool is_left_or_right = keyData == Keys.Left || keyData == Keys.Right || keyData == (Keys.Left | Keys.Alt) || keyData == (Keys.Right | Keys.Alt);
+                if (is_left_or_right) {
+                    bool is_alt_left_or_right = keyData == (Keys.Left | Keys.Alt) || keyData == (Keys.Right | Keys.Alt);
+                    if (edit.Visible && (edit.SelectionLength == 0 || is_alt_left_or_right)) {
+                        bool left = keyData == Keys.Left || keyData == (Keys.Left | Keys.Alt);
+                        bool can_move = (left && edit.SelectionStart == 0 && edit.SelectionLength == 0) || (!left && edit.SelectionStart == edit.TextLength) || is_alt_left_or_right;
 
                         if (can_move) {
                             for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
@@ -1837,6 +1839,10 @@ namespace lw_common
                     util.postpone(() => edit.Focus(), 1);
                 }
             }
+        }
+
+        private void list_Scroll(object sender, ScrollEventArgs e) {
+            util.postpone(edit.update_ui, 1);
         }
     }
 }

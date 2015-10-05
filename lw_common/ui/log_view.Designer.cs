@@ -118,6 +118,7 @@
             this.list.CellToolTipShowing += new System.EventHandler<BrightIdeasSoftware.ToolTipShowingEventArgs>(this.list_CellToolTipShowing);
             this.list.FormatCell += new System.EventHandler<BrightIdeasSoftware.FormatCellEventArgs>(this.list_FormatCell_1);
             this.list.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.list_FormatRow_1);
+            this.list.Scroll += new System.EventHandler<System.Windows.Forms.ScrollEventArgs>(this.list_Scroll);
             this.list.SelectedIndexChanged += new System.EventHandler(this.list_SelectedIndexChanged);
             this.list.Enter += new System.EventHandler(this.list_Enter);
             this.list.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.list_KeyPress);

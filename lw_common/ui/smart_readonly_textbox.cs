@@ -32,20 +32,25 @@ namespace lw_common.ui {
 
             int sel = parent_.sel_row_idx;
             var bounds = parent_.sel_subrect_bounds;
-            Visible = sel >= 0 && bounds.Width > 0 && bounds.Height > 0 && parent_.is_editing;
+            bool is_multi_selection = parent_.list.SelectedIndices != null && parent_.list.SelectedIndices.Count > 1;
+            Visible = sel >= 0 && bounds.Width > 0 && bounds.Height > 0 && parent_.is_editing && !is_multi_selection;
             if (!Visible) 
                 return;
 
             int offset_x = parent_.list.Left;
             int offset_y = parent_.list.Top;
             var location = new Point(offset_x + bounds.X, offset_y + bounds.Y);
-            if (location.Y + bounds.Height > parent_.Height)
+            if (location.Y + bounds.Height > parent_.Height) {
                 // it was the last row when user is moving down (down arrow) - we'll get notified again
+                Visible = false;
                 return;
+            }
             int header_height = parent_.list.HeaderControl.ClientRectangle.Height;
-            if (location.Y < offset_y + header_height)
+            if (location.Y < offset_y + header_height) {
                 // it was the first row when user is moving up (up arrow), we'll get notified again
+                Visible = false;
                 return;
+            }
 
             Location = location;
             Size = new Size(bounds.Width, bounds.Height);
