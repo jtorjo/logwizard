@@ -13,8 +13,12 @@ namespace lw_common.ui {
     public partial class smart_readonly_textbox : RichTextBox {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private const int ON_CLICK_WAIT_BEFORE_SELECTING_WORD_MS = 450;
+
         private log_view parent_;
         private int sel_start_ = -1, sel_len_ = -1, sel_col_ = -1;
+
+        private int after_click_sel_start_ = -1, after_click_sel_len_ = -1, after_click_sel_col_ = -1;
 
         private bool changed_sel_background_ = false;
 
@@ -113,12 +117,45 @@ namespace lw_common.ui {
 
         public void go_to_char(int char_idx) {
             if (char_idx <= TextLength) {
+                ++ignore_change_;
                 SelectionStart = char_idx;
                 SelectionLength = 0;
                 sel_col_ = parent_.sel_col;
                 sel_start_ = SelectionStart;
                 sel_len_ = 0;
-            }    
+                --ignore_change_;
+
+                update_ui();
+            } 
+        }
+
+        public void after_click() {
+            after_click_sel_col_ = sel_col_;
+            after_click_sel_len_ = sel_len_;
+            after_click_sel_start_ = sel_start_;
+            util.postpone(check_if_user_hasnt_moved, ON_CLICK_WAIT_BEFORE_SELECTING_WORD_MS );
+        }
+
+        private void check_if_user_hasnt_moved() {
+            if (sel_col_ == after_click_sel_col_ && sel_len_ == after_click_sel_len_ && sel_start_ == after_click_sel_start_) {
+                // user hasn't moved after he clicked
+                string txt = Text;
+                int space = txt.LastIndexOf(' ', sel_start_, sel_start_);
+                if (space <= 0)
+                    // it's the first word
+                    space = 0;
+                else
+                    ++space; // ignore the space itself
+
+                // we found the word the user clicked on
+                int next_space = txt.IndexOf(' ', space );
+                int len = next_space >= 0 ? next_space - space : txt.Length - space;
+
+                sel_start_ = space;
+                sel_len_ = len;
+                update_selected_text();
+            }
+            after_click_sel_col_ = -1;
         }
 
         public string sel_text {

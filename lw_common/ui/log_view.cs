@@ -1722,7 +1722,6 @@ namespace lw_common
                     editing_row_ = sel_row_idx;
                     cur_col_ = msgCol.Index;
                     edit.go_to_char(0);
-                    edit.update_ui();
                     focus_to_edit();
                     return true;
                 }
@@ -1779,7 +1778,6 @@ namespace lw_common
                             }
                             util.postpone(() => {
                                 edit.go_to_char(0);
-                                edit.update_ui();
                                 focus_to_edit();
                             }, 1);
                             return true;
@@ -1858,9 +1856,9 @@ namespace lw_common
                         char_idx = widths.Count;
 
                     cur_col_ = col_idx;
-                    edit.update_ui();
                     edit.go_to_char(char_idx);
                     util.postpone(() => edit.Focus(), 1);
+                    edit.after_click();
                 }
             }
         }
