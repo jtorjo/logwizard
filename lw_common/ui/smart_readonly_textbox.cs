@@ -80,7 +80,7 @@ namespace lw_common.ui {
             ForeColor = i.fg(parent_);
             BackColor = i.sel_bg(parent_);
 
-            Text = parent_.sel_subitem_text;
+            set_text( parent_.sel_subitem_text, false);
             SelectionBackColor = BackColor;
             SelectionColor = ForeColor;
             changed_sel_background_ = false;
@@ -100,6 +100,15 @@ namespace lw_common.ui {
 
             if (old_sel != sel_text)
                 on_sel_changed();
+        }
+
+        private void set_text(string txt, bool force) {
+            if (Text == txt && !force)
+                return;
+            ++ignore_change_;
+            Clear();
+            AppendText(txt);
+            --ignore_change_;
         }
 
         public void go_to_char(int char_idx) {
@@ -253,8 +262,7 @@ namespace lw_common.ui {
             ++ignore_change_;
 
             int sel = SelectionStart;
-            string full_txt = Text;
-            Text = full_txt;
+            set_text( Text, true);
             SelectionStart = sel;
             
             --ignore_change_;

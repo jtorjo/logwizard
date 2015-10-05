@@ -10,6 +10,9 @@
 
 - click on a word - if user doesn't leave that place for a while (like, 750ms), we should mark that word!
 
+1.2.5p
+- search ahead now works, even with richtext's bug
+
 
 1.2.5o
 - search ahead (the next 100 rows - on the same column)
