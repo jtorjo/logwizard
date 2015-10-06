@@ -47,7 +47,7 @@
   - view: Rename, move to left, move to right
 - context menu on full log -> New Filter containing [...]/starting with [...]
 
-
+- match_color -> in filters!!!
  
 
 

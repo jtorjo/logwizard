@@ -1648,13 +1648,21 @@ namespace lw_common
         }
 
         private void list_Enter(object sender, EventArgs e) {
-            //logger.Info("[view] lv got focus " + name);
-            BackColor = Color.DarkSlateGray;
+            update_background();
         }
 
         private void list_Leave(object sender, EventArgs e) {
-            //logger.Info("[view] lv lost focus " + name);
-            BackColor = Color.White;
+            // note: we might actually lose focus to the edit box - in this case, we don't really need to update anything
+            util.postpone(update_background,1);
+        }
+
+        private void update_background() {
+            var focus = win32.focused_ctrl();
+            bool here = focus == list || focus == edit;
+
+            var color = here ? Color.DarkSlateGray : Color.White;
+            if ( BackColor.ToArgb() != color.ToArgb())
+                BackColor = color;
         }
 
         public void set_focus() {
@@ -1841,7 +1849,7 @@ namespace lw_common
                 return;
 
             int col_idx = e.ColumnIndex;
-            if (col_idx >= 0) {
+            if (col_idx >= 0 && e.RowIndex >= 0) {
                 var mouse = list.PointToClient(Cursor.Position);
                 using (Graphics g = CreateGraphics()) {
                     string text = list.GetItem(e.RowIndex).GetSubItem(e.ColumnIndex).Text;

@@ -7,7 +7,11 @@
 
 
 - what is selected -> show darker in everything that is rendered
+- we should also take into account the results of the existing find (and those results take precedence - if any collitions)
 
+
+1.2.6a
+- solved minor bugs 
 
 
 1.2.5r

@@ -140,7 +140,7 @@ namespace lw_common.ui {
             if (sel_col_ == after_click_sel_col_ && sel_len_ == after_click_sel_len_ && sel_start_ == after_click_sel_start_) {
                 // user hasn't moved after he clicked
                 string txt = Text;
-                int space = txt.LastIndexOf(' ', sel_start_, sel_start_);
+                int space = sel_start_ < txt.Length ? txt.LastIndexOf(' ', sel_start_, sel_start_) : txt.LastIndexOf(' ');
                 if (space <= 0)
                     // it's the first word
                     space = 0;
