@@ -1941,7 +1941,7 @@ namespace lw_common
                 var mouse = list.PointToClient(Cursor.Position);
                 using (Graphics g = CreateGraphics()) {
                     string text = list.GetItem(e.RowIndex).GetSubItem(e.ColumnIndex).Text;
-                    var widths = render_.text_width(g, text);
+                    var widths = render_.text_widths(g, text);
                     int offset_x = list.GetItem(e.RowIndex).GetSubItemBounds(e.ColumnIndex).X;
 
                     for (int i = 0; i < widths.Count; ++i)

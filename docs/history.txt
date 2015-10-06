@@ -5,6 +5,8 @@
 
 
 
+1.2.6d
+- at this point, selected text by the user is shown correctly
 
 
 1.2.6c

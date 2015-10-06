@@ -89,15 +89,15 @@ namespace lw_common.ui {
         private List<Tuple<int, int, log_view_render.print_info>> override_print_ = new List<Tuple<int, int, log_view_render.print_info>> ();
         print_info default_ = new print_info();
 
-        private int draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, print_info print) {
+        private void draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, print_info print) {
             Font f = print.bold ? (print.italic ? bi_font : b_font) : (print.italic ? i_font : font);
             var i = ListItem.RowObject as log_view.item;
+            int width = text_width(g, sub);
             if (print != default_) {
                 Color bg = print.bg != util.transparent ? print.bg : util.darker_color( i.bg(parent_) );
                 Rectangle here = new Rectangle(r.Location, r.Size);
-                int cur_width = (int)g.MeasureString(sub, f).Width + 1;
                 here.X += left;
-                here.Width = cur_width;
+                here.Width = width + 1;
                 g.FillRectangle(brush_.brush(bg), here);
             }
 
@@ -107,9 +107,7 @@ namespace lw_common.ui {
             Rectangle sub_r = new Rectangle(r.Location, r.Size);
             sub_r.X += left;
             sub_r.Width -= left;
-            int width = (int)g.MeasureString(sub, f).Width + 1;
             g.DrawString(sub, f, brush, sub_r, fmt);
-            return left + width;
         }
 
 
@@ -124,29 +122,57 @@ namespace lw_common.ui {
             for (int idx = 0; idx < override_print_.Count; ++idx) {
                 int start_normal = idx > 0 ? override_print_[idx - 1].Item1 + override_print_[idx - 1].Item2 : 0;
                 int normal_len = override_print_[idx].Item1 - start_normal;
-                // first, draw the normal text
-                int next = normal_len > 0 ? draw_sub_string(left, s.Substring(start_normal, normal_len), g, b, r, fmt, default_) : left;
-                int next2 = draw_sub_string(next, s.Substring( override_print_[idx].Item1, override_print_[idx].Item2 ), g, b, r, fmt, override_print_[idx].Item3);
 
-                left = next2;
+                string up_to_prev = s.Substring(0, start_normal);
+                string up_to_now = s.Substring(0, override_print_[idx].Item1);
+                int left_normal = left + text_width(g, up_to_prev);
+                int left2 = left + text_width(g, up_to_now);
+
+                // first, draw the normal text
+                draw_sub_string(left_normal, s.Substring(start_normal, normal_len), g, b, r, fmt, default_);
+                draw_sub_string(left2, s.Substring( override_print_[idx].Item1, override_print_[idx].Item2 ), g, b, r, fmt, override_print_[idx].Item3);
             }
 
             var last_override = override_print_.Last();
             int last = last_override.Item1 + last_override.Item2;
             string last_normal = s.Substring(last);
-            if ( last_normal != "")
-                draw_sub_string(left, last_normal, g, b, r, fmt, default_);
+            if (last_normal != "") {
+                string up_to_now = s.Substring(0, last_override.Item1 + last_override.Item2);
+                int last_left = left + text_width(g, up_to_now);
+                draw_sub_string(last_left, last_normal, g, b, r, fmt, default_);
+            }
         }
 
-        // for each character of the printed text, see how many pixels it takes
-        public List<int> text_width(Graphics g ,string text) {
+        private int text_width(Graphics g, string text) {
+            // IMPORTANT: at this time, we assume we have a fixed font
+            bool ends_in_space = text.EndsWith(" ");
+            if (ends_in_space)
+                // just append any character, so that the spaces are taken into account
+                text += "_";
+
+            int width = (int)g.MeasureString(text, font).Width + 1;
+            if (ends_in_space) {
+                int avg_per_char = width / text.Length;
+                width -= avg_per_char;
+            }
+            return width;
+//            return char_size(g) * text.Length;
+        }
+
+
+        private int char_size(Graphics g) {
             // IMPORTANT: at this time, we assume we have a fixed font
             var ab = g.MeasureString("ab", font).Width;
             var abc = g.MeasureString("abc", font).Width;
             var abcd = g.MeasureString("abcd", font).Width;
             Debug.Assert( (int)((abc - ab) * 100) == (int)((abcd - abc) * 100)) ;
 
-            var char_size = abc - ab;
+            return (int)(abc - ab);
+        }
+
+        // for each character of the printed text, see how many pixels it takes
+        public List<int> text_widths(Graphics g ,string text) {
+            var char_size = this.char_size(g);
             List<int> widths = new List<int>();
             for ( int i = 0; i < text.Length; ++i)
                 widths.Add((int)(char_size * i));
