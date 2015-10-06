@@ -3,6 +3,11 @@
 
 
 
+string_search.matches -> mark things that match (the indexes)
+
+
+1.2.6e
+- find: instead of marking lines, mark the words directly
 
 
 1.2.6d

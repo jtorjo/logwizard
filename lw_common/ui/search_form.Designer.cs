@@ -65,9 +65,9 @@
             this.mark.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mark.Location = new System.Drawing.Point(65, 90);
             this.mark.Name = "mark";
-            this.mark.Size = new System.Drawing.Size(276, 21);
+            this.mark.Size = new System.Drawing.Size(284, 21);
             this.mark.TabIndex = 2;
-            this.mark.Text = "Mark lines where text is found with color";
+            this.mark.Text = "Mark words where text is found with color";
             this.mark.UseVisualStyleBackColor = true;
             // 
             // fg

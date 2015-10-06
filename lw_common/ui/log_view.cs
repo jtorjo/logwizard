@@ -153,13 +153,13 @@ namespace lw_common
 
                 string find = parent.cur_search_ != null ? parent.cur_search_.text : "";
                 if (col_idx == parent.msgCol.Index && find != "") {
-                    var matches = util.find_all_matches(text, sel);
+                    var matches = util.find_all_matches(text, find);
                     if (matches.Count > 0) {
                         // if we're showing both selected text and the results of a find, differentiate them visually
                         bool italic = sel != "";
                         log_view_render.print_info print_sel = new log_view_render.print_info { text = find, bg = parent.cur_search_.bg, fg = parent.cur_search_.fg, bold = true, italic = italic };
                         foreach ( var match in matches)
-                            print.Add( new Tuple<int, int, log_view_render.print_info>(match, sel.Length, print_sel));
+                            print.Add( new Tuple<int, int, log_view_render.print_info>(match, find.Length, print_sel));
                     }                    
                 }
 
@@ -1378,6 +1378,10 @@ namespace lw_common
             unmark();
             cur_search_ = search;
 
+            // as of 1.2.6, we mark the words visually
+            list.Refresh();
+
+#if old_code
             bool needs_refresh = false;
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
@@ -1391,12 +1395,16 @@ namespace lw_common
             }
             if (needs_refresh)
                 list.Refresh();
+#endif
         }
 
         // unmarks any previously marked rows
         public void unmark() {
 
             cur_search_ = null;
+            // as of 1.2.6, we mark the words visually
+            list.Refresh();
+#if old_code
             bool needs_refresh = false;
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
@@ -1411,6 +1419,7 @@ namespace lw_common
             }
             if (needs_refresh)
                 list.Refresh();
+#endif
         }
 
         public void search_for_text_first(search_form.search_for search) {

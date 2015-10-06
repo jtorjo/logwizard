@@ -765,6 +765,7 @@ namespace lw_common {
         }
 
         public static List<int> find_all_matches(string text, string search_for) {
+            Debug.Assert(search_for != null);
             List<int> all = new List<int>();
             int at = 0;
             while (true) {
