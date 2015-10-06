@@ -173,8 +173,16 @@ namespace lw_common {
         private filter_line.font_info get_raw_font_info() {
             var result = new filter_line.font_info();
             foreach ( var item in items_)
-                if (item.part == filter_line.part_type.font)
-                    result.copy_from( item.fi);
+                if (item.part == filter_line.part_type.font) {
+                    if (item.fi.fg != util.transparent || item.fi.bg != util.transparent) {
+                        result.fg = item.fi.fg;
+                        result.bg = item.fi.bg;
+                    }
+                    else if (item.fi.match_fg != util.transparent || item.fi.match_bg != util.transparent) {
+                        result.match_fg = item.fi.match_fg;
+                        result.match_bg = item.fi.match_bg;
+                    }
+                }
 
             return result;
         }
@@ -256,6 +264,27 @@ namespace lw_common {
             //         we will use the new font though
             font_.copy_from( from.font_);
         }
+
+        private List<filter_line.match_index> empty_ = new List<filter_line.match_index>();
+        public List<filter_line.match_index> match_indexes(line l, info_type type) {
+            List<filter_line.match_index> indexes = null;
+            bool has_match_color = font_.match_fg != util.transparent || font_.match_bg != util.transparent;
+            if ( has_match_color)
+                foreach (filter_line line in items_) {
+                    var now = line.match_indexes(l, type);
+                    if (now.Count > 0) {
+                        if ( indexes == null)
+                            indexes = new List<filter_line.match_index>();
+                        // here, we need to set the match colors
+                        foreach (var index in now) {
+                            index.fg = font_.match_fg;
+                            index.bg = font_.match_bg;
+                        }
+                        indexes.AddRange(now);
+                    }
+                }
+            return indexes ?? empty_;
+        } 
 
     }
 }

@@ -19,6 +19,7 @@
  * If you wish to use this code in a closed source application, please contact john.code@torjo.com
 */
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -116,8 +117,8 @@ namespace LogWizard {
         // font -> contains details about the font; for now, the colors
         public class font_info {
             protected bool Equals(font_info other) {
-                return fg.ToArgb() == other.fg.ToArgb() && bg.ToArgb() == other.bg.ToArgb();
-                //return fg.Equals(other.fg) && bg.Equals(other.bg);
+                return fg.ToArgb() == other.fg.ToArgb() && bg.ToArgb() == other.bg.ToArgb() 
+                    && match_fg.ToArgb() == other.match_fg.ToArgb() && match_bg.ToArgb() == other.match_bg.ToArgb();
             }
 
             public override bool Equals(object obj) {
@@ -129,7 +130,11 @@ namespace LogWizard {
 
             public override int GetHashCode() {
                 unchecked {
-                    return (fg.GetHashCode() * 397) ^ bg.GetHashCode();
+                    var hashCode = match_fg.GetHashCode();
+                    hashCode = (hashCode * 397) ^ match_bg.GetHashCode();
+                    hashCode = (hashCode * 397) ^ fg.GetHashCode();
+                    hashCode = (hashCode * 397) ^ bg.GetHashCode();
+                    return hashCode;
                 }
             }
 
@@ -144,15 +149,19 @@ namespace LogWizard {
             public void copy_from(font_info other) {
                 fg = other.fg;
                 bg = other.bg;
+                match_fg = other.match_fg;
+                match_bg = other.match_bg;
             }
 
             public override string ToString() {
-                return "fg=" + util.color_to_str(fg) + ", bg=" + util.color_to_str(bg);
+                return "fg=" + util.color_to_str(fg) + ", bg=" + util.color_to_str(bg) +
+                    ", m_fg=" + util.color_to_str(match_fg) + ", m_bg=" + util.color_to_str(match_bg);
             }
 
             public Color fg = util.transparent, bg = util.transparent;
-            // FIXME in the future, allow other font info, such as "bold", font name, etc
-            // FIXME for later - allow matching a text within the line - the text will be dumped in a different color (and font, maybe -> like bold?)
+
+            // 1.2.6g+
+            public Color match_fg = util.transparent, match_bg = util.transparent;
 
             // basically this is what "Used" means - dim this filter_row compared to the rest
             public static font_info dimmed = new font_info { bg = Color.White, fg = Color.LightGray };
@@ -179,8 +188,15 @@ namespace LogWizard {
                     return new_;                    
                 }
             }
-
         }
+
+        // 1.2.6g+ - contains an match within a line -one that matches the match color
+        public class match_index {
+            public int start = 0, len = 0;
+            public Color bg = util.transparent, fg = util.transparent;
+        }
+
+
 
         public static bool is_color_line(string line) {
             line = line.Trim();
@@ -200,14 +216,22 @@ namespace LogWizard {
         // at this point, we allow a simple "color" line:
         // color fg [bg]
         private static filter_line parse_font(string line) {
-            Debug.Assert(line.StartsWith("color"));
+            Debug.Assert(line.StartsWith("color") || line.StartsWith("match_color"));
+            bool is_color = line.StartsWith("color");
+
             string[] colors = line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
             filter_line fi = new filter_line(line) { part = part_type.font };
             if (colors.Length >= 2)
-                fi.fi.fg = util.str_to_color(colors[1]);
+                if ( is_color)
+                    fi.fi.fg = util.str_to_color(colors[1]);
+                else 
+                    fi.fi.match_fg = util.str_to_color(colors[1]);
             if (colors.Length >= 3)
-                fi.fi.bg = util.str_to_color(colors[2]);
+                if (is_color)
+                    fi.fi.bg = util.str_to_color(colors[2]);
+                else  
+                    fi.fi.match_bg = util.str_to_color(colors[2]);
             return fi;
         }
 
@@ -232,7 +256,7 @@ namespace LogWizard {
                 // allow comments
                 return null;
 
-            if (line.StartsWith("font") || line.StartsWith("color"))
+            if (line.StartsWith("font") || line.StartsWith("color") || line.StartsWith("match_color"))
                 return parse_font(line);
 
             if (line == "case-insensitive")
@@ -423,6 +447,56 @@ namespace LogWizard {
             return result;            
         }
 
+        private List<match_index> compare_with_indexes(string line_part, string text, string[] words) {
+            List<match_index> indexes = new List<match_index>();
+            switch (comparison) {
+            case comparison_type.does_not_start_with:
+            case comparison_type.does_not_contain:
+            case comparison_type.contains_none:
+                Debug.Assert(false);
+                return empty_;
+
+            case comparison_type.equal:
+                if ( line_part == text)
+                    indexes.Add(new match_index { start = 0, len = text.Length });
+                break;
+            case comparison_type.not_equal:
+                if ( line_part != text)
+                    indexes.Add(new match_index { start = 0, len = text.Length });
+                break;
+            case comparison_type.starts_with:
+                if ( line_part.StartsWith(text))
+                    indexes.Add(new match_index { start = 0, len = text.Length });
+                break;
+            case comparison_type.contains:
+                int pos = line_part.IndexOf(text);
+                if ( pos >= 0)
+                    indexes.Add(new match_index { start = pos, len = text.Length });
+                break;
+
+            case comparison_type.contains_any:
+                foreach (string word in words) {
+                    int word_pos = line_part.IndexOf(word);
+                    if ( word_pos >= 0)
+                        indexes.Add(new match_index { start = word_pos, len = word.Length });
+                }
+                break;
+
+            case comparison_type.regex:
+                var matches = regex_.Match(line_part);
+                while (matches.Success) {
+                    indexes.Add( new match_index { start = matches.Index, len = matches.Length } );
+                    matches = matches.NextMatch();
+                }                    
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+            }
+
+            return indexes;
+        }
+
         private bool matches_case_sensitive(line l) {
             Debug.Assert( part != part_type.font );
             string line_part = this.line_part(l);
@@ -437,6 +511,48 @@ namespace LogWizard {
 
         public bool matches(line l) {
             return case_sensitive ? matches_case_sensitive(l) : matches_case_insensitive(l);
+        }
+
+        private static readonly List<match_index> empty_ = new List<match_index>();
+        public List<match_index> match_indexes(line l, info_type type) {
+            if (part == part_type.font || part == part_type.case_sensitive_info)
+                return empty_;
+
+            // 1.2.6 for now, care about match indexes only for msg column
+            if (type != info_type.msg)
+                return empty_;
+
+            // we only care about "positive" matches - those that have "containing", "startswith", regex, etc.
+            switch (comparison) {
+            case comparison_type.does_not_start_with:
+            case comparison_type.does_not_contain:
+            case comparison_type.contains_none:
+                return empty_;
+
+            case comparison_type.equal:
+            case comparison_type.not_equal:
+            case comparison_type.starts_with:
+            case comparison_type.contains:
+            case comparison_type.contains_any:
+            case comparison_type.regex:
+                break;
+            default:
+                Debug.Assert(false);
+                return empty_;
+            }
+
+            return case_sensitive ? matches_case_sensitive_with_indexes(l, type) : matches_case_insensitive_with_indexes(l, type);
+        }
+
+
+        private List<match_index> matches_case_sensitive_with_indexes(line l, info_type type) {
+            string line_part = l.part(type);
+            return compare_with_indexes(line_part, text, words);
+        }
+
+        private List<match_index> matches_case_insensitive_with_indexes(line l, info_type type) {
+            string line_part = l.part(type).ToLower();
+            return compare_with_indexes(line_part, lo_text, lo_words);
         }
 
     }

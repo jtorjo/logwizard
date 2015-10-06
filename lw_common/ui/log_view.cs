@@ -140,6 +140,15 @@ namespace lw_common
             public List<Tuple<int, int, log_view_render.print_info>> override_print(log_view parent, string text, int col_idx) {
                 List<Tuple<int, int, log_view_render.print_info>> print = new List<Tuple<int, int, log_view_render.print_info>>();
 
+                // 1.2.6 - for now, just for msg do match-color
+                if (col_idx == parent.msgCol.Index) {
+                    var from_filter = parent.filter_.match_indexes(base.line, info_type.msg);
+                    foreach ( var ff in from_filter)
+                        print.Add( new Tuple<int, int, log_view_render.print_info>( ff.start, ff.len, new log_view_render.print_info {
+                            bg = ff.bg, fg = ff.fg, text = new string('?', ff.len), bold = true
+                        } ));
+                }
+
                 string sel = parent.edit.sel_text;
                 if (col_idx == parent.cur_col_ && sel != "") {
                     // look for the text typed by the user

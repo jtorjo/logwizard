@@ -111,11 +111,14 @@
             this.filterCtrl.UseSubItemCheckBoxes = true;
             this.filterCtrl.View = System.Windows.Forms.View.Details;
             this.filterCtrl.CellEditStarting += new BrightIdeasSoftware.CellEditEventHandler(this.filterCtrl_CellEditStarting);
+            this.filterCtrl.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.filterCtrl_CellClick);
             this.filterCtrl.ItemsChanged += new System.EventHandler<BrightIdeasSoftware.ItemsChangedEventArgs>(this.filterCtrl_ItemsChanged);
             this.filterCtrl.SelectionChanged += new System.EventHandler(this.filterCtrl_SelectionChanged);
             this.filterCtrl.SelectedIndexChanged += new System.EventHandler(this.filterCtrl_SelectedIndexChanged);
+            this.filterCtrl.Click += new System.EventHandler(this.filterCtrl_Click);
             this.filterCtrl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.filterCtrl_KeyPress);
             this.filterCtrl.Leave += new System.EventHandler(this.filterCtrl_Leave);
+            this.filterCtrl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.filterCtrl_MouseClick);
             this.filterCtrl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.filterCtrl_MouseDown);
             // 
             // olvColumn4

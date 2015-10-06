@@ -332,6 +332,21 @@ namespace LogWizard {
             }
         }
 
+        public List<filter_line.match_index> match_indexes(line l, info_type type) {
+            List<filter_line.match_index> indexes = new List<filter_line.match_index>();
+            lock (this) 
+                foreach ( var row in rows_)
+                    indexes.AddRange( row.match_indexes(l, type));
+
+            indexes.Sort((x, y) => {
+                if (x.start != y.start)
+                    return x.start - y.start;
+                return -(x.len - y.len);
+            });
+            return indexes;
+        } 
+
+
         private void compute_matches_thread() {
             while (!disposed_) {
                 bool needs_recompute = false;

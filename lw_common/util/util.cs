@@ -83,7 +83,7 @@ namespace lw_common {
             }
             public override void Fail(string message)
             {
-                Debugger.Break();
+                 Debugger.Break();
             }
             public override void Fail(string message, string detailMessage)
             {

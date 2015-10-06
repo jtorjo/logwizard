@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using lw_common;
@@ -81,6 +82,7 @@ namespace LogWizard {
             // if we have at least one line - we'll recheck this last line next time - just in case we did not fully read it last time
             old_line_count_ = new_line_count > 0 ? new_line_count -1 : new_line_count;
         }
+
 
         // returns exactly how we match this line
         public match get_match(int line_idx) {

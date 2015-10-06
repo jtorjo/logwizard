@@ -258,6 +258,10 @@ namespace lw_common.ui {
             // ... note: there's a bug when clicking on a combo or on a checkbox, and then clicking on the same type of control on another row
             var mouse = win32.GetMousePos();
             win32.SetMousePos( mouse.x+1, mouse.y);
+
+            if ( (e.Button & MouseButtons.Right) == MouseButtons.Right)
+                filterContextMenu.Show(Cursor.Position);
+
         }
 
         private void filterCtrl_CellEditStarting(object sender, BrightIdeasSoftware.CellEditEventArgs e) {
@@ -536,7 +540,12 @@ namespace lw_common.ui {
             var cur = filters[sel];
             filters.RemoveAt(sel);
             filters.Insert(sel - 1, cur);
-            ui_to_view(view_idx_);
+
+            ++ignore_change_;
+            view_to_ui(view_, view_idx_);
+            --ignore_change_;
+            filterCtrl.SelectedIndex = sel - 1;
+
             // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
             //       that could interfere with editing the filter - we don't want that
         }
@@ -548,7 +557,12 @@ namespace lw_common.ui {
             var cur = filters[sel];
             filters.RemoveAt(sel);
             filters.Insert(0, cur);
-            ui_to_view(view_idx_);
+
+            ++ignore_change_;
+            view_to_ui(view_, view_idx_);
+            --ignore_change_;
+            filterCtrl.SelectedIndex = 0;
+
             // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
             //       that could interfere with editing the filter - we don't want that
         }
@@ -563,7 +577,12 @@ namespace lw_common.ui {
             var cur = filters[sel];
             filters.RemoveAt(sel);
             filters.Insert(sel + 1, cur);
-            ui_to_view(view_idx_);
+
+            ++ignore_change_;
+            view_to_ui(view_, view_idx_);
+            --ignore_change_;
+            filterCtrl.SelectedIndex = sel + 1;
+
             // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
             //       that could interfere with editing the filter - we don't want that
         }
@@ -577,7 +596,12 @@ namespace lw_common.ui {
             var cur = filters[sel];
             filters.RemoveAt(sel);
             filters.Add(cur);
-            ui_to_view(view_idx_);
+
+            ++ignore_change_;
+            view_to_ui(view_, view_idx_);
+            --ignore_change_;
+            filterCtrl.SelectedIndex = filterCtrl.GetItemCount() - 1;
+            
             // note: we will re-run the view once we leave the filter control - we don't want to do this too fast, since 
             //       that could interfere with editing the filter - we don't want that
         }
@@ -641,6 +665,17 @@ namespace lw_common.ui {
                 refresh_view(view_idx_);
             }
 
+        }
+
+        private void filterCtrl_MouseClick(object sender, MouseEventArgs e) {
+        }
+
+        private void filterCtrl_Click(object sender, EventArgs e) {
+
+        }
+
+        private void filterCtrl_CellClick(object sender, BrightIdeasSoftware.CellClickEventArgs e) {
+            
         }
     }
 }
