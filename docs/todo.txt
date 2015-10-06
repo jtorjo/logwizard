@@ -60,7 +60,9 @@
 
 
 
-
+ - match_color -> here, for a line, i need to run all filters that have matchcolor (since some could actually modify match_color)
+  at this time i assume it's just for $msg
+  i should care about the first thing column that matches (for instance, for $ctx1 filter, match color applies to $ctx1)
 
 
 

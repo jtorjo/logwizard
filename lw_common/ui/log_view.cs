@@ -153,13 +153,13 @@ namespace lw_common
 
                 string find = parent.cur_search_ != null ? parent.cur_search_.text : "";
                 if (col_idx == parent.msgCol.Index && find != "") {
-                    var matches = util.find_all_matches(text, find);
+                    var matches = string_search.match_indexes(text, parent.cur_search_);
                     if (matches.Count > 0) {
                         // if we're showing both selected text and the results of a find, differentiate them visually
                         bool italic = sel != "";
                         log_view_render.print_info print_sel = new log_view_render.print_info { text = find, bg = parent.cur_search_.bg, fg = parent.cur_search_.fg, bold = true, italic = italic };
                         foreach ( var match in matches)
-                            print.Add( new Tuple<int, int, log_view_render.print_info>(match, find.Length, print_sel));
+                            print.Add( new Tuple<int, int, log_view_render.print_info>(match.Item1, match.Item2, print_sel));
                     }                    
                 }
 

@@ -3,7 +3,13 @@
 
 
 
-string_search.matches -> mark things that match (the indexes)
+- match_color -> here, for a line, i need to run all filters that have matchcolor (since some could actually modify match_color)
+  at this time, assume match_color is only for $msg
+
+
+
+1.2.6f
+- find regexes work
 
 
 1.2.6e

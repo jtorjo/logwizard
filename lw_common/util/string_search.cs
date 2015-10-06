@@ -20,6 +20,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
@@ -46,6 +47,40 @@ namespace lw_common {
 
             return false;
         }
+
+        public static List< Tuple<int,int>> match_indexes(string line, search_form.search_for search) {
+            if (search.use_regex && search.regex == null)
+                // the regex is invalid
+                return new List<Tuple<int, int>>();
+
+            if (search.use_regex) {
+                var matches = search.regex.Match(line);
+                if ( !matches.Success)
+                    return new List<Tuple<int, int>>();
+
+                List<Tuple<int, int>> result = new List<Tuple<int, int>>();
+                while (matches.Success) {
+                    result.Add( new Tuple<int, int>(matches.Index, matches.Length));
+                    matches = matches.NextMatch();
+                }
+
+                return result;
+            } else {
+                // case sensitive and/or full word
+                string search_for = search.case_sensitive ? search.text : search.text.ToLower();
+                string search_line = search.case_sensitive ? line : line.ToLower();
+
+                if (search.full_word) 
+                    return util.find_all_matches(search_line, search_for).Where( 
+                        x => is_delim_or_does_not_exist(search_line, x - 1) && is_delim_or_does_not_exist(search_line, x + search_for.Length) 
+                            ).Select(x => new Tuple<int,int>(x, search_for.Length)). ToList();
+
+                else
+                    return util.find_all_matches(search_line, search_for).Select(x => new Tuple<int,int>(x, search_for.Length)). ToList();
+            }
+
+        }
+
 
         public static bool matches(string line, search_form.search_for search) {
             if (search.use_regex && search.regex == null)
