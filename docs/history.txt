@@ -6,6 +6,18 @@
 - match_color -> here, for a line, i need to run all filters that have matchcolor (since some could actually modify match_color)
   at this time, assume match_color is only for $msg
 
+- ctrl-f -> if there's something selected, just have that text entered by default (ctrl-shift-f should do that implicitly)
+
+- say i type something, and then it finds all the lines that match what i typed
+  - if i go down/up/etc (thus, the selection would be empty -> i should preserve my "find" so that by default those words are still shown in selection-color)
+    (until i press escape)
+
+- f3/shift-f3 -> if i have something selected (see above), i should take that into account and search that selected-text forward/backward
+  (it would override a ctrl-f; the ctrl-f will be in effect when there's no selection)
+  + care about whether focus is in filters-pane /filtersctrl
+
+- note: this will never replace search form -> since there you can have extra settings: regexes, case-sensitivity ,full word
+
 
 
 1.2.6f

@@ -19,7 +19,6 @@
 
 	  - right click -> To Filter / To different color (show lines containing word in different color -> filter)
 
-  - ctrl-f -> if there's something selected, just have that text entered by default (ctrl-shift-f should do that implicitly)
   - should skip those columns that are image only (for future - since i will allow this)
 
 
