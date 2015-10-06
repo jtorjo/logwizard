@@ -306,6 +306,7 @@ namespace lw_common.ui {
         }
 
         private void smart_readonly_textbox_KeyPress(object sender, KeyPressEventArgs e) {
+            e.Handled = true;
             if ( e.KeyChar == '\x8') {
                 // backspace
                 if (sel_len_ > 0) {

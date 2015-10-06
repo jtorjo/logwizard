@@ -10,6 +10,11 @@
 - we should also take into account the results of the existing find (and those results take precedence - if any collitions)
 
 
+1.2.6b
+- no more beep on pressing letters
+  - still beeps on backspace
+
+
 1.2.6a
 - solved minor bugs 
 
