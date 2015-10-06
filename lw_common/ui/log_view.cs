@@ -136,6 +136,90 @@ namespace lw_common
                 return base.font.fg;
             }
 
+            // returns the overrides, sorted by index in the string to print
+            public List<Tuple<int, int, log_view_render.print_info>> override_print(log_view parent, string text, int col_idx) {
+                List<Tuple<int, int, log_view_render.print_info>> print = new List<Tuple<int, int, log_view_render.print_info>>();
+
+                string sel = parent.edit.sel_text;
+                if (col_idx == parent.cur_col_ && sel != "") {
+                    // look for the text typed by the user
+                    var matches = util.find_all_matches(text, sel);
+                    if (matches.Count > 0) {
+                        log_view_render.print_info print_sel = new log_view_render.print_info { bold = true, text = sel };
+                        foreach ( var match in matches)
+                            print.Add( new Tuple<int, int, log_view_render.print_info>(match, sel.Length, print_sel));
+                    }
+                }
+
+                string find = parent.cur_search_ != null ? parent.cur_search_.text : "";
+                if (col_idx == parent.msgCol.Index && find != "") {
+                    var matches = util.find_all_matches(text, sel);
+                    if (matches.Count > 0) {
+                        // if we're showing both selected text and the results of a find, differentiate them visually
+                        bool italic = sel != "";
+                        log_view_render.print_info print_sel = new log_view_render.print_info { text = find, bg = parent.cur_search_.bg, fg = parent.cur_search_.fg, bold = true, italic = italic };
+                        foreach ( var match in matches)
+                            print.Add( new Tuple<int, int, log_view_render.print_info>(match, sel.Length, print_sel));
+                    }                    
+                }
+
+                // sort it
+                print.Sort((x, y) => {
+                    if (x.Item1 != y.Item1)
+                        return x.Item1 - y.Item1;
+                    // if two items at same index - first will be the one with larger len
+                    return - (x.Item2 - y.Item2);
+                });
+
+                // check for collitions
+                bool collitions_found = true;
+                while (collitions_found) {
+                    collitions_found = false;
+                    for (int idx = 0; !collitions_found && idx < print.Count - 1; ++idx) {
+                        var now = print[idx];
+                        var next = print[idx + 1];
+                        if (now.Item1 + now.Item2 > next.Item1)
+                            collitions_found = true;
+
+                        if (collitions_found) {
+                            // first, see what type of collision it is
+                            bool exactly_same = now.Item1 == next.Item1 && now.Item2 == next.Item2;
+                            if (exactly_same)
+                                // doesn't matter - just keep one
+                                print.RemoveAt(idx + 1);
+                            else {
+                                // here - either one completely contains the other, or they just intersect
+                                bool contains_fully = now.Item1 + now.Item2 >= next.Item1 + next.Item2;
+                                if (contains_fully) {
+                                    bool starts_at_same_idx = now.Item1 == next.Item1;
+                                    if (starts_at_same_idx) {
+                                        print[idx] = next;
+                                        int len = next.Item2;
+                                        print[idx + 1] = new Tuple<int, int, log_view_render.print_info>(now.Item1 + len, now.Item2 - len, now.Item3);
+                                    } else {
+                                        // in this case, we need to split in 3
+                                        int len1 = next.Item1 - now.Item1;
+                                        var now1 = new Tuple<int, int, log_view_render.print_info>(now.Item1, len1, now.Item3);
+                                        var now2 = new Tuple<int, int, log_view_render.print_info>(next.Item1 + next.Item2, now.Item2 - len1 - next.Item2,
+                                            now.Item3);
+                                        print[idx] = now1;
+                                        print.Insert(idx + 2, now2);
+                                    }
+                                } else {
+                                    // they just intersect
+                                    int intersect_count = now.Item1 + now.Item2 - next.Item1;
+                                    Debug.Assert( intersect_count > 0);
+                                    now = new Tuple<int, int, log_view_render.print_info>(now.Item1, now.Item2 - intersect_count, now.Item3);
+                                    print[idx] = now;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return print;
+            } 
+
             public filter.match match {
                 get { return this;  }
             }
@@ -219,6 +303,8 @@ namespace lw_common
 
         private bool is_editing_ = false;
         private int editing_row_ = -1;
+
+        private search_form.search_for cur_search_ = null;
 
         public log_view(Form parent, string name)
         {
@@ -1290,6 +1376,7 @@ namespace lw_common
 
             // just in case a filter was selected
             unmark();
+            cur_search_ = search;
 
             bool needs_refresh = false;
             int count = filter_.match_count;
@@ -1309,6 +1396,7 @@ namespace lw_common
         // unmarks any previously marked rows
         public void unmark() {
 
+            cur_search_ = null;
             bool needs_refresh = false;
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
@@ -1873,6 +1961,7 @@ namespace lw_common
 
         private void on_edit_sel_changed() {
             // logger.Debug("[lv] sel= [" + edit.sel_text + "]");
+            list.Refresh();
         }
 
         // note: searches in the current column

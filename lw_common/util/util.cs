@@ -764,5 +764,19 @@ namespace lw_common {
                 c.ResumeLayout(true);
         }
 
+        public static List<int> find_all_matches(string text, string search_for) {
+            List<int> all = new List<int>();
+            int at = 0;
+            while (true) {
+                int next = text.IndexOf(search_for, at);
+                if (next != -1) {
+                    all.Add(next);
+                    at = next + search_for.Length;
+                } else 
+                    break;
+            }
+            return all;
+        }
+
     }
 }

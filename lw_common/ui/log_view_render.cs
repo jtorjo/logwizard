@@ -81,24 +81,19 @@ namespace lw_common.ui {
             public Color bg = util.transparent;
             public bool bold = false, italic = false;
             public string font_name = "";
+            
+            // useful when sorting - to avoid collisions
+            public string text = "";
         }
 
-        private Dictionary<string, print_info> override_print_ = new Dictionary<string, print_info>();
+        private List<Tuple<int, int, log_view_render.print_info>> override_print_ = new List<Tuple<int, int, log_view_render.print_info>> ();
         print_info default_ = new print_info();
-
-        public void set_override(string txt, print_info print) {
-            if (override_print_.ContainsKey(txt))
-                override_print_.Remove(txt);
-
-            override_print_.Add(txt, print);
-        }
 
         private int draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, print_info print) {
             Font f = print.bold ? (print.italic ? bi_font : b_font) : (print.italic ? i_font : font);
             var i = ListItem.RowObject as log_view.item;
             if (print != default_) {
-                Color bg = i.bg(parent_);
-                bg = print.bg != util.transparent ? print.bg : util.darker_color(bg);
+                Color bg = print.bg != util.transparent ? print.bg : util.darker_color( i.bg(parent_) );
                 Rectangle here = new Rectangle(r.Location, r.Size);
                 int cur_width = (int)g.MeasureString(sub, f).Width + 1;
                 here.X += left;
@@ -125,27 +120,22 @@ namespace lw_common.ui {
                 return;
             }
 
-            int least = override_print_.Keys.Min(op => {
-                int idx = s.IndexOf(op);
-                return idx != -1 ? idx : int.MaxValue;
-            });
-
-            if (least == int.MaxValue) {
-                // nothing to override
-                draw_sub_string(left, s, g, b, r, fmt, default_);
-                return;                
-            }
-
             // here, we have at least one override
-            foreach (var op in override_print_) {
-                int idx = s.IndexOf(op.Key);
-                if (idx == least) {
-                    int next = draw_sub_string(left, s.Substring(0, idx), g, b, r, fmt, default_);
-                    int next2 = draw_sub_string(next, s.Substring(idx, op.Key.Length), g, b, r, fmt, op.Value);
-                    draw_string(next2, s.Substring(idx + op.Key.Length), g, b, r, fmt);
-                    return;
-                }
+            for (int idx = 0; idx < override_print_.Count; ++idx) {
+                int start_normal = idx > 0 ? override_print_[idx - 1].Item1 + override_print_[idx - 1].Item2 : 0;
+                int normal_len = override_print_[idx].Item1 - start_normal;
+                // first, draw the normal text
+                int next = normal_len > 0 ? draw_sub_string(left, s.Substring(start_normal, normal_len), g, b, r, fmt, default_) : left;
+                int next2 = draw_sub_string(next, s.Substring( override_print_[idx].Item1, override_print_[idx].Item2 ), g, b, r, fmt, override_print_[idx].Item3);
+
+                left = next2;
             }
+
+            var last_override = override_print_.Last();
+            int last = last_override.Item1 + last_override.Item2;
+            string last_normal = s.Substring(last);
+            if ( last_normal != "")
+                draw_sub_string(left, last_normal, g, b, r, fmt, default_);
         }
 
         // for each character of the printed text, see how many pixels it takes
@@ -168,26 +158,24 @@ namespace lw_common.ui {
             if (i == null)
                 return;
 
+            var col_idx = Column.Index;
+            string text = GetText();
+            override_print_ = i.override_print(parent_, text, col_idx);
             Color bg = i.bg(parent_);
-            var focus_ctrl = win32.focused_ctrl();
-            bool is_focused = focus_ctrl == parent_.list || focus_ctrl == parent_.edit;
-
-            Color dark_bg = util.darker_color(bg);
-            Color darker_bg = util.darker_color(dark_bg);
+            Color dark_bg = i.sel_bg(parent_);
             bool is_sel = IsItemSelected;
 
-            var col_idx = Column.Index;
 
             Brush brush;
             if (col_idx == parent_.msgCol.Index) {
                 if (is_sel) 
-                    brush = brush_.brush(is_sel ? (is_focused ? darker_bg : dark_bg) : bg);
+                    brush = brush_.brush(is_sel ? dark_bg : bg);
                 else if (app.inst.use_bg_gradient)
                     brush = gradient_.brush(r, app.inst.bg_from, app.inst.bg_to);
                 else
                     brush = brush_.brush(bg);
             } else 
-                brush = brush_.brush(is_sel ? (is_focused ? darker_bg : dark_bg) : bg);
+                brush = brush_.brush(is_sel ? dark_bg : bg);
             g.FillRectangle(brush, r);
 
             StringFormat fmt = new StringFormat(StringFormatFlags.NoWrap);
@@ -199,8 +187,7 @@ namespace lw_common.ui {
                 case HorizontalAlignment.Right: fmt.Alignment = StringAlignment.Far; break;
             }
 
-            //g.DrawString(this.GetText(), this.Font, this.TextBrush, r, fmt);
-            draw_string(0, GetText(), g, brush, r, fmt);
+            draw_string(0, text, g, brush, r, fmt);
         }
     }
 }
