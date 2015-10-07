@@ -6,7 +6,13 @@ using System.Text;
 namespace lw_common {
 
     public enum action_type {
-        search, search_prev, search_next, clear_search,
+        search, search_prev, search_next, 
+
+        // a search with defaults + what is selected
+        default_search,
+        
+        // 1.2.6+ - now, this can do a lot of stuff, depending on the context
+        escape,
 
         next_view, prev_view,
         home, end,

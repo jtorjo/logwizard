@@ -1,11 +1,7 @@
-
-
-
-
-
-
 - ctrl-f -> if there's something selected, just have that text entered by default (ctrl-shift-f should do that implicitly)
-  - HANDLE ALL in log_view
+  - HANDLE ALL in log_view - so that log_wizard does not need to know about anything happening in logview
+    so that we can easily handle f3/shift-f3 even with what i want
+
 
 - say i type something, and then it finds all the lines that match what i typed
   - if i go down/up/etc (thus, the selection would be empty -> i should preserve my "find" so that by default those words are still shown in selection-color)
@@ -17,7 +13,9 @@
   if details shown -> erase it
   etc.
   
+- logwizard - home takes me home but not in edit mode?
 
+- filter - special case - when all filters turned off?
 
 
 - f3/shift-f3 -> if i have something selected (see above), i should take that into account and search that selected-text forward/backward
@@ -28,11 +26,18 @@
 
 - retest : modifying matchcolor with eyedropper
 
-- the current line -> everything that is normally applied (color, match colors) -> apply it to current line
+- the current line (the text box) -> everything that is normally applied (color, match colors) -> apply it to current line
 
 - look again at all keys (esc/bksp/etc) in logwizard -> they showuld work corectly
 
 
+
+
+
+
+
+1.2.7a
+- ctrl-shift-f works
 
 
 1.2.6g

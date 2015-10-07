@@ -102,9 +102,6 @@ namespace LogWizard
 
         private int ignore_change_ = 0;
 
-        // in case we're searching for some text in the current tab, this is non-null
-        private search_form.search_for search_for_text_ = null;
-
         private List<int> bookmarks_ = new List<int>();
         private msg_details_ctrl msg_details_ = null;
 
@@ -1926,12 +1923,14 @@ namespace LogWizard
             switch (key_code) {
             case "ctrl-f": 
                 return action_type.search ;
+            case "ctrl-shift-f": 
+                return action_type.default_search ;
             case "f3":
                 return action_type.search_next;
             case "shift-f3":
                 return action_type.search_prev;
             case "escape":
-                return action_type.clear_search;
+                return action_type.escape;
 
             case "ctrl-f2":
                 return action_type.toggle_bookmark;
@@ -2043,28 +2042,41 @@ namespace LogWizard
         private void handle_action(action_type action) {
             int sel = viewsTab.SelectedIndex;
             var lv = selected_view();
+            Debug.Assert(lv != null);
 
             switch (action) {
             case action_type.search:
                 var searcher = new search_form(this);
                 if (searcher.ShowDialog() == DialogResult.OK) {
-                    search_for_text_ = searcher.search;
                     // remove focus from the Filters tab, just in case (otherwise, search prev/next would end up working on that)
                     unfocus_filter_panel();
 
-                    if ( search_for_text_.mark_lines_with_color)
-                        lv.mark_text(search_for_text_, search_for_text_.fg, search_for_text_.bg);
-                    lv.search_for_text_first(search_for_text_);
+                    lv.search_for_text(searcher.search);
+                    lv.search_for_text_first();
                 }
                 break;
+
+            case action_type.default_search:
+                // remove focus from the Filters tab, just in case (otherwise, search prev/next would end up working on that)
+                unfocus_filter_panel();
+                var search = search_form.default_search;
+                var sel_text = lv.smart_edit_sel_text;
+                if (sel_text != "") {
+                    search.text = sel_text;
+                    search.use_regex = false;
+                }
+                lv.search_for_text(search);
+                lv.search_next();
+                break;
+
             case action_type.search_prev:
-                search_prev();
+                lv.search_prev();
                 break;
             case action_type.search_next:
-                search_next();
+                lv.search_next();
                 break;
-            case action_type.clear_search:
-                clear_search();
+            case action_type.escape:
+                lv.escape();
                 break;
 
             case action_type.next_view: {
@@ -2098,8 +2110,7 @@ namespace LogWizard
             case action_type.arrow_down:
             case action_type.shift_arrow_down:
             case action_type.shift_arrow_up:
-                if ( lv != null)
-                    lv.on_action(action);
+                lv.on_action(action);
                 break;
 
             case action_type.toggle_filters:
@@ -2116,20 +2127,16 @@ namespace LogWizard
                 break;
 
             case action_type.copy_to_clipboard:
-                if (lv != null) {
-                    lv.copy_to_clipboard();
-                    set_status("Lines copied to Clipboard, as text and html");
-                }
+                lv.copy_to_clipboard();
+                set_status("Lines copied to Clipboard, as text and html");
                 break;
             case action_type.copy_full_line_to_clipboard:
-                if (lv != null) {
-                    lv.copy_full_line_to_clipboard();
-                    set_status("Full Lines copied to Clipboard, as text and html");
-                }
+                lv.copy_full_line_to_clipboard();
+                set_status("Full Lines copied to Clipboard, as text and html");
                 break;
 
             case action_type.toggle_bookmark:
-                int line_idx = lv != null ? lv.sel_line_idx : -1;
+                int line_idx = lv.sel_line_idx ;
                 if (line_idx >= 0) {
                     if (bookmarks_.Contains(line_idx))
                         bookmarks_.Remove(line_idx);
@@ -2145,12 +2152,10 @@ namespace LogWizard
                 notify_views_of_bookmarks();
                 break;
             case action_type.next_bookmark:
-                if (lv != null)
-                    lv.next_bookmark();
+                lv.next_bookmark();
                 break;
             case action_type.prev_bookmark:
-                if (lv != null)
-                    lv.prev_bookmark();
+                lv.prev_bookmark();
                 break;
 
             case action_type.pane_next:
@@ -2185,35 +2190,29 @@ namespace LogWizard
                 break;
 
             case action_type.toggle_show_msg_only:
-                if (lv != null) {
-                    var next = global_ui.next_show_row_for_view(lv.name);
-                    lv.show_row(next);
-                    global_ui.show_row_for_view(lv.name, next);
-                }
+                var next = global_ui.next_show_row_for_view(lv.name);
+                lv.show_row(next);
+                global_ui.show_row_for_view(lv.name, next);
                 break;
             case action_type.scroll_up:
-                if (lv != null)
-                    lv.scroll_up();
+                lv.scroll_up();
                 break;
             case action_type.scroll_down:
-                if (lv != null)
-                    lv.scroll_down();
+                lv.scroll_down();
                 break;
 
             case action_type.go_to_line:
-                if (lv != null) {
-                    var dlg = new go_to_line_time_form(this);
-                    if (dlg.ShowDialog() == DialogResult.OK) {
-                        if (dlg.is_number()) {
-                            if ( dlg.has_offset != '\0')
-                                lv.offset_closest_line(dlg.number, dlg.has_offset == '+');
-                            else
-                                lv.go_to_closest_line(dlg.number - 1, log_view.select_type.notify_parent);
-                        } else if (dlg.has_offset != '\0')
-                            lv.offset_closest_time(dlg.time_milliseconds, dlg.has_offset == '+');
+                var dlg = new go_to_line_time_form(this);
+                if (dlg.ShowDialog() == DialogResult.OK) {
+                    if (dlg.is_number()) {
+                        if ( dlg.has_offset != '\0')
+                            lv.offset_closest_line(dlg.number, dlg.has_offset == '+');
                         else
-                            lv.go_to_closest_time(dlg.normalized_time);
-                    }
+                            lv.go_to_closest_line(dlg.number - 1, log_view.select_type.notify_parent);
+                    } else if (dlg.has_offset != '\0')
+                        lv.offset_closest_time(dlg.time_milliseconds, dlg.has_offset == '+');
+                    else
+                        lv.go_to_closest_time(dlg.normalized_time);
                 }
                 break;
             case action_type.refresh:
@@ -2279,18 +2278,6 @@ namespace LogWizard
                 break;
             }
         }
-
-        private void clear_search() {
-            if (msg_details_.visible()) {
-                msg_details_.show(false);
-                return;
-            }
-
-            if (selected_view() != null)
-                selected_view().unmark();
-            search_for_text_ = null;
-        }
-
 
         private void toggle_custom_ui(int idx) {
             int new_ui = idx == toggled_to_custom_ui_ ? -1 : idx;
@@ -2400,26 +2387,6 @@ namespace LogWizard
                 txt += m;
             }
             return txt;
-        }
-
-        private void search_next() {
-            var lv = selected_view();
-            if (lv == null)
-                return;
-            if ( search_for_text_ != null)
-                lv.search_for_text_next(search_for_text_);
-            else if ( filtCtrl.sel >= 0)
-                lv.search_for_next_match( filtCtrl.sel);
-        }
-
-        private void search_prev() {
-            var lv = selected_view();
-            if (lv == null)
-                return;
-            if ( search_for_text_ != null)
-                lv.search_for_text_prev(search_for_text_);            
-            else if ( filtCtrl.sel >= 0)
-                lv.search_for_prev_match( filtCtrl.sel);
         }
 
 

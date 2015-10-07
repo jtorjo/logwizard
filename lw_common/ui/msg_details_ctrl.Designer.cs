@@ -1,4 +1,4 @@
-﻿namespace LogWizard {
+﻿namespace lw_common {
     partial class msg_details_ctrl {
         /// <summary> 
         /// Required designer variable.

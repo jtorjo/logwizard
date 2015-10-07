@@ -23,17 +23,20 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using lw_common;
+using lw_common.ui;
 
-namespace LogWizard {
-    internal partial class msg_details_ctrl : UserControl {
+namespace lw_common {
+    public partial class msg_details_ctrl : UserControl {
         private const int MAX_HEIGHT = 160;
-        private log_wizard wizard_parent_;
-        public msg_details_ctrl(log_wizard wizard_parent) {
+        private Form wizard_parent_;
+        public msg_details_ctrl(Form wizard_parent) {
             wizard_parent_ = wizard_parent;
+            Debug.Assert(wizard_parent is log_view_parent);
+
             InitializeComponent();
             SetStyle(ControlStyles.Selectable, false);
             Visible = true;
@@ -63,7 +66,7 @@ namespace LogWizard {
         }
 
         public void update(log_view view, int top_offset, int bottom_offset, bool force_update) {
-            Rectangle wizard_rect = wizard_parent_.client_rect_no_filter; 
+            Rectangle wizard_rect = (wizard_parent_ as log_view_parent).client_rect_no_filter; 
             Rectangle wizard_screen = wizard_parent_.RectangleToScreen(wizard_rect);
             // ... care about the lower buttons
             wizard_rect.Y += top_offset;

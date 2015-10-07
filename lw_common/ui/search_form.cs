@@ -75,6 +75,47 @@ namespace lw_common.ui {
             TopMost = parent.TopMost;
         }
 
+        public static search_for default_search {
+            get {
+                var sett = app.inst.sett;
+
+                int type = int.Parse(sett.get("search_type", "0"));
+                switch (type) {
+                case 0:
+                    // auto
+                    break;
+                case 1:
+                    // text
+                    break;
+                case 2:
+                    // regex
+                    break;
+                    default: Debug.Assert(false);
+                    break;
+                }
+                string text = sett.get("search_text");
+                bool use_regex = type == 2;
+                if (type == 0)
+                    use_regex = is_auto_regex(text);
+                Regex regex = null;
+                if ( use_regex)
+                    try {
+                        regex = new Regex(text);
+                    } catch {
+                        regex = null;
+                    }
+
+                search_for default_ = new search_for {
+                    fg = util.str_to_color( sett.get("search_fg", "transparent")),
+                    bg = util.str_to_color( sett.get("search_bg", "#faebd7") ),
+                    case_sensitive = sett.get("search_case_sensitive", "0") != "0",
+                    full_word = sett.get("search_full_word", "0") != "0",
+                    use_regex = use_regex, regex = regex, text = text, mark_lines_with_color = true
+                };
+                return default_;
+            }
+        }
+
         public search_for search {
             get { return search_; }
         }
@@ -111,7 +152,7 @@ namespace lw_common.ui {
 
                 bool use_regex = radioRegex.Checked;
                 if (radioAutoRecognize.Checked)
-                    use_regex = is_auto_regex();
+                    use_regex = is_auto_regex(txt.Text);
                 Regex regex = null;
                 if ( use_regex)
                     try {
@@ -132,13 +173,13 @@ namespace lw_common.ui {
             update_autorecognize_radio();
         }
 
-        private bool is_auto_regex() {
-            bool is_regex = txt.Text.IndexOfAny(new char[] {'[', ']', '(', ')', '\\'}) >= 0;
+        private static bool is_auto_regex(string text) {
+            bool is_regex = text.IndexOfAny(new char[] {'[', ']', '(', ')', '\\'}) >= 0;
             return is_regex;
         }
 
         private void update_autorecognize_radio() {
-            radioAutoRecognize.Text = "Auto recognized (" + (is_auto_regex() ? "Regex" : "Text") + ")";
+            radioAutoRecognize.Text = "Auto recognized (" + (is_auto_regex(txt.Text) ? "Regex" : "Text") + ")";
         }
     }
 }

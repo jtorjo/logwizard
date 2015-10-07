@@ -5,14 +5,13 @@
     - sharing thy log with coworkers/customer support/customers 
 	  - customer support - explain that they can have the developers look at the logs as well.
 
-- search - allow starting from here (=default) or from top
-- search - synchronize with full log
 
 -------------------------------------------------------
 
 
 
 
+- tothink about menu : should i create a single filter_row + noneditable( so that only I can change it), or create a single row per request (eventually with meaningful ## names)
 
 
 
@@ -34,6 +33,7 @@
   - Show all filters that matched this (a bit harder, since we need to select several rows in filter_ctrl; should check that it does not mess with .SelectedIndex)
   - show what other views contain this line - "Go to Other View Containing this line" -> and show which other views contain it
   - Change color of all lines .. (basically, create a filter that will show all lines with given color)
+    OR update existing filter (if any) -> to the given color???
     if right click on a word -> create a filter that "line starts with word" or "line contains with word"
   - Remove Lines containing ... / starting with
     - for this, we'll have a special filter (apply to existing lines)
@@ -74,6 +74,10 @@
 
 
 
+
+
+- search - allow starting from here (=default) or from top
+- search - synchronize with full log
 
 
 

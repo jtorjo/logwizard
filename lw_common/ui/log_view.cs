@@ -136,8 +136,7 @@ namespace lw_common
                 return base.font.fg;
             }
 
-            // returns the overrides, sorted by index in the string to print
-            public List<Tuple<int, int, log_view_render.print_info>> override_print(log_view parent, string text, int col_idx) {
+            private List<Tuple<int, int, log_view_render.print_info>> override_print_from_all_places(log_view parent, string text, int col_idx) {
                 List<Tuple<int, int, log_view_render.print_info>> print = new List<Tuple<int, int, log_view_render.print_info>>();
 
                 // 1.2.6 - for now, just for msg do match-color
@@ -171,18 +170,33 @@ namespace lw_common
                             print.Add( new Tuple<int, int, log_view_render.print_info>(match.Item1, match.Item2, print_sel));
                     }                    
                 }
+                
+                if ( util.is_debug)
+                    foreach ( var p in print)
+                        Debug.Assert(p.Item1 >= 0 && p.Item2 >= 0);
 
-                // sort it
-                print.Sort((x, y) => {
-                    if (x.Item1 != y.Item1)
-                        return x.Item1 - y.Item1;
-                    // if two items at same index - first will be the one with larger len
-                    return - (x.Item2 - y.Item2);
-                });
+                return print;
+            }
+
+            // returns the overrides, sorted by index in the string to print
+            public List<Tuple<int, int, log_view_render.print_info>> override_print(log_view parent, string text, int col_idx) {
+                var print = override_print_from_all_places(parent, text, col_idx);
+
+                // for testing only
+                var old_print = util.is_debug ? print.ToList() : null;
 
                 // check for collitions
                 bool collitions_found = true;
                 while (collitions_found) {
+                    // sort it
+                    // note: I need to sort it after each collision is solved, since in imbricated prints, we can get un-sorted
+                    print.Sort((x, y) => {
+                        if (x.Item1 != y.Item1)
+                            return x.Item1 - y.Item1;
+                        // if two items at same index - first will be the one with larger len
+                        return - (x.Item2 - y.Item2);
+                    });
+
                     collitions_found = false;
                     for (int idx = 0; !collitions_found && idx < print.Count - 1; ++idx) {
                         var now = print[idx];
@@ -204,13 +218,16 @@ namespace lw_common
                                     if (starts_at_same_idx) {
                                         print[idx] = next;
                                         int len = next.Item2;
-                                        print[idx + 1] = new Tuple<int, int, log_view_render.print_info>(now.Item1 + len, now.Item2 - len, now.Item3);
+                                        int second_len = now.Item2 - len;
+                                        Debug.Assert(second_len >= 0);
+                                        print[idx + 1] = new Tuple<int, int, log_view_render.print_info>(now.Item1 + len, second_len, now.Item3);
                                     } else {
                                         // in this case, we need to split in 3
                                         int len1 = next.Item1 - now.Item1;
+                                        int len2 = now.Item2 - len1 - next.Item2;
                                         var now1 = new Tuple<int, int, log_view_render.print_info>(now.Item1, len1, now.Item3);
-                                        var now2 = new Tuple<int, int, log_view_render.print_info>(next.Item1 + next.Item2, now.Item2 - len1 - next.Item2,
-                                            now.Item3);
+                                        var now2 = new Tuple<int, int, log_view_render.print_info>(next.Item1 + next.Item2, len2, now.Item3);
+                                        Debug.Assert(len1 >= 0 && len2 >= 0);
                                         print[idx] = now1;
                                         print.Insert(idx + 2, now2);
                                     }
@@ -218,13 +235,19 @@ namespace lw_common
                                     // they just intersect
                                     int intersect_count = now.Item1 + now.Item2 - next.Item1;
                                     Debug.Assert( intersect_count > 0);
-                                    now = new Tuple<int, int, log_view_render.print_info>(now.Item1, now.Item2 - intersect_count, now.Item3);
+                                    int interesect_len = now.Item2 - intersect_count;
+                                    Debug.Assert(interesect_len >= 0);
+                                    now = new Tuple<int, int, log_view_render.print_info>(now.Item1, interesect_len, now.Item3);
                                     print[idx] = now;
                                 }
                             }
                         }
                     }
                 }
+
+                if ( util.is_debug)
+                    foreach ( var p in print)
+                        Debug.Assert(p.Item1 >= 0 && p.Item2 >= 0);
 
                 return print;
             } 
@@ -317,7 +340,7 @@ namespace lw_common
 
         public log_view(Form parent, string name)
         {
-            Debug.Assert(parent as log_view_parent != null);
+            Debug.Assert(parent is log_view_parent);
 
             filter_ = new filter(this.create_match_object);
             InitializeComponent();
@@ -473,7 +496,10 @@ namespace lw_common
             }
         }
 
-
+        // returns the text the user has selected via the smart edit
+        public string smart_edit_sel_text {
+            get { return edit.sel_text; }
+        }
 
         public string sel_line_text {
             get {
@@ -1381,7 +1407,7 @@ namespace lw_common
             e.Handled = true;
         }
 
-        public void mark_text(search_form.search_for search, Color fg, Color bg) {
+        public void search_for_text(search_form.search_for search) {
 
             // just in case a filter was selected
             unmark();
@@ -1389,22 +1415,6 @@ namespace lw_common
 
             // as of 1.2.6, we mark the words visually
             list.Refresh();
-
-#if old_code
-            bool needs_refresh = false;
-            int count = filter_.match_count;
-            for (int idx = 0; idx < count; ++idx) {
-                item i = match_at(idx) ;
-                if (string_search.matches( i.match.line.part(info_type.msg), search)) {
-                    i.override_fg = fg;
-                    i.override_bg = bg;
-                    needs_refresh = true;
-                    update_line_color(idx);
-                }
-            }
-            if (needs_refresh)
-                list.Refresh();
-#endif
         }
 
         // unmarks any previously marked rows
@@ -1413,50 +1423,84 @@ namespace lw_common
             cur_search_ = null;
             // as of 1.2.6, we mark the words visually
             list.Refresh();
-#if old_code
-            bool needs_refresh = false;
-            int count = filter_.match_count;
-            for (int idx = 0; idx < count; ++idx) {
-                item i = match_at(idx) ;
-                bool needs_unmark = i.override_bg != util.transparent || i.override_fg != util.transparent;
-                if (needs_unmark) {
-                    i.override_fg = util.transparent;
-                    i.override_bg = util.transparent;
-                    needs_refresh = true;
-                    update_line_color(idx);
-                }
-            }
-            if (needs_refresh)
-                list.Refresh();
-#endif
         }
 
-        public void search_for_text_first(search_form.search_for search) {
+        /* 
+        private void search_next() {
+            var lv = selected_view();
+            if (lv == null)
+                return;
+            if ( search_for_text_ != null)
+                lv.search_for_text_next(search_for_text_);
+            else if ( filtCtrl.sel >= 0)
+                lv.search_for_next_match( filtCtrl.sel);
+        }
+
+        private void search_prev() {
+            var lv = selected_view();
+            if (lv == null)
+                return;
+            if ( search_for_text_ != null)
+                lv.search_for_text_prev(search_for_text_);            
+            else if ( filtCtrl.sel >= 0)
+                lv.search_for_prev_match( filtCtrl.sel);
+        }
+        */
+        public void escape() {
+            /*
+            if (msg_details_.visible()) {
+                msg_details_.show(false);
+                return;
+            }
+
+            if (selected_view() != null)
+                selected_view().unmark();
+            search_for_text_ = null; */
+        }
+
+        public void search_next() {
+            search_for_text_next();
+        }
+
+        public void search_prev() {
+            search_for_text_prev();
+        }
+
+        // note: starts from the next row, or, if on row zero -> starts from row zero
+        public void search_for_text_first() {
             if (filter_.match_count < 1)
+                return;
+            Debug.Assert(cur_search_ != null);
+            if (cur_search_ == null)
                 return;
 
             select_idx(0, select_type.notify_parent);
             item i = match_at(0) ;
-            if ( string_search.matches( i.match.line.part(info_type.msg), search)) {
+            bool include_row_zero = sel_row_idx == 0 || sel_row_idx == -1;
+            if ( include_row_zero && string_search.matches( i.match.line.part(info_type.msg), cur_search_)) {
                 // line zero contains the text already
                 ensure_line_visible(0);
                 return;
             } else
-                search_for_text_next(search);
+                search_for_text_next();
         }
 
-        public void search_for_text_next(search_form.search_for search) {
+        private void search_for_text_next() {
             int count = filter_.match_count;
             if (count < 1)
                 return;
+            Debug.Assert(cur_search_ != null);
+            if (cur_search_ == null)
+                return;
 
             int found = -1;
-            if (sel_row_idx >= 0)
-                for (int idx = sel_row_idx + 1; idx < count && found < 0; ++idx) {
-                    item i = match_at(idx) ;
-                    if (string_search.matches( i.match.line.part(info_type.msg), search))
-                        found = idx;
-                }
+            int next_row = sel_row_idx >= 0 ? sel_row_idx + 1 : 0;
+            for (int idx = next_row; idx < count && found < 0; ++idx) {
+                item i = match_at(idx) ;
+                if (string_search.matches( i.match.line.part(info_type.msg), cur_search_))
+                    found = idx;
+            }
+
             if (found >= 0) {
                 select_idx(found, select_type.notify_parent);
                 ensure_line_visible(found);
@@ -1464,18 +1508,21 @@ namespace lw_common
                 util.beep(util.beep_type.err);
         }
 
-        public void search_for_text_prev(search_form.search_for search) {
+        private void search_for_text_prev() {
             int count = filter_.match_count;
             if (count < 1)
                 return;
+            Debug.Assert(cur_search_ != null);
+            if (cur_search_ == null)
+                return;
 
             int found = -1;
-            if (sel_row_idx > 0)
-                for (int idx = sel_row_idx - 1; idx >= 0 && found < 0; --idx) {
-                    item i = match_at(idx) ;
-                    if (string_search.matches( i.match.line.part(info_type.msg), search))
-                        found = idx;
-                }
+            int prev_row = sel_row_idx >= 0 ? sel_row_idx - 1 : count - 1;
+            for (int idx = prev_row; idx >= 0 && found < 0; --idx) {
+                item i = match_at(idx) ;
+                if (string_search.matches( i.match.line.part(info_type.msg), cur_search_))
+                    found = idx;
+            }
             if (found >= 0) {
                 select_idx(found, select_type.notify_parent);
                 ensure_line_visible(found);
