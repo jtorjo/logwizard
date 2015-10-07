@@ -1,9 +1,3 @@
-- ctrl-f -> if there's something selected, just have that text entered by default (ctrl-shift-f should do that implicitly)
-  - HANDLE ALL in log_view - so that log_wizard does not need to know about anything happening in logview
-    so that we can easily handle f3/shift-f3 even with what i want
-	NEED TO HANDLE when filter_ctrl is selected
-
-
 
 - escape hotkey - in logview
   if selection -> erase it
@@ -13,20 +7,22 @@
   
 - logwizard - home takes me home but not in edit mode?
 
-- filter - special case - when all filters turned off?
-
-
-- f3/shift-f3 -> if i have something selected (see above), i should take that into account and search that selected-text forward/backward
-  (it would override a ctrl-f; the ctrl-f will be in effect when there's no selection)
-  + care about whether focus is in filters-pane /filtersctrl
-
-- note: this will never replace search form -> since there you can have extra settings: regexes, case-sensitivity ,full word
-
 - retest : modifying matchcolor with eyedropper
+
+- look again at all keys (esc/bksp/etc) in logwizard -> they showuld work corectly
 
 - the current line (the text box) -> everything that is normally applied (color, match colors) -> apply it to current line
 
-- look again at all keys (esc/bksp/etc) in logwizard -> they showuld work corectly
+- filter - special case - when all filters turned off?
+
+
+1.2.8
+- ctrl-f -> if there's something selected, just have that text entered by default (ctrl-shift-f should do that implicitly)
+  - HANDLE ALL in log_view - so that log_wizard does not need to know about anything happening in logview
+    so that we can easily handle f3/shift-f3 even with what i want
+- f3/shift-f3 -> if i have something selected (see above), i should take that into account and search that selected-text forward/backward
+  (it would override a ctrl-f; the ctrl-f will be in effect when there's no selection)
+  + care about whether focus is in filters-pane /filtersctrl
 
 
 1.2.7b

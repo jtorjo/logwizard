@@ -337,6 +337,7 @@ namespace lw_common
         private int editing_row_ = -1;
 
         private search_form.search_for cur_search_ = null;
+        private int cur_filter_row_idx_ = -1;
 
         public log_view(Form parent, string name)
         {
@@ -1130,6 +1131,7 @@ namespace lw_common
         }
 
         // returns true if it needed to refresh
+        // FIXME 1.2.7+ probably not needed anymore, we're doing all this when rendering
         private bool update_line_color(int idx) {
             if (idx >= list.GetItemCount())
                 // in this case, the list hasn't fully refreshed - the filter contains more items than the list
@@ -1408,20 +1410,21 @@ namespace lw_common
         }
 
         public void search_for_text(search_form.search_for search) {
-
-            // just in case a filter was selected
-            unmark();
             cur_search_ = search;
-
             // as of 1.2.6, we mark the words visually
             list.Refresh();
         }
 
         // unmarks any previously marked rows
         public void unmark() {
-
-            cur_search_ = null;
-            // as of 1.2.6, we mark the words visually
+            cur_filter_row_idx_ = -1;
+            bool needs_refresh = false;
+            int count = filter_.match_count;
+            for (int idx = 0; idx < count; ++idx) {
+                item i = match_at(idx) ;
+                i.override_fg = util.transparent;
+                i.override_bg = util.transparent;
+            }
             list.Refresh();
         }
 
@@ -1456,14 +1459,42 @@ namespace lw_common
             if (selected_view() != null)
                 selected_view().unmark();
             search_for_text_ = null; */
+
+            // FIXME
+            cur_filter_row_idx_ = -1;
         }
 
+
         public void search_next() {
-            search_for_text_next();
+            /* 1.2.7+   implemented f3/shift-f3 on smart-edit first
+                        note: this will never replace search form -> since there you can have extra settings: regexes, case-sensitivity ,full word
+            */
+
+            // if user has selected something (smart edit), search for that
+            // if user has made a find (ctrl-f), search for that
+            // otherwise, search for selected filter (if any)
+
+            string sel_text = edit.sel_text.ToLower();
+            if (cur_search_ != null || sel_text != "")
+                search_for_text_next();
+            else if ( cur_filter_row_idx_ >= 0)
+                search_for_next_match(cur_filter_row_idx_);
         }
 
         public void search_prev() {
-            search_for_text_prev();
+            /* 1.2.7+   implemented f3/shift-f3 on smart-edit first
+                        note: this will never replace search form -> since there you can have extra settings: regexes, case-sensitivity ,full word
+            */
+
+            // if user has selected something (smart edit), search for that
+            // if user has made a find (ctrl-f), search for that
+            // otherwise, search for selected filter (if any)
+
+            string sel_text = edit.sel_text.ToLower();
+            if (cur_search_ != null || sel_text != "")
+                search_for_text_prev();
+            else if ( cur_filter_row_idx_ >= 0)
+                search_for_prev_match(cur_filter_row_idx_);
         }
 
         // note: starts from the next row, or, if on row zero -> starts from row zero
@@ -1525,11 +1556,10 @@ namespace lw_common
             int count = filter_.match_count;
             if (count < 1)
                 return;
-            Debug.Assert(cur_search_ != null);
-            if (cur_search_ == null)
-                return;
-
             string sel_text = edit.sel_text.ToLower();
+            Debug.Assert(cur_search_ != null || sel_text != "");
+            if (cur_search_ == null && sel_text == "")
+                return;
 
             int found = -1;
             int prev_row = sel_row_idx >= 0 ? sel_row_idx - 1 : count - 1;
@@ -1554,12 +1584,15 @@ namespace lw_common
         }
 
         public void mark_match(int filter_row_idx, Color fg, Color bg) {
+            cur_filter_row_idx_ = filter_row_idx;
             bool needs_refresh = false;
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
                 item i = match_at(idx) ;
-                bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
-                bool needs_change = (is_match && (i.override_fg.ToArgb() != fg.ToArgb() || i.override_bg.ToArgb() != bg.ToArgb())) || (!is_match && (i.override_fg != util.transparent || i.override_bg != util.transparent));
+                bool is_match = filter_row_idx >= 0 && i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
+                bool needs_change = 
+                    (is_match && (i.override_fg.ToArgb() != fg.ToArgb() || i.override_bg.ToArgb() != bg.ToArgb())) || 
+                    (!is_match && (i.override_fg != util.transparent || i.override_bg != util.transparent));
 
                 if (needs_change) {
                     i.override_fg = is_match ? fg : util.transparent;
@@ -1572,18 +1605,19 @@ namespace lw_common
                 list.Refresh();
         }
 
-        public void search_for_next_match(int filter_row_idx) {
+        private void search_for_next_match(int filter_row_idx) {
             int count = filter_.match_count;
             if (count < 1)
                 return;
             int found = -1;
-            if (sel_row_idx >= 0)
-                for (int idx = sel_row_idx + 1; idx < count && found < 0; ++idx) {
-                    item i = match_at(idx) ;
-                    bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
-                    if (is_match)
-                        found = idx;
-                }
+            int next_row = sel_row_idx >= 0 ? sel_row_idx + 1 : 0;
+            for (int idx = next_row; idx < count && found < 0; ++idx) {
+                item i = match_at(idx) ;
+                bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
+                if (is_match)
+                    found = idx;
+            }
+
             if (found >= 0) {
                 select_idx(found, select_type.notify_parent);
                 ensure_line_visible(found);
@@ -1591,17 +1625,18 @@ namespace lw_common
                 util.beep(util.beep_type.err);
         }
 
-        public void search_for_prev_match(int filter_row_idx) {
+        private void search_for_prev_match(int filter_row_idx) {
             if (filter_.match_count < 1)
                 return;
             int found = -1;
-            if (sel_row_idx > 0)
-                for (int idx = sel_row_idx - 1; idx >= 0 && found < 0; --idx) {
-                    item i = match_at(idx) ;
-                    bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
-                    if (is_match)
-                        found = idx;
-                }
+            int prev_row = sel_row_idx >= 0 ? sel_row_idx - 1 : filter_.match_count - 1;
+            for (int idx = prev_row; idx >= 0 && found < 0; --idx) {
+                item i = match_at(idx) ;
+                bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
+                if (is_match)
+                    found = idx;
+            }
+
             if (found >= 0) {
                 select_idx(found, select_type.notify_parent);
                 ensure_line_visible(found);

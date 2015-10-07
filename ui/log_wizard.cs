@@ -128,28 +128,6 @@ namespace LogWizard
             both, just_view, just_full_log
         }
 
-        class filter_item {
-            public bool enabled = true;
-            public bool dimmed = false;
-            public string text = "";
-
-            public bool apply_to_existing_lines = false;
-
-            public string found_count = "";
-
-            // "name" is just a friendly name for the text
-            public string name {
-                get {
-                    string[] lines = text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
-                    var filter_name = lines.FirstOrDefault(l => l.Trim().StartsWith("## "));
-                    if (filter_name != null)
-                        return filter_name.Trim().Substring(3).Trim();
-
-                    return lines.Aggregate("", (current, l) => current + (l + " | "));
-                }
-            } 
-        }
-
         public log_wizard()
         {
             InitializeComponent();

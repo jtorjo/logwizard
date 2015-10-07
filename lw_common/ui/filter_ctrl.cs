@@ -228,10 +228,15 @@ namespace lw_common.ui {
                 curFilterCtrl.Text = "";
                 applyToExistingLines.Checked = false;
                 --ignore_change_;
+                mark_match(-1);
                 return;
             }
 
             filter_item i = filterCtrl.GetItem(sel_filter).RowObject as filter_item;
+            ++ignore_change_;
+            applyToExistingLines.Checked = i.apply_to_existing_lines;
+            --ignore_change_;
+
             raw_filter_row filt = new raw_filter_row(i.text, i.apply_to_existing_lines);
             if (filt.is_valid) {
                 /*
@@ -242,11 +247,6 @@ namespace lw_common.ui {
                 */
                 mark_match(sel_filter);
             }
-
-            ++ignore_change_;
-            applyToExistingLines.Checked = i.apply_to_existing_lines;
-            --ignore_change_;
-
         }
 
         private void filterCtrl_KeyPress(object sender, KeyPressEventArgs e) {
