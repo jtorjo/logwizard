@@ -47,7 +47,8 @@ namespace lw_common.ui {
         private search_for search_ = new search_for();
         private settings_file sett;
 
-        public search_form(Form parent) {
+        // 1.2.7+ if there's something selected by the user, override what we had
+        public search_form(Form parent, string smart_edit_search_for_text) {
             this.sett = app.inst.sett;
             InitializeComponent();
             fg.BackColor = util.str_to_color( sett.get("search_fg", "transparent"));
@@ -71,6 +72,12 @@ namespace lw_common.ui {
             }
 
             txt.Text = sett.get("search_text");
+
+            if (smart_edit_search_for_text != "") {
+                txt.Text = smart_edit_search_for_text;
+                radioText.Checked = true;
+            }
+
             update_autorecognize_radio();
             TopMost = parent.TopMost;
         }

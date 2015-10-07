@@ -148,10 +148,10 @@ namespace lw_common
                         } ));
                 }
 
-                string sel = parent.edit.sel_text;
+                string sel = parent.edit.sel_text.ToLower();
                 if (col_idx == parent.cur_col_ && sel != "") {
                     // look for the text typed by the user
-                    var matches = util.find_all_matches(text, sel);
+                    var matches = util.find_all_matches(text.ToLower(), sel);
                     if (matches.Count > 0) {
                         log_view_render.print_info print_sel = new log_view_render.print_info { bold = true, text = sel };
                         foreach ( var match in matches)
@@ -1474,6 +1474,9 @@ namespace lw_common
             if (cur_search_ == null)
                 return;
 
+            // make sure f3/shift-f3 will work on the current search (cur_search_), not on the currently selected word(s)
+            edit.escape();
+
             select_idx(0, select_type.notify_parent);
             item i = match_at(0) ;
             bool include_row_zero = sel_row_idx == 0 || sel_row_idx == -1;
@@ -1489,13 +1492,23 @@ namespace lw_common
             int count = filter_.match_count;
             if (count < 1)
                 return;
-            Debug.Assert(cur_search_ != null);
-            if (cur_search_ == null)
+
+            string sel_text = edit.sel_text.ToLower();
+            Debug.Assert(cur_search_ != null || sel_text != "");
+            if (cur_search_ == null && sel_text == "")
                 return;
 
             int found = -1;
             int next_row = sel_row_idx >= 0 ? sel_row_idx + 1 : 0;
             for (int idx = next_row; idx < count && found < 0; ++idx) {
+                // 1.2.7+ - if user has selected something, search for that
+                if (sel_text != "") {
+                    string cur = list.GetItem(idx).GetSubItem(cur_col_).Text;
+                    if (cur.ToLower().Contains(sel_text))
+                        found = idx;
+                    continue;
+                }
+
                 item i = match_at(idx) ;
                 if (string_search.matches( i.match.line.part(info_type.msg), cur_search_))
                     found = idx;
@@ -1516,9 +1529,19 @@ namespace lw_common
             if (cur_search_ == null)
                 return;
 
+            string sel_text = edit.sel_text.ToLower();
+
             int found = -1;
             int prev_row = sel_row_idx >= 0 ? sel_row_idx - 1 : count - 1;
             for (int idx = prev_row; idx >= 0 && found < 0; --idx) {
+                // 1.2.7+ - if user has selected something, search for that
+                if (sel_text != "") {
+                    string cur = list.GetItem(idx).GetSubItem(cur_col_).Text;
+                    if (cur.ToLower().Contains(sel_text))
+                        found = idx;
+                    continue;
+                }
+
                 item i = match_at(idx) ;
                 if (string_search.matches( i.match.line.part(info_type.msg), cur_search_))
                     found = idx;

@@ -1,11 +1,9 @@
 - ctrl-f -> if there's something selected, just have that text entered by default (ctrl-shift-f should do that implicitly)
   - HANDLE ALL in log_view - so that log_wizard does not need to know about anything happening in logview
     so that we can easily handle f3/shift-f3 even with what i want
+	NEED TO HANDLE when filter_ctrl is selected
 
 
-- say i type something, and then it finds all the lines that match what i typed
-  - if i go down/up/etc (thus, the selection would be empty -> i should preserve my "find" so that by default those words are still shown in selection-color)
-    (until i press escape)
 
 - escape hotkey - in logview
   if selection -> erase it
@@ -31,9 +29,11 @@
 - look again at all keys (esc/bksp/etc) in logwizard -> they showuld work corectly
 
 
-
-
-
+1.2.7b
+- ctrl-f -> if there's something selected, just have that text entered by default (ctrl-shift-f should do that implicitly)
+- say i type something, and then it finds all the lines that match what i typed
+  - if i go down/up/etc (thus, the selection would be empty -> i should preserve my "find" so that by default those words are still shown in selection-color)
+    (until i press escape)
 
 
 1.2.7a

@@ -46,6 +46,12 @@ namespace test_ui {
             return "-matched";
         }
 
+        public Rectangle client_rect_no_filter {
+            get {
+                return new Rectangle();
+            }
+        }
+
         private void refresh_Tick(object sender, EventArgs e) {
             lv_.refresh();
         }

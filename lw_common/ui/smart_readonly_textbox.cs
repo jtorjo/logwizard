@@ -16,9 +16,12 @@ namespace lw_common.ui {
         private const int ON_CLICK_WAIT_BEFORE_SELECTING_WORD_MS = 450;
 
         private log_view parent_;
+
         private int sel_start_ = -1, sel_len_ = -1, sel_col_ = -1;
 
         private int after_click_sel_start_ = -1, after_click_sel_len_ = -1, after_click_sel_col_ = -1;
+
+        private string cached_sel_text_ = "";
 
         private bool changed_sel_background_ = false;
 
@@ -72,7 +75,6 @@ namespace lw_common.ui {
                 return;
             }
 
-            var old_sel = sel_text;
 
             ++ignore_change_;
 
@@ -101,9 +103,6 @@ namespace lw_common.ui {
                     SelectionLength = sel_len_;
 
             --ignore_change_;
-
-            if (old_sel != sel_text)
-                on_sel_changed();
         }
 
         private void set_text(string txt, bool force) {
@@ -160,35 +159,21 @@ namespace lw_common.ui {
 
         public string sel_text {
             get {
-                if (sel_len_ < 1)
-                    return "";
-
-                if (sel_start_ + sel_len_ <= TextLength)
-                    return Text.Substring(sel_start_, sel_len_);
-                if (sel_start_ < TextLength)
-                    return Text.Substring(sel_start_);
-
-                return "";
+                return cached_sel_text_;
             }
         }
 
         public void force_update_sel() {
 //            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
 
-            var old_sel = sel_text;
             sel_col_ = parent_.sel_col;
             sel_start_ = SelectionStart;
             sel_len_ = SelectionLength;
-
-            if (old_sel != sel_text)
-                on_sel_changed();
         }
 
         public void clear_sel() {
-            if (sel_len_ > 0) {
+            if (sel_len_ > 0) 
                 sel_len_ = 0;
-                on_sel_changed();
-            }
         }
 
         public void go_to_text(string text_to_select) {
@@ -199,19 +184,17 @@ namespace lw_common.ui {
 
             sel_start_ = pos;
             sel_len_ = text_to_select.Length;
+            update_cached_sel_text();
             Focus();
 
             util.postpone(() => {
                 readd_all_text();
                 update_selected_text();
-                on_sel_changed();
             }, 20);
         }
 
         public void update_sel() {
 //            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
-
-            var old_sel = sel_text;
 
             if (sel_col_ == parent_.sel_col) {
                 // at this point - see if we already have a selection higher than what we selected now
@@ -228,15 +211,13 @@ namespace lw_common.ui {
                 sel_start_ = SelectionStart;
                 sel_len_ = SelectionLength;
             }
-
-            if (old_sel != sel_text)
-                on_sel_changed();
         }
 
         public void sel_to_left() {
             if (sel_start_ > 0) {
                 ++sel_len_;
                 --sel_start_;
+                update_cached_sel_text();
                 update_selected_text();
             }
         }
@@ -244,13 +225,34 @@ namespace lw_common.ui {
         public void sel_to_right() {
             if (sel_start_ + sel_len_ < TextLength) {
                 ++sel_len_;
+                update_cached_sel_text();
                 update_selected_text();
             }
         }
 
+        private string raw_sel_text() {
+            if (sel_len_ < 1)
+                return "";
+            else if (sel_start_ + sel_len_ <= TextLength)
+                return Text.Substring(sel_start_, sel_len_);
+            else if (sel_start_ < TextLength)
+                return Text.Substring(sel_start_);
+            else
+                return "";
+        }
+
+        // 1.2.7+ we cache the selection, so that the user will see what he last selected in a different color anyway, even after he goes somewhere else
+        private void update_cached_sel_text() {
+            var old_sel = sel_text;
+
+            cached_sel_text_ = raw_sel_text();
+
+            if (old_sel != sel_text)
+                on_sel_changed();
+        }
+
         private void update_selected_text() {
             Select(sel_start_, sel_len_);
-            util.postpone(() => on_sel_changed(), 1);
         }
 
         private void smart_readonly_textbox_SelectionChanged(object sender, EventArgs e) {
@@ -305,6 +307,17 @@ namespace lw_common.ui {
             --ignore_change_;
         }
 
+        public void escape() {
+            // escape
+            if (sel_len_ > 0) {
+                sel_len_ = 0;
+                readd_all_text();
+                update_selected_text();
+            }
+
+            update_cached_sel_text();
+        }
+
         private void smart_readonly_textbox_KeyPress(object sender, KeyPressEventArgs e) {
             e.Handled = true;
             if ( e.KeyChar == '\x8') {
@@ -312,8 +325,9 @@ namespace lw_common.ui {
                 if (sel_len_ > 0) {
                     --sel_len_;
                     // delete last space, if any
-                    if (sel_text.EndsWith(" "))
+                    if (raw_sel_text().EndsWith(" "))
                         --sel_len_;
+                    update_cached_sel_text();
                     readd_all_text();
                     update_selected_text();
                 }
@@ -322,17 +336,13 @@ namespace lw_common.ui {
 
             if ( e.KeyChar == '\x1b') {
                 // escape
-                if (sel_len_ > 0) {
-                    sel_len_ = 0;
-                    readd_all_text();
-                    update_selected_text();
-                }
+                escape();
                 return;
             }
 
-            string new_text = sel_text + e.KeyChar, new_text_with_space = "";
-            if (sel_text != "")
-                new_text_with_space = sel_text + " " + e.KeyChar;
+            string new_text = raw_sel_text() + e.KeyChar, new_text_with_space = "";
+            if (raw_sel_text() != "")
+                new_text_with_space = raw_sel_text() + " " + e.KeyChar;
 
             // all searches are case-insensitive
             new_text_with_space = new_text_with_space.ToLower();
@@ -352,6 +362,7 @@ namespace lw_common.ui {
                 if (moving)
                     readd_all_text();
 
+                update_cached_sel_text();
                 update_selected_text();
                 return;
             }
@@ -369,6 +380,7 @@ namespace lw_common.ui {
                 if (moving)
                     readd_all_text();
 
+                update_cached_sel_text();
                 update_selected_text();
                 return;                
             }

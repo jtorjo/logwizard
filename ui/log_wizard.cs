@@ -2046,7 +2046,7 @@ namespace LogWizard
 
             switch (action) {
             case action_type.search:
-                var searcher = new search_form(this);
+                var searcher = new search_form(this, lv.smart_edit_sel_text);
                 if (searcher.ShowDialog() == DialogResult.OK) {
                     // remove focus from the Filters tab, just in case (otherwise, search prev/next would end up working on that)
                     unfocus_filter_panel();
