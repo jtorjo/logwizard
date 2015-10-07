@@ -1418,7 +1418,6 @@ namespace lw_common
         // unmarks any previously marked rows
         public void unmark() {
             cur_filter_row_idx_ = -1;
-            bool needs_refresh = false;
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
                 item i = match_at(idx) ;
@@ -1449,19 +1448,37 @@ namespace lw_common
                 lv.search_for_prev_match( filtCtrl.sel);
         }
         */
+
+        private msg_details_ctrl msg_details {
+            get {
+                foreach ( var ctrl in parent.Controls)
+                    if (ctrl is msg_details_ctrl)
+                        return ctrl as msg_details_ctrl;
+                return null;
+            }
+        }
         public void escape() {
-            /*
-            if (msg_details_.visible()) {
-                msg_details_.show(false);
+            var msg_details = this.msg_details;
+            if (msg_details != null && msg_details.visible()) {
+                msg_details.show(false);
                 return;
             }
 
-            if (selected_view() != null)
-                selected_view().unmark();
-            search_for_text_ = null; */
+            if (edit.sel_text != "") {
+                edit.escape();
+                return;
+            }
 
-            // FIXME
-            cur_filter_row_idx_ = -1;
+            if (cur_search_ != null) {
+                cur_search_ = null;
+                list.Refresh();
+                return;
+            }
+
+            if (cur_filter_row_idx_ >= 0) {
+                unmark();
+                return;
+            }
         }
 
 

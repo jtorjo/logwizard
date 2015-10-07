@@ -101,7 +101,7 @@ namespace lw_common {
         }
 
         public bool visible() {
-            return Location.X > -100000;
+            return Location.X > -10000;
         }
 
         internal void show(bool do_show, Point p = default(Point) ) {
