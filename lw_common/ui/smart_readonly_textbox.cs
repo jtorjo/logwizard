@@ -317,21 +317,20 @@ namespace lw_common.ui {
             update_cached_sel_text();
         }
 
+        public void backspace() {
+            if (sel_len_ > 0) {
+                --sel_len_;
+                // delete last space, if any
+                if (raw_sel_text().EndsWith(" "))
+                    --sel_len_;
+                update_cached_sel_text();
+                readd_all_text();
+                update_selected_text();
+            }            
+        }
+
         private void smart_readonly_textbox_KeyPress(object sender, KeyPressEventArgs e) {
             e.Handled = true;
-            if ( e.KeyChar == '\x8') {
-                // backspace
-                if (sel_len_ > 0) {
-                    --sel_len_;
-                    // delete last space, if any
-                    if (raw_sel_text().EndsWith(" "))
-                        --sel_len_;
-                    update_cached_sel_text();
-                    readd_all_text();
-                    update_selected_text();
-                }
-                return;
-            }
 
             if ( e.KeyChar == '\x1b') {
                 // escape

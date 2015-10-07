@@ -1965,6 +1965,11 @@ namespace lw_common
             }
 
             if (is_editing) {
+                if (keyData == Keys.Back) {
+                    edit.backspace();
+                    return true;
+                }
+
                 // see if user wants to turn off editing
                 switch (app.inst.edit_mode) {
                 case app.edit_mode_type.always:
