@@ -691,6 +691,7 @@ namespace lw_common
                 Debug.Assert(false);
                 return;
             }
+            edit.clear_sel();
 
             int sel = sel_row_idx;
             int count = filter_.match_count;
@@ -2036,32 +2037,26 @@ namespace lw_common
 
                 switch (keyData) {
                 case Keys.Up:
-                    edit.clear_sel();
                     on_action(action_type.arrow_up);
                     return true;
                 case Keys.Down:
-                    edit.clear_sel();
                     on_action(action_type.arrow_down);
                     return true;
                 case Keys.PageUp:
-                    edit.clear_sel();
                     on_action(action_type.pageup);
                     return true;
                 case Keys.PageDown:
-                    edit.clear_sel();
                     on_action(action_type.pagedown);
                     return true;
 
                 case Keys.Home:
                     if (edit.SelectionStart == 0 && edit.SelectionLength == 0) {
-                        edit.clear_sel();
                         on_action(action_type.home);
                         return true;
                     }
                     break;
                 case Keys.End:
                     if (edit.SelectionStart == edit.TextLength) {
-                        edit.clear_sel();
                         on_action(action_type.end);
                         return true;
                     }

@@ -1817,15 +1817,8 @@ namespace LogWizard
 
 
         private bool is_focus_on_edit() {
-            /* doesn't work
-            var active = ActiveControl;
-            if ( active != null)
-                if (active is TextBox)
-                    return true;
-            return false;
-            */
             var focused = focused_ctrl();
-            return focused != null && focused is TextBox;
+            return focused != null && (focused is TextBox || focused is RichTextBox);
         }
 
         private bool allow_arrow_to_function_normally() {

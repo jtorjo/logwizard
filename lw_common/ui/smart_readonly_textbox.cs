@@ -172,8 +172,7 @@ namespace lw_common.ui {
         }
 
         public void clear_sel() {
-            if (sel_len_ > 0) 
-                sel_len_ = 0;
+            sel_len_ = 0;
         }
 
         public void go_to_text(string text_to_select) {

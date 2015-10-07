@@ -1,16 +1,21 @@
 
+- look again at all keys (esc/bksp/etc) in logwizard -> they showuld work corectly
+
+
   
 - logwizard - home takes me home but not in edit mode?
 
-- logwizard - up/down -> don't clear the selection'
 
 - retest : modifying matchcolor with eyedropper
 
-- look again at all keys (esc/bksp/etc) in logwizard -> they showuld work corectly
 
 - the current line (the text box) -> everything that is normally applied (color, match colors) -> apply it to current line
 
 - filter - special case - when all filters turned off?
+
+
+1.2.10a
+- fix: logwizard - up/down -> don't clear the selection'
 
 
 1.2.9
