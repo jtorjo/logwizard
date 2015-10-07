@@ -12,7 +12,7 @@
 
 
 - tothink about menu : should i create a single filter_row + noneditable( so that only I can change it), or create a single row per request (eventually with meaningful ## names)
-
+  - we auto recreate it before showing -> if too many items, split into Filter/View/etc. otherwise, single (with splitters for sections)
 
 
 
@@ -116,6 +116,47 @@
 	- cmd line client should also be able to dump a certain view into another file (.txt or .html); this way, you might run it on Test results?
 
 
+- "start monitoring" have a list in settings of locations to monitor
+  - at the first sign of a file that was rewritten -> select that file
+  (stoppable with ESC)
+  - awesome when debugging several apps -> thus, you can have several custom locations - move there, then "start monitoring" and the file is selected
+   (care if the file is already open in another window)
+   useful even wehn debugging a single app at a time.
+
+
+
+
+
+
+
+
+- improve find dialog:
+  have combo box with the latest 20 searches (for each search, we save everything - like, it's text/regex, colors, casesensitive etc)
+   - if i edit something selected from the combo, save it there
+   - if i select something from the combo -> move to last (the first to be shown next time)
+   - if history contains at least 2 items, automatically drop combo when shown
+
+- low pane: all buttons should become images + have icons for find/find next/find prev + tothink : should i add icons for anything else?
+
+
+
+
+
+
+
+
+
+- threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
+  - this should basically be by assigning a color to each thread's BACKGROUND. Then update the background for each line accordingly
+    say we have 3 threads: one, two, three and assign to them : red, green, yellow
+	we will have an extra column (perhaps the thread column anyway) what will divide itself into the number or different colors (3)
+	then, based on this, it will show one of the 3 in a certain color (red, green, yellow) - each of the different colors will get a different slot
+	then, 
+	- the background of EACH line will update to a ligher version of the given thread color (like red -> very light red)
+	- whenever a line is selected, all the lines from the same thread will be shown on a slighly darker background than usual (like red -> light red)
+	--> (pro_v) same with any context or anything that can be a "filter". In other words, categorize by something (like, a module or so) 
+	    i should allow by other contexts, with the following: at most 10 contexts (the, pro_v)
+	+ save everything the user selects (colors, how he categorizes) - TOTHINK how?
 
 
 
@@ -129,7 +170,7 @@
 
 
 
-- allow using the surrounding lines - if a $part ends in a number, it's the prev/next line. 
+- (pro_v) allow using the surrounding lines - if a $part ends in a number, it's the prev/next line. 
   Example: $msg[2] (the second line from now), $time[-3] (the time 3 lines above), $thread[-12] (the thread 12 lines above)
   allow concatenating of several messages - like: $msg[-1,2] = prev msg + enter + msg + enter + next msg + next+1 msg
   This should be: 
@@ -141,6 +182,12 @@
 
 - (pro_v) show delta - that is, how many millisecs from start? (maybe in secs or so?)
   this should be possible to be shown also from selected line (like, above are with "-", below with "+")
+  -- 3 types of delta : compare to start, compare to previous line, compare to current selection
+     - also, i should have a "min delta show period", like, lets say, 10ms - for diffs that are not at least this much, don't show them
+	   this way, i don't clutter the user with too much useless data, since anyway, he can look at the time, if he wants to
+	   maybe show with different colors as well, based on distance - also, allow showing them graphically?
+	   also, have a setting like "show exact times" - if off, we'll round to seconds/minutes/etc. BUT
+	     if "show exact times on selection" is on, when selecting a row, we'll show the exact times
 
 
 
@@ -221,16 +268,6 @@
 
 ---------------------------------------------------------------------------------
 
-allow bolding or changing font or color or whatever of certain words/phrases
-like, color=red for all "could not" text
-
-- (low) log_line_parser.read_to_end - normally, when a line is incomplete and reparsed, we should reapply filters on it, because the line might have become complete now,
-  thus, some filters might match now. however, it's not a big deal - normally logs should be flushed correctly (several lines at a time)
-
-allow bolding or changing font or color or whatever of certain regexes?
-like, in the message - if X matches Y -> mark it in a certain color or so.
-case in point -> [time.stats] -> numbers -> if too big -> mark them in given color
----- at beginning, do this simple, like "match [time.stats] $number ms". Then, allow $number comparisons, like , $number > 100 => color something
 
 
 
@@ -258,15 +295,6 @@ case in point -> [time.stats] -> numbers -> if too big -> mark them in given col
 
 
 
-- threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
-  - this should basically be by assigning a color to each thread's BACKGROUND. Then update the background for each line accordingly
-    say we have 3 threads: one, two, three and assign to them : red, green, yellow
-	we will have an extra column (perhaps the thread column anyway) what will divide itself into the number or different colors (3)
-	then, based on this, it will show one of the 3 in a certain color (red, green, yellow) - each of the different colors will get a different slot
-	then, 
-	- the background of EACH line will update to a ligher version of the given thread color (like red -> very light red)
-	- whenever a line is selected, all the lines from the same thread will be shown on a slighly darker background than usual (like red -> light red)
-	--> same with any context or anything that can be a "filter". In other words, categorize by something (like, a module or so) (pro_v)
 
 ------------- talk with Vidi
 

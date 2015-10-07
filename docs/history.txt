@@ -1,5 +1,5 @@
 
-
+- bug: f3 does not always work on the current selection
 
   
 - logwizard - home takes me home but not in edit mode?
@@ -7,9 +7,17 @@
 
 - the current line (the text box) -> everything that is normally applied (color, match colors) -> apply it to current line
 
+- escape: if editmode != always -> escape edit mode and make edit box invisible
+
+
 
 - retest : modifying matchcolor with eyedropper
 - filter - special case - when all filters turned off?
+
+
+
+1.2.11
+- fix: bug: escape does not clear the search
 
 
 1.2.10b

@@ -1869,7 +1869,6 @@ namespace LogWizard
             case "end":
             case "space":
             case "return":
-            case "escape":
                 if (key_code == "space" && filtCtrl.can_handle_toggle_enable_dimmed_now )
                     break;
 

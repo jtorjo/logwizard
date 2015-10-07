@@ -1969,6 +1969,10 @@ namespace lw_common
                     edit.backspace();
                     return true;
                 }
+                if (keyData == Keys.Escape) {
+                    escape();
+                    return true;
+                }
 
                 // see if user wants to turn off editing
                 switch (app.inst.edit_mode) {
