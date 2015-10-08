@@ -473,7 +473,7 @@ namespace lw_common
             }
         }
 
-        internal int sel_col {
+        internal int sel_col_idx {
             get { return cur_col_; }
         }
 
@@ -1964,7 +1964,6 @@ namespace lw_common
                     is_editing_ = true;
                     cur_col_ = msgCol.Index;
                     edit.update_ui();
-                    edit.update_sel();
                     return true;
                 } 
                 else if (keyData == Keys.Right && app.inst.edit_mode == app.edit_mode_type.with_right_arrow) {

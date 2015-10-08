@@ -1,5 +1,3 @@
-
-
 - the current line (the text box) -> everything that is normally applied (color, match colors) -> apply it to current line
 
 
@@ -11,6 +9,10 @@
 - filter - special case - when all filters turned off?
 
 
+1.2.14a
+- smart: modified setting sel_col_, so that we update text based on sel_col/sel_row, not on Text itself
+         it's because i could have two consecutive lines having the column at sel_col have the same text, but different color
+		 I want the colors to be shown correctly (thus, sel_col/sel_row)
 
 
 1.2.13e

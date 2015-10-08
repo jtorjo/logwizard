@@ -19,15 +19,18 @@ namespace lw_common.ui {
 
         private log_view parent_;
 
+        private int sel_row_ = -1;
         private int sel_start_ = -1, sel_len_ = -1, sel_col_ = -1;
 
-        private int after_click_sel_start_ = -1, after_click_sel_len_ = -1, after_click_sel_col_ = -1;
+        private int after_click_sel_start_ = -1, after_click_sel_row_ = -1, after_click_sel_col_ = -1;
 
         private string cached_sel_text_ = "";
 
         private bool changed_sel_background_ = false;
 
         private int ignore_change_ = 0;
+
+        private string all_text_ = "";
 
         // sometimes when the user is moving, we need to become invisible
         private DateTime last_force_invisible_ = DateTime.MinValue;
@@ -108,7 +111,7 @@ namespace lw_common.ui {
             ForeColor = i.fg(parent_);
             BackColor = i.sel_bg(parent_);
 
-            set_text( parent_.sel_subitem_text, false);
+            set_text(false);
             SelectionBackColor = BackColor;
             SelectionColor = ForeColor;
             changed_sel_background_ = false;
@@ -130,11 +133,17 @@ namespace lw_common.ui {
             --ignore_change_;
         }
 
-        private void set_text(string txt, bool force) {
-            if (Text == txt && !force)
+        private void set_text(bool force) {
+            if (sel_row_ == parent_.sel_row_idx && sel_col_ == parent_.sel_col_idx && !force)
                 return;
+
+            sel_row_ = parent_.sel_row_idx;
+            sel_col_ = parent_.sel_col_idx;
+            string txt = parent_.sel_subitem_text;
+
             ++ignore_change_;
             Clear();
+
             AppendText(txt);
             --ignore_change_;
         }
@@ -144,7 +153,6 @@ namespace lw_common.ui {
                 ++ignore_change_;
                 SelectionStart = char_idx;
                 SelectionLength = 0;
-                sel_col_ = parent_.sel_col;
                 sel_start_ = SelectionStart;
                 sel_len_ = 0;
                 --ignore_change_;
@@ -155,13 +163,14 @@ namespace lw_common.ui {
 
         public void after_click() {
             after_click_sel_col_ = sel_col_;
-            after_click_sel_len_ = sel_len_;
+            after_click_sel_row_ = parent_.sel_row_idx;
             after_click_sel_start_ = sel_start_;
-            util.postpone(check_if_user_hasnt_moved, ON_CLICK_WAIT_BEFORE_SELECTING_WORD_MS );
+            if ( sel_len_ == 0)
+                util.postpone(check_if_user_hasnt_moved, ON_CLICK_WAIT_BEFORE_SELECTING_WORD_MS );
         }
 
         private void check_if_user_hasnt_moved() {
-            if (sel_col_ == after_click_sel_col_ && sel_len_ == after_click_sel_len_ && sel_start_ == after_click_sel_start_) {
+            if (sel_col_ == after_click_sel_col_ && sel_len_ == 0 && sel_row_ == after_click_sel_row_ && sel_start_ == after_click_sel_start_) {
                 // user hasn't moved after he clicked
                 string txt = Text;
                 int space = sel_start_ < txt.Length ? txt.LastIndexOf(' ', sel_start_, sel_start_) : txt.LastIndexOf(' ');
@@ -177,6 +186,7 @@ namespace lw_common.ui {
 
                 sel_start_ = space;
                 sel_len_ = len;
+                update_cached_sel_text();
                 update_selected_text();
             }
             after_click_sel_col_ = -1;
@@ -191,13 +201,35 @@ namespace lw_common.ui {
         public void force_update_sel() {
 //            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
 
-            sel_col_ = parent_.sel_col;
+            Debug.Assert( sel_col_ == parent_.sel_col_idx);
+            
             sel_start_ = SelectionStart;
             sel_len_ = SelectionLength;
         }
 
         public void clear_sel() {
             sel_len_ = 0;
+        }
+
+        public void update_sel() {
+//            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
+
+            if (sel_col_ == parent_.sel_col_idx) {
+                // at this point - see if we already have a selection higher than what we selected now
+                if (sel_start_ <= TextLength) {
+                    sel_start_ = SelectionStart;
+                    sel_len_ = SelectionLength;
+                } else {
+                    // we're bigger than current row
+                    SelectionStart = TextLength;
+                    SelectionLength = 0;
+                }
+            } else {
+                sel_start_ = SelectionStart;
+                sel_len_ = SelectionLength;
+                // force showing the text for this column
+                update_ui();
+            }
         }
 
         public void go_to_text(string text_to_select) {
@@ -214,26 +246,6 @@ namespace lw_common.ui {
                 readd_all_text();
                 update_selected_text();
             }, 20);
-        }
-
-        public void update_sel() {
-//            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
-
-            if (sel_col_ == parent_.sel_col) {
-                // at this point - see if we already have a selection higher than what we selected now
-                if (sel_start_ <= TextLength) {
-                    sel_start_ = SelectionStart;
-                    sel_len_ = SelectionLength;
-                } else {
-                    // we're bigger than current row
-                    SelectionStart = TextLength;
-                    SelectionLength = 0;
-                }
-            } else {
-                sel_col_ = parent_.sel_col;
-                sel_start_ = SelectionStart;
-                sel_len_ = SelectionLength;
-            }
         }
 
         public void sel_to_left() {
@@ -324,7 +336,7 @@ namespace lw_common.ui {
             ++ignore_change_;
 
             int sel = SelectionStart;
-            set_text( Text, true);
+            set_text( true);
             SelectionStart = sel;
             
             --ignore_change_;
