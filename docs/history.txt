@@ -1,7 +1,5 @@
-- settings: above/below/ all columns
 
-
-- bacskp -> if i type something and it takes me a few lines above/below, when typing backspace, it should take me BACK.
+- bacskp -> if i type something and it takes me a few lines above/below, when typing backspace, it should take me BACK. to the EXACT COLUMN/ROW
 
 
 
@@ -11,6 +9,11 @@
 
 - msg details -> if i can fit on the low part, do it
 
+- handle logwizard: activate (alt-tab + alttab back)
+
+
+1.2.15
+- settings: above/below/ all columns
 
 
 1.2.14e

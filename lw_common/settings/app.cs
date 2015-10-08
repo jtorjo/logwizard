@@ -113,6 +113,13 @@ namespace lw_common {
         }
         public edit_mode_type edit_mode = edit_mode_type.always;
 
+        // if true, when the user types something, and we can't find the word, search ahead
+        public bool edit_search_after = true;
+        // if true, when the user types something, and we can't find the word ahead, search before as well
+        public bool edit_search_before = true;
+        // if true, when searching something, search all columns (current column first!)
+        public bool edit_search_all_columns = false;
+
 
 
         // file-by-file
@@ -251,6 +258,10 @@ namespace lw_common {
             load_save(load, ref forced_file_to_context, "forced_file_to_context");
 
             load_save(load, ref edit_mode, "edit_mode", edit_mode_type.always);
+
+            load_save(load, ref edit_search_after, "edit_search_after", true);
+            load_save(load, ref edit_search_before, "edit_search_before", true);
+            load_save(load, ref edit_search_all_columns, "edit_search_all_columns", false);
         }
 
         private string initials(string name) {

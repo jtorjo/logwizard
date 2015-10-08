@@ -20,7 +20,7 @@ namespace lw_common.ui {
         private log_view parent_;
 
         private int sel_row_ = -1;
-        private int sel_start_ = -1, sel_len_ = -1, sel_col_ = -1;
+        private int sel_start_ = 0, sel_len_ = 0, sel_col_ = -1;
 
         private int after_click_sel_start_ = -1, after_click_sel_row_ = -1, after_click_sel_col_ = -1;
 

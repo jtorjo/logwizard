@@ -54,6 +54,11 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.editSearchAllColumns = new System.Windows.Forms.RadioButton();
+            this.editSearchCurColumnOnly = new System.Windows.Forms.RadioButton();
+            this.editSearchBelow = new System.Windows.Forms.CheckBox();
+            this.editSearchAfter = new System.Windows.Forms.CheckBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.editMode = new System.Windows.Forms.ComboBox();
             this.label18 = new System.Windows.Forms.Label();
@@ -95,11 +100,6 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.label20 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -420,10 +420,10 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.radioButton2);
-            this.groupBox7.Controls.Add(this.radioButton1);
-            this.groupBox7.Controls.Add(this.checkBox2);
-            this.groupBox7.Controls.Add(this.checkBox1);
+            this.groupBox7.Controls.Add(this.editSearchAllColumns);
+            this.groupBox7.Controls.Add(this.editSearchCurColumnOnly);
+            this.groupBox7.Controls.Add(this.editSearchBelow);
+            this.groupBox7.Controls.Add(this.editSearchAfter);
             this.groupBox7.Controls.Add(this.label20);
             this.groupBox7.Controls.Add(this.label19);
             this.groupBox7.Controls.Add(this.editMode);
@@ -437,6 +437,57 @@
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General";
+            // 
+            // editSearchAllColumns
+            // 
+            this.editSearchAllColumns.AutoSize = true;
+            this.editSearchAllColumns.Location = new System.Drawing.Point(375, 167);
+            this.editSearchAllColumns.Name = "editSearchAllColumns";
+            this.editSearchAllColumns.Size = new System.Drawing.Size(147, 21);
+            this.editSearchAllColumns.TabIndex = 11;
+            this.editSearchAllColumns.TabStop = true;
+            this.editSearchAllColumns.Text = "Look at all columns";
+            this.editSearchAllColumns.UseVisualStyleBackColor = true;
+            // 
+            // editSearchCurColumnOnly
+            // 
+            this.editSearchCurColumnOnly.AutoSize = true;
+            this.editSearchCurColumnOnly.Location = new System.Drawing.Point(145, 167);
+            this.editSearchCurColumnOnly.Name = "editSearchCurColumnOnly";
+            this.editSearchCurColumnOnly.Size = new System.Drawing.Size(224, 21);
+            this.editSearchCurColumnOnly.TabIndex = 10;
+            this.editSearchCurColumnOnly.TabStop = true;
+            this.editSearchCurColumnOnly.Text = "Look only in the current column";
+            this.editSearchCurColumnOnly.UseVisualStyleBackColor = true;
+            // 
+            // editSearchBelow
+            // 
+            this.editSearchBelow.AutoSize = true;
+            this.editSearchBelow.Location = new System.Drawing.Point(261, 140);
+            this.editSearchBelow.Name = "editSearchBelow";
+            this.editSearchBelow.Size = new System.Drawing.Size(99, 21);
+            this.editSearchBelow.TabIndex = 9;
+            this.editSearchBelow.Text = "Look Below";
+            this.editSearchBelow.UseVisualStyleBackColor = true;
+            // 
+            // editSearchAfter
+            // 
+            this.editSearchAfter.AutoSize = true;
+            this.editSearchAfter.Location = new System.Drawing.Point(145, 140);
+            this.editSearchAfter.Name = "editSearchAfter";
+            this.editSearchAfter.Size = new System.Drawing.Size(103, 21);
+            this.editSearchAfter.TabIndex = 8;
+            this.editSearchAfter.Text = "Look Ahead";
+            this.editSearchAfter.UseVisualStyleBackColor = true;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 141);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(119, 17);
+            this.label20.TabIndex = 7;
+            this.label20.Text = "Smart Completion";
             // 
             // label19
             // 
@@ -498,7 +549,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(666, 468);
+            this.tabPage2.Size = new System.Drawing.Size(666, 536);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Colors";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -584,7 +635,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(666, 468);
+            this.tabPage3.Size = new System.Drawing.Size(666, 536);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Import/Export";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -622,7 +673,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(666, 468);
+            this.tabPage4.Size = new System.Drawing.Size(666, 536);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Notes";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -739,7 +790,7 @@
             this.tabPage7.Location = new System.Drawing.Point(4, 25);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(666, 468);
+            this.tabPage7.Size = new System.Drawing.Size(666, 536);
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "Zip Files";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -769,7 +820,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(666, 468);
+            this.tabPage5.Size = new System.Drawing.Size(666, 536);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Auto Match Template";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -830,7 +881,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 25);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(666, 468);
+            this.tabPage6.Size = new System.Drawing.Size(666, 536);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Auto Match Syntax";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -882,57 +933,6 @@
             this.olvColumn2.AspectName = "value";
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(6, 141);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(119, 17);
-            this.label20.TabIndex = 7;
-            this.label20.Text = "Smart Completion";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(145, 140);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(103, 21);
-            this.checkBox1.TabIndex = 8;
-            this.checkBox1.Text = "Look Ahead";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(261, 140);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(99, 21);
-            this.checkBox2.TabIndex = 9;
-            this.checkBox2.Text = "Look Below";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(145, 167);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(224, 21);
-            this.radioButton1.TabIndex = 10;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Look only in the current column";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(375, 167);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(147, 21);
-            this.radioButton2.TabIndex = 11;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Look at all columns";
-            this.radioButton2.UseVisualStyleBackColor = true;
             // 
             // settings_form
             // 
@@ -1051,10 +1051,10 @@
         private System.Windows.Forms.ComboBox editMode;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.RadioButton editSearchAllColumns;
+        private System.Windows.Forms.RadioButton editSearchCurColumnOnly;
+        private System.Windows.Forms.CheckBox editSearchBelow;
+        private System.Windows.Forms.CheckBox editSearchAfter;
         private System.Windows.Forms.Label label20;
 
     }

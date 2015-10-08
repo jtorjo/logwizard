@@ -44,7 +44,7 @@ namespace lw_common
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // how many rows to search ahead (smart search)
-        private const int SEARCH_AHEAD_ROWS = 100;
+        private const int SEARCH_AROUND_ROWS = 100;
 
         private Form parent;
         private filter filter_ ;
@@ -2144,20 +2144,57 @@ namespace lw_common
             list.Refresh();
         }
 
+        // returns the row, or -1 on failure
+        private bool can_find_text_at_row(string txt, int row, int col) {
+            string col_text = list.GetItem(row).GetSubItem(col).Text.ToLower();
+            int pos = col_text.IndexOf(txt);
+            return pos >= 0;            
+        }
+
         // note: searches in the current column
         private void search_ahead(string txt) {
             Debug.Assert(txt == txt.ToLower());
 
             int count = filter_.match_count;
-            int max = Math.Min(sel_row_idx + SEARCH_AHEAD_ROWS, count);
-            for (int cur_row = sel_row_idx + 1; cur_row < max; ++cur_row) {
-                string col_text = list.GetItem(cur_row).GetSubItem(cur_col_).Text.ToLower();
-                int pos = col_text.IndexOf(txt);
-                if (pos >= 0) {
-                    go_to_row(cur_row, select_type.notify_parent);
-                    edit.go_to_text(txt);
-                    return;
-                }
+            int max = Math.Min(sel_row_idx + SEARCH_AROUND_ROWS, count);
+            int min = Math.Max(sel_row_idx - SEARCH_AROUND_ROWS, 0);
+
+            // note: even if we search all columns, we first search ahead/before for the selected column - then, the rest
+            int found_row = -1;
+            if ( app.inst.edit_search_after)
+                for (int cur_row = sel_row_idx + 1; cur_row < max && found_row < 0; ++cur_row)
+                    if (can_find_text_at_row(txt, cur_row, cur_col_))
+                        found_row = cur_row;
+                
+            if ( app.inst.edit_search_before)
+                for (int cur_row = sel_row_idx - 1; cur_row >= min && found_row < 0; --cur_row) 
+                    if (can_find_text_at_row(txt, cur_row, cur_col_)) 
+                        found_row = cur_row;
+
+            if (app.inst.edit_search_all_columns) {
+                if ( app.inst.edit_search_after)
+                    for (int cur_row = sel_row_idx + 1; cur_row < max && found_row < 0; ++cur_row)
+                        for ( int col_idx = 0; col_idx < list.Columns.Count && found_row < 0; ++col_idx)
+                            if ( col_idx != cur_col_ && list.Columns[col_idx].Width > 0)
+                                if (can_find_text_at_row(txt, cur_row, col_idx)) {
+                                    found_row = cur_row;
+                                    cur_col_ = col_idx;
+                                }
+
+                if ( app.inst.edit_search_before)
+                    for (int cur_row = sel_row_idx - 1; cur_row >= min && found_row < 0; --cur_row) 
+                        for ( int col_idx = 0; col_idx < list.Columns.Count && found_row < 0; ++col_idx)
+                            if ( col_idx != cur_col_ && list.Columns[col_idx].Width > 0)
+                                if (can_find_text_at_row(txt, cur_row, col_idx)) {
+                                    found_row = cur_row;
+                                    cur_col_ = col_idx;
+                                }
+            }
+
+            if (found_row >= 0) {
+                go_to_row(found_row, select_type.notify_parent);
+                edit.update_ui();
+                edit.go_to_text(txt);                
             }
         }
 

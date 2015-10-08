@@ -95,6 +95,13 @@ namespace LogWizard.ui {
                 fileToSyntax.AddObject(new item());
 
             editMode.SelectedIndex = (int)app.inst.edit_mode;
+
+            editSearchAfter.Checked = app.inst.edit_search_after;
+            editSearchBelow.Checked = app.inst.edit_search_before;
+            if (app.inst.edit_search_all_columns)
+                editSearchAllColumns.Checked = true;
+            else
+                editSearchCurColumnOnly.Checked = true;
         }
 
         private void save() {
@@ -157,6 +164,10 @@ namespace LogWizard.ui {
                 util.beep(util.beep_type.err);
 
             app.inst.edit_mode = (app.edit_mode_type) editMode.SelectedIndex;
+
+            app.inst.edit_search_after = editSearchAfter.Checked;
+            app.inst.edit_search_before = editSearchBelow.Checked;
+            app.inst.edit_search_all_columns = editSearchAllColumns.Checked;
 
             app.inst.save();
         }
