@@ -1,5 +1,4 @@
 
-- retest : modifying matchcolor with eyedropper
 - filter - special case - when all filters turned off?
 
 - msg details -> if i can fit on the low part, do it
@@ -7,9 +6,13 @@
 - handle logwizard: activate (alt-tab + alttab back)
 
 
+1.2.17
+done:
+- retest : modifying matchcolor with eyedropper
+
 
 1.2.16
-- bacskp -> if i type something and it takes me a few lines above/below, when typing backspace, it should take me BACK. to the EXACT COLUMN/ROW
+- bacskpace -> if i type something and it takes me a few lines above/below, when typing backspace, it should take me BACK. to the EXACT COLUMN/ROW
 
 
 1.2.15

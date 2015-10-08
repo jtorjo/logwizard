@@ -483,7 +483,7 @@ namespace lw_common.ui {
                 if (edited_line != -1) {
                     // in this case, he's editing the color from a given line
                     bool is_color_line = filter_line.is_color_line( lines[edited_line]);
-                    bool is_replacing = lines[edited_line].Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries).Length == 2 &&
+                    bool is_replacing = lines[edited_line].Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries).Length <= 2 &&
                                         lines[edited_line].TrimEnd() == lines[edited_line];
                     if (is_color_line) {
                         if (is_replacing)

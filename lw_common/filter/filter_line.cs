@@ -200,7 +200,7 @@ namespace LogWizard {
 
         public static bool is_color_line(string line) {
             line = line.Trim();
-            return line.StartsWith("color ") || line.StartsWith("match_color ");
+            return line.StartsWith("color") || line.StartsWith("match_color");
         }
 
         public static filter_line parse(string line) {
