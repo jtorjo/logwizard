@@ -75,8 +75,8 @@ namespace lw_common.ui {
                 return;
 
             var bounds = parent_.sel_subrect_bounds;
-            Visible = should_be_visible();
-            if (!Visible) 
+            bool visible = should_be_visible();
+            if (!visible) 
                 return;
 
             int offset_x = parent_.list.Left;
@@ -110,6 +110,9 @@ namespace lw_common.ui {
             SelectionBackColor = BackColor;
             SelectionColor = ForeColor;
             changed_sel_background_ = false;
+
+            // make visible only after we've properly set the location (otherwise, we would flicker)
+            Visible = true;
 
             if (sel_start_ >= 0 && sel_start_ <= TextLength)
                 SelectionStart = sel_start_;
@@ -417,6 +420,16 @@ namespace lw_common.ui {
 
             if (win32.focused_ctrl() == parent_.list && parent_.is_editing && Visible)
                 Focus();
+            else 
+                // note: we need to update background when I lose focus, or the parent loses focus
+                //       however, dealing with those cases would still involve create a timer to check when focus is going to another control, etc.
+                //
+                //       doing it here is the simple solution
+                parent_.update_background();
+
+            if (Visible && !parent_.has_focus)
+                // user has moved focus somewhere else
+                Visible = false;
         }
 
     }

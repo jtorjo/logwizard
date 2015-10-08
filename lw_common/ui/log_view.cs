@@ -1888,7 +1888,7 @@ namespace lw_common
             util.postpone(update_background,10);
         }
 
-        private void update_background() {
+        internal void update_background() {
             var focus = win32.focused_ctrl();
             bool here = focus == list || focus == edit;
 
