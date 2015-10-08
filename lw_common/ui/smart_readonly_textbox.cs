@@ -129,7 +129,8 @@ namespace lw_common.ui {
                 --ignore_change_;
 
                 update_ui();
-            } 
+            }
+            util.postpone(() => Focus(), 1);
         }
 
         public void after_click() {
@@ -196,7 +197,7 @@ namespace lw_common.ui {
             }, 20);
         }
 
-        public void update_sel() {
+        public void refocus() {
 //            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
 
             if (sel_col_ == parent_.sel_col) {
@@ -214,6 +215,9 @@ namespace lw_common.ui {
                 sel_start_ = SelectionStart;
                 sel_len_ = SelectionLength;
             }
+
+            util.postpone( () => Focus(), 1);
+            logger.Debug("[smart] focus on edit for " + parent_.name + "/" + parent_.sel_row_idx);
         }
 
         public void sel_to_left() {

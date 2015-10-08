@@ -768,7 +768,7 @@ namespace lw_common
                 select_idx( sel, select_type.notify_parent);
                 ensure_line_visible(sel);
             }
-            focus_to_edit();
+            edit.refocus();
         }
 
         private List<int> selected_indices_array() {
@@ -1201,7 +1201,7 @@ namespace lw_common
                 list.SelectedIndex = row_idx;
                 update_line_highlight_color(row_idx);
                 update_x_of_y();
-                util.postpone(edit.update_ui, 1);
+                //util.postpone(edit.update_ui, 1);
             }
             select_nofify_ = select_type.notify_parent;
         }
@@ -1221,8 +1221,7 @@ namespace lw_common
                 if (sel != editing_row_) {
                     is_editing_ = false;
                     edit.update_ui();
-                }
-                
+                }                
             }
         }
 
@@ -1878,6 +1877,7 @@ namespace lw_common
 
         private void list_Enter(object sender, EventArgs e) {
             update_background();
+            edit.update_ui();
         }
 
         private void list_Leave(object sender, EventArgs e) {
@@ -1895,7 +1895,12 @@ namespace lw_common
         }
 
         public void set_focus() {
-            list.Focus();
+            update_background();
+
+            if ( is_editing)
+                edit.refocus();
+            else
+                list.Focus();
         }
 
         public export_text export() {
@@ -1918,11 +1923,6 @@ namespace lw_common
             }
 
             return export;
-        }
-
-        private void focus_to_edit() {
-            edit.Focus();
-            edit.update_sel();
         }
 
         public bool is_editing {
@@ -1951,7 +1951,7 @@ namespace lw_common
                     is_editing_ = true;
                     cur_col_ = msgCol.Index;
                     edit.update_ui();
-                    focus_to_edit();
+                    edit.refocus();
                     return true;
                 } 
                 else if (keyData == Keys.Right && app.inst.edit_mode == app.edit_mode_type.with_right_arrow) {
@@ -1959,7 +1959,6 @@ namespace lw_common
                     editing_row_ = sel_row_idx;
                     cur_col_ = msgCol.Index;
                     edit.go_to_char(0);
-                    focus_to_edit();
                     return true;
                 }
             }
@@ -2022,10 +2021,7 @@ namespace lw_common
                                     break;
                                 }
                             }
-                            util.postpone(() => {
-                                edit.go_to_char(0);
-                                focus_to_edit();
-                            }, 1);
+                            util.postpone(() => edit.go_to_char(0), 1);
                             return true;
                         }
                     }
@@ -2097,7 +2093,6 @@ namespace lw_common
 
                     cur_col_ = col_idx;
                     edit.go_to_char(char_idx);
-                    util.postpone(() => edit.Focus(), 1);
                     edit.after_click();
                 }
             }

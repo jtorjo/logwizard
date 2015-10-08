@@ -105,7 +105,6 @@ namespace LogWizard
         private List<int> bookmarks_ = new List<int>();
         private msg_details_ctrl msg_details_ = null;
 
-        private Control pane_to_focus_ = null;
 
         private action_type last_action_ = action_type.none;
 
@@ -1839,8 +1838,10 @@ namespace LogWizard
 
         // in case the Filter is selected, make sure we remove focus from it
         private void unfocus_filter_panel() {
-            if ( is_focus_on_filter_panel())
-                viewsTab.Focus();            
+            if (is_focus_on_filter_panel())
+                // 1.2.13+ - make sure to select something meaningful
+                selected_view().set_focus();
+                //viewsTab.Focus();            
         }
 
         private bool is_focus_on_full_log() {
@@ -2278,11 +2279,11 @@ namespace LogWizard
             // first pane - the current view (tab)
             int sel = viewsTab.SelectedIndex;
             if ( sel >= 0 && log_view_for_tab(sel) != null)
-                panes.Add( log_view_for_tab(sel).list);
+                panes.Add( log_view_for_tab(sel));
 
             // second pane - the full log (if shown)
             if( global_ui.show_fulllog)
-                panes.Add(full_log_ctrl.list);
+                panes.Add(full_log_ctrl);
 
             // third/fourth panes - the filters control and edit box (if visible)
             if ( global_ui.show_filter)
@@ -2310,17 +2311,37 @@ namespace LogWizard
         private void switch_pane(bool forward) {
             List<Control> panes = this.panes();
             Control focus_ctrl = focused_ctrl();
-            int idx = panes.IndexOf(focus_ctrl);
+            int idx = -1;
+
+            while (idx < 0 && focus_ctrl != null) {
+                idx = panes.IndexOf(focus_ctrl);
+                if (idx < 0)
+                    focus_ctrl = focus_ctrl.Parent;
+            }
+
             if (idx >= 0)
                 // move to next control
                 idx = forward ? idx + 1 : idx + panes.Count - 1;
             else 
                 // move to first / last
                 idx = forward ? 0 : panes.Count - 1;
-            // FIXME 1.0.83+ I should use the util.postpone function
-            // note: can't focus now, since the "next/prev" pane event might be triggered twice if from Full-Log
-            pane_to_focus_ = panes[ idx % panes.Count ];
-            postFocus.Enabled = true;
+
+            var cur_pane = panes[ idx % panes.Count ];
+            var lv_pane = cur_pane as log_view;
+            var list_pane = cur_pane as ObjectListView;
+
+            util.postpone(() => {
+                if (lv_pane != null)    
+                    lv_pane.set_focus();
+                else if (list_pane != null) {
+                    list_pane.Focus();
+                    // maybe not such a good idea for notes pane???? TOTHINK
+                    if (list_pane.SelectedIndex < 0 && list_pane.GetItemCount() > 0)
+                        list_pane.SelectedIndex = 0;
+                }
+                else
+                    cur_pane.Focus();
+            }, 10);
         }
 
 
@@ -2402,17 +2423,6 @@ namespace LogWizard
         private void log_wizard_Deactivate(object sender, EventArgs e) {
         }
 
-        private void postFocus_Tick(object sender, EventArgs e) {
-            postFocus.Enabled = false;
-            if (pane_to_focus_ != null) {
-                pane_to_focus_.Focus();
-                var list = pane_to_focus_ as ObjectListView;
-                // select the first item - if nothing is selected
-                if (list != null && list.SelectedIndex < 0 && list.GetItemCount() > 0)
-                    list.SelectedIndex = 0;
-                pane_to_focus_ = null;
-            }
-        }
 
         private void update_sync_texts() {
             synchronizedWithFullLog.Text = synchronizedWithFullLog.Checked ? "<-FL->" : "</FL/>";
