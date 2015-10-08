@@ -201,6 +201,19 @@ namespace lw_common
                     for (int idx = 0; !collitions_found && idx < print.Count - 1; ++idx) {
                         var now = print[idx];
                         var next = print[idx + 1];
+
+                        // special case - we split something into 3, but one of the parts was empty
+                        if (now.Item2 == 0) {
+                            print.RemoveAt(idx);
+                            collitions_found = true;
+                            continue;
+                        }
+                        if (next.Item2 == 0) {
+                            print.RemoveAt(idx + 1);
+                            collitions_found = true;
+                            continue;
+                        }
+
                         if (now.Item1 + now.Item2 > next.Item1)
                             collitions_found = true;
 

@@ -1,14 +1,19 @@
-- the current line (the text box) -> everything that is normally applied (color, match colors) -> apply it to current line
+- settings: above/below/ all columns
 
 
 - bacskp -> if i type something and it takes me a few lines above/below, when typing backspace, it should take me BACK.
 
-- settings: above/below/ all columns
 
 - hte current line - msg details -> match all colors (Colortextbox from codeplex - see about license!)
 
+
 - retest : modifying matchcolor with eyedropper
 - filter - special case - when all filters turned off?
+
+
+
+1.2.14d
+- the current line (the text box) -> everything that is normally applied (color, match colors) -> apply it to current line
 
 
 1.2.14c

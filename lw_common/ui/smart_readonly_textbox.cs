@@ -44,6 +44,9 @@ namespace lw_common.ui {
 
         public search_func on_search_ahead;
 
+        private log_view_item_draw_ui drawer_ = null;
+        print_info default_print_ = new print_info();
+
         public smart_readonly_textbox() {
             InitializeComponent();
             BorderStyle = BorderStyle.None;
@@ -54,6 +57,7 @@ namespace lw_common.ui {
 
         public void init(log_view parent) {
             parent_ = parent;
+            drawer_ = new log_view_item_draw_ui(parent);
             util.postpone(update_ui, 10);
 
             // ... easier testing
@@ -134,6 +138,8 @@ namespace lw_common.ui {
         }
 
         private void set_text(bool force) {
+            if (drawer_ == null)
+                return;
             if (sel_row_ == parent_.sel_row_idx && sel_col_ == parent_.sel_col_idx && !force)
                 return;
 
@@ -145,7 +151,31 @@ namespace lw_common.ui {
             Clear();
 
             AppendText(txt);
-//            var i = parent_.sel.override_print(parent_, txt, sel_col_);
+            var prints = parent_.sel.override_print(parent_, txt, sel_col_);
+            var full_row = parent_.list.GetItem(sel_row_);
+            int last_idx = 0;
+            for (int print_idx = 0; print_idx < prints.Count; ++print_idx) {
+                int cur_idx = prints[print_idx].Item1, cur_len = prints[print_idx].Item2;
+                string before = txt.Substring(last_idx, cur_idx - last_idx);
+                if (before != "") {
+                    Select(last_idx, cur_idx - last_idx);
+                    SelectionColor = drawer_.print_fg_color(full_row, default_print_);
+                    SelectionBackColor = drawer_.bg_color(full_row, sel_col_);
+                }
+                Select(cur_idx, cur_len);
+                SelectionColor = drawer_.print_fg_color(full_row, prints[print_idx].Item3);
+                SelectionBackColor = drawer_.print_bg_color(full_row, prints[print_idx].Item3);
+                last_idx = cur_idx + cur_len;
+            }
+            last_idx = prints.Count > 0 ? prints.Last().Item1 + prints.Last().Item2 : 0;
+            if (last_idx < txt.Length) {
+                Select(last_idx, txt.Length - last_idx);
+                SelectionColor = drawer_.print_fg_color(full_row, default_print_);
+                SelectionBackColor = drawer_.bg_color(full_row, sel_col_);
+            }
+            // ... safety net
+            SelectionStart = 0;
+            SelectionLength = 0;
 
             --ignore_change_;
         }

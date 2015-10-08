@@ -46,6 +46,8 @@
   - view: Rename, move to left, move to right
 - context menu on full log -> New Filter containing [...]/starting with [...]
 
+- menu: Find + Find Next/ Find Prev (if anytihng to find)
+
 - match_color -> in filters!!!
  
 
