@@ -1,8 +1,5 @@
 
-- always should be on edit mode!
-  
-- logwizard - home takes me home but not in edit mode?
-  - this does not work correctly 100% of the time (i think when i'm on a different page than the first one)
+- log view background - not updated correctly when losing focus
 
 - the current line (the text box) -> everything that is normally applied (color, match colors) -> apply it to current line
 
@@ -15,6 +12,14 @@
 
 - retest : modifying matchcolor with eyedropper
 - filter - special case - when all filters turned off?
+
+
+1.2.13c
+fixed:
+- always should be on edit mode!  
+- logwizard - home takes me home but not in edit mode?
+  - this does not work correctly 100% of the time (i think when i'm on a different page than the first one)
+
 
 
 1.2.13b

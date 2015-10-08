@@ -1134,6 +1134,8 @@ namespace lw_common
         // returns true if it needed to refresh
         // FIXME 1.2.7+ probably not needed anymore, we're doing all this when rendering
         private bool update_line_color(int idx) {
+            return false;
+#if old_code
             if (idx >= list.GetItemCount())
                 // in this case, the list hasn't fully refreshed - the filter contains more items than the list
                 return false;
@@ -1152,6 +1154,7 @@ namespace lw_common
                 needed = true;
             }
             return needed;
+#endif
         }
 
         private void update_line_highlight_color(int idx) {
@@ -1882,7 +1885,7 @@ namespace lw_common
 
         private void list_Leave(object sender, EventArgs e) {
             // note: we might actually lose focus to the edit box - in this case, we don't really need to update anything
-            util.postpone(update_background,1);
+            util.postpone(update_background,10);
         }
 
         private void update_background() {
@@ -1897,6 +1900,14 @@ namespace lw_common
         public void set_focus() {
             update_background();
             list.Focus();
+        }
+
+        public bool has_focus {
+            get {
+                var focus = win32.focused_ctrl();
+                bool here = focus == list || focus == edit || focus == viewName;
+                return here;    
+            }
         }
 
         public export_text export() {

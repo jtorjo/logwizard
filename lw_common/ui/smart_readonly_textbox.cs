@@ -15,6 +15,8 @@ namespace lw_common.ui {
 
         private const int ON_CLICK_WAIT_BEFORE_SELECTING_WORD_MS = 450;
 
+        private const int TRY_GAIN_FOCUS_AFTER_FORCE_INVISIBLE = 500;
+
         private log_view parent_;
 
         private int sel_start_ = -1, sel_len_ = -1, sel_col_ = -1;
@@ -26,6 +28,9 @@ namespace lw_common.ui {
         private bool changed_sel_background_ = false;
 
         private int ignore_change_ = 0;
+
+        // sometimes when the user is moving, we need to become invisible
+        private DateTime last_force_invisible_ = DateTime.MinValue;
 
         public delegate void void_func();
 
@@ -53,14 +58,24 @@ namespace lw_common.ui {
                 BorderStyle = BorderStyle.FixedSingle;
         }
 
+        private bool should_be_visible() {
+            int sel = parent_.sel_row_idx;
+            var bounds = parent_.sel_subrect_bounds;
+            bool is_multi_selection = parent_.list.SelectedIndices != null && parent_.list.SelectedIndices.Count > 1;
+            bool should_be = sel >= 0 && bounds.Width > 0 && bounds.Height > 0 && parent_.is_editing && !is_multi_selection;
+            if (should_be) {
+                var focus = win32.focused_ctrl();
+                should_be = focus == parent_.list || focus == this;
+            }
+            return should_be;
+        }
+
         public void update_ui() {
             if (parent_ == null)
                 return;
 
-            int sel = parent_.sel_row_idx;
             var bounds = parent_.sel_subrect_bounds;
-            bool is_multi_selection = parent_.list.SelectedIndices != null && parent_.list.SelectedIndices.Count > 1;
-            Visible = sel >= 0 && bounds.Width > 0 && bounds.Height > 0 && parent_.is_editing && !is_multi_selection;
+            Visible = should_be_visible();
             if (!Visible) 
                 return;
 
@@ -69,16 +84,17 @@ namespace lw_common.ui {
             var location = new Point(offset_x + bounds.X, offset_y + bounds.Y + 2);
             if (location.Y + bounds.Height > parent_.Height) {
                 // it was the last row when user is moving down (down arrow) - we'll get notified again
+                last_force_invisible_ = DateTime.Now;
                 Visible = false;
                 return;
             }
             int header_height = parent_.list.HeaderControl.ClientRectangle.Height;
             if (location.Y < offset_y + header_height) {
                 // it was the first row when user is moving up (up arrow), we'll get notified again
+                last_force_invisible_ = DateTime.Now;
                 Visible = false;
                 return;
             }
-
 
             ++ignore_change_;
 
@@ -391,6 +407,14 @@ namespace lw_common.ui {
         }
 
         private void stealFocus_Tick(object sender, EventArgs e) {
+            if ( parent_ == null)
+                // in design mode
+                return;
+
+            if (!Visible && last_force_invisible_.AddMilliseconds(TRY_GAIN_FOCUS_AFTER_FORCE_INVISIBLE) >= DateTime.Now)
+                if (should_be_visible()) 
+                    update_ui();
+
             if (win32.focused_ctrl() == parent_.list && parent_.is_editing && Visible)
                 Focus();
         }

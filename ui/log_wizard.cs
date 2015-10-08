@@ -106,8 +106,6 @@ namespace LogWizard
         private msg_details_ctrl msg_details_ = null;
 
 
-        private action_type last_action_ = action_type.none;
-
         // the status(es) to be shown
         private enum status_type {
             msg, warn, err
@@ -937,7 +935,7 @@ namespace LogWizard
             if (lv.is_filter_up_to_date) {
                 lv.go_to_row(selected_row_idx, log_view.select_type.do_not_notify_parent);
                 if ( lv.sel_line_idx >= 0)
-                    go_to_line( lv.sel_line_idx, lv);
+                    on_log_changed_line( lv.sel_line_idx, lv);
             }
             else 
                 util.postpone( () => try_to_go_to_selected_line(selected_row_idx), 250);            
@@ -1181,10 +1179,12 @@ namespace LogWizard
             var sel = selected_view();
             update_notes_current_line();
 
-            if (sel == full_log_ctrl)
+            if (sel == full_log_ctrl) {
+                sync_full_log_colors(true);
                 return;
+            }
 
-            go_to_line(sel.sel_line_idx, sel);
+            on_log_changed_line(sel.sel_line_idx, sel);
 
             global_ui.selected_row_idx = global_ui.selected_row_idx = sel.sel_row_idx;
             if (logHistory.SelectedIndex >= 0)
@@ -1209,16 +1209,17 @@ namespace LogWizard
             update_notes_current_line();
         }
 
-        public void go_to_line(int line_idx, log_view from) {
-            if (global_ui.show_fulllog && from != full_log_ctrl && app.inst.sync_full_log_view) {
-                full_log_ctrl.go_to_row(line_idx, log_view.select_type.do_not_notify_parent);
-                sync_full_log_colors();
+        public void on_log_changed_line(int line_idx, log_view from) {
+            if (global_ui.show_fulllog) {
+                if ( from != full_log_ctrl && app.inst.sync_full_log_view)
+                    full_log_ctrl.go_to_row(line_idx, log_view.select_type.do_not_notify_parent);
+                sync_full_log_colors(true);
             }
 
             bool keep_all_in_sync = (from != full_log_ctrl && app.inst.sync_all_views) ||
                 // if the current log is full log, we will synchronize all views only if both checks are checked
                 // (note: this is always a bit time consuming as well)
-                (from == full_log_ctrl&& app.inst.sync_all_views && app.inst.sync_full_log_view);
+                (from == full_log_ctrl && app.inst.sync_all_views && app.inst.sync_full_log_view);
             if ( keep_all_in_sync)
                 keep_logs_in_sync(from);
         }
@@ -1736,7 +1737,6 @@ namespace LogWizard
                 // note: some hotkeys are sent twice
                 bool handle_now = !is_key_sent_twice() || (handled_key_idx_ % 2 == 0);
                 if (handle_now) {
-                    last_action_ = action;
                     handle_action(action);
                     logger.Info("action by key - " + action); // + " from " + sender);
                 }
@@ -1751,7 +1751,6 @@ namespace LogWizard
 #if old_code
             var action = key_to_action(keyData);
             if (action != action_type.none) {
-                last_action_ = action;
                 handle_action(action);
                 logger.Info("action by key - " + action); // + " from " + sender);
                 return true;
@@ -1770,13 +1769,13 @@ namespace LogWizard
                 if (notes.is_focus_on_notes_list)
                     return;
 
-                switch (last_action_) {
-                case action_type.home:
-                case action_type.end:
-                case action_type.pageup:
-                case action_type.pagedown:
-                case action_type.arrow_up:
-                case action_type.arrow_down:
+                switch ( util.key_to_action(e)) {
+                case "up":
+                case "down":
+                case "pageup":
+                case "next":
+                case "home":
+                case "end":
                     on_move_key_end();
                     break;
                 }
@@ -1845,8 +1844,7 @@ namespace LogWizard
         }
 
         private bool is_focus_on_full_log() {
-            var focus_ctrl = focused_ctrl();
-            return focus_ctrl != null && focus_ctrl is VirtualObjectListView && focus_ctrl.Parent == full_log_ctrl;
+            return full_log_ctrl != null && full_log_ctrl.has_focus;
         }
 
         private bool is_focus_on_filter_panel() {
