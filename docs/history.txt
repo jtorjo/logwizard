@@ -1,5 +1,4 @@
 
-- escape: if editmode != always -> escape edit mode and make edit box invisible
 
 - the current line (the text box) -> everything that is normally applied (color, match colors) -> apply it to current line
 
@@ -10,6 +9,12 @@
 
 - retest : modifying matchcolor with eyedropper
 - filter - special case - when all filters turned off?
+
+
+
+
+1.2.13e
+- escape: if editmode != always -> escape edit mode and make edit box invisible
 
 
 1.2.13d

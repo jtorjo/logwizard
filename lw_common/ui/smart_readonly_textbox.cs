@@ -76,8 +76,10 @@ namespace lw_common.ui {
 
             var bounds = parent_.sel_subrect_bounds;
             bool visible = should_be_visible();
-            if (!visible) 
+            if (!visible) {
+                Visible = false;
                 return;
+            }
 
             int offset_x = parent_.list.Left;
             int offset_y = parent_.list.Top;

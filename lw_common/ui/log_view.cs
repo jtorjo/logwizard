@@ -1482,6 +1482,12 @@ namespace lw_common
                 unmark();
                 return;
             }
+
+            if (app.inst.edit_mode != app.edit_mode_type.always && is_editing) {
+                is_editing_ = false;
+                edit.update_ui();
+                return;
+            }
         }
 
 
