@@ -136,14 +136,14 @@ namespace lw_common
                 return base.font.fg;
             }
 
-            private List<Tuple<int, int, log_view_render.print_info>> override_print_from_all_places(log_view parent, string text, int col_idx) {
-                List<Tuple<int, int, log_view_render.print_info>> print = new List<Tuple<int, int, log_view_render.print_info>>();
+            private List<Tuple<int, int, print_info>> override_print_from_all_places(log_view parent, string text, int col_idx) {
+                List<Tuple<int, int, print_info>> print = new List<Tuple<int, int, print_info>>();
 
                 // 1.2.6 - for now, just for msg do match-color
                 if (col_idx == parent.msgCol.Index) {
                     var from_filter = parent.filter_.match_indexes(base.line, info_type.msg);
                     foreach ( var ff in from_filter)
-                        print.Add( new Tuple<int, int, log_view_render.print_info>( ff.start, ff.len, new log_view_render.print_info {
+                        print.Add( new Tuple<int, int, print_info>( ff.start, ff.len, new print_info {
                             bg = ff.bg, fg = ff.fg, text = new string('?', ff.len), bold = true
                         } ));
                 }
@@ -153,9 +153,9 @@ namespace lw_common
                     // look for the text typed by the user
                     var matches = util.find_all_matches(text.ToLower(), sel);
                     if (matches.Count > 0) {
-                        log_view_render.print_info print_sel = new log_view_render.print_info { bold = true, text = sel };
+                        print_info print_sel = new print_info { bold = true, text = sel };
                         foreach ( var match in matches)
-                            print.Add( new Tuple<int, int, log_view_render.print_info>(match, sel.Length, print_sel));
+                            print.Add( new Tuple<int, int, print_info>(match, sel.Length, print_sel));
                     }
                 }
 
@@ -165,9 +165,9 @@ namespace lw_common
                     if (matches.Count > 0) {
                         // if we're showing both selected text and the results of a find, differentiate them visually
                         bool italic = sel != "";
-                        log_view_render.print_info print_sel = new log_view_render.print_info { text = find, bg = parent.cur_search_.bg, fg = parent.cur_search_.fg, bold = true, italic = italic };
+                        print_info print_sel = new print_info { text = find, bg = parent.cur_search_.bg, fg = parent.cur_search_.fg, bold = true, italic = italic };
                         foreach ( var match in matches)
-                            print.Add( new Tuple<int, int, log_view_render.print_info>(match.Item1, match.Item2, print_sel));
+                            print.Add( new Tuple<int, int, print_info>(match.Item1, match.Item2, print_sel));
                     }                    
                 }
                 
@@ -179,7 +179,7 @@ namespace lw_common
             }
 
             // returns the overrides, sorted by index in the string to print
-            public List<Tuple<int, int, log_view_render.print_info>> override_print(log_view parent, string text, int col_idx) {
+            public List<Tuple<int, int, print_info>> override_print(log_view parent, string text, int col_idx) {
                 var print = override_print_from_all_places(parent, text, col_idx);
 
                 // for testing only
@@ -220,13 +220,13 @@ namespace lw_common
                                         int len = next.Item2;
                                         int second_len = now.Item2 - len;
                                         Debug.Assert(second_len >= 0);
-                                        print[idx + 1] = new Tuple<int, int, log_view_render.print_info>(now.Item1 + len, second_len, now.Item3);
+                                        print[idx + 1] = new Tuple<int, int, print_info>(now.Item1 + len, second_len, now.Item3);
                                     } else {
                                         // in this case, we need to split in 3
                                         int len1 = next.Item1 - now.Item1;
                                         int len2 = now.Item2 - len1 - next.Item2;
-                                        var now1 = new Tuple<int, int, log_view_render.print_info>(now.Item1, len1, now.Item3);
-                                        var now2 = new Tuple<int, int, log_view_render.print_info>(next.Item1 + next.Item2, len2, now.Item3);
+                                        var now1 = new Tuple<int, int, print_info>(now.Item1, len1, now.Item3);
+                                        var now2 = new Tuple<int, int, print_info>(next.Item1 + next.Item2, len2, now.Item3);
                                         Debug.Assert(len1 >= 0 && len2 >= 0);
                                         print[idx] = now1;
                                         print.Insert(idx + 2, now2);
@@ -237,7 +237,7 @@ namespace lw_common
                                     Debug.Assert( intersect_count > 0);
                                     int interesect_len = now.Item2 - intersect_count;
                                     Debug.Assert(interesect_len >= 0);
-                                    now = new Tuple<int, int, log_view_render.print_info>(now.Item1, interesect_len, now.Item3);
+                                    now = new Tuple<int, int, print_info>(now.Item1, interesect_len, now.Item3);
                                     print[idx] = now;
                                 }
                             }
@@ -443,6 +443,22 @@ namespace lw_common
                         return multi[0];
 
                 return -1;
+            }
+        }
+
+        public List<int> multi_sel_idx {
+            get {
+                List<int> sel = new List<int>();
+                var multi = list.SelectedIndices;
+                if ( multi != null)
+                    for ( int i = 0; i < multi.Count; ++i)
+                        sel.Add(multi[i]);
+                
+                var cur_row = sel_row_idx;
+                if ( sel.Count == 0 && cur_row >= 0)
+                    // in this case, a single selection
+                    sel.Add(cur_row);
+                return sel;
             }
         }
 

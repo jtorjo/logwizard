@@ -14,83 +14,23 @@ namespace lw_common.ui {
     class log_view_render : BaseRenderer {
 
         private solid_brush_list brush_ = new solid_brush_list();
-        private gradient_brush_list gradient_ = new gradient_brush_list();
-
-        private Font font, b_font, bi_font, i_font;
 
         private log_view parent_;
+        private log_view_item_draw_ui drawer_ = null;
         public log_view_render(log_view parent) {
             parent_ = parent;
-            
-            font = parent_.list.Font;
-            b_font = new Font(font.FontFamily, font.Size, FontStyle.Bold);
-            bi_font = new Font(font.FontFamily, font.Size, FontStyle.Bold | FontStyle.Italic);
-            i_font = new Font(font.FontFamily, font.Size, FontStyle.Italic);
-        }
-
-        private void build_fonts() {
-            b_font = new Font(font.FontFamily, font.Size, FontStyle.Bold);
-            bi_font = new Font(font.FontFamily, font.Size, FontStyle.Bold | FontStyle.Italic);
-            i_font = new Font(font.FontFamily, font.Size, FontStyle.Italic);            
+            drawer_ = new log_view_item_draw_ui(parent_);            
         }
 
         public void set_font(Font f) {
-            font = f;
-            build_fonts();
+            drawer_.set_font(f);
         }
 
-        /*
-        public override bool OptionalRender(Graphics g, Rectangle r) {
-            if ( SubItem == null)
-                gradient(g,r);
-            return false;
-        }*/
-
-        public class print_info {
-            protected bool Equals(print_info other) {
-                return fg.Equals(other.fg) && bg.Equals(other.bg) && bold == other.bold && italic == other.italic && string.Equals(font_name, other.font_name);
-            }
-
-            public override bool Equals(object obj) {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
-                return Equals((print_info) obj);
-            }
-
-            public override int GetHashCode() {
-                unchecked {
-                    var hashCode = fg.GetHashCode();
-                    hashCode = (hashCode * 397) ^ bg.GetHashCode();
-                    hashCode = (hashCode * 397) ^ bold.GetHashCode();
-                    hashCode = (hashCode * 397) ^ italic.GetHashCode();
-                    hashCode = (hashCode * 397) ^ (font_name != null ? font_name.GetHashCode() : 0);
-                    return hashCode;
-                }
-            }
-
-            public static bool operator ==(print_info left, print_info right) {
-                return Equals(left, right);
-            }
-
-            public static bool operator !=(print_info left, print_info right) {
-                return !Equals(left, right);
-            }
-
-            public Color fg = util.transparent;
-            public Color bg = util.transparent;
-            public bool bold = false, italic = false;
-            public string font_name = "";
-            
-            // useful when sorting - to avoid collisions
-            public string text = "";
-        }
-
-        private List<Tuple<int, int, log_view_render.print_info>> override_print_ = new List<Tuple<int, int, log_view_render.print_info>> ();
+        private List<Tuple<int, int, print_info>> override_print_ = new List<Tuple<int, int, print_info>> ();
         print_info default_ = new print_info();
 
         private void draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, print_info print) {
-            Font f = print.bold ? (print.italic ? bi_font : b_font) : (print.italic ? i_font : font);
+            Font f = drawer_.font(print);
             var i = ListItem.RowObject as log_view.item;
             int width = text_width(g, sub);
             if (print != default_) {
@@ -144,30 +84,12 @@ namespace lw_common.ui {
         }
 
         private int text_width(Graphics g, string text) {
-            // IMPORTANT: at this time, we assume we have a fixed font
-            bool ends_in_space = text.EndsWith(" ");
-            if (ends_in_space)
-                // just append any character, so that the spaces are taken into account
-                text += "_";
-
-            int width = (int)g.MeasureString(text, font).Width + 1;
-            if (ends_in_space) {
-                int avg_per_char = width / text.Length;
-                width -= avg_per_char;
-            }
-            return width;
-//            return char_size(g) * text.Length;
+            return drawer_.text_width(g, text);
         }
 
 
         private int char_size(Graphics g) {
-            // IMPORTANT: at this time, we assume we have a fixed font
-            var ab = g.MeasureString("ab", font).Width;
-            var abc = g.MeasureString("abc", font).Width;
-            var abcd = g.MeasureString("abcd", font).Width;
-            Debug.Assert( (int)((abc - ab) * 100) == (int)((abcd - abc) * 100)) ;
-
-            return (int)(abc - ab);
+            return drawer_.char_size(g);
         }
 
         // for each character of the printed text, see how many pixels it takes
@@ -192,16 +114,7 @@ namespace lw_common.ui {
             bool is_sel = IsItemSelected;
 
 
-            Brush brush;
-            if (col_idx == parent_.msgCol.Index) {
-                if (is_sel) 
-                    brush = brush_.brush(is_sel ? dark_bg : bg);
-                else if (app.inst.use_bg_gradient)
-                    brush = gradient_.brush(r, app.inst.bg_from, app.inst.bg_to);
-                else
-                    brush = brush_.brush(bg);
-            } else 
-                brush = brush_.brush(is_sel ? dark_bg : bg);
+            Brush brush = drawer_.bg_brush(ListItem, col_idx);
             g.FillRectangle(brush, r);
 
             StringFormat fmt = new StringFormat(StringFormatFlags.NoWrap);
@@ -216,4 +129,5 @@ namespace lw_common.ui {
             draw_string(0, text, g, brush, r, fmt);
         }
     }
+
 }

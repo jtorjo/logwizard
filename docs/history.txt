@@ -9,6 +9,10 @@
 - filter - special case - when all filters turned off?
 
 
+1.2.14b
+- refactoring (part 1): move code dealing with colors into log_view_item_dra_ui, so I can reuse it for smart-edit
+
+
 1.2.14a
 - smart: modified setting sel_col_, so that we update text based on sel_col/sel_row, not on Text itself
          it's because i could have two consecutive lines having the column at sel_col have the same text, but different color

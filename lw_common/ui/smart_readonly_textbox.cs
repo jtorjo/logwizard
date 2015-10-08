@@ -145,6 +145,8 @@ namespace lw_common.ui {
             Clear();
 
             AppendText(txt);
+//            var i = parent_.sel.override_print(parent_, txt, sel_col_);
+
             --ignore_change_;
         }
 

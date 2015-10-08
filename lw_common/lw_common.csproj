@@ -91,6 +91,7 @@
     <Compile Include="ui\log_view.Designer.cs">
       <DependentUpon>log_view.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\log_view_item_draw_ui.cs" />
     <Compile Include="ui\log_view_parent.cs" />
     <Compile Include="ui\log_view_render.cs">
       <SubType>Component</SubType>
@@ -107,6 +108,7 @@
     <Compile Include="ui\note_ctrl.Designer.cs">
       <DependentUpon>note_ctrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\print_info.cs" />
     <Compile Include="ui\search_form.cs">
       <SubType>Form</SubType>
     </Compile>
