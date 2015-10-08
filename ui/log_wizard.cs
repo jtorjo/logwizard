@@ -1720,14 +1720,6 @@ namespace LogWizard
                 }, 2500, 250);
         }
 
-        // http://stackoverflow.com/questions/91778/how-to-remove-all-event-handlers-from-a-control
-        private void remove_event_handler(Control c, string event_name) {
-            FieldInfo f1 = typeof(Control).GetField("Event" + event_name, BindingFlags.Static | BindingFlags.NonPublic);
-            object obj = f1.GetValue(c);
-            PropertyInfo pi = c.GetType().GetProperty("Events",  BindingFlags.NonPublic | BindingFlags.Instance);
-            EventHandlerList list = (EventHandlerList)pi.GetValue(c, null);
-            list.RemoveHandler(obj, list[obj]);            
-        }
 
         private int handled_key_idx_ = 0;
         private void LogWizard_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
@@ -1735,10 +1727,11 @@ namespace LogWizard
                 e.IsInputKey = true;
         }
         private void LogWizard_KeyDown(object sender, KeyEventArgs e) {
+            // processing stuff in ProcessCmdKey now
             ++handled_key_idx_;
             //logger.Debug("key pressed - " + e.KeyCode + " sender " + sender);
             var action = key_to_action(e);
-            if (key_to_action(e) != action_type.none) {
+            if (action != action_type.none) {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
                 // note: some hotkeys are sent twice
@@ -1754,7 +1747,17 @@ namespace LogWizard
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
             if(keyData == (Keys.Control | Keys.Tab) || keyData == (Keys.Control | Keys.Shift | Keys.Tab) ) 
                 return true;
-            
+
+            // 1.2.12 - tried, but doesn't work
+#if old_code
+            var action = key_to_action(keyData);
+            if (action != action_type.none) {
+                last_action_ = action;
+                handle_action(action);
+                logger.Info("action by key - " + action); // + " from " + sender);
+                return true;
+            }
+#endif
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
@@ -1787,14 +1790,6 @@ namespace LogWizard
         }
 
         public void handle_subcontrol_keys(Control c) {
-            /* seems ctrl-tab/ctrl-shift-tab are still caught 
-            if (c == viewsTab) {
-                remove_event_handler(c, "PreviewKeyDown");
-                remove_event_handler(c, "KeyDown");
-                remove_event_handler(c, "KeyPress");
-                remove_event_handler(c, "KeyUp");
-            }
-            */
             c.PreviewKeyDown += LogWizard_PreviewKeyDown;
             c.KeyDown += LogWizard_KeyDown;
             c.KeyUp += log_wizard_KeyUp;
@@ -1804,6 +1799,9 @@ namespace LogWizard
         }
 
 
+        private action_type key_to_action(Keys e) {
+            return key_to_action( util.key_to_action(e));
+        }
         private action_type key_to_action(KeyEventArgs e) {
             return key_to_action( util.key_to_action(e));
         }
@@ -1815,8 +1813,15 @@ namespace LogWizard
             return win32.focused_ctrl();
         }
 
+        // ... this is always editable
+        private bool is_focus_on_editable_box() {
+            var focused = focused_ctrl();
+            var box = focused as TextBox;
+            return box != null && !box.ReadOnly;
+        }
 
-        private bool is_focus_on_edit() {
+        // ... this can be editable or non-editable (the richchtexbox is readonly)
+        private bool is_focus_on_text_box() {
             var focused = focused_ctrl();
             return focused != null && (focused is TextBox || focused is RichTextBox);
         }
@@ -1824,7 +1829,7 @@ namespace LogWizard
         private bool allow_arrow_to_function_normally() {
             if (is_focus_on_filter_panel())
                 return true;
-            if (is_focus_on_edit())
+            if (is_focus_on_text_box())
                 return true;
             var focused = focused_ctrl();
             if (focused == logHistory)
@@ -1880,21 +1885,17 @@ namespace LogWizard
 
             case "ctrl-c":
             case "ctrl-shift-c":
-                if ( is_focus_on_edit())
+                if ( is_focus_on_text_box())
                     return action_type.none;
                 break;
             }
 
-            bool has_modifiers = key_code.Contains("ctrl-") || key_code.Contains("alt-") || key_code.Contains("shift");
-            if (!has_modifiers && key_code != "tab" && is_focus_on_edit())
+            bool has_modifiers = key_code.Contains("ctrl-") || key_code.Contains("alt-") || key_code.Contains("shift-");
+            if (!has_modifiers && key_code != "tab" && is_focus_on_editable_box())
                 // key down - in edit -> don't have it as hotkey
                 return action_type.none;
 
             switch (key_code) {
-            case "ctrl-f": 
-                return action_type.search ;
-            case "ctrl-shift-f": 
-                return action_type.default_search ;
             case "f3":
                 return action_type.search_next;
             case "shift-f3":
@@ -1902,6 +1903,10 @@ namespace LogWizard
             case "escape":
                 return action_type.escape;
 
+            case "ctrl-f": 
+                return action_type.search ;
+            case "ctrl-shift-f": 
+                return action_type.default_search ;
             case "ctrl-f2":
                 return action_type.toggle_bookmark;
             case "f2":
@@ -1916,12 +1921,11 @@ namespace LogWizard
             case "ctrl-shift-c":
                 return action_type.copy_to_clipboard;
 
-                // for some strange reason, ctrl-tab/ctrl-shift-tab are caught by the viewsTab - even if I remove the event handlers
-                // http://stackoverflow.com/questions/91778/how-to-remove-all-event-handlers-from-a-control
             case "ctrl-right":
                 return action_type.next_view;
             case "ctrl-left":
                 return action_type.prev_view;
+
             case "home":
                 return action_type.home;
             case "end":
@@ -1934,18 +1938,25 @@ namespace LogWizard
                 return action_type.arrow_up;
             case "down":
                 return action_type.arrow_down;
+
             case "shift-up":
                 return action_type.shift_arrow_up;
             case "shift-down":
                 return action_type.shift_arrow_down;
+
             case "tab":
                 return action_type.pane_next;
             case "shift-tab":
                 return action_type.pane_prev;
+
             case "add":
                 return action_type.increase_font;
             case "subtract":
                 return action_type.decrease_font;
+            case "space":
+                if ( filtCtrl.can_handle_toggle_enable_dimmed_now)
+                    return action_type.toggle_enabled_dimmed;
+                break;
 
             case "ctrl-h":
                 return action_type.toggle_history_dropdown;
@@ -1996,10 +2007,6 @@ namespace LogWizard
                 return action_type.goto_position_4;
             case "ctrl-5":
                 return action_type.goto_position_5;
-            case "space":
-                if ( filtCtrl.can_handle_toggle_enable_dimmed_now)
-                    return action_type.toggle_enabled_dimmed;
-                break;
             case "ctrl-e":
                 return action_type.export_notes;
             case "ctrl-z":

@@ -612,10 +612,26 @@ namespace lw_common {
 
 
         private static string key_to_action(Keys code, string prefix) {
+            if (code == Keys.None)
+                return "";
+
             string s = code.ToString().ToLower();
             if ( code >= Keys.D0 && code <= Keys.D9)
                 s = code.ToString().ToLower().Substring(1);
             return prefix + s;
+        }
+
+        public static string key_to_action(Keys code) {
+            string prefix = "";
+            if ((code & Keys.Control) ==  Keys.Control)
+                prefix += "ctrl-";
+            if ((code & Keys.Shift) ==  Keys.Shift)
+                prefix += "shift-";
+            if ((code & Keys.Alt) ==  Keys.Alt)
+                prefix += "alt-";
+
+            code = code & ~(Keys.Control | Keys.Shift | Keys.Alt);
+            return key_to_action(code, prefix);
         }
 
         public static string key_to_action(PreviewKeyDownEventArgs e) {

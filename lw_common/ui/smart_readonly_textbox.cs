@@ -47,6 +47,10 @@ namespace lw_common.ui {
         public void init(log_view parent) {
             parent_ = parent;
             util.postpone(update_ui, 10);
+
+            // ... easier testing
+            if ( util.is_debug)
+                BorderStyle = BorderStyle.FixedSingle;
         }
 
         public void update_ui() {
