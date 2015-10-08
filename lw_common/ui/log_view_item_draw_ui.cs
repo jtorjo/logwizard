@@ -15,6 +15,8 @@ namespace lw_common.ui {
 
         private Font font_, b_font, bi_font, i_font;
 
+        // if true, we consider none of the items is selected
+        public bool ignore_selection = false;
 
         public log_view_item_draw_ui(log_view parent) {
             parent_ = parent;
@@ -38,6 +40,16 @@ namespace lw_common.ui {
         public Font font(print_info print) {
             Font f = print.bold ? (print.italic ? bi_font : b_font) : (print.italic ? i_font : font_);
             return f;
+        }
+
+        // allow overriding the parent  
+        public void set_parent(log_view parent) {
+            Debug.Assert(parent != null);
+            if (parent == parent_)
+                return;
+
+            parent_ = parent;
+            set_font(parent.list.Font);
         }
 
         public int text_width(Graphics g, string text) {
@@ -93,7 +105,7 @@ namespace lw_common.ui {
             int row_idx = item.Index;
 
             Color color;
-            bool is_sel = parent_.multi_sel_idx.Contains(row_idx);
+            bool is_sel = !ignore_selection ? parent_.multi_sel_idx.Contains(row_idx) : false;
 
             Color bg = i.bg(parent_);
             Color dark_bg = i.sel_bg(parent_);
@@ -121,7 +133,7 @@ namespace lw_common.ui {
             int row_idx = item.Index;
 
             if (col_idx == parent_.msgCol.Index) {
-                bool is_sel = parent_.multi_sel_idx.Contains(row_idx);
+                bool is_sel = !ignore_selection ? parent_.multi_sel_idx.Contains(row_idx) : false;
                 if (!is_sel && app.inst.use_bg_gradient) {
                     Rectangle r = item.GetSubItemBounds(col_idx);
                     if ( r.Width > 0 && r.Height > 0)

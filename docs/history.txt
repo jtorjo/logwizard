@@ -4,12 +4,18 @@
 - bacskp -> if i type something and it takes me a few lines above/below, when typing backspace, it should take me BACK.
 
 
-- hte current line - msg details -> match all colors (Colortextbox from codeplex - see about license!)
 
 
 - retest : modifying matchcolor with eyedropper
 - filter - special case - when all filters turned off?
 
+- msg details -> if i can fit on the low part, do it
+
+
+
+1.2.14e
+- the current line - msg details -> match all colors 
+  THIS IS SO AWESOME, I DON'T HAVE WORDS FOR IT :D
 
 
 1.2.14d

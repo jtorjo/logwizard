@@ -33,6 +33,10 @@ namespace lw_common {
     public partial class msg_details_ctrl : UserControl {
         private const int MAX_HEIGHT = 160;
         private Form wizard_parent_;
+
+        private log_view_item_draw_ui drawer_;
+        private print_info default_print_ = new print_info();
+
         public msg_details_ctrl(Form wizard_parent) {
             wizard_parent_ = wizard_parent;
             Debug.Assert(wizard_parent is log_view_parent);
@@ -82,7 +86,6 @@ namespace lw_common {
             int height_offset = 10;
             var new_size = new Size( wizard_rect.Width, Math.Min( text_height(sel, wizard_rect.Width) + height_offset, MAX_HEIGHT) );
             Size = new_size;
-            txt.Text = sel;
 
             Rectangle line_rect = view.sel_rect_screen;
             if (can_text_fit_in_width(sel, line_rect.Width)) {
@@ -94,10 +97,50 @@ namespace lw_common {
 
             bool on_top = distance_to_top >= distance_to_bottom;
             var new_location = new Point(wizard_rect.Left, on_top ? wizard_rect.Top : wizard_rect.Bottom - Height);
+
+            set_text(view);            
             show(true, new_location);
-            var cols = view.sel_line_colors;
-            txt.ForeColor = cols.Item1;
-            txt.BackColor = cols.Item2;
+        }
+
+        private void set_text(log_view lv) {
+            if ( drawer_ == null)
+                drawer_= new log_view_item_draw_ui(lv) { ignore_selection = true };
+            drawer_.set_parent(lv);
+
+            int msg_col = lv.msgCol.Index;
+            string msg_txt = lv.sel_line_text;
+
+            txt.Clear();
+            txt.AppendText(msg_txt);
+
+            var prints = lv.sel.override_print(lv, msg_txt, msg_col);
+            var full_row = lv.list.GetItem(lv.sel_row_idx);
+
+            txt.BackColor = drawer_.bg_color(full_row, msg_col);
+            int last_idx = 0;
+
+            for (int print_idx = 0; print_idx < prints.Count; ++print_idx) {
+                int cur_idx = prints[print_idx].Item1, cur_len = prints[print_idx].Item2;
+                string before = msg_txt.Substring(last_idx, cur_idx - last_idx);
+                if (before != "") {
+                    txt.Select(last_idx, cur_idx - last_idx);
+                    txt.SelectionColor = drawer_.print_fg_color(full_row, default_print_);
+                    txt.SelectionBackColor = drawer_.bg_color(full_row, msg_col);
+                }
+                txt.Select(cur_idx, cur_len);
+                txt.SelectionColor = drawer_.print_fg_color(full_row, prints[print_idx].Item3);
+                txt.SelectionBackColor = drawer_.print_bg_color(full_row, prints[print_idx].Item3);
+                last_idx = cur_idx + cur_len;
+            }
+            last_idx = prints.Count > 0 ? prints.Last().Item1 + prints.Last().Item2 : 0;
+            if (last_idx < msg_txt.Length) {
+                txt.Select(last_idx, msg_txt.Length - last_idx);
+                txt.SelectionColor = drawer_.print_fg_color(full_row, default_print_);
+                txt.SelectionBackColor = drawer_.bg_color(full_row, msg_col);
+            }
+
+            txt.SelectionStart = 0;
+            txt.SelectionLength = 0;            
         }
 
         public bool visible() {
