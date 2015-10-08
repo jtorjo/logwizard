@@ -17,6 +17,10 @@
 - filter - special case - when all filters turned off?
 
 
+1.2.13b
+- initial start -> we get focus correctly
+
+
 1.2.13a
 - log_wizard : removed postFocus 
 - still sometimes it does not focus to smart edit (like, home/end/beginning of app)

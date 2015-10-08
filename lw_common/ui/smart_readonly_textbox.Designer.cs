@@ -23,7 +23,15 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
+            this.stealFocus = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // stealFocus
+            // 
+            this.stealFocus.Enabled = true;
+            this.stealFocus.Interval = 25;
+            this.stealFocus.Tick += new System.EventHandler(this.stealFocus_Tick);
             // 
             // smart_readonly_textbox
             // 
@@ -39,5 +47,7 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer stealFocus;
     }
 }

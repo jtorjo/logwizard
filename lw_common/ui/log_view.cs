@@ -768,7 +768,7 @@ namespace lw_common
                 select_idx( sel, select_type.notify_parent);
                 ensure_line_visible(sel);
             }
-            edit.refocus();
+            edit.update_sel();
         }
 
         private List<int> selected_indices_array() {
@@ -1896,11 +1896,7 @@ namespace lw_common
 
         public void set_focus() {
             update_background();
-
-            if ( is_editing)
-                edit.refocus();
-            else
-                list.Focus();
+            list.Focus();
         }
 
         public export_text export() {
@@ -1951,7 +1947,7 @@ namespace lw_common
                     is_editing_ = true;
                     cur_col_ = msgCol.Index;
                     edit.update_ui();
-                    edit.refocus();
+                    edit.update_sel();
                     return true;
                 } 
                 else if (keyData == Keys.Right && app.inst.edit_mode == app.edit_mode_type.with_right_arrow) {

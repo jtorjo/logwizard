@@ -130,7 +130,6 @@ namespace lw_common.ui {
 
                 update_ui();
             }
-            util.postpone(() => Focus(), 1);
         }
 
         public void after_click() {
@@ -189,7 +188,6 @@ namespace lw_common.ui {
             sel_start_ = pos;
             sel_len_ = text_to_select.Length;
             update_cached_sel_text();
-            Focus();
 
             util.postpone(() => {
                 readd_all_text();
@@ -197,7 +195,7 @@ namespace lw_common.ui {
             }, 20);
         }
 
-        public void refocus() {
+        public void update_sel() {
 //            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
 
             if (sel_col_ == parent_.sel_col) {
@@ -215,9 +213,6 @@ namespace lw_common.ui {
                 sel_start_ = SelectionStart;
                 sel_len_ = SelectionLength;
             }
-
-            util.postpone( () => Focus(), 1);
-            logger.Debug("[smart] focus on edit for " + parent_.name + "/" + parent_.sel_row_idx);
         }
 
         public void sel_to_left() {
@@ -393,6 +388,11 @@ namespace lw_common.ui {
 
             // did not find anything, let parent know
             on_search_ahead(new_text);
+        }
+
+        private void stealFocus_Tick(object sender, EventArgs e) {
+            if (win32.focused_ctrl() == parent_.list && parent_.is_editing && Visible)
+                Focus();
         }
 
     }
