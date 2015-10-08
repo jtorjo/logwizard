@@ -5,12 +5,18 @@
 
 - settings: above/below/ all columns
 
+- hte current line - msg details -> match all colors (Colortextbox from codeplex - see about license!)
+
 - retest : modifying matchcolor with eyedropper
 - filter - special case - when all filters turned off?
 
 
+1.2.14c
+- refactoring (part 2): move code dealing with colors into log_view_item_draw_ui, so I can reuse it for smart-edit
+
+
 1.2.14b
-- refactoring (part 1): move code dealing with colors into log_view_item_dra_ui, so I can reuse it for smart-edit
+- refactoring (part 1): move code dealing with colors into log_view_item_draw_ui, so I can reuse it for smart-edit
 
 
 1.2.14a

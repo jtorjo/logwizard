@@ -13,10 +13,9 @@ using lw_common;
 namespace lw_common.ui {
     class log_view_render : BaseRenderer {
 
-        private solid_brush_list brush_ = new solid_brush_list();
-
         private log_view parent_;
         private log_view_item_draw_ui drawer_ = null;
+
         public log_view_render(log_view parent) {
             parent_ = parent;
             drawer_ = new log_view_item_draw_ui(parent_);            
@@ -30,24 +29,18 @@ namespace lw_common.ui {
         print_info default_ = new print_info();
 
         private void draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, print_info print) {
-            Font f = drawer_.font(print);
-            var i = ListItem.RowObject as log_view.item;
             int width = text_width(g, sub);
             if (print != default_) {
-                Color bg = print.bg != util.transparent ? print.bg : util.darker_color( i.bg(parent_) );
                 Rectangle here = new Rectangle(r.Location, r.Size);
                 here.X += left;
                 here.Width = width + 1;
-                g.FillRectangle(brush_.brush(bg), here);
+                g.FillRectangle( drawer_.print_bg_brush(ListItem, print) , here);
             }
-
-            Color fg = i.fg(parent_);
-            Brush brush = print.fg != util.transparent ? brush_.brush(print.fg) : brush_.brush( fg);
 
             Rectangle sub_r = new Rectangle(r.Location, r.Size);
             sub_r.X += left;
             sub_r.Width -= left;
-            g.DrawString(sub, f, brush, sub_r, fmt);
+            g.DrawString(sub, drawer_.font(print), drawer_.print_fg_brush(ListItem, print) , sub_r, fmt);
         }
 
 
@@ -109,10 +102,6 @@ namespace lw_common.ui {
             var col_idx = Column.Index;
             string text = GetText();
             override_print_ = i.override_print(parent_, text, col_idx);
-            Color bg = i.bg(parent_);
-            Color dark_bg = i.sel_bg(parent_);
-            bool is_sel = IsItemSelected;
-
 
             Brush brush = drawer_.bg_brush(ListItem, col_idx);
             g.FillRectangle(brush, r);

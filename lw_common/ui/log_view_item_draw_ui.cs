@@ -67,12 +67,32 @@ namespace lw_common.ui {
             return (int)(abc - ab);
         }
 
+        public Color print_bg_color(OLVListItem item, print_info print) {
+            log_view.item i = item.RowObject as log_view.item;            
+            Color bg = print.bg != util.transparent ? print.bg : util.darker_color( i.bg(parent_) );
+            return bg;
+        }
 
-        public Brush bg_brush(OLVListItem item, int col_idx) {
+        public Brush print_bg_brush(OLVListItem item, print_info print) {
+            return brush_.brush(print_bg_color(item, print));
+        }
+
+        public Color print_fg_color(OLVListItem item, print_info print) {
+            log_view.item i = item.RowObject as log_view.item;            
+            Color fg = i.fg(parent_);
+            Color print_fg = print.fg != util.transparent ? print.fg : fg;
+            return print_fg;
+        }
+
+        public Brush print_fg_brush(OLVListItem item, print_info print) {
+            return brush_.brush(print_fg_color(item, print));
+        }
+
+        public Color bg_color(OLVListItem item, int col_idx) {
             log_view.item i = item.RowObject as log_view.item;
             int row_idx = item.Index;
 
-            Brush brush;
+            Color color;
             bool is_sel = parent_.multi_sel_idx.Contains(row_idx);
 
             Color bg = i.bg(parent_);
@@ -80,19 +100,36 @@ namespace lw_common.ui {
 
             if (col_idx == parent_.msgCol.Index) {
                 if (is_sel) 
-                    brush = brush_.brush(is_sel ? dark_bg : bg);
+                    color = is_sel ? dark_bg : bg;
                 else if (app.inst.use_bg_gradient) {
                     Rectangle r = item.GetSubItemBounds(col_idx);
-                    if ( r.Width > 0 && r.Height > 0)
-                        brush = gradient_.brush(r, app.inst.bg_from, app.inst.bg_to);
-                    else 
-                        brush = brush_.brush(bg);
+                    if (r.Width > 0 && r.Height > 0)
+                        // it's a gradient
+                        color = util.transparent;
+                    else
+                        color = bg;
                 } else
-                    brush = brush_.brush(bg);
+                    color = bg;
             } else 
-                brush = brush_.brush(is_sel ? dark_bg : bg);
+                color = is_sel ? dark_bg : bg;
 
-            return brush;
+            return color;
+        }
+
+        public Brush bg_brush(OLVListItem item, int col_idx) {
+            log_view.item i = item.RowObject as log_view.item;
+            int row_idx = item.Index;
+
+            if (col_idx == parent_.msgCol.Index) {
+                bool is_sel = parent_.multi_sel_idx.Contains(row_idx);
+                if (!is_sel && app.inst.use_bg_gradient) {
+                    Rectangle r = item.GetSubItemBounds(col_idx);
+                    if ( r.Width > 0 && r.Height > 0)
+                        return gradient_.brush(r, app.inst.bg_from, app.inst.bg_to);
+                }
+            }
+
+            return brush_.brush( bg_color(item, col_idx));
         }
     }
 }
