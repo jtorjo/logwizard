@@ -47,6 +47,15 @@ namespace lw_common.ui {
         private log_view_item_draw_ui drawer_ = null;
         print_info default_print_ = new print_info();
 
+        private class position {
+            // the exact cell
+            public int row = 0, col = 0;
+
+            // the selection
+            public int sel_start = 0, len = 0;
+        }
+        private Dictionary<string, position> last_positions_ = new Dictionary<string, position>(); 
+
         public smart_readonly_textbox() {
             InitializeComponent();
             BorderStyle = BorderStyle.None;
@@ -79,6 +88,8 @@ namespace lw_common.ui {
 
         public void update_ui() {
             if (parent_ == null)
+                return;
+            if (ignore_change_ > 0)
                 return;
 
             var bounds = parent_.sel_subrect_bounds;
@@ -241,6 +252,7 @@ namespace lw_common.ui {
 
         public void clear_sel() {
             sel_len_ = 0;
+            last_positions_.Clear();
         }
 
         public void update_sel() {
@@ -313,6 +325,7 @@ namespace lw_common.ui {
             var old_sel = sel_text;
 
             cached_sel_text_ = raw_sel_text();
+            add_cur_text_to_positions();
 
             if (old_sel != sel_text)
                 on_sel_changed();
@@ -375,7 +388,8 @@ namespace lw_common.ui {
         }
 
         public void escape() {
-            // escape
+            last_positions_.Clear();
+
             if (sel_len_ > 0) {
                 sel_len_ = 0;
                 readd_all_text();
@@ -391,10 +405,47 @@ namespace lw_common.ui {
                 // delete last space, if any
                 if (raw_sel_text().EndsWith(" "))
                     --sel_len_;
+
+                string txt = raw_sel_text().ToLower();
+                if (last_positions_.ContainsKey(txt))
+                    go_to_backspace_text(txt);
+
                 update_cached_sel_text();
                 readd_all_text();
                 update_selected_text();
             }            
+        }
+
+        // goes back to the text selected before typing a new letter - EVEN if within the same line
+        private void go_to_backspace_text(string txt) {
+            Debug.Assert(last_positions_.ContainsKey(txt));
+            position pos = last_positions_[txt];
+            // remove unused entries - just in case
+            last_positions_ = last_positions_.Where(x => txt.StartsWith(x.Key)).ToDictionary(x => x.Key, x => x.Value);
+
+            bool needs_update_ui = (pos.col != sel_col_) || (pos.row != sel_row_);
+            ++ignore_change_;
+            parent_.select_cell(pos.row, pos.col);
+            --ignore_change_;
+            if ( needs_update_ui)
+                update_ui();
+
+            sel_start_ = pos.sel_start;
+            sel_len_ = pos.len;
+        }
+
+        private void add_cur_text_to_positions() {
+            if (sel_len_ < 1)
+                return;
+            string txt = Text.Substring(sel_start_, sel_len_).ToLower();
+            if ( !last_positions_.ContainsKey(txt))
+                last_positions_.Add(txt, new position());
+            position pos = last_positions_[txt];
+            pos.col = sel_col_;
+            pos.row = sel_row_;
+            pos.sel_start = sel_start_;
+            pos.len = sel_len_;
+            logger.Debug("[smart] new pos - " + pos.row + "," + pos.col + "," + pos.sel_start + "," + pos.len);
         }
 
         private void smart_readonly_textbox_KeyPress(object sender, KeyPressEventArgs e) {

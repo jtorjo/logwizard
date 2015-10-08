@@ -1233,9 +1233,14 @@ namespace lw_common
                 list.SelectedIndex = row_idx;
                 update_line_highlight_color(row_idx);
                 update_x_of_y();
-                //util.postpone(edit.update_ui, 1);
             }
             select_nofify_ = select_type.notify_parent;
+        }
+
+        // only called by smart edit on backspace
+        internal void select_cell(int row_idx, int cell_idx) {
+            cur_col_ = cell_idx;
+            select_idx(row_idx, select_type.notify_parent);
         }
 
         private void list_SelectedIndexChanged(object sender, EventArgs e) {
