@@ -1,12 +1,16 @@
 
-- filter - special case - when all filters turned off?
-
-- msg details -> if i can fit on the low part, do it
 
 - handle logwizard: activate (alt-tab + alttab back)
 
+- msg details -> if i can fit on the low part, do it
 
-1.2.17
+
+
+1.2.17b
+- filter - special case - when all filters turned off?
+
+
+1.2.17a
 done:
 - retest : modifying matchcolor with eyedropper
 

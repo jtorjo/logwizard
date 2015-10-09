@@ -1017,6 +1017,7 @@ namespace lw_common
 
             if (old_item_count_ == new_item_count)
                 return; // nothing changed
+            bool more_items = old_item_count_ < new_item_count;
             old_item_count_ = new_item_count;
 
             model_.refresh();
@@ -1024,7 +1025,7 @@ namespace lw_common
             update_x_of_y();
             
             list.Refresh();
-            if( needs_scroll)
+            if( needs_scroll && more_items)
                 go_last();
         }
 

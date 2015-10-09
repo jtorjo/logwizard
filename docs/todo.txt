@@ -47,7 +47,7 @@
 - context menu on full log -> New Filter containing [...]/starting with [...]
 
 - menu: Find + Find Next/ Find Prev (if anytihng to find)
-
+- menu: compute - see if it's got enough room to show all items - if not, adjust
 - match_color -> in filters!!!
  
 
@@ -140,7 +140,7 @@
 
 - low pane: all buttons should become images + have icons for find/find next/find prev + tothink : should i add icons for anything else?
 
-
+- bug: toggling enabled/dimmed will end up causing exceptions - seems it's because of all the forced reloads
 
 
 

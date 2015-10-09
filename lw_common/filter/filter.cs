@@ -445,6 +445,9 @@ namespace LogWizard {
                 int old_match_count = matches_.count;
                 BitArray matches = new BitArray(rows.Count);
 
+                // handle the case where all the filters are disabled (thus, show all lines)
+                int run_filter_count = rows.Count(x => x.enabled || x.dimmed) ;
+
                 for (int line_idx = old_line_count; line_idx < new_log.line_count; ++line_idx) {
                     bool any_match = false;
                     bool any_non_apply_to_existing_lines_filters = false;
@@ -507,8 +510,7 @@ namespace LogWizard {
                         continue;
                     }
 
-                    bool any_filter = (rows.Count > 0);
-                    if (!any_filter) 
+                    if (run_filter_count == 0) 
                         new_matches.Add( new_match(new BitArray(0), new_log.line_at(line_idx), line_idx, filter_line.font_info.default_font ));
                 }
 
