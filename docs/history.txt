@@ -1,9 +1,11 @@
 
 
-- handle logwizard: activate (alt-tab + alttab back)
 
 - msg details -> if i can fit on the low part, do it
 
+
+1.2.17c
+- handle logwizard: activate (alt-tab + alttab back)
 
 
 1.2.17b

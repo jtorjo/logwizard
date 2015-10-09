@@ -121,6 +121,8 @@ namespace LogWizard
         // if non-empty, we need to merge our notes with other notes
         private string post_merge_file_ = "";
 
+        private Control active_pane_ = null;
+
         private enum show_full_log_type {
             both, just_view, just_full_log
         }
@@ -1884,7 +1886,7 @@ namespace LogWizard
 
             case "ctrl-c":
             case "ctrl-shift-c":
-                if ( is_focus_on_text_box())
+                if ( is_focus_on_editable_box())
                     return action_type.none;
                 break;
             }
@@ -2310,7 +2312,6 @@ namespace LogWizard
             List<Control> panes = this.panes();
             Control focus_ctrl = focused_ctrl();
             int idx = -1;
-
             while (idx < 0 && focus_ctrl != null) {
                 idx = panes.IndexOf(focus_ctrl);
                 if (idx < 0)
@@ -2325,6 +2326,11 @@ namespace LogWizard
                 idx = forward ? 0 : panes.Count - 1;
 
             var cur_pane = panes[ idx % panes.Count ];
+            activate_pane(cur_pane);
+        }
+
+        private void activate_pane(Control cur_pane) {
+            active_pane_ = cur_pane;
             var lv_pane = cur_pane as log_view;
             var list_pane = cur_pane as ObjectListView;
 
@@ -2339,7 +2345,16 @@ namespace LogWizard
                 }
                 else
                     cur_pane.Focus();
-            }, 10);
+            }, 10);            
+        }
+
+        private void on_activate() {
+            if (active_pane_ != null) {
+                if (active_pane_ is log_view)
+                    active_pane_ = selected_view();
+                activate_pane(active_pane_);
+            } else
+                activate_pane(panes()[0]);
         }
 
 
@@ -2650,7 +2665,7 @@ namespace LogWizard
         }
 
         private void log_wizard_Activated(object sender, EventArgs e) {
-
+            on_activate();
         }
 
 
