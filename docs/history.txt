@@ -1,5 +1,18 @@
 
+- click -> select full word -> care about any delimeter
 
+- press ESC on dropdown
+
+- on a new view started from scratch -> see that in log_view, I don't think it's full-log!
+
+
+
+1.2.19a
+- skeleton for right click on logview
+
+
+1.2.18
+- tested that list_cellclick is only triggered on click, not right-click
 
 
 1.2.17d

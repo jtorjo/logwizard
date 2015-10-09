@@ -14,5 +14,10 @@ namespace lw_common.ui {
 
         string matched_logs(int line_idx);
         Rectangle client_rect_no_filter { get; }
+
+        // read-only
+        ui_info current_ui { get; }
+
+        void simple_action(log_view_right_click.simple_action simple);
     }
 }

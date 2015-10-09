@@ -50,3 +50,6 @@
 - (pro_v) comparing logs/view?
   do a diff of two views -see what is different in each - select which cols to compare (probably you would not want to compare times?)
 
+- filter right click:
+  - in time, we can actually have an extra menu option: "Show Back" - which will show all the things the user removed (and a "Show Back" command would just remove that)
+  - smart edit as well : should skip those columns that are image only (for future - since i will allow this)

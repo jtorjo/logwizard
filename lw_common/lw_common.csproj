@@ -96,6 +96,7 @@
     <Compile Include="ui\log_view_render.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ui\log_view_right_click.cs" />
     <Compile Include="ui\msg_details_ctrl.cs">
       <SubType>UserControl</SubType>
     </Compile>

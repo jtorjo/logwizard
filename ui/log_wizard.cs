@@ -819,6 +819,18 @@ namespace LogWizard
             }
         }
 
+        // returns current settings (read-only)
+        public ui_info current_ui {
+            get {
+                ui_info ui = new ui_info();
+                ui.copy_from(global_ui);
+                return ui;
+            }
+        }
+
+        public void simple_action(log_view_right_click.simple_action simple) {
+        }
+
         public static List<log_wizard> forms {
             get { return forms_; }
         }
@@ -3128,6 +3140,10 @@ namespace LogWizard
                 // we want to refresh it only after it's been loaded, so that it visually shows that
                 util.postpone(() => full_log_ctrl.force_refresh_visible_columns(), 2000);
             }
+        }
+
+        private void logHistory_DropDown(object sender, EventArgs e) {
+            set_status("To get back to where you were, press ESC.");
         }
 
 

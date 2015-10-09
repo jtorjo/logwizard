@@ -14,43 +14,10 @@
 - tothink about menu : should i create a single filter_row + noneditable( so that only I can change it), or create a single row per request (eventually with meaningful ## names)
   - we auto recreate it before showing -> if too many items, split into Filter/View/etc. otherwise, single (with splitters for sections)
 
-
-
-	  - right click -> To Filter / To different color (show lines containing word in different color -> filter)
-
-  - should skip those columns that are image only (for future - since i will allow this)
-
-
-
-- context menu on any line (this will go on current view, TOTHINK what i can have on full log):
-  - Rename View -> to rename the view, show source pane, after user presses enter, hide source pane (if it was not visible)
-    - when editing view name, show "Press Enter to save"
-  - start "mark" from current line
-  - locate the filter that matched this (and open filter view if hidden)
-  - Export This View to Disk...
-  - Create a note on this line
-  - To New Filter (Exclude all lines matching....)
-  - Show all filters that matched this (a bit harder, since we need to select several rows in filter_ctrl; should check that it does not mess with .SelectedIndex)
-  - show what other views contain this line - "Go to Other View Containing this line" -> and show which other views contain it
-  - Change color of all lines .. (basically, create a filter that will show all lines with given color)
-    OR update existing filter (if any) -> to the given color???
-    if right click on a word -> create a filter that "line starts with word" or "line contains with word"
-  - Remove Lines containing ... / starting with
-    - for this, we'll have a special filter (apply to existing lines)
-	- we simply append to it each time the user adds a "Remove" + perhaps with a comment line, like 'Eliminate words containing'
-	- in time, we can actually have an extra menu option: "Show Back" - which will show all the things the user removed (and a "Show Back" command would just remove that)
-  - Start Filter From Here (basically this creates the basic filter, and puts you into the driver seat -> takes you to edit the filter, after we have created it)
-    example: user has selected "[find] pots", we'll create the default filter "$msg contains [find] pots", and show the Filters view, and then allow the user to tweak it
-  - Just Show lines containing/starting with...
-  - to alert?
-  - view: Rename, move to left, move to right
-- context menu on full log -> New Filter containing [...]/starting with [...]
-
 - menu: Find + Find Next/ Find Prev (if anytihng to find)
 - menu: compute - see if it's got enough room to show all items - if not, adjust
-- match_color -> in filters!!!
  
-
+- multi select menu -> copy/shift-copy
 
 
 
@@ -142,6 +109,11 @@
 
 - bug: toggling enabled/dimmed will end up causing exceptions - seems it's because of all the forced reloads
 
+- smart edit: 
+  - allow synchronizing what i type-search with full log (that is, show in both current view and full log) 
+    - both ways, from current view to full log and back
+  - allow synchronizing full log - match color with current view
+              
 
 
 
@@ -164,7 +136,7 @@
 
 
 
-
+- filtering right click - just like right now we only do filter on msg row, allow other rows as well (pro_v)
 
 
 

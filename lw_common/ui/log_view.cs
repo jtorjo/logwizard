@@ -352,6 +352,8 @@ namespace lw_common
         private search_form.search_for cur_search_ = null;
         private int cur_filter_row_idx_ = -1;
 
+        private log_view_right_click right_click_;
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -370,6 +372,7 @@ namespace lw_common
             render_ = new log_view_render(this);
             foreach (var col in list.Columns)
                 (col as OLVColumn).Renderer = render_;
+            right_click_ = new log_view_right_click(this);
 
             // just an example:
             //render_.set_override("settings", new log_view_render.print_info { fg = Color.Blue, bold = true });
@@ -379,7 +382,7 @@ namespace lw_common
             edit.init(this);
         }
 
-        private log_view_parent lv_parent {
+        internal log_view_parent lv_parent {
             get {
                 return parent as log_view_parent;
             }
@@ -622,7 +625,7 @@ namespace lw_common
             }
         }
 
-        private bool is_full_log {
+        internal bool is_full_log {
             get {
                 return filter_ != null ? filter_.row_count < 1 : true;
             }
