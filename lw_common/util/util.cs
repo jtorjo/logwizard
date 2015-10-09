@@ -795,5 +795,22 @@ namespace lw_common {
             return all;
         }
 
+        public static ToolStripDropDownDirection menu_direction(ContextMenuStrip menu, Point mouse) {
+            var screen = Screen.AllScreens.FirstOrDefault(s => s.Bounds.Contains(mouse));
+            if (screen == null)
+                // normally we should never get here
+                return ToolStripDropDownDirection.Default;
+
+            Rectangle r = screen.WorkingArea;
+            int w = menu.Width, h = menu.Height;
+            bool to_right = mouse.X + w <= r.Right;
+            bool to_bottom = mouse.Y + h <= r.Bottom;
+
+            if (to_right)
+                return to_bottom ? ToolStripDropDownDirection.BelowRight : ToolStripDropDownDirection.AboveRight;
+            else
+                return to_bottom ? ToolStripDropDownDirection.BelowLeft : ToolStripDropDownDirection.AboveLeft;
+        }
+
     }
 }

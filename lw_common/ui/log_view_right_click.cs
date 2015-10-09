@@ -352,7 +352,7 @@ namespace lw_common.ui {
 
             // check if showing menu would be too big at this position
 
-            menu.Show(parent_, point);
+            menu.Show(parent_, point, util.menu_direction(menu, parent_.PointToScreen(point)) );
         }
 
 
