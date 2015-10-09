@@ -96,6 +96,11 @@ namespace lw_common {
             int distance_to_bottom = wizard_screen.Bottom - line_rect.Bottom;
 
             bool on_top = distance_to_top >= distance_to_bottom;
+
+            // always prefer bottom
+            var bottom_rect_screen = Parent.RectangleToScreen( new Rectangle(new Point(wizard_rect.Left, wizard_rect.Bottom - Height), new_size));
+            if (!line_rect.IntersectsWith(bottom_rect_screen))
+                on_top = false;
             var new_location = new Point(wizard_rect.Left, on_top ? wizard_rect.Top : wizard_rect.Bottom - Height);
 
             set_text(view);            
@@ -103,8 +108,10 @@ namespace lw_common {
         }
 
         private void set_text(log_view lv) {
-            if ( drawer_ == null)
-                drawer_= new log_view_item_draw_ui(lv) { ignore_selection = true };
+            if (drawer_ == null) {
+                drawer_ = new log_view_item_draw_ui(lv) {ignore_selection = true};
+                txt.Font = drawer_.default_font;
+            }
             drawer_.set_parent(lv);
 
             int msg_col = lv.msgCol.Index;
@@ -151,8 +158,10 @@ namespace lw_common {
             if (do_show) {
                 Location = p;
                 BringToFront();
-            } else
+            } else {
+                txt.Text = "";
                 Location = new Point(-100000, -100000);
+            }
         }
     }
 }

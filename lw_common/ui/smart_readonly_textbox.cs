@@ -70,8 +70,8 @@ namespace lw_common.ui {
             util.postpone(update_ui, 10);
 
             // ... easier testing
-            if ( util.is_debug)
-                BorderStyle = BorderStyle.FixedSingle;
+//            if ( util.is_debug)
+  //              BorderStyle = BorderStyle.FixedSingle;
         }
 
         private bool should_be_visible() {

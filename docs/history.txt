@@ -1,7 +1,10 @@
 
 
 
+
+1.2.17d
 - msg details -> if i can fit on the low part, do it
+- fix: sometimes it showed msg details when not needed (different font)
 
 
 1.2.17c

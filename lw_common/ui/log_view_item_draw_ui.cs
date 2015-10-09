@@ -42,6 +42,10 @@ namespace lw_common.ui {
             return f;
         }
 
+        public Font default_font {
+            get { return font_; }
+        }
+
         // allow overriding the parent  
         public void set_parent(log_view parent) {
             Debug.Assert(parent != null);
