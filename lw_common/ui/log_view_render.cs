@@ -87,10 +87,9 @@ namespace lw_common.ui {
 
         // for each character of the printed text, see how many pixels it takes
         public List<int> text_widths(Graphics g ,string text) {
-            var char_size = this.char_size(g);
             List<int> widths = new List<int>();
             for ( int i = 0; i < text.Length; ++i)
-                widths.Add((int)(char_size * i));
+                widths.Add( i > 0 ? text_width(g, text.Substring(0, i)) : 0);
             return widths;
         } 
 

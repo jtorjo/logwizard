@@ -10,6 +10,10 @@
 - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
 
 
+1.2.19j
+- made clicking more accurate (when selecting word)
+
+
 1.2.19i
 - click -> select full word -> care about any delimeter
   -> if clicked passed last char -> don't select anything
