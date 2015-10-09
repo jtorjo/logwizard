@@ -1,4 +1,4 @@
-# LogWizard - Log Viewing made easy!
+# LogWizard - a Log Viewer that is easy and fun to use!
 
 I created **LogWizard** to help anyone that really needs to deal with logs, in order to _hunt down bugs and/or issues that happen somewhere else_ (read = at customer site).
 

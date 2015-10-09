@@ -14,10 +14,7 @@
 - tothink about menu : should i create a single filter_row + noneditable( so that only I can change it), or create a single row per request (eventually with meaningful ## names)
   - we auto recreate it before showing -> if too many items, split into Filter/View/etc. otherwise, single (with splitters for sections)
 
-- menu: Find + Find Next/ Find Prev (if anytihng to find)
 - menu: compute - see if it's got enough room to show all items - if not, adjust
- 
-- multi select menu -> copy/shift-copy
 
 
 
@@ -140,6 +137,10 @@
 
 
 
+- (pro_v) improve find: find-type as you go - very useful for regexes: basically
+  have a testing 500-1000 lines from the beginning of the current view, in which we "test-the find", and as soon as we find something, we insta-show it
+  and for regexes, if it's a bad regex, show it in red
+  + allow giving friendly names to the regexes, so in the future we can easily reselect them
 
 
 

@@ -529,5 +529,16 @@ namespace lw_common.ui {
                 Visible = false;
         }
 
+        private void smart_readonly_textbox_MouseClick(object sender, MouseEventArgs e) {
+        }
+
+        private void smart_readonly_textbox_MouseDown(object sender, MouseEventArgs e) {
+        }
+
+        private void smart_readonly_textbox_MouseUp(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Right)
+                parent_.right_click.right_click();
+        }
+
     }
 }

@@ -1954,6 +1954,18 @@ namespace lw_common
             }
         }
 
+        public bool has_find {
+            get {
+                if (smart_edit_sel_text != "")
+                    return true;
+                if (cur_search_ != null)
+                    return true;
+                if (cur_filter_row_idx_ >= 0)
+                    return true;
+                return false;
+            }
+        }
+
         public export_text export() {
             export_text export = new export_text();
 
@@ -1992,6 +2004,10 @@ namespace lw_common
                     return false;
                 }
             }
+        }
+
+        internal log_view_right_click right_click {
+            get { return right_click_; }
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {

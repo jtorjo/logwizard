@@ -53,3 +53,9 @@
 - filter right click:
   - in time, we can actually have an extra menu option: "Show Back" - which will show all the things the user removed (and a "Show Back" command would just remove that)
   - smart edit as well : should skip those columns that are image only (for future - since i will allow this)
+
+
+- auto updater from github
+  - and write article about it
+  - allow reading description (releases) from github, + identify the beta/stable (if needed) + identify version by release tag + 64/32 bit
+  - read history from online file (history.txt) + in there, mark what to show to users - perhaps i should only read from the description of the release notes

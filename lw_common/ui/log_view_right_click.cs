@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.Linq;
+using System.Net.Configuration;
 using System.Text;
+using System.Windows.Forms;
+using LogWizard;
 
 namespace lw_common.ui {
     public class log_view_right_click {
@@ -19,8 +23,12 @@ namespace lw_common.ui {
 
             note_create_note, note_show_notes,
 
+            find_find, find_find_next, find_find_prev,
+
+            copy_msg, copy_full_line,
+
             // so that the user can edit what he just created
-            edit_last_filter
+            edit_last_filter,
         }
 
         public class action {
@@ -146,12 +154,20 @@ namespace lw_common.ui {
         }
 
         private void append_filter_actions(List<action> actions) {
-            string sel = parent_.smart_edit_sel_text;
-
             if (parent_.is_full_log)
                 append_filter_fulllog_actions(actions);
             else
                 append_current_view_filter_actions(actions);
+
+            if (!parent_.is_full_log) {
+                var i = parent_.sel;
+                Debug.Assert(i != null);
+                bool is_default = i.match.font.fg == filter_line.font_info.default_font.fg;
+                if (is_default)
+                    append_filter_create_actions(actions);
+                else
+                    append_filter_existing_actions(actions);
+            }
 
             if ( parent_.filter_row_count > 0 && !parent_.is_full_log)
                 // here, I know there's at least a filter
@@ -165,9 +181,18 @@ namespace lw_common.ui {
         }
 
         private void append_copy_actions(List<action> actions) {
+            bool multi = parent_.multi_sel_idx.Count > 1;
+            actions.Add(new action { category = "Copy", name = "Selected Line" + (multi ? "s" : "") + " To Clipboard (Just Message)", simple = simple_action.copy_msg });
+            actions.Add(new action { category = "Copy", name = "Selected Line" + (multi ? "s" : "") + " To Clipboard (Full Line)", simple = simple_action.copy_full_line });
         }
 
         private void append_find_actions(List<action> actions) {
+            actions.Add(new action { category = "Find", name = "Find Text (Ctrl-F)", simple = simple_action.find_find });
+
+            if (!parent_.has_find) {
+                actions.Add(new action { category = "Find", name = "Find Next (F3)", simple = simple_action.find_find_next });
+                actions.Add(new action { category = "Find", name = "Find Prev (Shift-F3)", simple = simple_action.find_find_prev });                
+            }
         }
 
         private void append_view_actions(List<action> actions) {
@@ -232,16 +257,74 @@ namespace lw_common.ui {
 
             List<action> actions = new List<action>();
 
+            append_filter_actions(actions);
+
+            append_copy_actions(actions);
+            append_find_actions(actions);
             append_notes_actions(actions);
+
+            append_export_actions(actions);
+            append_button_actions(actions);
+
             return actions;
-        } 
+        }
+
+        private ToolStripMenuItem create_menu(ContextMenuStrip root, string name, string category) {
+            var parents = category.Split('/').ToList();
+            parents.Add(name);
+
+            object cur = root;
+            while (parents.Count > 0) {
+                string parent_name = parents[0];
+                parents.RemoveAt(0);
+
+                ToolStripMenuItem found = null;
+                if (cur is ContextMenuStrip) {
+                    foreach (var child in root.Items)
+                        if ((child as ToolStripMenuItem).Text == parent_name) {
+                            found = child as ToolStripMenuItem;
+                            break;
+                        }
+                } else {
+                    var strip = cur as ToolStripMenuItem;
+                    foreach ( var child in strip.DropDownItems)
+                        if ((child as ToolStripMenuItem).Text == parent_name) {
+                            found = child as ToolStripMenuItem;
+                            break;
+                        }
+                }
+
+                if (found == null) {
+                    // create one now
+                    found = new ToolStripMenuItem(parent_name);
+                    if (cur is ContextMenuStrip)
+                        root.Items.Add(found);
+                    else
+                        (cur as ToolStripMenuItem).DropDownItems.Add(found);
+                }
+                cur = found;
+            }
+            return cur as ToolStripMenuItem;
+        }
 
         public void right_click() {
             // non-categorized actions are shown at the bottom with a separator before
 
+            var actions = available_actions();
+            int first_non_category = actions.FindIndex(x => x.category == "");
+            actions.Insert(first_non_category, new action { separator = true});
+
             // show the Filter actions first (the rest will be shown in their respective categories)
+            ContextMenuStrip menu = new ContextMenuStrip();
+
+            foreach (action a in actions) {
+                var item = create_menu(menu, a.name, a.category);
+                item.Enabled = a.enabled;
+            }
 
             // check if showing menu would be too big at this position
+
+            menu.Show(parent_, parent_.PointToClient( Cursor.Position));
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////
