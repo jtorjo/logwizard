@@ -4,13 +4,17 @@
 - click -> select full word -> care about any delimeter
   -> if clicked passed last char -> don't select anything
 
-- bug: clicking on list is interpreted as right-click
 
 - press ESC on dropdown
 
 - on a new view started from scratch -> see that in log_view, I don't think it's full-log!
 
 - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
+
+
+
+1.2.91h
+- bug: clicking on list is interpreted as right-click
 
 
 1.2.19g

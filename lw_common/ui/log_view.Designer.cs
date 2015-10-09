@@ -124,6 +124,7 @@
             this.list.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.list_KeyPress);
             this.list.Leave += new System.EventHandler(this.list_Leave);
             this.list.MouseClick += new System.Windows.Forms.MouseEventHandler(this.list_MouseClick);
+            this.list.MouseDown += new System.Windows.Forms.MouseEventHandler(this.list_MouseDown);
             // 
             // lineCol
             // 
