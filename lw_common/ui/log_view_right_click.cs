@@ -299,7 +299,7 @@ namespace lw_common.ui {
                     foreach (var child in root.Items)
                         if ( child is ToolStripMenuItem)
                             if ((child as ToolStripMenuItem).Text == parent_name) {
-                                found = child as ToolStripMenuItem;
+                                found = child as ToolStripMenuItem;                                
                                 break;
                             }
                 } else {

@@ -52,6 +52,14 @@ namespace test_ui {
             }
         }
 
+        public ui_info current_ui {
+            get {
+                return new ui_info();
+            }
+        }
+        public void simple_action(log_view_right_click.simple_action simple) {
+        }
+
         private void refresh_Tick(object sender, EventArgs e) {
             lv_.refresh();
         }

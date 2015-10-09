@@ -23,7 +23,6 @@
 
 
 
-
  - match_color -> here, for a line, i need to run all filters that have matchcolor (since some could actually modify match_color)
   at this time i assume it's just for $msg
   i should care about the first thing column that matches (for instance, for $ctx1 filter, match color applies to $ctx1)
@@ -88,7 +87,9 @@
    (care if the file is already open in another window)
    useful even wehn debugging a single app at a time.
 
-
+- debug viewer (OutputDebugString)
+  https://technet.microsoft.com/en-us/library/bb896647.aspx
+  https://github.com/djeedjay/DebugViewPP (Dbgviewreader.cpp, dblogreader.cpp)
 
 
 
@@ -144,6 +145,7 @@
   -- also, category -> picture should work for the event type
 
 
+- allow files from http / ftp (+ allow settings for each type of text reader - in this case - by default, cache it)
 
 
 
@@ -197,11 +199,11 @@
 
 - log friendly name -> retest, useful for Denise (also, will be useful in the future, when we'll have several text readers)
 
-- 'd' toggle details - this is the beginning of a larger feature -> allow showing details about the message (like, certain columns should show up in the list, and certain in the details - they can overlap)
+- 'alt-d' toggle details - this is the beginning of a larger feature -> allow showing details about the message (like, certain columns should show up in the list, and certain in the details - they can overlap)
   if turned on, the msg details is automatically off
   - i should also have a way to toggle msg_details on/off
+  IMPORTANT - this is view dependent - i can create views where it makes sense to always see details TOTHINK
 
-- 's' - toggle status (info about the file/current view - like, file size, number of lines, how many lines the last Find matched; when loading a file -> write status about it)
 
 
 
