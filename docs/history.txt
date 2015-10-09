@@ -8,6 +8,10 @@
 - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
 
 
+1.2.19c
+- skeleton part 2 - menu is shown 100% correctly 
+  - nothing happens when clicking an action (of course :))
+
 
 1.2.19b
 - skeleton part 2 - menu is shown, not 100% correctly

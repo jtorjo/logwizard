@@ -259,6 +259,8 @@ namespace lw_common.ui {
 
             append_filter_actions(actions);
 
+            append_view_actions(actions);
+
             append_copy_actions(actions);
             append_find_actions(actions);
             append_notes_actions(actions);
@@ -269,9 +271,18 @@ namespace lw_common.ui {
             return actions;
         }
 
-        private ToolStripMenuItem create_menu(ContextMenuStrip root, string name, string category) {
-            var parents = category.Split('/').ToList();
-            parents.Add(name);
+        private ToolStripMenuItem create_menu(ContextMenuStrip root, string name, string category, bool separator) {
+            var parents = category != "" ? category.Split('/').ToList() : new List<string>();
+            if (!separator) {
+                if (parents.Count > 0 && parents[0] == "Filter") {
+                    Debug.Assert(parents.Count > 1);
+                    parents[0] = "Filter: " + parents[1];
+                    parents.RemoveAt(1);
+                } 
+                parents.Add(name);
+            } else 
+                // it's a separator
+                Debug.Assert(name == "");
 
             object cur = root;
             while (parents.Count > 0) {
@@ -281,17 +292,19 @@ namespace lw_common.ui {
                 ToolStripMenuItem found = null;
                 if (cur is ContextMenuStrip) {
                     foreach (var child in root.Items)
-                        if ((child as ToolStripMenuItem).Text == parent_name) {
-                            found = child as ToolStripMenuItem;
-                            break;
-                        }
+                        if ( child is ToolStripMenuItem)
+                            if ((child as ToolStripMenuItem).Text == parent_name) {
+                                found = child as ToolStripMenuItem;
+                                break;
+                            }
                 } else {
                     var strip = cur as ToolStripMenuItem;
                     foreach ( var child in strip.DropDownItems)
-                        if ((child as ToolStripMenuItem).Text == parent_name) {
-                            found = child as ToolStripMenuItem;
-                            break;
-                        }
+                        if ( child is ToolStripMenuItem)
+                            if ((child as ToolStripMenuItem).Text == parent_name) {
+                                found = child as ToolStripMenuItem;
+                                break;
+                            }
                 }
 
                 if (found == null) {
@@ -304,6 +317,15 @@ namespace lw_common.ui {
                 }
                 cur = found;
             }
+
+            if (separator) {
+                if (cur is ContextMenuStrip)
+                    root.Items.Add( new ToolStripSeparator());
+                else
+                    (cur as ToolStripMenuItem).DropDownItems.Add(new ToolStripSeparator());
+                return null;
+            }
+
             return cur as ToolStripMenuItem;
         }
 
@@ -311,15 +333,18 @@ namespace lw_common.ui {
             // non-categorized actions are shown at the bottom with a separator before
 
             var actions = available_actions();
+            int first_non_filter = actions.FindIndex(x => !x.category.StartsWith( "Filter"));
             int first_non_category = actions.FindIndex(x => x.category == "");
+            actions.Insert(first_non_filter, new action { separator = true});
             actions.Insert(first_non_category, new action { separator = true});
 
             // show the Filter actions first (the rest will be shown in their respective categories)
             ContextMenuStrip menu = new ContextMenuStrip();
 
             foreach (action a in actions) {
-                var item = create_menu(menu, a.name, a.category);
-                item.Enabled = a.enabled;
+                var item = create_menu(menu, a.name, a.category, a.separator);
+                if ( !a.separator)
+                    item.Enabled = a.enabled;
             }
 
             // check if showing menu would be too big at this position

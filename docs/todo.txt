@@ -133,6 +133,22 @@
 
 
 
+
+
+
+- view the event log + article
+  http://www.aspheute.com/english/20000811.asp
+  http://www.codeproject.com/Articles/14455/Eventlog-Viewer
+  http://www.codeproject.com/Articles/91/WindowsNT-Event-Log-Viewer
+  allow .csv files, .xml, and merge files (up to 5000 lines -> rest (pro_v))
+  -- at this point, i need to have "details" pane + when smart searching -> allow including the non-visible columns (like, those shown in Details)
+  -- also, category -> picture should work for the event type
+
+
+
+
+
+
 - filtering right click - just like right now we only do filter on msg row, allow other rows as well (pro_v)
 
 
@@ -227,6 +243,8 @@
 
 - level column -> allow transforming it into pictures
   - this should work on any column - we should be able to transform any context into picts
+  - there should be 2 ways: to picture, to text + picture (when to-picture only -> take a lot less space(width))
+  - (pro_v) - i should allow regexes for the categorizing a column into pictures (allow to-picture or to-picture + to-picture + space)
 
 - article: testing with logwizard (allow command line as well?) 
 
