@@ -3,11 +3,14 @@
 
 
 
-- press ESC on dropdown
 
 - on a new view started from scratch -> see that in log_view, I don't think it's full-log!
 
 - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
+
+
+1.2.19k
+- press ESC on dropdown works
 
 
 1.2.19j

@@ -123,6 +123,8 @@ namespace LogWizard
 
         private Control active_pane_ = null;
 
+        private int selected_history_on_dropdown_ = -1;
+
         private enum show_full_log_type {
             both, just_view, just_full_log
         }
@@ -1567,6 +1569,34 @@ namespace LogWizard
             --ignore_change_;
         }
 
+        private void logHistory_DropDownClosed(object sender, EventArgs e) {
+            if (logHistory.Items.Count < 1)
+                return; // nothing is in history
+
+            //sourceName_TextChanged(null,null);
+            on_log_listory_changed();
+
+            util.postpone(() => {
+                if (global_ui.show_current_view)
+                    log_view_for_tab(viewsTab.SelectedIndex).set_focus();
+                else
+                    full_log_ctrl.set_focus();
+            }, 100);
+        }
+
+        private void close_history_dropdown() {
+            ++ignore_change_;
+            if ( selected_history_on_dropdown_ >= 0)
+                logHistory.SelectedIndex = selected_history_on_dropdown_;
+            --ignore_change_;
+            logHistory.DroppedDown = false;
+        }
+
+        private void logHistory_DropDown(object sender, EventArgs e) {
+            selected_history_on_dropdown_ = logHistory.SelectedIndex;
+            set_status("To get back to where you were, press ESC.");
+        }
+
         private void logHistory_SelectedIndexChanged(object sender, EventArgs e)
         {
             if ( ignore_change_ > 0 || logHistory.SelectedIndex < 0)
@@ -1605,21 +1635,6 @@ namespace LogWizard
 
         private void LogWizard_FormClosing(object sender, FormClosingEventArgs e) {
             save();
-        }
-
-        private void logHistory_DropDownClosed(object sender, EventArgs e) {
-            if (logHistory.Items.Count < 1)
-                return; // nothing is in history
-
-            //sourceName_TextChanged(null,null);
-            on_log_listory_changed();
-
-            util.postpone(() => {
-                if (global_ui.show_current_view)
-                    log_view_for_tab(viewsTab.SelectedIndex).set_focus();
-                else
-                    full_log_ctrl.set_focus();
-            }, 100);
         }
 
         private void viewsTab_SelectedIndexChanged(object sender, EventArgs e) {
@@ -2069,9 +2084,13 @@ namespace LogWizard
                 lv.search_next();
                 break;
             case action_type.escape:
-                lv.escape();
+                if (logHistory.DroppedDown) 
+                    close_history_dropdown();
+                else
+                    lv.escape();
                 break;
-                case action_type.right_click_via_key:
+
+            case action_type.right_click_via_key:
                 lv.do_right_click_via_key();
                 break;
 
@@ -2162,8 +2181,8 @@ namespace LogWizard
                 break;
 
             case action_type.toggle_history_dropdown:
-                if (logHistory.DroppedDown) 
-                    logHistory.DroppedDown = false;
+                if (logHistory.DroppedDown)
+                    close_history_dropdown();
                 else {
                     logHistory.Focus();
                     logHistory.DroppedDown = true;
@@ -3148,9 +3167,6 @@ namespace LogWizard
             }
         }
 
-        private void logHistory_DropDown(object sender, EventArgs e) {
-            set_status("To get back to where you were, press ESC.");
-        }
 
 
 
