@@ -1,8 +1,6 @@
 
 
 
-- click -> select full word -> care about any delimeter
-  -> if clicked passed last char -> don't select anything
 
 
 - press ESC on dropdown
@@ -12,8 +10,12 @@
 - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
 
 
+1.2.19i
+- click -> select full word -> care about any delimeter
+  -> if clicked passed last char -> don't select anything
 
-1.2.91h
+
+1.2.19h
 - bug: clicking on list is interpreted as right-click
 
 

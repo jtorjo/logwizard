@@ -226,21 +226,25 @@ namespace lw_common.ui {
             if (sel_col_ == after_click_sel_col_ && sel_len_ == 0 && sel_row_ == after_click_sel_row_ && sel_start_ == after_click_sel_start_) {
                 // user hasn't moved after he clicked
                 string txt = Text;
-                int space = sel_start_ < txt.Length ? txt.LastIndexOf(' ', sel_start_, sel_start_) : txt.LastIndexOf(' ');
-                if (space <= 0)
-                    // it's the first word
-                    space = 0;
-                else
-                    ++space; // ignore the space itself
+                bool clicked_in_middle_of_row = SelectionStart < TextLength;
+                if (clicked_in_middle_of_row && sel_start_ < txt.Length) {
+                    int start = sel_start_, end = sel_start_;
 
-                // we found the word the user clicked on
-                int next_space = txt.IndexOf(' ', space );
-                int len = next_space >= 0 ? next_space - space : txt.Length - space;
+                    while ( start >= 0 && !string_search.is_delim_or_does_not_exist(txt, start))
+                        --start;
+                    while (end < txt.Length && !string_search.is_delim_or_does_not_exist(txt, end))
+                        ++end;
 
-                sel_start_ = space;
-                sel_len_ = len;
-                update_cached_sel_text();
-                update_selected_text();
+                    // if false, clicked on space - don't do anything
+                    bool clicked_in_middle_of_word = (start < end);
+                    if (clicked_in_middle_of_word) {
+                        ++start; // ... ignore the delimeter itself
+                        sel_start_ = start;
+                        sel_len_ = end - start;
+                        update_cached_sel_text();
+                        update_selected_text();
+                    }
+                }
             }
             after_click_sel_col_ = -1;
         }

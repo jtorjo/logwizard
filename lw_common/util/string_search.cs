@@ -29,7 +29,7 @@ using lw_common.ui;
 
 namespace lw_common {
     public class string_search {
-        private static bool is_delim_or_does_not_exist(string line, int idx) {
+        public static bool is_delim_or_does_not_exist(string line, int idx) {
             if (idx >= 0 && idx < line.Length)
                 return !Char.IsLetterOrDigit(line[idx]);
             else
