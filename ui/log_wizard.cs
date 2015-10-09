@@ -1916,6 +1916,9 @@ namespace LogWizard
             case "escape":
                 return action_type.escape;
 
+            case "apps":
+                return action_type.right_click_via_key;
+
             case "ctrl-f": 
                 return action_type.search ;
             case "ctrl-shift-f": 
@@ -2067,6 +2070,9 @@ namespace LogWizard
                 break;
             case action_type.escape:
                 lv.escape();
+                break;
+                case action_type.right_click_via_key:
+                lv.do_right_click_via_key();
                 break;
 
             case action_type.next_view: {

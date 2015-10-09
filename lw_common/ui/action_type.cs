@@ -77,6 +77,8 @@ namespace lw_common {
 
         export_notes,
 
+        right_click_via_key,
+
         none,
     }
 

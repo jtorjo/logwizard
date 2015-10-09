@@ -1,11 +1,21 @@
 
+- right click - recreating the context menu each time is very expensive - lets have one with most items hidden and reuse that
+  - ToolStripSeparator -> ToolStripMenuItem("-")
+    - optimize for what we have -> 20 items children of root + each one have 4 children of its own, AddRange
+
 - click -> select full word -> care about any delimeter
+  -> if clicked passed last char -> don't select anything
 
 - press ESC on dropdown
 
 - on a new view started from scratch -> see that in log_view, I don't think it's full-log!
 
 - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
+
+
+1.2.19d
+- handling all right clicks
+- handle "right click via MENU key" - showing the meu where it should be (at the caret)
 
 
 1.2.19c

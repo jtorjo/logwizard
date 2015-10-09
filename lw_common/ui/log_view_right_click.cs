@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Net.Configuration;
@@ -10,6 +11,8 @@ using LogWizard;
 
 namespace lw_common.ui {
     public class log_view_right_click {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private log_view parent_;
 
         public enum simple_action {
@@ -329,9 +332,7 @@ namespace lw_common.ui {
             return cur as ToolStripMenuItem;
         }
 
-        public void right_click() {
-            // non-categorized actions are shown at the bottom with a separator before
-
+        public void right_click_at_pos(Point point) {
             var actions = available_actions();
             int first_non_filter = actions.FindIndex(x => !x.category.StartsWith( "Filter"));
             int first_non_category = actions.FindIndex(x => x.category == "");
@@ -349,7 +350,22 @@ namespace lw_common.ui {
 
             // check if showing menu would be too big at this position
 
-            menu.Show(parent_, parent_.PointToClient( Cursor.Position));
+            menu.Show(parent_, point);
+        }
+
+
+        public void right_click() {
+            right_click_at_pos( parent_.PointToClient( Cursor.Position));
+        }
+
+        public void right_click_at_caret() {
+            var bounds = parent_.sel_subrect_bounds;
+            int left = bounds.Left + parent_.edit.caret_left_pos;
+            if (parent_.edit.caret_left_pos > bounds.Width)
+                // in this case, the user scrolled to a very left location (and we have more text that can be shown at a time)
+                left = bounds.Left + 5;
+            int top = bounds.Bottom + 5;
+            right_click_at_pos( new Point(left, top));
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////

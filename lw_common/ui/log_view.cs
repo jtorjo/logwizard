@@ -2226,5 +2226,14 @@ namespace lw_common
         private void list_Scroll(object sender, ScrollEventArgs e) {
             util.postpone(edit.update_ui, 1);
         }
+
+        private void list_MouseClick(object sender, MouseEventArgs e) {
+            if ( e.Button == MouseButtons.Right)
+                right_click_.right_click();
+        }
+
+        public void do_right_click_via_key() {
+            right_click_.right_click_at_caret();
+        }
     }
 }

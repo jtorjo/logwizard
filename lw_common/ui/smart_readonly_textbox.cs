@@ -74,6 +74,16 @@ namespace lw_common.ui {
   //              BorderStyle = BorderStyle.FixedSingle;
         }
 
+        public int caret_left_pos {
+            get {
+                int start = SelectionStart;
+                int pos = 0;
+                using (Graphics g = CreateGraphics())
+                    pos = drawer_.text_width(g, Text.Substring(0, start));
+                return pos;
+            }
+        }
+
         private bool should_be_visible() {
             int sel = parent_.sel_row_idx;
             var bounds = parent_.sel_subrect_bounds;
