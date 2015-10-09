@@ -46,6 +46,8 @@ namespace lw_common
         // how many rows to search ahead (smart search)
         private const int SEARCH_AROUND_ROWS = 100;
 
+        public const string FULLLOG_NAME = "__all_this_is_fulllog__";
+
         private Form parent;
         private filter filter_ ;
         private log_line_reader log_ = null;
@@ -627,7 +629,9 @@ namespace lw_common
 
         internal bool is_full_log {
             get {
-                return filter_ != null ? filter_.row_count < 1 : true;
+                // 1.2.19+ - when opening a new file for the first time (thus, no views/filters at all), we don't want to mistakengly think it's the full-log
+                //return filter_ != null ? filter_.row_count < 1 : true;
+                return viewName != null ? name == FULLLOG_NAME : true;
             }
         }
 
@@ -1405,6 +1409,11 @@ namespace lw_common
             get { return show_name_; }
             set {
                 bool old_show_header = show_name_ || show_header_;
+
+                if (value == true && name == FULLLOG_NAME)
+                    // we never allow showing the name of the full log
+                    return;
+
                 if (show_name_ != value) {
                     show_name_ = value;
                     update_show_name();

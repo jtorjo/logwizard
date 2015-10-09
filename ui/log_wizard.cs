@@ -174,7 +174,7 @@ namespace LogWizard
             load();
             ++ignore_change_;
 
-            full_log_ctrl = new log_view( this, "[All]");
+            full_log_ctrl = new log_view( this, log_view.FULLLOG_NAME);
             full_log_ctrl.Dock = DockStyle.Fill;
             filteredLeft.Panel2.Controls.Add(full_log_ctrl);
             full_log_ctrl.show_name = false;
