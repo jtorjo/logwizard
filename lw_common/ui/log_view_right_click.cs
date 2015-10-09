@@ -235,7 +235,8 @@ namespace lw_common.ui {
 
         private List<action> available_actions_no_sel() {
             List<action> actions = new List<action>();
-            append_view_actions(actions);
+            if ( !parent_.is_full_log)
+                append_view_actions(actions);
             append_button_actions(actions);
             return actions;
         }
@@ -262,7 +263,8 @@ namespace lw_common.ui {
 
             append_filter_actions(actions);
 
-            append_view_actions(actions);
+            if ( !parent_.is_full_log)
+                append_view_actions(actions);
 
             append_copy_actions(actions);
             append_find_actions(actions);

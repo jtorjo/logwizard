@@ -14,7 +14,6 @@
 - tothink about menu : should i create a single filter_row + noneditable( so that only I can change it), or create a single row per request (eventually with meaningful ## names)
   - we auto recreate it before showing -> if too many items, split into Filter/View/etc. otherwise, single (with splitters for sections)
 
-- menu: compute - see if it's got enough room to show all items - if not, adjust
 
 
 
