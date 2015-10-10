@@ -15,6 +15,8 @@ namespace lw_common.ui {
 
         private log_view parent_;
 
+        private bool via_apps_hotkey_ = false;
+
         public enum simple_action {
             none, 
             
@@ -54,11 +56,20 @@ namespace lw_common.ui {
         }
 
 
-        private void add_filter_two_actions(List<action> actions, string prefix, action.void_func color, action.void_func match_color) {
+        private void add_filter_color_actions(List<action> actions, string prefix, action.void_func color, action.void_func match_color, action.void_func no_color = null) {
+            if ( no_color != null)
+                actions.Add(new action { category = "Filter/" + prefix, name = "Default Color", on_click = no_color });
+
             actions.Add(new action { category = "Filter/" + prefix, name = "Color the Full Line", on_click = color });
             actions.Add(new action { category = "Filter/" + prefix, name = "Match Color (color only what matches)", on_click = match_color });
 
             if (!parent_.lv_parent.current_ui.show_filter) {
+                if ( no_color != null)
+                    actions.Add(new action {category = "Filter/" + prefix, name = "Default Color + Take Me to Edit", on_click = () => { 
+                        no_color();
+                        parent_.lv_parent.simple_action(simple_action.edit_last_filter);
+                    } });
+
                 actions.Add(new action {category = "Filter/" + prefix, name = "Color the Full Line + Take Me to Edit", on_click = () => { 
                     color();
                     parent_.lv_parent.simple_action(simple_action.edit_last_filter);
@@ -93,8 +104,16 @@ namespace lw_common.ui {
 
             bool sel_at_start = parent_.sel_subitem_text.StartsWith(sel);
             if ( sel_at_start)
-                add_filter_two_actions(actions, "Include Lines Starting With " + small_sel(), () => include_lines(true,true), () => include_lines(true, false) );
-            add_filter_two_actions(actions, "Include Lines Containing " + small_sel(), () => include_lines(false, true), () => include_lines(false, false) );
+                add_filter_color_actions(actions, "Include Lines Starting With " + small_sel(), 
+                    () => include_lines(true, true, true), () => include_lines(true, false, true), () => include_lines(true, false, true, true) );
+            add_filter_color_actions(actions, "Include Lines Containing " + small_sel(), 
+                () => include_lines(false, true, true), () => include_lines(false, false, true),  () => include_lines(false, false, true, true) );
+
+            if ( sel_at_start)
+                add_filter_color_actions(actions, "Include Lines Starting With " + small_sel() + " (case-INsensitive)", 
+                    () => include_lines(true, true, false), () => include_lines(true, false, false), () => include_lines(true, false, false, true) );
+            add_filter_color_actions(actions, "Include Lines Containing " + small_sel() + " (case-INsensitive)", 
+                () => include_lines(false, true, false), () => include_lines(false, false, false) , () => include_lines(false, false, false, true));
         }
 
         private void append_current_view_filter_actions(List<action> actions) {
@@ -106,9 +125,12 @@ namespace lw_common.ui {
                 return;
 
             bool sel_at_start = parent_.sel_subitem_text.StartsWith(sel);
-            if ( sel_at_start)
-                add_filter_two_actions(actions, "Exclude Lines Starting With " + small_sel(), () => exclude_lines(true,true), () => exclude_lines(true, false)  );
-            add_filter_two_actions(actions, "Exclude Lines Containing " + small_sel(), () => exclude_lines(false, true), () => exclude_lines(false, false) );
+            if (sel_at_start) {
+                actions.Add(new action { category = "Filter", name = "Exclude Lines Starting With " + small_sel(), on_click = () => exclude_lines(true, true) });
+                actions.Add(new action { category = "Filter", name = "Exclude Lines Starting With " + small_sel() + " (case-INsensitive)", on_click = () => exclude_lines(true, false) });
+            }
+            actions.Add(new action { category = "Filter", name = "Exclude Lines Containing " + small_sel(), on_click = () => exclude_lines(false, true) });
+            actions.Add(new action { category = "Filter", name = "Exclude Lines Containing " + small_sel() + " (case-INsensitive)", on_click = () => exclude_lines(false, false) });
         }
 
         private void append_filter_goto_actions(List<action> actions) {
@@ -141,8 +163,12 @@ namespace lw_common.ui {
 
             bool sel_at_start = parent_.sel_subitem_text.StartsWith(sel);
             if ( sel_at_start)
-                add_filter_two_actions(actions, "Set Color Of Lines Starting With " + small_sel(), () => set_color(true,true), () => set_color(true, false) );
-            add_filter_two_actions(actions, "Set Color Of Lines Including " + small_sel(), () => set_color(false, true), () => set_color(false, false) );
+                add_filter_color_actions(actions, "Set Color Of Lines Starting With " + small_sel(), () => set_color(true,true,true), () => set_color(true, false, true) );
+            add_filter_color_actions(actions, "Set Color Of Lines Including " + small_sel(), () => set_color(false, true, true), () => set_color(false, false, true) );
+
+            if ( sel_at_start)
+                add_filter_color_actions(actions, "Set Color Of Lines Starting With " + small_sel() + " (case-INsensitive)", () => set_color(true,true,false), () => set_color(true, false, false) );
+            add_filter_color_actions(actions, "Set Color Of Lines Including " + small_sel() + " (case-INsensitive)", () => set_color(false, true, false), () => set_color(false, false, false) );
         }
 
         // only when there's a filter that matched this line
@@ -156,8 +182,13 @@ namespace lw_common.ui {
 
             bool sel_at_start = parent_.sel_subitem_text.StartsWith(sel);
             if ( sel_at_start)
-                add_filter_two_actions(actions, "Change Color Of Lines Starting With " + small_sel(), () => set_color(true,true), () => set_color(true, false) );
-            add_filter_two_actions(actions, "Change Color Of Lines Including " + small_sel(), () => set_color(false, true), () => set_color(false, false) );
+                add_filter_color_actions(actions, "Change Color Of Lines Starting With " + small_sel(), () => set_color(true,true,true), () => set_color(true, false, true) );
+            add_filter_color_actions(actions, "Change Color Of Lines Including " + small_sel(), () => set_color(false, true, true), () => set_color(false, false, true) );
+
+            if ( sel_at_start)
+                add_filter_color_actions(actions, "Change Color Of Lines Starting With " + small_sel() + " (case-INsensitive)", () => set_color(true,true,false), () => set_color(true, false, false) );
+            add_filter_color_actions(actions, "Change Color Of Lines Including " + small_sel() + " (case-INsensitive)", () => set_color(false, true, false), () => set_color(false, false, false) );
+        
         }
 
         private void append_filter_actions(List<action> actions) {
@@ -284,9 +315,13 @@ namespace lw_common.ui {
             var parents = category != "" ? category.Split('/').ToList() : new List<string>();
             if (!separator) {
                 if (parents.Count > 0 && parents[0] == "Filter") {
-                    Debug.Assert(parents.Count > 1);
-                    parents[0] = "Filter: " + parents[1];
-                    parents.RemoveAt(1);
+                    if (parents.Count > 1) {
+                        parents[0] = "Filter: " + parents[1];
+                        parents.RemoveAt(1);
+                    } else {
+                        name = "Filter: " + name;
+                        parents.Clear();
+                    }
                 } 
                 parents.Add(name);
             } else 
@@ -338,7 +373,7 @@ namespace lw_common.ui {
             return cur as ToolStripMenuItem;
         }
 
-        public void right_click_at_pos(Point point) {
+        private void right_click_at_pos(Point point) {
             var actions = available_actions();
             int first_non_filter = actions.FindIndex(x => !x.category.StartsWith( "Filter"));
             int first_non_category = actions.FindIndex(x => x.category == "");
@@ -366,17 +401,25 @@ namespace lw_common.ui {
 
 
         public void right_click() {
+            via_apps_hotkey_ = false;
             right_click_at_pos( parent_.PointToClient( Cursor.Position));
         }
 
+        private Point carent_pos {
+            get {
+                var bounds = parent_.sel_subrect_bounds;
+                int left = bounds.Left + parent_.edit.caret_left_pos;
+                if (parent_.edit.caret_left_pos > bounds.Width)
+                    // in this case, the user scrolled to a very left location (and we have more text that can be shown at a time)
+                    left = bounds.Left + 5;
+                int top = bounds.Bottom + 5;
+                return new Point(left, top);
+            }
+        }
+
         public void right_click_at_caret() {
-            var bounds = parent_.sel_subrect_bounds;
-            int left = bounds.Left + parent_.edit.caret_left_pos;
-            if (parent_.edit.caret_left_pos > bounds.Width)
-                // in this case, the user scrolled to a very left location (and we have more text that can be shown at a time)
-                left = bounds.Left + 5;
-            int top = bounds.Bottom + 5;
-            right_click_at_pos( new Point(left, top));
+            via_apps_hotkey_ = true;
+            right_click_at_pos( carent_pos);
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////
@@ -396,14 +439,27 @@ namespace lw_common.ui {
             
         }
 
-        private void set_color(bool starting_with, bool color_full_line) {
+        private void do_add_filter(string filter_str) {
             
         }
 
-        private void include_lines(bool starting_with, bool color_full_line) {
-            
+        private void set_color(bool starting_with, bool color_full_line, bool case_sensitive) {
+            string header = "Select " + (color_full_line ? "Color" : "Match Color") + " for Lines " + (starting_with ? "Starting With " : "Containing ") 
+                + parent_.smart_edit_sel_text + " " + (case_sensitive ? "" : "(case-INsensitive)") ;
+            var location = parent_.PointToScreen( carent_pos);
+            var sel = new select_color_form(header, parent_.sel.fg(parent_), location );
+            if (sel.ShowDialog() == DialogResult.OK) {
+            }
         }
-        private void exclude_lines(bool starting_with, bool color_full_line) {
+
+        // if ignore_color, it's a "Default Color" include filter
+        private void include_lines(bool starting_with, bool color_full_line, bool case_sensitive, bool ignore_color = false) {
+            Color col = util.transparent;
+            if (!ignore_color) {
+                
+            }
+        }
+        private void exclude_lines(bool starting_with, bool case_sensitive) {
             
         }
 

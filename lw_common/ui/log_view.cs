@@ -2167,6 +2167,8 @@ namespace lw_common
                         char_idx = widths.Count;
 
                     cur_col_ = col_idx;
+                    if (char_idx < 0)
+                        char_idx = 0;
                     edit.go_to_char(char_idx);
                     edit.after_click();
                 }

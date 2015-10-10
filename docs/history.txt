@@ -1,10 +1,12 @@
 
 
 
+log_view_right_click
 
 
-
-
+1.2.20a
+- exclude lines -> no need to specify any color, we're excluding
+- can now show a dialog when selecting a filter menu (not finished)
 
 
 1.2.19n

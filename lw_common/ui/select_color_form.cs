@@ -32,9 +32,18 @@ namespace lw_common {
     public partial class select_color_form : Form {
         public bool copy_to_clipboard = false;
 
-        public select_color_form() {
+        public select_color_form(string title = "Select Color...") : this(title, Color.Black, Cursor.Position) {
+        }
+
+        public select_color_form(string title, Color preselect) : this(title, preselect, Cursor.Position) {
+        }
+
+        public select_color_form(string title, Color preselect, Point location) {
             InitializeComponent();
-            Location = Cursor.Position;
+            this.title.Text = title;
+            if ( preselect != util.transparent)
+                picker.SelectedColor = preselect;
+            Location = location;
         }
 
         public Color SelectedColor {
