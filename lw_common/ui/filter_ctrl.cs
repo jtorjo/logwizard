@@ -677,5 +677,17 @@ namespace lw_common.ui {
         private void filterCtrl_CellClick(object sender, BrightIdeasSoftware.CellClickEventArgs e) {
             
         }
+
+        public void update_filter_row(string id, string filter_str) {
+            
+        }
+
+        // goes to select the filter created here
+        public void edit_filter_row_by_filter_id(string id) {
+            ++ignore_change_;
+            --ignore_change_;
+            curFilterCtrl.Focus();
+        }
+
     }
 }

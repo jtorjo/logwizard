@@ -344,7 +344,11 @@ namespace LogWizard {
 
             // take the rest of the text
             int compare_idx = line.IndexOf(words[1]);
-            line = line.Substring(compare_idx + words[1].Length).Trim();
+            if (compare_idx + words[1].Length + 1 >= line.Length)
+                // nothing following the comparison
+                return null;
+            // 1.2.20+ - don't trim the end! - very likely the user wants the beginning/ending spaces to be in the comparison
+            line = line.Substring(compare_idx + words[1].Length + 1);
             if (fi.comparison == comparison_type.contains_any || fi.comparison == comparison_type.contains_none) {
                 fi.words = line.Split('|');
                 fi.lo_words = fi.words.Select(w => w.ToLower()).ToArray();

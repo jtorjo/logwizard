@@ -1449,6 +1449,10 @@ namespace lw_common.ui {
             }
         }
 
+        public void focus_to_edit() {
+            util.postpone( () => curNote.Focus(), 10);
+        }
+
         public export_text export_notes() {
             export_text export = new export_text();
             int line_idx = 0;

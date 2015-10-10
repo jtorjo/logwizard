@@ -125,6 +125,9 @@ namespace LogWizard
 
         private int selected_history_on_dropdown_ = -1;
 
+        // just in case the user added/edited a filter via right-click filter menu
+        private string last_edited_filter_id_ = "";
+
         private enum show_full_log_type {
             both, just_view, just_full_log
         }
@@ -831,6 +834,93 @@ namespace LogWizard
         }
 
         public void simple_action(log_view_right_click.simple_action simple) {
+            // - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
+            switch (simple) {
+            case log_view_right_click.simple_action.none:
+                Debug.Assert(false);
+                break;
+            case log_view_right_click.simple_action.view_to_left:
+                Debug.Assert(false);
+                break;
+            case log_view_right_click.simple_action.view_to_right:
+                Debug.Assert(false);
+                break;
+
+            case log_view_right_click.simple_action.view_add_copy:
+                createACopyOfTheExistingViewToolStripMenuItem_Click(null,null);
+                break;
+            case log_view_right_click.simple_action.view_add_new:
+                createANewViewFromScratchToolStripMenuItem_Click(null,null);
+                break;
+            case log_view_right_click.simple_action.view_delete:
+                delView_Click(null,null);
+                break;
+
+            case log_view_right_click.simple_action.button_toggles:
+                toggles_Click(null,null);
+                break;
+            case log_view_right_click.simple_action.button_preferences:
+                settingsCtrl_Click(null,null);
+                break;
+            case log_view_right_click.simple_action.button_refresh:
+                refreshFilter_Click(null,null);
+                break;
+
+            case log_view_right_click.simple_action.export_log_and_notes:
+                export_notes_to_logwizard_file();
+                break;
+            case log_view_right_click.simple_action.export_view:
+                exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem_Click(null,null);
+                break;
+            case log_view_right_click.simple_action.export_notes:
+                exportNotestotxtAndhtmlFilesToolStripMenuItem_Click(null,null);
+                break;
+
+            case log_view_right_click.simple_action.find_find:
+                handle_action(action_type.search);
+                break;
+            case log_view_right_click.simple_action.find_find_next:
+                handle_action(action_type.search_next);
+                break;
+            case log_view_right_click.simple_action.find_find_prev:
+                handle_action(action_type.search_prev);
+                break;
+
+            case log_view_right_click.simple_action.copy_msg:
+                handle_action(action_type.copy_to_clipboard);
+                break;
+            case log_view_right_click.simple_action.copy_full_line:
+                handle_action(action_type.copy_full_line_to_clipboard);
+                break;
+
+            case log_view_right_click.simple_action.note_create_note:
+                if (!global_ui.show_notes) {
+                    global_ui.show_notes = true;
+                    show_left_pane(global_ui.show_left_pane);
+                }
+                notes.focus_to_edit();
+                break;
+            case log_view_right_click.simple_action.note_show_notes:
+                handle_action(action_type.toggle_notes);
+                break;
+
+            case log_view_right_click.simple_action.edit_last_filter:
+                if (!global_ui.show_filter) {
+                    global_ui.show_filter = true;
+                    show_left_pane(global_ui.show_left_pane);
+                }
+                filtCtrl.edit_filter_row_by_filter_id(last_edited_filter_id_);
+                break;
+
+            default:
+                Debug.Assert(false);
+                break;
+            }
+        }
+
+        public void add_or_edit_filter(string filter_str, string filter_id) {
+            filtCtrl.update_filter_row(filter_id, filter_str);
+            last_edited_filter_id_ = filter_id;
         }
 
         public static List<log_wizard> forms {
@@ -843,14 +933,14 @@ namespace LogWizard
 
             // never allow "no view" whatsoever
             bool has_views = cur.views.Count > 0 || cur.name != "Default";
-            if (cur.views.Count < 1) 
-                cur.views.Add(new ui_view() { name = "View_1", is_default_name = true });
+            if (cur.views.Count < 1)
+                cur.views.Add(new ui_view() {name = "View_1", is_default_name = true});
 
-            for ( int idx = 0; idx < cur.views.Count; ++idx) 
-                if ( viewsTab.TabCount < idx + 1) 
+            for (int idx = 0; idx < cur.views.Count; ++idx)
+                if (viewsTab.TabCount < idx + 1)
                     viewsTab.TabPages.Add(cur.views[idx].name);
 
-            for ( int idx = 0; idx < cur.views.Count; ++idx) {
+            for (int idx = 0; idx < cur.views.Count; ++idx) {
                 viewsTab.TabPages[idx].Text = cur.views[idx].name;
                 ensure_we_have_log_view_for_tab(idx);
             }
@@ -892,7 +982,7 @@ namespace LogWizard
             show_left_pane(global_ui.show_left_pane);
             show_source(global_ui.show_source);
 
-            if ( global_ui.show_fulllog && global_ui.show_current_view)
+            if (global_ui.show_fulllog && global_ui.show_current_view)
                 show_full_log(show_full_log_type.both);
             else
                 show_full_log(global_ui.show_current_view ? show_full_log_type.just_view : show_full_log_type.just_full_log);
@@ -902,7 +992,7 @@ namespace LogWizard
             show_details(global_ui.show_details);
             show_status(global_ui.show_status);
 
-            if ( global_ui.width > 0) {
+            if (global_ui.width > 0) {
                 Left = global_ui.left;
                 Top = global_ui.top;
                 Width = global_ui.width;
@@ -911,13 +1001,13 @@ namespace LogWizard
             }
 
             bool view_name_found = false;
-            if (global_ui.selected_view != "") 
+            if (global_ui.selected_view != "")
                 for (int idx = 0; idx < viewsTab.TabCount && !view_name_found; ++idx)
                     if (log_view_for_tab(idx).name == global_ui.selected_view) {
                         viewsTab.SelectedIndex = idx;
                         view_name_found = true;
                     }
-            if ( !view_name_found)
+            if (!view_name_found)
                 viewsTab.SelectedIndex = 0;
 
             --ignore_change_;
@@ -927,17 +1017,17 @@ namespace LogWizard
             ++ignore_change_;
             if (global_ui.left_pane_pos >= 0)
                 main.SplitterDistance = global_ui.left_pane_pos;
-            if ( global_ui.full_log_splitter_pos >= 0)
+            if (global_ui.full_log_splitter_pos >= 0)
                 filteredLeft.SplitterDistance = global_ui.full_log_splitter_pos;
             --ignore_change_;
 
-            util.postpone( () => show_row_based_on_global_ui(), 100);
+            util.postpone(() => show_row_based_on_global_ui(), 100);
 
             if (global_ui.selected_row_idx > 0)
-                if ( selected_file_name() == global_ui.log_name)
-                    util.postpone( () => try_to_go_to_selected_line(global_ui.selected_row_idx), 250);
+                if (selected_file_name() == global_ui.log_name)
+                    util.postpone(() => try_to_go_to_selected_line(global_ui.selected_row_idx), 250);
 
-            util.postpone( () => show_tabs(global_ui.show_tabs), 100);
+            util.postpone(() => show_tabs(global_ui.show_tabs), 100);
             /* not tested
             if (cur.topmost) {
                 util.bring_to_topmost(this);
@@ -950,11 +1040,10 @@ namespace LogWizard
             var lv = log_view_for_tab(viewsTab.SelectedIndex);
             if (lv.is_filter_up_to_date) {
                 lv.go_to_row(selected_row_idx, log_view.select_type.do_not_notify_parent);
-                if ( lv.sel_line_idx >= 0)
-                    on_log_changed_line( lv.sel_line_idx, lv);
-            }
-            else 
-                util.postpone( () => try_to_go_to_selected_line(selected_row_idx), 250);            
+                if (lv.sel_line_idx >= 0)
+                    on_log_changed_line(lv.sel_line_idx, lv);
+            } else
+                util.postpone(() => try_to_go_to_selected_line(selected_row_idx), 250);
         }
 
         private void show_row_based_on_global_ui() {
@@ -963,11 +1052,11 @@ namespace LogWizard
                 if (!lv.is_filter_up_to_date)
                     is_up_to_date = false;
 
-            if ( is_up_to_date)
+            if (is_up_to_date)
                 foreach (var lv in all_log_views_and_full_log())
                     lv.show_row(global_ui.show_row_for_view(lv.name));
-            else 
-                util.postpone( () => show_row_based_on_global_ui(), 100);
+            else
+                util.postpone(() => show_row_based_on_global_ui(), 100);
         }
 
 
@@ -985,32 +1074,30 @@ namespace LogWizard
             Debug.Assert(idx < viewsTab.TabCount);
             TabPage tab = viewsTab.TabPages[idx];
             log_view lv = log_view_for_tab(idx);
-            if ( lv != null)
+            if (lv != null)
                 tab.Controls.Remove(lv);
         }
 
         private void remove_all_log_views() {
             ++ignore_change_;
 
-            for ( int idx = 0; idx < viewsTab.TabCount; ++idx)
+            for (int idx = 0; idx < viewsTab.TabCount; ++idx)
                 remove_log_view_from_tab(idx);
 
             // 1.1.5+ - if we had too many tabs, remove them
-            int new_count = Math.Max( cur_context().views.Count, 1);
-            while ( viewsTab.TabCount > new_count)
-                viewsTab.TabPages.Remove( viewsTab.TabPages[viewsTab.TabCount - 1]);
+            int new_count = Math.Max(cur_context().views.Count, 1);
+            while (viewsTab.TabCount > new_count)
+                viewsTab.TabPages.Remove(viewsTab.TabPages[viewsTab.TabCount - 1]);
             --ignore_change_;
         }
 
-        private void new_view_Click(object sender, EventArgs e)
-        {
+        private void new_view_Click(object sender, EventArgs e) {
             newViewMenu.Show(Cursor.Position);
         }
 
-        private void delView_Click(object sender, EventArgs e)
-        {
+        private void delView_Click(object sender, EventArgs e) {
             int idx = viewsTab.SelectedIndex;
-            if ( idx < 0)
+            if (idx < 0)
                 return;
 
             ui_context cur = cur_context();
@@ -1024,7 +1111,7 @@ namespace LogWizard
                 // it's the last tab, clear the filter
                 cur.views[0].name = "New_1";
                 cur.views[0].filters = new List<ui_filter>();
-                on_view_name_changed( ensure_we_have_log_view_for_tab(0) , cur.views[0].name);
+                on_view_name_changed(ensure_we_have_log_view_for_tab(0), cur.views[0].name);
                 load_filters();
                 save();
             }
@@ -1059,19 +1146,18 @@ namespace LogWizard
             bool dirty = app.inst.sett.dirty;
             app.inst.save();
 
-            if ( !dirty)
+            if (!dirty)
                 // no change
                 return;
 
-            foreach ( log_wizard lw in forms_)
-                if ( lw != this)
+            foreach (log_wizard lw in forms_)
+                if (lw != this)
                     lw.load();
         }
 
 
-        private void refresh_Tick(object sender, EventArgs e)
-        {
-            if ( curContextCtrl.DroppedDown)
+        private void refresh_Tick(object sender, EventArgs e) {
+            if (curContextCtrl.DroppedDown)
                 return;
 
             refresh_cur_log_view();
@@ -1123,8 +1209,7 @@ namespace LogWizard
                     lw_util.bring_to_topmost(this);
                     update_topmost_image();
                     update_toggle_topmost_visibility();
-                }
-                else
+                } else
                     lw_util.bring_to_top(this);
             }
         }
@@ -1154,10 +1239,10 @@ namespace LogWizard
                 var row = new raw_filter_row(filt.text, filt.apply_to_existing_lines);
                 row.enabled = filt.enabled;
                 row.dimmed = filt.dimmed;
-                if ( row.is_valid)
+                if (row.is_valid)
                     lvf.Add(row);
             }
-            lv.set_filter( lvf);
+            lv.set_filter(lvf);
         }
 
         private void refresh_filter_found() {
@@ -1179,7 +1264,7 @@ namespace LogWizard
             old_line_count_ = lv.line_count;
         }
 
-        private void update_filter( log_view lv) {
+        private void update_filter(log_view lv) {
             return;
             /* 1.0.91+ - we get notified of filter changes
 
@@ -1210,10 +1295,10 @@ namespace LogWizard
 
         private void update_notes_current_line() {
             var sel = selected_view();
-            if ( sel.sel_line_idx >= 0)
-                notes.set_current_line( new note_ctrl.line { idx = sel.sel_line_idx, msg = sel.sel_line_text, view_name = sel.name });
-            else 
-                notes.set_current_line( new note_ctrl.line { idx = -1, msg = "", view_name = ""} );
+            if (sel.sel_line_idx >= 0)
+                notes.set_current_line(new note_ctrl.line {idx = sel.sel_line_idx, msg = sel.sel_line_text, view_name = sel.name});
+            else
+                notes.set_current_line(new note_ctrl.line {idx = -1, msg = "", view_name = ""});
         }
 
         public void on_sel_line(log_view lv, int line_idx) {
@@ -1227,36 +1312,34 @@ namespace LogWizard
 
         public void on_log_changed_line(int line_idx, log_view from) {
             if (global_ui.show_fulllog) {
-                if ( from != full_log_ctrl && app.inst.sync_full_log_view)
+                if (from != full_log_ctrl && app.inst.sync_full_log_view)
                     full_log_ctrl.go_to_row(line_idx, log_view.select_type.do_not_notify_parent);
                 sync_full_log_colors(true);
             }
 
             bool keep_all_in_sync = (from != full_log_ctrl && app.inst.sync_all_views) ||
-                // if the current log is full log, we will synchronize all views only if both checks are checked
-                // (note: this is always a bit time consuming as well)
-                (from == full_log_ctrl && app.inst.sync_all_views && app.inst.sync_full_log_view);
-            if ( keep_all_in_sync)
+                                    // if the current log is full log, we will synchronize all views only if both checks are checked
+                                    // (note: this is always a bit time consuming as well)
+                                    (from == full_log_ctrl && app.inst.sync_all_views && app.inst.sync_full_log_view);
+            if (keep_all_in_sync)
                 keep_logs_in_sync(from);
         }
 
-        private void sourceName_TextChanged(object sender, EventArgs e)
-        {
+        private void sourceName_TextChanged(object sender, EventArgs e) {
             if (ignore_change_ > 0)
                 return;
-            if ( logHistory.DroppedDown)
+            if (logHistory.DroppedDown)
                 // user is going through the history, hasn't made up his mind yet
                 return;
 
-            if ( sourceTypeCtrl.SelectedIndex == 0 && File.Exists(sourceNameCtrl.Text)) 
-                on_new_file_log(sourceNameCtrl.Text);            
-            else if ( sourceTypeCtrl.SelectedIndex == 1) 
-                on_new_shared_log(sourceNameCtrl.Text);            
+            if (sourceTypeCtrl.SelectedIndex == 0 && File.Exists(sourceNameCtrl.Text))
+                on_new_file_log(sourceNameCtrl.Text);
+            else if (sourceTypeCtrl.SelectedIndex == 1)
+                on_new_shared_log(sourceNameCtrl.Text);
         }
 
-        private void sourceType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if ( sourceTypeCtrl.SelectedIndex == 2) 
+        private void sourceType_SelectedIndexChanged(object sender, EventArgs e) {
+            if (sourceTypeCtrl.SelectedIndex == 2)
                 on_new_debug_log();
         }
 
@@ -1267,6 +1350,7 @@ namespace LogWizard
               - the idea is for the uesr not to have to mistakenly delete a context when he's selecting a different type of file,
                 (since he would want new filters). thus, just create a new context where he can do anything
         */
+
         private void create_context_for_file(string name) {
             ui_context file_ctx = file_to_context(name);
             if (file_ctx.name != "Default")
@@ -1274,13 +1358,12 @@ namespace LogWizard
                 return;
 
             ui_context new_ctx = new ui_context();
-            new_ctx.name = Path.GetFileNameWithoutExtension( new FileInfo(name).Name);
+            new_ctx.name = Path.GetFileNameWithoutExtension(new FileInfo(name).Name);
             contexts_.Add(new_ctx);
             var syntax = new find_log_syntax().try_find_log_syntax_file(name);
             if (syntax != find_log_syntax.UNKNOWN_SYNTAX)
                 new_ctx.default_syntax = syntax;
-            curContextCtrl.Items.Add( new_ctx.name);
-
+            curContextCtrl.Items.Add(new_ctx.name);
         }
 
         private void on_new_file_log(string name) {
@@ -1289,7 +1372,7 @@ namespace LogWizard
                 return;
             }
 
-            if ( text_ != null)
+            if (text_ != null)
                 text_.Dispose();
 
             create_context_for_file(name);
@@ -1305,8 +1388,7 @@ namespace LogWizard
             if (logSyntaxCtrl.Text == find_log_syntax.UNKNOWN_SYNTAX) {
                 set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Test' button on the top-right.", status_type.err);
                 show_source(true);
-            }
-            else if ( !cur_context().has_not_empty_views)
+            } else if (!cur_context().has_not_empty_views)
                 set_status("Don't the columns look ok? Perpaps LogWizard did not correctly parse them... If so, Toggle the Source Pane ON (Alt-O), anc click on 'Test'.", status_type.warn, 15000);
 
             force_initial_refresh_of_all_views();
@@ -1339,7 +1421,7 @@ namespace LogWizard
             }
 
             update_msg_details(false);
-            refresh_filter_found();            
+            refresh_filter_found();
         }
 
         private void force_initial_refresh_of_all_views() {
@@ -1349,38 +1431,35 @@ namespace LogWizard
             foreach (log_view lv in all_log_views_and_full_log())
                 lv.turn_off_has_anying_changed = true;
             refresh_all_views();
-            
-            util.add_timer(
-                (has_terminated) => {
-                    refresh_all_views();
-                    if ( has_terminated)
-                        foreach (log_view lv in all_log_views_and_full_log())
-                            lv.turn_off_has_anying_changed = false;
-                },
-                () =>
-                    {
-                        foreach (log_view lv in all_log_views_and_full_log())
-                            if (!lv.is_filter_up_to_date)
-                                return false;
-                        logger.Debug("[view] initial refresh complete");
-                        // we allocated a lot of interim objects
-                        GC.Collect();
-                        return true;
-                    }, 500);
+
+            util.add_timer((has_terminated) => {
+                refresh_all_views();
+                if (has_terminated)
+                    foreach (log_view lv in all_log_views_and_full_log())
+                        lv.turn_off_has_anying_changed = false;
+            }, () => {
+                foreach (log_view lv in all_log_views_and_full_log())
+                    if (!lv.is_filter_up_to_date)
+                        return false;
+                logger.Debug("[view] initial refresh complete");
+                // we allocated a lot of interim objects
+                GC.Collect();
+                return true;
+            }, 500);
         }
 
         private void on_new_shared_log(string name) {
-            if ( text_ != null)
+            if (text_ != null)
                 text_.Dispose();
 
-            if ( text_ != null && !(text_ is shared_memory_text_reader)) 
+            if (text_ != null && !(text_ is shared_memory_text_reader))
                 text_ = new shared_memory_text_reader();
-            ((shared_memory_text_reader)text_).set_memory_name( name);
-            on_new_log();            
+            ((shared_memory_text_reader) text_).set_memory_name(name);
+            on_new_log();
         }
 
         private void on_new_debug_log() {
-            if ( text_ != null)
+            if (text_ != null)
                 text_.Dispose();
 
             text_ = new debug_text_reader();
@@ -1409,8 +1488,8 @@ namespace LogWizard
             full_log_ctrl.set_log(new log_line_reader(log_parser_));
             for (int i = 0; i < viewsTab.TabCount; ++i) {
                 var lv = log_view_for_tab(i);
-                if ( lv != null)
-                    lv.set_log( new log_line_reader(log_parser_));
+                if (lv != null)
+                    lv.set_log(new log_line_reader(log_parser_));
             }
         }
 
@@ -1420,14 +1499,13 @@ namespace LogWizard
             logHistory.SelectedIndex = -1;
 
             bool found = false;
-            for ( int i = 0; i < history_.Count && !found; ++i)
+            for (int i = 0; i < history_.Count && !found; ++i)
                 if (history_[i].name == name) {
                     found = true;
                     bool is_sample = name.ToLower().EndsWith("logwizardsetupsample.log");
                     if (is_sample)
                         logHistory.SelectedIndex = i;
                     else {
-
                         // whatever the user selects, move it to the end
                         history h = history_[i];
                         history_.RemoveAt(i);
@@ -1441,7 +1519,7 @@ namespace LogWizard
 
             if (logHistory.SelectedIndex < 0) {
                 history_.Add(new history {name = name, type = 0, friendly_name = friendly_name});
-                logHistory.Items.Add( history_.Last().ui_friendly_name);
+                logHistory.Items.Add(history_.Last().ui_friendly_name);
                 logHistory.SelectedIndex = logHistory.Items.Count - 1;
             }
             --ignore_change_;
@@ -1452,6 +1530,7 @@ namespace LogWizard
         }
 
         private int last_sel_ = -1;
+
         private void on_new_log() {
             string size = text_ is file_text_reader ? " (" + new FileInfo(text_.name).Length + " bytes)" : "";
             set_status_forever("Log: " + text_.name + size);
@@ -1460,20 +1539,20 @@ namespace LogWizard
             // by default - try to find the syntax by reading the header info
             //              otherwise, try to parse it
             string syntax = null;
-            if (text_ is file_text_reader) 
+            if (text_ is file_text_reader)
                 syntax = log_to_default_syntax.file_to_syntax(text_.name);
-            if ( syntax == null)
+            if (syntax == null)
                 syntax = text_.try_to_find_log_syntax();
             string name = text_.name;
 
-            if (history_.Count < 1) 
+            if (history_.Count < 1)
                 history_select(name);
 
             // 1.1.25+ if I can't find the syntax from file-to-syntax, or by parsing the log, see if the context associated with this file has log-syntax
             Debug.Assert(syntax != null);
             if (syntax == find_log_syntax.UNKNOWN_SYNTAX) {
                 ui_context file_ctx = file_to_context(name);
-                if ( syntax == find_log_syntax.UNKNOWN_SYNTAX)
+                if (syntax == find_log_syntax.UNKNOWN_SYNTAX)
                     if (file_ctx.default_syntax != "")
                         syntax = file_ctx.default_syntax;
             }
@@ -1487,14 +1566,14 @@ namespace LogWizard
             full_log_ctrl.set_filter(new List<raw_filter_row>());
 
             Text = reader_title() + " - Log Wizard " + version();
-            if ( logHistory.SelectedIndex == last_sel_)
+            if (logHistory.SelectedIndex == last_sel_)
                 // note: sometimes this gets called twice - for instance, when user drops the combo and then selects an entry with the mouse
                 return;
             last_sel_ = logHistory.SelectedIndex;
             add_reader_to_history();
             // FIXME I don't think this is needed
             ui_context cur = cur_context();
-            for ( int idx = 0; idx < cur.views.Count; ++idx)
+            for (int idx = 0; idx < cur.views.Count; ++idx)
                 ensure_we_have_log_view_for_tab(idx);
             load_bookmarks();
             logger.Info("new reader_ " + history_[logHistory.SelectedIndex].name);
@@ -1520,36 +1599,33 @@ namespace LogWizard
                         show_left_pane(true);
                     }
                 }
-            }            
+            }
         }
 
         private void add_reader_to_history() {
-            if ( text_ is debug_text_reader)
+            if (text_ is debug_text_reader)
                 return;
             history new_ = new history();
-            if ( text_ is file_text_reader) {
-                new_.name = ((file_text_reader)text_).name;
+            if (text_ is file_text_reader) {
+                new_.name = ((file_text_reader) text_).name;
                 new_.type = history.entry_type.file;
-            }
-            else if ( text_ is shared_memory_text_reader) {
-                new_.name = ((shared_memory_text_reader)text_).name;
+            } else if (text_ is shared_memory_text_reader) {
+                new_.name = ((shared_memory_text_reader) text_).name;
                 new_.type = history.entry_type.shmem;
-            }
-            else
+            } else
                 Debug.Assert(false);
 
             int history_idx = -1;
-            for ( int i = 0; i < history_.Count && history_idx < 0; ++i)
-                if ( new_.name == history_[i].name && new_.type == history_[i].type) 
+            for (int i = 0; i < history_.Count && history_idx < 0; ++i)
+                if (new_.name == history_[i].name && new_.type == history_[i].type)
                     history_idx = i;
-            if ( history_idx < 0) {
+            if (history_idx < 0) {
                 history_.Add(new_);
                 history_idx = history_.Count - 1;
                 logHistory.Items.Add(new_.ui_friendly_name);
-            }
-            else {
+            } else {
                 ++ignore_change_;
-                friendlyNameCtrl.Text = history_[ history_idx].friendly_name;
+                friendlyNameCtrl.Text = history_[history_idx].friendly_name;
                 --ignore_change_;
             }
 
@@ -1563,7 +1639,7 @@ namespace LogWizard
             int history_idx = logHistory.SelectedIndex;
             ++ignore_change_;
             logHistory.Items.Clear();
-            foreach ( history hist in history_)
+            foreach (history hist in history_)
                 logHistory.Items.Add(hist.ui_friendly_name);
             logHistory.SelectedIndex = history_idx;
             --ignore_change_;
@@ -1586,7 +1662,7 @@ namespace LogWizard
 
         private void close_history_dropdown() {
             ++ignore_change_;
-            if ( selected_history_on_dropdown_ >= 0)
+            if (selected_history_on_dropdown_ >= 0)
                 logHistory.SelectedIndex = selected_history_on_dropdown_;
             --ignore_change_;
             logHistory.DroppedDown = false;
@@ -1597,9 +1673,8 @@ namespace LogWizard
             set_status("To get back to where you were, press ESC.");
         }
 
-        private void logHistory_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if ( ignore_change_ > 0 || logHistory.SelectedIndex < 0)
+        private void logHistory_SelectedIndexChanged(object sender, EventArgs e) {
+            if (ignore_change_ > 0 || logHistory.SelectedIndex < 0)
                 return;
             if (logHistory.DroppedDown)
                 return;
@@ -1609,26 +1684,24 @@ namespace LogWizard
         private void on_log_listory_changed() {
             if (logHistory.SelectedIndex >= 0) {
                 history_select(history_[logHistory.SelectedIndex].name);
-                app.inst.set_log_file( selected_file_name() );
+                app.inst.set_log_file(selected_file_name());
             }
 
-            sourceTypeCtrl.SelectedIndex = (int) history_[ logHistory.SelectedIndex].type;
-            sourceNameCtrl.Text = history_[ logHistory.SelectedIndex].name;
-            friendlyNameCtrl.Text = history_[ logHistory.SelectedIndex].friendly_name;
-            sourceName_TextChanged(null,null);
+            sourceTypeCtrl.SelectedIndex = (int) history_[logHistory.SelectedIndex].type;
+            sourceNameCtrl.Text = history_[logHistory.SelectedIndex].name;
+            friendlyNameCtrl.Text = history_[logHistory.SelectedIndex].friendly_name;
+            sourceName_TextChanged(null, null);
         }
 
-        private void friendlyName_TextChanged(object sender, EventArgs e)
-        {
+        private void friendlyName_TextChanged(object sender, EventArgs e) {
             if (ignore_change_ > 0)
                 return;
-            history_[ logHistory.SelectedIndex].friendly_name = friendlyNameCtrl.Text;
+            history_[logHistory.SelectedIndex].friendly_name = friendlyNameCtrl.Text;
             update_history();
             save();
         }
 
-        private void logSyntax_TextChanged(object sender, EventArgs e)
-        {
+        private void logSyntax_TextChanged(object sender, EventArgs e) {
             if (ignore_change_ > 0)
                 return;
         }
@@ -1652,30 +1725,28 @@ namespace LogWizard
         }
 
 
-        private void addContext_Click(object sender, EventArgs e)
-        {
+        private void addContext_Click(object sender, EventArgs e) {
             new_context_form new_ = new new_context_form(this);
             new_.Location = Cursor.Position;
-            if ( new_.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+            if (new_.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                 ui_context new_ctx = new ui_context();
-                if ( new_.basedOnExisting.Checked)
-                    new_ctx.copy_from( cur_context());
+                if (new_.basedOnExisting.Checked)
+                    new_ctx.copy_from(cur_context());
                 new_ctx.name = new_.name.Text;
                 contexts_.Add(new_ctx);
-                curContextCtrl.Items.Add( new_ctx.name);
+                curContextCtrl.Items.Add(new_ctx.name);
                 curContextCtrl.SelectedIndex = curContextCtrl.Items.Count - 1;
             }
         }
 
-        private void delContext_Click(object sender, EventArgs e)
-        {
+        private void delContext_Click(object sender, EventArgs e) {
             // make sure we have at least one, after deleting the current one
             if (curContextCtrl.Items.Count < 2)
                 return;
 
             int sel = curContextCtrl.SelectedIndex;
             contexts_.RemoveAt(sel);
-            curContextCtrl.Items.RemoveAt( sel);
+            curContextCtrl.Items.RemoveAt(sel);
             curContextCtrl.SelectedIndex = curContextCtrl.Items.Count > sel ? sel : 0;
         }
 
@@ -1686,13 +1757,12 @@ namespace LogWizard
                 return "";
         }
 
-        private void curContextCtrl_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void curContextCtrl_SelectedIndexChanged(object sender, EventArgs e) {
             // first, remove all log views, so that the new filters (from the new context) are loaded
             remove_all_log_views();
 
             string name = selected_file_name();
-            int default_context = contexts_.IndexOf( file_to_context(name));
+            int default_context = contexts_.IndexOf(file_to_context(name));
             if (name != "" && default_context != curContextCtrl.SelectedIndex) {
                 if (!app.inst.forced_file_to_context.ContainsKey(name))
                     app.inst.forced_file_to_context.Add(name, "");
@@ -1700,24 +1770,23 @@ namespace LogWizard
             }
 
             load();
-            
-            if ( global_ui.show_fulllog && full_log_ctrl != null)
+
+            if (global_ui.show_fulllog && full_log_ctrl != null)
                 full_log_ctrl.refresh();
             refresh_cur_log_view();
             save();
         }
 
-        private void curContextCtrl_DropDown(object sender, EventArgs e)
-        {
+        private void curContextCtrl_DropDown(object sender, EventArgs e) {
             // saving after the selection is changed would be too late
             save();
         }
 
 
         private void dropHere_DragDrop(object sender, DragEventArgs e) {
-            if ( e.Data.GetDataPresent( DataFormats.FileDrop)) {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if ( files.Length == 1)
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                string[] files = (string[]) e.Data.GetData(DataFormats.FileDrop);
+                if (files.Length == 1)
                     on_file_drop(files[0]);
             }
         }
@@ -1732,9 +1801,7 @@ namespace LogWizard
 
         private void contextMatch_TextChanged(object sender, EventArgs e) {
             // not implemented yet
-
         }
-
 
 
         private void refreshFilter_Click(object sender, EventArgs e) {
@@ -1742,19 +1809,20 @@ namespace LogWizard
                 log_parser_.force_reload();
             refresh_filter_found();
 
-            util.add_timer(
-                (has_ended) => {
-                    refreshFilter.Enabled = has_ended;
-                    refreshFilter.Text = has_ended ? "Refresh" : util.add_dots(refreshFilter.Text, 3);
-                }, 2500, 250);
+            util.add_timer((has_ended) => {
+                refreshFilter.Enabled = has_ended;
+                refreshFilter.Text = has_ended ? "Refresh" : util.add_dots(refreshFilter.Text, 3);
+            }, 2500, 250);
         }
 
 
         private int handled_key_idx_ = 0;
+
         private void LogWizard_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
-            if (key_to_action(e) != action_type.none) 
+            if (key_to_action(e) != action_type.none)
                 e.IsInputKey = true;
         }
+
         private void LogWizard_KeyDown(object sender, KeyEventArgs e) {
             // processing stuff in ProcessCmdKey now
             ++handled_key_idx_;
@@ -1773,7 +1841,7 @@ namespace LogWizard
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
-            if(keyData == (Keys.Control | Keys.Tab) || keyData == (Keys.Control | Keys.Shift | Keys.Tab) ) 
+            if (keyData == (Keys.Control | Keys.Tab) || keyData == (Keys.Control | Keys.Shift | Keys.Tab))
                 return true;
 
             // 1.2.12 - tried, but doesn't work
@@ -1789,16 +1857,16 @@ namespace LogWizard
         }
 
         private bool any_moving_key_still_down() {
-            return win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || win32.IsKeyPushedDown(Keys.PageUp) ||
-                                        win32.IsKeyPushedDown(Keys.PageDown) || win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
+            return win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || win32.IsKeyPushedDown(Keys.PageUp) || win32.IsKeyPushedDown(Keys.PageDown) || win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
         }
+
         private void log_wizard_KeyUp(object sender, KeyEventArgs e) {
             // see if any of the moving keys is still down
             if (!any_moving_key_still_down()) {
                 if (notes.is_focus_on_notes_list)
                     return;
 
-                switch ( util.key_to_action(e)) {
+                switch (util.key_to_action(e)) {
                 case "up":
                 case "down":
                 case "pageup":
@@ -1821,19 +1889,21 @@ namespace LogWizard
             c.KeyDown += LogWizard_KeyDown;
             c.KeyUp += log_wizard_KeyUp;
 
-            foreach ( Control sub in c.Controls)
+            foreach (Control sub in c.Controls)
                 handle_subcontrol_keys(sub);
         }
 
 
         private action_type key_to_action(Keys e) {
-            return key_to_action( util.key_to_action(e));
+            return key_to_action(util.key_to_action(e));
         }
+
         private action_type key_to_action(KeyEventArgs e) {
-            return key_to_action( util.key_to_action(e));
+            return key_to_action(util.key_to_action(e));
         }
+
         private action_type key_to_action(PreviewKeyDownEventArgs e) {
-            return key_to_action( util.key_to_action(e));
+            return key_to_action(util.key_to_action(e));
         }
 
         private Control focused_ctrl() {
@@ -1869,7 +1939,7 @@ namespace LogWizard
             if (is_focus_on_filter_panel())
                 // 1.2.13+ - make sure to select something meaningful
                 selected_view().set_focus();
-                //viewsTab.Focus();            
+            //viewsTab.Focus();            
         }
 
         private bool is_focus_on_full_log() {
@@ -1889,7 +1959,7 @@ namespace LogWizard
             if (notes.is_focus_on_notes_list)
                 return action_type.none;
 
-            if (any_moving_key_still_down()) 
+            if (any_moving_key_still_down())
                 if (notes.is_focus_on_notes_list)
                     return action_type.none;
 
@@ -1902,7 +1972,7 @@ namespace LogWizard
             case "end":
             case "space":
             case "return":
-                if (key_code == "space" && filtCtrl.can_handle_toggle_enable_dimmed_now )
+                if (key_code == "space" && filtCtrl.can_handle_toggle_enable_dimmed_now)
                     break;
 
                 if (allow_arrow_to_function_normally())
@@ -1913,7 +1983,7 @@ namespace LogWizard
 
             case "ctrl-c":
             case "ctrl-shift-c":
-                if ( is_focus_on_editable_box())
+                if (is_focus_on_editable_box())
                     return action_type.none;
                 break;
             }
@@ -1934,10 +2004,10 @@ namespace LogWizard
             case "apps":
                 return action_type.right_click_via_key;
 
-            case "ctrl-f": 
-                return action_type.search ;
-            case "ctrl-shift-f": 
-                return action_type.default_search ;
+            case "ctrl-f":
+                return action_type.search;
+            case "ctrl-shift-f":
+                return action_type.default_search;
             case "ctrl-f2":
                 return action_type.toggle_bookmark;
             case "f2":
@@ -1985,7 +2055,7 @@ namespace LogWizard
             case "subtract":
                 return action_type.decrease_font;
             case "space":
-                if ( filtCtrl.can_handle_toggle_enable_dimmed_now)
+                if (filtCtrl.can_handle_toggle_enable_dimmed_now)
                     return action_type.toggle_enabled_dimmed;
                 break;
 
@@ -2084,7 +2154,7 @@ namespace LogWizard
                 lv.search_next();
                 break;
             case action_type.escape:
-                if (logHistory.DroppedDown) 
+                if (logHistory.DroppedDown)
                     close_history_dropdown();
                 else
                     lv.escape();
@@ -2101,7 +2171,7 @@ namespace LogWizard
                     viewsTab.SelectedIndex = next_idx;
                     log_view_for_tab(next_idx).on_selected();
                 }
-                if ( prev_idx >= 0)
+                if (prev_idx >= 0)
                     log_view_for_tab(prev_idx).update_x_of_y();
             }
                 break;
@@ -2112,7 +2182,7 @@ namespace LogWizard
                     viewsTab.SelectedIndex = next_idx;
                     log_view_for_tab(next_idx).on_selected();
                 }
-                if ( prev_idx >= 0)
+                if (prev_idx >= 0)
                     log_view_for_tab(prev_idx).update_x_of_y();
             }
                 break;
@@ -2151,7 +2221,7 @@ namespace LogWizard
                 break;
 
             case action_type.toggle_bookmark:
-                int line_idx = lv.sel_line_idx ;
+                int line_idx = lv.sel_line_idx;
                 if (line_idx >= 0) {
                     if (bookmarks_.Contains(line_idx))
                         bookmarks_.Remove(line_idx);
@@ -2189,10 +2259,10 @@ namespace LogWizard
                 }
                 break;
             case action_type.new_log_wizard:
-                newView_Click(null,null);
+                newView_Click(null, null);
                 break;
             case action_type.show_preferences:
-                settingsCtrl_Click(null,null);
+                settingsCtrl_Click(null, null);
                 break;
 
             case action_type.increase_font:
@@ -2220,7 +2290,7 @@ namespace LogWizard
                 var dlg = new go_to_line_time_form(this);
                 if (dlg.ShowDialog() == DialogResult.OK) {
                     if (dlg.is_number()) {
-                        if ( dlg.has_offset != '\0')
+                        if (dlg.has_offset != '\0')
                             lv.offset_closest_line(dlg.number, dlg.has_offset == '+');
                         else
                             lv.go_to_closest_line(dlg.number - 1, log_view.select_type.notify_parent);
@@ -2231,7 +2301,7 @@ namespace LogWizard
                 }
                 break;
             case action_type.refresh:
-                refreshFilter_Click(null,null);
+                refreshFilter_Click(null, null);
                 break;
             case action_type.toggle_title:
                 toggle_title();
@@ -2251,7 +2321,7 @@ namespace LogWizard
                 break;
 
             case action_type.open_in_explorer:
-                if ( text_ != null)
+                if (text_ != null)
                     util.open_in_explorer(text_.name);
                 break;
 
@@ -2298,14 +2368,14 @@ namespace LogWizard
             int new_ui = idx == toggled_to_custom_ui_ ? -1 : idx;
             if (new_ui != -1) {
                 // going to a custom position
-                if ( !custom_ui_[idx].was_set_at_least_once)
+                if (!custom_ui_[idx].was_set_at_least_once)
                     custom_ui_[idx].copy_from(global_ui);
             } else {
                 // going to default position (from a custom position)
             }
             toggled_to_custom_ui_ = new_ui;
             load_ui();
-            status_prefix_ = toggled_to_custom_ui_ < 0 ? ""  : "[Position " + (idx+1) + "]";
+            status_prefix_ = toggled_to_custom_ui_ < 0 ? "" : "[Position " + (idx + 1) + "]";
             force_udpate_status_text();
             save();
         }
@@ -2315,17 +2385,17 @@ namespace LogWizard
 
             // first pane - the current view (tab)
             int sel = viewsTab.SelectedIndex;
-            if ( sel >= 0 && log_view_for_tab(sel) != null)
-                panes.Add( log_view_for_tab(sel));
+            if (sel >= 0 && log_view_for_tab(sel) != null)
+                panes.Add(log_view_for_tab(sel));
 
             // second pane - the full log (if shown)
-            if( global_ui.show_fulllog)
+            if (global_ui.show_fulllog)
                 panes.Add(full_log_ctrl);
 
             // third/fourth panes - the filters control and edit box (if visible)
-            if ( global_ui.show_filter)
+            if (global_ui.show_filter)
                 panes.AddRange(filtCtrl.tab_navigatable_controls);
-            else if ( global_ui.show_notes)
+            else if (global_ui.show_notes)
                 panes.AddRange(notes.tab_navigatable_controls);
             return panes;
         }
@@ -2335,7 +2405,7 @@ namespace LogWizard
             int line_idx = src.sel_line_idx;
             if (line_idx < 0)
                 return;
-            foreach ( log_view lv in all_log_views_and_full_log())
+            foreach (log_view lv in all_log_views_and_full_log())
                 if (lv != src) {
                     if (global_ui.show_fulllog && lv == full_log_ctrl && app.inst.sync_full_log_view)
                         // in this case, we already synched the full log
@@ -2358,11 +2428,11 @@ namespace LogWizard
             if (idx >= 0)
                 // move to next control
                 idx = forward ? idx + 1 : idx + panes.Count - 1;
-            else 
-                // move to first / last
+            else
+            // move to first / last
                 idx = forward ? 0 : panes.Count - 1;
 
-            var cur_pane = panes[ idx % panes.Count ];
+            var cur_pane = panes[idx % panes.Count];
             activate_pane(cur_pane);
         }
 
@@ -2372,17 +2442,16 @@ namespace LogWizard
             var list_pane = cur_pane as ObjectListView;
 
             util.postpone(() => {
-                if (lv_pane != null)    
+                if (lv_pane != null)
                     lv_pane.set_focus();
                 else if (list_pane != null) {
                     list_pane.Focus();
                     // maybe not such a good idea for notes pane???? TOTHINK
                     if (list_pane.SelectedIndex < 0 && list_pane.GetItemCount() > 0)
                         list_pane.SelectedIndex = 0;
-                }
-                else
+                } else
                     cur_pane.Focus();
-            }, 10);            
+            }, 10);
         }
 
         private void on_activate() {
@@ -2399,10 +2468,10 @@ namespace LogWizard
             var old_sync_colors = app.inst.syncronize_colors;
             var old_sync_gray = app.inst.sync_colors_all_views_gray_non_active;
             new settings_form(this).ShowDialog();
-            notes.set_author( app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
+            notes.set_author(app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
 
             bool sync_changed = app.inst.syncronize_colors != old_sync_colors || old_sync_gray != app.inst.sync_colors_all_views_gray_non_active;
-            if ( sync_changed)
+            if (sync_changed)
                 sync_full_log_colors();
         }
 
@@ -2419,13 +2488,13 @@ namespace LogWizard
 
         public string matched_logs(int line_idx) {
             List<string> matched = new List<string>();
-            foreach ( var lv in all_log_views())
-                if ( lv.matches_line(line_idx))
+            foreach (var lv in all_log_views())
+                if (lv.matches_line(line_idx))
                     matched.Add(lv.name);
 
             string selected = log_view_for_tab(viewsTab.SelectedIndex).name;
             bool removed = matched.Remove(selected);
-            if ( removed)
+            if (removed)
                 matched.Insert(0, selected);
 
             string txt = "";
@@ -2444,7 +2513,7 @@ namespace LogWizard
             string[] bookmarks = sett.get("bookmarks." + bookmarks_key).Split(',');
             foreach (var b in bookmarks) {
                 int line_idx;
-                if ( int.TryParse(b, out line_idx))
+                if (int.TryParse(b, out line_idx))
                     bookmarks_.Add(line_idx);
             }
             notify_views_of_bookmarks();
@@ -2476,7 +2545,7 @@ namespace LogWizard
 
         private void update_sync_texts() {
             synchronizedWithFullLog.Text = synchronizedWithFullLog.Checked ? "<-FL->" : "</FL/>";
-            synchronizeWithExistingLogs.Text = synchronizeWithExistingLogs.Checked ? "<-V->" : "</V/>";            
+            synchronizeWithExistingLogs.Text = synchronizeWithExistingLogs.Checked ? "<-V->" : "</V/>";
         }
 
         private void synchronizedWithFullLog_CheckedChanged(object sender, EventArgs e) {
@@ -2494,7 +2563,7 @@ namespace LogWizard
         private string ui_context_to_str(ui_context cur) {
             if (cur.views.Count < 1)
                 return ""; // no views
-            var formatter = new XmlSerializer( typeof(ui_context));
+            var formatter = new XmlSerializer(typeof (ui_context));
             string str = "";
             using (var stream = new MemoryStream()) {
                 formatter.Serialize(stream, cur);
@@ -2508,7 +2577,7 @@ namespace LogWizard
 
         private ui_context str_to_ui_context(string txt) {
             try {
-                var formatter = new XmlSerializer( typeof(ui_context));
+                var formatter = new XmlSerializer(typeof (ui_context));
                 using (var stream = new MemoryStream()) {
                     using (var writer = new StreamWriter(stream)) {
                         writer.Write(txt);
@@ -2517,21 +2586,21 @@ namespace LogWizard
                         using (var reader = new StreamReader(stream)) {
                             var new_ctx = (ui_context) formatter.Deserialize(reader);
                             // we don't care about the name, just the filters
-                            foreach ( var view in new_ctx.views)
+                            foreach (var view in new_ctx.views)
                                 view.filters.ForEach(f => f.text = util.normalize_enters(f.text));
                             return new_ctx;
                         }
                     }
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 logger.Error("can't convert to UI-context " + e.Message);
             }
             return null;
         }
 
         private void contextToClipboard_Click(object sender, EventArgs e) {
-            string to_copy = ui_context_to_str( cur_context() );
-            if ( to_copy != "")
+            string to_copy = ui_context_to_str(cur_context());
+            if (to_copy != "")
                 Clipboard.SetText(to_copy);
         }
 
@@ -2540,7 +2609,7 @@ namespace LogWizard
                 string txt = Clipboard.GetText();
                 ui_context cur = cur_context();
 
-                var formatter = new XmlSerializer( typeof(ui_context));
+                var formatter = new XmlSerializer(typeof (ui_context));
                 using (var stream = new MemoryStream()) {
                     using (var writer = new StreamWriter(stream)) {
                         writer.Write(txt);
@@ -2549,7 +2618,7 @@ namespace LogWizard
                         using (var reader = new StreamReader(stream)) {
                             var new_ctx = (ui_context) formatter.Deserialize(reader);
                             // we don't care about the name, just the filters
-                            foreach ( var view in new_ctx.views)
+                            foreach (var view in new_ctx.views)
                                 view.filters.ForEach(f => f.text = util.normalize_enters(f.text));
                             // ... preserve existing context name
                             string ctx_name = cur.name;
@@ -2559,13 +2628,11 @@ namespace LogWizard
                     }
                 }
                 curContextCtrl_SelectedIndexChanged(null, null);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 logger.Error("can't copy from clipboard: " + e.Message);
                 util.beep(util.beep_type.err);
             }
         }
-
-
 
 
         // sets the status for a given period - after that ends, the previous status is shown
@@ -2577,7 +2644,7 @@ namespace LogWizard
             if (type == status_type.err)
                 // show errors longer
                 set_status_for_ms = Math.Max(set_status_for_ms, 15000);
-            statuses_.Add( new Tuple<string, status_type, DateTime>(msg, type, set_status_for_ms > 0 ? DateTime.Now.AddMilliseconds(set_status_for_ms) : DateTime.MaxValue));
+            statuses_.Add(new Tuple<string, status_type, DateTime>(msg, type, set_status_for_ms > 0 ? DateTime.Now.AddMilliseconds(set_status_for_ms) : DateTime.MaxValue));
             status.Text = status_prefix_ + msg;
             status.ForeColor = status_color(type);
             status.BackColor = status_bg_color(type);
@@ -2586,13 +2653,14 @@ namespace LogWizard
                 show_status(global_ui.temporarily_show_status);
             }
 
-            if ( type == status_type.err)
+            if (type == status_type.err)
                 util.beep(util.beep_type.err);
         }
 
         private Color status_color(status_type type) {
             return type == status_type.err ? Color.DarkRed : Color.Black;
         }
+
         private Color status_bg_color(status_type type) {
             return type == status_type.err ? Color.Yellow : Color.White;
         }
@@ -2616,7 +2684,7 @@ namespace LogWizard
                 }
 
                 bool is_err = statuses_.Count > 0 && statuses_.Last().Item2 == status_type.err;
-                if ( !is_err)
+                if (!is_err)
                     if (global_ui.temporarily_show_status && !global_ui.show_status) {
                         global_ui.temporarily_show_status = false;
                         show_status(false);
@@ -2631,25 +2699,27 @@ namespace LogWizard
         private static string tn2_file() {
             return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\TableNinja.v2\\TableNinja2.log";
         }
+
         private static string hm2_file() {
             // FIXME I think this is not the right file
             return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\HoldemManager\\hm2.log";
         }
+
         private static string hm3_file() {
             return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Max Value Software\\Holdem Manager\\3.0\\Logs\\holdemmanager3.log.txt";
         }
 
         private void monitor_Click(object sender, EventArgs e) {
             List<MenuItem> items = new List<MenuItem>();
-            if ( File.Exists(tn2_file()))
-                items.Add( new MenuItem("TableNinja II", (o,args) => on_file_drop(tn2_file())));
-            if ( File.Exists(hm2_file()))
-                items.Add( new MenuItem("HM2", (o,args) => on_file_drop(hm2_file())));
-            if ( File.Exists(hm3_file()))
-                items.Add( new MenuItem("HM3", (o,args) => on_file_drop(hm3_file())));
+            if (File.Exists(tn2_file()))
+                items.Add(new MenuItem("TableNinja II", (o, args) => on_file_drop(tn2_file())));
+            if (File.Exists(hm2_file()))
+                items.Add(new MenuItem("HM2", (o, args) => on_file_drop(hm2_file())));
+            if (File.Exists(hm3_file()))
+                items.Add(new MenuItem("HM3", (o, args) => on_file_drop(hm3_file())));
 
             monitor.ContextMenu = new ContextMenu(items.ToArray());
-            monitor.ContextMenu.Show(monitor, monitor.PointToClient(Cursor.Position) );
+            monitor.ContextMenu.Show(monitor, monitor.PointToClient(Cursor.Position));
         }
 
         private void toggleTopmost_MouseClick(object sender, MouseEventArgs e) {
@@ -2698,7 +2768,7 @@ namespace LogWizard
                 global_ui.top = Top;
                 global_ui.maximized = false;
             }
-            save();            
+            save();
         }
 
         private void log_wizard_Activated(object sender, EventArgs e) {
@@ -2713,7 +2783,7 @@ namespace LogWizard
         private void leftPane_SizeChanged(object sender, EventArgs e) {
             logger.Info("left pane = " + leftPane.Width + " x " + leftPane.Height + " [" + filtersTab.Width + " x " + filtersTab.Height + "]");
         }
-            
+
         private void export_Click(object sender, EventArgs e) {
             //export_notes();
             exportMenu.Show(Cursor.Position);
@@ -2721,6 +2791,7 @@ namespace LogWizard
 
         // within our .logwizard file - easily identify our files
         private const string log_wizard_zip_file_prefix = "___logwizard___";
+
         private void export_notes_to_logwizard_file() {
             if (!(text_ is file_text_reader)) {
                 Debug.Assert(false);
@@ -2729,7 +2800,7 @@ namespace LogWizard
 
             string dir = util.create_temp_dir(Program.local_dir());
             notes.save_to(dir + "\\notes.txt");
-            string ctx_as_string = ui_context_to_str( cur_context());
+            string ctx_as_string = ui_context_to_str(cur_context());
             util.create_file(dir + "\\context.txt", cur_context().name + "\r\n" + ctx_as_string);
 
             string full_name = text_.name;
@@ -2740,14 +2811,14 @@ namespace LogWizard
                 md5_log_keeper.inst.get_md5_for_file(full_name, md5_log_keeper.md5_type.slow);
 
             var md5s = md5_log_keeper.inst.local_md5s_for_file(full_name);
-            util.create_file(dir + "\\md5.txt",  util.concatenate(md5s, "\r\n") );
+            util.create_file(dir + "\\md5.txt", util.concatenate(md5s, "\r\n"));
 
             // here, we have all needed files
             string zip_dir = Program.local_dir() + "export";
             util.create_dir(zip_dir);
             string prefix = zip_dir + "\\" + file_name + "." + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss-fff") + ".";
 
-            Dictionary<string,string> files = new Dictionary<string, string>();
+            Dictionary<string, string> files = new Dictionary<string, string>();
             files.Add(dir + "\\notes.txt", log_wizard_zip_file_prefix + "notes.txt");
             files.Add(dir + "\\context.txt", log_wizard_zip_file_prefix + "context.txt");
             files.Add(dir + "\\md5.txt", log_wizard_zip_file_prefix + "md5.txt");
@@ -2764,7 +2835,7 @@ namespace LogWizard
             try {
                 import_notes_impl(file);
             } catch (Exception e) {
-                logger.Fatal("could not import file " + file  + " : " + e.Message);
+                logger.Fatal("could not import file " + file + " : " + e.Message);
                 set_status("An internal error occured. Please contact the author.", status_type.err);
             }
         }
@@ -2772,8 +2843,7 @@ namespace LogWizard
 
         private void import_notes_impl(string file) {
             var files = zip_util.enum_file_names_in_zip(file);
-            bool valid = files.Contains(log_wizard_zip_file_prefix + "md5.txt") 
-                && files.Contains(log_wizard_zip_file_prefix + "context.txt") && files.Contains(log_wizard_zip_file_prefix + "notes.txt");
+            bool valid = files.Contains(log_wizard_zip_file_prefix + "md5.txt") && files.Contains(log_wizard_zip_file_prefix + "context.txt") && files.Contains(log_wizard_zip_file_prefix + "notes.txt");
             if (!valid) {
                 set_status("Invalid .LogWizard file: " + file, status_type.err);
                 return;
@@ -2802,9 +2872,7 @@ namespace LogWizard
                     return;
                 }
                 if (log_file_count == 0) {
-                    set_status(
-                        "Please ask your colleague to send you the LONG .LogWizard File - so we can auto-import and show you the Log together with the notes.",
-                        status_type.err);
+                    set_status("Please ask your colleague to send you the LONG .LogWizard File - so we can auto-import and show you the Log together with the notes.", status_type.err);
                     return;
                 }
                 // at this point - we know we have the log file as well
@@ -2850,7 +2918,7 @@ namespace LogWizard
 
         protected override void WndProc(ref Message m) {
             if (m.Msg == win32.WM_COPYDATA) {
-                var st = (win32.COPYDATASTRUCT)Marshal.PtrToStructure(m.LParam, typeof(win32.COPYDATASTRUCT));
+                var st = (win32.COPYDATASTRUCT) Marshal.PtrToStructure(m.LParam, typeof (win32.COPYDATASTRUCT));
                 string open = st.lpData;
                 util.postpone(() => on_file_drop(open), 100);
             }
@@ -2859,19 +2927,18 @@ namespace LogWizard
         }
 
 
-
         private static bool file_contains_pattern(string file, IEnumerable<string> pattern) {
-            foreach(string patt in pattern)
+            foreach (string patt in pattern)
                 if (file.Contains(patt))
                     return true;
             return false;
         }
 
-        List<Tuple<string, long>> in_zip(string file) {
+        private List<Tuple<string, long>> in_zip(string file) {
             var matches = app.inst.look_into_zip_files;
             var in_zip = zip_util.enum_file_names_and_sizes_in_zip(file).Where(x => file_contains_pattern(x.Item1, matches)).ToList();
-            in_zip.Sort((x,y) => {
-                int m1 = util.matched_string_index(x.Item1, matches), m2 = util.matched_string_index(y.Item1, matches);       
+            in_zip.Sort((x, y) => {
+                int m1 = util.matched_string_index(x.Item1, matches), m2 = util.matched_string_index(y.Item1, matches);
                 if (m1 != m2)
                     // by extension
                     return m1 - m2;
@@ -2909,14 +2976,14 @@ namespace LogWizard
 
             lw_util.bring_to_top(this);
             select_zip_file_form sel = new select_zip_file_form(file, in_zip);
-            if (sel.ShowDialog() == DialogResult.OK) 
+            if (sel.ShowDialog() == DialogResult.OK)
                 on_zip_file_drop(file, sel.selected_file);
         }
 
         private void on_zip_file_drop(string zip_file, string sub_file_name) {
             string zip_dir = Program.local_dir() + "zip";
             util.create_dir(zip_dir);
-            Dictionary<string,string> single_zip = new Dictionary<string, string>();
+            Dictionary<string, string> single_zip = new Dictionary<string, string>();
             string unique = sub_file_name + "." + DateTime.Now.Ticks + ".txt";
             single_zip.Add(sub_file_name, unique);
             zip_util.try_extract_file_names_in_zip(zip_file, zip_dir, single_zip);
@@ -2938,14 +3005,13 @@ namespace LogWizard
 
                 var export = selected_view().export();
 
-                File.WriteAllText( prefix + ".txt", export.to_text());
-                File.WriteAllText( prefix + ".html", export.to_html());
+                File.WriteAllText(prefix + ".txt", export.to_text());
+                File.WriteAllText(prefix + ".html", export.to_html());
 
                 util.open_in_explorer(prefix + ".html");
             } catch (Exception e) {
                 logger.Error("can't export notes to txt/html " + e.Message);
             }
-
         }
 
         private void exportNotestotxtAndhtmlFilesToolStripMenuItem_Click(object sender, EventArgs ea) {
@@ -2954,8 +3020,8 @@ namespace LogWizard
                 util.create_dir(prefix);
                 prefix += "\\Notes on " + new FileInfo(selected_file_name()).Name + " (" + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ")";
                 var export = notes.export_notes();
-                File.WriteAllText( prefix + ".txt", export.to_text());
-                File.WriteAllText( prefix + ".html", export.to_html());
+                File.WriteAllText(prefix + ".txt", export.to_text());
+                File.WriteAllText(prefix + ".html", export.to_html());
 
                 util.open_in_explorer(prefix + ".html");
             } catch (Exception e) {
@@ -2985,11 +3051,14 @@ namespace LogWizard
             show_full_log_type now = shown_full_log_now();
             show_full_log_type next = now;
             switch (now) {
-            case show_full_log_type.both: next = show_full_log_type.just_full_log; 
+            case show_full_log_type.both:
+                next = show_full_log_type.just_full_log;
                 break;
-            case show_full_log_type.just_view: next = show_full_log_type.just_full_log;
+            case show_full_log_type.just_view:
+                next = show_full_log_type.just_full_log;
                 break;
-            case show_full_log_type.just_full_log: next = show_full_log_type.both;
+            case show_full_log_type.just_full_log:
+                next = show_full_log_type.both;
                 break;
             default:
                 Debug.Assert(false);
@@ -2997,15 +3066,19 @@ namespace LogWizard
             }
             show_full_log(next);
         }
+
         private void fullLogToolStripMenuItem_Click(object sender, EventArgs e) {
             show_full_log_type now = shown_full_log_now();
             show_full_log_type next = now;
             switch (now) {
-            case show_full_log_type.both: next = show_full_log_type.just_view; 
+            case show_full_log_type.both:
+                next = show_full_log_type.just_view;
                 break;
-            case show_full_log_type.just_view: next = show_full_log_type.both;
+            case show_full_log_type.just_view:
+                next = show_full_log_type.both;
                 break;
-            case show_full_log_type.just_full_log: next = show_full_log_type.just_view;
+            case show_full_log_type.just_full_log:
+                next = show_full_log_type.just_view;
                 break;
             default:
                 Debug.Assert(false);
@@ -3040,6 +3113,7 @@ namespace LogWizard
             global_ui.show_source = !global_ui.show_source;
             show_source(global_ui.show_source);
         }
+
         private void statusToolStripMenuItem_Click(object sender, EventArgs e) {
             toggle_status();
         }
@@ -3056,7 +3130,7 @@ namespace LogWizard
 
         private void toggles_Click(object sender, EventArgs e) {
             update_toggles();
-            toggleMenu.Show(Cursor.Position);
+            toggleMenu.Show(Cursor.Position, util.menu_direction(toggleMenu, Cursor.Position));
         }
 
         private void whatIsThisToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -3070,9 +3144,9 @@ namespace LogWizard
 
             // I want to visually show to the user that we're dealing with views
             ui_context cur = cur_context();
-            string name = name = "View_" + (cur.views.Count+1);
+            string name = name = "View_" + (cur.views.Count + 1);
             if (history_[logHistory.SelectedIndex].is_file) {
-                name = Path.GetFileNameWithoutExtension( new FileInfo( selected_file_name()).Name) + "_View" + (cur.views.Count + 1);
+                name = Path.GetFileNameWithoutExtension(new FileInfo(selected_file_name()).Name) + "_View" + (cur.views.Count + 1);
             }
 
             return name;
@@ -3083,24 +3157,24 @@ namespace LogWizard
             int cur_view = viewsTab.SelectedIndex;
             var filters = cur_view >= 0 ? cur.views[cur_view].filters : new List<ui_filter>();
 
-            ui_view new_ = new ui_view() { name = new_view_name(cur.views[cur_view]), filters = filters.ToList() };
+            ui_view new_ = new ui_view() {name = new_view_name(cur.views[cur_view]), filters = filters.ToList()};
             cur.views.Insert(cur_view + 1, new_);
 
             viewsTab.TabPages.Insert(cur_view + 1, new_.name);
             viewsTab.SelectedIndex = cur_view + 1;
-            ensure_we_have_log_view_for_tab( cur_view + 1);
+            ensure_we_have_log_view_for_tab(cur_view + 1);
             save();
         }
 
         private void createANewViewFromScratchToolStripMenuItem_Click(object sender, EventArgs e) {
             ui_context cur = cur_context();
             int cur_view = viewsTab.SelectedIndex;
-            ui_view new_ = new ui_view() { name = new_view_name(), filters = new List<ui_filter>() };
+            ui_view new_ = new ui_view() {name = new_view_name(), filters = new List<ui_filter>()};
             cur.views.Insert(cur_view + 1, new_);
 
             viewsTab.TabPages.Insert(cur_view + 1, new_.name);
             viewsTab.SelectedIndex = cur_view + 1;
-            ensure_we_have_log_view_for_tab( cur_view + 1);
+            ensure_we_have_log_view_for_tab(cur_view + 1);
             save();
         }
 
@@ -3112,8 +3186,7 @@ namespace LogWizard
             if (filteredLeft.SplitterDistance >= 0) {
                 global_ui.full_log_splitter_pos = filteredLeft.SplitterDistance;
                 save();
-            }
-            else
+            } else
                 Debug.Assert(false);
         }
 
@@ -3125,8 +3198,7 @@ namespace LogWizard
             if (main.SplitterDistance >= 0) {
                 global_ui.left_pane_pos = main.SplitterDistance;
                 save();
-            }
-            else
+            } else
                 Debug.Assert(false);
         }
 
@@ -3161,15 +3233,10 @@ namespace LogWizard
                 text_.Dispose();
                 text_ = null;
                 remove_all_log_views();
-                on_file_drop(selected_file_name()); 
+                on_file_drop(selected_file_name());
                 // we want to refresh it only after it's been loaded, so that it visually shows that
                 util.postpone(() => full_log_ctrl.force_refresh_visible_columns(), 2000);
             }
         }
-
-
-
-
     }
-
 }

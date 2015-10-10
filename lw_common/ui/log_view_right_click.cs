@@ -17,12 +17,14 @@ namespace lw_common.ui {
 
         private bool via_apps_hotkey_ = false;
 
+        private delegate bool bool_func();
+
         public enum simple_action {
             none, 
             
             view_to_left, view_to_right, view_add_copy, view_add_new, view_delete,
             
-            button_toggles, button_preferences,
+            button_toggles, button_preferences, button_refresh,
 
             export_log_and_notes, export_view, export_notes,
 
@@ -30,7 +32,7 @@ namespace lw_common.ui {
 
             find_find, find_find_next, find_find_prev,
 
-            copy_msg, copy_full_line,
+            copy_msg, copy_full_line,            
 
             // so that the user can edit what he just created
             edit_last_filter,
@@ -56,27 +58,30 @@ namespace lw_common.ui {
         }
 
 
-        private void add_filter_color_actions(List<action> actions, string prefix, action.void_func color, action.void_func match_color, action.void_func no_color = null) {
+        private void add_filter_color_actions(List<action> actions, string prefix, bool_func color, bool_func match_color, bool_func no_color = null) {
             if ( no_color != null)
-                actions.Add(new action { category = "Filter/" + prefix, name = "Default Color", on_click = no_color });
+                actions.Add(new action { category = "Filter/" + prefix, name = "Default Color", on_click = () => no_color() });
 
-            actions.Add(new action { category = "Filter/" + prefix, name = "Color the Full Line", on_click = color });
-            actions.Add(new action { category = "Filter/" + prefix, name = "Match Color (color only what matches)", on_click = match_color });
+            actions.Add(new action { category = "Filter/" + prefix, name = "Color the Full Line", on_click = () => color() });
+            actions.Add(new action { category = "Filter/" + prefix, name = "Match Color (color only what matches)", on_click = () => match_color() });
 
             if (!parent_.lv_parent.current_ui.show_filter) {
                 if ( no_color != null)
                     actions.Add(new action {category = "Filter/" + prefix, name = "Default Color + Take Me to Edit", on_click = () => { 
-                        no_color();
-                        parent_.lv_parent.simple_action(simple_action.edit_last_filter);
+                        // note: the user can cancel on the color dialog
+                        if ( no_color())
+                            parent_.lv_parent.simple_action(simple_action.edit_last_filter);
                     } });
 
                 actions.Add(new action {category = "Filter/" + prefix, name = "Color the Full Line + Take Me to Edit", on_click = () => { 
-                    color();
-                    parent_.lv_parent.simple_action(simple_action.edit_last_filter);
+                    // note: the user can cancel on the color dialog
+                    if ( color())
+                        parent_.lv_parent.simple_action(simple_action.edit_last_filter);
                 } });
                 actions.Add(new action {category = "Filter/" + prefix, name = "Match Color (color only what matches) + Take Me to Edit", on_click = () => {
-                    match_color();
-                    parent_.lv_parent.simple_action(simple_action.edit_last_filter);
+                    // note: the user can cancel on the color dialog
+                    if (match_color())
+                        parent_.lv_parent.simple_action(simple_action.edit_last_filter);
                 }});
             }
         }
@@ -253,7 +258,7 @@ namespace lw_common.ui {
             actions.Add(new action { category = "", name = "Edit Toggles", simple = simple_action.button_toggles });
 
             if (!parent_.lv_parent.current_ui.show_title) {
-                actions.Add(new action { category = "", name = "Refresh...", on_click = do_refresh });
+                actions.Add(new action { category = "", name = "Refresh...", simple = simple_action.button_refresh });
                 actions.Add(new action { category = "", name = "Preferences...", simple = simple_action.button_preferences });                
             }
         }
@@ -426,40 +431,102 @@ namespace lw_common.ui {
 
         private void do_simple(simple_action simple) {
             logger.Info("[right-click] action " + simple);
-            // - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
-
+            parent_.lv_parent.simple_action(simple);
         }
         
-        private void do_rename_view() {
-//  - Rename View -> to rename the view, show source pane, after user presses enter, hide source pane (if it was not visible)
-  //  - when editing view name, show "Press Enter to save, Esc to Exit"
-            
-        }
-        private void do_refresh() {
-            
+        private void do_add_filter(string filter_str, bool is_color_filter, bool is_include_lines_filter, bool is_exclude_lines_filter) {
+            // exclude lines - always apply to existing filters!
+
+            // - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
+            string id = easy_filter_prefix(is_color_filter, is_include_lines_filter, is_exclude_lines_filter);
+            filter_str = id + "\r\n" + filter_str;
+            parent_.lv_parent.add_or_edit_filter(filter_str, id);
         }
 
-        private void do_add_filter(string filter_str) {
-            
+        // this is an easy way for me to later find the filter - in case it needs changing
+        // (for instance, when changing the colors of a line - go to edit a filter, instead of creating a new one)
+        private string easy_filter_prefix(bool is_color_filter, bool is_include_lines_filter, bool is_exclude_lines_filter) {
+            string do_not_edit = "DONOT CHANGE this line -";
+            string prefix = "# " + do_not_edit 
+                + (is_color_filter ? "color " : "") 
+                + (is_include_lines_filter ? "include " : "") 
+                + (is_exclude_lines_filter ? "exclude " : "")
+                + " #" + parent_.smart_edit_sel_text;
+            return prefix;
         }
 
-        private void set_color(bool starting_with, bool color_full_line, bool case_sensitive) {
+        private bool set_color(bool starting_with, bool color_full_line, bool case_sensitive) {
             string header = "Select " + (color_full_line ? "Color" : "Match Color") + " for Lines " + (starting_with ? "Starting With " : "Containing ") 
                 + parent_.smart_edit_sel_text + " " + (case_sensitive ? "" : "(case-INsensitive)") ;
             var location = parent_.PointToScreen( carent_pos);
             var sel = new select_color_form(header, parent_.sel.fg(parent_), location );
-            if (sel.ShowDialog() == DialogResult.OK) {
-            }
+            bool ok = sel.ShowDialog() == DialogResult.OK;
+            if (!ok)
+                return false;
+
+            bool is_color_filter = true;
+            bool is_include_lines = false;
+            bool is_exclude_lines = false;
+            string filter_str = "$msg " + (starting_with ? "startswith" : "contains") + " " + parent_.smart_edit_sel_text 
+                + "\r\n" + (color_full_line ? "color" : "match_color") + " " + util.color_to_str(sel.SelectedColor)
+                + (case_sensitive ? "" : "\r\ncase-insensitive");
+            do_add_filter(filter_str, is_color_filter, is_include_lines, is_exclude_lines);
+            return true;
         }
 
         // if ignore_color, it's a "Default Color" include filter
-        private void include_lines(bool starting_with, bool color_full_line, bool case_sensitive, bool ignore_color = false) {
+        private bool include_lines(bool starting_with, bool color_full_line, bool case_sensitive, bool ignore_color = false) {
             Color col = util.transparent;
             if (!ignore_color) {
-                
+                string header = (color_full_line ? "Color" : "Match Color") + " for Lines " + (starting_with ? "Starting With " : "Containing ") 
+                    + parent_.smart_edit_sel_text + " " + (case_sensitive ? "" : "(case-INsensitive)") ;
+                var location = parent_.PointToScreen( carent_pos);
+                var sel = new select_color_form(header, parent_.sel.fg(parent_), location );
+                bool ok = sel.ShowDialog() == DialogResult.OK;
+                if (!ok)
+                    return false;
+                col = sel.SelectedColor;
             }
+
+            bool is_color_filter = col != util.transparent;
+            bool is_include_lines = true;
+            bool is_exclude_lines = false;
+
+            string filter_str = "$msg " + (starting_with ? "startswith" : "contains") + " " + parent_.smart_edit_sel_text 
+                + (is_color_filter ? "\r\n" + (color_full_line ? "color" : "match_color") + " " + util.color_to_str(col) : "")
+                + (case_sensitive ? "" : "\r\ncase-insensitive");
+
+            do_add_filter(filter_str, is_color_filter, is_include_lines, is_exclude_lines);
+            return true;
         }
-        private void exclude_lines(bool starting_with, bool case_sensitive) {
+        private bool exclude_lines(bool starting_with, bool case_sensitive) {
+            bool is_color_filter = false;
+            bool is_include_lines = false;
+            bool is_exclude_lines = true;
+
+            // exclude lines - always apply to existing filters!
+            string filter_str = "$msg " + (starting_with ? "!startswith" : "!contains") + " " + parent_.smart_edit_sel_text 
+                + (case_sensitive ? "" : "\r\ncase-insensitive");
+            do_add_filter(filter_str, is_color_filter, is_include_lines, is_exclude_lines);
+            return true;
+        }
+
+
+
+
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////
+        /// TODO
+
+
+        private void do_rename_view() {
+//  - Rename View -> to rename the view, show source pane, after user presses enter, hide source pane (if it was not visible)
+  //  - when editing view name, show "Press Enter to save, Esc to Exit"
             
         }
 

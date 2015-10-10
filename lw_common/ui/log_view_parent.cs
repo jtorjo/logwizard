@@ -19,5 +19,7 @@ namespace lw_common.ui {
         ui_info current_ui { get; }
 
         void simple_action(log_view_right_click.simple_action simple);
+
+        void add_or_edit_filter(string filter_str, string filter_id );
     }
 }
