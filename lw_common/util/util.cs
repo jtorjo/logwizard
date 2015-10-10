@@ -19,6 +19,7 @@
  * If you wish to use this code in a closed source application, please contact john.code@torjo.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Diagnostics;
@@ -811,6 +812,13 @@ namespace lw_common {
             else
                 return to_bottom ? ToolStripDropDownDirection.BelowLeft : ToolStripDropDownDirection.AboveLeft;
         }
+
+        public static List<bool> to_list(BitArray ba) {
+            List<bool> list = new List<bool>();
+            for (int i = 0; i < ba.Count; ++i)
+                list.Add(ba[i]);
+            return list;
+        } 
 
     }
 }

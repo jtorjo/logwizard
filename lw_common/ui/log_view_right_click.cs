@@ -56,7 +56,7 @@ namespace lw_common.ui {
 
         private void add_filter_two_actions(List<action> actions, string prefix, action.void_func color, action.void_func match_color) {
             actions.Add(new action { category = "Filter/" + prefix, name = "Color the Full Line", on_click = color });
-            actions.Add(new action { category = "Filter/" + prefix, name = "Match Color (color only what matches)", on_click = color });
+            actions.Add(new action { category = "Filter/" + prefix, name = "Match Color (color only what matches)", on_click = match_color });
 
             if (!parent_.lv_parent.current_ui.show_filter) {
                 actions.Add(new action {category = "Filter/" + prefix, name = "Color the Full Line + Take Me to Edit", on_click = () => { 
@@ -93,8 +93,8 @@ namespace lw_common.ui {
 
             bool sel_at_start = parent_.sel_subitem_text.StartsWith(sel);
             if ( sel_at_start)
-                add_filter_two_actions(actions, "Include Lines Starting With " + small_sel(), null, null );
-            add_filter_two_actions(actions, "Include Lines Containing " + small_sel(), null, null );
+                add_filter_two_actions(actions, "Include Lines Starting With " + small_sel(), () => include_lines(true,true), () => include_lines(true, false) );
+            add_filter_two_actions(actions, "Include Lines Containing " + small_sel(), () => include_lines(false, true), () => include_lines(false, false) );
         }
 
         private void append_current_view_filter_actions(List<action> actions) {
@@ -107,24 +107,28 @@ namespace lw_common.ui {
 
             bool sel_at_start = parent_.sel_subitem_text.StartsWith(sel);
             if ( sel_at_start)
-                add_filter_two_actions(actions, "Exclude Lines Starting With " + small_sel(), null, null );
-            add_filter_two_actions(actions, "Exclude Lines Containing " + small_sel(), null, null );
+                add_filter_two_actions(actions, "Exclude Lines Starting With " + small_sel(), () => exclude_lines(true,true), () => exclude_lines(true, false)  );
+            add_filter_two_actions(actions, "Exclude Lines Containing " + small_sel(), () => exclude_lines(false, true), () => exclude_lines(false, false) );
         }
 
         private void append_filter_goto_actions(List<action> actions) {
             Debug.Assert(!parent_.is_full_log);
 
-            // see if there's a single filter that matched this or more
-            //
-            //  - locate the filter(s) that matched this (and open filter view if hidden)
-            //   - Show all filters that matched this (a bit harder, since we need to select several rows in filter_ctrl; should check that it does not mess with .SelectedIndex)
-            actions.Add(new action { category = "Filter/Go to...", name = "Show Filter that matched this Line", on_click = null });
-            actions.Add(new action { category = "Filter/Go to...", name = "Show All Filters that matched this Line", on_click = null });
-            actions.Add(new action { category = "Filter/Go to...", name = "Edit First Filter that matched this Line", on_click = null });
+            bool is_single_filter = util.to_list(parent_.sel.match.matches).Count(x => x) == 1;
+            if ( is_single_filter)
+                actions.Add(new action { category = "Filter/Go to...", name = "Filter that matched this Line", on_click = find_filter_matching_line });
+            else
+                actions.Add(new action { category = "Filter/Go to...", name = "All Filters that matched this Line", on_click = find_filter_matching_line });
+
+            actions.Add(new action { category = "Filter/Go to...", name = "Edit First Filter that matched this Line", on_click = edit_first_filter_matching_line });
 
             //   - show what other views contain this line - "Go to Other View Containing this line" -> and show which other views contain it
-            actions.Add(new action { category = "Filter/Go to...", name = "Other View Containing this Line", on_click = null });
-            actions.Add(new action { category = "Filter/Go to.../[menu-for-each-such-view]", name = "[view-name]", on_click = null });
+            var other = other_views_containing_this_line(parent_.sel_row_idx);
+            string prefix = "Filter/Go to.../Other View Containing this Line";
+            foreach (var name in other) {
+                string cur = name;
+                actions.Add(new action {category = prefix, name = name, on_click = () => go_to_view(cur)});
+            }
         }
 
         private void append_filter_create_actions(List<action> actions) {
@@ -137,8 +141,8 @@ namespace lw_common.ui {
 
             bool sel_at_start = parent_.sel_subitem_text.StartsWith(sel);
             if ( sel_at_start)
-                add_filter_two_actions(actions, "Set Color Of Lines Starting With " + small_sel(), null, null );
-            add_filter_two_actions(actions, "Set Color Of Lines Including " + small_sel(), null, null );
+                add_filter_two_actions(actions, "Set Color Of Lines Starting With " + small_sel(), () => set_color(true,true), () => set_color(true, false) );
+            add_filter_two_actions(actions, "Set Color Of Lines Including " + small_sel(), () => set_color(false, true), () => set_color(false, false) );
         }
 
         // only when there's a filter that matched this line
@@ -152,8 +156,8 @@ namespace lw_common.ui {
 
             bool sel_at_start = parent_.sel_subitem_text.StartsWith(sel);
             if ( sel_at_start)
-                add_filter_two_actions(actions, "Change Color Of Lines Starting With " + small_sel(), null, null );
-            add_filter_two_actions(actions, "Change Color Of Lines Including " + small_sel(), null, null );
+                add_filter_two_actions(actions, "Change Color Of Lines Starting With " + small_sel(), () => set_color(true,true), () => set_color(true, false) );
+            add_filter_two_actions(actions, "Change Color Of Lines Including " + small_sel(), () => set_color(false, true), () => set_color(false, false) );
         }
 
         private void append_filter_actions(List<action> actions) {
@@ -215,7 +219,7 @@ namespace lw_common.ui {
 
         // appends Buttons such as Toggles,Preferences..etc
         private void append_button_actions(List<action> actions) {
-            actions.Add(new action { category = "", name = "Update Toggles", simple = simple_action.button_toggles });
+            actions.Add(new action { category = "", name = "Edit Toggles", simple = simple_action.button_toggles });
 
             if (!parent_.lv_parent.current_ui.show_title) {
                 actions.Add(new action { category = "", name = "Refresh...", on_click = do_refresh });
@@ -346,11 +350,16 @@ namespace lw_common.ui {
 
             foreach (action a in actions) {
                 var item = create_menu(menu, a.name, a.category, a.separator);
-                if ( !a.separator)
+                if (!a.separator) {
                     item.Enabled = a.enabled;
+                    var to_do = a.simple;
+                    var to_act = a.on_click;
+                    if ( to_do != simple_action.none)
+                        item.Click += (sender, args) => do_simple(to_do);
+                    else 
+                        item.Click += (sender, args) => to_act();
+                }
             }
-
-            // check if showing menu would be too big at this position
 
             menu.Show(parent_, point, util.menu_direction(menu, parent_.PointToScreen(point)) );
         }
@@ -371,6 +380,13 @@ namespace lw_common.ui {
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////
+
+        private void do_simple(simple_action simple) {
+            logger.Info("[right-click] action " + simple);
+            // - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
+
+        }
+        
         private void do_rename_view() {
 //  - Rename View -> to rename the view, show source pane, after user presses enter, hide source pane (if it was not visible)
   //  - when editing view name, show "Press Enter to save, Esc to Exit"
@@ -380,10 +396,39 @@ namespace lw_common.ui {
             
         }
 
-        private void do_new_filter(action a) {
-            // base the color on what color is on the current line!
+        private void set_color(bool starting_with, bool color_full_line) {
+            
         }
 
+        private void include_lines(bool starting_with, bool color_full_line) {
+            
+        }
+        private void exclude_lines(bool starting_with, bool color_full_line) {
+            
+        }
+
+        private void find_filter_matching_line() {
+            
+            // see if there's a single filter that matched this or more
+            //
+            //  - locate the filter(s) that matched this (and open filter view if hidden)
+            //   - Show all filters that matched this (a bit harder, since we need to select several rows in filter_ctrl; should check that it does not mess with .SelectedIndex)
+        }
+
+        private void edit_first_filter_matching_line() {
+            
+        }
+
+        private List<string> other_views_containing_this_line(int row_idx) {
+            List<string> other = new List<string>();
+            other.Add("one");
+            other.Add("two");
+            return other;
+        }
+
+        private void go_to_view(string name) {
+            
+        }
 
     }
 }
