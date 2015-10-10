@@ -33,6 +33,9 @@ namespace lw_common {
     //
     // the filter row itself can have several lines, each of the lines need to yield a positive match, in order for the row to yield a match
     public class raw_filter_row {
+
+        public const string FILTER_ID_PREFIX = "# // ";
+
         protected bool Equals(raw_filter_row other) {
             return same(other) && (enabled == other.enabled) && (dimmed == other.dimmed);
         }
@@ -85,6 +88,9 @@ namespace lw_common {
         public readonly bool apply_to_existing_lines = false;
 
         protected readonly string unique_id_;
+
+        // 1.2.20+ useful to find a filter by id
+        private readonly string[] lines_;
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // CHANGEABLE DATA 
         //
@@ -107,11 +113,22 @@ namespace lw_common {
             }
         }
 
+        // 1.2.20+ - easy way to uniquely identify a filter within a view
+        public string filter_id {
+            get {
+                foreach ( string line in lines_)
+                    if (line.StartsWith(FILTER_ID_PREFIX))
+                        return line;
+                return "";
+            }
+        }
+
         public raw_filter_row(raw_filter_row other) {
             items_ = other.items_.ToList();
+            lines_ = other.lines_.ToArray();
             additions_ = other.additions.ToList();
             apply_to_existing_lines = other.apply_to_existing_lines;
-            unique_id_ = other.unique_id;
+            unique_id_ = other.unique_id_;
             valid_ = other.valid_;
             enabled_ = other.enabled;
             dimmed_ = other.dimmed_;
@@ -124,7 +141,8 @@ namespace lw_common {
             this.apply_to_existing_lines = apply_to_existing_lines;
             List<filter_line> lines = new List<filter_line>();
             List<addition> additions = new List<addition>();
-            foreach ( string line in text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)) {
+            lines_ = text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            foreach ( string line in lines_) {
                 filter_line item = filter_line.parse(line);
                 if ( item != null)
                     lines.Add(item);

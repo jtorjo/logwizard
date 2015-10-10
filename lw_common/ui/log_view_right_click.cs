@@ -437,17 +437,20 @@ namespace lw_common.ui {
         private void do_add_filter(string filter_str, bool is_color_filter, bool is_include_lines_filter, bool is_exclude_lines_filter) {
             // exclude lines - always apply to existing filters!
 
-            // - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
             string id = easy_filter_prefix(is_color_filter, is_include_lines_filter, is_exclude_lines_filter);
             filter_str = id + "\r\n" + filter_str;
-            parent_.lv_parent.add_or_edit_filter(filter_str, id);
+            bool apply_to_existing_lines = is_color_filter || is_exclude_lines_filter;
+            if (is_include_lines_filter)
+                apply_to_existing_lines = false;
+
+            parent_.lv_parent.add_or_edit_filter(filter_str, id, apply_to_existing_lines);
         }
 
         // this is an easy way for me to later find the filter - in case it needs changing
         // (for instance, when changing the colors of a line - go to edit a filter, instead of creating a new one)
         private string easy_filter_prefix(bool is_color_filter, bool is_include_lines_filter, bool is_exclude_lines_filter) {
             string do_not_edit = "DONOT CHANGE this line -";
-            string prefix = "# " + do_not_edit 
+            string prefix = raw_filter_row.FILTER_ID_PREFIX + do_not_edit 
                 + (is_color_filter ? "color " : "") 
                 + (is_include_lines_filter ? "include " : "") 
                 + (is_exclude_lines_filter ? "exclude " : "")

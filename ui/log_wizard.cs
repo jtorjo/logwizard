@@ -918,8 +918,8 @@ namespace LogWizard
             }
         }
 
-        public void add_or_edit_filter(string filter_str, string filter_id) {
-            filtCtrl.update_filter_row(filter_id, filter_str);
+        public void add_or_edit_filter(string filter_str, string filter_id, bool apply_to_existing_lines) {
+            filtCtrl.update_filter_row(filter_id, filter_str, apply_to_existing_lines);
             last_edited_filter_id_ = filter_id;
         }
 

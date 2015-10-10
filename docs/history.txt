@@ -1,7 +1,14 @@
 
 
 
+- bug: right click menu: changing filter color (of an existing filter) sometimes messes up rendering completely - maybe an extra refresh would be in order?
+
 log_view_right_click
+
+
+1.2.20c
+- menu: most filter actions work
+  - need more testing
 
 
 1.2.20b

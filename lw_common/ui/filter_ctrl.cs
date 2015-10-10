@@ -87,6 +87,13 @@ namespace lw_common.ui {
                 set { filter_.apply_to_existing_lines = value; }
             }
 
+            public string filter_id {
+                get {
+                    raw_filter_row row = new raw_filter_row(filter_.text, filter_.apply_to_existing_lines);
+                    return row.filter_id;
+                }
+            }
+
             public string found_count = "";
 
             // "name" is just a friendly name for the text
@@ -678,8 +685,46 @@ namespace lw_common.ui {
             
         }
 
-        public void update_filter_row(string id, string filter_str) {
-            
+        public void update_filter_row(string id, string filter_str, bool apply_to_existing_lines) {
+            bool updated = false;
+            bool was_selected = false;
+            for (int idx = 0; idx < filterCtrl.GetItemCount(); ++idx) {
+                var i = filterCtrl.GetItem(idx).RowObject as filter_item;
+                if (i.filter_id == id) {
+                    i.text = filter_str;
+                    was_selected = idx == filterCtrl.SelectedIndex;
+                    filterCtrl.RefreshObject(i);
+                    updated = true;
+                    break;
+                }
+            }
+
+            if (!updated) {
+                // new filter
+                ui_filter new_ui = new ui_filter {enabled = true, dimmed = false, text = filter_str, apply_to_existing_lines = apply_to_existing_lines};
+                filter_item new_ = new filter_item( new_ui);
+
+                view_.filters.Add( new_ui );
+
+                ++ignore_change_;
+                filterCtrl.AddObject(new_);
+                --ignore_change_;
+            }
+
+            // if editing, need to update that as well
+            if (was_selected) {
+                ++ignore_change_;
+                curFilterCtrl.Text = filter_str;
+                --ignore_change_;                
+            }
+
+            do_save();
+            ui_to_view(view_idx_);
+            if (updated)
+                refresh_view(view_idx_);
+            else
+                rerun_view(view_idx_);
+
         }
 
         // goes to select the filter created here
