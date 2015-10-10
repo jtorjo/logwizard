@@ -8,6 +8,19 @@
 
 -------------------------------------------------------
 
+	- allow toggling "matches filter(s) X,Y,Z ON/OFF" - this toggle should be customizable (several filters or simply just an extra function?)
+	  - in other words, say i may have a filter or several filters
+	    a. i want to be able to say "at this point, show only messages from these filters" BUT easily be able to toggle back to "show everything in this view"
+		b. i want to be abe to also do "show everything in the current log (while preserving the filters)" and easily be able to toggle back
+		  - i need to modify the way the log model is kept - i will need to keep 3 models: the view itself, the toggled-view (a.), the full-log-view
+		    - very likely - i need to share the full-log-view between all views
+			- need to think about memory efficiency
+	- teh logview needs to refresh and also, old_item_count_ / last_item_count_while_current_view_  -> see how to update them
+	 - when on a line when showing all logs 
+	   -> right click should show teh "Include lines starting/containing"
+	   -> we should not have "Filter/Goto ..." menu
+	   - tothink about the rest
+    - toggling - will preserve the seleted row + its location on the screen!!! (based on its rectangle bounds - computed the first row that is visible, and scroll to there)
 
 
 
@@ -25,8 +38,6 @@
 
 
 
-- search - allow starting from here (=default) or from top
-- search - synchronize with full log
 
 
 
@@ -65,18 +76,76 @@
 	- cmd line client should also be able to dump a certain view into another file (.txt or .html); this way, you might run it on Test results?
 
 
+
+
+
+
+
+
+
+
+
+            
+
+
+
+- threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
+  - this should basically be by assigning a color to each thread's BACKGROUND. Then update the background for each line accordingly
+    say we have 3 threads: one, two, three and assign to them : red, green, yellow
+	we will have an extra column (perhaps the thread column anyway) what will divide itself into the number or different colors (3)
+	then, based on this, it will show one of the 3 in a certain color (red, green, yellow) - each of the different colors will get a different slot
+	then, 
+	- the background of EACH line will update to a ligher version of the given thread color (like red -> very light red)
+	- whenever a line is selected, all the lines from the same thread will be shown on a slighly darker background than usual (like red -> light red)
+	--> (pro_v) same with any context or anything that can be a "filter". In other words, categorize by something (like, a module or so) 
+	    i should allow by other contexts, with the following: at most 10 contexts (the, pro_v)
+	+ save everything the user selects (colors, how he categorizes) - TOTHINK how?
+	- article: LogWizard - Threading can be easy - Thread Filters
+	 ------- also, explain that you can toggle:
+	           - on only currently shown thread (from view) 
+			   - only current shown thread (from full log) 
+			   - everything (from full log) + everything (from view) 
+			   - which is the view itself
+
+
+
+
+
+
+
+
+
+
+
+
+
+- preview mode (probably not pro_v)
+  - in this mode, we only load part of the file, like, first 50K lines or so
+  - also, we stop monitoring for new lines (so we don't interfere with the view/filter creation process)
+  - when toggling ON/OFF - show in status (as WARNING), that we're in Preview or not
+  - in preview mode, filters will run a LOT faster
+    - allow setting the preview mode - how many lines, from where (beginning or end, or half begging half end)
+  - when it's a large file, and we don't have any filters, dump a warning
+    - by default, on large files, we should automatically toggle preview-mode ON (setting "Auto toggle preview mode on new files larger than X")
+  - first and last lines in PREVIEW mode should be something like "YOU ARE IN PREVIEW MODE"
+    - so that the user is instantly aware of it
+  - Preview mode is on a file-by-file basis (not context-dependent)
+  - *** if not pro_v -> article about it?
+
+
+
+
+
+
+
+
+
 - "start monitoring" have a list in settings of locations to monitor
   - at the first sign of a file that was rewritten -> select that file
   (stoppable with ESC)
   - awesome when debugging several apps -> thus, you can have several custom locations - move there, then "start monitoring" and the file is selected
    (care if the file is already open in another window)
    useful even wehn debugging a single app at a time.
-
-- debug viewer (OutputDebugString)
-  https://technet.microsoft.com/en-us/library/bb896647.aspx
-  https://github.com/djeedjay/DebugViewPP (Dbgviewreader.cpp, dblogreader.cpp)
-
-
 
 
 
@@ -95,49 +164,95 @@
   - allow synchronizing what i type-search with full log (that is, show in both current view and full log) 
     - both ways, from current view to full log and back
   - allow synchronizing full log - match color with current view
-              
 
-
-
-
-
-
-- threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
-  - this should basically be by assigning a color to each thread's BACKGROUND. Then update the background for each line accordingly
-    say we have 3 threads: one, two, three and assign to them : red, green, yellow
-	we will have an extra column (perhaps the thread column anyway) what will divide itself into the number or different colors (3)
-	then, based on this, it will show one of the 3 in a certain color (red, green, yellow) - each of the different colors will get a different slot
-	then, 
-	- the background of EACH line will update to a ligher version of the given thread color (like red -> very light red)
-	- whenever a line is selected, all the lines from the same thread will be shown on a slighly darker background than usual (like red -> light red)
-	--> (pro_v) same with any context or anything that can be a "filter". In other words, categorize by something (like, a module or so) 
-	    i should allow by other contexts, with the following: at most 10 contexts (the, pro_v)
-	+ save everything the user selects (colors, how he categorizes) - TOTHINK how?
-
-
-
-
-
-
-
-
-- view the event log + article
+- view the event log + article -- 
   http://www.aspheute.com/english/20000811.asp
   http://www.codeproject.com/Articles/14455/Eventlog-Viewer
   http://www.codeproject.com/Articles/91/WindowsNT-Event-Log-Viewer
-  allow .csv files, .xml, and merge files (up to 5000 lines -> rest (pro_v))
-  -- at this point, i need to have "details" pane + when smart searching -> allow including the non-visible columns (like, those shown in Details)
-  -- also, category -> picture should work for the event type
+		- debug viewer (OutputDebugString)
+		  https://technet.microsoft.com/en-us/library/bb896647.aspx
+		  https://github.com/djeedjay/DebugViewPP (Dbgviewreader.cpp, dblogreader.cpp)
+  -- implement toggle details 
+     - allow several details in there
+	 - allow specifying which columns to be in details, and which in list (they can overlap)
+	 - save column widths / positions in global_ui
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- 'alt-d' toggle details - this is the beginning of a larger feature -> allow showing details about the message (like, certain columns should show up in the list, and certain in the details - they can overlap)
+  if turned on, the msg details is automatically off
+  - i should also have a way to toggle msg_details on/off
 
 - allow files from http / ftp (+ allow settings for each type of text reader - in this case - by default, cache it)
+- parsing xml/csv?
+	allow .csv files, .xml, and merge files 
+		-- at this point, i need to have "details" pane + when smart searching -> allow including the non-visible columns (like, those shown in Details)
+		-- also, category -> picture should work for the event type
+		-- at this point 
+		   - xml/csv can contain LOTS of information - thus, our line class will probably not be enough
+		     - so, i will need to create an ext_line class allowing up to 50 columns or so
+			 - when creating filters - i should be able to filter by column names instead of things like $ctx5 
+			   - need to create a string-to-column-name correspondence (by default, all column names correspond to themselves, then we can add aliases)
+			     TOTHINK where should we keep the aliases (in context?) + what do we do when we have a filter line whose alias we can't find?
+  -- toggle details -> explain how you can set-up your own customized details.
+     - article (other types of files - xml, csv)
+	   - merge files - even if with different extensions - TOTHINK what the max size should be for when not pro_v (maybe up to 100K lines)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 - filtering right click - just like right now we only do filter on msg row, allow other rows as well (pro_v)
-
-
 
 - (pro_v) improve find: find-type as you go - very useful for regexes: basically
   have a testing 500-1000 lines from the beginning of the current view, in which we "test-the find", and as soon as we find something, we insta-show it
@@ -182,19 +297,14 @@
 
 
 
-- log friendly name -> retest, useful for Denise (also, will be useful in the future, when we'll have several text readers)
-
-- 'alt-d' toggle details - this is the beginning of a larger feature -> allow showing details about the message (like, certain columns should show up in the list, and certain in the details - they can overlap)
-  if turned on, the msg details is automatically off
-  - i should also have a way to toggle msg_details on/off
-  IMPORTANT - this is view dependent - i can create views where it makes sense to always see details TOTHINK
 
 
 
 
 
-- creating your filters? in that case, it would be quite useful to have a smaller log (so that when filters refresh, this happens quicker)
-  we should have something that will only take 2Mb or so from the log. then, when toggled again, it will go back to the full log (and refresh)
+
+
+
 
 
 - creating filters tutorial - have 2 tutorials for creating the same views (the views for TN2scrapepot) - one when editing filters manually, one with selecting words, and converting them to filters
@@ -275,26 +385,11 @@
 
 
 
-------------- talk with Vidi
 
-
-
-- allow copy-paste of full-log into a cloud
-
-- file:line -> allow showing the actual source code , eventually integrate with visual studio, 
-  eventually think about root folder / and allow overriding it to your own
-  integrate with github/bitbucket for open source projects? - look for api from github/bitbucket for retrieving files
-  
-- find: allow showing only the lines that matched the find condition (toggle)
-- in visual studio -> if i'm at file:line -> go into logwizard and see what messages were written at this file:line -> create a view with those lines or something like that
-
-- find -> convert to a filter 
-
----------------
-
-
-- at some point: all commands should be available via menu - which should be turned on/off
-
+- allow showing/hiding views (pro_v)
+  this would be for when you don't want that view to be visible (when you have too many, or - some might be very complex, and take a lot of time to run)
+  when a view is hidden - we don't run its filters (unless any of them are "alerts")
+  - when shown back, run the filters
 
 
 
@@ -322,3 +417,32 @@
 - merge files - allow merging several files (we will allow up to some decent size, like 50M, then pro_v)
 
 - probably 500Mb+ files (pro_v? optimize some stuff for such files)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------- talk with Vidi
+- allow copy-paste of full-log into a cloud
+
+- file:line (pro_v) -> allow showing the actual source code , eventually integrate with visual studio, 
+  eventually think about root folder / and allow overriding it to your own
+  integrate with github/bitbucket for open source projects? - look for api from github/bitbucket for retrieving files
+  
+- find (pro_v): allow showing only the lines that matched the find condition (toggle)
+- in visual studio -> if i'm at file:line -> go into logwizard and see what messages were written at this file:line -> create a view with those lines or something like that
+
+- find -> convert to a filter 
+---------------
+
+

@@ -1,17 +1,32 @@
 
 
+- bug: (seems it's not apply to existing lines/???')
+# // DONOT CHANGE this line -color  #Process
+$msg startswith Process
+match_color #9F00FF
+-- this when added to Init/exit messes it up (it shows) all lines instead of just the filtered ones
 
-- bug: right click menu: changing filter color (of an existing filter) sometimes messes up rendering completely - maybe an extra refresh would be in order?
-- when changing color - when the filter also has oher info (such as, match color) - we need to just UPDATE it (preserve what was already there)
+
+- bug: release -> alt-f sometimes beeps and does not work properly (same thing for alt-n)
+  - it may have to do something with richtextbox shortcuts???
+  - maybe because i'm handing it in keydown instead of keyup????
+
 - bug - i have two filters - first matches color, second matches match-color(+apply to existing lines)
   - i need to make sure both are applied (first one - color of line, second one - the match color)
 
-log_view_right_click
+- bug: search (find, find next, find prev) - need to synchronize with full log
+       same thing when typing and moving ahead/below to a different row
+
+- bug: right click menu: changing filter color (of an existing filter) sometimes messes up rendering completely - maybe an extra refresh would be in order?
+- when changing color - when the filter also has oher info (such as, match color) - we need to just UPDATE it (preserve what was already there)
+
+
+log_view_right_click - filter goto + rename view
 
 
 - TOTHINK how will exclude lines + include lines work together? in other words, include lines don't apply to existing lines, while exclude lines apply
   how can i make this work?
-  perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
+  *************perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
   perhaps i should have something like "ignore all lines that don't have color set" (per view) which i could toggle on/off?? not sure how complicated that would be
     probably this is a bad idea -> i should make it possible to have a toggle that would show all log or just the filtered view
 	this way (when the whole log is shown, the user can add more filters)
@@ -21,6 +36,7 @@ log_view_right_click
 
 
 
+1.2.21
 
 
 1.2.20d
