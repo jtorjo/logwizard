@@ -11,21 +11,6 @@
 
 
 
-- tothink about menu : should i create a single filter_row + noneditable( so that only I can change it), or create a single row per request (eventually with meaningful ## names)
-  - we auto recreate it before showing -> if too many items, split into Filter/View/etc. otherwise, single (with splitters for sections)
-
-
-
-
-
-
-
-
-
-
- - match_color -> here, for a line, i need to run all filters that have matchcolor (since some could actually modify match_color)
-  at this time i assume it's just for $msg
-  i should care about the first thing column that matches (for instance, for $ctx1 filter, match color applies to $ctx1)
 
 
 

@@ -2,11 +2,28 @@
 
 
 - bug: right click menu: changing filter color (of an existing filter) sometimes messes up rendering completely - maybe an extra refresh would be in order?
+- when changing color - when the filter also has oher info (such as, match color) - we need to just UPDATE it (preserve what was already there)
+- bug - i have two filters - first matches color, second matches match-color(+apply to existing lines)
+  - i need to make sure both are applied (first one - color of line, second one - the match color)
 
 log_view_right_click
 
 
-1.2.20c
+- TOTHINK how will exclude lines + include lines work together? in other words, include lines don't apply to existing lines, while exclude lines apply
+  how can i make this work?
+  perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
+  perhaps i should have something like "ignore all lines that don't have color set" (per view) which i could toggle on/off?? not sure how complicated that would be
+    probably this is a bad idea -> i should make it possible to have a toggle that would show all log or just the filtered view
+	this way (when the whole log is shown, the user can add more filters)
+	-- very likely i should think about reusing the fulllog???
+	   probably everything is fine as is - just need to explain to users - if they want more  lines in your view, just toggle full-log on, select what you want
+
+
+
+
+
+
+1.2.20d
 - menu: most filter actions work
   - need more testing
 
