@@ -42,7 +42,7 @@
 
 
 
-
+   ------------> perhaps threads first (i think it's less code???? TOTHINK)
 
 - option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?; probably - yes)
 
@@ -97,6 +97,11 @@
 	then, 
 	- the background of EACH line will update to a ligher version of the given thread color (like red -> very light red)
 	- whenever a line is selected, all the lines from the same thread will be shown on a slighly darker background than usual (like red -> light red)
+	   - same thing happens when the line is selected in the "threads" pane 
+	    - TOTHINK how many shades of the given color i should have - since it's the normal color, then selected color, then other lines of the same color
+		- also perhaps, have a way to toggle the "thread colors" on/off - so that i can have these colors even if the threads pane is off.
+	- once i select a color (allow for common colors as well)
+	  - if another thread has the same color -> change the other thread's color
 	--> (pro_v) same with any context or anything that can be a "filter". In other words, categorize by something (like, a module or so) 
 	    i should allow by other contexts, with the following: at most 10 contexts (the, pro_v)
 	+ save everything the user selects (colors, how he categorizes) - TOTHINK how?

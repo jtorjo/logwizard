@@ -144,7 +144,7 @@ namespace LogWizard
                 load_contexts(sett);
             }
             notes.set_author( app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
-            notes_keeper.inst.init( util.is_debug ? "notes" : Program.local_dir(), app.inst.identify_notes_files);
+            notes_keeper.inst.init( util.is_debug ? "notes" : Program.local_dir() + "\\notes", app.inst.identify_notes_files);
             notes.on_note_selected = on_note_selected;
 
             ++ignore_change_;

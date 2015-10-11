@@ -59,7 +59,7 @@ namespace lw_common {
             foreach ( string md5 in local)
                 if (md5_to_notes_file_.ContainsKey(md5))
                     // we already know the notes-file for this specific file
-                    return dir_ + "\\" + md5_to_notes_file_[md5];
+                    return Path.Combine( dir_, md5_to_notes_file_[md5]);
 
             // it's a new file
             string file_md5 = md5_log_keeper.inst.get_md5_for_file(file, prefer_md5_method_);
@@ -70,7 +70,7 @@ namespace lw_common {
             foreach ( string md5 in local)
                 if (md5_to_notes_file_.ContainsKey(md5))
                     // we already know the notes-file for this specific file
-                    return dir_ + "\\" + md5_to_notes_file_[md5];
+                    return Path.Combine( dir_ , md5_to_notes_file_[md5]);
 
             string guid = "{" + Guid.NewGuid().ToString() + "}.txt";
             md5_to_notes_file_.Add(file_md5, guid);
@@ -82,7 +82,7 @@ namespace lw_common {
 
             save();
 
-            return dir_ + "\\" + guid;
+            return Path.Combine( dir_ , guid);
         }
 
         private void save() {

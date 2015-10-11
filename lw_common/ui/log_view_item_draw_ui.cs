@@ -129,6 +129,8 @@ namespace lw_common.ui {
             } else 
                 color = is_sel ? dark_bg : bg;
 
+            if (color == util.transparent)
+                color = Color.White;
             return color;
         }
 

@@ -7,9 +7,6 @@ match_color #9F00FF
 -- this when added to Init/exit messes it up (it shows) all lines instead of just the filtered ones
 
 
-- bug: release -> alt-f sometimes beeps and does not work properly (same thing for alt-n)
-  - it may have to do something with richtextbox shortcuts???
-  - maybe because i'm handing it in keydown instead of keyup????
 
 - bug - i have two filters - first matches color, second matches match-color(+apply to existing lines)
   - i need to make sure both are applied (first one - color of line, second one - the match color)
@@ -37,6 +34,9 @@ log_view_right_click - filter goto + rename view
 
 
 1.2.21
+- fix: bug: release -> alt-f sometimes beeps and does not work properly (same thing for alt-n)
+  - it may have to do something with richtextbox shortcuts???
+  - maybe because i'm handing it in keydown instead of keyup????
 
 
 1.2.20d
