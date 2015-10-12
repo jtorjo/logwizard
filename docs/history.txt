@@ -4,6 +4,7 @@
 - new samples (+update Logwizardsetupsample) -> i should have one or two logwizard samples that users can take a look at
   - i should create the context only with rightclick
   - also, create the uk_small filter
+  --- expain in setup sample - use ctrl-o to open explorer, find samples etc.
 
 
 
