@@ -923,6 +923,10 @@ namespace LogWizard
             last_edited_filter_id_ = filter_id;
         }
 
+        public void after_search() {
+            on_log_changed_line();
+        }
+
         public static List<log_wizard> forms {
             get { return forms_; }
         }
@@ -1041,7 +1045,7 @@ namespace LogWizard
             if (lv.is_filter_up_to_date) {
                 lv.go_to_row(selected_row_idx, log_view.select_type.do_not_notify_parent);
                 if (lv.sel_line_idx >= 0)
-                    on_log_changed_line(lv.sel_line_idx, lv);
+                    on_log_changed_line_do_sync(lv.sel_line_idx, lv);
             } else
                 util.postpone(() => try_to_go_to_selected_line(selected_row_idx), 250);
         }
@@ -1277,6 +1281,15 @@ namespace LogWizard
         }
 
         private void on_move_key_end() {
+            on_log_changed_line();
+            // the reason we have this is because of a bug in the renderer
+            // apparently, it draws the selected rectangle with one extra pixel - thus, leaving a "trail" - we don't want that
+            var sel = selected_view();
+            sel.list.Refresh();
+        }
+
+
+        private void on_log_changed_line() {
             var sel = selected_view();
             update_notes_current_line();
 
@@ -1285,12 +1298,11 @@ namespace LogWizard
                 return;
             }
 
-            on_log_changed_line(sel.sel_line_idx, sel);
+            on_log_changed_line_do_sync(sel.sel_line_idx, sel);
 
             global_ui.selected_row_idx = global_ui.selected_row_idx = sel.sel_row_idx;
             if (logHistory.SelectedIndex >= 0)
                 global_ui.log_name = global_ui.log_name = history_[logHistory.SelectedIndex].name;
-            sel.list.Refresh();
         }
 
         private void update_notes_current_line() {
@@ -1310,7 +1322,7 @@ namespace LogWizard
             update_notes_current_line();
         }
 
-        public void on_log_changed_line(int line_idx, log_view from) {
+        private void on_log_changed_line_do_sync(int line_idx, log_view from) {
             if (global_ui.show_fulllog) {
                 if (from != full_log_ctrl && app.inst.sync_full_log_view)
                     full_log_ctrl.go_to_row(line_idx, log_view.select_type.do_not_notify_parent);

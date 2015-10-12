@@ -1,9 +1,5 @@
 
 
-
-- bug: search (find, find next, find prev) - need to synchronize with full log
-       same thing when typing and moving ahead/below to a different row
-
 - bug: right click menu: changing filter color (of an existing filter) sometimes messes up rendering completely - maybe an extra refresh would be in order?
 - when changing color - when the filter also has oher info (such as, match color) - we need to just UPDATE it (preserve what was already there)
 
@@ -27,6 +23,11 @@ log_view_right_click - filter goto + rename view
   - i should create the context only with rightclick
   - also, create the uk_small filter
 
+
+
+1.2.23b
+- fix: bug: search (find, find next, find prev) - need to synchronize with full log
+       same thing when typing and moving ahead/below to a different row
 
 
 1.2.23a

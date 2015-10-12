@@ -1249,6 +1249,7 @@ namespace lw_common
         internal void select_cell(int row_idx, int cell_idx) {
             cur_col_ = cell_idx;
             select_idx(row_idx, select_type.notify_parent);
+            lv_parent.after_search();
         }
 
         private void list_SelectedIndexChanged(object sender, EventArgs e) {
@@ -1477,28 +1478,6 @@ namespace lw_common
             list.Refresh();
         }
 
-        /* 
-        private void search_next() {
-            var lv = selected_view();
-            if (lv == null)
-                return;
-            if ( search_for_text_ != null)
-                lv.search_for_text_next(search_for_text_);
-            else if ( filtCtrl.sel >= 0)
-                lv.search_for_next_match( filtCtrl.sel);
-        }
-
-        private void search_prev() {
-            var lv = selected_view();
-            if (lv == null)
-                return;
-            if ( search_for_text_ != null)
-                lv.search_for_text_prev(search_for_text_);            
-            else if ( filtCtrl.sel >= 0)
-                lv.search_for_prev_match( filtCtrl.sel);
-        }
-        */
-
         private msg_details_ctrl msg_details {
             get {
                 foreach ( var ctrl in parent.Controls)
@@ -1552,6 +1531,7 @@ namespace lw_common
                 search_for_text_next();
             else if ( cur_filter_row_idx_ >= 0)
                 search_for_next_match(cur_filter_row_idx_);
+            lv_parent.after_search();
         }
 
         public void search_prev() {
@@ -1568,6 +1548,7 @@ namespace lw_common
                 search_for_text_prev();
             else if ( cur_filter_row_idx_ >= 0)
                 search_for_prev_match(cur_filter_row_idx_);
+            lv_parent.after_search();
         }
 
         // note: starts from the next row, or, if on row zero -> starts from row zero
@@ -1587,7 +1568,7 @@ namespace lw_common
             if ( include_row_zero && string_search.matches( i.match.line.part(info_type.msg), cur_search_)) {
                 // line zero contains the text already
                 ensure_line_visible(0);
-                return;
+                lv_parent.after_search();
             } else
                 search_for_text_next();
         }
@@ -2230,7 +2211,8 @@ namespace lw_common
             if (found_row >= 0) {
                 go_to_row(found_row, select_type.notify_parent);
                 edit.update_ui();
-                edit.go_to_text(txt);                
+                edit.go_to_text(txt);
+                lv_parent.after_search();
             }
         }
 
