@@ -495,18 +495,18 @@ namespace lw_common.ui {
                 var lines = curFilterCtrl.Text.Split( new string[] { "\r\n" }, StringSplitOptions.None ).ToList();
                 int sel_start = curFilterCtrl.SelectionStart;
                 int edited_line = util.index_to_line(curFilterCtrl.Text, sel_start);
-                if (edited_line >= 0 && !filter_line.is_color_line(lines[edited_line]))
+                if (edited_line >= 0 && !filter_line.is_color_or_font_line(lines[edited_line]))
                     // user is editing a line that is not a color line
                     edited_line = -1;
                 if (edited_line == -1) {
                     // it's not with the cursor on a line - find the first line that would actually be a color
                     for ( int i = 0; i < lines.Count && edited_line == -1; ++i)
-                        if (filter_line.is_color_line( lines[i]))
+                        if (filter_line.is_color_or_font_line( lines[i]))
                             edited_line = i;
                 }
                 if (edited_line != -1) {
                     // in this case, he's editing the color from a given line
-                    bool is_color_line = filter_line.is_color_line( lines[edited_line]);
+                    bool is_color_line = filter_line.is_color_or_font_line( lines[edited_line]);
                     bool is_replacing = lines[edited_line].Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries).Length <= 2 &&
                                         lines[edited_line].TrimEnd() == lines[edited_line];
                     if (is_color_line) {
@@ -702,22 +702,6 @@ namespace lw_common.ui {
             
         }
 
-        private string merge_filter_row(string old_text, string new_text) {
-            // note : we don't care about apply-to-existing-lines - we know it's the same amongst old/new filter row
-            //        what I care about is the colors (line color and merge color)
-            bool apply_to_existing_lines = false;
-            var old_row = new raw_filter_row(old_text, apply_to_existing_lines);
-            var new_row = new raw_filter_row(new_text, apply_to_existing_lines);
-
-            if (new_row.color_line == "" && old_row.color_line != "") 
-                // preserve old color
-                util.append_line(ref new_text, old_row.color_line);
-
-            if ( new_row.match_color_line == "" && old_row.match_color_line != "")
-                util.append_line(ref new_text, old_row.match_color_line);
-
-            return new_text;
-        }
 
         public void update_filter_row(string id, string filter_str, bool apply_to_existing_lines) {
             bool updated = false;
@@ -730,7 +714,7 @@ namespace lw_common.ui {
                     // in this case, check if we have an existing filter exactly the same, but with a different color
                     is_same = unique_id == i.unique_id;
                 if (is_same) {
-                    i.text = merge_filter_row(i.text, filter_str);
+                    i.text = raw_filter_row.merge_lines(i.text, filter_str);
                     was_selected = idx == filterCtrl.SelectedIndex;
                     filterCtrl.RefreshObject(i);
                     updated = true;

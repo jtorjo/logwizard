@@ -136,6 +136,32 @@ namespace lw_common {
             }
         }
 
+        public static string merge_lines(string old_text, string new_text) {
+            // note : we don't care about apply-to-existing-lines - we know it's the same amongst old/new filter row
+            //        what I care about is the colors (line color and merge color)
+            bool apply_to_existing_lines = false;
+            var old_row = new raw_filter_row(old_text, apply_to_existing_lines);
+            var new_row = new raw_filter_row(new_text, apply_to_existing_lines);
+
+            // old lines - not trimmed (so that we can insert them as they were - if needed); new lines -> trimmed
+            var old_lines = old_row.lines_.Where(x => !filter_line.is_color_or_font_line(x) && !x.Trim().StartsWith("#") && x.Trim() != "" ).ToList();
+            var new_lines = new_row.lines_.Where(x => !filter_line.is_color_or_font_line(x) && !x.Trim().StartsWith("#") && x.Trim() != "" ).Select(x => x.Trim()).ToList();
+
+            foreach ( string line in old_lines)
+                if ( !new_lines.Contains( line.Trim()))
+                    util.append_line(ref new_text, line);
+
+            if (new_row.color_line == "" && old_row.color_line != "") 
+                // preserve old color
+                util.append_line(ref new_text, old_row.color_line);
+
+            if ( new_row.match_color_line == "" && old_row.match_color_line != "")
+                util.append_line(ref new_text, old_row.match_color_line);
+
+            return new_text;
+
+        }
+
         public raw_filter_row(raw_filter_row other) {
             items_ = other.items_.ToList();
             lines_ = other.lines_.ToArray();
@@ -164,7 +190,7 @@ namespace lw_common {
                     additions.Add(add);
 
                 bool is_comment = line.StartsWith("#"), is_empty = line.Trim() == "";
-                if (!is_comment && !is_empty && !filter_line.is_color_line(line))
+                if (!is_comment && !is_empty && !filter_line.is_color_or_font_line(line))
                     unique_id_ += line.Trim() + "\r\n";
 
                 if (item == null && add == null) {

@@ -1,9 +1,4 @@
 
-- when changing color - when the filter also has oher info (such as, match color) - we need to just UPDATE it (preserve what was already there)
-  ---> take all lines, remove color/font lines - trim() them on start -> then - if found only in old, append it
-  ---------> merging - do it internally in filter_row - much easier to maintain - assert they have the same id + append_to_existing_lines
-
-
 
 - TOTHINK how will exclude lines + include lines work together? in other words, include lines don't apply to existing lines, while exclude lines apply
   how can i make this work?
@@ -24,10 +19,16 @@ log_view_right_click - filter goto + rename view
   - also, create the uk_small filter
 
 
+
+1.2.23d
+- when changing color - when the filter also has oher info (such as, match color) - we need to just UPDATE it (preserve what was already there)
+  ---> take all lines, remove color/font lines - trim() them on start -> then - if found only in old, append it
+  ---------> merging - do it internally in filter_row - much easier to maintain - assert they have the same id + append_to_existing_lines
+
+
 1.2.23c
 - fix: bug: right click menu: changing filter color (of an existing filter) sometimes messes up rendering completely - maybe an extra refresh bowould be in order?
   - done: have extra refresh 100ms later
-
 
 
 1.2.23b

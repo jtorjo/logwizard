@@ -198,7 +198,7 @@ namespace LogWizard {
 
 
 
-        public static bool is_color_line(string line) {
+        public static bool is_color_or_font_line(string line) {
             line = line.Trim();
             return line.StartsWith("color") || line.StartsWith("match_color");
         }
@@ -216,7 +216,8 @@ namespace LogWizard {
         // at this point, we allow a simple "color" line:
         // color fg [bg]
         private static filter_line parse_font(string line) {
-            Debug.Assert(line.StartsWith("color") || line.StartsWith("match_color"));
+            // future: if "font" -> account for that as well
+            Debug.Assert( is_color_or_font_line( line));
             bool is_color = line.StartsWith("color");
 
             string[] colors = line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
