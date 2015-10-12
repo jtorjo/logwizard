@@ -28,5 +28,8 @@ namespace lw_common.ui {
         void select_filter_rows(List<int> filter_row_indexes);
 
         void edit_filter_row(int filter_row_idx);
+
+        List<Tuple<string, int>> other_views_containing_this_line(int row_idx);
+        void go_to_view(int view_idx);
     }
 }

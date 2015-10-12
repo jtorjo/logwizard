@@ -19,6 +19,8 @@ namespace lw_common.ui {
 
         private delegate bool bool_func();
 
+        private List<Tuple<string, int>> other_views_ = null; 
+
         public enum simple_action {
             none, 
             
@@ -150,12 +152,13 @@ namespace lw_common.ui {
             actions.Add(new action { category = "Filter/Go to...", name = "Edit " + (is_single_filter ? "" : "First ") + "Filter that matched this Line", on_click = edit_first_filter_matching_line });
 
             //   - show what other views contain this line - "Go to Other View Containing this line" -> and show which other views contain it
-            var other = other_views_containing_this_line(parent_.sel_row_idx);
+            var other_views = parent_.lv_parent.other_views_containing_this_line(parent_.sel_row_idx);
             string prefix = "Filter/Go to.../Other View Containing this Line";
-            foreach (var name in other) {
-                string cur = name;
-                actions.Add(new action {category = prefix, name = name, on_click = () => go_to_view(cur)});
-            }
+            if ( other_views.Count > 0)
+                foreach (var other in other_views) {
+                    int idx = other.Item2;
+                    actions.Add(new action {category = prefix, name = other.Item1, on_click = () => go_to_view(idx)});
+                }
         }
 
         private void append_filter_create_actions(List<action> actions) {
@@ -532,18 +535,6 @@ namespace lw_common.ui {
             parent_.lv_parent.select_filter_rows(filter_row_indexes);
         }
 
-
-
-
-
-
-
-        ////////////////////////////////////////////////////////////////
-        /// TODO
-
-
-
-
         private void edit_first_filter_matching_line() {
             int row_idx = 0;
             List<int> filter_row_indexes = new List<int>();
@@ -555,19 +546,20 @@ namespace lw_common.ui {
             Debug.Assert(filter_row_indexes.Count > 0);
 
             parent_.lv_parent.edit_filter_row(filter_row_indexes[0]);
-
         }
 
-        private List<string> other_views_containing_this_line(int row_idx) {
-            List<string> other = new List<string>();
-            other.Add("one");
-            other.Add("two");
-            return other;
+        private void go_to_view(int view_idx) {
+            parent_.lv_parent.go_to_view(view_idx);
         }
 
-        private void go_to_view(string name) {
-            
-        }
+
+
+
+
+        ////////////////////////////////////////////////////////////////
+        /// TODO
+
+
 
         private void do_rename_view() {
 //  - Rename View -> to rename the view, show source pane, after user presses enter, hide source pane (if it was not visible)

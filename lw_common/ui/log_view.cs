@@ -1320,6 +1320,9 @@ namespace lw_common
                 ensure_line_visible(bottom_idx);
         }
 
+        public bool contains_line(int line_idx) {
+            return filter_.matches.binary_search(line_idx).Item1 != null;
+        }
 
         public void go_to_closest_line(int line_idx, select_type notify) {
             if (filter_.match_count < 1)

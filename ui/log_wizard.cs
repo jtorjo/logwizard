@@ -943,6 +943,35 @@ namespace LogWizard
             filtCtrl.edit_filter_row(filter_row_idx);
         }
 
+        public List<Tuple<string, int>> other_views_containing_this_line(int row_idx) {            
+            Debug.Assert( !is_focus_on_full_log());
+            List<Tuple<string,int>> other = new List<Tuple<string, int>>();
+            if (!is_focus_on_full_log()) {
+                var lv = selected_view();
+                // at this time - only for the selection
+                Debug.Assert(lv.sel_row_idx == row_idx);
+                int line_idx = lv.sel_line_idx;
+                int view_idx = 0;
+                foreach (var other_view in all_log_views()) {
+                    if ( other_view != lv)
+                        if ( other_view.contains_line(line_idx))
+                            other.Add( new Tuple<string, int>(other_view.name, view_idx));
+                    ++view_idx;
+                }
+            }
+            return other;
+        }
+
+        public void go_to_view(int view_idx) {
+            Debug.Assert(view_idx >= 0 && view_idx < viewsTab.TabCount);
+            int line_idx = selected_view().sel_line_idx;
+            viewsTab.SelectedIndex = view_idx;
+            // wait for UI to completely go to the other tab
+            util.postpone(() => {
+                selected_view().go_to_closest_line(line_idx, log_view.select_type.do_not_notify_parent);
+            }, 100);
+        }
+
         public static List<log_wizard> forms {
             get { return forms_; }
         }
