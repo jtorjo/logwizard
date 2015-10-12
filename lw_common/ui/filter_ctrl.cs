@@ -37,6 +37,9 @@ namespace lw_common.ui {
     public partial class filter_ctrl : UserControl {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        // sometimes the first refresh fails - do another one
+        private readonly int SECOND_REFRESH_MS = 100; //util.is_debug ? 1000 : 200;
+
         private ui_view view_;
         private int view_idx_ = -1;
         private int ignore_change_ = 0;
@@ -47,12 +50,12 @@ namespace lw_common.ui {
         public delegate void idx_func(int filter_idx);
         public delegate void view_idx_func(int view_idx);
 
-        public void_func do_save;
+        public void_func on_save;
         public view_idx_func ui_to_view;
         // ... this means the view has changed drastically, and filters need to be re-run
-        public view_idx_func rerun_view;
+        public view_idx_func on_rerun_view;
         // ... this means the UI of the view needs refresh
-        public view_idx_func refresh_view;
+        public view_idx_func on_refresh_view;
 
         public idx_func mark_match;
 
@@ -198,9 +201,9 @@ namespace lw_common.ui {
                 var i = filterCtrl.GetItem(sel).RowObject as filter_item;
                 filterCtrl.RefreshObject(i);
 
-                do_save();
+                on_save();
                 ui_to_view(view_idx_);
-                rerun_view(view_idx_);
+                on_rerun_view(view_idx_);
             }
         }
 
@@ -208,7 +211,7 @@ namespace lw_common.ui {
         public void view_to_ui(ui_view view, int view_idx) {
             if ( view_ != view && view_ != null)
                 if (needs_save_) {
-                    do_save();
+                    on_save();
                     ui_to_view(view_idx_);
                 }
 
@@ -298,7 +301,7 @@ namespace lw_common.ui {
             if (ignore_change_ > 0)
                 return;
 
-            do_save();
+            on_save();
         }
 
         private void filterCtrl_SelectionChanged(object sender, EventArgs e) {
@@ -379,7 +382,7 @@ namespace lw_common.ui {
                 sel.apply_to_existing_lines = applyToExistingLines.Checked;
                 filterCtrl.RefreshObject(sel);
                 needs_save_ = true;
-                do_save();
+                on_save();
             }
         }
 
@@ -400,7 +403,7 @@ namespace lw_common.ui {
             curFilterCtrl.Text = "";
             --ignore_change_;
 
-            do_save();
+            on_save();
 
             util.postpone(() => {
                 curFilterCtrl.Focus();
@@ -427,7 +430,7 @@ namespace lw_common.ui {
                 --ignore_change_;
             }
 
-            do_save();
+            on_save();
         }
 
         private void tipsHotkeys_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
@@ -473,8 +476,8 @@ namespace lw_common.ui {
                     }
                 }
                 ui_to_view(view_idx_);
-                do_save();
-                rerun_view(view_idx_);
+                on_save();
+                on_rerun_view(view_idx_);
             } catch(Exception e) {
                 logger.Error("can't copy from clipboard: " + e.Message);
                 util.beep(util.beep_type.err);
@@ -529,8 +532,8 @@ namespace lw_common.ui {
 
 
                 ui_to_view(view_idx_);
-                do_save();
-                refresh_view(view_idx_);
+                on_save();
+                do_refresh();
             }
 
         }
@@ -542,7 +545,7 @@ namespace lw_common.ui {
               //  return;
 
             if (!design_mode)
-                Debug.Assert(do_save != null && rerun_view != null && refresh_view != null && ui_to_view != null && mark_match != null);
+                Debug.Assert(on_save != null && on_rerun_view != null && on_refresh_view != null && ui_to_view != null && mark_match != null);
         }
 
         public void select_filter(string name) {
@@ -633,7 +636,7 @@ namespace lw_common.ui {
                 bool is_ours = focus == curFilterCtrl || focus == applyToExistingLines || focus == filterCtrl || focus == addFilter || focus == delFilter;
                 if (!is_ours) {
                     needs_save_ = false;
-                    do_save();
+                    on_save();
                     ui_to_view(view_idx_);
                     curFilterCtrl.Enabled = filterCtrl.SelectedIndex >= 0;
                 }
@@ -682,8 +685,8 @@ namespace lw_common.ui {
                 before_ctrl_enter_ = curFilterCtrl.Text;
                 e.Handled = true;
                 ui_to_view(view_idx_);
-                do_save();
-                refresh_view(view_idx_);
+                on_save();
+                do_refresh();
             }
 
         }
@@ -754,14 +757,20 @@ namespace lw_common.ui {
                 --ignore_change_;                
             }
 
-            do_save();
+            on_save();
             ui_to_view(view_idx_);
             if (updated)
-                refresh_view(view_idx_);
+                do_refresh();
             else
-                rerun_view(view_idx_);
+                on_rerun_view(view_idx_);
 
         }
+
+        private void do_refresh() {
+            on_refresh_view(view_idx_);
+            util.postpone(() => on_refresh_view(view_idx_), SECOND_REFRESH_MS);
+        }
+
 
         // goes to select the filter created here
         public void edit_filter_row_by_filter_id(string id) {

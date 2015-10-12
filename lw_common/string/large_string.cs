@@ -121,7 +121,8 @@ namespace lw_common
         }
 
         public string line_at(int idx) {
-            Debug.Assert(idx < line_count);
+            // note : it's possible to ask for an invalid line, while refreshing on the other thread
+            //Debug.Assert(idx < line_count);
 
             if (idx == 0) 
                 return (indexes_.Count > 0) ? string_.ToString(0, indexes_[0]) : "";

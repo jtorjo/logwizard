@@ -14,10 +14,10 @@ namespace test_ui {
             InitializeComponent();
 
             filtCtrl.design_mode = false;
-            filtCtrl.do_save = save;
+            filtCtrl.on_save = save;
             filtCtrl.ui_to_view = ui_to_view;
-            filtCtrl.rerun_view = rerun;
-            filtCtrl.refresh_view = refresh_view;
+            filtCtrl.on_rerun_view = rerun;
+            filtCtrl.on_refresh_view = refresh_view;
             filtCtrl.mark_match = mark_match;
 
             ui_view dummy = new ui_view();

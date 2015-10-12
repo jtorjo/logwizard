@@ -150,10 +150,10 @@ namespace LogWizard
             ++ignore_change_;
 
             filtCtrl.design_mode = false;
-            filtCtrl.do_save = save;
+            filtCtrl.on_save = save;
             filtCtrl.ui_to_view = (view_idx) => log_view_for_tab(view_idx).set_filter(filtCtrl.to_filter_row_list());
-            filtCtrl.rerun_view = (view_idx) => refreshFilter_Click(null, null);
-            filtCtrl.refresh_view = (view_idx) => {
+            filtCtrl.on_rerun_view = (view_idx) => refreshFilter_Click(null, null);
+            filtCtrl.on_refresh_view = (view_idx) => {
                 log_view_for_tab(view_idx).Refresh();
                 if (global_ui.show_fulllog) 
                     sync_full_log_colors(true /* force refresh */);
