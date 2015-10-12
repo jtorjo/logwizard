@@ -820,5 +820,11 @@ namespace lw_common {
             return list;
         } 
 
+        public static void append_line(ref string txt, string line) {
+            if (!txt.EndsWith("\r\n"))
+                txt += "\r\n";
+            txt += line;
+        }
+
     }
 }

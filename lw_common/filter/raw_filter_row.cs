@@ -123,6 +123,19 @@ namespace lw_common {
             }
         }
 
+        public string color_line {
+            get {
+                var l = lines_.FirstOrDefault(x => x.Trim().StartsWith("color"));
+                return l ?? "";
+            }
+        }
+        public string match_color_line {
+            get {
+                var l = lines_.FirstOrDefault(x => x.Trim().StartsWith("match_color"));
+                return l ?? "";
+            }
+        }
+
         public raw_filter_row(raw_filter_row other) {
             items_ = other.items_.ToList();
             lines_ = other.lines_.ToArray();
@@ -181,6 +194,12 @@ namespace lw_common {
             get { return additions_; }
         }
 
+        public Color match_fg {
+            get { return font_.match_fg; }
+        }
+        public Color match_bg {
+            get { return font_.match_bg; }
+        }
         public Color fg {
             get { return font_.fg; }
         }

@@ -4,7 +4,10 @@
 - article: 
     - sharing thy log with coworkers/customer support/customers 
 	  - customer support - explain that they can have the developers look at the logs as well.
+	    also, each dev can have his own views thus seeing data in a different way - which can of course yield different insights
 
+
+- 
 
 -------------------------------------------------------
 
@@ -24,13 +27,12 @@
     - toggling - will preserve the seleted row + its location on the screen!!! (based on its rectangle bounds - computed the first row that is visible, and scroll to there)
 
 
-- filter: have an option (default= true): whether to show each row in the color/match_color of the filter
 
 
 
 
--- article: filter your logs inside out!
-  tagline: Editing Filtes can now be a joy!
+-- article: filter your logs inside out! 
+  tagline: Editing Filtes can now be a joy! / Log viewing can be a joy!
   example: have a filter that shows all numbers in red (white bg) - how amazing is that?
    or maybe, telephone numbers
 
@@ -178,6 +180,7 @@
 		- debug viewer (OutputDebugString)
 		  https://technet.microsoft.com/en-us/library/bb896647.aspx
 		  https://github.com/djeedjay/DebugViewPP (Dbgviewreader.cpp, dblogreader.cpp)
+		  -------> to make this really useful, from process-id -> get the process name. Thus, you can make a filter based on process name, that will always be meaningful
   -- implement toggle details 
      - allow several details in there
 	 - allow specifying which columns to be in details, and which in list (they can overlap)
