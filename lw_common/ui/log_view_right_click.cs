@@ -553,19 +553,11 @@ namespace lw_common.ui {
         }
 
 
-
-
-
-        ////////////////////////////////////////////////////////////////
-        /// TODO
-
-
-
         private void do_rename_view() {
-//  - Rename View -> to rename the view, show source pane, after user presses enter, hide source pane (if it was not visible)
-  //  - when editing view name, show "Press Enter to save, Esc to Exit"
-            
+            parent_.rename_view();
         }
+
+
 
     }
 }

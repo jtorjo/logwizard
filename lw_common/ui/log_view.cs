@@ -356,6 +356,9 @@ namespace lw_common
 
         private log_view_right_click right_click_;
 
+        // in case the user edits and presses Escape
+        private string old_view_name_ = "";
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -382,6 +385,7 @@ namespace lw_common
             edit.on_sel_changed = on_edit_sel_changed;
             edit.on_search_ahead = search_ahead;
             edit.init(this);
+            edit.BringToFront();
         }
 
         internal log_view_parent lv_parent {
@@ -1320,6 +1324,17 @@ namespace lw_common
                 ensure_line_visible(bottom_idx);
         }
 
+        public void rename_view() {
+            old_view_name_ = name;
+            show_name = true;
+            viewName.Focus();
+        }
+
+        private void cancel_rename() {
+            name = old_view_name_;
+            show_name = false;
+        }
+
         public bool contains_line(int line_idx) {
             return filter_.matches.binary_search(line_idx).Item1 != null;
         }
@@ -2004,6 +2019,7 @@ namespace lw_common
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+            bool is_renaming = win32.focused_ctrl() == viewName;
 
             if (!is_editing) {
                 // see if the current key will start editing
@@ -2024,11 +2040,22 @@ namespace lw_common
 
             if (is_editing) {
                 if (keyData == Keys.Back) {
-                    edit.backspace();
-                    return true;
+                    if (!is_renaming) {
+                        edit.backspace();
+                        return true;
+                    }
                 }
                 if (keyData == Keys.Escape) {
-                    escape();
+                    if (is_renaming)
+                        cancel_rename();
+                    else
+                        escape();
+                    return true;
+                }
+
+                if (keyData == Keys.Return) {
+                    if ( is_renaming)
+                        show_name = false;
                     return true;
                 }
 

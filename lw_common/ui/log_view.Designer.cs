@@ -28,10 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.labelName = new System.Windows.Forms.Label();
             this.viewName = new System.Windows.Forms.TextBox();
-            this.tip = new System.Windows.Forms.ToolTip(this.components);
+            this.tip = new System.Windows.Forms.ToolTip();
             this.list = new BrightIdeasSoftware.VirtualObjectListView();
             this.lineCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.viewCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -46,26 +45,29 @@
             this.ctx3Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.msgCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.edit = new lw_common.ui.smart_readonly_textbox();
             ((System.ComponentModel.ISupportInitialize)(this.list)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelName
             // 
             this.labelName.AutoSize = true;
             this.labelName.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.labelName.Location = new System.Drawing.Point(3, 3);
+            this.labelName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelName.Location = new System.Drawing.Point(3, 2);
             this.labelName.Name = "labelName";
-            this.labelName.Size = new System.Drawing.Size(30, 13);
+            this.labelName.Size = new System.Drawing.Size(33, 15);
             this.labelName.TabIndex = 1;
             this.labelName.Text = "View";
             this.tip.SetToolTip(this.labelName, "Name of the Filtered View (shows up as the tab name)");
             // 
             // viewName
             // 
-            this.viewName.Location = new System.Drawing.Point(51, 0);
+            this.viewName.Location = new System.Drawing.Point(41, 0);
             this.viewName.Name = "viewName";
-            this.viewName.Size = new System.Drawing.Size(172, 20);
+            this.viewName.Size = new System.Drawing.Size(145, 20);
             this.viewName.TabIndex = 2;
             this.tip.SetToolTip(this.viewName, "Name of the Filtered View (shows up as the tab name)");
             this.viewName.TextChanged += new System.EventHandler(this.filterName_TextChanged);
@@ -212,10 +214,21 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(2, -1);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(693, 23);
             this.panel1.TabIndex = 4;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(189, 4);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(141, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Enter to save, Esc to cancel.";
             // 
             // edit
             // 
@@ -234,8 +247,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.edit);
             this.Controls.Add(this.list);
+            this.Controls.Add(this.edit);
             this.Controls.Add(this.viewName);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.panel1);
@@ -243,6 +256,8 @@
             this.Size = new System.Drawing.Size(697, 427);
             this.Load += new System.EventHandler(this.log_view_Load);
             ((System.ComponentModel.ISupportInitialize)(this.list)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -268,5 +283,6 @@
         private System.Windows.Forms.Panel panel1;
         public BrightIdeasSoftware.VirtualObjectListView list;
         internal ui.smart_readonly_textbox edit;
+        private System.Windows.Forms.Label label1;
     }
 }
