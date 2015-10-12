@@ -143,9 +143,9 @@ namespace lw_common.ui {
 
             bool is_single_filter = util.to_list(parent_.sel.match.matches).Count(x => x) == 1;
             if ( is_single_filter)
-                actions.Add(new action { category = "Filter/Go to...", name = "Filter that matched this Line", on_click = find_filter_matching_line });
+                actions.Add(new action { category = "Filter/Go to...", name = "Select Filter that matched this Line", on_click = find_filter_matching_line });
             else
-                actions.Add(new action { category = "Filter/Go to...", name = "All Filters that matched this Line", on_click = find_filter_matching_line });
+                actions.Add(new action { category = "Filter/Go to...", name = "Select All Filters that matched this Line", on_click = find_filter_matching_line });
 
             actions.Add(new action { category = "Filter/Go to...", name = "Edit First Filter that matched this Line", on_click = edit_first_filter_matching_line });
 
@@ -530,18 +530,18 @@ namespace lw_common.ui {
         /// TODO
 
 
-        private void do_rename_view() {
-//  - Rename View -> to rename the view, show source pane, after user presses enter, hide source pane (if it was not visible)
-  //  - when editing view name, show "Press Enter to save, Esc to Exit"
-            
-        }
 
         private void find_filter_matching_line() {
+            int row_idx = 0;
+            List<int> filter_row_indexes = new List<int>();
+            foreach (var match in util.to_list(parent_.sel.match.matches)) {
+                if ( match)
+                    filter_row_indexes.Add(row_idx);
+                ++row_idx;
+            }
+            Debug.Assert(filter_row_indexes.Count > 0);
             
-            // see if there's a single filter that matched this or more
-            //
-            //  - locate the filter(s) that matched this (and open filter view if hidden)
-            //   - Show all filters that matched this (a bit harder, since we need to select several rows in filter_ctrl; should check that it does not mess with .SelectedIndex)
+            parent_.lv_parent.select_filter_rows(filter_row_indexes);
         }
 
         private void edit_first_filter_matching_line() {
@@ -556,6 +556,12 @@ namespace lw_common.ui {
         }
 
         private void go_to_view(string name) {
+            
+        }
+
+        private void do_rename_view() {
+//  - Rename View -> to rename the view, show source pane, after user presses enter, hide source pane (if it was not visible)
+  //  - when editing view name, show "Press Enter to save, Esc to Exit"
             
         }
 

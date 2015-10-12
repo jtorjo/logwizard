@@ -927,6 +927,14 @@ namespace LogWizard
             on_log_changed_line();
         }
 
+        public void select_filter_rows(List<int> filter_row_indexes) {
+            if (!global_ui.show_filter) {
+                global_ui.show_filter = true;
+                show_left_pane(global_ui.show_left_pane);
+            }
+            filtCtrl.select_filter_rows(filter_row_indexes);
+        }
+
         public static List<log_wizard> forms {
             get { return forms_; }
         }

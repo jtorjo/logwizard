@@ -309,7 +309,10 @@ namespace lw_common.ui {
             ++ignore_change_;
             var sel = filterCtrl.SelectedObject as filter_item;
             curFilterCtrl.Text = sel != null ? sel.text : "";
-            curFilterCtrl.Enabled = sel != null;
+            curFilterCtrl.Enabled = sel != null ;
+            if (filterCtrl.SelectedIndices.Count > 1)
+                // in this case, it's multi-sel
+                curFilterCtrl.Enabled = false;
             if (sel != null) {
                 var row = new raw_filter_row(sel.text, sel.apply_to_existing_lines);
                 filterLabel.BackColor = row.bg;
@@ -556,6 +559,26 @@ namespace lw_common.ui {
                     filterCtrl.SelectedIndex = idx;
             }
         }
+
+        public void select_filter_rows(List<int> filter_row_indexes) {
+            Debug.Assert(filter_row_indexes.Count > 0);
+            if (filter_row_indexes.Count == 1)
+                filterCtrl.SelectedIndex = filter_row_indexes[0];
+            else {
+                ++ignore_change_;
+                
+                filterCtrl.SelectedIndex = filter_row_indexes[0];
+
+                filterCtrl.SelectedIndices.Clear();
+                foreach (int idx in filter_row_indexes)
+                    filterCtrl.SelectedIndices.Add(idx);
+                curFilterCtrl.Enabled = false;
+                filterCtrl.EnsureVisible(filter_row_indexes[0]);
+
+                --ignore_change_;
+            }
+        }
+
 
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e) {
             int sel = filterCtrl.SelectedIndex;

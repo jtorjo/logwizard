@@ -8,6 +8,9 @@ log_view_right_click - filter goto + rename view
   - also, create the uk_small filter
 
 
+1.2.23f
+- right click : filter goto filter/filters matching line
+
 
 1.2.23e
 - filter: have an option (default= true): whether to show each row in the color/match_color of the filter

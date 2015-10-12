@@ -24,5 +24,7 @@ namespace lw_common.ui {
 
         // called after we've searched to something (thus, changed the current line)
         void after_search();
+
+        void select_filter_rows(List<int> filter_row_indexes);
     }
 }

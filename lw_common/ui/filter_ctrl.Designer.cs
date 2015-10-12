@@ -97,13 +97,13 @@
             this.filterCtrl.HideSelection = false;
             this.filterCtrl.HighlightBackgroundColor = System.Drawing.Color.Silver;
             this.filterCtrl.Location = new System.Drawing.Point(0, 21);
-            this.filterCtrl.MultiSelect = false;
             this.filterCtrl.Name = "filterCtrl";
             this.filterCtrl.ShowFilterMenuOnRightClick = false;
             this.filterCtrl.ShowGroups = false;
             this.filterCtrl.ShowImagesOnSubItems = true;
             this.filterCtrl.Size = new System.Drawing.Size(353, 327);
             this.filterCtrl.TabIndex = 18;
+            this.filterCtrl.UnfocusedHighlightBackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.filterCtrl.UseAlternatingBackColors = true;
             this.filterCtrl.UseCellFormatEvents = true;
             this.filterCtrl.UseCompatibleStateImageBehavior = false;
