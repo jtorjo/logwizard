@@ -93,6 +93,12 @@ namespace lw_common.ui {
                     return row.filter_id;
                 }
             }
+            public string unique_id {
+                get {
+                    raw_filter_row row = new raw_filter_row(filter_.text, filter_.apply_to_existing_lines);
+                    return row.unique_id;
+                }
+            }
 
             public string found_count = "";
 
@@ -688,9 +694,14 @@ namespace lw_common.ui {
         public void update_filter_row(string id, string filter_str, bool apply_to_existing_lines) {
             bool updated = false;
             bool was_selected = false;
+            string unique_id = new raw_filter_row(filter_str, apply_to_existing_lines).unique_id;
             for (int idx = 0; idx < filterCtrl.GetItemCount(); ++idx) {
                 var i = filterCtrl.GetItem(idx).RowObject as filter_item;
-                if (i.filter_id == id) {
+                bool is_same = i.filter_id == id;
+                if ( !is_same)
+                    // in this case, check if we have an existing filter exactly the same, but with a different color
+                    is_same = unique_id == i.unique_id;
+                if (is_same) {
                     i.text = filter_str;
                     was_selected = idx == filterCtrl.SelectedIndex;
                     filterCtrl.RefreshObject(i);

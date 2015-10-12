@@ -1,12 +1,5 @@
 
-
-- bug: (seems it's not apply to existing lines/???')
-# // DONOT CHANGE this line -color  #Process
-$msg startswith Process
-match_color #9F00FF
--- this when added to Init/exit messes it up (it shows) all lines instead of just the filtered ones
-
-
+- add comment ## specifying the name of the filter -like 'any line containing blabla'
 
 - bug - i have two filters - first matches color, second matches match-color(+apply to existing lines)
   - i need to make sure both are applied (first one - color of line, second one - the match color)
@@ -18,8 +11,6 @@ match_color #9F00FF
 - when changing color - when the filter also has oher info (such as, match color) - we need to just UPDATE it (preserve what was already there)
 
 
-log_view_right_click - filter goto + rename view
-
 
 - TOTHINK how will exclude lines + include lines work together? in other words, include lines don't apply to existing lines, while exclude lines apply
   how can i make this work?
@@ -30,7 +21,19 @@ log_view_right_click - filter goto + rename view
 	-- very likely i should think about reusing the fulllog???
 	   probably everything is fine as is - just need to explain to users - if they want more  lines in your view, just toggle full-log on, select what you want
 
+log_view_right_click - filter goto + rename view
 
+
+
+1.2.22a
+- fix: bug: (seems it's not apply to existing lines/???')
+# // DONOT CHANGE this line -color  #Process
+$msg startswith Process
+match_color #9F00FF
+-- this when added to Init/exit messes it up (it shows) all lines instead of just the filtered ones
+
+- change color -> need to be "apply to existing ilnes" filter
+- fix: pressing esc to hide details would end up showing them again in a few millisecs
 
 
 1.2.21

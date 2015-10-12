@@ -37,6 +37,9 @@ namespace lw_common {
         private log_view_item_draw_ui drawer_;
         private print_info default_print_ = new print_info();
 
+        private log_view force_hide_for_view_ = null;
+        private int force_hide_for_row_ = -1;
+
         public msg_details_ctrl(Form wizard_parent) {
             wizard_parent_ = wizard_parent;
             Debug.Assert(wizard_parent is log_view_parent);
@@ -83,6 +86,11 @@ namespace lw_common {
             }
             if (sel == txt.Text && !force_update)
                 return; // nothing changed
+
+            if (view == force_hide_for_view_ && view.sel_row_idx == force_hide_for_row_)
+                // user forced us to hide
+                return;
+
             int height_offset = 10;
             var new_size = new Size( wizard_rect.Width, Math.Min( text_height(sel, wizard_rect.Width) + height_offset, MAX_HEIGHT) );
             Size = new_size;
@@ -103,8 +111,14 @@ namespace lw_common {
                 on_top = false;
             var new_location = new Point(wizard_rect.Left, on_top ? wizard_rect.Top : wizard_rect.Bottom - Height);
 
-            set_text(view);            
+            set_text(view);
             show(true, new_location);
+        }
+
+        public void force_hide(log_view lv) {
+            force_hide_for_view_ = lv;
+            force_hide_for_row_ = lv.sel_row_idx;
+            show(false);
         }
 
         private void set_text(log_view lv) {
@@ -154,8 +168,10 @@ namespace lw_common {
             return Location.X > -10000;
         }
 
-        internal void show(bool do_show, Point p = default(Point) ) {
+        private void show(bool do_show, Point p = default(Point) ) {
             if (do_show) {
+                force_hide_for_row_ = -1;
+                force_hide_for_view_ = null;
                 Location = p;
                 BringToFront();
             } else {

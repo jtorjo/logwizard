@@ -1510,7 +1510,7 @@ namespace lw_common
         public void escape() {
             var msg_details = this.msg_details;
             if (msg_details != null && msg_details.visible()) {
-                msg_details.show(false);
+                msg_details.force_hide(this);
                 return;
             }
 

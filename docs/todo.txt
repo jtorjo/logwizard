@@ -16,6 +16,7 @@
 		    - very likely - i need to share the full-log-view between all views
 			- need to think about memory efficiency
 	- teh logview needs to refresh and also, old_item_count_ / last_item_count_while_current_view_  -> see how to update them
+	--------- IMPORTANT: this needs to work even when new lines are added!!!!!!! (like, monitoring live)
 	 - when on a line when showing all logs 
 	   -> right click should show teh "Include lines starting/containing"
 	   -> we should not have "Filter/Goto ..." menu

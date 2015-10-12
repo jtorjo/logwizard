@@ -64,7 +64,7 @@ namespace LogWizard
             util.init_exceptions();
 
             // uncomment this to test how we'd behave in release
-            //util.is_debug = false;
+            // util.is_debug = false;
 
             // if "Open With" and LogWizard is already running -> send this to the existing running application
             // the reason for this: if multiple instances running, they can mess up the settings file - we don't want that!

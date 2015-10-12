@@ -273,6 +273,12 @@ namespace LogWizard {
             - if you move a filter row up/down, it wil preserve its computations
         */
         private void preserve_cache(List<raw_filter_row> rows) {
+            HashSet<string> unique_ids = new HashSet<string>(rows.Select(r => r.unique_id));
+            if (unique_ids.Count != rows.Count) {
+                logger.Fatal("[filter] two identical filter rows in teh same filter " + name);
+                return;
+            }
+
             var old_ids = rows_.ToDictionary(r => r.unique_id, r => r);
             var new_ids = rows.ToDictionary(r => r.unique_id, r => r);
 

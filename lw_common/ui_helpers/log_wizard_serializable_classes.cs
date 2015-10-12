@@ -41,7 +41,7 @@ namespace lw_common {
             app.load_save(load, ref text, prefix + "text");
             app.load_save(load, ref enabled, prefix + "enabled", true);
             app.load_save(load, ref dimmed, prefix + "dimmed", false);
-            app.load_save(load, ref apply_to_existing_lines, "apply_to_existing_lines", false);
+            app.load_save(load, ref apply_to_existing_lines,prefix + "apply_to_existing_lines", false);
         }
 
         public void load(string prefix) {
