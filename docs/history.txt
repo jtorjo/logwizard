@@ -1,23 +1,17 @@
 
 
-- TOTHINK how will exclude lines + include lines work together? in other words, include lines don't apply to existing lines, while exclude lines apply
-  how can i make this work?
-  *************perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
-  perhaps i should have something like "ignore all lines that don't have color set" (per view) which i could toggle on/off?? not sure how complicated that would be
-    probably this is a bad idea -> i should make it possible to have a toggle that would show all log or just the filtered view
-	this way (when the whole log is shown, the user can add more filters)
-	-- very likely i should think about reusing the fulllog???
-	   probably everything is fine as is - just need to explain to users - if they want more  lines in your view, just toggle full-log on, select what you want
 
 log_view_right_click - filter goto + rename view
-
-- filter: have an option (default= true): whether to show each row in the color/match_color of the filter
-  - if both found, use color
 
 - new samples (+update Logwizardsetupsample) -> i should have one or two logwizard samples that users can take a look at
   - i should create the context only with rightclick
   - also, create the uk_small filter
 
+
+
+1.2.23e
+- filter: have an option (default= true): whether to show each row in the color/match_color of the filter
+  - if both found, use color
 
 
 1.2.23d

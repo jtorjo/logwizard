@@ -26,6 +26,7 @@
 	   - tothink about the rest
     - toggling - will preserve the seleted row + its location on the screen!!! (based on its rectangle bounds - computed the first row that is visible, and scroll to there)
 
+  *************perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
 
 
 

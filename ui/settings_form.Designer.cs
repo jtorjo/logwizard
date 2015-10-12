@@ -100,6 +100,9 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.filterShowFilterRowInFilterColor = new System.Windows.Forms.CheckBox();
+            this.label21 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -117,6 +120,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.fileToContext)).BeginInit();
             this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).BeginInit();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -269,7 +273,7 @@
             this.groupBox3.Controls.Add(this.syncColorsAllViews);
             this.groupBox3.Controls.Add(this.syncColorsCurView);
             this.groupBox3.Controls.Add(this.syncColorsNone);
-            this.groupBox3.Location = new System.Drawing.Point(6, 97);
+            this.groupBox3.Location = new System.Drawing.Point(6, 208);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(628, 146);
             this.groupBox3.TabIndex = 5;
@@ -544,6 +548,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox8);
             this.tabPage2.Controls.Add(this.groupBox5);
             this.tabPage2.Controls.Add(this.groupBox3);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
@@ -562,16 +567,16 @@
             this.groupBox5.Controls.Add(this.label13);
             this.groupBox5.Controls.Add(this.logBgGradient);
             this.groupBox5.Controls.Add(this.logBgSingleColor);
-            this.groupBox5.Location = new System.Drawing.Point(6, 3);
+            this.groupBox5.Location = new System.Drawing.Point(3, 88);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(628, 88);
+            this.groupBox5.Size = new System.Drawing.Size(628, 114);
             this.groupBox5.TabIndex = 6;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Log Background";
             // 
             // logBgTo
             // 
-            this.logBgTo.Location = new System.Drawing.Point(234, 53);
+            this.logBgTo.Location = new System.Drawing.Point(234, 67);
             this.logBgTo.Name = "logBgTo";
             this.logBgTo.SelectedItem = System.Drawing.Color.Wheat;
             this.logBgTo.Size = new System.Drawing.Size(42, 23);
@@ -580,7 +585,7 @@
             // 
             // logBgFrom
             // 
-            this.logBgFrom.Location = new System.Drawing.Point(137, 53);
+            this.logBgFrom.Location = new System.Drawing.Point(137, 67);
             this.logBgFrom.Name = "logBgFrom";
             this.logBgFrom.SelectedItem = System.Drawing.Color.Wheat;
             this.logBgFrom.Size = new System.Drawing.Size(42, 23);
@@ -589,7 +594,7 @@
             // 
             // logBg
             // 
-            this.logBg.Location = new System.Drawing.Point(137, 20);
+            this.logBg.Location = new System.Drawing.Point(137, 34);
             this.logBg.Name = "logBg";
             this.logBg.SelectedItem = System.Drawing.Color.Wheat;
             this.logBg.Size = new System.Drawing.Size(42, 23);
@@ -599,7 +604,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(197, 57);
+            this.label13.Location = new System.Drawing.Point(197, 71);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(20, 17);
             this.label13.TabIndex = 5;
@@ -608,7 +613,7 @@
             // logBgGradient
             // 
             this.logBgGradient.AutoSize = true;
-            this.logBgGradient.Location = new System.Drawing.Point(13, 55);
+            this.logBgGradient.Location = new System.Drawing.Point(13, 69);
             this.logBgGradient.Name = "logBgGradient";
             this.logBgGradient.Size = new System.Drawing.Size(81, 21);
             this.logBgGradient.TabIndex = 1;
@@ -619,7 +624,7 @@
             // logBgSingleColor
             // 
             this.logBgSingleColor.AutoSize = true;
-            this.logBgSingleColor.Location = new System.Drawing.Point(13, 22);
+            this.logBgSingleColor.Location = new System.Drawing.Point(13, 36);
             this.logBgSingleColor.Name = "logBgSingleColor";
             this.logBgSingleColor.Size = new System.Drawing.Size(59, 21);
             this.logBgSingleColor.TabIndex = 0;
@@ -934,6 +939,37 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.label21);
+            this.groupBox8.Controls.Add(this.filterShowFilterRowInFilterColor);
+            this.groupBox8.Location = new System.Drawing.Point(6, 8);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(625, 74);
+            this.groupBox8.TabIndex = 7;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "General";
+            // 
+            // filterShowFilterRowInFilterColor
+            // 
+            this.filterShowFilterRowInFilterColor.AutoSize = true;
+            this.filterShowFilterRowInFilterColor.Location = new System.Drawing.Point(22, 18);
+            this.filterShowFilterRowInFilterColor.Name = "filterShowFilterRowInFilterColor";
+            this.filterShowFilterRowInFilterColor.Size = new System.Drawing.Size(276, 21);
+            this.filterShowFilterRowInFilterColor.TabIndex = 0;
+            this.filterShowFilterRowInFilterColor.Text = "Filter Pane: Show Each Filter in its color";
+            this.filterShowFilterRowInFilterColor.UseVisualStyleBackColor = true;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(44, 40);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(556, 26);
+            this.label21.TabIndex = 1;
+            this.label21.Text = resources.GetString("label21.Text");
+            // 
             // settings_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -975,6 +1011,8 @@
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).EndInit();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1056,6 +1094,9 @@
         private System.Windows.Forms.CheckBox editSearchBelow;
         private System.Windows.Forms.CheckBox editSearchAfter;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.CheckBox filterShowFilterRowInFilterColor;
 
     }
 }

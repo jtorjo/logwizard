@@ -120,6 +120,8 @@ namespace lw_common {
         // if true, when searching something, search all columns (current column first!)
         public bool edit_search_all_columns = false;
 
+        public bool show_filter_row_in_filter_color = true;
+
 
 
         // file-by-file
@@ -262,6 +264,8 @@ namespace lw_common {
             load_save(load, ref edit_search_after, "edit_search_after", true);
             load_save(load, ref edit_search_before, "edit_search_before", true);
             load_save(load, ref edit_search_all_columns, "edit_search_all_columns", false);
+
+            load_save(load, ref show_filter_row_in_filter_color, "show_filter_row_in_filter_color", true);
         }
 
         private string initials(string name) {

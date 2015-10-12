@@ -102,6 +102,8 @@ namespace LogWizard.ui {
                 editSearchAllColumns.Checked = true;
             else
                 editSearchCurColumnOnly.Checked = true;
+
+            filterShowFilterRowInFilterColor.Checked = app.inst.show_filter_row_in_filter_color;
         }
 
         private void save() {
@@ -168,6 +170,8 @@ namespace LogWizard.ui {
             app.inst.edit_search_after = editSearchAfter.Checked;
             app.inst.edit_search_before = editSearchBelow.Checked;
             app.inst.edit_search_all_columns = editSearchAllColumns.Checked;
+
+            app.inst.show_filter_row_in_filter_color = filterShowFilterRowInFilterColor.Checked;
 
             app.inst.save();
         }

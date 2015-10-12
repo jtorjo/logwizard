@@ -138,6 +138,10 @@ With Space - Use Space hotkey to toggle Edit mode ON/OFF
 With Right Arrow - turn the Edit mode ON. Move to another line, and it will be turned OFF
 </value>
   </data>
+  <data name="label21.Text" xml:space="preserve">
+    <value>If checked, when the Filter Pane is ON, and we have a filter that specifies color or match color, 
+we'll show its correspondin row in the color that the filter sets. This way you can get to your wanted filter(s) even easier</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

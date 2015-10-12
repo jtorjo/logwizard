@@ -112,6 +112,7 @@
             this.filterCtrl.View = System.Windows.Forms.View.Details;
             this.filterCtrl.CellEditStarting += new BrightIdeasSoftware.CellEditEventHandler(this.filterCtrl_CellEditStarting);
             this.filterCtrl.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.filterCtrl_CellClick);
+            this.filterCtrl.FormatRow += new System.EventHandler<BrightIdeasSoftware.FormatRowEventArgs>(this.filterCtrl_FormatRow);
             this.filterCtrl.ItemsChanged += new System.EventHandler<BrightIdeasSoftware.ItemsChangedEventArgs>(this.filterCtrl_ItemsChanged);
             this.filterCtrl.SelectionChanged += new System.EventHandler(this.filterCtrl_SelectionChanged);
             this.filterCtrl.SelectedIndexChanged += new System.EventHandler(this.filterCtrl_SelectedIndexChanged);

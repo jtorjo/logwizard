@@ -29,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using BrightIdeasSoftware;
 using LogWizard;
 
 namespace lw_common.ui {
@@ -751,6 +752,8 @@ namespace lw_common.ui {
         }
 
         private void do_refresh() {
+            update_colors();
+
             on_refresh_view(view_idx_);
             util.postpone(() => on_refresh_view(view_idx_), SECOND_REFRESH_MS);
         }
@@ -761,6 +764,46 @@ namespace lw_common.ui {
             ++ignore_change_;
             --ignore_change_;
             curFilterCtrl.Focus();
+        }
+
+        public void update_colors() {
+            for (int i = 0; i < filterCtrl.GetItemCount(); ++i) {
+                update_color(filterCtrl.GetItem(i));
+                filterCtrl.RefreshObject( filterCtrl.GetItem(i).RowObject );
+            }
+        }
+
+        private void update_color(OLVListItem olv_row) {
+            Color bg, fg;
+            if (!app.inst.show_filter_row_in_filter_color) {
+                fg = Color.Black;
+                bg = Color.White;
+            } else {
+                filter_item i = olv_row.RowObject as filter_item;
+                var row = new raw_filter_row(i.text, i.apply_to_existing_lines);
+                fg = row.fg;
+                bg = row.bg;
+
+                if (fg == util.transparent)
+                    fg = row.match_fg;
+                if (bg == util.transparent)
+                    bg = row.match_bg;
+
+                if (fg == util.transparent)
+                    fg = Color.Black;
+                if (bg == util.transparent)
+                    bg = Color.White;
+            }
+
+            if (olv_row.BackColor.ToArgb() != bg.ToArgb())
+                olv_row.BackColor = bg;
+
+            if (olv_row.ForeColor.ToArgb() != fg.ToArgb())
+                olv_row.ForeColor = fg;
+        }
+
+        private void filterCtrl_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e) {
+            update_color( e.Item);
         }
 
     }

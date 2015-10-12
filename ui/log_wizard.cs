@@ -2485,6 +2485,8 @@ namespace LogWizard
             bool sync_changed = app.inst.syncronize_colors != old_sync_colors || old_sync_gray != app.inst.sync_colors_all_views_gray_non_active;
             if (sync_changed)
                 sync_full_log_colors();
+
+            filtCtrl.update_colors();
         }
 
         private log_view selected_view() {
