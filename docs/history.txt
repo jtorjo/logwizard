@@ -1,5 +1,4 @@
 
-- add comment ## specifying the name of the filter -like 'any line containing blabla'
 
 - bug - i have two filters - first matches color, second matches match-color(+apply to existing lines)
   - i need to make sure both are applied (first one - color of line, second one - the match color)
@@ -23,6 +22,10 @@
 
 log_view_right_click - filter goto + rename view
 
+
+
+1.2.22b
+- add comment ## specifying the name of the filter -like 'any line containing blabla'
 
 
 1.2.22a

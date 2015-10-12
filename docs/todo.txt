@@ -24,6 +24,7 @@
     - toggling - will preserve the seleted row + its location on the screen!!! (based on its rectangle bounds - computed the first row that is visible, and scroll to there)
 
 
+- filter: have an option (default= true): whether to show each row in the color/match_color of the filter
 
 
 
@@ -75,7 +76,6 @@
 	- TOTHINK when should we dump an email? by default, probably not. maybe only on the command line client?
 	- later: in time, allow for this to be very thin (memory-wise), since we don't need to remember the matches - we only need to dump alerts, if needed
 	- cmd line client should also be able to dump a certain view into another file (.txt or .html); this way, you might run it on Test results?
-
 
 
 

@@ -434,11 +434,11 @@ namespace lw_common.ui {
             parent_.lv_parent.simple_action(simple);
         }
         
-        private void do_add_filter(string filter_str, bool is_color_filter, bool is_include_lines_filter, bool is_exclude_lines_filter) {
+        private void do_add_filter(string filter_str, string filter_description, bool is_color_filter, bool is_include_lines_filter, bool is_exclude_lines_filter) {
             // exclude lines - always apply to existing filters!
 
             string id = easy_filter_prefix(is_color_filter, is_include_lines_filter, is_exclude_lines_filter);
-            filter_str = id + "\r\n" + filter_str;
+            filter_str = id + "\r\n## " + filter_description + "\r\n" + filter_str;
             bool apply_to_existing_lines = is_color_filter || is_exclude_lines_filter;
             if (is_include_lines_filter)
                 apply_to_existing_lines = false;
@@ -473,7 +473,8 @@ namespace lw_common.ui {
             string filter_str = "$msg " + (starting_with ? "startswith" : "contains") + " " + parent_.smart_edit_sel_text 
                 + "\r\n" + (color_full_line ? "color" : "match_color") + " " + util.color_to_str(sel.SelectedColor)
                 + (case_sensitive ? "" : "\r\ncase-insensitive");
-            do_add_filter(filter_str, is_color_filter, is_include_lines, is_exclude_lines);
+            string filter_description = (starting_with ? "starts with " : "contains") + " " + parent_.smart_edit_sel_text + " - " + (color_full_line ? "(color)" : "(match)");
+            do_add_filter(filter_str, filter_description, is_color_filter, is_include_lines, is_exclude_lines);
             return true;
         }
 
@@ -498,8 +499,9 @@ namespace lw_common.ui {
             string filter_str = "$msg " + (starting_with ? "startswith" : "contains") + " " + parent_.smart_edit_sel_text 
                 + (is_color_filter ? "\r\n" + (color_full_line ? "color" : "match_color") + " " + util.color_to_str(col) : "")
                 + (case_sensitive ? "" : "\r\ncase-insensitive");
+            string filter_description = "include lines " + (starting_with ? "starting with " : "containing") + " " + parent_.smart_edit_sel_text;
 
-            do_add_filter(filter_str, is_color_filter, is_include_lines, is_exclude_lines);
+            do_add_filter(filter_str, filter_description, is_color_filter, is_include_lines, is_exclude_lines);
             return true;
         }
         private bool exclude_lines(bool starting_with, bool case_sensitive) {
@@ -510,7 +512,8 @@ namespace lw_common.ui {
             // exclude lines - always apply to existing filters!
             string filter_str = "$msg " + (starting_with ? "!startswith" : "!contains") + " " + parent_.smart_edit_sel_text 
                 + (case_sensitive ? "" : "\r\ncase-insensitive");
-            do_add_filter(filter_str, is_color_filter, is_include_lines, is_exclude_lines);
+            string filter_description = "exclude lines " + (starting_with ? "starting with " : "containing") + " " + parent_.smart_edit_sel_text;
+            do_add_filter(filter_str, filter_description, is_color_filter, is_include_lines, is_exclude_lines);
             return true;
         }
 

@@ -306,6 +306,14 @@ namespace lw_common.ui {
             var sel = filterCtrl.SelectedObject as filter_item;
             curFilterCtrl.Text = sel != null ? sel.text : "";
             curFilterCtrl.Enabled = sel != null;
+            if (sel != null) {
+                var row = new raw_filter_row(sel.text, sel.apply_to_existing_lines);
+                filterLabel.BackColor = row.bg;
+                filterLabel.ForeColor = row.fg;
+            } else {
+                filterLabel.BackColor = DefaultBackColor;
+                filterLabel.ForeColor = Color.White;
+            }
             --ignore_change_;
         }
 
