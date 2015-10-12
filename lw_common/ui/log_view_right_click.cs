@@ -147,7 +147,7 @@ namespace lw_common.ui {
             else
                 actions.Add(new action { category = "Filter/Go to...", name = "Select All Filters that matched this Line", on_click = find_filter_matching_line });
 
-            actions.Add(new action { category = "Filter/Go to...", name = "Edit First Filter that matched this Line", on_click = edit_first_filter_matching_line });
+            actions.Add(new action { category = "Filter/Go to...", name = "Edit " + (is_single_filter ? "" : "First ") + "Filter that matched this Line", on_click = edit_first_filter_matching_line });
 
             //   - show what other views contain this line - "Go to Other View Containing this line" -> and show which other views contain it
             var other = other_views_containing_this_line(parent_.sel_row_idx);
@@ -519,18 +519,6 @@ namespace lw_common.ui {
 
 
 
-
-
-
-
-
-
-
-        ////////////////////////////////////////////////////////////////
-        /// TODO
-
-
-
         private void find_filter_matching_line() {
             int row_idx = 0;
             List<int> filter_row_indexes = new List<int>();
@@ -544,8 +532,30 @@ namespace lw_common.ui {
             parent_.lv_parent.select_filter_rows(filter_row_indexes);
         }
 
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////
+        /// TODO
+
+
+
+
         private void edit_first_filter_matching_line() {
-            
+            int row_idx = 0;
+            List<int> filter_row_indexes = new List<int>();
+            foreach (var match in util.to_list(parent_.sel.match.matches)) {
+                if ( match)
+                    filter_row_indexes.Add(row_idx);
+                ++row_idx;
+            }
+            Debug.Assert(filter_row_indexes.Count > 0);
+
+            parent_.lv_parent.edit_filter_row(filter_row_indexes[0]);
+
         }
 
         private List<string> other_views_containing_this_line(int row_idx) {

@@ -26,5 +26,7 @@ namespace lw_common.ui {
         void after_search();
 
         void select_filter_rows(List<int> filter_row_indexes);
+
+        void edit_filter_row(int filter_row_idx);
     }
 }

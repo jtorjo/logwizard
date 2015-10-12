@@ -935,6 +935,14 @@ namespace LogWizard
             filtCtrl.select_filter_rows(filter_row_indexes);
         }
 
+        public void edit_filter_row(int filter_row_idx) {
+            if (!global_ui.show_filter) {
+                global_ui.show_filter = true;
+                show_left_pane(global_ui.show_left_pane);
+            }
+            filtCtrl.edit_filter_row(filter_row_idx);
+        }
+
         public static List<log_wizard> forms {
             get { return forms_; }
         }
@@ -3260,5 +3268,6 @@ namespace LogWizard
                 util.postpone(() => full_log_ctrl.force_refresh_visible_columns(), 2000);
             }
         }
+
     }
 }

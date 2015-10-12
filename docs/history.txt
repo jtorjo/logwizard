@@ -8,6 +8,10 @@ log_view_right_click - filter goto + rename view
   - also, create the uk_small filter
 
 
+1.2.23g
+- right click : filter goto filter: edit filter matching this line
+
+
 1.2.23f
 - right click : filter goto filter/filters matching line
 

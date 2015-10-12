@@ -784,9 +784,23 @@ namespace lw_common.ui {
 
         // goes to select the filter created here
         public void edit_filter_row_by_filter_id(string id) {
+            for (int idx = 0; idx < filterCtrl.GetItemCount(); ++idx)
+                if ((filterCtrl.GetItem(idx).RowObject as filter_item).filter_id == id) {
+                    edit_filter_row(idx);
+                    break;
+                }
+        }
+
+        public void edit_filter_row(int filter_row_idx) {
             ++ignore_change_;
+            filterCtrl.SelectedIndex = filter_row_idx;
             --ignore_change_;
-            curFilterCtrl.Focus();
+
+            // wait a bit for the UI to update
+            util.postpone(() => {                
+                curFilterCtrl.SelectionStart = curFilterCtrl.TextLength;
+                curFilterCtrl.Focus();
+            }, 150);
         }
 
         public void update_colors() {
