@@ -5,7 +5,13 @@
   - i should create the context only with rightclick
   - also, create the uk_small filter
   --- expain in setup sample - use ctrl-o to open explorer, find samples etc.
+  ---- also, samples -> include contexts in logwizard.txt
 
+
+1.2.24
+- fix: bug - adding filter manually would select two rows
+- added sample - as .sample + ignored (.gitignore) -> otherwise, github would choke
+- added logwizard.sample as well
 
 
 1.2.23i

@@ -403,6 +403,7 @@ namespace lw_common.ui {
 
             ++ignore_change_;
             filterCtrl.AddObject(new_);
+            filterCtrl.SelectedIndices.Clear();
             filterCtrl.SelectObject(new_);
             curFilterCtrl.Text = "";
             --ignore_change_;
@@ -790,6 +791,7 @@ namespace lw_common.ui {
                     break;
                 }
         }
+
 
         public void edit_filter_row(int filter_row_idx) {
             ++ignore_change_;

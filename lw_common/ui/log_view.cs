@@ -1871,7 +1871,7 @@ namespace lw_common
                 for (int idx = 0; idx < list.Columns.Count; ++idx)
                     full_widths_.Add(list.Columns[idx].Width);                
             
-            logger.Info("[lv] showing rows - " + name + " = " + show );
+            logger.Info("[view] showing rows - " + name + " = " + show );
 
             switch (show) {
             case ui_info.show_row_type.msg_only:

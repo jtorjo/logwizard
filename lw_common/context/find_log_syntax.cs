@@ -75,7 +75,7 @@ namespace LogWizard {
             // see if we have $(file) first
             int pos1 = lines[0].IndexOf("\\"), pos2 = lines[0].IndexOf("\\");
             if ( pos1 < 20 && pos2 < 20)
-                syntax += "$(file) ";
+                syntax += "$file ";
 
             List<int> times = new List<int>(), dates = new List<int>(), levels = new List<int>();
             foreach ( string line in lines) {

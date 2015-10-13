@@ -1598,21 +1598,21 @@ namespace LogWizard
             string syntax = null;
             if (text_ is file_text_reader)
                 syntax = log_to_default_syntax.file_to_syntax(text_.name);
-            if (syntax == null)
-                syntax = text_.try_to_find_log_syntax();
             string name = text_.name;
 
             if (history_.Count < 1)
                 history_select(name);
 
             // 1.1.25+ if I can't find the syntax from file-to-syntax, or by parsing the log, see if the context associated with this file has log-syntax
-            Debug.Assert(syntax != null);
-            if (syntax == find_log_syntax.UNKNOWN_SYNTAX) {
+            if (syntax == null) {
                 ui_context file_ctx = file_to_context(name);
-                if (syntax == find_log_syntax.UNKNOWN_SYNTAX)
-                    if (file_ctx.default_syntax != "")
-                        syntax = file_ctx.default_syntax;
+                if (file_ctx.default_syntax != "")
+                    syntax = file_ctx.default_syntax;
             }
+
+            if (syntax == null)
+                syntax = text_.try_to_find_log_syntax();
+
             logSyntaxCtrl.Text = syntax;
             logSyntaxCtrl.ForeColor = logSyntaxCtrl.Text != find_log_syntax.UNKNOWN_SYNTAX ? Color.Black : Color.Red;
 

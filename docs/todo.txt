@@ -46,7 +46,6 @@
 
 
 
-
    ------------> perhaps threads first (i think it's less code???? TOTHINK)
 
 - option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?; probably - yes)
@@ -128,6 +127,13 @@
 
 
 
+
+
+
+
+
+
+
 - preview mode (probably not pro_v)
   - in this mode, we only load part of the file, like, first 50K lines or so
   - also, we stop monitoring for new lines (so we don't interfere with the view/filter creation process)
@@ -140,6 +146,25 @@
     - so that the user is instantly aware of it
   - Preview mode is on a file-by-file basis (not context-dependent)
   - *** if not pro_v -> article about it?
+
+- filters - when refreshing 
+  -> run all filters (until they are all run (those not for only-apply-to-existing-filters), nothing changes (in the view))
+  -> AFTER they are all run (we change the whole array in ONE step)
+- on 50K lines, the refresh takes rather long - it should not take this long
+  - like, creating a new view takes a bit - this should be close to instant
+    + refreshing - should not re-read the file if it's not changed!!! 
+	  + parser - should reread from scratch only if syntax has changed!
+
+
+
+
+
+
+
+
+
+
+
 
 
 

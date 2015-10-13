@@ -23,6 +23,7 @@ logwizardsetup/Dbg64/*
 logwizardsetup/Release64/*
 
 *.exe
+*.sample
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
