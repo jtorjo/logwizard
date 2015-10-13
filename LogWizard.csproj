@@ -246,7 +246,9 @@
     <Content Include="samples\uk_small.sample">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="samples\LogWizard.sample" />
+    <Content Include="samples\LogWizard.sample">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="docs\history.txt" />

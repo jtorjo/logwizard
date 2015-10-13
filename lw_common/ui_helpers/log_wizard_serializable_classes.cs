@@ -126,6 +126,7 @@ namespace lw_common {
         }
 
         public void copy_from(ui_context other) {
+            default_syntax = other.default_syntax;
             name = other.name;
             auto_match = other.auto_match;
             views = other.views.ToList();

@@ -1205,12 +1205,16 @@ namespace LogWizard
         }
 
 
-        private void refresh_Tick(object sender, EventArgs e) {
+        private void refresh_Tick(object sender, EventArgs ea) {
             if (curContextCtrl.DroppedDown)
                 return;
 
-            refresh_cur_log_view();
-            update_status_text();
+            try {
+                refresh_cur_log_view();
+                update_status_text();
+            } catch (Exception e) {
+                logger.Error("Refresh error" + e.Message);
+            }
         }
 
         private void saveTimer_Tick(object sender, EventArgs e) {

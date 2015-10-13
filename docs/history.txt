@@ -8,6 +8,11 @@
   ---- also, samples -> include contexts in logwizard.txt
 
 
+
+1.2.27
+- updated logwizard.txt to allow for the .sample files
+
+
 1.2.24
 - fix: bug - adding filter manually would select two rows
 - added sample - as .sample + ignored (.gitignore) -> otherwise, github would choke
