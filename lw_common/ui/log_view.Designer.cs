@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.labelName = new System.Windows.Forms.Label();
             this.viewName = new System.Windows.Forms.TextBox();
-            this.tip = new System.Windows.Forms.ToolTip();
+            this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.list = new BrightIdeasSoftware.VirtualObjectListView();
             this.lineCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.viewCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -224,6 +225,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Gray;
             this.label1.Location = new System.Drawing.Point(189, 4);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(141, 13);

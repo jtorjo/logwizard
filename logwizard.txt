@@ -472,19 +472,73 @@ context.2.view2.filt5.text=$msg !startswith TIMER
 context.2.view2.filter_count=3
 context.2.view2.is_default_name=0
 context.2.view2.name=Stats
+
 context.3.auto_match=
 context.3.default_syntax=
+
 context.3.name=SetupSample
-context.3.show_filter=1
-context.3.show_fulllog=0
-context.3.show_source=1
-context.3.show_tips=1
 context.3.view_count=8
 context.3.view0.filt0.apply_to_existing_lines=0
 context.3.view0.filt0.dimmed=0
 context.3.view0.filt0.enabled=1
 context.3.view0.filt0.text=$class = wizard_intro
-context.3.view0.filter_count=1
+context.3.view0.filt1.apply_to_existing_lines=1
+context.3.view0.filt1.dimmed=0
+context.3.view0.filt1.enabled=1
+context.3.view0.filt1.text=# // DONOT CHANGE this line -color  #LogWizard
+	## contains LogWizard - (match)
+	$msg contains LogWizard
+	match_color #007EFF
+context.3.view0.filt2.apply_to_existing_lines=1
+context.3.view0.filt2.dimmed=0
+context.3.view0.filt2.enabled=1
+context.3.view0.filt2.text=# // DONOT CHANGE this line -color  #Eager?
+	## starts with  Eager? - (match)
+	$msg startswith Eager?
+	match_color #FF00FD
+context.3.view0.filt3.apply_to_existing_lines=1
+context.3.view0.filt3.dimmed=0
+context.3.view0.filt3.enabled=1
+context.3.view0.filt3.text=# // DONOT CHANGE this line -color  #Wanna play?
+	## contains Wanna play? - (match)
+	$msg contains Wanna play?
+	match_color #FF003E
+context.3.view0.filt4.apply_to_existing_lines=1
+context.3.view0.filt4.dimmed=0
+context.3.view0.filt4.enabled=1
+context.3.view0.filt4.text=# // DONOT CHANGE this line -color  #Alt-F
+	## contains Alt-F - (match)
+	$msg contains Alt-F
+	match_color #FF5E00
+context.3.view0.filt5.apply_to_existing_lines=1
+context.3.view0.filt5.dimmed=0
+context.3.view0.filt5.enabled=1
+context.3.view0.filt5.text=# // DONOT CHANGE this line -color  #filter
+	## contains filter - (match)
+	$msg contains filter
+	match_color #003EFF
+context.3.view0.filt6.apply_to_existing_lines=1
+context.3.view0.filt6.dimmed=0
+context.3.view0.filt6.enabled=1
+context.3.view0.filt6.text=# // DONOT CHANGE this line -color  #Ctrl-O
+	## contains Ctrl-O - (match)
+	$msg contains Ctrl-O
+	match_color #FF5E00
+context.3.view0.filt7.apply_to_existing_lines=1
+context.3.view0.filt7.dimmed=0
+context.3.view0.filt7.enabled=1
+context.3.view0.filt7.text=# // DONOT CHANGE this line -color  #Ctrl-RightArrow
+	## contains Ctrl-RightArrow - (match)
+	$msg contains Ctrl-RightArrow
+	match_color #FF5E00
+context.3.view0.filt8.apply_to_existing_lines=1
+context.3.view0.filt8.dimmed=0
+context.3.view0.filt8.enabled=1
+context.3.view0.filt8.text=# // DONOT CHANGE this line -color  #Samples
+	## contains Samples - (match)
+	$msg contains Samples
+	match_color #0000FF
+context.3.view0.filter_count=9
 context.3.view0.is_default_name=0
 context.3.view0.name=Intro
 context.3.view1.filt0.apply_to_existing_lines=0
@@ -496,28 +550,91 @@ context.3.view1.filt1.dimmed=0
 context.3.view1.filt1.enabled=1
 context.3.view1.filt1.text=$class = wi2b
 	color blue
-context.3.view1.filter_count=2
+context.3.view1.filt2.apply_to_existing_lines=1
+context.3.view1.filt2.dimmed=0
+context.3.view1.filt2.enabled=1
+context.3.view1.filt2.text=# // DONOT CHANGE this line -color  #filter
+	## contains filter - (match)
+	$msg contains filter
+	match_color #FF009E
+context.3.view1.filt3.apply_to_existing_lines=1
+context.3.view1.filt3.dimmed=0
+context.3.view1.filt3.enabled=1
+context.3.view1.filt3.text=# // DONOT CHANGE this line -color  #Alt-F
+	## contains Alt-F - (match)
+	$msg contains Alt-F
+	match_color #FF3F00
+context.3.view1.filter_count=4
 context.3.view1.is_default_name=0
 context.3.view1.name=Filters
 context.3.view2.filt0.apply_to_existing_lines=0
 context.3.view2.filt0.dimmed=0
 context.3.view2.filt0.enabled=1
 context.3.view2.filt0.text=$class = wi3
-context.3.view2.filter_count=1
+context.3.view2.filt1.apply_to_existing_lines=1
+context.3.view2.filt1.dimmed=0
+context.3.view2.filt1.enabled=1
+context.3.view2.filt1.text=# // DONOT CHANGE this line -color  #Ctrl-RightArrow
+	## contains Ctrl-RightArrow - (match)
+	$msg contains Ctrl-RightArrow
+	match_color #FF007E
+context.3.view2.filt2.apply_to_existing_lines=1
+context.3.view2.filt2.dimmed=0
+context.3.view2.filt2.enabled=1
+context.3.view2.filt2.text=# // DONOT CHANGE this line -color  #Ctrl-LeftArrow
+	## contains Ctrl-LeftArrow - (match)
+	$msg contains Ctrl-LeftArrow
+	match_color #FF007E
+context.3.view2.filt3.apply_to_existing_lines=1
+context.3.view2.filt3.dimmed=0
+context.3.view2.filt3.enabled=1
+context.3.view2.filt3.text=# // DONOT CHANGE this line -color  #View
+	## contains View - (match)
+	$msg contains View
+	match_color #007EFF
+context.3.view2.filt4.apply_to_existing_lines=1
+context.3.view2.filt4.dimmed=0
+context.3.view2.filt4.enabled=1
+context.3.view2.filt4.text=# // DONOT CHANGE this line -color  #Alt-L
+	## contains Alt-L - (match)
+	$msg contains Alt-L
+	match_color #FF007E
+context.3.view2.filter_count=5
 context.3.view2.is_default_name=0
 context.3.view2.name=DiffViews
 context.3.view3.filt0.apply_to_existing_lines=0
 context.3.view3.filt0.dimmed=0
 context.3.view3.filt0.enabled=1
 context.3.view3.filt0.text=$class = wi4
-context.3.view3.filter_count=1
+context.3.view3.filt1.apply_to_existing_lines=1
+context.3.view3.filt1.dimmed=0
+context.3.view3.filt1.enabled=1
+context.3.view3.filt1.text=# // DONOT CHANGE this line -color  #Ctrl-RightArrow
+	## contains Ctrl-RightArrow - (match)
+	$msg contains Ctrl-RightArrow
+	match_color #FF007E
+context.3.view3.filt2.apply_to_existing_lines=1
+context.3.view3.filt2.dimmed=0
+context.3.view3.filt2.enabled=1
+context.3.view3.filt2.text=# // DONOT CHANGE this line -color  #Alt-S
+	## contains Alt-S - (match)
+	$msg contains Alt-S
+	match_color #FF007E
+context.3.view3.filter_count=3
 context.3.view3.is_default_name=0
 context.3.view3.name=Source Pane
 context.3.view4.filt0.apply_to_existing_lines=0
 context.3.view4.filt0.dimmed=0
 context.3.view4.filt0.enabled=1
 context.3.view4.filt0.text=$class = wi5
-context.3.view4.filter_count=1
+context.3.view4.filt1.apply_to_existing_lines=1
+context.3.view4.filt1.dimmed=0
+context.3.view4.filt1.enabled=1
+context.3.view4.filt1.text=# // DONOT CHANGE this line -color  #Hotkeys
+	## starts with  Hotkeys - (match)
+	$msg contains Hotkeys
+	match_color #005EFF
+context.3.view4.filter_count=2
 context.3.view4.is_default_name=0
 context.3.view4.name=Hotkeys
 context.3.view5.filt0.apply_to_existing_lines=0
@@ -566,6 +683,7 @@ context.3.view7.filt2.text=$msg startswith [time.
 context.3.view7.filter_count=3
 context.3.view7.is_default_name=0
 context.3.view7.name=Time(s)
+
 context.4.auto_match=
 context.4.default_syntax=$file[0,': '] $time['',12] $ctx1['',10] $level['','- '] $msg
 context.4.name=LogWizard

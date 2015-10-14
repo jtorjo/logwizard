@@ -59,3 +59,6 @@
   - and write article about it
   - allow reading description (releases) from github, + identify the beta/stable (if needed) + identify version by release tag + 64/32 bit
   - read history from online file (history.txt) + in there, mark what to show to users - perhaps i should only read from the description of the release notes
+
+
+- perhaps integrate with github - so that when looking at a message coming from a file:line -> look and see who modified that line?

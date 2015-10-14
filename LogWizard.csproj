@@ -243,12 +243,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="README.md" />
-    <Content Include="samples\uk_small.sample">
+    <None Include="samples\uk_small.sample.log">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="samples\LogWizard.sample">
+    </None>
+    <None Include="samples\LogWizard.sample.log">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="docs\history.txt" />

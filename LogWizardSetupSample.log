@@ -4,6 +4,12 @@
 11:06:12,939 main       INFO  wizard_intro - 
 11:06:12,939 main       INFO  wizard_intro - https://github.com/jtorjo/logwizard/wiki
 11:06:12,939 main       INFO  wizard_intro - 
+11:06:12,939 main       INFO  wizard_intro - Eager? Wanna play? Press Alt-F to show the Filter Pane.
+11:06:12,939 main       INFO  wizard_intro - Now press Ctrl-O (Open in Windows Explorer). You will see a directory called Samples
+11:06:12,939 main       INFO  wizard_intro - Go there, select a sample, right-click it, select Open With >> LogWizard.
+11:06:12,939 main       INFO  wizard_intro -           (note: you can drop files on LogWizard, but only when you run LogWizard manually,
+11:06:12,939 main       INFO  wizard_intro -                  not when the setup kit starts LogWizard. Long story...)
+11:06:12,939 main       INFO  wizard_intro - 
 11:06:12,939 main       INFO  wizard_intro - You will see this each time you run the LogWizard setup kit.
 11:06:12,939 main       INFO  wizard_intro - 
 11:06:12,939 main       INFO  wizard_intro - LogWizard's purpose is to help you easily focus on what's important, 
@@ -25,13 +31,13 @@
 11:06:12,939 main       INFO  wizard_intro - and drop it here.
 11:06:12,939 main       INFO  wizard_intro - 
 11:06:12,939 main       INFO  wizard_intro - In order to create views for your log, you will set different filters. 
-11:06:12,939 main       INFO  wizard_intro - If a filter matches a line in the log, it will be shown.
+11:06:12,939 main       INFO  wizard_intro - If a filter matches a line in the log, that line will be shown.
 11:06:12,939 main       INFO  wizard_intro - 
 11:06:12,939 main       INFO  wizard_intro - For now, press "Ctrl-RightArrow", to move to the next view.
 11:06:12,939 main       INFO  wi2a - 
-11:06:12,939 main       INFO  wi2a - Dealing with filters.
+11:06:12,939 main       INFO  wi2a - Dealing with Filters.
 11:06:12,939 main       INFO  wi2a - 
-11:06:12,939 main       INFO  wi2a - The Filters Pane is shown on the left, and can be toggled on/off ('Alf-F' hotkey)
+11:06:12,939 main       INFO  wi2a - The Filters Pane is shown on the left, and can be toggled on/off ('Alt-F' hotkey)
 11:06:12,939 main       INFO  wi2a - (or via 'Toggles' button -> select "Filter Pane")
 11:06:12,939 main       INFO  wi2a - 
 11:06:12,939 main       INFO  wi2a - You can have as many filters as you want, just remember that all of them are 'OR'ed,
@@ -49,7 +55,7 @@
 11:06:12,939 main       INFO  wi2b - (name = we allow some predefined color names, such as 'blue', 'lightgray', 'darkred', etc.)
 11:06:12,939 main       INFO  wi2b - Or, just click on the "eyedropper" button, select a color, and press Enter. That's it!
 11:06:12,939 main       INFO  wi2b - 
-11:06:12,939 main       INFO  wi2b - For more tips on dealing with filters, check out "Tips" (the link shown below the filter).
+11:06:12,939 main       INFO  wi2b - For more tips on dealing with filters, check out https://github.com/jtorjo/logwizard/wiki/Filters
 11:06:12,939 main       INFO  wi2b - Enabling/disabling a specific filter is very easy - just Check/uncheck its "Enb" box.
 11:06:12,939 main       INFO  wi2b - 
 11:06:12,939 main       INFO  wi2b - For instance, just go and disable - first the first filter, then the second one. 
@@ -58,7 +64,6 @@
 11:06:12,939 main       INFO  wi2b - The main idea is that you will most of the time create the Filters, and once you're happy
 11:06:12,939 main       INFO  wi2b - with them, just toggle the "Filters Pane" off (so that you have more space to focus on what's
 11:06:12,939 main       INFO  wi2b - important to you)
-11:06:12,939 main       INFO  wi2b - 
 11:06:12,939 main       INFO  wi2b - 
 11:06:12,939 main       INFO  wi2b - 
 11:06:12,939 main       INFO  wi2b - Now, press "Ctrl-RightArrow" to move to the next view.
@@ -74,8 +79,8 @@
 11:06:12,939 main       INFO  wi3 - You would probably want to use this when you have a log that is a bit out of the ordinary,
 11:06:12,939 main       INFO  wi3 - and while existing log views work for 95% of the logs you view, this one needs a few different filters.
 11:06:12,939 main       INFO  wi3 - 
-11:06:12,939 main       INFO  wi3 - Changing the name of a view is easy - make sure you see the Edit box below the View's default name,
-11:06:12,939 main       INFO  wi3 - edit it and write whatever you want. If there's no edit box, toggle the "Source Pane" on ('Alt-S' hotkey)
+11:06:12,939 main       INFO  wi3 - Changing the name of a view is easy - right click on any line, select View >> Rename View.
+11:06:12,939 main       INFO  wi3 - Write whatever you want, and type Enter. That's all!
 11:06:12,939 main       INFO  wi3 - 
 11:06:12,939 main       INFO  wi3 - In case you want to see both the existing view and an overview of the log (that is, 
 11:06:12,939 main       INFO  wi3 - see both your specific View and the Full Log), just toggle the "Full Log" Pane ('Alt-L' hotkey).
@@ -197,9 +202,6 @@ We are BETA testing a way of clicking FullTilt timebanks so that they do not ste
 11:06:15,577 rf_tables  INFO  TNTables.ipoker_lobby - ipoker lobby detected as generic
 11:06:15,578 vision     INFO  TNCommon.settings_file - Reading settings from Z:\TN2\bin\Debug\vision_templates\ipoker_default.txt
 11:06:15,580 main       INFO  TNCommon.ui_notifications - Notification: Starting layout : stacked
-11:06:15,769 rf_tables  INFO  TNCommon.ui_notifications - Notification: Please note that we have not beta-tested this specific iPoker skin (Netbet Poker) enough.
-
-We suggest you use caution, and please report any issues to support@tableninja.com.
 11:06:15,769 vision     INFO  TNCommon.settings_file - Reading settings from Z:\TN2\bin\Debug\vision_templates\pacific-6p_default.txt
 11:06:15,771 vision     INFO  TNCommon.settings_file - Reading settings from Z:\TN2\bin\Debug\vision_templates\pacific_default.txt
 11:06:15,853 zorder     DEBUG TNCommon.font_pool - new font Microsoft Sans Serif, 36, Bold
@@ -292,9 +294,6 @@ We suggest you use caution, and please report any issues to support@tableninja.c
 11:07:00,978 main       DEBUG TNLayout.popup_active_table - [hk] Target= none(C1694/pid10320-v/PTIODEVICE/Netbet Poker/{X=512,Y=204,Width=814,Height=614}/p0/o0) fg C1694/pid10320-v/PTIODEVICE/Netbet Poker/{X=512,Y=204,Width=814,Height=614}/p0/o0
 11:07:01,230 comp_wnds  DEBUG TNTables.compute_table_windows - [new] window table C1694/pid10320-v/PTIODEVICE/78suited2015: Chiaulis - Texas Hold'em, No limit - €0.01/€0.02/{X=663,Y=128,Width=814,Height=614}/p0/o0
 11:07:01,279 rf_tables  INFO  TNCommon.game_info - [new] table 78suited2015: Chiaulis/ipoker/Holdem(Normal,normal)/NoLimit, CUR=€ , B: 0.01/0.02/0  
-11:07:01,280 rf_tables  INFO  TNCommon.ui_notifications - Notification: Please note that iPoker is in Early-BETA support. When you play iPoker tables, we recommend you don't play other types of sites as well (such as Pokerstars or Full Tilt), since iPoker tables could sometimes steal focus from the other sites.
-
-We're working on fixing this.
 11:07:01,356 main       DEBUG TNHotkeys.all_hotkeys - Enabling hotkeys 8
 11:07:01,373 zorder     INFO  TNv1.Win32 - Moving 78suited2015: Chiaulis - Texas Hold'em, No limit - €0.01/€0.02 to 52/32/655/494
 11:07:01,379 scrape_hh  DEBUG TNTables.common_hh_parser`2 - [hh] scraping ipoker HH C:\Users\meeee\AppData\Local\NetBet Poker\History\

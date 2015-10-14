@@ -2,14 +2,27 @@
 - take some picture(s) with logwizard - to place on github
 
 - article: 
+- LowWizard - Talk about your Logs!
     - sharing thy log with coworkers/customer support/customers 
 	  - customer support - explain that they can have the developers look at the logs as well.
 	    also, each dev can have his own views thus seeing data in a different way - which can of course yield different insights
 
-
+- shift-drop : logwizard / zip -> do postpone, so that we get the dragdrop ended message processed
 - 
 
 -------------------------------------------------------
+- filters - when refreshing 
+  (especially on "apply to existing")
+  -> run all filters (until they are all run (those not for only-apply-to-existing-filters), nothing changes (in the view))
+  -> AFTER they are all run (we change the whole array in ONE step)
+- on 50K lines, the refresh takes rather long - it should not take this long
+  - like, creating a new view takes a bit - this should be close to instant
+    + refreshing - should not re-read the file if it's not changed!!! 
+	  + parser - should reread from scratch only if syntax has changed!
+----------------> what i need is different types of refresh: current view, current file, all views, etc. TOTHINK
+---------- while refreshing, show this ON THE STATUS message
+
+
 
 	- allow toggling "matches filter(s) X,Y,Z ON/OFF" - this toggle should be customizable (several filters or simply just an extra function?)
 	  - in other words, say i may have a filter or several filters
@@ -36,10 +49,22 @@
   tagline: Editing Filtes can now be a joy! / Log viewing can be a joy!
   example: have a filter that shows all numbers in red (white bg) - how amazing is that?
    or maybe, telephone numbers
+		There are quite a few reasons you'll want to do logging in your application, but lets settle for the most common: 
+		* find bugs, 
+		* find as much information when something goes south.
+
+		In both cases, you will need to deeply analyze your log. And I'm not saying - just dump some chart about how many errors were found or about how many requests your application handled, or whatever.
+
+		I'm talking about really analyzing your log - to understand what actually happened. Filtering through the log, picking the right information, until you find out what let to the bug/problem.
 
 
 
 
+- notes article: if feedback is positive, perhaps allow easy sharing of notes over intranet
+  (so that you automatically save your notes on the intranet as well, and as you load them, you automatically merge them with what is there)
+    - easy way to do: each user writes its notes to intranet into a guid-named file (thus - each user will only write its files so there are no clashes)
+	  - you simply know the guid of the other users, and auto-import their notes 
+	    - (need to find a way to know all the authors for a given file) -> probably use the guid that identifies the file and suffix it by the author name (to think what to do when user changes author name)
 
 
 
@@ -147,13 +172,6 @@
   - Preview mode is on a file-by-file basis (not context-dependent)
   - *** if not pro_v -> article about it?
 
-- filters - when refreshing 
-  -> run all filters (until they are all run (those not for only-apply-to-existing-filters), nothing changes (in the view))
-  -> AFTER they are all run (we change the whole array in ONE step)
-- on 50K lines, the refresh takes rather long - it should not take this long
-  - like, creating a new view takes a bit - this should be close to instant
-    + refreshing - should not re-read the file if it's not changed!!! 
-	  + parser - should reread from scratch only if syntax has changed!
 
 
 

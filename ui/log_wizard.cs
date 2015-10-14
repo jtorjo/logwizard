@@ -796,7 +796,7 @@ namespace LogWizard
 
         public void on_view_name_changed(log_view view, string name) {
             ui_context cur = cur_context();
-            for ( int i = 0; i < cur_context().views.Count; ++i)
+            for ( int i = 0; i < viewsTab.TabCount; ++i)
                 if ( log_view_for_tab(i) == view) {
                     viewsTab.TabPages[i].Text = name;
                     view.name = name;
@@ -2807,6 +2807,7 @@ namespace LogWizard
 
             // remember position - if Visible
             save_location();
+            selected_view().refresh();
         }
 
         private void log_wizard_LocationChanged(object sender, EventArgs e) {

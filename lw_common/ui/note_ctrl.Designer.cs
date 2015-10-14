@@ -62,7 +62,7 @@
             this.notesCtrl.Name = "notesCtrl";
             this.notesCtrl.OwnerDraw = true;
             this.notesCtrl.ShowGroups = false;
-            this.notesCtrl.Size = new System.Drawing.Size(431, 443);
+            this.notesCtrl.Size = new System.Drawing.Size(431, 475);
             this.notesCtrl.TabIndex = 0;
             this.notesCtrl.UseCellFormatEvents = true;
             this.notesCtrl.UseCompatibleStateImageBehavior = false;
@@ -99,7 +99,7 @@
             // 
             this.addNoteToLineLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.addNoteToLineLabel.AutoSize = true;
-            this.addNoteToLineLabel.Location = new System.Drawing.Point(-3, 478);
+            this.addNoteToLineLabel.Location = new System.Drawing.Point(-3, 480);
             this.addNoteToLineLabel.Name = "addNoteToLineLabel";
             this.addNoteToLineLabel.Size = new System.Drawing.Size(114, 17);
             this.addNoteToLineLabel.TabIndex = 1;
@@ -120,11 +120,11 @@
             // 
             this.showDeletedLines.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.showDeletedLines.AutoSize = true;
-            this.showDeletedLines.Location = new System.Drawing.Point(311, 478);
+            this.showDeletedLines.Location = new System.Drawing.Point(308, 652);
             this.showDeletedLines.Name = "showDeletedLines";
-            this.showDeletedLines.Size = new System.Drawing.Size(124, 21);
+            this.showDeletedLines.Size = new System.Drawing.Size(127, 21);
             this.showDeletedLines.TabIndex = 3;
-            this.showDeletedLines.Text = "Show Del Lines";
+            this.showDeletedLines.Text = "Show Del Notes";
             this.showDeletedLines.UseVisualStyleBackColor = true;
             this.showDeletedLines.CheckedChanged += new System.EventHandler(this.showDeletedLines_CheckedChanged);
             // 
@@ -132,10 +132,10 @@
             // 
             this.curNote.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.curNote.Location = new System.Drawing.Point(23, 502);
+            this.curNote.Location = new System.Drawing.Point(23, 500);
             this.curNote.Multiline = true;
             this.curNote.Name = "curNote";
-            this.curNote.Size = new System.Drawing.Size(406, 151);
+            this.curNote.Size = new System.Drawing.Size(407, 151);
             this.curNote.TabIndex = 4;
             this.curNote.Enter += new System.EventHandler(this.curNote_Enter);
             this.curNote.KeyDown += new System.Windows.Forms.KeyEventHandler(this.curNote_KeyDown);
@@ -147,7 +147,8 @@
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(197, 657);
+            this.label3.ForeColor = System.Drawing.Color.Gray;
+            this.label3.Location = new System.Drawing.Point(22, 653);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(232, 13);
             this.label3.TabIndex = 5;
@@ -158,7 +159,7 @@
             this.selectColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.selectColor.BackgroundImage = global::lw_common.Properties.Resources.eyedropper;
             this.selectColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.selectColor.Location = new System.Drawing.Point(0, 502);
+            this.selectColor.Location = new System.Drawing.Point(0, 499);
             this.selectColor.Name = "selectColor";
             this.selectColor.Size = new System.Drawing.Size(22, 22);
             this.selectColor.TabIndex = 6;
@@ -172,7 +173,7 @@
             this.sortByTime.AutoSize = true;
             this.sortByTime.Enabled = false;
             this.sortByTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sortByTime.Location = new System.Drawing.Point(283, 450);
+            this.sortByTime.Location = new System.Drawing.Point(283, 476);
             this.sortByTime.Name = "sortByTime";
             this.sortByTime.Size = new System.Drawing.Size(74, 23);
             this.sortByTime.TabIndex = 7;
@@ -186,7 +187,7 @@
             this.sortByLine.AutoSize = true;
             this.sortByLine.Checked = true;
             this.sortByLine.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sortByLine.Location = new System.Drawing.Point(358, 450);
+            this.sortByLine.Location = new System.Drawing.Point(358, 476);
             this.sortByLine.Name = "sortByLine";
             this.sortByLine.Size = new System.Drawing.Size(73, 23);
             this.sortByLine.TabIndex = 8;

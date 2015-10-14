@@ -24,6 +24,7 @@ logwizardsetup/Release64/*
 
 *.exe
 *.sample
+*.sample.log
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
