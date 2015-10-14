@@ -550,11 +550,13 @@ namespace LogWizard
 
         private void on_file_drop(string file, string friendly_name = "") {
             if (file.ToLower().EndsWith(".zip")) {
-                on_zip_drop(file);
+                // allow the drag/drop operation to finish - thus the program we got this from can be responsive
+                util.postpone(() => on_zip_drop(file), 1);
                 return;
             }
             else if (file.ToLower().EndsWith(".logwizard")) {
-                import_notes(file);
+                // allow the drag/drop operation to finish - thus the program we got this from can be responsive
+                util.postpone(() => import_notes(file), 1);
                 return;
             }
 

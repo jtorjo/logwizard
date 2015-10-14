@@ -1,9 +1,9 @@
 
 
 
-
-1.3.1
+1.3.2
 - making setup kits for public release
+- fixed but at replying to note
 
 
 1.2.29

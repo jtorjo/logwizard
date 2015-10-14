@@ -528,7 +528,14 @@ namespace lw_common.ui {
             }
 
             line new_ = new line();
-            new_.copy_from(cur_line);
+            if (reply_to_note_id == "")
+                new_.copy_from(cur_line);
+            else {
+                // find the line we're replying to
+                var reply_to_note = notes_sorted_by_line_index_.FirstOrDefault(x => x.note_id == reply_to_note_id);
+                Debug.Assert(reply_to_note != null && lines_.ContainsKey(reply_to_note.line_id));
+                new_.copy_from( lines_[reply_to_note.line_id] );
+            }
             return add_note(new_, n, note_id, reply_to_note_id, deleted, utc_added);
         }
 
