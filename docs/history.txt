@@ -2,18 +2,11 @@
 
 
 
-- filters - when refreshing 
----------- while refreshing, show this ON THE STATUS message
-  (especially on "apply to existing")
-  -> run all filters (until they are all run (those not for only-apply-to-existing-filters), nothing changes (in the view))
-  -> AFTER they are all run (we change the whole array in ONE step)
-- on 50K lines, the refresh takes rather long - it should not take this long
-  - like, creating a new view takes a bit - this should be close to instant
-    + refreshing - should not re-read the file if it's not changed!!! 
-	  + parser - should reread from scratch only if syntax has changed!
-----------------> what i need is different types of refresh: current view, current file, all views, etc. TOTHINK
-
 1.3.1
+
+
+1.2.29
+- ipmroved refreshing by A LOT - basically, don't reload the file unless truly needed
 
 
 1.2.28

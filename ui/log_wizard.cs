@@ -1867,7 +1867,7 @@ namespace LogWizard
 
         private void refreshFilter_Click(object sender, EventArgs e) {
             if (text_ != null)
-                log_parser_.force_reload();
+                log_parser_.reload();
             refresh_filter_found();
 
             util.add_timer((has_ended) => {

@@ -364,16 +364,25 @@ namespace LogWizard
         }
 
         // forces the WHOLE FILE to be reloaded
-        public void force_reload() {
+        //
+        // be VERY careful calling this - I should call this only when the syntax has changed
+        private void force_reload() {
             lock (this) {
                 was_last_line_incomplete_ = DateTime.MinValue;
                 forced_reload_.Clear();
                 lines_.Clear();
                 up_to_date_ = false;
-                logger.Info("[log] log reloaded: " + text_reader_.name);
+                logger.Info("[log] forced reload: " + text_reader_.name);
             }
             string_.clear();
             text_reader_.force_reload();
+        }
+
+        // forces readers to reload
+        public void reload() {
+            lock (this) {
+                forced_reload_.Clear();
+            }
         }
 
 

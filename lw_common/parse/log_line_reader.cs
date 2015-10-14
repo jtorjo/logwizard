@@ -77,9 +77,5 @@ namespace LogWizard {
             return parser_.line_at(idx);
         }
 
-        public void force_reload() {
-            parser_.force_reload();
-        }
-
     }
 }
