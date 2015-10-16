@@ -1,5 +1,8 @@
 
 
+1.3.3
+- .samples.log files - re-marked as "Content"
+
 
 1.3.2
 - making setup kits for public release

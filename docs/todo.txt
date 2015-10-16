@@ -11,6 +11,8 @@
 - 
 
 -------------------------------------------------------
+- add $thread
+
 - filters - when refreshing 
   (especially on "apply to existing")
   -> run all filters (until they are all run (those not for only-apply-to-existing-filters), nothing changes (in the view))
@@ -41,7 +43,24 @@
 
   *************perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
 
+- filter regex: RegexOptions.Singleline
 
+- find: have a "To Filter" button (good when doing regex search)
+- improve find dialog:
+  have combo box with the latest 20 searches (for each search, we save everything - like, it's text/regex, colors, casesensitive etc)
+   - if i edit something selected from the combo, save it there
+   - if i select something from the combo -> move to last (the first to be shown next time)
+   - if history contains at least 2 items, automatically drop combo when shown
+
+- improve find: find-type as you go - very useful for regexes: basically
+  have a testing 500-1000 lines from the beginning of the current view, in which we "test-the find", and as soon as we find something, we insta-show it
+     (basically, the lines should be from around the current line +/- a number of lines below and after)
+	 (two ways - either only show the $msg + $line, or everything ) 
+	 + exclude $line from the search!!!
+    -> show how many times the text was found
+  and for regexes, if it's a bad regex, show it in red
+  + allow giving friendly names to the regexes, so in the future we can easily reselect them - this needs to be available only for regexes (for normal searches, makes no sense)
+  + find: in preview -> when finding something, select it and auto-filter it (so that only the lines containing the text will be shown)
 
 
 
@@ -202,11 +221,6 @@
 
 
 
-- improve find dialog:
-  have combo box with the latest 20 searches (for each search, we save everything - like, it's text/regex, colors, casesensitive etc)
-   - if i edit something selected from the combo, save it there
-   - if i select something from the combo -> move to last (the first to be shown next time)
-   - if history contains at least 2 items, automatically drop combo when shown
 
 - low pane: all buttons should become images + have icons for find/find next/find prev + tothink : should i add icons for anything else?
 
@@ -241,7 +255,7 @@
 
 
 
-
+- logging article??? c# - like, when to log, what to log, logging libs (log4net,nlog), performance, async logging
 
 
 
@@ -307,10 +321,6 @@
 
 - filtering right click - just like right now we only do filter on msg row, allow other rows as well (pro_v)
 
-- (pro_v) improve find: find-type as you go - very useful for regexes: basically
-  have a testing 500-1000 lines from the beginning of the current view, in which we "test-the find", and as soon as we find something, we insta-show it
-  and for regexes, if it's a bad regex, show it in red
-  + allow giving friendly names to the regexes, so in the future we can easily reselect them
 
 
 
@@ -321,7 +331,7 @@
   This should be: 
   if "apply to existing lines" is checked -> the lines are only taken from this view
   if "apply to existing lines" is unchecked -> lines are taken from the log
-
+  ------ need to remove RegexOptions.Singleline
 
 
 
@@ -492,10 +502,8 @@
   eventually think about root folder / and allow overriding it to your own
   integrate with github/bitbucket for open source projects? - look for api from github/bitbucket for retrieving files
   
-- find (pro_v): allow showing only the lines that matched the find condition (toggle)
 - in visual studio -> if i'm at file:line -> go into logwizard and see what messages were written at this file:line -> create a view with those lines or something like that
 
-- find -> convert to a filter 
 ---------------
 
 
