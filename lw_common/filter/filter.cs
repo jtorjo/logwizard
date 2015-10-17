@@ -180,6 +180,12 @@ namespace LogWizard {
         // debugging/testing only
         private string name_ = "";
 
+        private easy_mutex new_lines_event_ = new easy_mutex();
+
+        public delegate void on_new_lines_func();
+        public on_new_lines_func on_new_lines;
+
+
         public filter(create_match_func creator) {
             create_match = creator;
 
@@ -353,8 +359,17 @@ namespace LogWizard {
         } 
 
 
+        // we get notified of new lines from reader
+        internal void on_new_reader_lines() {
+            if (disposed_)
+                return;
+            new_lines_event_.release_and_reaquire();
+        }
+
         private void compute_matches_thread() {
             while (!disposed_) {
+                bool new_lines_found = new_lines_event_.wait_and_release();
+
                 bool needs_recompute = false;
                 lock (this)
                     needs_recompute = post_force_recompute_matches_;
@@ -376,7 +391,8 @@ namespace LogWizard {
                 lock (this)
                     old_log_ = new_;
 
-                Thread.Sleep(100);
+                if (new_lines_found && on_new_lines != null)
+                    on_new_lines();
             }
         }
 
@@ -417,8 +433,6 @@ namespace LogWizard {
                         lock (this) new_log_fully_read_at_least_once_ = true;
                     }
                 }
-
-            // fixme: start with number of lines / 20 (capacity), and go from there
 
             int old_line_count = new_log.line_count;
             new_log.refresh();

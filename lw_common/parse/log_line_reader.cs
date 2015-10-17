@@ -43,18 +43,24 @@ namespace LogWizard {
         // for testing/debugging
         private string tab_name_ = "";
 
+        public delegate void on_new_lines_func();
+
+        public on_new_lines_func on_new_lines;
+
         public log_line_reader(log_line_parser parser) {
             Debug.Assert(parser != null);
             parser_ = parser;
-            parser_.on_new_lines += on_new_lines;
+            parser_.on_new_lines += on_parser_new_lines;
         }
 
-        private void on_new_lines() {
+        private void on_parser_new_lines() {
             Debug.Assert(!disposed_);
             if (disposed_)
                 return;
 
             // logger.Debug("[parse] new lines on tab " + tab_name);
+            if (on_new_lines != null)
+                on_new_lines();
         }
 
         public string tab_name {
@@ -100,7 +106,7 @@ namespace LogWizard {
 
         public void Dispose() {
             if ( parser_.on_new_lines != null)
-                parser_.on_new_lines -= on_new_lines;
+                parser_.on_new_lines -= on_parser_new_lines;
             disposed_ = true;
         }
     }

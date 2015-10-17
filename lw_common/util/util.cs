@@ -40,6 +40,28 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace lw_common {
 
+    // http://stackoverflow.com/questions/3874134/cleaning-up-code-littered-with-invokerequired
+    public static class ControlHelpers
+    {
+        public static void async_call_and_wait(this Control control, Action action)
+        {
+            if (control == null)
+                return;
+            if (control.InvokeRequired)
+                control.Invoke( new Action(() => { action(); })  );
+            else
+                action();
+        }
+
+        public static void async_call(this Control control, Action action) {
+            if (control == null)
+                return;
+            if (control.InvokeRequired)
+                control.BeginInvoke( new Action(() => { action(); })  );
+            else
+                action();
+        }
+    }
 
     public class util {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

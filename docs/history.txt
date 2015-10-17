@@ -1,4 +1,8 @@
 
+1.3.5b
+refactoring so that we notify filters much faster of real-time changes - finished
+
+
 1.3.5a
 refactoring so that we notify filters much faster of real-time changes
 - the log_line_parser is notified of new lines via windows event

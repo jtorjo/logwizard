@@ -49,7 +49,7 @@ namespace lw_common
         public const string FULLLOG_NAME = "__all_this_is_fulllog__";
 
         private Form parent;
-        private filter filter_ ;
+        private readonly filter filter_ ;
         private log_line_reader log_ = null;
 
         private string selected_view_ = null;
@@ -364,6 +364,7 @@ namespace lw_common
             Debug.Assert(parent is log_view_parent);
 
             filter_ = new filter(this.create_match_object);
+            filter_.on_new_lines = on_new_lines;
             InitializeComponent();
             this.parent = parent;
             viewName.Text = name;
@@ -661,6 +662,8 @@ namespace lw_common
 
                 log_ = log;
                 log_.tab_name = name;
+                log_.on_new_lines += filter_.on_new_reader_lines;
+
                 last_item_count_while_current_view_ = 0;
                 visible_columns_refreshed_ = false;
                 logger.Debug("[view] new log for " + name + " - " + log.log_name);
@@ -1025,6 +1028,11 @@ namespace lw_common
             // we want the tab to be repainted
             last_item_count_while_current_view_ = filter_.match_count;
             tab_parent.Text += " ";
+        }
+
+        private void on_new_lines() {
+            logger.Debug("[view] new lines on " + name);
+            this.async_call(refresh);
         }
 
         public void refresh() {

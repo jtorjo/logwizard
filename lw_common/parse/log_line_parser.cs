@@ -105,10 +105,10 @@ namespace LogWizard
 
         private bool lines_min_capacity_updated_ = false;
 
-        private Mutex new_lines_event_ = null;
-
         public delegate void on_new_lines_func();
         public on_new_lines_func on_new_lines;
+
+        private readonly easy_mutex new_lines_event_ = new easy_mutex();
 
         public log_line_parser(text_reader reader, string syntax) {
             Debug.Assert(reader != null);
@@ -135,17 +135,7 @@ namespace LogWizard
         private void on_log_has_new_lines() {
             if (disposed_)
                 return;
-
-            lock(this)
-                if ( new_lines_event_ == null)
-                    new_lines_event_ = new Mutex(true);
-            // this will wake up the refresh thread
-            new_lines_event_.ReleaseMutex();
-            // now, reaquire - should be instant
-            int timeout = 1000;
-            bool received = new_lines_event_.WaitOne(timeout);
-            if ( !received)
-                logger.Fatal("[log] on new lines - could not reaquire lock " + name);
+            new_lines_event_.release_and_reaquire();
         }
 
 
@@ -176,21 +166,19 @@ namespace LogWizard
 
         private void refresh_thread() {
             while (!disposed_) {
-                bool wait_event = reader_.fully_read_once && new_lines_event_ != null;
-                bool new_lines = false;
+                bool wait_event = reader_.fully_read_once;
+                bool new_lines_found = false;
                 if (wait_event) {
-                    new_lines = new_lines_event_.WaitOne(app.inst.check_new_lines_interval_ms);
-                    if (new_lines) {
-                        new_lines_event_.ReleaseMutex();
+                    new_lines_found = new_lines_event_.wait_and_release();
+                    if (new_lines_found) 
                         logger.Debug("[log] new lines for " + reader_.name);
-                    }
                 }
                 else 
                     Thread.Sleep(app.inst.check_new_lines_interval_ms);
 
                 read_to_end();
 
-                if ( !disposed_&& new_lines && on_new_lines != null)
+                if ( !disposed_&& new_lines_found && on_new_lines != null)
                     on_new_lines();
             }
         }
