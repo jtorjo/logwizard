@@ -3,17 +3,15 @@
 
 -------------------------------------------------------
 
-
-- add $thread
-  - also, add up to $ctx50 (even if not displayed in UI) -> line_ext class?	
-    - i will add up to $ctx50, but the original line will only allow up to $10
-  - add aliases as well
-    - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
-  - TOTHINK how to easily have this work on log view??? (perhaps up to 10 contexts or so???)
+- parse lines ending in 0xa
 
 - refresh_visibl_columns -> should not be needed - i need to figure this out from logsyntax TOTHINK
   - seee if i can hide columns another way (not by width=0)
-- parse lines ending in 0xa
+
+
+  - add aliases as well
+    - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
+
 
 
 

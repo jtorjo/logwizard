@@ -42,11 +42,52 @@ namespace LogWizard.ui {
             public string t7 { get { return part(7); }}
             public string t8 { get { return part(8); }}
             public string t9 { get { return part(9); }}
+
             public string t10 { get { return part(10); }}
             public string t11 { get { return part(11); }}
             public string t12 { get { return part(12); }}
             public string t13 { get { return part(13); }}
             public string t14 { get { return part(14); }}
+            public string t15 { get { return part(15); }}
+            public string t16 { get { return part(16); }}
+            public string t17 { get { return part(17); }}
+            public string t18 { get { return part(18); }}
+            public string t19 { get { return part(19); }}
+
+            public string t20 { get { return part(20); }}
+            public string t21 { get { return part(21); }}
+            public string t22 { get { return part(22); }}
+            public string t23 { get { return part(23); }}
+            public string t24 { get { return part(24); }}
+            public string t25 { get { return part(25); }}
+            public string t26 { get { return part(26); }}
+            public string t27 { get { return part(27); }}
+            public string t28 { get { return part(28); }}
+            public string t29 { get { return part(29); }}
+
+            public string t30 { get { return part(30); }}
+            public string t31 { get { return part(31); }}
+            public string t32 { get { return part(32); }}
+            public string t33 { get { return part(33); }}
+            public string t34 { get { return part(34); }}
+            public string t35 { get { return part(35); }}
+            public string t36 { get { return part(36); }}
+            public string t37 { get { return part(37); }}
+            public string t38 { get { return part(38); }}
+            public string t39 { get { return part(39); }}
+
+            public string t40 { get { return part(40); }}
+            public string t41 { get { return part(41); }}
+            public string t42 { get { return part(42); }}
+            public string t43 { get { return part(43); }}
+            public string t44 { get { return part(44); }}
+            public string t45 { get { return part(45); }}
+            public string t46 { get { return part(46); }}
+            public string t47 { get { return part(47); }}
+            public string t48 { get { return part(48); }}
+            public string t49 { get { return part(49); }}
+
+            public string t50 { get { return part(50); }}
         }
 
         public test_syntax_form(string initial_lines) {
@@ -97,37 +138,7 @@ namespace LogWizard.ui {
 
         private string column_name(int idx) {
             info_type i = (info_type) idx;
-            switch (i) {
-            case info_type.time:
-                return "Time";
-            case info_type.date:
-                return "Date";
-            case info_type.level:
-                return "Level";
-            case info_type.thread:
-                return "Thread";
-            case info_type.class_:
-                return "Class";
-            case info_type.file:
-                return "File";
-            case info_type.func:
-                return "Func";
-            case info_type.ctx1:
-                return "Ctx1";
-            case info_type.ctx2:
-                return "Ctx2";
-            case info_type.ctx3:
-                return "Ctx3";
-            case info_type.msg:
-                return "Message";
-            case info_type.max: 
-                break;
-            default:
-                Debug.Assert(false);
-                break;
-            }
-
-            return "";
+            return info_type_io.to_friendly_str(i);
         }
 
         private void test_Click(object sender, EventArgs e) {

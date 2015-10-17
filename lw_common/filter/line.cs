@@ -62,8 +62,40 @@ namespace lw_common {
             }
             return type;
         }
-    }
 
+        public static string to_friendly_str(info_type i) {
+            switch (i) {
+            case info_type.time:                return "Time";
+            case info_type.date:                return "Date";
+            case info_type.level:               return "Level";
+            case info_type.thread:              return "Thread";
+            case info_type.class_:              return "Class";
+            case info_type.file:                return "File";
+            case info_type.func:                return "Func";
+            case info_type.ctx1:                return "Ctx1";
+            case info_type.ctx2:                return "Ctx2";
+            case info_type.ctx3:                return "Ctx3";
+            case info_type.ctx4:                return "Ctx4";
+            case info_type.ctx5:                return "Ctx5";
+            case info_type.ctx6:                return "Ctx6";
+            case info_type.ctx7:                return "Ctx7";
+            case info_type.ctx8:                return "Ctx8";
+            case info_type.ctx9:                return "Ctx9";
+            case info_type.ctx10:               return "Ctx10";
+            case info_type.ctx11:               return "Ctx11";
+            case info_type.ctx12:               return "Ctx12";
+            case info_type.ctx13:               return "Ctx13";
+            case info_type.ctx14:               return "Ctx14";
+            case info_type.ctx15:               return "Ctx15";
+            case info_type.msg:                 return "Message";
+
+            default:
+            case info_type.max:
+                Debug.Assert(false);
+                return "";
+            }
+        }
+    }
 
 
     public class line {
@@ -73,7 +105,7 @@ namespace lw_common {
         //       we could end up with several parts of the message being bigger than 255 chars, so we'd have to come back to this again
         //
         //      thus, not worth doing
-        private short[] parts = new short[(int)info_type.max * 2];
+        private short[] parts = new short[(int) info_type.max * 2];
 
         // if not minvalue, it's the time this message was written
         public DateTime time = DateTime.MinValue;
@@ -86,8 +118,8 @@ namespace lw_common {
         public string full_line {
             get {
                 string full = "";
-                foreach (info_type i in Enum.GetValues(typeof (info_type))) 
-                    if ( i != info_type.max) {
+                foreach (info_type i in Enum.GetValues(typeof (info_type)))
+                    if (i != info_type.max) {
                         string sub = part(i);
                         if (sub != "")
                             full += sub + " ";
@@ -97,7 +129,7 @@ namespace lw_common {
         }
 
         private line() {
-            sub_ = new sub_string(null,0);
+            sub_ = new sub_string(null, 0);
         }
 
         public static line empty_line() {
@@ -111,7 +143,7 @@ namespace lw_common {
 
         public line(sub_string sub, Tuple<int, int>[] idx_in_line) {
             sub_ = sub;
-            Debug.Assert(idx_in_line.Length == (int)info_type.max);
+            Debug.Assert(idx_in_line.Length == (int) info_type.max);
             string msg = sub.msg;
             // ... indexes a short can hold
             Debug.Assert(msg.Length < 65536);
@@ -120,9 +152,8 @@ namespace lw_common {
                 var index = idx_in_line[part_idx];
                 parts[part_idx * 2] = parts[part_idx * 2 + 1] = -1;
 
-                if ( index.Item1 >= 0)
+                if (index.Item1 >= 0)
                     if ((index.Item2 >= 0 && msg.Length >= index.Item1 + index.Item2) || (index.Item2 < 0 && msg.Length >= index.Item1)) {
-
                         short start, len;
                         if (index.Item2 >= 0) {
                             start = (short) index.Item1;
@@ -133,7 +164,7 @@ namespace lw_common {
                         }
 
                         bool needs_trim = part_idx != (int) info_type.msg;
-                        if ( needs_trim)
+                        if (needs_trim)
                             while (len > 0)
                                 if (Char.IsWhiteSpace(msg[start + len - 1]))
                                     --len;
@@ -157,7 +188,7 @@ namespace lw_common {
                 return "";
 
             string msg = sub_.msg;
-            var result = msg.Substring( parts[(int) i * 2], parts[(int) i * 2 + 1]);
+            var result = msg.Substring(parts[(int) i * 2], parts[(int) i * 2 + 1]);
             return result;
         }
     }

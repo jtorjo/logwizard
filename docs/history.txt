@@ -1,5 +1,10 @@
 
 
+1.3.8c
+- tested showing $thread - works now. Note, the TN2 syntax i wanted is this:
+  $time['',' '] $thread['',11] $level['','- '] $msg
+
+
 1.3.8b
 - added $thread and $ctx4 - $ctx15  (in filter_line)
 

@@ -49,6 +49,42 @@
             this.syntax = new System.Windows.Forms.TextBox();
             this.cancel = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
+            this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn17 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn18 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn19 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn20 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn21 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn22 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn23 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn24 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn25 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn26 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn27 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn28 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn29 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn30 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn31 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn32 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn33 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn34 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn35 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn36 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn37 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn38 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn39 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn40 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn41 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn42 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn43 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn44 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn45 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn46 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn47 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn48 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn49 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn50 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn51 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.result)).BeginInit();
             this.SuspendLayout();
             // 
@@ -106,6 +142,42 @@
             this.result.AllColumns.Add(this.olvColumn13);
             this.result.AllColumns.Add(this.olvColumn14);
             this.result.AllColumns.Add(this.olvColumn15);
+            this.result.AllColumns.Add(this.olvColumn16);
+            this.result.AllColumns.Add(this.olvColumn17);
+            this.result.AllColumns.Add(this.olvColumn18);
+            this.result.AllColumns.Add(this.olvColumn19);
+            this.result.AllColumns.Add(this.olvColumn20);
+            this.result.AllColumns.Add(this.olvColumn21);
+            this.result.AllColumns.Add(this.olvColumn22);
+            this.result.AllColumns.Add(this.olvColumn23);
+            this.result.AllColumns.Add(this.olvColumn24);
+            this.result.AllColumns.Add(this.olvColumn25);
+            this.result.AllColumns.Add(this.olvColumn26);
+            this.result.AllColumns.Add(this.olvColumn27);
+            this.result.AllColumns.Add(this.olvColumn28);
+            this.result.AllColumns.Add(this.olvColumn29);
+            this.result.AllColumns.Add(this.olvColumn30);
+            this.result.AllColumns.Add(this.olvColumn31);
+            this.result.AllColumns.Add(this.olvColumn32);
+            this.result.AllColumns.Add(this.olvColumn33);
+            this.result.AllColumns.Add(this.olvColumn34);
+            this.result.AllColumns.Add(this.olvColumn35);
+            this.result.AllColumns.Add(this.olvColumn36);
+            this.result.AllColumns.Add(this.olvColumn37);
+            this.result.AllColumns.Add(this.olvColumn38);
+            this.result.AllColumns.Add(this.olvColumn39);
+            this.result.AllColumns.Add(this.olvColumn40);
+            this.result.AllColumns.Add(this.olvColumn41);
+            this.result.AllColumns.Add(this.olvColumn42);
+            this.result.AllColumns.Add(this.olvColumn43);
+            this.result.AllColumns.Add(this.olvColumn44);
+            this.result.AllColumns.Add(this.olvColumn45);
+            this.result.AllColumns.Add(this.olvColumn46);
+            this.result.AllColumns.Add(this.olvColumn47);
+            this.result.AllColumns.Add(this.olvColumn48);
+            this.result.AllColumns.Add(this.olvColumn49);
+            this.result.AllColumns.Add(this.olvColumn50);
+            this.result.AllColumns.Add(this.olvColumn51);
             this.result.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.result.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -123,7 +195,43 @@
             this.olvColumn12,
             this.olvColumn13,
             this.olvColumn14,
-            this.olvColumn15});
+            this.olvColumn15,
+            this.olvColumn16,
+            this.olvColumn17,
+            this.olvColumn18,
+            this.olvColumn19,
+            this.olvColumn20,
+            this.olvColumn21,
+            this.olvColumn22,
+            this.olvColumn23,
+            this.olvColumn24,
+            this.olvColumn25,
+            this.olvColumn26,
+            this.olvColumn27,
+            this.olvColumn28,
+            this.olvColumn29,
+            this.olvColumn30,
+            this.olvColumn31,
+            this.olvColumn32,
+            this.olvColumn33,
+            this.olvColumn34,
+            this.olvColumn35,
+            this.olvColumn36,
+            this.olvColumn37,
+            this.olvColumn38,
+            this.olvColumn39,
+            this.olvColumn40,
+            this.olvColumn41,
+            this.olvColumn42,
+            this.olvColumn43,
+            this.olvColumn44,
+            this.olvColumn45,
+            this.olvColumn46,
+            this.olvColumn47,
+            this.olvColumn48,
+            this.olvColumn49,
+            this.olvColumn50,
+            this.olvColumn51});
             this.result.FullRowSelect = true;
             this.result.Location = new System.Drawing.Point(16, 402);
             this.result.MultiSelect = false;
@@ -251,6 +359,7 @@
             // 
             // cancel
             // 
+            this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancel.Location = new System.Drawing.Point(942, 10);
             this.cancel.Name = "cancel";
             this.cancel.Size = new System.Drawing.Size(68, 26);
@@ -269,6 +378,150 @@
             this.label4.Size = new System.Drawing.Size(220, 13);
             this.label4.TabIndex = 10;
             this.label4.Text = "Press Enter to Test, Escape to exit this dialog.";
+            // 
+            // olvColumn16
+            // 
+            this.olvColumn16.AspectName = "t15";
+            // 
+            // olvColumn17
+            // 
+            this.olvColumn17.AspectName = "t16";
+            // 
+            // olvColumn18
+            // 
+            this.olvColumn18.AspectName = "t17";
+            // 
+            // olvColumn19
+            // 
+            this.olvColumn19.AspectName = "t18";
+            // 
+            // olvColumn20
+            // 
+            this.olvColumn20.AspectName = "t19";
+            // 
+            // olvColumn21
+            // 
+            this.olvColumn21.AspectName = "t20";
+            // 
+            // olvColumn22
+            // 
+            this.olvColumn22.AspectName = "t21";
+            // 
+            // olvColumn23
+            // 
+            this.olvColumn23.AspectName = "t22";
+            // 
+            // olvColumn24
+            // 
+            this.olvColumn24.AspectName = "t23";
+            // 
+            // olvColumn25
+            // 
+            this.olvColumn25.AspectName = "t24";
+            // 
+            // olvColumn26
+            // 
+            this.olvColumn26.AspectName = "t25";
+            // 
+            // olvColumn27
+            // 
+            this.olvColumn27.AspectName = "t26";
+            // 
+            // olvColumn28
+            // 
+            this.olvColumn28.AspectName = "t27";
+            // 
+            // olvColumn29
+            // 
+            this.olvColumn29.AspectName = "t28";
+            // 
+            // olvColumn30
+            // 
+            this.olvColumn30.AspectName = "t29";
+            // 
+            // olvColumn31
+            // 
+            this.olvColumn31.AspectName = "t30";
+            // 
+            // olvColumn32
+            // 
+            this.olvColumn32.AspectName = "t31";
+            // 
+            // olvColumn33
+            // 
+            this.olvColumn33.AspectName = "t32";
+            // 
+            // olvColumn34
+            // 
+            this.olvColumn34.AspectName = "t33";
+            // 
+            // olvColumn35
+            // 
+            this.olvColumn35.AspectName = "t34";
+            // 
+            // olvColumn36
+            // 
+            this.olvColumn36.AspectName = "t35";
+            // 
+            // olvColumn37
+            // 
+            this.olvColumn37.AspectName = "t36";
+            // 
+            // olvColumn38
+            // 
+            this.olvColumn38.AspectName = "t37";
+            // 
+            // olvColumn39
+            // 
+            this.olvColumn39.AspectName = "t38";
+            // 
+            // olvColumn40
+            // 
+            this.olvColumn40.AspectName = "t39";
+            // 
+            // olvColumn41
+            // 
+            this.olvColumn41.AspectName = "t40";
+            // 
+            // olvColumn42
+            // 
+            this.olvColumn42.AspectName = "t41";
+            // 
+            // olvColumn43
+            // 
+            this.olvColumn43.AspectName = "t42";
+            // 
+            // olvColumn44
+            // 
+            this.olvColumn44.AspectName = "t43";
+            // 
+            // olvColumn45
+            // 
+            this.olvColumn45.AspectName = "t44";
+            // 
+            // olvColumn46
+            // 
+            this.olvColumn46.AspectName = "t45";
+            // 
+            // olvColumn47
+            // 
+            this.olvColumn47.AspectName = "t46";
+            // 
+            // olvColumn48
+            // 
+            this.olvColumn48.AspectName = "t47";
+            // 
+            // olvColumn49
+            // 
+            this.olvColumn49.AspectName = "t48";
+            // 
+            // olvColumn50
+            // 
+            this.olvColumn50.AspectName = "t49";
+            // 
+            // olvColumn51
+            // 
+            this.olvColumn51.AspectName = "t50";
             // 
             // test_syntax_form
             // 
@@ -327,5 +580,41 @@
         private BrightIdeasSoftware.OLVColumn olvColumn15;
         private System.Windows.Forms.Button cancel;
         private System.Windows.Forms.Label label4;
+        private BrightIdeasSoftware.OLVColumn olvColumn16;
+        private BrightIdeasSoftware.OLVColumn olvColumn17;
+        private BrightIdeasSoftware.OLVColumn olvColumn18;
+        private BrightIdeasSoftware.OLVColumn olvColumn19;
+        private BrightIdeasSoftware.OLVColumn olvColumn20;
+        private BrightIdeasSoftware.OLVColumn olvColumn21;
+        private BrightIdeasSoftware.OLVColumn olvColumn22;
+        private BrightIdeasSoftware.OLVColumn olvColumn23;
+        private BrightIdeasSoftware.OLVColumn olvColumn24;
+        private BrightIdeasSoftware.OLVColumn olvColumn25;
+        private BrightIdeasSoftware.OLVColumn olvColumn26;
+        private BrightIdeasSoftware.OLVColumn olvColumn27;
+        private BrightIdeasSoftware.OLVColumn olvColumn28;
+        private BrightIdeasSoftware.OLVColumn olvColumn29;
+        private BrightIdeasSoftware.OLVColumn olvColumn30;
+        private BrightIdeasSoftware.OLVColumn olvColumn31;
+        private BrightIdeasSoftware.OLVColumn olvColumn32;
+        private BrightIdeasSoftware.OLVColumn olvColumn33;
+        private BrightIdeasSoftware.OLVColumn olvColumn34;
+        private BrightIdeasSoftware.OLVColumn olvColumn35;
+        private BrightIdeasSoftware.OLVColumn olvColumn36;
+        private BrightIdeasSoftware.OLVColumn olvColumn37;
+        private BrightIdeasSoftware.OLVColumn olvColumn38;
+        private BrightIdeasSoftware.OLVColumn olvColumn39;
+        private BrightIdeasSoftware.OLVColumn olvColumn40;
+        private BrightIdeasSoftware.OLVColumn olvColumn41;
+        private BrightIdeasSoftware.OLVColumn olvColumn42;
+        private BrightIdeasSoftware.OLVColumn olvColumn43;
+        private BrightIdeasSoftware.OLVColumn olvColumn44;
+        private BrightIdeasSoftware.OLVColumn olvColumn45;
+        private BrightIdeasSoftware.OLVColumn olvColumn46;
+        private BrightIdeasSoftware.OLVColumn olvColumn47;
+        private BrightIdeasSoftware.OLVColumn olvColumn48;
+        private BrightIdeasSoftware.OLVColumn olvColumn49;
+        private BrightIdeasSoftware.OLVColumn olvColumn50;
+        private BrightIdeasSoftware.OLVColumn olvColumn51;
     }
 }
