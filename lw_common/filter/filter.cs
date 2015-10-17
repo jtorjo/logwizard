@@ -158,7 +158,7 @@ namespace LogWizard {
 
         private List<filter_row> rows_ = new List<filter_row>();
 
-        private log_line_reader new_log_ = null, old_log_ = null;
+        private log_reader new_log_ = null, old_log_ = null;
         // 1.0.75+ - wait for the full log to be read first - in the hopes of using les memory on huge logs
         private bool new_log_fully_read_at_least_once_ = false;
 
@@ -209,7 +209,7 @@ namespace LogWizard {
             }
         }
 
-        public void compute_matches(log_line_reader log) {
+        public void compute_matches(log_reader log) {
             Debug.Assert(log != null);
             lock (this) {
                 if (new_log_ != log)
@@ -243,7 +243,7 @@ namespace LogWizard {
         }
 
         // this will return the log we last read the matches from
-        internal log_line_reader log {
+        internal log_reader log {
             get { lock(this) return old_log_; }
         }
 
@@ -376,7 +376,7 @@ namespace LogWizard {
                 if (needs_recompute)
                     force_recompute_matches();
 
-                log_line_reader new_, old;
+                log_reader new_, old;
                 lock (this) {
                     new_ = new_log_;
                     old = old_log_;
@@ -419,7 +419,7 @@ namespace LogWizard {
                     }            
         }
 
-        private void compute_matches_impl(log_line_reader new_log, log_line_reader old_log) {
+        private void compute_matches_impl(log_reader new_log, log_reader old_log) {
             Debug.Assert(new_log != null);
 
             if ( app.inst.no_ui.read_full_log_first)
@@ -549,7 +549,7 @@ namespace LogWizard {
         }
 
 
-        private void apply_additions(int old_match_count, log_line_reader log, List<filter_row> rows ) {
+        private void apply_additions(int old_match_count, log_reader log, List<filter_row> rows ) {
             // FIXME note: we should normally care about the last match before old_match_count as well, to see maybe it still matches some "addition" lines
             //             but we ignore that for now
             //
@@ -619,7 +619,7 @@ namespace LogWizard {
 
         private static BitArray empty_match = new BitArray(0);
         /*
-        private void add_addition_line(int line_idx, Color fg, log_line_reader log) {
+        private void add_addition_line(int line_idx, Color fg, log_reader log) {
             // if insert_idx > 0 , that means we already have it
             int insert_idx = match_indexes_.BinarySearch(line_idx);
             if (insert_idx < 0) {
@@ -642,7 +642,7 @@ namespace LogWizard {
             return m;
         }
 
-        private void add_addition_line(int line_idx, Color fg, log_line_reader log) {
+        private void add_addition_line(int line_idx, Color fg, log_reader log) {
             // IMPORTANT: I did NOT test the binary_search_insert!
             int insert_idx = matches_.insert_line_idx(line_idx);
             if ( insert_idx >= 0)

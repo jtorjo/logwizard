@@ -33,10 +33,10 @@ namespace LogWizard {
        1.0.42 made thread-safe
     */
 
-    public class log_line_reader : IDisposable {
+    public class log_reader : IDisposable {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private log_line_parser parser_;
+        private log_parser parser_;
         private int line_count_ = 0;
 
         private bool disposed_ = false;
@@ -47,7 +47,7 @@ namespace LogWizard {
 
         public on_new_lines_func on_new_lines;
 
-        public log_line_reader(log_line_parser parser) {
+        public log_reader(log_parser parser) {
             Debug.Assert(parser != null);
             parser_ = parser;
             parser_.on_new_lines += on_parser_new_lines;

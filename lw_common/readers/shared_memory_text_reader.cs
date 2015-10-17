@@ -27,7 +27,7 @@ namespace LogWizard
 {
     public class shared_memory_text_reader : text_reader
     {
-        // keep all the log_line_parser in memory
+        // keep all the log_parser in memory
         StringBuilder full_log = new StringBuilder();
         private string name_ = "";
 

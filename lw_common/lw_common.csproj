@@ -60,10 +60,10 @@
     <Compile Include="filter\line.cs" />
     <Compile Include="notes\md5_log_keeper.cs" />
     <Compile Include="notes\notes_keeper.cs" />
-    <Compile Include="parse\log_line_parser.cs" />
+    <Compile Include="parse\log_parser.cs" />
     <Compile Include="parse\syntaxes\line_by_line_syntax.cs" />
     <Compile Include="parse\parsers\log_parser_line_by_line.cs" />
-    <Compile Include="parse\log_line_reader.cs" />
+    <Compile Include="parse\log_reader.cs" />
     <Compile Include="parse\parsers\log_parser_base.cs" />
     <Compile Include="parse\syntaxes\syntax_base.cs" />
     <Compile Include="readers\debug_text_reader.cs" />

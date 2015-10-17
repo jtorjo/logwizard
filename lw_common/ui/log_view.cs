@@ -50,7 +50,7 @@ namespace lw_common
 
         private Form parent;
         private readonly filter filter_ ;
-        private log_line_reader log_ = null;
+        private log_reader log_ = null;
 
         private string selected_view_ = null;
 
@@ -654,7 +654,7 @@ namespace lw_common
             }
         }
 
-        public void set_log(log_line_reader log) {
+        public void set_log(log_reader log) {
             Debug.Assert(log != null);
             if (log_ != log) {
                 if (log_ != null)

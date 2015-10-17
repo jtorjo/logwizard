@@ -6,13 +6,12 @@
 
 - add $thread
   - also, add up to $ctx50 (even if not displayed in UI) -> line_ext class?	
+    - i will add up to $ctx50, but the original line will only allow up to $10
   - add aliases as well
-
-- parse encoding correctly (for korean)
+  - TOTHINK how to easily have this work on log view??? (perhaps up to 10 contexts or so???)
 
 - parse lines ending in 0xa
 
-- parse by line "xx: yy", and empty line is end-of-record
 
 - filters - when refreshing 
   (especially on "apply to existing")
@@ -69,6 +68,8 @@
 
 - font: allow changing it
 
+- parse by line "xx: yy", and empty line is end-of-record
+  = take care of the case when we read a partial entry
 
 
 -- article: filter your logs inside out! 
@@ -91,6 +92,28 @@
     - easy way to do: each user writes its notes to intranet into a guid-named file (thus - each user will only write its files so there are no clashes)
 	  - you simply know the guid of the other users, and auto-import their notes 
 	    - (need to find a way to know all the authors for a given file) -> probably use the guid that identifies the file and suffix it by the author name (to think what to do when user changes author name)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

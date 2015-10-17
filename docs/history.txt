@@ -1,4 +1,10 @@
 
+
+1.3.6b
+refactoring code for parsing logs so that we can easily add new parsers (like: xml, db, etc.) - step 2
+- initial testing works
+
+
 1.3.6a
 refactoring code for parsing logs so that we can easily add new parsers (like: xml, db, etc.) - step 1
 

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using lw_common;
+using lw_common.parse;
 
 namespace LogWizard.ui {
     public partial class test_syntax_form : Form {
@@ -133,7 +134,7 @@ namespace LogWizard.ui {
             result.ClearObjects();
 
             // parse each line
-            log_line_parser parse = new log_line_parser(new inmem_text_reader(lines.Text), syntax.Text);
+            log_parser parse = new log_parser(new inmem_text_reader(lines.Text), new line_by_line_syntax { line_syntax = syntax.Text } );
             while (!parse.up_to_date)
                 Thread.Sleep(10);
 

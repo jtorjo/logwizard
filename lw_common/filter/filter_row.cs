@@ -43,7 +43,7 @@ namespace LogWizard {
 
         private HashSet<int> line_matches_ = new HashSet<int>();
         // cached - so that what we computed once, we don't ask again
-        private log_line_reader old_line_matches_log_ = null;
+        private log_reader old_line_matches_log_ = null;
         private int old_line_count_ = 0;
 
         public HashSet<int> line_matches {
@@ -58,7 +58,7 @@ namespace LogWizard {
         }
 
         // computes the line matches - does not care about colors or the additions - just to know which lines actually match
-        public void compute_line_matches(log_line_reader log) {
+        public void compute_line_matches(log_reader log) {
             log.refresh();
             if (old_line_matches_log_ != log) {
                 old_line_matches_log_ = log;

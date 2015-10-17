@@ -201,7 +201,7 @@
             this.label7.Size = new System.Drawing.Size(113, 15);
             this.label7.TabIndex = 7;
             this.label7.Text = "Friendly Name (opt)";
-            this.tip.SetToolTip(this.label7, "You can assign a friendlier name to this log_line_parser, so you can easier locat" +
+            this.tip.SetToolTip(this.label7, "You can assign a friendlier name to this log_parser, so you can easier locat" +
         "e it in history");
             // 
             // friendlyNameCtrl
@@ -211,7 +211,7 @@
             this.friendlyNameCtrl.Name = "friendlyNameCtrl";
             this.friendlyNameCtrl.Size = new System.Drawing.Size(111, 23);
             this.friendlyNameCtrl.TabIndex = 8;
-            this.tip.SetToolTip(this.friendlyNameCtrl, "You can assign a friendlier name to this log_line_parser, so you can easier locat" +
+            this.tip.SetToolTip(this.friendlyNameCtrl, "You can assign a friendlier name to this log_parser, so you can easier locat" +
         "e it in history");
             this.friendlyNameCtrl.TextChanged += new System.EventHandler(this.friendlyName_TextChanged);
             // 

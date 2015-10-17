@@ -33,6 +33,7 @@ using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 using BrightIdeasSoftware;
 using lw_common;
+using lw_common.parse;
 using lw_common.ui;
 using LogWizard.context;
 using LogWizard.Properties;
@@ -93,7 +94,7 @@ namespace LogWizard
         private static List<history> history_ = new List<history>();
 
         private text_reader text_ = null;
-        private log_line_parser log_parser_ = null;
+        private log_parser log_parser_ = null;
         private log_view full_log_ctrl = null;
 
         private int old_line_count_ = 0;
@@ -776,7 +777,7 @@ namespace LogWizard
             new_.show_name = global_ui.show_source;
             new_.set_bookmarks(bookmarks_.ToList());
             if ( log_parser_ != null)
-                new_.set_log( new log_line_reader(log_parser_));
+                new_.set_log( new log_reader(log_parser_));
             return new_;
         }
 
@@ -1553,11 +1554,11 @@ namespace LogWizard
         }
 
         private void on_new_log_parser() {
-            full_log_ctrl.set_log(new log_line_reader(log_parser_));
+            full_log_ctrl.set_log(new log_reader(log_parser_));
             for (int i = 0; i < viewsTab.TabCount; ++i) {
                 var lv = log_view_for_tab(i);
                 if (lv != null)
-                    lv.set_log(new log_line_reader(log_parser_));
+                    lv.set_log(new log_reader(log_parser_));
             }
         }
 
@@ -1628,7 +1629,7 @@ namespace LogWizard
             logSyntaxCtrl.ForeColor = logSyntaxCtrl.Text != find_log_syntax.UNKNOWN_SYNTAX ? Color.Black : Color.Red;
 
             // note: we recreate the log, so that cached filters know to rebuild
-            log_parser_ = new log_line_parser(text_, syntax);
+            log_parser_ = new log_parser(text_, new line_by_line_syntax { line_syntax = syntax });
             on_new_log_parser();
 
             full_log_ctrl.set_filter(new List<raw_filter_row>());

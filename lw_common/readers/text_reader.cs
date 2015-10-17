@@ -66,7 +66,7 @@ namespace LogWizard
             get { return ulong.MaxValue;  }
         }
 
-        // the position in the log_line_parser (in bytes)
+        // the position in the log_parser (in bytes)
         // 1.0.72+ - made readonly
         public abstract ulong pos { get; }
 

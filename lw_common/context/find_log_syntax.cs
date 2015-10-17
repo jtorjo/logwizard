@@ -198,8 +198,8 @@ namespace LogWizard {
             }
 
             if ( invalid == a.Count)
-                // one of the arrays contains only invalid values - that means we don't have that pattern in the log_line_parser
-                // for instane, we don't have times in the log_line_parser lines
+                // one of the arrays contains only invalid values - that means we don't have that pattern in the log_parser
+                // for instane, we don't have times in the log_parser lines
                 return a[0] == -1 ? -1 : 1;
 
             bool valid_less = less / (bigger + less) > .7;

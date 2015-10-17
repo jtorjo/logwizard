@@ -8,14 +8,13 @@ using System.Threading;
 using lw_common.parse.parsers;
 using LogWizard;
 
-namespace lw_common.parse {
+namespace lw_common.parse.parsers {
 
     /* reads everything in the log, and allows easy access to its lines
 
-        parses the syntax line-by-line
+        parses the syntax line-by-line - we assume a single line contains a full log entry
     */
-
-    public class log_parser_line_by_line : log_parser_base {
+    internal class log_parser_line_by_line : log_parser_base {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private class syntax_info {
@@ -74,9 +73,6 @@ namespace lw_common.parse {
         private large_string string_ = new large_string();
         private memory_optimized_list<line> lines_ = new memory_optimized_list<line>() { name = "parser"};
 
-        // for each of these readers, we have returned a "yes" to forced_reload
-        private HashSet<log_line_reader> forced_reload_ = new HashSet<log_line_reader>();
-
         private DateTime was_last_line_incomplete_ = DateTime.MinValue;
 
         // if true, we've been fully read (thus, we're up to date)
@@ -84,17 +80,11 @@ namespace lw_common.parse {
 
         private bool lines_min_capacity_updated_ = false;
 
-        public delegate void on_new_lines_func();
-        public on_new_lines_func on_new_lines;
-
-        private readonly easy_mutex new_lines_event_ = new easy_mutex();
-
-        public log_parser_line_by_line(text_reader reader, string syntax) {
+        public log_parser_line_by_line(text_reader reader, line_by_line_syntax syntax) {
+            string syntax_str = syntax.line_syntax;
             Debug.Assert(reader != null);
-            parse_syntax(syntax);
+            parse_syntax(syntax_str);
             reader_ = reader;
-
-            reader.on_new_lines += on_log_has_new_lines;
             
             lines_.name = "parser " + reader_.name;
             var file = reader as file_text_reader;
@@ -106,17 +96,7 @@ namespace lw_common.parse {
                 string_.expect_bytes(full_len);
                 lines_.min_capacity = (int)(full_len / CHARS_PER_AVG_LINE);
             }
-
-            force_reload();
-            new Thread(refresh_thread) {IsBackground = true}.Start();
         }
-
-        private void on_log_has_new_lines() {
-            if (disposed_)
-                return;
-            new_lines_event_.release_and_reaquire();
-        }
-
 
         private void update_log_lines_capacity() {
             if (lines_min_capacity_updated_)
@@ -133,36 +113,8 @@ namespace lw_common.parse {
                 lines_.min_capacity = (int)(full_len / (ulong)avg_line);            
         }
 
-        // once we've been forced to reload - we should return true once per each reader
-        public bool forced_reload(log_line_reader reader) {
-            lock (this) {
-                if (forced_reload_.Contains(reader))
-                    return false;
-                forced_reload_.Add(reader);
-                return true;
-            }
-        }
 
-        private void refresh_thread() {
-            while (!disposed_) {
-                bool wait_event = reader_.fully_read_once;
-                bool new_lines_found = false;
-                if (wait_event) {
-                    new_lines_found = new_lines_event_.wait_and_release();
-                    if (new_lines_found) 
-                        logger.Debug("[log] new lines for " + reader_.name);
-                }
-                else 
-                    Thread.Sleep(app.inst.check_new_lines_interval_ms);
-
-                read_to_end();
-
-                if ( !disposed_&& new_lines_found && on_new_lines != null)
-                    on_new_lines();
-            }
-        }
-
-        public int line_count {
+        public override int line_count {
             get {
                 lock (this) {
                     int count = lines_.Count;
@@ -179,11 +131,11 @@ namespace lw_common.parse {
             get { return reader_.name; }
         }
 
-        public bool up_to_date {
+        public override bool up_to_date {
             get { return up_to_date_;  }
         }
 
-        public line line_at(int idx) {
+        public override  line line_at(int idx) {
             lock (this) {
                 if (idx < lines_.Count)
                     return lines_[idx];
@@ -370,27 +322,17 @@ namespace lw_common.parse {
         // forces the WHOLE FILE to be reloaded
         //
         // be VERY careful calling this - I should call this only when the syntax has changed
-        private void force_reload() {
+        public override void force_reload() {
             lock (this) {
                 was_last_line_incomplete_ = DateTime.MinValue;
-                forced_reload_.Clear();
                 lines_.Clear();
                 up_to_date_ = false;
-                logger.Info("[log] forced reload: " + reader_.name);
             }
             string_.clear();
-            reader_.force_reload();
-        }
-
-        // forces readers to reload
-        public void reload() {
-            lock (this) {
-                forced_reload_.Clear();
-            }
         }
 
 
-        private void read_to_end() {
+        public override void read_to_end() {
             ulong old_len = reader_.full_len;
             reader_.compute_full_length();
             ulong new_len = reader_.full_len;

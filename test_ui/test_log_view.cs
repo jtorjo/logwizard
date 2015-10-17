@@ -25,7 +25,7 @@ namespace test_ui {
             this.Controls.Add(lv_);
             lv_.show_name = false;
 
-            lv_.set_log( new log_line_reader( new log_line_parser(new file_text_reader(file), syntax ) ));
+            lv_.set_log( new log_reader( new log_parser(new file_text_reader(file), syntax ) ));
             var filter = new List<raw_filter_row>();
             lv_.set_filter( filter  );
 
