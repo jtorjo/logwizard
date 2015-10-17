@@ -8,9 +8,15 @@
   - also, add up to $ctx50 (even if not displayed in UI) -> line_ext class?	
     - i will add up to $ctx50, but the original line will only allow up to $10
   - add aliases as well
+    - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
   - TOTHINK how to easily have this work on log view??? (perhaps up to 10 contexts or so???)
 
+- refresh_visibl_columns -> should not be needed - i need to figure this out from logsyntax TOTHINK
+  - seee if i can hide columns another way (not by width=0)
 - parse lines ending in 0xa
+
+
+
 
 
 - filters - when refreshing 
@@ -24,6 +30,10 @@
 	  + parser - should reread from scratch only if syntax has changed!
 ----------------> what i need is different types of refresh: current view, current file, all views, etc. TOTHINK
 ---------- while refreshing, show this ON THE STATUS message
+
+
+
+
 
 
 
@@ -68,8 +78,18 @@
 
 - font: allow changing it
 
+- bug: drag drop a file from a different context -> not all view names (in tabcontrol) are changed
+
+- bug: selecting a word and pressing f3 will take you correctly, but will select the former selection as well
+- bug: selecting something with arrow right, and then pressing arrow left will select an extra char from left instead of acting as backspace
+
+- bug notes export: they are not sorted by id when expoted
+- bug: next bookmark does not sync with full log
+
 - parse by line "xx: yy", and empty line is end-of-record
   = take care of the case when we read a partial entry
+
+
 
 
 -- article: filter your logs inside out! 
@@ -322,7 +342,9 @@
 			     TOTHINK where should we keep the aliases (in context?) + what do we do when we have a filter line whose alias we can't find?
   -- toggle details -> explain how you can set-up your own customized details.
      - article (other types of files - xml, csv)
-	   - merge files - even if with different extensions - TOTHINK what the max size should be for when not pro_v (maybe up to 100K lines)
+	   - merge files - even if with different extensions - TOTHINK what the max size should be for when not pro_v (maybe up to 10K lines) TOTHINK
+	   ---> when something changes anywhere, i have to notify parent instantly (which probably can query all children first, then update everything )
+	        + avoid infinite loop (when child notifies parent, parent queries again, child notifies parent etc.)
 
 
 
@@ -511,7 +533,7 @@
   - i need to be able to show each view (lines by color?) on timeline - for instance, be able to find where exactly (on the timeline) are most messages, errors, etc
   - i need to account for several days in this case (care about date/time, not just time)
 
-- merge files - allow merging several files (we will allow up to some decent size, like 50M, then pro_v)
+- merge files - allow merging several files (we will allow up to some decent size, like 50M, then pro_v - proabbly just 10K lines)
 
 - probably 500Mb+ files (pro_v? optimize some stuff for such files)
 

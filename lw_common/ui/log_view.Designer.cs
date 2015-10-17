@@ -114,6 +114,7 @@
             this.list.Size = new System.Drawing.Size(693, 403);
             this.list.TabIndex = 3;
             this.list.UseCompatibleStateImageBehavior = false;
+            this.list.UseOverlays = false;
             this.list.View = System.Windows.Forms.View.Details;
             this.list.VirtualMode = true;
             this.list.CellClick += new System.EventHandler<BrightIdeasSoftware.CellClickEventArgs>(this.list_CellClick);
