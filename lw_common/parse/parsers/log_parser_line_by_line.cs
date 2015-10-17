@@ -173,39 +173,7 @@ namespace lw_common.parse.parsers {
 
                 syntax = syntax.Substring(1);
                 string type_str = syntax.Split('[')[0];
-                info_type type = info_type.max;
-                switch (type_str) {
-                case "msg":     type = info_type.msg; break;
-
-                case "time":    type = info_type.time; break;
-                case "date":    type = info_type.date; break;
-                case "level":   type = info_type.level; break;
-                case "class":   type = info_type.class_; break;
-                case "file":    type = info_type.file; break;
-                case "func":    type = info_type.func; break;
-                case "thread":  type = info_type.thread; break;
-
-                case "ctx1":    type = info_type.ctx1; break;
-                case "ctx2":    type = info_type.ctx2; break;
-                case "ctx3":    type = info_type.ctx3; break;
-
-                case "ctx4":    type = info_type.ctx4; break;
-                case "ctx5":    type = info_type.ctx5; break;
-                case "ctx6":    type = info_type.ctx6; break;
-                case "ctx7":    type = info_type.ctx7; break;
-                case "ctx8":    type = info_type.ctx8; break;
-                case "ctx9":    type = info_type.ctx9; break;
-                case "ctx10":    type = info_type.ctx10; break;
-
-                case "ctx11":    type = info_type.ctx11; break;
-                case "ctx12":    type = info_type.ctx12; break;
-                case "ctx13":    type = info_type.ctx13; break;
-                case "ctx14":    type = info_type.ctx14; break;
-                case "ctx15":    type = info_type.ctx15; break;
-
-                default:
-                    break;
-                }
+                info_type type = info_type_io.from_str(type_str);
                 if (type == info_type.max)
                     // invalid syntax
                     break;

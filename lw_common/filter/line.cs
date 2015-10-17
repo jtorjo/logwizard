@@ -24,6 +24,48 @@ namespace lw_common {
         max 
     }
 
+    public static class info_type_io {
+
+        public static info_type from_str(string type_str) {
+            info_type type = info_type.max;
+            switch (type_str) {
+            case "msg":     type = info_type.msg; break;
+
+            case "time":    type = info_type.time; break;
+            case "date":    type = info_type.date; break;
+            case "level":   type = info_type.level; break;
+            case "class":   type = info_type.class_; break;
+            case "file":    type = info_type.file; break;
+            case "func":    type = info_type.func; break;
+            case "thread":  type = info_type.thread; break;
+
+            case "ctx1":    type = info_type.ctx1; break;
+            case "ctx2":    type = info_type.ctx2; break;
+            case "ctx3":    type = info_type.ctx3; break;
+
+            case "ctx4":    type = info_type.ctx4; break;
+            case "ctx5":    type = info_type.ctx5; break;
+            case "ctx6":    type = info_type.ctx6; break;
+            case "ctx7":    type = info_type.ctx7; break;
+            case "ctx8":    type = info_type.ctx8; break;
+            case "ctx9":    type = info_type.ctx9; break;
+            case "ctx10":    type = info_type.ctx10; break;
+
+            case "ctx11":    type = info_type.ctx11; break;
+            case "ctx12":    type = info_type.ctx12; break;
+            case "ctx13":    type = info_type.ctx13; break;
+            case "ctx14":    type = info_type.ctx14; break;
+            case "ctx15":    type = info_type.ctx15; break;
+
+            default:
+                break;
+            }
+            return type;
+        }
+    }
+
+
+
     public class line {
         private sub_string sub_;
         // note: I could theoretically keep the length as a ubyte - and only the length of the message as a short
@@ -119,54 +161,4 @@ namespace lw_common {
             return result;
         }
     }
-
-
-
-
-
-
-    /*  old implementation, before optimizing for memory
-
-    class line {
-        private string[] parts = new string[(int)info_type.max];
-
-        // if not minvalue, it's the time this message was written
-        public DateTime time = DateTime.MinValue;
-
-        public string full_line {
-            get {
-                string full = "";
-                foreach ( string p in parts)
-                    if (p != null)
-                        full += p + " ";
-                return full;
-            }
-        }
-
-        public line(sub_string sub, Tuple<int, int>[] idx_in_line) {
-            Debug.Assert(idx_in_line.Length == (int)info_type.max);
-            string msg = sub.sub;
-
-            for (int part_idx = 0; part_idx < idx_in_line.Length; ++part_idx) {
-                var index = idx_in_line[part_idx];
-                if ( index.Item1 >= 0)
-                    if ((index.Item2 >= 0 && msg.Length >= index.Item1 + index.Item2) || (index.Item2 < 0 && msg.Length >= index.Item1)) {
-                        string result = index.Item2 >= 0 ? msg.Substring(index.Item1, index.Item2) : msg.Substring(index.Item1);
-                        parts[part_idx] = part_idx == (int)info_type.msg ? result : result.Trim();
-                    }
-            }
-
-            // normalize time - so that we can do proper comparisons when "Go to Line"
-            var time_str = parts[(int) info_type.time];
-            if (time_str != "" && time_str != null)
-                time = util.str_to_normalized_time(time_str);
-        }
-
-        public string part(info_type i) {
-            Debug.Assert(i < info_type.max);
-            var result = parts[(int) i];
-            return result ?? "";
-        }
-    }
-    */
 }

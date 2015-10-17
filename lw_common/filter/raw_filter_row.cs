@@ -236,7 +236,7 @@ namespace lw_common {
         private filter_line.font_info get_raw_font_info() {
             var result = new filter_line.font_info();
             foreach ( var item in items_)
-                if (item.part == filter_line.part_type.font) {
+                if (item.part == part_type.font) {
                     if (item.fi.fg != util.transparent || item.fi.bg != util.transparent) {
                         result.fg = item.fi.fg;
                         result.bg = item.fi.bg;
@@ -275,7 +275,7 @@ namespace lw_common {
 
         public bool has_font_info {
             get {
-                bool has_font_info = items_.Count(i => i.part == filter_line.part_type.font) > 0;
+                bool has_font_info = items_.Count(i => i.part == part_type.font) > 0;
                 return has_font_info;
             }
         }
@@ -300,7 +300,7 @@ namespace lw_common {
             foreach (filter_line line in items_)
                 if (!line.case_sensitive)
                     is_sensitive = false;
-            items_ = items_.Where(i => i.part != filter_line.part_type.case_sensitive_info).ToList();
+            items_ = items_.Where(i => i.part != part_type.case_sensitive_info).ToList();
             if ( !is_sensitive)
                 foreach (filter_line line in items_)
                     line.case_sensitive = false;

@@ -26,9 +26,97 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using log4net.Repository.Hierarchy;
-using lw_common;
 
-namespace LogWizard {
+namespace lw_common {
+    public enum part_type {
+        date, time, level, message, file, func, thread, 
+            
+        ctx1, ctx2, ctx3, 
+            
+        // added in 1.3.8
+        ctx4, ctx5, ctx6, ctx7, ctx8, ctx9, ctx10, ctx11, ctx12, ctx13, ctx14, ctx15,
+
+        class_, font, case_sensitive_info,
+        
+        invalid
+    }
+
+    internal static class part_type_io {
+        internal static part_type from_str(string str) {
+            part_type part = part_type.invalid;
+            switch ( str) {
+            case "$msg": part = part_type.message; break;
+
+            case "$date": part = part_type.date; break;
+            case "$time": part = part_type.time; break;
+            case "$level": part = part_type.level; break;
+            case "$file": part = part_type.file; break;
+            case "$func": part = part_type.func; break;
+            case "$class": part = part_type.class_; break;
+            case "$thread": part = part_type.thread; break;
+
+            case "$ctx1": part = part_type.ctx1; break;
+            case "$ctx2": part = part_type.ctx2; break;
+            case "$ctx3": part = part_type.ctx3; break;
+
+            case "$ctx4": part = part_type.ctx4; break;
+            case "$ctx5": part = part_type.ctx5; break;
+            case "$ctx6": part = part_type.ctx6; break;
+            case "$ctx7": part = part_type.ctx7; break;
+            case "$ctx8": part = part_type.ctx8; break;
+            case "$ctx9": part = part_type.ctx9; break;
+            case "$ctx10": part = part_type.ctx10; break;
+
+            case "$ctx11": part = part_type.ctx11; break;
+            case "$ctx12": part = part_type.ctx12; break;
+            case "$ctx13": part = part_type.ctx13; break;
+            case "$ctx14": part = part_type.ctx14; break;
+            case "$ctx15": part = part_type.ctx15; break;
+            
+            }
+            return part;
+        }
+
+        internal static info_type to_info_type(part_type part) {
+            switch (part) {
+            case part_type.message: return info_type.msg;
+
+            case part_type.date:    return info_type.date;
+            case part_type.time:    return info_type.time;
+            case part_type.level:   return info_type.level;
+            case part_type.file:    return info_type.file;
+            case part_type.func:    return info_type.func;
+            case part_type.class_:  return info_type.class_;
+            case part_type.thread:  return info_type.thread;
+
+            case part_type.ctx1:    return info_type.ctx1;
+            case part_type.ctx2:    return info_type.ctx2;
+            case part_type.ctx3:    return info_type.ctx3;
+
+            case part_type.ctx4:    return info_type.ctx4;
+            case part_type.ctx5:    return info_type.ctx5;
+            case part_type.ctx6:    return info_type.ctx6;
+            case part_type.ctx7:    return info_type.ctx7;
+            case part_type.ctx8:    return info_type.ctx8;
+            case part_type.ctx9:    return info_type.ctx9;
+            case part_type.ctx10:    return info_type.ctx10;
+
+            case part_type.ctx11:    return info_type.ctx11;
+            case part_type.ctx12:    return info_type.ctx12;
+            case part_type.ctx13:    return info_type.ctx13;
+            case part_type.ctx14:    return info_type.ctx14;
+            case part_type.ctx15:    return info_type.ctx15;
+
+            default:
+                Debug.Assert(false);
+                return info_type.msg;
+            }
+            
+        }
+        
+    }
+
+
     public class filter_line {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -73,11 +161,6 @@ namespace LogWizard {
         }
 
         // ctxX -> context about the message (other than file/func/class)
-        public enum part_type {
-            date, time, level, message, file, func, ctx1, ctx2, ctx3, class_, font, case_sensitive_info,
-            // not implemented yet
-            thread
-        }
 
         public enum comparison_type {
             equal, not_equal, starts_with, does_not_start_with, contains, does_not_contain,
@@ -276,23 +359,9 @@ namespace LogWizard {
                 return null;
 
             filter_line fi = new filter_line(line);
-            switch ( words[0]) {
-            case "$date": fi.part = part_type.date; break;
-            case "$time": fi.part = part_type.time; break;
-            case "$level": fi.part = part_type.level; break;
-            case "$file": fi.part = part_type.file; break;
-            case "$func": fi.part = part_type.func; break;
-            case "$msg": fi.part = part_type.message; break;
-            case "$class": fi.part = part_type.class_; break;
-
-            case "$ctx1": fi.part = part_type.ctx1; break;
-            case "$ctx2": fi.part = part_type.ctx2; break;
-            case "$ctx3": fi.part = part_type.ctx3; break;
-
-            case "$thread": fi.part = part_type.thread; break;
-            default:
+            fi.part = part_type_io.from_str(words[0]);
+            if (fi.part == part_type.invalid)
                 return null;
-            }
 
             if (words.Length == 2) {
                 // comparison is not present; inferred as regex
@@ -364,48 +433,7 @@ namespace LogWizard {
         }
 
         private string line_part(line l) {
-            string sub = "";
-            switch (part) {
-            case part_type.date:
-                sub = l.part(info_type.date);
-                break;
-            case part_type.time:
-                sub = l.part(info_type.time);
-                break;
-            case part_type.level:
-                sub = l.part(info_type.level);
-                break;
-            case part_type.message:
-                sub = l.part(info_type.msg);
-                break;
-            case part_type.file:
-                sub = l.part(info_type.file);
-                break;
-            case part_type.func:
-                sub = l.part(info_type.func);
-                break;
-            case part_type.class_:
-                sub = l.part(info_type.class_);
-                break;
-
-            case part_type.ctx1:
-                sub = l.part(info_type.ctx1);
-                break;
-            case part_type.ctx2:
-                sub = l.part(info_type.ctx2);
-                break;
-            case part_type.ctx3:
-                sub = l.part(info_type.ctx3);
-                break;
-            case part_type.thread:
-                sub = l.part(info_type.thread);
-                break;
-
-            default:
-                Debug.Assert(false);
-                break;
-            }
-            return sub;
+            return l.part(part_type_io.to_info_type(part));
         }
 
         private bool compare(string line_part, string text, string[] words) {
@@ -561,4 +589,5 @@ namespace LogWizard {
         }
 
     }
+
 }

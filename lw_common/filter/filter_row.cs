@@ -71,7 +71,7 @@ namespace LogWizard {
             for (int i = old_line_count_; i < new_line_count; ++i) {
                 bool matches = true;
                 foreach (filter_line fi in items_)
-                    if ( fi.part != filter_line.part_type.font)
+                    if ( fi.part != part_type.font)
                         if ( !fi.matches(log.line_at(i))) {
                             matches = false;
                             break;
