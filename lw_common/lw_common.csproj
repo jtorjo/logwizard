@@ -92,6 +92,7 @@
     <Compile Include="ui\log_view.Designer.cs">
       <DependentUpon>log_view.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\log_view_cell.cs" />
     <Compile Include="ui\log_view_item_draw_ui.cs" />
     <Compile Include="ui\log_view_parent.cs" />
     <Compile Include="ui\log_view_render.cs">

@@ -1,5 +1,9 @@
 
 
+1.3.8a
+- added $thread and $ctx4 - $ctx15 (in parsing line syntax + log_view)
+
+
 1.3.7b
 - removed nuget objectlistview
 

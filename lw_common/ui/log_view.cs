@@ -108,6 +108,45 @@ namespace lw_common
             public string ctx3 {
                 get { return base.line.part(info_type.ctx3); }
             }
+
+            public string ctx4 {
+                get { return base.line.part(info_type.ctx4); }
+            }
+            public string ctx5 {
+                get { return base.line.part(info_type.ctx5); }
+            }
+            public string ctx6 {
+                get { return base.line.part(info_type.ctx6); }
+            }
+            public string ctx7 {
+                get { return base.line.part(info_type.ctx7); }
+            }
+            public string ctx8 {
+                get { return base.line.part(info_type.ctx8); }
+            }
+            public string ctx9 {
+                get { return base.line.part(info_type.ctx9); }
+            }
+            public string ctx10 {
+                get { return base.line.part(info_type.ctx10); }
+            }
+            public string ctx11 {
+                get { return base.line.part(info_type.ctx11); }
+            }
+            public string ctx12 {
+                get { return base.line.part(info_type.ctx12); }
+            }
+            public string ctx13 {
+                get { return base.line.part(info_type.ctx13); }
+            }
+            public string ctx14 {
+                get { return base.line.part(info_type.ctx14); }
+            }
+            public string ctx15 {
+                get { return base.line.part(info_type.ctx15); }
+            }
+
+
             public string thread {
                 get { return base.line.part(info_type.thread); }
             }
@@ -848,94 +887,15 @@ namespace lw_common
         }
 
         string cell_value(item i, int column_idx) {
-            switch (column_idx) {
-            case 0:
-                return "" + i.line;
-            case 1:
-                return i.view;
-            case 2:
-                return i.date;
-            case 3:
-                return i.time;
-            case 4:
-                return i.level;
-            case 5:
-                return i.file;
-            case 6:
-                return i.func;
-            case 7:
-                return i.class_;
-            case 8:
-                return i.ctx1;
-            case 9:
-                return i.ctx2;
-            case 10:
-                return i.ctx3;
-            case 11:
-                return i.msg;
-            default:
-                Debug.Assert(false);
-                return "";
-            }
+            return log_view_cell.cell_value(i, column_idx);
         }
 
         private string cell_value_by_type(item i, info_type type) {
-            switch (type) {
-            case info_type.msg:
-                return i.msg;
-            case info_type.time:
-                return i.time;
-            case info_type.date:
-                return i.date;
-            case info_type.level:
-                return i.level;
-            case info_type.class_:
-                return i.class_;
-            case info_type.file:
-                return i.file;
-            case info_type.func:
-                return i.func;
-            case info_type.ctx1:
-                return i.ctx1;
-            case info_type.ctx2:
-                return i.ctx2;
-            case info_type.ctx3:
-                return i.ctx3;
-            case info_type.thread:
-                return i.thread;
-            }
-            Debug.Assert(false);
-            return i.msg;
+            return log_view_cell.cell_value_by_type(i, type);
         }
 
         OLVColumn column(info_type type) {
-            switch (type) {
-            case info_type.msg:
-                return msgCol;
-            case info_type.time:
-                return timeCol;
-            case info_type.date:
-                return dateCol;
-            case info_type.level:
-                return levelCol;
-            case info_type.class_:
-                return classCol;
-            case info_type.file:
-                return fileCol;
-            case info_type.func:
-                return funcCol;
-            case info_type.ctx1:
-                return ctx1Col;
-            case info_type.ctx2:
-                return ctx2Col;
-            case info_type.ctx3:
-                return ctx3Col;
-            case info_type.thread:
-                // FIXME have its own column!
-                return ctx1Col;
-            }
-            Debug.Assert(false);
-            return msgCol;
+            return log_view_cell.column(this, type);
         }
 
 

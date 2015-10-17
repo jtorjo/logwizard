@@ -38,12 +38,25 @@
             this.dateCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.timeCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.levelCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.threadCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.fileCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.funcCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.classCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.ctx1Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.ctx2Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.ctx3Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx4Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx5Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx6Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx7Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx8Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx9Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx10Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx11Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx12Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx13Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx14Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ctx15Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.msgCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -80,12 +93,25 @@
             this.list.AllColumns.Add(this.dateCol);
             this.list.AllColumns.Add(this.timeCol);
             this.list.AllColumns.Add(this.levelCol);
+            this.list.AllColumns.Add(this.threadCol);
             this.list.AllColumns.Add(this.fileCol);
             this.list.AllColumns.Add(this.funcCol);
             this.list.AllColumns.Add(this.classCol);
             this.list.AllColumns.Add(this.ctx1Col);
             this.list.AllColumns.Add(this.ctx2Col);
             this.list.AllColumns.Add(this.ctx3Col);
+            this.list.AllColumns.Add(this.ctx4Col);
+            this.list.AllColumns.Add(this.ctx5Col);
+            this.list.AllColumns.Add(this.ctx6Col);
+            this.list.AllColumns.Add(this.ctx7Col);
+            this.list.AllColumns.Add(this.ctx8Col);
+            this.list.AllColumns.Add(this.ctx9Col);
+            this.list.AllColumns.Add(this.ctx10Col);
+            this.list.AllColumns.Add(this.ctx11Col);
+            this.list.AllColumns.Add(this.ctx12Col);
+            this.list.AllColumns.Add(this.ctx13Col);
+            this.list.AllColumns.Add(this.ctx14Col);
+            this.list.AllColumns.Add(this.ctx15Col);
             this.list.AllColumns.Add(this.msgCol);
             this.list.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -96,12 +122,25 @@
             this.dateCol,
             this.timeCol,
             this.levelCol,
+            this.threadCol,
             this.fileCol,
             this.funcCol,
             this.classCol,
             this.ctx1Col,
             this.ctx2Col,
             this.ctx3Col,
+            this.ctx4Col,
+            this.ctx5Col,
+            this.ctx6Col,
+            this.ctx7Col,
+            this.ctx8Col,
+            this.ctx9Col,
+            this.ctx10Col,
+            this.ctx11Col,
+            this.ctx12Col,
+            this.ctx13Col,
+            this.ctx14Col,
+            this.ctx15Col,
             this.msgCol});
             this.list.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.list.FullRowSelect = true;
@@ -163,6 +202,12 @@
             this.levelCol.IsEditable = false;
             this.levelCol.Text = "Level";
             // 
+            // threadCol
+            // 
+            this.threadCol.AspectName = "thread";
+            this.threadCol.IsEditable = false;
+            this.threadCol.Text = "Thread";
+            // 
             // fileCol
             // 
             this.fileCol.AspectName = "file";
@@ -205,10 +250,95 @@
             this.ctx3Col.Text = "Ctx3";
             this.ctx3Col.Width = 0;
             // 
+            // ctx4Col
+            // 
+            this.ctx4Col.AspectName = "ctx4";
+            this.ctx4Col.IsEditable = false;
+            this.ctx4Col.Text = "Ctx4";
+            this.ctx4Col.Width = 0;
+            // 
+            // ctx5Col
+            // 
+            this.ctx5Col.AspectName = "ctx5";
+            this.ctx5Col.IsEditable = false;
+            this.ctx5Col.Text = "Ctx5";
+            this.ctx5Col.Width = 0;
+            // 
+            // ctx6Col
+            // 
+            this.ctx6Col.AspectName = "ctx6";
+            this.ctx6Col.IsEditable = false;
+            this.ctx6Col.Text = "Ctx6";
+            this.ctx6Col.Width = 0;
+            // 
+            // ctx7Col
+            // 
+            this.ctx7Col.AspectName = "ctx7";
+            this.ctx7Col.IsEditable = false;
+            this.ctx7Col.Text = "Ctx7";
+            this.ctx7Col.Width = 0;
+            // 
+            // ctx8Col
+            // 
+            this.ctx8Col.AspectName = "ctx8";
+            this.ctx8Col.IsEditable = false;
+            this.ctx8Col.Text = "Ctx8";
+            this.ctx8Col.Width = 0;
+            // 
+            // ctx9Col
+            // 
+            this.ctx9Col.AspectName = "ctx9";
+            this.ctx9Col.IsEditable = false;
+            this.ctx9Col.Text = "Ctx9";
+            this.ctx9Col.Width = 0;
+            // 
+            // ctx10Col
+            // 
+            this.ctx10Col.AspectName = "ctx10";
+            this.ctx10Col.IsEditable = false;
+            this.ctx10Col.Text = "Ctx10";
+            this.ctx10Col.Width = 0;
+            // 
+            // ctx11Col
+            // 
+            this.ctx11Col.AspectName = "ctx11";
+            this.ctx11Col.IsEditable = false;
+            this.ctx11Col.Text = "Ctx11";
+            this.ctx11Col.Width = 0;
+            // 
+            // ctx12Col
+            // 
+            this.ctx12Col.AspectName = "ctx12";
+            this.ctx12Col.IsEditable = false;
+            this.ctx12Col.Text = "Ctx12";
+            this.ctx12Col.Width = 0;
+            // 
+            // ctx13Col
+            // 
+            this.ctx13Col.AspectName = "ctx13";
+            this.ctx13Col.IsEditable = false;
+            this.ctx13Col.Text = "Ctx13";
+            this.ctx13Col.Width = 0;
+            // 
+            // ctx14Col
+            // 
+            this.ctx14Col.AspectName = "ctx14";
+            this.ctx14Col.IsEditable = false;
+            this.ctx14Col.Text = "Ctx14";
+            this.ctx14Col.Width = 0;
+            // 
+            // ctx15Col
+            // 
+            this.ctx15Col.AspectName = "ctx15";
+            this.ctx15Col.IsEditable = false;
+            this.ctx15Col.Text = "Ctx15";
+            this.ctx15Col.Width = 0;
+            // 
             // msgCol
             // 
             this.msgCol.AspectName = "msg";
             this.msgCol.FillsFreeSpace = true;
+            this.msgCol.IsEditable = false;
             this.msgCol.Text = "Message";
             // 
             // panel1
@@ -271,21 +401,34 @@
         private System.Windows.Forms.Label labelName;
         private System.Windows.Forms.TextBox viewName;
         private System.Windows.Forms.ToolTip tip;
-        private BrightIdeasSoftware.OLVColumn lineCol;
-        private BrightIdeasSoftware.OLVColumn dateCol;
-        private BrightIdeasSoftware.OLVColumn timeCol;
-        private BrightIdeasSoftware.OLVColumn levelCol;
-        private BrightIdeasSoftware.OLVColumn fileCol;
-        private BrightIdeasSoftware.OLVColumn funcCol;
-        private BrightIdeasSoftware.OLVColumn classCol;
-        private BrightIdeasSoftware.OLVColumn ctx1Col;
-        private BrightIdeasSoftware.OLVColumn ctx2Col;
-        private BrightIdeasSoftware.OLVColumn ctx3Col;
-        private BrightIdeasSoftware.OLVColumn viewCol;
         internal BrightIdeasSoftware.OLVColumn msgCol;
         private System.Windows.Forms.Panel panel1;
         public BrightIdeasSoftware.VirtualObjectListView list;
         internal ui.smart_readonly_textbox edit;
         private System.Windows.Forms.Label label1;
+        internal BrightIdeasSoftware.OLVColumn lineCol;
+        internal BrightIdeasSoftware.OLVColumn dateCol;
+        internal BrightIdeasSoftware.OLVColumn timeCol;
+        internal BrightIdeasSoftware.OLVColumn levelCol;
+        internal BrightIdeasSoftware.OLVColumn fileCol;
+        internal BrightIdeasSoftware.OLVColumn funcCol;
+        internal BrightIdeasSoftware.OLVColumn classCol;
+        internal BrightIdeasSoftware.OLVColumn ctx1Col;
+        internal BrightIdeasSoftware.OLVColumn ctx2Col;
+        internal BrightIdeasSoftware.OLVColumn ctx3Col;
+        internal BrightIdeasSoftware.OLVColumn viewCol;
+        internal BrightIdeasSoftware.OLVColumn threadCol;
+        internal BrightIdeasSoftware.OLVColumn ctx4Col;
+        internal BrightIdeasSoftware.OLVColumn ctx5Col;
+        internal BrightIdeasSoftware.OLVColumn ctx6Col;
+        internal BrightIdeasSoftware.OLVColumn ctx7Col;
+        internal BrightIdeasSoftware.OLVColumn ctx8Col;
+        internal BrightIdeasSoftware.OLVColumn ctx9Col;
+        internal BrightIdeasSoftware.OLVColumn ctx10Col;
+        internal BrightIdeasSoftware.OLVColumn ctx11Col;
+        internal BrightIdeasSoftware.OLVColumn ctx12Col;
+        internal BrightIdeasSoftware.OLVColumn ctx13Col;
+        internal BrightIdeasSoftware.OLVColumn ctx14Col;
+        internal BrightIdeasSoftware.OLVColumn ctx15Col;
     }
 }

@@ -18,8 +18,13 @@ namespace lw_common.parse.parsers {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private class syntax_info {
+            internal static readonly Tuple<int, int>[] line_contains_msg_only_ = new Tuple<int, int>[(int) info_type.max];
+            static syntax_info() {
+                for (int i = 0; i < line_contains_msg_only_.Length; ++i)
+                    line_contains_msg_only_[i] = i == (int)info_type.msg ? new Tuple<int, int>(0, -1) : new Tuple<int, int>(-1, -1);
+            }
+
             public syntax_info() {
-                line_contains_msg_only_[(int) info_type.msg] = new Tuple<int, int>(0, -1);                
             }
             
             // if true, each line needs to be parsed (the positions of each part are relative)
@@ -27,19 +32,6 @@ namespace lw_common.parse.parsers {
 
             // [index, length]
             public Tuple<int,int>[] idx_in_line_ = new Tuple<int, int>[ (int)info_type.max];
-            public readonly Tuple<int,int>[] line_contains_msg_only_ = new Tuple<int, int>[] {
-                new Tuple<int,int>(-1, -1),
-                new Tuple<int,int>(-1, -1),
-                new Tuple<int,int>(-1, -1),
-                new Tuple<int,int>(-1, -1),
-                new Tuple<int,int>(-1, -1),
-                new Tuple<int,int>(-1, -1),
-                new Tuple<int,int>(-1, -1),
-                new Tuple<int,int>(-1, -1),
-                new Tuple<int,int>(-1, -1),
-                new Tuple<int,int>(-1, -1),
-                new Tuple<int,int>(-1, -1)
-            };
 
             public class relative_pos {
                 public info_type type = info_type.max;
@@ -167,6 +159,77 @@ namespace lw_common.parse.parsers {
             return new Tuple<int, int>(prefix.StartsWith("msg") ? 0 : -1, -1);
         }
 
+        private syntax_info parse_relative_syntax(string syntax) {
+            syntax_info si = new syntax_info();
+            si.relative_syntax_ = true;
+            si.relative_idx_in_line_.Clear();
+
+            // Example: "$time[0,12] $ctx1['[','-'] $func[' ',']'] $ctx2['[[',' ] ]'] $msg"
+            syntax = syntax.Trim();
+            while (syntax.Length > 0) {
+                if (syntax[0] != '$')
+                    // invalid syntax
+                    break;
+
+                syntax = syntax.Substring(1);
+                string type_str = syntax.Split('[')[0];
+                info_type type = info_type.max;
+                switch (type_str) {
+                case "msg":     type = info_type.msg; break;
+
+                case "time":    type = info_type.time; break;
+                case "date":    type = info_type.date; break;
+                case "level":   type = info_type.level; break;
+                case "class":   type = info_type.class_; break;
+                case "file":    type = info_type.file; break;
+                case "func":    type = info_type.func; break;
+                case "thread":  type = info_type.thread; break;
+
+                case "ctx1":    type = info_type.ctx1; break;
+                case "ctx2":    type = info_type.ctx2; break;
+                case "ctx3":    type = info_type.ctx3; break;
+
+                case "ctx4":    type = info_type.ctx4; break;
+                case "ctx5":    type = info_type.ctx5; break;
+                case "ctx6":    type = info_type.ctx6; break;
+                case "ctx7":    type = info_type.ctx7; break;
+                case "ctx8":    type = info_type.ctx8; break;
+                case "ctx9":    type = info_type.ctx9; break;
+                case "ctx10":    type = info_type.ctx10; break;
+
+                case "ctx11":    type = info_type.ctx11; break;
+                case "ctx12":    type = info_type.ctx12; break;
+                case "ctx13":    type = info_type.ctx13; break;
+                case "ctx14":    type = info_type.ctx14; break;
+                case "ctx15":    type = info_type.ctx15; break;
+
+                default:
+                    break;
+                }
+                if (type == info_type.max)
+                    // invalid syntax
+                    break;
+                int bracket = syntax.IndexOf("[");
+                syntax = bracket >= 0 ? syntax.Substring(bracket + 1).Trim() : "";
+                if (syntax == "") {
+                    // this was the last item (the remainder of the string)
+                    si.relative_idx_in_line_.Add( new syntax_info.relative_pos {
+                        type = type, start = -1, start_str = null, len = -1, end_str = null
+                    });
+                    break;
+                }
+
+                var start = parse_sub_relative_syntax(ref syntax);
+                var end = parse_sub_relative_syntax(ref syntax);
+                si.relative_idx_in_line_.Add( new syntax_info.relative_pos {
+                    type = type, start = start.Item1, start_str = start.Item2, len = end.Item1, end_str = end.Item2
+                });
+
+                syntax = syntax.Trim();
+            }
+            return si;
+        }
+
         private syntax_info parse_single_syntax(string syntax) {
             try {
                 if (syntax.Contains("'")) 
@@ -184,9 +247,24 @@ namespace lw_common.parse.parsers {
                 si.idx_in_line_[(int) info_type.ctx1] = parse_syntax_pos(syntax, "ctx1[");
                 si.idx_in_line_[(int) info_type.ctx2] = parse_syntax_pos(syntax, "ctx2[");
                 si.idx_in_line_[(int) info_type.ctx3] = parse_syntax_pos(syntax, "ctx3[");
+
+                si.idx_in_line_[(int) info_type.ctx4] = parse_syntax_pos(syntax, "ctx4[");
+                si.idx_in_line_[(int) info_type.ctx5] = parse_syntax_pos(syntax, "ctx5[");
+                si.idx_in_line_[(int) info_type.ctx6] = parse_syntax_pos(syntax, "ctx6[");
+                si.idx_in_line_[(int) info_type.ctx7] = parse_syntax_pos(syntax, "ctx7[");
+                si.idx_in_line_[(int) info_type.ctx8] = parse_syntax_pos(syntax, "ctx8[");
+                si.idx_in_line_[(int) info_type.ctx9] = parse_syntax_pos(syntax, "ctx9[");
+                si.idx_in_line_[(int) info_type.ctx10] = parse_syntax_pos(syntax, "ctx10[");
+
+                si.idx_in_line_[(int) info_type.ctx11] = parse_syntax_pos(syntax, "ctx11[");
+                si.idx_in_line_[(int) info_type.ctx12] = parse_syntax_pos(syntax, "ctx12[");
+                si.idx_in_line_[(int) info_type.ctx13] = parse_syntax_pos(syntax, "ctx13[");
+                si.idx_in_line_[(int) info_type.ctx14] = parse_syntax_pos(syntax, "ctx14[");
+                si.idx_in_line_[(int) info_type.ctx15] = parse_syntax_pos(syntax, "ctx15[");
+
                 si.idx_in_line_[(int) info_type.thread] = parse_syntax_pos(syntax, "thread[");
 
-                Debug.Assert(si.idx_in_line_.Length == si.line_contains_msg_only_.Length);
+                Debug.Assert(si.idx_in_line_.Length == syntax_info.line_contains_msg_only_.Length);
                 return si;
             } catch {
                 // invalid syntax
@@ -246,78 +324,6 @@ namespace lw_common.parse.parsers {
             return new Tuple<int, string>(-1, null);            
         }
 
-        private syntax_info parse_relative_syntax(string syntax) {
-            syntax_info si = new syntax_info();
-            si.relative_syntax_ = true;
-            si.relative_idx_in_line_.Clear();
-
-            // Example: "$time[0,12] $ctx1['[','-'] $func[' ',']'] $ctx2['[[',' ] ]'] $msg"
-            syntax = syntax.Trim();
-            while (syntax.Length > 0) {
-                if (syntax[0] != '$')
-                    // invalid syntax
-                    break;
-
-                syntax = syntax.Substring(1);
-                string type_str = syntax.Split('[')[0];
-                info_type type = info_type.max;
-                switch (type_str) {
-                case "time":
-                    type = info_type.time;
-                    break;
-                case "date":
-                    type = info_type.date;
-                    break;
-                case "level":
-                    type = info_type.level;
-                    break;
-                case "msg":
-                    type = info_type.msg;
-                    break;
-                case "class":
-                    type = info_type.class_;
-                    break;
-                case "file":
-                    type = info_type.file;
-                    break;
-                case "func":
-                    type = info_type.func;
-                    break;
-                case "ctx1":
-                    type = info_type.ctx1;
-                    break;
-                case "ctx2":
-                    type = info_type.ctx2;
-                    break;
-                case "ctx3":
-                    type = info_type.ctx3;
-                    break;
-                default:
-                    break;
-                }
-                if (type == info_type.max)
-                    // invalid syntax
-                    break;
-                int bracket = syntax.IndexOf("[");
-                syntax = bracket >= 0 ? syntax.Substring(bracket + 1).Trim() : "";
-                if (syntax == "") {
-                    // this was the last item (the remainder of the string)
-                    si.relative_idx_in_line_.Add( new syntax_info.relative_pos {
-                        type = type, start = -1, start_str = null, len = -1, end_str = null
-                    });
-                    break;
-                }
-
-                var start = parse_sub_relative_syntax(ref syntax);
-                var end = parse_sub_relative_syntax(ref syntax);
-                si.relative_idx_in_line_.Add( new syntax_info.relative_pos {
-                    type = type, start = start.Item1, start_str = start.Item2, len = end.Item1, end_str = end.Item2
-                });
-
-                syntax = syntax.Trim();
-            }
-            return si;
-        }
 
         // forces the WHOLE FILE to be reloaded
         //
@@ -560,7 +566,7 @@ namespace lw_common.parse.parsers {
             }
 
             // in this case, we can't parse the line at all - use default
-            return new line(l, syntaxes_[0].line_contains_msg_only_);
+            return new line(l, syntax_info.line_contains_msg_only_);
         }
 
     }

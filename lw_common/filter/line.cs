@@ -8,10 +8,16 @@ namespace lw_common {
     // ctxX -> context about the message (other than file/func/class)
     public enum info_type { 
         time, date, level, 
-        // not implemented yet
+
+        // added in 1.3.8
         thread, 
         
-        class_, file, func, ctx1, ctx2, ctx3, 
+        class_, file, func, 
+        
+        ctx1, ctx2, ctx3, 
+
+        // added in 1.3.8
+        ctx4, ctx5, ctx6, ctx7, ctx8, ctx9, ctx10, ctx11, ctx12, ctx13, ctx14, ctx15,
 
         msg,
 
