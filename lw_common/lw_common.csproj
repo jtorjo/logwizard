@@ -188,6 +188,10 @@
       <Project>{5d703fc5-ea9a-4bbb-bf08-e3a80efddaa8}</Project>
       <Name>color_picker</Name>
     </ProjectReference>
+    <ProjectReference Include="3rdparty\EncodingTools\EncodingTools.csproj">
+      <Project>{ca19d4de-b232-491a-92bf-7bf3a2758694}</Project>
+      <Name>EncodingTools</Name>
+    </ProjectReference>
     <ProjectReference Include="3rdparty\SharpZipLib\src\ICSharpCode.SharpZLib.csproj">
       <Project>{0e7413ff-eb9e-4714-acf2-be3a6a7b2ffd}</Project>
       <Name>ICSharpCode.SharpZLib</Name>

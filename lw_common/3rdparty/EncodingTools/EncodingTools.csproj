@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CA19D4DE-B232-491A-92BF-7BF3A2758694}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EncodingTools</RootNamespace>
+    <AssemblyName>EncodingTools</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EncodingTools.cs" />
+    <Compile Include="Multilang\CMLangConvertCharset.cs" />
+    <Compile Include="Multilang\CMLangConvertCharsetClass.cs" />
+    <Compile Include="Multilang\CMLangString.cs" />
+    <Compile Include="Multilang\CMLangStringClass.cs" />
+    <Compile Include="Multilang\CMultiLanguage.cs" />
+    <Compile Include="Multilang\CMultiLanguageClass.cs" />
+    <Compile Include="Multilang\IEnumCodePage.cs" />
+    <Compile Include="Multilang\IEnumRfc1766.cs" />
+    <Compile Include="Multilang\IEnumScript.cs" />
+    <Compile Include="Multilang\IMLangCodePages.cs" />
+    <Compile Include="Multilang\IMLangConvertCharset.cs" />
+    <Compile Include="Multilang\IMLangFontLink.cs" />
+    <Compile Include="Multilang\IMLangFontLink2.cs" />
+    <Compile Include="Multilang\IMLangLineBreakConsole.cs" />
+    <Compile Include="Multilang\IMLangString.cs" />
+    <Compile Include="Multilang\IMLangStringAStr.cs" />
+    <Compile Include="Multilang\IMLangStringBufA.cs" />
+    <Compile Include="Multilang\IMLangStringBufW.cs" />
+    <Compile Include="Multilang\IMLangStringWStr.cs" />
+    <Compile Include="Multilang\IMultiLanguage.cs" />
+    <Compile Include="Multilang\IMultiLanguage2.cs" />
+    <Compile Include="Multilang\IMultiLanguage3.cs" />
+    <Compile Include="Multilang\ISequentialStream.cs" />
+    <Compile Include="Multilang\IStream.cs" />
+    <Compile Include="Multilang\tagMLDETECTCP.cs" />
+    <Compile Include="Multilang\tagDetectEncodingInfo.cs" />
+    <Compile Include="Multilang\tagMIMECONTF.cs" />
+    <Compile Include="Multilang\tagMIMECPINFO.cs" />
+    <Compile Include="Multilang\tagMIMECSETINFO.cs" />
+    <Compile Include="Multilang\tagMLCPF.cs" />
+    <Compile Include="Multilang\tagMLSTR_FLAGS.cs" />
+    <Compile Include="Multilang\tagRFC1766INFO.cs" />
+    <Compile Include="Multilang\tagSCRIPFONTINFO.cs" />
+    <Compile Include="Multilang\tagSCRIPTINFO.cs" />
+    <Compile Include="Multilang\tagSTATSTG.cs" />
+    <Compile Include="Multilang\tagUNICODERANGE.cs" />
+    <Compile Include="Multilang\_FILETIME.cs" />
+    <Compile Include="Multilang\_LARGE_INTEGER.cs" />
+    <Compile Include="Multilang\_RemotableHandle.cs" />
+    <Compile Include="Multilang\_ULARGE_INTEGER.cs" />
+    <Compile Include="Multilang\__MIDL_IWinTypes_0009.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

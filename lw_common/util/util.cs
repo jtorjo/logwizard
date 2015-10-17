@@ -34,6 +34,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using ColorSchemeExtension;
+using href.Utils;
 using Microsoft.Win32;
 using Timer = System.Windows.Forms.Timer;
 
@@ -483,7 +484,18 @@ namespace lw_common {
                 if (bom[0] == 0xff && bom[1] == 0xfe) return Encoding.Unicode; //UTF-16LE
                 if (bom[0] == 0xfe && bom[1] == 0xff) return Encoding.BigEndianUnicode; //UTF-16BE
                 if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) return Encoding.UTF32;
-                return Encoding.ASCII;
+
+                
+                long len = Math.Min(8192, file.Length);
+                byte[] buff = new byte[len];
+                file.Read(buff, 0, (int)len);
+
+                var detected = EncodingTools.DetectInputCodepage(buff);
+                if (!detected.Equals( Encoding.Default))
+                    return detected;
+
+                // assume UTF8 by default
+                return Encoding.UTF8;
             } catch {
                 return null;
             }            

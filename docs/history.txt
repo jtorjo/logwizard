@@ -1,4 +1,8 @@
 
+1.3.4
+- using http://www.codeproject.com/Articles/17201/Detect-Encoding-for-In-and-Outgoing-Text for finding out the encoding of the text
+  (works like a charm for Korean)
+
 
 1.3.3
 - .samples.log files - re-marked as "Content"

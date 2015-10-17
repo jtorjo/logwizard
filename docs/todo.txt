@@ -1,22 +1,25 @@
 
 - take some picture(s) with logwizard - to place on github
 
-- article: 
-- LowWizard - Talk about your Logs!
-    - sharing thy log with coworkers/customer support/customers 
-	  - customer support - explain that they can have the developers look at the logs as well.
-	    also, each dev can have his own views thus seeing data in a different way - which can of course yield different insights
-
-- shift-drop : logwizard / zip -> do postpone, so that we get the dragdrop ended message processed
-- 
-
 -------------------------------------------------------
+*888888888- make it real-time like win32tail - probably on new lines, notify all filters?
+
+
 - add $thread
+  - also, add up to $ctx50 (even if not displayed in UI) -> line_ext class?	
+  - add aliases as well
+
+- parse encoding correctly (for korean)
+
+- parse lines ending in 0xa
+
+- parse by line "xx: yy", and empty line is end-of-record
 
 - filters - when refreshing 
   (especially on "apply to existing")
   -> run all filters (until they are all run (those not for only-apply-to-existing-filters), nothing changes (in the view))
-  -> AFTER they are all run (we change the whole array in ONE step)
+  ----------------> AFTER they are all run (we change the whole array in ONE step)
+                   (this way when refreshing and the same number of lines -> it's instant and perfect)
 - on 50K lines, the refresh takes rather long - it should not take this long
   - like, creating a new view takes a bit - this should be close to instant
     + refreshing - should not re-read the file if it's not changed!!! 
@@ -41,6 +44,8 @@
 	   - tothink about the rest
     - toggling - will preserve the seleted row + its location on the screen!!! (based on its rectangle bounds - computed the first row that is visible, and scroll to there)
 
+	-- at this point, i need to update the filter menu (based on whether current line matches the filters or not)
+
   *************perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
 
 - filter regex: RegexOptions.Singleline
@@ -61,6 +66,9 @@
   and for regexes, if it's a bad regex, show it in red
   + allow giving friendly names to the regexes, so in the future we can easily reselect them - this needs to be available only for regexes (for normal searches, makes no sense)
   + find: in preview -> when finding something, select it and auto-filter it (so that only the lines containing the text will be shown)
+
+
+- font: allow changing it
 
 
 
@@ -244,7 +252,11 @@
 	 - allow specifying which columns to be in details, and which in list (they can overlap)
 	 - save column widths / positions in global_ui
 
-
+---------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
+ - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))
+   - i also need to allow caching (pro_v?)
+     - like, remember the last "X" sessions, the user should be able to always bring back any former sessions, and also filter by date(s)
+	 - very likely: i should store them locally, but only allow access on pro_v
 
 
 
