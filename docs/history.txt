@@ -1,6 +1,10 @@
 
 
 
+1.3.6d
+- after set useoverlays to false - bug did not dissapear
+
+
 1.3.6c
 - set UseOverays to false - to see if bug related to weird surroundings of cells dissapears
 
