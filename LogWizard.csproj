@@ -124,10 +124,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="ObjectListView, Version=2.8.1.33936, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\ObjectListView.Official.2.8.1\lib\net20\ObjectListView.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -306,6 +302,10 @@
     <ProjectReference Include="lw_common\3rdparty\color_picker\color_picker.csproj">
       <Project>{5d703fc5-ea9a-4bbb-bf08-e3a80efddaa8}</Project>
       <Name>color_picker</Name>
+    </ProjectReference>
+    <ProjectReference Include="lw_common\3rdparty\ObjectListView\ObjectListView2012.csproj">
+      <Project>{18feda0c-d147-4286-b39a-01204808106a}</Project>
+      <Name>ObjectListView2012</Name>
     </ProjectReference>
     <ProjectReference Include="lw_common\lw_common.csproj">
       <Project>{d7c0968b-59ca-4f94-a875-ef9de8f098eb}</Project>

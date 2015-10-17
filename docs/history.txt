@@ -1,6 +1,11 @@
 
 
 
+1.3.7a
+- added objectlistview 2.8.1 library as source code
+  Rationale: to possibly find the render bug, i certainly need to see the OLV source code
+
+
 1.3.6d
 - after set useoverlays to false - bug did not dissapear
 
