@@ -365,7 +365,7 @@ namespace lw_common
         }
 
         private list_data_source model_ = null;
-        private bool visible_columns_refreshed_ = false;
+        private int visible_columns_refreshed_ = 0;
 
         // lines that are bookmarks (sorted by index)
         private List<int> bookmarks_ = new List<int>();
@@ -443,7 +443,7 @@ namespace lw_common
         }
 
         public void force_refresh_visible_columns() {
-            visible_columns_refreshed_ = false;
+            visible_columns_refreshed_ = 0;
             refresh_visible_columns();
         }
 
@@ -704,7 +704,7 @@ namespace lw_common
                 log_.on_new_lines += filter_.on_new_reader_lines;
 
                 last_item_count_while_current_view_ = 0;
-                visible_columns_refreshed_ = false;
+                visible_columns_refreshed_ = 0;
                 logger.Debug("[view] new log for " + name + " - " + log.log_name);
                 update_x_of_y();
             }
@@ -899,32 +899,45 @@ namespace lw_common
         }
 
 
+        private bool has_value_at_column(info_type type, int max_rows_to_check) {
+            int value_count = 0;
+            for (int idx = 0; idx < max_rows_to_check; ++idx) {
+                var i = match_at(idx) ;
+                if (i.line_idx < 0)
+                    continue;
+                if (cell_value_by_type(i, type) != "")
+                    ++value_count;
+            }
+            bool has_values = (value_count > 0);
+            return has_values;
+        }
 
         // when we have a number of columns - based on the info on each column, we hide or show them
         private void refresh_visible_columns() {
-            if (visible_columns_refreshed_)
+            const int MIN_ROWS = 10;
+            if (visible_columns_refreshed_ >= MIN_ROWS)
                 return;
-            int MIN_ROWS = 10;
-            if (filter_.match_count >= MIN_ROWS) {
 
-                for ( int type_as_int = 0; type_as_int < (int)info_type.max; ++type_as_int)
-                    if (type_as_int != (int) info_type.msg) {
-                        info_type type = (info_type) type_as_int;
-                        int value_count = 0;
-                        for (int idx = 0; idx < MIN_ROWS; ++idx) {
-                            var i = match_at(idx) ;
-                            if (i.line_idx < 0)
-                                return;
-                            if (cell_value_by_type(i, type) != "")
-                                ++value_count;
-                        }
-                        bool has_values = (value_count > 0);
-                        bool is_visible = column(type).Width > 0;
-                        if (has_values != is_visible) 
-                            column(type).Width = has_values ? 80 : 0;                        
-                    }
-                visible_columns_refreshed_ = true;
+            bool needs_refresh = filter_.match_count != visible_columns_refreshed_;
+            if (needs_refresh) {
+                int row_count = Math.Min(filter_.match_count, MIN_ROWS);
+                for (int type_as_int = 0; type_as_int < (int) info_type.max; ++type_as_int) {
+                    info_type type = (info_type) type_as_int;
+                    bool was_visible = column(type).Width > 0;
+                    bool is_visible = false;
+                    if (type == info_type.msg)
+                        is_visible = true;
+                    else  
+                        is_visible = has_value_at_column(type, row_count);
+
+                    if (is_visible != was_visible)
+                        column(type).Width = is_visible ? 80 : 0;
+                }
+                visible_columns_refreshed_ = filter_.match_count;
             }
+
+            if (filter_.match_count >= MIN_ROWS) 
+                visible_columns_refreshed_ = MIN_ROWS;
         }
 
         private void compute_title_fonts() {

@@ -72,7 +72,7 @@ namespace lw_common.parse.parsers {
 
         private bool lines_min_capacity_updated_ = false;
 
-        public log_parser_line_by_line(text_reader reader, line_by_line_syntax syntax) {
+        public log_parser_line_by_line(text_reader reader, line_by_line_syntax syntax) {            
             string syntax_str = syntax.line_syntax;
             Debug.Assert(reader != null);
             parse_syntax(syntax_str);

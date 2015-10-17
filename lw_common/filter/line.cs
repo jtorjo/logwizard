@@ -6,13 +6,14 @@ using System.Text;
 
 namespace lw_common {
     // ctxX -> context about the message (other than file/func/class)
+    //
     public enum info_type { 
-        time, date, level, 
+        date, time, level, 
 
         // added in 1.3.8
         thread, 
         
-        class_, file, func, 
+        file, func, class_, 
         
         ctx1, ctx2, ctx3, 
 

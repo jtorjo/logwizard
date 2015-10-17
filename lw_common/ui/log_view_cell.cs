@@ -11,8 +11,10 @@ namespace lw_common.ui {
             switch (column_idx) {
             case 0:
                 return "" + i.line;
+
             case 1:
                 return i.view;
+
             case 2:
                 return i.date;
             case 3:

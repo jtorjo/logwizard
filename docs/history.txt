@@ -1,5 +1,9 @@
 
 
+1.3.8d
+- refresh_visible_columns - show the correct info even if less than 10 lines
+
+
 1.3.8c
 - tested showing $thread - works now. Note, the TN2 syntax i wanted is this:
   $time['',' '] $thread['',11] $level['','- '] $msg

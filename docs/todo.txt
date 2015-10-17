@@ -3,24 +3,11 @@
 
 -------------------------------------------------------
 
-- parse lines ending in 0xa
-
-- refresh_visibl_columns -> should not be needed - i need to figure this out from logsyntax TOTHINK
-  - seee if i can hide columns another way (not by width=0)
-
-
-  - add aliases as well
-    - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
-
-
-
-
-
 
 - filters - when refreshing 
   (especially on "apply to existing")
   -> run all filters (until they are all run (those not for only-apply-to-existing-filters), nothing changes (in the view))
-  ----------------> AFTER they are all run (we change the whole array in ONE step)
+  ---------------------------> AFTER they are all run (we change the whole array in ONE step)
                    (this way when refreshing and the same number of lines -> it's instant and perfect)
 - on 50K lines, the refresh takes rather long - it should not take this long
   - like, creating a new view takes a bit - this should be close to instant
@@ -28,6 +15,10 @@
 	  + parser - should reread from scratch only if syntax has changed!
 ----------------> what i need is different types of refresh: current view, current file, all views, etc. TOTHINK
 ---------- while refreshing, show this ON THE STATUS message
+
+
+- log_view: column width - hide columns with IsVisible property (needs RebuildColumns() !!!)
+  - i want this so that user can resize, and i should be able to save this
 
 
 
@@ -87,6 +78,14 @@
 - parse by line "xx: yy", and empty line is end-of-record
   = take care of the case when we read a partial entry
 
+- log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)
+  - i need to save this only if the user changes something
+  - this needs to be per each view + for full log
+  - i need an easy way to allow showing / hiding columns 
+    - this needs to be expandable so that in the future i can do the same for details pane.
+	- see if anything like this is allowed by default by the control
+
+
 
 
 
@@ -117,9 +116,13 @@
 
 
 
+  - add aliases as well
+    - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
 
+- refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
+  otherwise, i could end up ignoring a column if the first 10 values are empty
 
-
+- parse lines ending in 0xa
 
 
 
