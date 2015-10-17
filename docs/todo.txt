@@ -2,7 +2,6 @@
 - take some picture(s) with logwizard - to place on github
 
 -------------------------------------------------------
-*888888888- make it real-time like win32tail - probably on new lines, notify all filters?
 
 
 - add $thread

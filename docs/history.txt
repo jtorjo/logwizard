@@ -1,4 +1,8 @@
 
+1.3.6a
+refactoring code for parsing logs so that we can easily add new parsers (like: xml, db, etc.) - step 1
+
+
 1.3.5b
 refactoring so that we notify filters much faster of real-time changes - finished
 
