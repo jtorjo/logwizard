@@ -28,6 +28,10 @@ namespace LogWizard {
             get { return base.name; }
         }
 
+        public override bool fully_read_once {
+            get { return lines_.Length == 0; }
+        }
+
         public override bool has_it_been_rewritten {
             get { return false; }
         }

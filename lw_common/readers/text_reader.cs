@@ -28,13 +28,30 @@ namespace LogWizard
     public abstract class text_reader : IDisposable
     {
         public const string UNKNOWN_SYNTAX = find_log_syntax.UNKNOWN_SYNTAX;
+        private bool disposed_ = false;
 
+        public delegate void on_new_lines_func();
+        // it's called: 
+        //  - after the log has been fully read, when there are new lines appended to it
+        public on_new_lines_func on_new_lines;
+
+
+        public virtual string name {
+            get { return ""; }
+        }
+
+        
+        
+        
         // reads text at position - and updates position
         public abstract string read_next_text() ;
 
         public virtual bool has_more_cached_text() {
             return false;
         }
+
+
+
 
         // 1.0.14+ - this computes the full length of the reader - until we call it again
         //           (since this can be costly CPU-wise)
@@ -53,19 +70,17 @@ namespace LogWizard
         // 1.0.72+ - made readonly
         public abstract ulong pos { get; }
 
-        private bool disposed_ = false;
 
-        public virtual string name {
-            get { return ""; }
-        }
+
+
+
+
+        // 1.3.5+ - know when the log has been fully read at least once - useful to know whether to send "new_lines" events
+        public abstract bool fully_read_once { get; }
 
         // 1.0.57+ - if true, the file has been rewritten from scratch
         public virtual bool has_it_been_rewritten {
             get { return false; }
-        }
-
-        protected bool disposed {
-            get { return disposed_; }
         }
 
         // returns true when the read is fully read
@@ -77,10 +92,18 @@ namespace LogWizard
             return "$msg[0]";
         }
 
-        public virtual void on_dispose() {
+        public virtual void force_reload() {            
         }
 
-        public virtual void force_reload() {            
+
+
+
+
+
+        protected bool disposed {
+            get { return disposed_; }
+        }
+        public virtual void on_dispose() {
         }
 
         public void Dispose() {

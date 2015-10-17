@@ -122,6 +122,8 @@ namespace lw_common {
 
         public bool show_filter_row_in_filter_color = true;
 
+        // at what interval should we check for new lines?
+        public int check_new_lines_interval_ms = 50;
 
 
         // file-by-file

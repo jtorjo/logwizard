@@ -1,4 +1,9 @@
 
+1.3.5a
+refactoring so that we notify filters much faster of real-time changes
+- the log_line_parser is notified of new lines via windows event
+
+
 1.3.4
 - using http://www.codeproject.com/Articles/17201/Detect-Encoding-for-In-and-Outgoing-Text for finding out the encoding of the text
   (works like a charm for Korean)

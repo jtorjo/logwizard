@@ -58,5 +58,8 @@ namespace LogWizard
             
         }
 
+        public override bool fully_read_once {
+            get { return false; }
+        }
     }
 }

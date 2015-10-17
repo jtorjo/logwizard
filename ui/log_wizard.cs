@@ -996,11 +996,8 @@ namespace LogWizard
                 ensure_we_have_log_view_for_tab(idx);
             }
 
-            while (viewsTab.TabCount > cur.views.Count) {
-                // TabControl.RemoveAt is buggy
-                var page = viewsTab.TabPages[cur.views.Count];
-                viewsTab.TabPages.Remove(page);
-            }
+            while (viewsTab.TabCount > cur.views.Count) 
+                remove_log_view_tab(cur.views.Count);
 
             if (!has_views) {
                 log_view_for_tab(0).Visible = false;
@@ -1121,24 +1118,35 @@ namespace LogWizard
                 custom_ui_[i].load("ui.custom" + i);
         }
 
-        private void remove_log_view_from_tab(int idx) {
+        private void remove_log_view_from_tab_page(int idx) {
             Debug.Assert(idx < viewsTab.TabCount);
             TabPage tab = viewsTab.TabPages[idx];
             log_view lv = log_view_for_tab(idx);
-            if (lv != null)
+            if (lv != null) {
+                lv.mark_as_not_used();
                 tab.Controls.Remove(lv);
+            }
+        }
+
+        private void remove_log_view_tab(int idx) {
+            // 1.0.51+ - yeah - RemoveAt() has a bug and quite often removes a different tab
+            //viewsTab.TabPages.RemoveAt(idx);
+            remove_log_view_from_tab_page(idx);
+
+            var page = viewsTab.TabPages[idx];
+            viewsTab.TabPages.Remove(page);            
         }
 
         private void remove_all_log_views() {
             ++ignore_change_;
 
             for (int idx = 0; idx < viewsTab.TabCount; ++idx)
-                remove_log_view_from_tab(idx);
+                remove_log_view_from_tab_page(idx);
 
             // 1.1.5+ - if we had too many tabs, remove them
             int new_count = Math.Max(cur_context().views.Count, 1);
             while (viewsTab.TabCount > new_count)
-                viewsTab.TabPages.Remove(viewsTab.TabPages[viewsTab.TabCount - 1]);
+                remove_log_view_tab(viewsTab.TabCount - 1);
             --ignore_change_;
         }
 
@@ -1154,10 +1162,7 @@ namespace LogWizard
             ui_context cur = cur_context();
             if (cur.views.Count > 1) {
                 cur.views.RemoveAt(idx);
-                // 1.0.51+ - yeah - RemoveAt() has a bug and quite often removes a different tab
-                //viewsTab.TabPages.RemoveAt(idx);
-                var page = viewsTab.TabPages[idx];
-                viewsTab.TabPages.Remove(page);
+                remove_log_view_tab(idx);
             } else {
                 // it's the last tab, clear the filter
                 cur.views[0].name = "New_1";

@@ -44,5 +44,9 @@ namespace LogWizard
             get { return 0; } 
             
         }
+
+        public override bool fully_read_once {
+            get { return false; }
+        }
     }
 }

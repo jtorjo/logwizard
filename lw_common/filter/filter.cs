@@ -297,7 +297,7 @@ namespace LogWizard {
                 }
             }
             rows_ = new_rows;
-            logger.Info("[filter] preserving cache " + (new_log_ != null ? new_log_.name : "") + ", misses = " + misses);
+            logger.Info("[filter] preserving cache " + (new_log_ != null ? new_log_.log_name : "") + ", misses = " + misses);
         }
  
         // note: 
@@ -423,7 +423,7 @@ namespace LogWizard {
             int old_line_count = new_log.line_count;
             new_log.refresh();
             if (new_log != old_log || new_log.forced_reload) {                
-                logger.Info(new_log != old_log ? "[filter] new log " + new_log.name : "[filter] forced refresh of " + new_log.name);
+                logger.Info(new_log != old_log ? "[filter] new log " + new_log.log_name : "[filter] forced refresh of " + new_log.log_name);
                 old_line_count = 0;
                 force_recompute_matches();
             }
@@ -532,7 +532,6 @@ namespace LogWizard {
             bool is_up_to_date = new_log.up_to_date;
             lock (this)
                 is_up_to_date_ = is_up_to_date;
-
         }
 
 

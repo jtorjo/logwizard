@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using log4net.Repository.Hierarchy;
 using lw_common;
 
 namespace LogWizard {
@@ -32,17 +33,36 @@ namespace LogWizard {
        1.0.42 made thread-safe
     */
 
-    public class log_line_reader {
+    public class log_line_reader : IDisposable {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private log_line_parser parser_;
         private int line_count_ = 0;
 
+        private bool disposed_ = false;
+        // for testing/debugging
+        private string tab_name_ = "";
+
         public log_line_reader(log_line_parser parser) {
             Debug.Assert(parser != null);
             parser_ = parser;
+            parser_.on_new_lines += on_new_lines;
         }
 
-        public string name {
+        private void on_new_lines() {
+            Debug.Assert(!disposed_);
+            if (disposed_)
+                return;
+
+            // logger.Debug("[parse] new lines on tab " + tab_name);
+        }
+
+        public string tab_name {
+            get { return tab_name_; }
+            set { tab_name_ = value; }
+        }
+
+        public string log_name {
             get { return parser_.name; }
         }
 
@@ -67,6 +87,7 @@ namespace LogWizard {
             get { lock(this) return line_count_;  }
         }
 
+
         public void refresh() {
             int lc = parser_.line_count;
             lock (this) 
@@ -77,5 +98,10 @@ namespace LogWizard {
             return parser_.line_at(idx);
         }
 
+        public void Dispose() {
+            if ( parser_.on_new_lines != null)
+                parser_.on_new_lines -= on_new_lines;
+            disposed_ = true;
+        }
     }
 }

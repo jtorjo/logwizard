@@ -88,7 +88,7 @@ namespace LogWizard
 
         private void read_all_file_thread() {
             while (!disposed) {
-                Thread.Sleep(100);
+                Thread.Sleep( app.inst.check_new_lines_interval_ms);
                 read_file_block();
             }
         }
@@ -152,6 +152,12 @@ namespace LogWizard
             get { lock(this) return offset_;  }
         }
 
+        public override bool fully_read_once {
+            get {
+                lock(this) return fully_read_once_; 
+            }
+        }
+
         public override void force_reload() {
             lock (this) 
                 if (offset_ == 0)
@@ -189,6 +195,7 @@ namespace LogWizard
                 bool file_rewritten = false;
                 long offset;
                 lock (this) offset = (long) read_byte_count_;
+                bool genenerate_new_lines_event = false;
                 using (var fs = new FileStream(file_, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     if (len > offset) {
                         update_buffer();
@@ -201,6 +208,7 @@ namespace LogWizard
                             lock (this) {
                                 read_byte_count_ += (ulong) read_bytes;
                                 last_part_.Append(now) ;
+                                genenerate_new_lines_event = fully_read_once_ && on_new_lines != null;
                             }
                         }
                     }
@@ -217,6 +225,9 @@ namespace LogWizard
                         file_rewritten = true;
                 if ( file_rewritten)
                     on_rewritten_file();
+
+                if (genenerate_new_lines_event)
+                    on_new_lines();
             } catch(Exception e) {
                 logger.Error("[file] can't read file - " + file_ + " : " + e.Message);
             }

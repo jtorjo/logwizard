@@ -645,12 +645,25 @@ namespace lw_common
             filter_.update_rows(filter);
         }
 
+        // called when this log view is not used anymore (like, when it's removed from its tab page)
+        public void mark_as_not_used() {
+            if (log_ != null) {
+                log_.Dispose();
+                log_ = null;
+            }
+        }
+
         public void set_log(log_line_reader log) {
+            Debug.Assert(log != null);
             if (log_ != log) {
+                if (log_ != null)
+                    log_.Dispose();
+
                 log_ = log;
+                log_.tab_name = name;
                 last_item_count_while_current_view_ = 0;
                 visible_columns_refreshed_ = false;
-                logger.Debug("[view] new log for " + name + " - " + log.name);
+                logger.Debug("[view] new log for " + name + " - " + log.log_name);
                 update_x_of_y();
             }
         }
@@ -661,6 +674,8 @@ namespace lw_common
                 viewName.Text = value;
                 model_.name = value;
                 filter_.name = value;
+                if (log_ != null)
+                    log_.tab_name = value;
             }
         }
 

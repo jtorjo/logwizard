@@ -85,7 +85,7 @@ namespace LogWizard
         // FIXME not a good idea
         private const int CACHE_LAST_INCOMPLETE_LINE_MS = 50000;
 
-        private readonly text_reader text_reader_ = null;
+        private readonly text_reader reader_ = null;
 
         // this is probably far from truth (probably the avg line is much smaller), but it's good to have a good starting capacity, to minimizes resizes
         private const int CHARS_PER_AVG_LINE = 384;
@@ -105,17 +105,24 @@ namespace LogWizard
 
         private bool lines_min_capacity_updated_ = false;
 
+        private Mutex new_lines_event_ = null;
+
+        public delegate void on_new_lines_func();
+        public on_new_lines_func on_new_lines;
+
         public log_line_parser(text_reader reader, string syntax) {
             Debug.Assert(reader != null);
             parse_syntax(syntax);
-            text_reader_ = reader;
+            reader_ = reader;
+
+            reader.on_new_lines += on_log_has_new_lines;
             
-            lines_.name = "parser " + text_reader_.name;
+            lines_.name = "parser " + reader_.name;
             var file = reader as file_text_reader;
             if (file != null)
                 lines_.name = "parser " + new FileInfo(file.name).Name;
             
-            var full_len = text_reader_.try_guess_full_len;            
+            var full_len = reader_.try_guess_full_len;            
             if (full_len != ulong.MaxValue) {
                 string_.expect_bytes(full_len);
                 lines_.min_capacity = (int)(full_len / CHARS_PER_AVG_LINE);
@@ -123,6 +130,22 @@ namespace LogWizard
 
             force_reload();
             new Thread(refresh_thread) {IsBackground = true}.Start();
+        }
+
+        private void on_log_has_new_lines() {
+            if (disposed_)
+                return;
+
+            lock(this)
+                if ( new_lines_event_ == null)
+                    new_lines_event_ = new Mutex(true);
+            // this will wake up the refresh thread
+            new_lines_event_.ReleaseMutex();
+            // now, reaquire - should be instant
+            int timeout = 1000;
+            bool received = new_lines_event_.WaitOne(timeout);
+            if ( !received)
+                logger.Fatal("[log] on new lines - could not reaquire lock " + name);
         }
 
 
@@ -136,7 +159,7 @@ namespace LogWizard
             lines_min_capacity_updated_ = true;
             int avg_line = string_.char_count / string_.line_count ;
 
-            var full_len = text_reader_.try_guess_full_len;
+            var full_len = reader_.try_guess_full_len;
             if (full_len != ulong.MaxValue) 
                 lines_.min_capacity = (int)(full_len / (ulong)avg_line);            
         }
@@ -153,8 +176,22 @@ namespace LogWizard
 
         private void refresh_thread() {
             while (!disposed_) {
-                Thread.Sleep(100);
+                bool wait_event = reader_.fully_read_once && new_lines_event_ != null;
+                bool new_lines = false;
+                if (wait_event) {
+                    new_lines = new_lines_event_.WaitOne(app.inst.check_new_lines_interval_ms);
+                    if (new_lines) {
+                        new_lines_event_.ReleaseMutex();
+                        logger.Debug("[log] new lines for " + reader_.name);
+                    }
+                }
+                else 
+                    Thread.Sleep(app.inst.check_new_lines_interval_ms);
+
                 read_to_end();
+
+                if ( !disposed_&& new_lines && on_new_lines != null)
+                    on_new_lines();
             }
         }
 
@@ -172,7 +209,7 @@ namespace LogWizard
         }
 
         public string name {
-            get { return text_reader_.name; }
+            get { return reader_.name; }
         }
 
         public bool up_to_date {
@@ -372,10 +409,10 @@ namespace LogWizard
                 forced_reload_.Clear();
                 lines_.Clear();
                 up_to_date_ = false;
-                logger.Info("[log] forced reload: " + text_reader_.name);
+                logger.Info("[log] forced reload: " + reader_.name);
             }
             string_.clear();
-            text_reader_.force_reload();
+            reader_.force_reload();
         }
 
         // forces readers to reload
@@ -387,17 +424,17 @@ namespace LogWizard
 
 
         private void read_to_end() {
-            ulong old_len = text_reader_.full_len;
-            text_reader_.compute_full_length();
-            ulong new_len = text_reader_.full_len;
+            ulong old_len = reader_.full_len;
+            reader_.compute_full_length();
+            ulong new_len = reader_.full_len;
             // when reader's position is zero -> it's either the first time, or file was re-rewritten
-            if (old_len > new_len || text_reader_.pos == 0) 
+            if (old_len > new_len || reader_.pos == 0) 
                 // file got re-written
                 force_reload();
 
-            bool fully_read = old_len == new_len && text_reader_.is_up_to_date();
+            bool fully_read = old_len == new_len && reader_.is_up_to_date();
 
-            if ( !text_reader_.has_more_cached_text()) {
+            if ( !reader_.has_more_cached_text()) {
                 lock (this) {
                     up_to_date_ = fully_read;
                     if ( up_to_date_)
@@ -410,7 +447,7 @@ namespace LogWizard
             lock (this)
                 up_to_date_ = false;
 
-            string text = text_reader_.read_next_text();
+            string text = reader_.read_next_text();
             int added_line_count = 0;
             bool was_last_line_incomplete = false, is_last_line_incomplete = false;
             int old_line_count = string_.line_count;
