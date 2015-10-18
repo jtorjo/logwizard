@@ -403,7 +403,7 @@ namespace lw_common
             Debug.Assert(parent is log_view_parent);
 
             filter_ = new filter(this.create_match_object);
-            filter_.on_new_lines = on_new_lines;
+            filter_.on_change = on_new_lines;
             InitializeComponent();
             this.parent = parent;
             viewName.Text = name;
@@ -918,25 +918,22 @@ namespace lw_common
             if (visible_columns_refreshed_ >= MIN_ROWS)
                 return;
 
-            bool needs_refresh = filter_.match_count != visible_columns_refreshed_;
+            int match_count = filter_.match_count;
+            bool needs_refresh = match_count != visible_columns_refreshed_;
             if (needs_refresh) {
-                int row_count = Math.Min(filter_.match_count, MIN_ROWS);
+                int row_count = Math.Min(match_count, MIN_ROWS);
                 for (int type_as_int = 0; type_as_int < (int) info_type.max; ++type_as_int) {
                     info_type type = (info_type) type_as_int;
                     bool was_visible = column(type).Width > 0;
-                    bool is_visible = false;
-                    if (type == info_type.msg)
-                        is_visible = true;
-                    else  
-                        is_visible = has_value_at_column(type, row_count);
+                    bool is_visible = type == info_type.msg || has_value_at_column(type, row_count);
 
                     if (is_visible != was_visible)
                         column(type).Width = is_visible ? 80 : 0;
                 }
-                visible_columns_refreshed_ = filter_.match_count;
+                visible_columns_refreshed_ = match_count;
             }
 
-            if (filter_.match_count >= MIN_ROWS) 
+            if (match_count >= MIN_ROWS) 
                 visible_columns_refreshed_ = MIN_ROWS;
         }
 
@@ -1003,8 +1000,16 @@ namespace lw_common
             tab_parent.Text += " ";
         }
 
-        private void on_new_lines() {
-            logger.Debug("[view] new lines on " + name);
+        private void on_new_lines(filter.change_type change) {
+            logger.Debug("[view] change: " + change + "on " + name);
+            switch (change) {
+            case filter.change_type.new_lines:
+                break;
+            case filter.change_type.changed_filter:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException("change", change, null);
+            }
             this.async_call(refresh);
         }
 
@@ -1030,12 +1035,11 @@ namespace lw_common
             model_.refresh();
             refresh_visible_columns();
             update_x_of_y();
-            
+
             list.Refresh();
-            if( needs_scroll && more_items)
+            if (needs_scroll && more_items)
                 go_last();
         }
-
 
 
         private bool has_found_colors(int row_idx, log_view other_log, bool is_sel) {
@@ -1059,14 +1063,15 @@ namespace lw_common
                 found_line = other_log.filter_.matches.binary_search(line_idx).Item1 as item;
                 if (found_line != null) {
                     Color bg = found_line.bg(this), fg = found_line.fg(this);
-                    if (app.inst.sync_colors_all_views_gray_non_active && !is_sel) 
+                    if (app.inst.sync_colors_all_views_gray_non_active && !is_sel)
                         fg = util.grayer_color(fg);
                     i.override_bg = bg;
                     i.override_fg = fg;
                     return true;
                 }
                 break;
-            default: Debug.Assert(false);
+            default:
+                Debug.Assert(false);
                 break;
             }
             return false;
@@ -1090,7 +1095,7 @@ namespace lw_common
                 if (has_found_colors(row_idx, other_logs[sel_idx], true))
                     break;
                 for (int idx = 0; idx < other_logs.Count; ++idx)
-                    if ( idx != sel_idx)
+                    if (idx != sel_idx)
                         if (has_found_colors(row_idx, other_logs[idx], false))
                             break;
                 break;
@@ -1107,8 +1112,8 @@ namespace lw_common
             int PAD = 5;
             var top = list.GetItemAt(PAD, list.HeaderControl.ClientRectangle.Height + PAD);
             if (top == null)
-                return new Tuple<int, int>(0,0);
-            
+                return new Tuple<int, int>(0, 0);
+
             int top_idx = top.Index;
             int height = list.Height - list.HeaderControl.ClientRectangle.Height;
             int row_height = top.Bounds.Height;
@@ -1140,11 +1145,11 @@ namespace lw_common
                 top_idx = 0;
 
             bool needs_refresh = false;
-            for ( int idx = top_idx; idx <= bottom_idx; ++idx)
-                if ( idx < filter_.matches.count)
+            for (int idx = top_idx; idx <= bottom_idx; ++idx)
+                if (idx < filter_.matches.count)
                     update_colors_for_line(idx, other_logs, sel_log_view_idx, ref needs_refresh);
 
-            if ( needs_refresh || force_refresh)
+            if (needs_refresh || force_refresh)
                 list.Refresh();
         }
 
@@ -1159,12 +1164,12 @@ namespace lw_common
 
         private void go_last() {
             var count = filter_.match_count;
-            if (count > 0 ) {
-                if ( ensure_line_visible(count - 1))
+            if (count > 0) {
+                if (ensure_line_visible(count - 1))
                     select_idx(count - 1, select_type.do_not_notify_parent);
-                else 
-                    // in this case, we failed to go to the last item - try again ASAP
-                    util.postpone( go_last, 10);
+                else
+                // in this case, we failed to go to the last item - try again ASAP
+                    util.postpone(go_last, 10);
             }
         }
 
@@ -1259,7 +1264,7 @@ namespace lw_common
                 return;
 
             if (select_nofify_ == select_type.notify_parent) {
-                int line_idx = match_at(sel) .match.line_idx;
+                int line_idx = match_at(sel).match.line_idx;
                 lv_parent.on_sel_line(this, line_idx);
             }
 
@@ -1267,7 +1272,7 @@ namespace lw_common
                 if (sel != editing_row_) {
                     is_editing_ = false;
                     edit.update_ui();
-                }                
+                }
             }
         }
 
@@ -1314,9 +1319,9 @@ namespace lw_common
             if (top_idx < 0)
                 top_idx = 0;
             // we want to show the line in the *middle* of the control (height-wise)
-            if( top_idx < list.GetItemCount())
+            if (top_idx < list.GetItemCount())
                 ensure_line_visible(top_idx);
-            if( bottom_idx < list.GetItemCount())
+            if (bottom_idx < list.GetItemCount())
                 ensure_line_visible(bottom_idx);
         }
 
@@ -1338,9 +1343,9 @@ namespace lw_common
         public void go_to_closest_line(int line_idx, select_type notify) {
             if (filter_.match_count < 1)
                 return;
-            
+
             var closest = filter_.matches.binary_search_closest(line_idx);
-            if ( closest.Item2 >= 0)
+            if (closest.Item2 >= 0)
                 go_to_row(closest.Item2, notify);
         }
 
@@ -1354,7 +1359,7 @@ namespace lw_common
 
         public void go_to_closest_time(DateTime time) {
             var closest = filter_.matches.binary_search_closest(time);
-            if ( closest.Item2 >= 0)
+            if (closest.Item2 >= 0)
                 go_to_row(closest.Item2, select_type.notify_parent);
         }
 
@@ -1415,7 +1420,7 @@ namespace lw_common
                 bool old_show_header = show_name_ || show_header_;
                 show_header_ = value;
                 bool new_show_header = show_name_ || show_header_;
-                if (old_show_header != new_show_header) 
+                if (old_show_header != new_show_header)
                     update_show_header();
             }
         }
@@ -1434,13 +1439,12 @@ namespace lw_common
                     update_show_name();
 
                     bool new_show_header = show_name_ || show_header_;
-                    if( old_show_header != new_show_header)
+                    if (old_show_header != new_show_header)
                         update_show_header();
                 }
             }
         }
 
-    
 
         // returns how many lines this filter has found
         public int filter_row_match_count(int row_idx) {
@@ -1485,7 +1489,7 @@ namespace lw_common
             cur_filter_row_idx_ = -1;
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
-                item i = match_at(idx) ;
+                item i = match_at(idx);
                 i.override_fg = util.transparent;
                 i.override_bg = util.transparent;
             }
@@ -1494,12 +1498,13 @@ namespace lw_common
 
         private msg_details_ctrl msg_details {
             get {
-                foreach ( var ctrl in parent.Controls)
+                foreach (var ctrl in parent.Controls)
                     if (ctrl is msg_details_ctrl)
                         return ctrl as msg_details_ctrl;
                 return null;
             }
         }
+
         public void escape() {
             var msg_details = this.msg_details;
             if (msg_details != null && msg_details.visible()) {
@@ -1543,7 +1548,7 @@ namespace lw_common
             string sel_text = edit.sel_text.ToLower();
             if (cur_search_ != null || sel_text != "")
                 search_for_text_next();
-            else if ( cur_filter_row_idx_ >= 0)
+            else if (cur_filter_row_idx_ >= 0)
                 search_for_next_match(cur_filter_row_idx_);
             lv_parent.after_search();
         }
@@ -1560,7 +1565,7 @@ namespace lw_common
             string sel_text = edit.sel_text.ToLower();
             if (cur_search_ != null || sel_text != "")
                 search_for_text_prev();
-            else if ( cur_filter_row_idx_ >= 0)
+            else if (cur_filter_row_idx_ >= 0)
                 search_for_prev_match(cur_filter_row_idx_);
             lv_parent.after_search();
         }
@@ -1577,9 +1582,9 @@ namespace lw_common
             edit.escape();
 
             select_idx(0, select_type.notify_parent);
-            item i = match_at(0) ;
+            item i = match_at(0);
             bool include_row_zero = sel_row_idx == 0 || sel_row_idx == -1;
-            if ( include_row_zero && string_search.matches( i.match.line.part(info_type.msg), cur_search_)) {
+            if (include_row_zero && string_search.matches(i.match.line.part(info_type.msg), cur_search_)) {
                 // line zero contains the text already
                 ensure_line_visible(0);
                 lv_parent.after_search();
@@ -1608,8 +1613,8 @@ namespace lw_common
                     continue;
                 }
 
-                item i = match_at(idx) ;
-                if (string_search.matches( i.match.line.part(info_type.msg), cur_search_))
+                item i = match_at(idx);
+                if (string_search.matches(i.match.line.part(info_type.msg), cur_search_))
                     found = idx;
             }
 
@@ -1640,8 +1645,8 @@ namespace lw_common
                     continue;
                 }
 
-                item i = match_at(idx) ;
-                if (string_search.matches( i.match.line.part(info_type.msg), cur_search_))
+                item i = match_at(idx);
+                if (string_search.matches(i.match.line.part(info_type.msg), cur_search_))
                     found = idx;
             }
             if (found >= 0) {
@@ -1656,11 +1661,9 @@ namespace lw_common
             bool needs_refresh = false;
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
-                item i = match_at(idx) ;
+                item i = match_at(idx);
                 bool is_match = filter_row_idx >= 0 && i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
-                bool needs_change = 
-                    (is_match && (i.override_fg.ToArgb() != fg.ToArgb() || i.override_bg.ToArgb() != bg.ToArgb())) || 
-                    (!is_match && (i.override_fg != util.transparent || i.override_bg != util.transparent));
+                bool needs_change = (is_match && (i.override_fg.ToArgb() != fg.ToArgb() || i.override_bg.ToArgb() != bg.ToArgb())) || (!is_match && (i.override_fg != util.transparent || i.override_bg != util.transparent));
 
                 if (needs_change) {
                     i.override_fg = is_match ? fg : util.transparent;
@@ -1680,7 +1683,7 @@ namespace lw_common
             int found = -1;
             int next_row = sel_row_idx >= 0 ? sel_row_idx + 1 : 0;
             for (int idx = next_row; idx < count && found < 0; ++idx) {
-                item i = match_at(idx) ;
+                item i = match_at(idx);
                 bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                 if (is_match)
                     found = idx;
@@ -1699,7 +1702,7 @@ namespace lw_common
             int found = -1;
             int prev_row = sel_row_idx >= 0 ? sel_row_idx - 1 : filter_.match_count - 1;
             for (int idx = prev_row; idx >= 0 && found < 0; --idx) {
-                item i = match_at(idx) ;
+                item i = match_at(idx);
                 bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                 if (is_match)
                     found = idx;
@@ -1716,8 +1719,8 @@ namespace lw_common
             export_text export = new export_text();
 
             int row_idx = 0;
-            foreach ( int idx in indices) {
-                item i = match_at(idx) ;
+            foreach (int idx in indices) {
+                item i = match_at(idx);
 
                 int visible_idx = 0;
                 string font = list.Font.Name;
@@ -1727,7 +1730,7 @@ namespace lw_common
                         do_print = column_idx == msgCol.Index;
                     if (do_print) {
                         string txt = cell_value(i, column_idx);
-                        export_text.cell c = new export_text.cell(row_idx, visible_idx, txt) { fg = i.fg(this), bg = i.bg(this), font = font, font_size = 7 };
+                        export_text.cell c = new export_text.cell(row_idx, visible_idx, txt) {fg = i.fg(this), bg = i.bg(this), font = font, font_size = 7};
                         export.add_cell(c);
                         ++visible_idx;
                     }
@@ -1745,7 +1748,7 @@ namespace lw_common
 
             var export = this.export(sel, true);
             string html = export.to_html(), text = export.to_text();
-            clipboard_util.copy( html, text );
+            clipboard_util.copy(html, text);
 
 #if old_code
             string full = "";
@@ -1770,7 +1773,7 @@ namespace lw_common
 
             var export = this.export(sel, false);
             string html = export.to_html(), text = export.to_text();
-            clipboard_util.copy( html, text );
+            clipboard_util.copy(html, text);
 
 #if old_code
             string full = "";
@@ -1862,12 +1865,12 @@ namespace lw_common
 
 
         public void show_row(ui_info.show_row_type show) {
-            if (full_widths_.Count < 1) 
+            if (full_widths_.Count < 1)
                 // save_to them now
                 for (int idx = 0; idx < list.Columns.Count; ++idx)
-                    full_widths_.Add(list.Columns[idx].Width);                
-            
-            logger.Info("[view] showing rows - " + name + " = " + show );
+                    full_widths_.Add(list.Columns[idx].Width);
+
+            logger.Info("[view] showing rows - " + name + " = " + show);
 
             switch (show) {
             case ui_info.show_row_type.msg_only:
@@ -1933,7 +1936,7 @@ namespace lw_common
 
         private void list_Leave(object sender, EventArgs e) {
             // note: we might actually lose focus to the edit box - in this case, we don't really need to update anything
-            util.postpone(update_background,10);
+            util.postpone(update_background, 10);
         }
 
         internal void update_background() {
@@ -1941,7 +1944,7 @@ namespace lw_common
             bool here = focus == list || focus == edit;
 
             var color = here ? Color.DarkSlateGray : Color.White;
-            if ( BackColor.ToArgb() != color.ToArgb())
+            if (BackColor.ToArgb() != color.ToArgb())
                 BackColor = color;
         }
 
@@ -1954,7 +1957,7 @@ namespace lw_common
             get {
                 var focus = win32.focused_ctrl();
                 bool here = focus == list || focus == edit || focus == viewName;
-                return here;    
+                return here;
             }
         }
 
@@ -1975,14 +1978,14 @@ namespace lw_common
 
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
-                item i = match_at(idx) ;
+                item i = match_at(idx);
 
                 int visible_idx = 0;
                 string font = list.Font.Name;
                 for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
                     if (list.Columns[column_idx].Width > 0) {
                         string txt = cell_value(i, column_idx);
-                        export_text.cell c = new export_text.cell(idx, visible_idx, txt) { fg = i.fg(this), bg = i.bg(this), font = font, font_size = 7 };
+                        export_text.cell c = new export_text.cell(idx, visible_idx, txt) {fg = i.fg(this), bg = i.bg(this), font = font, font_size = 7};
                         export.add_cell(c);
                         ++visible_idx;
                     }
@@ -2024,8 +2027,7 @@ namespace lw_common
                     cur_col_ = msgCol.Index;
                     edit.update_ui();
                     return true;
-                } 
-                else if (keyData == Keys.Right && app.inst.edit_mode == app.edit_mode_type.with_right_arrow) {
+                } else if (keyData == Keys.Right && app.inst.edit_mode == app.edit_mode_type.with_right_arrow) {
                     is_editing_ = true;
                     editing_row_ = sel_row_idx;
                     cur_col_ = msgCol.Index;
@@ -2050,7 +2052,7 @@ namespace lw_common
                 }
 
                 if (keyData == Keys.Return) {
-                    if ( is_renaming)
+                    if (is_renaming)
                         show_name = false;
                     return true;
                 }
@@ -2061,7 +2063,7 @@ namespace lw_common
                     // in this case, we're always in edit-mode
                     break;
 
-                    // toggle this edit mode OFF
+                // toggle this edit mode OFF
                 case app.edit_mode_type.with_space:
                     if (keyData == Keys.Space) {
                         is_editing_ = false;
@@ -2070,7 +2072,7 @@ namespace lw_common
                     }
                     break;
 
-                    // moving to another line will toggle this edit mode off
+                // moving to another line will toggle this edit mode off
                 case app.edit_mode_type.with_right_arrow:
                     switch (keyData) {
                     case Keys.Up:
@@ -2191,7 +2193,7 @@ namespace lw_common
         private bool can_find_text_at_row(string txt, int row, int col) {
             string col_text = list.GetItem(row).GetSubItem(col).Text.ToLower();
             int pos = col_text.IndexOf(txt);
-            return pos >= 0;            
+            return pos >= 0;
         }
 
         // note: searches in the current column
@@ -2204,30 +2206,30 @@ namespace lw_common
 
             // note: even if we search all columns, we first search ahead/before for the selected column - then, the rest
             int found_row = -1;
-            if ( app.inst.edit_search_after)
+            if (app.inst.edit_search_after)
                 for (int cur_row = sel_row_idx + 1; cur_row < max && found_row < 0; ++cur_row)
                     if (can_find_text_at_row(txt, cur_row, cur_col_))
                         found_row = cur_row;
-                
-            if ( app.inst.edit_search_before)
-                for (int cur_row = sel_row_idx - 1; cur_row >= min && found_row < 0; --cur_row) 
-                    if (can_find_text_at_row(txt, cur_row, cur_col_)) 
+
+            if (app.inst.edit_search_before)
+                for (int cur_row = sel_row_idx - 1; cur_row >= min && found_row < 0; --cur_row)
+                    if (can_find_text_at_row(txt, cur_row, cur_col_))
                         found_row = cur_row;
 
             if (app.inst.edit_search_all_columns) {
-                if ( app.inst.edit_search_after)
+                if (app.inst.edit_search_after)
                     for (int cur_row = sel_row_idx + 1; cur_row < max && found_row < 0; ++cur_row)
-                        for ( int col_idx = 0; col_idx < list.Columns.Count && found_row < 0; ++col_idx)
-                            if ( col_idx != cur_col_ && list.Columns[col_idx].Width > 0)
+                        for (int col_idx = 0; col_idx < list.Columns.Count && found_row < 0; ++col_idx)
+                            if (col_idx != cur_col_ && list.Columns[col_idx].Width > 0)
                                 if (can_find_text_at_row(txt, cur_row, col_idx)) {
                                     found_row = cur_row;
                                     cur_col_ = col_idx;
                                 }
 
-                if ( app.inst.edit_search_before)
-                    for (int cur_row = sel_row_idx - 1; cur_row >= min && found_row < 0; --cur_row) 
-                        for ( int col_idx = 0; col_idx < list.Columns.Count && found_row < 0; ++col_idx)
-                            if ( col_idx != cur_col_ && list.Columns[col_idx].Width > 0)
+                if (app.inst.edit_search_before)
+                    for (int cur_row = sel_row_idx - 1; cur_row >= min && found_row < 0; --cur_row)
+                        for (int col_idx = 0; col_idx < list.Columns.Count && found_row < 0; ++col_idx)
+                            if (col_idx != cur_col_ && list.Columns[col_idx].Width > 0)
                                 if (can_find_text_at_row(txt, cur_row, col_idx)) {
                                     found_row = cur_row;
                                     cur_col_ = col_idx;
@@ -2254,7 +2256,7 @@ namespace lw_common
         }
 
         private void list_MouseDown(object sender, MouseEventArgs e) {
-            if ( (e.Button & MouseButtons.Right) == MouseButtons.Right)
+            if ((e.Button & MouseButtons.Right) == MouseButtons.Right)
                 right_click_.right_click();
         }
     }

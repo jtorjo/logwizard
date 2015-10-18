@@ -90,7 +90,7 @@ namespace LogWizard {
                     return idx >= 0 && idx < matches_.Count ? matches_[idx] : empty_match;
             }
 
-            public void clear() {
+            private void clear() {
                 lock (this)
                     matches_.Clear();
             }
@@ -102,6 +102,13 @@ namespace LogWizard {
                     int idx = matches_.binary_search_closest(x => x.line_idx, m.line_idx).Item2;
                     Debug.Assert(matches_[idx] == m);
                     return idx;
+                }
+            }
+
+            public void set_range(memory_optimized_list<match> new_matches) {
+                lock (this) {
+                    clear();
+                    add_range(new_matches);
                 }
             }
 
@@ -173,7 +180,7 @@ namespace LogWizard {
         private Thread compute_matches_thread_ = null;
         private bool disposed_ = false;
 
-        private bool post_force_recompute_matches_ = false;
+        private bool force_recompute_matches_ = false;
 
         private bool is_up_to_date_ = false;
 
@@ -182,8 +189,11 @@ namespace LogWizard {
 
         private easy_mutex new_lines_event_ = new easy_mutex();
 
-        public delegate void on_new_lines_func();
-        public on_new_lines_func on_new_lines;
+        public enum change_type {
+            new_lines, changed_filter
+        }
+        public delegate void on_change_func(change_type change);
+        public on_change_func on_change;
 
 
         public filter(create_match_func creator) {
@@ -340,7 +350,7 @@ namespace LogWizard {
                     return;
 
                 // this forces a recompute matches on the other thread
-                post_force_recompute_matches_ = true;
+                force_recompute_matches_ = true;
             }
         }
 
@@ -371,10 +381,7 @@ namespace LogWizard {
                 bool new_lines_found = new_lines_event_.wait_and_release();
 
                 bool needs_recompute = false;
-                lock (this)
-                    needs_recompute = post_force_recompute_matches_;
-                if (needs_recompute)
-                    force_recompute_matches();
+                lock (this) needs_recompute = force_recompute_matches_;
 
                 log_reader new_, old;
                 lock (this) {
@@ -391,20 +398,11 @@ namespace LogWizard {
                 lock (this)
                     old_log_ = new_;
 
-                if (new_lines_found && on_new_lines != null)
-                    on_new_lines();
+                if (new_lines_found && on_change != null)
+                    on_change(change_type.new_lines);
+                else if ( needs_recompute)
+                    on_change(change_type.changed_filter);
             }
-        }
-
-        // this gets called only on the compute_matches_thread - since we want to update the matches_ on that thread!
-        private void force_recompute_matches() {
-            lock (this) {
-                post_force_recompute_matches_ = false;
-                //old_log_ = null;
-            }
-            if (matches_.count < 1)
-                return;
-            matches_.clear();
         }
 
         private void start_compute_matches_thread() {
@@ -438,9 +436,13 @@ namespace LogWizard {
             new_log.refresh();
             if (new_log != old_log || new_log.forced_reload) {                
                 logger.Info(new_log != old_log ? "[filter] new log " + new_log.log_name : "[filter] forced refresh of " + new_log.log_name);
-                old_line_count = 0;
-                force_recompute_matches();
+                lock (this)
+                    force_recompute_matches_ = true;
             }
+            lock(this)
+                if (force_recompute_matches_)
+                    old_line_count = 0;
+
             bool has_new_lines = (old_line_count != new_log.line_count);
 
             // get a pointer to the rows_; in case it changes on the main thread, we don't care,
@@ -534,7 +536,16 @@ namespace LogWizard {
                         new_matches.Add( new_match(new BitArray(0), new_log.line_at(line_idx), line_idx, filter_line.font_info.default_font ));
                 }
 
-                matches_.add_range(new_matches);
+                bool replace = false;
+                lock(this)
+                    if (force_recompute_matches_) {
+                        replace = true;
+                        force_recompute_matches_ = false;
+                    }
+                if (replace) 
+                    matches_.set_range(new_matches);
+                else
+                    matches_.add_range(new_matches);
 
                 apply_additions(old_match_count, new_log, rows);
                 if (new_matches.Count > app.inst.no_ui.min_filter_capacity) {

@@ -2,23 +2,20 @@
 - take some picture(s) with logwizard - to place on github
 
 -------------------------------------------------------
+- test on AllProcesses.log
 
 
-- filters - when refreshing 
-  (especially on "apply to existing")
-  -> run all filters (until they are all run (those not for only-apply-to-existing-filters), nothing changes (in the view))
-  ---------------------------> AFTER they are all run (we change the whole array in ONE step)
-                   (this way when refreshing and the same number of lines -> it's instant and perfect)
-- on 50K lines, the refresh takes rather long - it should not take this long
-  - like, creating a new view takes a bit - this should be close to instant
-    + refreshing - should not re-read the file if it's not changed!!! 
-	  + parser - should reread from scratch only if syntax has changed!
-----------------> what i need is different types of refresh: current view, current file, all views, etc. TOTHINK
----------- while refreshing, show this ON THE STATUS message
+
 
 
 - log_view: column width - hide columns with IsVisible property (needs RebuildColumns() !!!)
   - i want this so that user can resize, and i should be able to save this
+
+
+
+
+
+
 
 
 
@@ -55,6 +52,7 @@
    - if history contains at least 2 items, automatically drop combo when shown
 
 - improve find: find-type as you go - very useful for regexes: basically
+  (every 250ms or so - if something changed)
   have a testing 500-1000 lines from the beginning of the current view, in which we "test-the find", and as soon as we find something, we insta-show it
      (basically, the lines should be from around the current line +/- a number of lines below and after)
 	 (two ways - either only show the $msg + $line, or everything ) 
@@ -63,6 +61,15 @@
   and for regexes, if it's a bad regex, show it in red
   + allow giving friendly names to the regexes, so in the future we can easily reselect them - this needs to be available only for regexes (for normal searches, makes no sense)
   + find: in preview -> when finding something, select it and auto-filter it (so that only the lines containing the text will be shown)
+
+
+
+
+
+
+
+
+
 
 
 - font: allow changing it
@@ -84,6 +91,11 @@
   - i need an easy way to allow showing / hiding columns 
     - this needs to be expandable so that in the future i can do the same for details pane.
 	- see if anything like this is allowed by default by the control
+
+
+
+
+
 
 
 
