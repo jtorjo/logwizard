@@ -4,10 +4,6 @@
 -------------------------------------------------------
 - test on AllProcesses.log
 
-
-
-
-
 - log_view: column width - hide columns with IsVisible property (needs RebuildColumns() !!!)
   - i want this so that user can resize, and i should be able to save this
 
