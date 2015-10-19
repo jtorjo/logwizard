@@ -1096,6 +1096,10 @@ namespace LogWizard
         }
 
         private void show_row_based_on_global_ui() {
+            // 1.3.11d+ - right now, we're showing this as soon as we have enough rows
+            foreach (var lv in all_log_views_and_full_log())
+                lv.show_row(global_ui.show_row_for_view(lv.name));
+#if old_code
             bool is_up_to_date = true;
             foreach (var lv in all_log_views_and_full_log())
                 if (!lv.is_filter_up_to_date)
@@ -1106,6 +1110,7 @@ namespace LogWizard
                     lv.show_row(global_ui.show_row_for_view(lv.name));
             else
                 util.postpone(() => show_row_based_on_global_ui(), 100);
+#endif
         }
 
 

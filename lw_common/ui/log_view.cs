@@ -363,6 +363,7 @@ namespace lw_common
                 lv_.UpdateVirtualListSize();                
             }
         }
+        private const int MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS = 10;
 
         private list_data_source model_ = null;
         private int visible_columns_refreshed_ = 0;
@@ -397,6 +398,8 @@ namespace lw_common
 
         // in case the user edits and presses Escape
         private string old_view_name_ = "";
+
+        private ui_info.show_row_type show_row_ = ui_info.show_row_type.full_row;
 
         public log_view(Form parent, string name)
         {
@@ -914,14 +917,13 @@ namespace lw_common
 
         // when we have a number of columns - based on the info on each column, we hide or show them
         private void refresh_visible_columns() {
-            const int MIN_ROWS = 10;
-            if (visible_columns_refreshed_ >= MIN_ROWS)
+            if (visible_columns_refreshed_ >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
                 return;
 
             int match_count = filter_.match_count;
             bool needs_refresh = match_count != visible_columns_refreshed_;
             if (needs_refresh) {
-                int row_count = Math.Min(match_count, MIN_ROWS);
+                int row_count = Math.Min(match_count, MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);
                 for (int type_as_int = 0; type_as_int < (int) info_type.max; ++type_as_int) {
                     info_type type = (info_type) type_as_int;
                     bool was_visible = column(type).Width > 0;
@@ -933,8 +935,11 @@ namespace lw_common
                 visible_columns_refreshed_ = match_count;
             }
 
-            if (match_count >= MIN_ROWS) 
-                visible_columns_refreshed_ = MIN_ROWS;
+            if (match_count >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS) {
+                visible_columns_refreshed_ = MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS;
+                full_widths_.Clear();
+                show_row_impl(show_row_);
+            }
         }
 
         private void compute_title_fonts() {
@@ -1865,6 +1870,12 @@ namespace lw_common
 
 
         public void show_row(ui_info.show_row_type show) {
+            show_row_ = show;
+            if ( visible_columns_refreshed_ >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
+                show_row_impl(show);
+        }
+
+        private void show_row_impl(ui_info.show_row_type show) {
             if (full_widths_.Count < 1)
                 // save_to them now
                 for (int idx = 0; idx < list.Columns.Count; ++idx)
