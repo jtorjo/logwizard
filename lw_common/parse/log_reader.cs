@@ -72,6 +72,10 @@ namespace LogWizard {
             get { return parser_.name; }
         }
 
+        public override string ToString() {
+            return tab_name + " / " + log_name;
+        }
+
         public bool forced_reload {
             get { return parser_.forced_reload(this); }
         }

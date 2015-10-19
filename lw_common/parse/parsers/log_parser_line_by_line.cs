@@ -65,8 +65,17 @@ namespace lw_common.parse.parsers {
                 }
             }
 
+            // if true, I can find this part 
+            public bool can_find(info_type part) {
+                if (relative_syntax_) {
+                    var pos = relative_idx_in_line_.FirstOrDefault(x => x.type == part);
+                    return (pos != null);
+                } else
+                    return idx_in_line_[(int) part].Item1 >= 0;
+            }
+
             // readonly - set in constructor
-            public List<syntax_info.relative_pos> relative_idx_in_line_ = new List<syntax_info.relative_pos>();
+            public List<relative_pos> relative_idx_in_line_ = new List<relative_pos>();
         }
 
         private List<syntax_info> syntaxes_ = new List<syntax_info>();
@@ -91,6 +100,7 @@ namespace lw_common.parse.parsers {
         private bool up_to_date_ = false;
 
         private bool lines_min_capacity_updated_ = false;
+
 
         public log_parser_line_by_line(text_reader reader, line_by_line_syntax syntax) {            
             string syntax_str = syntax.line_syntax;
@@ -377,8 +387,11 @@ namespace lw_common.parse.parsers {
 
                 int old_count = lines_.Count;
                 lines_.AddRange(now);
-                for ( int idx = old_count; idx < lines_.Count; ++idx)
-                    adjust_line_time(idx);
+                // in order to adjust time, we have to have at least one syntax in which we find it
+                bool can_find_time = syntaxes_.FirstOrDefault(x => x.can_find(info_type.time)) != null;
+                if ( can_find_time)
+                    for ( int idx = old_count; idx < lines_.Count; ++idx)
+                        adjust_line_time(idx);
                 was_last_line_incomplete_ = was_last_line_incomplete ? DateTime.Now : DateTime.MinValue;
             }
             Debug.Assert( lines_.Count == string_.line_count);

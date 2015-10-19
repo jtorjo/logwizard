@@ -435,7 +435,7 @@ namespace LogWizard {
             int old_line_count = new_log.line_count;
             new_log.refresh();
             if (new_log != old_log || new_log.forced_reload) {                
-                logger.Info(new_log != old_log ? "[filter] new log " + new_log.log_name : "[filter] forced refresh of " + new_log.log_name);
+                logger.Info((new_log != old_log ? "[filter] new log " : "[filter] forced refresh of " ) + new_log.tab_name + " / " + new_log.log_name);
                 lock (this)
                     force_recompute_matches_ = true;
             }
