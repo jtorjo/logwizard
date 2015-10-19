@@ -143,9 +143,10 @@ namespace LogWizard
             if (first_time) {
                 app.inst.load();
                 load_contexts(sett);
+
+                notes_keeper.inst.init( util.is_debug ? "notes" : Program.local_dir() + "\\notes", app.inst.identify_notes_files);
             }
             notes.set_author( app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
-            notes_keeper.inst.init( util.is_debug ? "notes" : Program.local_dir() + "\\notes", app.inst.identify_notes_files);
             notes.on_note_selected = on_note_selected;
 
             ++ignore_change_;
@@ -3300,7 +3301,8 @@ namespace LogWizard
             } catch {
             }
 
-            var test = new test_syntax_form(guess);
+            // 1.3.24+ - use the old syntax when we're modifying
+            var test = new test_syntax_form(guess, logSyntaxCtrl.Text);
             if (test.ShowDialog() == DialogResult.OK) {
                 // use the syntax
                 cur_context().default_syntax = test.found_syntax;

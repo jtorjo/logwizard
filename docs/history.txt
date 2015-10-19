@@ -1,8 +1,15 @@
 
+
+
+1.3.24
+- bug: click Test -> it will show the old syntax - not what we've computed (overridden)
+
+
 1.3.23
 - log_view: column width - hide columns with IsVisible property (needs RebuildColumns() !!!)
   - i want this so that user can resize, and i should be able to save this
   - done this for test_log_syntax form as well
+- fix: bug : click Test - when pasting - i should check for any type of enter not just \r\n
 
 
 1.3.22

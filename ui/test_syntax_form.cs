@@ -110,12 +110,16 @@ namespace LogWizard.ui {
             public string t50 { get { return part(50); }}
         }
 
-        public test_syntax_form(string initial_lines) {
+        public test_syntax_form(string initial_lines, string guessed_syntax) {
             InitializeComponent();
             test.Left = -100;
             cancel.Left = -100;
             initial_lines = util.normalize_enters(initial_lines);
-            use_lines(initial_lines);
+
+            if (guessed_syntax == find_log_syntax.UNKNOWN_SYNTAX)
+                guessed_syntax = "";
+
+            use_lines(initial_lines, guessed_syntax);
         }
 
         public string found_syntax {
@@ -142,17 +146,17 @@ namespace LogWizard.ui {
             if (text == lines.Text)
                 return;
 
-            use_lines(text);
+            use_lines(text, syntax.Text);
         }
 
         private void help_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             Process.Start("https://github.com/jtorjo/logwizard/wiki/Syntax");
         }
 
-        private void use_lines(string lines_str) {
+        private void use_lines(string lines_str, string guessed_syntax) {
 
             lines.Text = lines_str;
-            syntax.Text = new find_log_syntax().try_find_log_syntax(lines_str.Split( new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries) );
+            syntax.Text = guessed_syntax != "" ? guessed_syntax : new find_log_syntax().try_find_log_syntax(lines_str.Split( new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries) );
             syntax.SelectionStart = syntax.TextLength;
 
             test_Click(null,null);

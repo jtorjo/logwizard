@@ -3,17 +3,6 @@
 
 -------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
 	- allow toggling "matches filter(s) X,Y,Z ON/OFF" - this toggle should be customizable (several filters or simply just an extra function?)
 	  - in other words, say i may have a filter or several filters
 	    a. i want to be able to say "at this point, show only messages from these filters" BUT easily be able to toggle back to "show everything in this view"
@@ -49,10 +38,6 @@
 
 - parse by line "xx: yy", and empty line is end-of-record
   = take care of the case when we read a partial entry
-
-- bug: click Test -> it will show the old syntax - not what we've computed (overridden)
-
-- bug : click Test - when pasting - i should check for any type of enter not just \r\n
 
 - bug: allow selecting text with the mouse (not just shift-arrows)
 
