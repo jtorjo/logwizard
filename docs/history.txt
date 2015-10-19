@@ -1,6 +1,13 @@
 
 - bug: refresh_visible_columns shows all cols in view_1 for allprocess.small.log
 
+
+
+1.3.11b
+- testing viewing all allprocess.log file - step 2
+  - recognizing all enters correctly
+
+
 1.3.11a
 - testing viewing all allprocess.log file - step 1
 

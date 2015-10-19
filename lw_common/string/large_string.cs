@@ -148,15 +148,24 @@ namespace lw_common
                 return (indexes_.Count > 0) ? string_.ToString(0, indexes_[0]) : "";
 
             if (idx < indexes_.Count) {
-                int start = indexes_[idx - 1] + 2;
+                int start = indexes_[idx - 1] + 1;
+                // 1.3.11+ account for enters in all cases : '\r', '\n', '\r\n', '\n\r'
+                if (string_[start] == '\r' || string_[start] == '\n')
+                    ++start;
+
                 int end = indexes_[idx];
                 return string_.ToString(start, end - start);
             } else if (idx == indexes_.Count) {
                 // last line
-                int start = indexes_.Last() + 2;
+                int start = indexes_.Last() + 1;
                 int end = string_.Length;
                 if (end <= start)
                     return "";
+
+                // 1.3.11+ account for enters in all cases : '\r', '\n', '\r\n', '\n\r'
+                if (string_[start] == '\r' || string_[start] == '\n')
+                    ++start;
+
                 return string_.ToString(start, end - start);
             } else
                 return "";
