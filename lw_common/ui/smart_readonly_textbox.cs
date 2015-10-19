@@ -277,7 +277,6 @@ namespace lw_common.ui {
 
         public void force_update_sel() {
 //            logger.Debug("[smart] sel =" + parent_.sel_row_idx + "," + parent_.sel_col + " [" + SelectionStart + "," + SelectionLength + "]");
-
             Debug.Assert( sel_col_ == parent_.sel_col_idx);
             
             sel_start_ = SelectionStart;

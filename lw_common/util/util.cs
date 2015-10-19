@@ -308,7 +308,7 @@ namespace lw_common {
         }
 
         // sometimes we get bad-written enters (mostly from xml deserializing) - normalize them 
-        public static string normalize_enters(string value) {
+        public static string normalize_deserialized_enters(string value) {
             if (value.Contains("\r"))
                 return value.Replace("\n", "").Replace("\r", "\r\n");
             else
@@ -864,6 +864,18 @@ namespace lw_common {
             if (!txt.EndsWith("\r\n"))
                 txt += "\r\n";
             txt += line;
+        }
+
+        // not very efficient or pretty, but for now gets the job done
+        public static string normalize_enters(string txt) {
+            const string SHOULD_NEVER_EXIST = "$$$$----$$$$----$$$$%%%%$$$$----$$$$$$$$----$$$$";
+            txt =
+                txt.Replace("\r\n", SHOULD_NEVER_EXIST)
+                   .Replace("\n\r", SHOULD_NEVER_EXIST)
+                   .Replace("\r", SHOULD_NEVER_EXIST)
+                   .Replace("\n", SHOULD_NEVER_EXIST)
+                   .Replace(SHOULD_NEVER_EXIST, "\r\n");
+            return txt;
         }
 
     }

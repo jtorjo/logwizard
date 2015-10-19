@@ -2663,7 +2663,7 @@ namespace LogWizard
                             var new_ctx = (ui_context) formatter.Deserialize(reader);
                             // we don't care about the name, just the filters
                             foreach (var view in new_ctx.views)
-                                view.filters.ForEach(f => f.text = util.normalize_enters(f.text));
+                                view.filters.ForEach(f => f.text = util.normalize_deserialized_enters(f.text));
                             return new_ctx;
                         }
                     }
@@ -2695,7 +2695,7 @@ namespace LogWizard
                             var new_ctx = (ui_context) formatter.Deserialize(reader);
                             // we don't care about the name, just the filters
                             foreach (var view in new_ctx.views)
-                                view.filters.ForEach(f => f.text = util.normalize_enters(f.text));
+                                view.filters.ForEach(f => f.text = util.normalize_deserialized_enters(f.text));
                             // ... preserve existing context name
                             string ctx_name = cur.name;
                             cur.copy_from(new_ctx);

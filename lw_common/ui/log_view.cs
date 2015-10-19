@@ -418,7 +418,7 @@ namespace lw_common
             lv_parent.handle_subcontrol_keys(this);
 
             render_ = new log_view_render(this);
-            foreach (var col in list.Columns)
+            foreach (var col in list.AllColumns)
                 (col as OLVColumn).Renderer = render_;
             right_click_ = new log_view_right_click(this);
 
@@ -536,13 +536,19 @@ namespace lw_common
                     return null;
             }
         }
+
+        private int visible_column(int col_idx) {
+            var col = list.AllColumns[col_idx];
+            return list.Columns.IndexOf(col);
+        }
+
         internal Rectangle sel_subrect_bounds {
             get {
-                Debug.Assert(cur_col_ >= 0 && cur_col_ < list.Columns.Count);
+                Debug.Assert(cur_col_ >= 0 && cur_col_ < list.AllColumns.Count);
 
                 int sel = sel_row_idx;
                 if (sel >= 0) {
-                    var r = list.GetItem(sel).GetSubItemBounds(cur_col_);
+                    var r = list.GetItem(sel).GetSubItemBounds( visible_column( cur_col_));
                     if (r.Height == 0) {
                         // this can happen when the message is not visible at all
                         r = list.GetItem(sel).Bounds;
@@ -562,7 +568,7 @@ namespace lw_common
             get {
                 int sel = sel_row_idx;
                 if (sel >= 0)
-                    return list.GetItem(sel).GetSubItem(cur_col_).Text;
+                    return list.GetItem(sel).GetSubItem( visible_column( cur_col_)).Text;
                 else
                     return "";
             }
@@ -920,26 +926,33 @@ namespace lw_common
             if (visible_columns_refreshed_ >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
                 return;
 
+            const int DEFAULT_COL_WIDTH = 80;
             int match_count = filter_.match_count;
             bool needs_refresh = match_count != visible_columns_refreshed_;
             if (needs_refresh) {
                 int row_count = Math.Min(match_count, MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);
                 for (int type_as_int = 0; type_as_int < (int) info_type.max; ++type_as_int) {
                     info_type type = (info_type) type_as_int;
-                    bool was_visible = column(type).Width > 0;
                     bool is_visible = type == info_type.msg || has_value_at_column(type, row_count);
-
-                    if (is_visible != was_visible)
-                        column(type).Width = is_visible ? 80 : 0;
+                    show_column(column(type), (is_visible ? DEFAULT_COL_WIDTH : 0), is_visible);
                 }
                 visible_columns_refreshed_ = match_count;
             }
 
+            list.RebuildColumns();
             if (match_count >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS) {
                 visible_columns_refreshed_ = MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS;
                 full_widths_.Clear();
                 show_row_impl(show_row_);
             }
+        }
+
+        private void show_column(OLVColumn col, int width, bool show) {
+            if (col.IsVisible == show)
+                return;
+
+            col.Width = width;
+            col.IsVisible = show;
         }
 
         private void compute_title_fonts() {
@@ -1612,7 +1625,7 @@ namespace lw_common
             for (int idx = next_row; idx < count && found < 0; ++idx) {
                 // 1.2.7+ - if user has selected something, search for that
                 if (sel_text != "") {
-                    string cur = list.GetItem(idx).GetSubItem(cur_col_).Text;
+                    string cur = list.GetItem(idx).GetSubItem( visible_column(cur_col_)).Text;
                     if (cur.ToLower().Contains(sel_text))
                         found = idx;
                     continue;
@@ -1644,7 +1657,7 @@ namespace lw_common
             for (int idx = prev_row; idx >= 0 && found < 0; --idx) {
                 // 1.2.7+ - if user has selected something, search for that
                 if (sel_text != "") {
-                    string cur = list.GetItem(idx).GetSubItem(cur_col_).Text;
+                    string cur = list.GetItem(idx).GetSubItem( visible_column(cur_col_)).Text;
                     if (cur.ToLower().Contains(sel_text))
                         found = idx;
                     continue;
@@ -1729,8 +1742,8 @@ namespace lw_common
 
                 int visible_idx = 0;
                 string font = list.Font.Name;
-                for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
-                    bool do_print = list.Columns[column_idx].Width > 0;
+                for (int column_idx = 0; column_idx < list.AllColumns.Count; ++column_idx) {
+                    bool do_print = list.AllColumns[column_idx].IsVisible;
                     if (msg_only)
                         do_print = column_idx == msgCol.Index;
                     if (do_print) {
@@ -1878,33 +1891,30 @@ namespace lw_common
         private void show_row_impl(ui_info.show_row_type show) {
             if (full_widths_.Count < 1)
                 // save_to them now
-                for (int idx = 0; idx < list.Columns.Count; ++idx)
-                    full_widths_.Add(list.Columns[idx].Width);
+                for (int idx = 0; idx < list.AllColumns.Count; ++idx)
+                    full_widths_.Add(list.AllColumns[idx].Width);
 
             logger.Info("[view] showing rows - " + name + " = " + show);
 
             switch (show) {
             case ui_info.show_row_type.msg_only:
-                for (int idx = 0; idx < list.Columns.Count; ++idx)
-                    if (idx != msgCol.Index && idx != lineCol.Index)
-                        list.Columns[idx].Width = 0;
+                for (int idx = 0; idx < list.AllColumns.Count; ++idx)
+                    show_column( list.AllColumns[idx], full_widths_[idx], idx == msgCol.Index || idx == lineCol.Index );
                 break;
             case ui_info.show_row_type.msg_and_view_only:
-                for (int idx = 0; idx < list.Columns.Count; ++idx)
-                    if (idx == viewCol.Index)
-                        list.Columns[idx].Width = full_widths_[idx];
-                    else if (idx != msgCol.Index && idx != lineCol.Index)
-                        list.Columns[idx].Width = 0;
+                for (int idx = 0; idx < list.AllColumns.Count; ++idx)
+                    show_column( list.AllColumns[idx], full_widths_[idx], idx == msgCol.Index || idx == lineCol.Index || idx == viewCol.Index );
                 break;
             case ui_info.show_row_type.full_row:
-                for (int idx = 0; idx < list.Columns.Count; ++idx)
-                    if (idx != msgCol.Index && idx != lineCol.Index)
-                        list.Columns[idx].Width = full_widths_[idx];
+                for (int idx = 0; idx < list.AllColumns.Count; ++idx)
+                    show_column( list.AllColumns[idx], full_widths_[idx], full_widths_[idx] > 0 );
                 break;
             default:
                 Debug.Assert(false);
                 break;
             }
+
+            list.RebuildColumns();
         }
 
 
@@ -1993,8 +2003,8 @@ namespace lw_common
 
                 int visible_idx = 0;
                 string font = list.Font.Name;
-                for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
-                    if (list.Columns[column_idx].Width > 0) {
+                for (int column_idx = 0; column_idx < list.AllColumns.Count; ++column_idx) {
+                    if (list.AllColumns[column_idx].IsVisible) {
                         string txt = cell_value(i, column_idx);
                         export_text.cell c = new export_text.cell(idx, visible_idx, txt) {fg = i.fg(this), bg = i.bg(this), font = font, font_size = 7};
                         export.add_cell(c);
@@ -2109,9 +2119,9 @@ namespace lw_common
                         bool can_move = (is_left && edit.SelectionStart == 0 && edit.SelectionLength == 0) || (!is_left && edit.SelectionStart == edit.TextLength) || is_alt_left_or_right;
 
                         if (can_move) {
-                            for (int column_idx = 0; column_idx < list.Columns.Count; ++column_idx) {
-                                int next = is_left ? (cur_col_ - column_idx - 1 + list.Columns.Count) % list.Columns.Count : (cur_col_ + column_idx + 1) % list.Columns.Count;
-                                if (list.Columns[next].Width > 0) {
+                            for (int column_idx = 0; column_idx < list.AllColumns.Count; ++column_idx) {
+                                int next = is_left ? (cur_col_ - column_idx - 1 + list.AllColumns.Count) % list.AllColumns.Count : (cur_col_ + column_idx + 1) % list.AllColumns.Count;
+                                if (list.AllColumns[next].IsVisible) {
                                     cur_col_ = next;
                                     break;
                                 }
@@ -2202,7 +2212,7 @@ namespace lw_common
 
         // returns the row, or -1 on failure
         private bool can_find_text_at_row(string txt, int row, int col) {
-            string col_text = list.GetItem(row).GetSubItem(col).Text.ToLower();
+            string col_text = list.GetItem(row).GetSubItem( visible_column(col)).Text.ToLower();
             int pos = col_text.IndexOf(txt);
             return pos >= 0;
         }
@@ -2230,8 +2240,8 @@ namespace lw_common
             if (app.inst.edit_search_all_columns) {
                 if (app.inst.edit_search_after)
                     for (int cur_row = sel_row_idx + 1; cur_row < max && found_row < 0; ++cur_row)
-                        for (int col_idx = 0; col_idx < list.Columns.Count && found_row < 0; ++col_idx)
-                            if (col_idx != cur_col_ && list.Columns[col_idx].Width > 0)
+                        for (int col_idx = 0; col_idx < list.AllColumns.Count && found_row < 0; ++col_idx)
+                            if (col_idx != cur_col_ && list.AllColumns[col_idx].IsVisible)
                                 if (can_find_text_at_row(txt, cur_row, col_idx)) {
                                     found_row = cur_row;
                                     cur_col_ = col_idx;
@@ -2239,8 +2249,8 @@ namespace lw_common
 
                 if (app.inst.edit_search_before)
                     for (int cur_row = sel_row_idx - 1; cur_row >= min && found_row < 0; --cur_row)
-                        for (int col_idx = 0; col_idx < list.Columns.Count && found_row < 0; ++col_idx)
-                            if (col_idx != cur_col_ && list.Columns[col_idx].Width > 0)
+                        for (int col_idx = 0; col_idx < list.AllColumns.Count && found_row < 0; ++col_idx)
+                            if (col_idx != cur_col_ && list.AllColumns[col_idx].Width > 0)
                                 if (can_find_text_at_row(txt, cur_row, col_idx)) {
                                     found_row = cur_row;
                                     cur_col_ = col_idx;

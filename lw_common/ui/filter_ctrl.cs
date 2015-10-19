@@ -475,7 +475,7 @@ namespace lw_common.ui {
                         using (var reader = new StreamReader(stream)) {
                             var new_view = (ui_view) formatter.Deserialize(reader);
                             // we don't care about the name, just the filters
-                            new_view.filters.ForEach(f => f.text = util.normalize_enters(f.text));
+                            new_view.filters.ForEach(f => f.text = util.normalize_deserialized_enters(f.text));
                             view_.filters = new_view.filters;
                         }
                     }

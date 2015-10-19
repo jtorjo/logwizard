@@ -7020,6 +7020,8 @@
             <summary>
             Gets or sets the strategy for determining the current date and time. The default
             implementation is to use LocalDateTime which internally calls through to DateTime.Now. 
+            DateTime.UtcNow may be used on frameworks newer than .NET 1.0 by specifying
+            <see cref="T:log4net.Appender.RollingFileAppender.UniversalDateTime"/>.
             </summary>
             <value>
             An implementation of the <see cref="T:log4net.Appender.RollingFileAppender.IDateTime"/> interface which returns the current date and time.
@@ -7027,6 +7029,11 @@
             <remarks>
             <para>
             Gets or sets the <see cref="T:log4net.Appender.RollingFileAppender.IDateTime"/> used to return the current date and time.
+            </para>
+            <para>
+            There are two built strategies for determining the current date and time, 
+            <see cref="T:log4net.Appender.RollingFileAppender.LocalDateTime"/>
+            and <see cref="T:log4net.Appender.RollingFileAppender.UniversalDateTime"/>.
             </para>
             <para>
             The default strategy is <see cref="T:log4net.Appender.RollingFileAppender.LocalDateTime"/>.
@@ -7320,6 +7327,22 @@
             </summary>
         </member>
         <member name="P:log4net.Appender.RollingFileAppender.LocalDateTime.Now">
+            <summary>
+            Gets the <b>current</b> time.
+            </summary>
+            <value>The <b>current</b> time.</value>
+            <remarks>
+            <para>
+            Gets the <b>current</b> time.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:log4net.Appender.RollingFileAppender.UniversalDateTime">
+            <summary>
+            Implementation of <see cref="T:log4net.Appender.RollingFileAppender.IDateTime"/> that returns the current time as the coordinated universal time (UTC).
+            </summary>
+        </member>
+        <member name="P:log4net.Appender.RollingFileAppender.UniversalDateTime.Now">
             <summary>
             Gets the <b>current</b> time.
             </summary>

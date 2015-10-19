@@ -26,6 +26,13 @@
             this.lines = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.test = new System.Windows.Forms.Button();
+            this.use = new System.Windows.Forms.Button();
+            this.help = new System.Windows.Forms.LinkLabel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.syntax = new System.Windows.Forms.TextBox();
+            this.cancel = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
             this.result = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -42,13 +49,6 @@
             this.olvColumn13 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn15 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.test = new System.Windows.Forms.Button();
-            this.use = new System.Windows.Forms.Button();
-            this.help = new System.Windows.Forms.LinkLabel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.syntax = new System.Windows.Forms.TextBox();
-            this.cancel = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
             this.olvColumn16 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn17 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn18 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -102,6 +102,7 @@
             this.lines.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.lines.Size = new System.Drawing.Size(981, 269);
             this.lines.TabIndex = 0;
+            this.lines.WordWrap = false;
             // 
             // label1
             // 
@@ -124,6 +125,82 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "The Log Syntax is the syntax of each line of your log. This is how we split each " +
     "line into columns.";
+            // 
+            // test
+            // 
+            this.test.Location = new System.Drawing.Point(868, 9);
+            this.test.Name = "test";
+            this.test.Size = new System.Drawing.Size(68, 26);
+            this.test.TabIndex = 4;
+            this.test.Text = "Test";
+            this.test.UseVisualStyleBackColor = true;
+            this.test.Click += new System.EventHandler(this.test_Click);
+            // 
+            // use
+            // 
+            this.use.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.use.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.use.Location = new System.Drawing.Point(922, 351);
+            this.use.Name = "use";
+            this.use.Size = new System.Drawing.Size(75, 44);
+            this.use.TabIndex = 5;
+            this.use.Text = "Use it!";
+            this.use.UseVisualStyleBackColor = true;
+            this.use.Click += new System.EventHandler(this.use_Click);
+            // 
+            // help
+            // 
+            this.help.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.help.AutoSize = true;
+            this.help.Location = new System.Drawing.Point(877, 356);
+            this.help.Name = "help";
+            this.help.Size = new System.Drawing.Size(37, 17);
+            this.help.TabIndex = 6;
+            this.help.TabStop = true;
+            this.help.Text = "Help";
+            this.help.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.help_LinkClicked);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(20, 355);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(54, 17);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Syntax:";
+            // 
+            // syntax
+            // 
+            this.syntax.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.syntax.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.syntax.Location = new System.Drawing.Point(80, 353);
+            this.syntax.Name = "syntax";
+            this.syntax.Size = new System.Drawing.Size(791, 21);
+            this.syntax.TabIndex = 8;
+            // 
+            // cancel
+            // 
+            this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancel.Location = new System.Drawing.Point(942, 10);
+            this.cancel.Name = "cancel";
+            this.cancel.Size = new System.Drawing.Size(68, 26);
+            this.cancel.TabIndex = 9;
+            this.cancel.Text = "Cancel";
+            this.cancel.UseVisualStyleBackColor = true;
+            this.cancel.Click += new System.EventHandler(this.cancel_Click);
+            // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(81, 377);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(220, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Press Enter to Test, Escape to exit this dialog.";
             // 
             // result
             // 
@@ -302,82 +379,6 @@
             // olvColumn15
             // 
             this.olvColumn15.AspectName = "t14";
-            // 
-            // test
-            // 
-            this.test.Location = new System.Drawing.Point(868, 9);
-            this.test.Name = "test";
-            this.test.Size = new System.Drawing.Size(68, 26);
-            this.test.TabIndex = 4;
-            this.test.Text = "Test";
-            this.test.UseVisualStyleBackColor = true;
-            this.test.Click += new System.EventHandler(this.test_Click);
-            // 
-            // use
-            // 
-            this.use.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.use.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.use.Location = new System.Drawing.Point(922, 351);
-            this.use.Name = "use";
-            this.use.Size = new System.Drawing.Size(75, 44);
-            this.use.TabIndex = 5;
-            this.use.Text = "Use it!";
-            this.use.UseVisualStyleBackColor = true;
-            this.use.Click += new System.EventHandler(this.use_Click);
-            // 
-            // help
-            // 
-            this.help.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.help.AutoSize = true;
-            this.help.Location = new System.Drawing.Point(877, 356);
-            this.help.Name = "help";
-            this.help.Size = new System.Drawing.Size(37, 17);
-            this.help.TabIndex = 6;
-            this.help.TabStop = true;
-            this.help.Text = "Help";
-            this.help.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.help_LinkClicked);
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 355);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 17);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Syntax:";
-            // 
-            // syntax
-            // 
-            this.syntax.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.syntax.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.syntax.Location = new System.Drawing.Point(80, 353);
-            this.syntax.Name = "syntax";
-            this.syntax.Size = new System.Drawing.Size(791, 21);
-            this.syntax.TabIndex = 8;
-            // 
-            // cancel
-            // 
-            this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancel.Location = new System.Drawing.Point(942, 10);
-            this.cancel.Name = "cancel";
-            this.cancel.Size = new System.Drawing.Size(68, 26);
-            this.cancel.TabIndex = 9;
-            this.cancel.Text = "Cancel";
-            this.cancel.UseVisualStyleBackColor = true;
-            this.cancel.Click += new System.EventHandler(this.cancel_Click);
-            // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(81, 377);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(220, 13);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Press Enter to Test, Escape to exit this dialog.";
             // 
             // olvColumn16
             // 

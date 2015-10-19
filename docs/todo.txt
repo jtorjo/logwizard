@@ -2,9 +2,6 @@
 - take some picture(s) with logwizard - to place on github
 
 -------------------------------------------------------
-- log_view: column width - hide columns with IsVisible property (needs RebuildColumns() !!!)
-  - i want this so that user can resize, and i should be able to save this
-  - do this for test_log_syntax form as well
 
 
 
@@ -35,7 +32,44 @@
 	-- at this point, i need to update the filter menu (based on whether current line matches the filters or not)
 
 
+
+
+
 - fg/bg: allow changing it (bug: fg does not work)
+
+- font: allow changing it
+
+- bug: drag drop a file from a different context -> not all view names (in tabcontrol) are changed
+
+- bug: selecting a word and pressing f3 will take you correctly, but will select the former selection as well
+- bug: selecting something with arrow right, and then pressing arrow left will select an extra char from left instead of acting as backspace
+
+- bug notes export: they are not sorted by id when expoted
+- bug: next bookmark does not sync with full log
+
+- parse by line "xx: yy", and empty line is end-of-record
+  = take care of the case when we read a partial entry
+
+- bug: click Test -> it will show the old syntax - not what we've computed (overridden)
+
+- bug : click Test - when pasting - i should check for any type of enter not just \r\n
+
+- bug: allow selecting text with the mouse (not just shift-arrows)
+
+- bug: tn2 bet tab - select preflop, set match color , it will somehow override the color
+
+- bug: 'New' does not work
+
+- log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)
+  - i need to save this only if the user changes something
+  - this needs to be per each view + for full log
+  - i need an easy way to allow showing / hiding columns 
+    - this needs to be expandable so that in the future i can do the same for details pane.
+	- see if anything like this is allowed by default by the control
+
+
+
+
 
 
 
@@ -72,33 +106,6 @@
 
 
 
-- font: allow changing it
-
-- bug: drag drop a file from a different context -> not all view names (in tabcontrol) are changed
-
-- bug: selecting a word and pressing f3 will take you correctly, but will select the former selection as well
-- bug: selecting something with arrow right, and then pressing arrow left will select an extra char from left instead of acting as backspace
-
-- bug notes export: they are not sorted by id when expoted
-- bug: next bookmark does not sync with full log
-
-- parse by line "xx: yy", and empty line is end-of-record
-  = take care of the case when we read a partial entry
-
-- bug: click Test -> it will show the old syntax - not what we've computed (overridden)
-
-- bug : click Test - when pasting - i should check for any type of enter not just \r\n
-
-- bug: allow selecting text with the mouse (not just shift-arrows)
-
-- bug: tn2 bet tab - select preflop, set match color , it will somehow override the color
-
-- log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)
-  - i need to save this only if the user changes something
-  - this needs to be per each view + for full log
-  - i need an easy way to allow showing / hiding columns 
-    - this needs to be expandable so that in the future i can do the same for details pane.
-	- see if anything like this is allowed by default by the control
 
 
 

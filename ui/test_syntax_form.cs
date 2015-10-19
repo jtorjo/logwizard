@@ -114,6 +114,7 @@ namespace LogWizard.ui {
             InitializeComponent();
             test.Left = -100;
             cancel.Left = -100;
+            initial_lines = util.normalize_enters(initial_lines);
             use_lines(initial_lines);
         }
 
@@ -134,6 +135,7 @@ namespace LogWizard.ui {
                 text = Clipboard.GetText();
             } catch {
             }
+            text = util.normalize_enters(text);
             if (text.Split('\r').Length < LEAST_LINES)
                 return;
 
@@ -148,6 +150,7 @@ namespace LogWizard.ui {
         }
 
         private void use_lines(string lines_str) {
+
             lines.Text = lines_str;
             syntax.Text = new find_log_syntax().try_find_log_syntax(lines_str.Split( new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries) );
             syntax.SelectionStart = syntax.TextLength;
@@ -162,6 +165,7 @@ namespace LogWizard.ui {
         }
 
         private void test_Click(object sender, EventArgs e) {
+            result.Enabled = false;
             result.ClearObjects();
 
             // parse each line
@@ -169,11 +173,14 @@ namespace LogWizard.ui {
             while (!parse.up_to_date)
                 Thread.Sleep(10);
 
-            foreach (var col in result.Columns) {
-                var header = col as OLVColumn;
-                header.Width = header.Index == (int) info_type.msg ? 90 : 0;
-                header.FillsFreeSpace = header.Index == (int) info_type.msg;
+            for (int col_idx = 0; col_idx < result.AllColumns.Count; col_idx++) {
+                var header = result.AllColumns[col_idx];
+
+                header.Width = col_idx > 0 ? 100 : 0;
+                header.FillsFreeSpace = col_idx == (int) info_type.msg;
+                header.IsVisible = col_idx == (int) info_type.msg;
             }
+            result.RebuildColumns();
 
             for (int idx = 0; idx < parse.line_count; ++idx) {
                 var l = parse.line_at(idx);
@@ -184,19 +191,22 @@ namespace LogWizard.ui {
                 result.AddObject(new item(cols));
             }
 
-            foreach (var col in result.Columns) {
-                var header = col as OLVColumn;
+            for (int col_idx = 0; col_idx < result.AllColumns.Count; col_idx++) {
+                var header = result.AllColumns[col_idx];
+
                 bool column_visible = false;
                 for (int idx = 0; idx < result.GetItemCount() && !column_visible; ++idx)
-                    if ((result.GetItem(idx).RowObject as item).part(header.Index) != "")
+                    if ((result.GetItem(idx).RowObject as item).part(col_idx) != "")
                         column_visible = true;
 
                 if (column_visible) {
-                    if ( header.Width < 1)
-                        header.Width = 90;
-                    header.Text = column_name(header.Index);
+                    header.Width = 100;
+                    header.IsVisible = true;
+                    header.Text = column_name(col_idx);
                 }
             }
+            result.RebuildColumns();
+            result.Enabled = true;
         }
 
         private void result_SelectedIndexChanged(object sender, EventArgs e) {
