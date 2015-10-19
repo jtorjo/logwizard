@@ -4,7 +4,7 @@
 -------------------------------------------------------
 - log_view: column width - hide columns with IsVisible property (needs RebuildColumns() !!!)
   - i want this so that user can resize, and i should be able to save this
-
+  - do this for test_log_syntax form as well
 
 
 
@@ -89,8 +89,7 @@
 
 
 
-
-
+- use "fch = FindFirstChangeNotification (szNewPath, FALSE, FILE_NOTIFY_CHANGE_SIZE);" => to monitor for file changes ???
 
 
 

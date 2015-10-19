@@ -16,8 +16,9 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>olv-keyfile.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
     <TargetFrameworkProfile />
     <SccProjectName>
     </SccProjectName>
@@ -174,9 +175,6 @@
     <None Include="Resources\filter.png" />
     <None Include="Resources\clear-filter.png" />
     <None Include="Resources\filter-icons3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="olv-keyfile.snk" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
