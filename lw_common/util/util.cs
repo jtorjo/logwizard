@@ -324,6 +324,12 @@ namespace lw_common {
             // milliseconds after "."
             time = time.Replace(',', '.');
 
+            // 1.3.11+ recognizes times such as 15:30:46(031) or 15:30:46[043]
+            int sep_bracket = time.IndexOf('('), sep_square_bracket = time.IndexOf('[');
+            if (sep_bracket >= 0 || sep_square_bracket >= 0) 
+                time = time.Replace(sep_bracket >= 0 ? '(' : '[', '.').Replace(sep_bracket >= 0 ? ")" : "]" , "");
+            
+
             // in this case, just hh:mm
             if (time.Count(c => c == ':') == 1) {
                 int sep0 = time.IndexOf(':');
