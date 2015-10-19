@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BrightIdeasSoftware</RootNamespace>
-    <AssemblyName>ObjectListView</AssemblyName>
+    <AssemblyName>ObjectListView_lw</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -38,7 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>1</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Debug\ObjectListView.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\ObjectListView_lw.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,7 +48,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\ObjectListView.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />

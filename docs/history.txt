@@ -1,4 +1,6 @@
 
+1.3.17
+
 
 1.3.16
 - encoding: if not found by parsing the header of the log, use the system default
