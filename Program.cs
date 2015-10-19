@@ -27,6 +27,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using log4net;
 using lw_common;
 
 namespace LogWizard
@@ -59,12 +60,30 @@ namespace LogWizard
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            log4net.Config.XmlConfigurator.Configure( new FileInfo("LogWizard.exe.config"));
-            util.force_break_into_debugger();
-            util.init_exceptions();
 
             // uncomment this to test how we'd behave in release
-            // util.is_debug = false;
+            //util.is_debug = false;
+
+            if (!util.is_debug) {
+                Environment.CurrentDirectory = local_dir();
+                try {
+                    if (!File.Exists("logwizard_user.txt"))
+                        File.Copy("logwizard.txt", "logwizard_user.txt");
+                } catch {
+                }
+            }
+
+            try {
+                File.Delete("LogWizard.log");
+            } catch {}
+            log4net.Config.XmlConfigurator.Configure( new FileInfo("lw.config"));
+            var logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            logger.Info("logging initialized, cur dir is " + Environment.CurrentDirectory );
+            
+            app.inst.init( new settings_file(util.is_debug ? "logwizard_debug.txt" : "logwizard_user.txt") );
+
+            util.force_break_into_debugger();
+            util.init_exceptions();
 
             // if "Open With" and LogWizard is already running -> send this to the existing running application
             // the reason for this: if multiple instances running, they can mess up the settings file - we don't want that!
@@ -89,13 +108,6 @@ namespace LogWizard
                     return;
                 }
             }
-
-            if (!util.is_debug) {
-                Environment.CurrentDirectory = local_dir();
-                if ( !File.Exists("logwizard_user.txt"))
-                    File.Copy("logwizard.txt", "logwizard_user.txt");
-            }
-            app.inst.init( new settings_file(util.is_debug ? "logwizard_debug.txt" : "logwizard_user.txt") );
 
             if (args.Length > 0 && args[0] == "showsample") {
                 try {

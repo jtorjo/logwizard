@@ -89,7 +89,9 @@
 
 - bug : click Test - when pasting - i should check for any type of enter not just \r\n
 
+- bug: allow selecting text with the mouse (not just shift-arrows)
 
+- bug: tn2 bet tab - select preflop, set match color , it will somehow override the color
 
 - log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)
   - i need to save this only if the user changes something

@@ -1,6 +1,15 @@
 
-1.3.17
+1.3.21
+- added log4net - an OLDER version
+  - it's so AMAZING how newer versions seem to mess things up :D
+  - the problem with the newer version - i would change the dir to %appdata%\logwizard, init logging, but the log file would be nowhere to be found
+    it would probably try to write to Program Files, EVEN THOUGH I CHANGED THE CURRENT DIR.
+	So, this old version works
+	- And that my friends, is how your hair slowly turns LightGray...
 
+
+1.3.17
+- renamed objectlistview.dll so that it doesn't clash with an existing install
 
 1.3.16
 - encoding: if not found by parsing the header of the log, use the system default
