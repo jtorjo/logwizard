@@ -34,6 +34,12 @@
 
 	-- at this point, i need to update the filter menu (based on whether current line matches the filters or not)
 
+
+- fg/bg: allow changing it (bug: fg does not work)
+
+
+
+
   *************perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
 
 - filter regex: RegexOptions.Singleline
@@ -79,6 +85,12 @@
 - parse by line "xx: yy", and empty line is end-of-record
   = take care of the case when we read a partial entry
 
+- bug: click Test -> it will show the old syntax - not what we've computed (overridden)
+
+- bug : click Test - when pasting - i should check for any type of enter not just \r\n
+
+
+
 - log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)
   - i need to save this only if the user changes something
   - this needs to be per each view + for full log
@@ -87,9 +99,6 @@
 	- see if anything like this is allowed by default by the control
 
 
-
-
-- use "fch = FindFirstChangeNotification (szNewPath, FALSE, FILE_NOTIFY_CHANGE_SIZE);" => to monitor for file changes ???
 
 
 
@@ -106,6 +115,13 @@
 
 		I'm talking about really analyzing your log - to understand what actually happened. Filtering through the log, picking the right information, until you find out what let to the bug/problem.
 
+
+
+
+
+- use "fch = FindFirstChangeNotification (szNewPath, FALSE, FILE_NOTIFY_CHANGE_SIZE);" => to monitor for file changes ???
+
+- allow mouse scrolling
 
 
 

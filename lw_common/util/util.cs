@@ -522,8 +522,8 @@ namespace lw_common {
                 if (!detected.Equals( Encoding.Default))
                     return detected;
 
-                // assume UTF8 by default
-                return Encoding.UTF8;
+                // use user's default
+                return Encoding.Default;
             } catch {
                 return null;
             }            
