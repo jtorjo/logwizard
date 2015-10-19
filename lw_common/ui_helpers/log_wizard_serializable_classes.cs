@@ -24,6 +24,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Windows.Forms;
+using LogWizard;
 
 namespace lw_common {
     [Serializable]
@@ -115,6 +116,10 @@ namespace lw_common {
 
         public bool has_not_empty_views {
             get {
+                if (default_syntax != "" && default_syntax != find_log_syntax.UNKNOWN_SYNTAX)
+                    // user just set the syntax - very likely he'll use this file in the future
+                    return true;
+
                 if (views.Count < 1)
                     return false;
                 // in this case, we have a single view
