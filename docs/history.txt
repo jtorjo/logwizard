@@ -1,4 +1,8 @@
 
+1.3.22
+- log4net - use original version
+
+
 1.3.21
 - added log4net - an OLDER version
   - it's so AMAZING how newer versions seem to mess things up :D
