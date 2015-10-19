@@ -1,4 +1,7 @@
 
+1.3.13
+- generated setup kit
+
 1.3.11e
 - fix: remember the log syntax, once the user changes it
 
