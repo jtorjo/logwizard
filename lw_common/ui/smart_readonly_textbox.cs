@@ -152,7 +152,7 @@ namespace lw_common.ui {
             Size = new Size(bounds.Width, bounds.Height);
             Font = parent_.list.Font;
 
-            log_view.item i = parent_.sel;
+            log_view.match_item i = parent_.sel;
             ForeColor = i.fg(parent_);
             BackColor = i.sel_bg(parent_);
 

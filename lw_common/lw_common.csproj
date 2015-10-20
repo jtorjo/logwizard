@@ -83,19 +83,19 @@
       <DependentUpon>filter_ctrl.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\gradient_brush_list.cs" />
-    <Compile Include="ui\log_view.cs">
+    <Compile Include="ui\log_view\log_view.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ui\log_view.Designer.cs">
+    <Compile Include="ui\log_view\log_view.Designer.cs">
       <DependentUpon>log_view.cs</DependentUpon>
     </Compile>
-    <Compile Include="ui\log_view_cell.cs" />
-    <Compile Include="ui\log_view_item_draw_ui.cs" />
-    <Compile Include="ui\log_view_parent.cs" />
-    <Compile Include="ui\log_view_render.cs">
+    <Compile Include="ui\log_view\log_view_cell.cs" />
+    <Compile Include="ui\log_view\log_view_item_draw_ui.cs" />
+    <Compile Include="ui\log_view\log_view_parent.cs" />
+    <Compile Include="ui\log_view\log_view_render.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ui\log_view_right_click.cs" />
+    <Compile Include="ui\log_view\log_view_right_click.cs" />
     <Compile Include="ui\msg_details_ctrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -156,7 +156,7 @@
     <EmbeddedResource Include="ui\filter_ctrl.resx">
       <DependentUpon>filter_ctrl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ui\log_view.resx">
+    <EmbeddedResource Include="ui\log_view\log_view.resx">
       <DependentUpon>log_view.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\msg_details_ctrl.resx">

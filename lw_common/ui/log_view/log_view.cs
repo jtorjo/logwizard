@@ -62,11 +62,11 @@ namespace lw_common
         // and one here, full of pointers
         //
         // for large files, this can add up to a LOT of memory
-        internal class item : filter.match {
+        internal class match_item : filter.match {
 
             public Color override_bg = util.transparent, override_fg = util.transparent;
 
-            public item(BitArray matches, filter_line.font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx) {
+            public match_item(BitArray matches, filter_line.font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx) {
             }
 
             public int line {
@@ -312,10 +312,10 @@ namespace lw_common
         };
 
         // the reason we have this class - is for memory eficiency - since all views (except full log) don't need the info here
-        private class full_log_item : item {
+        private class full_log_match_item : match_item {
             private readonly log_view parent_ = null;
 
-            public full_log_item(BitArray matches, filter_line.font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx, parent) {
+            public full_log_match_item(BitArray matches, filter_line.font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx, parent) {
                 Debug.Assert(parent != null);
                 parent_ = parent;
             }
@@ -345,7 +345,7 @@ namespace lw_common
             }
 
             public override int GetObjectIndex(object model) {
-                return items_.index_of(model as item);
+                return items_.index_of(model as match_item);
             }
 
             public override object GetNthObject(int n) {
@@ -438,7 +438,7 @@ namespace lw_common
         }
 
         private filter.match create_match_object(BitArray matches, filter_line.font_info font, line line, int lineIdx) {
-            return is_full_log ? new full_log_item(matches, font, line, lineIdx, this) : new item(matches, font, line, lineIdx, this);
+            return is_full_log ? new full_log_match_item(matches, font, line, lineIdx, this) : new match_item(matches, font, line, lineIdx, this);
         }
 
         public override string ToString() {
@@ -527,7 +527,7 @@ namespace lw_common
             }
         }
 
-        internal item sel {
+        internal match_item sel {
             get {
                 int idx = sel_row_idx;
                 if (idx >= 0)
@@ -777,8 +777,8 @@ namespace lw_common
             return null;
         }
 
-        private item match_at(int idx) {
-            return filter_.matches.match_at(idx) as item;
+        private match_item match_at(int idx) {
+            return filter_.matches.match_at(idx) as match_item;
         }
 
 
@@ -895,11 +895,11 @@ namespace lw_common
             return false;
         }
 
-        string cell_value(item i, int column_idx) {
+        string cell_value(match_item i, int column_idx) {
             return log_view_cell.cell_value(i, column_idx);
         }
 
-        private string cell_value_by_type(item i, info_type type) {
+        private string cell_value_by_type(match_item i, info_type type) {
             return log_view_cell.cell_value_by_type(i, type);
         }
 
@@ -1061,16 +1061,16 @@ namespace lw_common
 
 
         private bool has_found_colors(int row_idx, log_view other_log, bool is_sel) {
-            var i = match_at(row_idx) as full_log_item;
+            var i = match_at(row_idx) as full_log_match_item;
 
             int line_idx = i.match.line_idx;
-            item found_line = null;
+            match_item found_line = null;
             switch (app.inst.syncronize_colors) {
             case app.synchronize_colors_type.none: // nothing to do
                 i.override_fg = Color.Black;
                 return true;
             case app.synchronize_colors_type.with_current_view:
-                found_line = other_log.filter_.matches.binary_search(line_idx).Item1 as item;
+                found_line = other_log.filter_.matches.binary_search(line_idx).Item1 as match_item;
                 if (found_line != null) {
                     i.override_bg = found_line.bg(this);
                     i.override_fg = found_line.fg(this);
@@ -1078,7 +1078,7 @@ namespace lw_common
                 }
                 break;
             case app.synchronize_colors_type.with_all_views:
-                found_line = other_log.filter_.matches.binary_search(line_idx).Item1 as item;
+                found_line = other_log.filter_.matches.binary_search(line_idx).Item1 as match_item;
                 if (found_line != null) {
                     Color bg = found_line.bg(this), fg = found_line.fg(this);
                     if (app.inst.sync_colors_all_views_gray_non_active && !is_sel)
@@ -1098,7 +1098,7 @@ namespace lw_common
         private void update_colors_for_line(int row_idx, List<log_view> other_logs, int sel_idx, ref bool needed_refresh) {
             Debug.Assert(other_logs.Count > 0 && sel_idx < other_logs.Count);
 
-            var i = match_at(row_idx) as full_log_item;
+            var i = match_at(row_idx) as full_log_match_item;
             i.override_bg = filter_line.font_info.full_log_gray.bg;
             i.override_fg = filter_line.font_info.full_log_gray.fg;
 
@@ -1235,7 +1235,7 @@ namespace lw_common
         }
 
         private void list_FormatRow_1(object sender, FormatRowEventArgs e) {
-            item i = e.Item.RowObject as item;
+            match_item i = e.Item.RowObject as match_item;
             if (i != null) {
                 e.Item.BackColor = i.bg(this);
                 e.Item.ForeColor = i.fg(this);
@@ -1507,7 +1507,7 @@ namespace lw_common
             cur_filter_row_idx_ = -1;
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
-                item i = match_at(idx);
+                match_item i = match_at(idx);
                 i.override_fg = util.transparent;
                 i.override_bg = util.transparent;
             }
@@ -1600,7 +1600,7 @@ namespace lw_common
             edit.escape();
 
             select_idx(0, select_type.notify_parent);
-            item i = match_at(0);
+            match_item i = match_at(0);
             bool include_row_zero = sel_row_idx == 0 || sel_row_idx == -1;
             if (include_row_zero && string_search.matches(i.match.line.part(info_type.msg), cur_search_)) {
                 // line zero contains the text already
@@ -1631,7 +1631,7 @@ namespace lw_common
                     continue;
                 }
 
-                item i = match_at(idx);
+                match_item i = match_at(idx);
                 if (string_search.matches(i.match.line.part(info_type.msg), cur_search_))
                     found = idx;
             }
@@ -1663,7 +1663,7 @@ namespace lw_common
                     continue;
                 }
 
-                item i = match_at(idx);
+                match_item i = match_at(idx);
                 if (string_search.matches(i.match.line.part(info_type.msg), cur_search_))
                     found = idx;
             }
@@ -1679,7 +1679,7 @@ namespace lw_common
             bool needs_refresh = false;
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
-                item i = match_at(idx);
+                match_item i = match_at(idx);
                 bool is_match = filter_row_idx >= 0 && i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                 bool needs_change = (is_match && (i.override_fg.ToArgb() != fg.ToArgb() || i.override_bg.ToArgb() != bg.ToArgb())) || (!is_match && (i.override_fg != util.transparent || i.override_bg != util.transparent));
 
@@ -1701,7 +1701,7 @@ namespace lw_common
             int found = -1;
             int next_row = sel_row_idx >= 0 ? sel_row_idx + 1 : 0;
             for (int idx = next_row; idx < count && found < 0; ++idx) {
-                item i = match_at(idx);
+                match_item i = match_at(idx);
                 bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                 if (is_match)
                     found = idx;
@@ -1720,7 +1720,7 @@ namespace lw_common
             int found = -1;
             int prev_row = sel_row_idx >= 0 ? sel_row_idx - 1 : filter_.match_count - 1;
             for (int idx = prev_row; idx >= 0 && found < 0; --idx) {
-                item i = match_at(idx);
+                match_item i = match_at(idx);
                 bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                 if (is_match)
                     found = idx;
@@ -1738,7 +1738,7 @@ namespace lw_common
 
             int row_idx = 0;
             foreach (int idx in indices) {
-                item i = match_at(idx);
+                match_item i = match_at(idx);
 
                 int visible_idx = 0;
                 string font = list.Font.Name;
@@ -1999,7 +1999,7 @@ namespace lw_common
 
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
-                item i = match_at(idx);
+                match_item i = match_at(idx);
 
                 int visible_idx = 0;
                 string font = list.Font.Name;

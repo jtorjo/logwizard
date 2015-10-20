@@ -27,7 +27,7 @@ using BrightIdeasSoftware;
 
 namespace lw_common.ui {
     internal class log_view_cell {
-        internal static string cell_value(log_view.item i, int column_idx) {
+        internal static string cell_value(log_view.match_item i, int column_idx) {
             switch (column_idx) {
             case 0:
                 return "" + i.line;
@@ -90,7 +90,7 @@ namespace lw_common.ui {
             }
         }
 
-        internal static string cell_value_by_type(log_view.item i, info_type type) {
+        internal static string cell_value_by_type(log_view.match_item i, info_type type) {
             switch (type) {
             case info_type.msg:
                 return i.msg;

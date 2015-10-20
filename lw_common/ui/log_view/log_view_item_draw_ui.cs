@@ -104,7 +104,7 @@ namespace lw_common.ui {
         }
 
         public Color print_bg_color(OLVListItem item, print_info print) {
-            log_view.item i = item.RowObject as log_view.item;            
+            log_view.match_item i = item.RowObject as log_view.match_item;            
             Color bg = print.bg != util.transparent ? print.bg : util.darker_color( i.bg(parent_) );
             return bg;
         }
@@ -114,7 +114,7 @@ namespace lw_common.ui {
         }
 
         public Color print_fg_color(OLVListItem item, print_info print) {
-            log_view.item i = item.RowObject as log_view.item;            
+            log_view.match_item i = item.RowObject as log_view.match_item;            
             Color fg = i.fg(parent_);
             Color print_fg = print.fg != util.transparent ? print.fg : fg;
             return print_fg;
@@ -125,7 +125,7 @@ namespace lw_common.ui {
         }
 
         public Color bg_color(OLVListItem item, int col_idx) {
-            log_view.item i = item.RowObject as log_view.item;
+            log_view.match_item i = item.RowObject as log_view.match_item;
             int row_idx = item.Index;
 
             Color color;
@@ -155,7 +155,7 @@ namespace lw_common.ui {
         }
 
         public Brush bg_brush(OLVListItem item, int col_idx) {
-            log_view.item i = item.RowObject as log_view.item;
+            log_view.match_item i = item.RowObject as log_view.match_item;
             int row_idx = item.Index;
 
             if (col_idx == parent_.msgCol.Index) {
