@@ -17,6 +17,11 @@
   - while disabled, ignore any toggling
 
 
+1.3.26i
+- implementing allowing toggles for view - step 9
+  - full log - colors are updated real time- much much better than before!
+
+
 1.3.26h
 - implementing allowing toggles for view - step 8
   - changed log_view.update_colors_for_line so that I can use it directly from match_full_item

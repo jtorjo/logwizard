@@ -54,5 +54,7 @@ namespace lw_common.ui {
 
         List<Tuple<string, int>> other_views_containing_this_line(int row_idx);
         void go_to_view(int view_idx);
+
+        Tuple<Color, Color> full_log_row_colors(int line_idx);
     }
 }

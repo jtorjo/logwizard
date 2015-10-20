@@ -158,6 +158,15 @@
 
 
 
+- bug:	I opened a file, A.txt, in LW.
+		Then I copied that to A-copy.txt.  So I have A.txt and A-copy.txt.
+		Then deleted A.txt.
+		So, LW now clears the display for A.txt.
+		So far so good.
+		Next, I renamed A-copy.txt to A.txt.
+		This rename is a kind of file update.
+		So, I expected LW to update the display, but it does not.
+		Even Refresh doesn't work.
 
 
 

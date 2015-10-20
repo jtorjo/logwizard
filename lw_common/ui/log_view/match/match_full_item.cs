@@ -43,11 +43,11 @@ namespace lw_common.ui {
         }
 
         public override Color fg(log_view parent) {
-            return base.fg(parent);
+            return parent.lv_parent.full_log_row_colors(line_idx).Item1;
         }
 
         public override Color bg(log_view parent) {
-            return base.bg(parent);
+            return parent.lv_parent.full_log_row_colors(line_idx).Item2;
         }
     }
 

@@ -163,8 +163,7 @@ namespace LogWizard
             filtCtrl.on_rerun_view = (view_idx) => refreshFilter_Click(null, null);
             filtCtrl.on_refresh_view = (view_idx) => {
                 log_view_for_tab(view_idx).Refresh();
-                if (global_ui.show_fulllog) 
-                    sync_full_log_colors(true /* force refresh */);
+                full_log.Refresh();
             };
             filtCtrl.mark_match = (filter_idx) => {
                 var lv = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
@@ -748,13 +747,6 @@ namespace LogWizard
             int cur_view = viewsTab.SelectedIndex;
             if (cur_view < cur.views.Count) 
                 filtCtrl.view_to_ui( cur.views[cur_view], cur_view);
-
-            sync_full_log_colors();
-        }
-
-        private void sync_full_log_colors(bool force_refresh = false) {
-            if (full_log_ctrl_ != null && global_ui.show_fulllog ) 
-                full_log_ctrl_.update_colors(all_log_views(), viewsTab.SelectedIndex, force_refresh);
         }
 
         private void save_filters() {
@@ -981,6 +973,13 @@ namespace LogWizard
             util.postpone(() => {
                 selected_view().go_to_closest_line(line_idx, log_view.select_type.do_not_notify_parent);
             }, 100);
+        }
+
+        public Tuple<Color, Color> full_log_row_colors(int line_idx) {
+            int sel = viewsTab.SelectedIndex;
+            int row_idx = full_log.line_to_row(line_idx);
+            Debug.Assert(row_idx >= 0);
+            return full_log. update_colors_for_line(row_idx, all_log_views(), sel);
         }
 
         public static List<log_wizard> forms {
@@ -1271,7 +1270,6 @@ namespace LogWizard
                 update_msg_details(false);
                 refresh_filter_found();
             }
-            sync_full_log_colors();
 
             if (text_.has_it_been_rewritten)
                 on_rewritten_log();
@@ -1363,11 +1361,9 @@ namespace LogWizard
             var sel = selected_view();
             update_notes_current_line();
 
-            if (sel == full_log_ctrl_) {
-                sync_full_log_colors(true);
+            if (sel == full_log_ctrl_)                 
                 return;
-            }
-
+            
             on_log_changed_line_do_sync(sel.sel_line_idx, sel);
 
             global_ui.selected_row_idx = global_ui.selected_row_idx = sel.sel_row_idx;
@@ -1396,7 +1392,6 @@ namespace LogWizard
             if (global_ui.show_fulllog) {
                 if (from != full_log_ctrl_ && app.inst.sync_full_log_view)
                     full_log_ctrl_.go_to_row(line_idx, log_view.select_type.do_not_notify_parent);
-                sync_full_log_colors(true);
             }
 
             bool keep_all_in_sync = (from != full_log_ctrl_ && app.inst.sync_all_views) ||
@@ -2570,7 +2565,7 @@ namespace LogWizard
 
             bool sync_changed = app.inst.syncronize_colors != old_sync_colors || old_sync_gray != app.inst.sync_colors_all_views_gray_non_active;
             if (sync_changed)
-                sync_full_log_colors();
+                full_log.Refresh();
 
             filtCtrl.update_colors();
         }

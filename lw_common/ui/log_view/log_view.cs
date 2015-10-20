@@ -827,7 +827,7 @@ namespace lw_common.ui
             return new Tuple<bool, Color, Color>(false, util.transparent, util.transparent);
         }
 
-        private Tuple<Color,Color> update_colors_for_line(int row_idx, List<log_view> other_logs, int sel_idx) {
+        public Tuple<Color,Color> update_colors_for_line(int row_idx, List<log_view> other_logs, int sel_idx) {
             Debug.Assert(other_logs.Count > 0 && sel_idx < other_logs.Count);
 
             Tuple<bool, Color, Color> found_colors = null;
@@ -877,37 +877,6 @@ namespace lw_common.ui
                 top_idx = 0;
 
             return new Tuple<int, int>(top_idx, bottom_idx);
-        }
-
-        public void update_colors(List<log_view> other_logs, int sel_log_view_idx, bool force_refresh = false) {
-            Debug.Assert(is_full_log);
-
-            int PAD = 5;
-            var top = list.GetItemAt(PAD, list.HeaderControl.ClientRectangle.Height + PAD);
-            if (top == null)
-                return;
-            int top_idx = top.Index;
-            int height = list.Height - list.HeaderControl.ClientRectangle.Height;
-            int row_height = top.Bounds.Height;
-            int rows_per_page = height / row_height;
-
-            int JUST_IN_CASE = 3;
-            int bottom_idx = top_idx + rows_per_page + JUST_IN_CASE;
-            top_idx -= JUST_IN_CASE;
-            if (top_idx < 0)
-                top_idx = 0;
-
-            for (int idx = top_idx; idx <= bottom_idx; ++idx)
-                if (idx < filter_.matches.count) {
-                    var colors = update_colors_for_line(idx, other_logs, sel_log_view_idx);
-
-                    var i = match_at(idx) as full_log_match_item;
-                    i.override_fg = colors.Item1;
-                    i.override_bg = colors.Item2;
-                }
-
-            if (force_refresh)
-                list.Refresh();
         }
 
         // specifies the name of selected view (on the right pane)
@@ -1053,7 +1022,11 @@ namespace lw_common.ui
         }
 
         public bool contains_line(int line_idx) {
-            return filter_.matches.binary_search(line_idx).Item1 != null;
+            return line_to_row(line_idx) >= 0;
+        }
+        // -1 means it's not found
+        public int line_to_row(int line_idx) {
+            return filter_.matches.binary_search(line_idx).Item2;
         }
 
         public void go_to_closest_line(int line_idx, select_type notify) {
