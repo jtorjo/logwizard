@@ -379,7 +379,7 @@ namespace lw_common.ui
             get { return model_.item_count; }
         }
 
-        // further filtering
+        // further filtering (toggle)
         private bool item_filter(match_item item, bool applied_on_full_log) {
             string sel_text = edit.sel_text;
             if (cur_search_ == null && sel_text == "")
