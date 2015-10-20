@@ -40,87 +40,34 @@ namespace lw_common.ui {
         public match_item(BitArray matches, filter_line.font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx) {
         }
 
-        public int line {
-            get { return base.line_idx + 1; }
-        }
+        public int line { get { return base.line_idx + 1; }}
+        public string date { get { return base.line.part(info_type.date); }}
+        public string time { get { return base.line.part(info_type.time); }}
+        public string level { get { return base.line.part(info_type.level); }}
+        public string msg { get { return base.line.part(info_type.msg); }}
 
-        public virtual string view {
-            get { return ""; }
-        }
+        public string file { get { return base.line.part(info_type.file); }}
+        public string func { get { return base.line.part(info_type.func); }}
+        public string class_ { get { return base.line.part(info_type.class_); }}
+        public string ctx1 { get { return base.line.part(info_type.ctx1); }}
+        public string ctx2 { get { return base.line.part(info_type.ctx2); }}
+        public string ctx3 { get { return base.line.part(info_type.ctx3); }}
 
-        public string date {
-            get { return base.line.part(info_type.date); }
-        }
-        public string time {
-            get { return base.line.part(info_type.time); }
-        }
-        public string level {
-            get { return base.line.part(info_type.level); }
-        }
-        public string msg {
-            get { return base.line.part(info_type.msg); }
-        }
+        public string ctx4 { get { return base.line.part(info_type.ctx4); }}
+        public string ctx5 { get { return base.line.part(info_type.ctx5); }}
+        public string ctx6 { get { return base.line.part(info_type.ctx6); }}
+        public string ctx7 { get { return base.line.part(info_type.ctx7); }}
+        public string ctx8 { get { return base.line.part(info_type.ctx8); }}
+        public string ctx9 { get { return base.line.part(info_type.ctx9); }}
+        public string ctx10 { get { return base.line.part(info_type.ctx10); }}
+        public string ctx11 { get { return base.line.part(info_type.ctx11); }}
+        public string ctx12 { get { return base.line.part(info_type.ctx12); }}
+        public string ctx13 { get { return base.line.part(info_type.ctx13); }}
+        public string ctx14 { get { return base.line.part(info_type.ctx14); }}
+        public string ctx15 { get { return base.line.part(info_type.ctx15); }}
+        public string thread { get { return base.line.part(info_type.thread); }}
 
-        public string file {
-            get { return base.line.part(info_type.file); }
-        }
-        public string func {
-            get { return base.line.part(info_type.func); }
-        }
-        public string class_ {
-            get { return base.line.part(info_type.class_); }
-        }
-        public string ctx1 {
-            get { return base.line.part(info_type.ctx1); }
-        }
-        public string ctx2 {
-            get { return base.line.part(info_type.ctx2); }
-        }
-        public string ctx3 {
-            get { return base.line.part(info_type.ctx3); }
-        }
-
-        public string ctx4 {
-            get { return base.line.part(info_type.ctx4); }
-        }
-        public string ctx5 {
-            get { return base.line.part(info_type.ctx5); }
-        }
-        public string ctx6 {
-            get { return base.line.part(info_type.ctx6); }
-        }
-        public string ctx7 {
-            get { return base.line.part(info_type.ctx7); }
-        }
-        public string ctx8 {
-            get { return base.line.part(info_type.ctx8); }
-        }
-        public string ctx9 {
-            get { return base.line.part(info_type.ctx9); }
-        }
-        public string ctx10 {
-            get { return base.line.part(info_type.ctx10); }
-        }
-        public string ctx11 {
-            get { return base.line.part(info_type.ctx11); }
-        }
-        public string ctx12 {
-            get { return base.line.part(info_type.ctx12); }
-        }
-        public string ctx13 {
-            get { return base.line.part(info_type.ctx13); }
-        }
-        public string ctx14 {
-            get { return base.line.part(info_type.ctx14); }
-        }
-        public string ctx15 {
-            get { return base.line.part(info_type.ctx15); }
-        }
-
-
-        public string thread {
-            get { return base.line.part(info_type.thread); }
-        }
+        public virtual string view { get { return ""; }}
 
         public Color sel_bg(log_view parent) {
             var bg = this.bg(parent);
@@ -131,21 +78,20 @@ namespace lw_common.ui {
             return is_focused ? darker_bg : dark_bg;
         }
 
-
-        public Color bg(log_view parent) {
-            if (parent.has_bookmark(base.line_idx))
-                return parent.bookmark_bg;
-            if (override_bg != util.transparent)
-                return override_bg;
-            return base.font.bg;
-        }
-
-        public Color fg(log_view parent) {
+        public virtual Color fg(log_view parent) {
             if (parent.has_bookmark(base.line_idx))
                 return parent.bookmark_fg;
             if (override_fg != util.transparent)
                 return override_fg;
-            return base.font.fg;
+            return font.fg;
+        }
+
+        public virtual Color bg(log_view parent) {
+            if (parent.has_bookmark(base.line_idx))
+                return parent.bookmark_bg;
+            if (override_bg != util.transparent)
+                return override_bg;
+            return font.bg;
         }
 
         private List<Tuple<int, int, print_info>> override_print_from_all_places(log_view parent, string text, int col_idx) {
@@ -195,7 +141,7 @@ namespace lw_common.ui {
             var print = override_print_from_all_places(parent, text, col_idx);
 
             // for testing only
-            var old_print = util.is_debug ? print.ToList() : null;
+            // var old_print = util.is_debug ? print.ToList() : null;
 
             // check for collitions
             bool collitions_found = true;

@@ -797,22 +797,19 @@ namespace lw_common.ui
         }
 
 
-        private bool has_found_colors(int row_idx, log_view other_log, bool is_sel) {
+        // if first item is true, we found colors, and the colors are item2 & 3
+        private Tuple<bool,Color,Color> has_found_colors(int row_idx, log_view other_log, bool is_sel) {
             var i = match_at(row_idx) as full_log_match_item;
 
             int line_idx = i.match.line_idx;
             match_item found_line = null;
             switch (app.inst.syncronize_colors) {
             case app.synchronize_colors_type.none: // nothing to do
-                i.override_fg = Color.Black;
-                return true;
+                return new Tuple<bool, Color, Color>(true, filter_line.font_info.default_font.fg, filter_line.font_info.default_font.bg);
             case app.synchronize_colors_type.with_current_view:
                 found_line = other_log.filter_.matches.binary_search(line_idx).Item1 as match_item;
-                if (found_line != null) {
-                    i.override_bg = found_line.bg(this);
-                    i.override_fg = found_line.fg(this);
-                    return true;
-                }
+                if (found_line != null) 
+                    return new Tuple<bool, Color, Color>(true, found_line.fg(this), found_line.bg(this));
                 break;
             case app.synchronize_colors_type.with_all_views:
                 found_line = other_log.filter_.matches.binary_search(line_idx).Item1 as match_item;
@@ -820,46 +817,47 @@ namespace lw_common.ui
                     Color bg = found_line.bg(this), fg = found_line.fg(this);
                     if (app.inst.sync_colors_all_views_gray_non_active && !is_sel)
                         fg = util.grayer_color(fg);
-                    i.override_bg = bg;
-                    i.override_fg = fg;
-                    return true;
+                    return new Tuple<bool, Color, Color>(true, fg, bg);
                 }
                 break;
             default:
                 Debug.Assert(false);
                 break;
             }
-            return false;
+            return new Tuple<bool, Color, Color>(false, util.transparent, util.transparent);
         }
 
-        private void update_colors_for_line(int row_idx, List<log_view> other_logs, int sel_idx, ref bool needed_refresh) {
+        private Tuple<Color,Color> update_colors_for_line(int row_idx, List<log_view> other_logs, int sel_idx) {
             Debug.Assert(other_logs.Count > 0 && sel_idx < other_logs.Count);
 
-            var i = match_at(row_idx) as full_log_match_item;
-            i.override_bg = filter_line.font_info.full_log_gray.bg;
-            i.override_fg = filter_line.font_info.full_log_gray.fg;
-
+            Tuple<bool, Color, Color> found_colors = null;
             switch (app.inst.syncronize_colors) {
             case app.synchronize_colors_type.none:
-                has_found_colors(row_idx, other_logs[0], false);
+                found_colors = has_found_colors(row_idx, other_logs[0], false);
                 break;
             case app.synchronize_colors_type.with_current_view:
-                has_found_colors(row_idx, other_logs[sel_idx], true);
+                found_colors = has_found_colors(row_idx, other_logs[sel_idx], true);
                 break;
             case app.synchronize_colors_type.with_all_views:
-                if (has_found_colors(row_idx, other_logs[sel_idx], true))
+                found_colors = has_found_colors(row_idx, other_logs[sel_idx], true);
+                if (found_colors.Item1)
                     break;
                 for (int idx = 0; idx < other_logs.Count; ++idx)
-                    if (idx != sel_idx)
-                        if (has_found_colors(row_idx, other_logs[idx], false))
+                    if (idx != sel_idx) {
+                        found_colors = has_found_colors(row_idx, other_logs[idx], false);
+                        if (found_colors.Item1)
                             break;
+                    }
                 break;
             default:
                 Debug.Assert(false);
                 break;
             }
-            if (update_line_color(row_idx))
-                needed_refresh = true;
+
+            if ( found_colors != null && found_colors.Item1)
+                return new Tuple<Color, Color>(found_colors.Item2, found_colors.Item3);
+
+            return new Tuple<Color, Color>( filter_line.font_info.full_log_gray.fg, filter_line.font_info.full_log_gray.bg );
         }
 
         // returns the rows that are visible
@@ -899,12 +897,16 @@ namespace lw_common.ui
             if (top_idx < 0)
                 top_idx = 0;
 
-            bool needs_refresh = false;
             for (int idx = top_idx; idx <= bottom_idx; ++idx)
-                if (idx < filter_.matches.count)
-                    update_colors_for_line(idx, other_logs, sel_log_view_idx, ref needs_refresh);
+                if (idx < filter_.matches.count) {
+                    var colors = update_colors_for_line(idx, other_logs, sel_log_view_idx);
 
-            if (needs_refresh || force_refresh)
+                    var i = match_at(idx) as full_log_match_item;
+                    i.override_fg = colors.Item1;
+                    i.override_bg = colors.Item2;
+                }
+
+            if (force_refresh)
                 list.Refresh();
         }
 
@@ -926,46 +928,6 @@ namespace lw_common.ui
                 // in this case, we failed to go to the last item - try again ASAP
                     util.postpone(go_last, 10);
             }
-        }
-
-        // returns true if it needed to refresh
-        // FIXME 1.2.7+ probably not needed anymore, we're doing all this when rendering
-        private bool update_line_color(int idx) {
-            return false;
-#if old_code
-            if (idx >= list.GetItemCount())
-                // in this case, the list hasn't fully refreshed - the filter contains more items than the list
-                return false;
-
-            var row = list.GetItem(idx);
-            item i = row.RowObject as item;
-
-            bool needed = false;
-            if (row.BackColor.ToArgb() != i.bg(this).ToArgb()) {
-                row.BackColor = i.bg(this);
-                needed = true;
-            }
-
-            if (row.ForeColor.ToArgb() != i.fg(this).ToArgb()) {
-                row.ForeColor = i.fg(this);
-                needed = true;
-            }
-            return needed;
-#endif
-        }
-
-        private void update_line_highlight_color(int idx) {
-            /* 1.0.88+ - we have the log_view_renderer for this
-
-            item i = match_at(idx) ;
-            if (i == null)
-                return;
-            list.UnfocusedHighlightBackgroundColor = util.darker_color(i.bg(this));
-            list.UnfocusedHighlightForegroundColor = i.fg(this);
-
-            list.HighlightBackgroundColor = util.darker_color(util.darker_color(i.bg(this)));
-            list.HighlightForegroundColor = i.fg(this);
-            */
         }
 
         private void list_FormatCell_1(object sender, FormatCellEventArgs e) {
@@ -999,7 +961,6 @@ namespace lw_common.ui
             if (row_idx >= 0 && row_idx < item_count) {
                 logger.Debug("[view] " + name + " sel=" + row_idx);
                 list.SelectedIndex = row_idx;
-                update_line_highlight_color(row_idx);
                 update_x_of_y();
             }
             select_nofify_ = select_type.notify_parent;
@@ -1424,7 +1385,6 @@ namespace lw_common.ui
                     i.override_fg = is_match ? fg : util.transparent;
                     i.override_bg = is_match ? bg : util.transparent;
                     needs_refresh = true;
-                    update_line_color(idx);
                 }
             }
             if (needs_refresh)
@@ -1555,20 +1515,14 @@ namespace lw_common.ui
 
             foreach (int idx in old) {
                 var row = row_by_line_idx(idx);
-                if (row != null) {
-                    update_line_color(row.Index);
+                if (row != null) 
                     list.RefreshItem(row);
-                }
             }
             foreach (int idx in new_) {
                 var row = row_by_line_idx(idx);
-                if (row != null) {
-                    update_line_color(row.Index);
-                    list.RefreshItem(row);
-                }
+                if (row != null) 
+                    list.RefreshItem(row);                
             }
-            if (sel_row_idx >= 0)
-                update_line_highlight_color(sel_row_idx);
         }
 
         public void next_bookmark() {

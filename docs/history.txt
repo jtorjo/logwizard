@@ -4,6 +4,8 @@
 - todo: fg/bg -> when outside of our filters, use gray
   - todo: full log: fg/bg -> we can calculate them on the spot!!! (instead of calling update_colors_for_line)
 
+- **** i have to stop using match_at (since it's filter-dependent; or, have it return model.item_at)
+
 - todo: end of refresh on teh other thread -> refresh log view +
   - todo: after the user has done any toggle, i need to preserve the former selected item (go_to_closest_line)
 
@@ -14,6 +16,10 @@
 - when toggling: disable the log_view + show "hourglass" cursor
   - while disabled, ignore any toggling
 
+
+1.3.26h
+- implementing allowing toggles for view - step 8
+  - changed log_view.update_colors_for_line so that I can use it directly from match_full_item
 
 
 1.3.26g

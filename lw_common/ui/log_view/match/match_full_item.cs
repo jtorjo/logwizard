@@ -22,6 +22,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -39,6 +40,14 @@ namespace lw_common.ui {
             get {
                 return parent_.lv_parent.matched_logs(line_idx);
             }
+        }
+
+        public override Color fg(log_view parent) {
+            return base.fg(parent);
+        }
+
+        public override Color bg(log_view parent) {
+            return base.bg(parent);
         }
     }
 
