@@ -187,7 +187,7 @@ namespace LogWizard {
         // debugging/testing only
         private string name_ = "";
 
-        private easy_mutex new_lines_event_ = new easy_mutex();
+        private easy_mutex new_lines_event_ = new easy_mutex("new lines (filter)");
 
         public enum change_type {
             new_lines, changed_filter

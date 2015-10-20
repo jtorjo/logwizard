@@ -20,6 +20,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -31,7 +32,18 @@ namespace lw_common {
 
         private int wait_ms = app.inst.check_new_lines_interval_ms;
 
-        // note: eventually if issues found, I will have to have add a friendly name property
+        public string friendly_name;
+
+        // it defers creation - since maybe another thread might be the "owner"
+        public easy_mutex(string name) {
+            friendly_name = name;
+        }
+
+        // marks this thread as owner
+        public void current_thread_is_owner() {
+            Debug.Assert(mutex_ == null);
+            release_and_reaquire();
+        }
 
         // returns true on success
         public bool release_and_reaquire() {
@@ -45,7 +57,7 @@ namespace lw_common {
             bool received = mutex_.WaitOne(timeout);
 
             if ( !received)
-                logger.Fatal("[log] on new lines - could not reaquire lock ");
+                logger.Fatal("[log] " + friendly_name + " - could not reaquire lock ");
             return received;
         }
 

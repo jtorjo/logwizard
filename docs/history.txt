@@ -1,14 +1,24 @@
 
-- implementing alling toggles for view - step 
+- implementing allowing toggles for view - step 
+
+- todo: after the user has done any toggle, i need to preserve the former selected item (go_to_closest_line)
+- todo: on full log - don't allow any toggling (even though theoretically it could be possible)
+
+- when toggling: disable the log_view + show "hourglass" cursor
+  - while disabled, ignore any toggling
+
+1.3.26c
+- implementing allowing toggles for view - step 3
+  - reimplemented list_data_source -> however, just realized that line_indexes_ should be a hashset (still todo)
 
 
 1.3.26b
-- implementing alling toggles for view - step 2
+- implementing allowing toggles for view - step 2
   took match_item, match_full_item, list_data_source out of scope
 
 
 1.3.26a
-- implementing alling toggles for view - step 1 
+- implementing allowing toggles for view - step 1 
   (before moving match_item to outer scope)
 
 

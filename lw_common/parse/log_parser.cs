@@ -49,7 +49,7 @@ namespace lw_common
         public delegate void on_new_lines_func();
         public on_new_lines_func on_new_lines;
 
-        private readonly easy_mutex new_lines_event_ = new easy_mutex();
+        private readonly easy_mutex new_lines_event_ = new easy_mutex("new lines (parser)");
 
         private readonly log_parser_base forward_to_parser_ = null;
 
