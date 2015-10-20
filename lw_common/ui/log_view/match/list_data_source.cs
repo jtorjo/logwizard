@@ -50,6 +50,8 @@ namespace lw_common.ui {
 
         public filter_func item_filter;
 
+        private int item_count_ = 0;
+
         public list_data_source(VirtualObjectListView lv, log_view parent ) : base(lv) {
             lv_ = lv;
             parent_ = parent;
@@ -128,7 +130,11 @@ namespace lw_common.ui {
         }
 
         public override int GetObjectCount() {
-            return item_count;
+            return item_count_;
+        }
+
+        public int item_count {
+            get { return item_count_; }
         }
 
         private match_item item_at(int idx) {
@@ -159,7 +165,7 @@ namespace lw_common.ui {
             return found as match_item;
         }
 
-        private int item_count {
+        private int item_count_at_this_time {
             get {
                 bool filter_view;
                 bool show_full_log;
@@ -185,6 +191,10 @@ namespace lw_common.ui {
             if ( items_.count == 0)
                 lv_.ClearObjects();
 
+            // I want the item count to be constant until the next refresh - otherwise, we could end up with more items (for instance, new lines added)
+            // the client code always asks for model_.item_count - i don't want to go out of sync with what the listview thinks
+            // (and the list view thinks what it was last told at UpdateVirtualListSize())
+            item_count_ = item_count_at_this_time;
             lv_.UpdateVirtualListSize();                
         }
 

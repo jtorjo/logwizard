@@ -375,6 +375,10 @@ namespace lw_common.ui
             model_.set_filter(filter_view, show_full_log);
         }
 
+        public int item_count {
+            get { return model_.item_count; }
+        }
+
         // further filtering
         private bool item_filter(match_item item, bool applied_on_full_log) {
             string sel_text = edit.sel_text;
@@ -517,16 +521,7 @@ namespace lw_common.ui
 
         private OLVListItem row_by_line_idx(int line_idx) {
             var m = filter_.matches.binary_search(line_idx);
-            if (m.Item1 != null)
-                return list.GetItem(m.Item2);
-            /*
-            int count = filter_.match_count;
-            for (int idx = 0; idx < count; ++idx) {
-                item i = match_at(idx) as item;
-                if (i.match.line_idx == line_idx)
-                    return list.GetItem(idx);
-            }*/
-            return null;
+            return m.Item1 != null ? list.GetItem(m.Item2) : null;
         }
 
         private match_item match_at(int idx) {
@@ -552,7 +547,7 @@ namespace lw_common.ui
             edit.clear_sel();
 
             int sel = sel_row_idx;
-            int count = filter_.match_count;
+            int count = item_count;
             if (sel < 0 && count > 0)
                 sel = 0; // assume we start from the top
 
@@ -638,7 +633,7 @@ namespace lw_common.ui
         } 
 
         private bool needs_scroll_to_last() {
-            if (filter_.match_count < 1)
+            if (item_count < 1)
                 return true;
             if (sel_row_idx < 0)
                 return true;
@@ -679,20 +674,20 @@ namespace lw_common.ui
                 return;
 
             const int DEFAULT_COL_WIDTH = 80;
-            int match_count = filter_.match_count;
-            bool needs_refresh = match_count != visible_columns_refreshed_;
+            int count = item_count;
+            bool needs_refresh = count != visible_columns_refreshed_;
             if (needs_refresh) {
-                int row_count = Math.Min(match_count, MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);
+                int row_count = Math.Min(count, MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);
                 for (int type_as_int = 0; type_as_int < (int) info_type.max; ++type_as_int) {
                     info_type type = (info_type) type_as_int;
                     bool is_visible = type == info_type.msg || has_value_at_column(type, row_count);
                     show_column(column(type), (is_visible ? DEFAULT_COL_WIDTH : 0), is_visible);
                 }
-                visible_columns_refreshed_ = match_count;
+                visible_columns_refreshed_ = count;
             }
 
             list.RebuildColumns();
-            if (match_count >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS) {
+            if (count >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS) {
                 visible_columns_refreshed_ = MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS;
                 full_widths_.Clear();
                 show_row_impl(show_row_);
@@ -723,7 +718,7 @@ namespace lw_common.ui
 
             string x_idx =  sel_row_idx >= 0 ? "" + (sel_row_idx+1) : "";
             string x_line =  sel_line_idx >= 0 ? "" + (sel_line_idx + 1) : "";
-            string y = "" + filter_.match_count;
+            string y = "" + item_count;
             string header = (app.inst.show_view_line_count || app.inst.show_view_selected_line || app.inst.show_view_selected_index ? (x_idx != "" ? x_idx + " of " + y : "(" + y + ")") : "");
             string x_of_y_msg = (show_name_in_header ? "[" + name + "] " : "") + "Message " + header;
             string x_of_y_title = "";
@@ -752,21 +747,13 @@ namespace lw_common.ui
             msgCol.Text = x_of_y_msg;
         }
 
-        private void force_select_first_item() {
-            if ( filter_.match_count > 0)
-                if (sel_row_idx < 0) {
-                    list.SelectedIndex = 0;
-                    logger.Debug("[view] forcing sel zero for " + name);
-                }
-        }
-
         // called when we've been selected as current view
         public void on_selected() {
             if (tab_parent == null)
                 return;
 
             // we want the tab to be repainted
-            last_item_count_while_current_view_ = filter_.match_count;
+            last_item_count_while_current_view_ = item_count;
             tab_parent.Text += " ";
         }
 
@@ -784,14 +771,11 @@ namespace lw_common.ui
         }
 
         public void refresh() {
-            // comment the following line to easily test the UI
-            //return;
-
             if (log_ == null)
                 return; // not set yet
 
             bool needs_scroll = needs_scroll_to_last();
-            int new_item_count = filter_.match_count;
+            int new_item_count = item_count;
             filter_.compute_matches(log_);
 
             if (is_current_view)
@@ -933,7 +917,7 @@ namespace lw_common.ui
         }
 
         private void go_last() {
-            var count = filter_.match_count;
+            var count = item_count;
             if (count > 0) {
                 if (ensure_line_visible(count - 1))
                     select_idx(count - 1, select_type.do_not_notify_parent);
@@ -1011,7 +995,7 @@ namespace lw_common.ui
                 return;
 
             select_nofify_ = notify;
-            if (row_idx >= 0 && row_idx < filter_.match_count) {
+            if (row_idx >= 0 && row_idx < item_count) {
                 logger.Debug("[view] " + name + " sel=" + row_idx);
                 list.SelectedIndex = row_idx;
                 update_line_highlight_color(row_idx);
@@ -1073,7 +1057,7 @@ namespace lw_common.ui
         }
 
         public void go_to_row(int row_idx, select_type notify) {
-            if (row_idx >= filter_.match_count)
+            if (row_idx >= item_count)
                 return;
 
             select_idx(row_idx, notify);
@@ -1083,8 +1067,8 @@ namespace lw_common.ui
 
             int rows = list.Height / list.RowHeight;
             int bottom_idx = row_idx + rows / 2;
-            if (bottom_idx >= filter_.match_count)
-                bottom_idx = filter_.match_count - 1;
+            if (bottom_idx >= item_count)
+                bottom_idx = item_count - 1;
             int top_idx = bottom_idx - rows;
             if (top_idx < 0)
                 top_idx = 0;
@@ -1159,7 +1143,7 @@ namespace lw_common.ui
         }
 
         public int line_count {
-            get { return filter_.match_count; }
+            get { return item_count; }
         }
 
         public int filter_row_count {
@@ -1342,7 +1326,7 @@ namespace lw_common.ui
 
         // note: starts from the next row, or, if on row zero -> starts from row zero
         public void search_for_text_first() {
-            if (filter_.match_count < 1)
+            if (item_count < 1)
                 return;
             Debug.Assert(cur_search_ != null);
             if (cur_search_ == null)
@@ -1363,7 +1347,7 @@ namespace lw_common.ui
         }
 
         private void search_for_text_next() {
-            int count = filter_.match_count;
+            int count = item_count;
             if (count < 1)
                 return;
 
@@ -1396,7 +1380,7 @@ namespace lw_common.ui
         }
 
         private void search_for_text_prev() {
-            int count = filter_.match_count;
+            int count = item_count;
             if (count < 1)
                 return;
             string sel_text = edit.sel_text.ToLower();
@@ -1671,7 +1655,7 @@ namespace lw_common.ui
 
 
         public void scroll_up() {
-            if (filter_.match_count < 1)
+            if (item_count < 1)
                 return;
 
             int sel = sel_row_idx;
@@ -1687,7 +1671,7 @@ namespace lw_common.ui
         }
 
         public void scroll_down() {
-            if (filter_.match_count < 1)
+            if (item_count < 1)
                 return;
 
             int sel = sel_row_idx;
@@ -1974,7 +1958,7 @@ namespace lw_common.ui
         private void search_ahead(string txt) {
             Debug.Assert(txt == txt.ToLower());
 
-            int count = filter_.match_count;
+            int count = item_count;
             int max = Math.Min(sel_row_idx + SEARCH_AROUND_ROWS, count);
             int min = Math.Max(sel_row_idx - SEARCH_AROUND_ROWS, 0);
 

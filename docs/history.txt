@@ -1,4 +1,5 @@
 
+- lowlevelsroll : freeze/unfreeze?
 
 - todo: after the user has done any toggle, i need to preserve the former selected item (go_to_closest_line)
 - todo: on full log - don't allow any toggling (even though theoretically it could be possible)
@@ -7,6 +8,11 @@
   - while disabled, ignore any toggling
 
 
+1.3.26e
+- implementing allowing toggles for view - step 5
+  - using item_count instead of filter.match_count
+  - **** there's a bug at this point: nothing is shown in the views
+  - **** i have to stop using match_at (since it's filter-dependent; or, have it return model.item_at)
 
 
 1.3.26d
