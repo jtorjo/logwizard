@@ -1,4 +1,4 @@
-﻿namespace lw_common
+﻿namespace lw_common.ui
 {
     public partial class log_view
     {

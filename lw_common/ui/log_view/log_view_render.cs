@@ -114,7 +114,7 @@ namespace lw_common.ui {
         } 
 
         public override void Render(Graphics g, Rectangle r) {
-            var i = ListItem.RowObject as log_view.match_item;
+            var i = ListItem.RowObject as match_item;
             if (i == null)
                 return;
 
