@@ -83,6 +83,10 @@ namespace lw_common.ui {
                 return parent.bookmark_fg;
             if (override_fg != util.transparent)
                 return override_fg;
+
+            if (parent.filter.matches.binary_search(line_idx).Item2 < 0)
+                return filter_line.font_info.full_log_gray.fg;
+
             return font.fg;
         }
 

@@ -978,7 +978,9 @@ namespace LogWizard
         public Tuple<Color, Color> full_log_row_colors(int line_idx) {
             int sel = viewsTab.SelectedIndex;
             int row_idx = full_log.line_to_row(line_idx);
-            Debug.Assert(row_idx >= 0);
+            if (row_idx < 0)
+                // this can happen when on a line not from our curent filter
+                return new Tuple<Color, Color>( filter_line.font_info.full_log_gray.fg, filter_line.font_info.full_log_gray.bg );
             return full_log. update_colors_for_line(row_idx, all_log_views(), sel);
         }
 

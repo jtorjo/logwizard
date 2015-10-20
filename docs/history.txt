@@ -1,20 +1,28 @@
 
 - lowlevelsroll : freeze/unfreeze?
 
-- todo: fg/bg -> when outside of our filters, use gray
-  - todo: full log: fg/bg -> we can calculate them on the spot!!! (instead of calling update_colors_for_line)
 
 - **** i have to stop using match_at (since it's filter-dependent; or, have it return model.item_at)
+  ---------> note; var i = match_at(row_idx) as full_log_match_item; ----> this is in has_found_colors -> i have to think about it
+
+- full log : not in sync after filter_.match_count finished + not in sync correctly - it points to other lines
+  - pehaps will be fixed by previous fix?
 
 - todo: end of refresh on teh other thread -> refresh log view +
   - todo: after the user has done any toggle, i need to preserve the former selected item (go_to_closest_line)
 
-- full log : not in sync after filter_.match_count finished + not in sync correctly - it points to other lines
 
 - todo: on full log - don't allow any toggling (even though theoretically it could be possible)
 
 - when toggling: disable the log_view + show "hourglass" cursor
   - while disabled, ignore any toggling
+
+- todo: toggles filter/show-full-log -> save them per view (perhaps the filter - i should not save it?)
+
+
+1.3.26j
+- implementing allowing toggles for view - step 10
+  - fg/bg -> when outside of our filters, use gray
 
 
 1.3.26i
