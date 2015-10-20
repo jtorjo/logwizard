@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using BrightIdeasSoftware;
 using LogWizard;
+using lw_common;
 
 namespace lw_common.ui {
     internal class list_data_source : AbstractVirtualListDataSource, IDisposable {
@@ -42,7 +43,7 @@ namespace lw_common.ui {
         private bool disposed_ = false;
 
         // I chose to use line indexes instead of row indexes - these will work even if the filter changes! (like, some rows are enabled/disabled)
-        private memory_optimized_list<int> line_indexes_ = null; 
+        private memory_optimized_list<int> sorted_line_indexes_ = null; 
 
         // called for each item to filter in/out 
         public delegate bool filter_func(match_item item, bool applied_on_full_log);
@@ -75,17 +76,17 @@ namespace lw_common.ui {
         }
 
         public bool filter_view {
-            get { return filter_view_; }
+            get { return filter_view_now_; }
         }
 
         public bool show_full_log {
-            get { return show_full_log_; }
+            get { return show_full_log_now_; }
         }
 
         // set both filter options in one step (so that change_event_ is triggered only once!)
         public void set_filter(bool filter_view, bool show_full_log) {
             lock (this) {
-                if (filter_view == filter_view_ && show_full_log == show_full_log_)
+                if (filter_view == filter_view_now_ && show_full_log == show_full_log_now_)
                     return;
 
                 filter_view_now_ = filter_view;
@@ -113,10 +114,13 @@ namespace lw_common.ui {
 
             // here, it's filtered
             int line_idx = i.line_idx;
-            // FIXME
+            lock (this) {
+                if (sorted_line_indexes_ == null)
+                    return -1;
 
-            // worst case scenario
-            return 0;
+                int found = sorted_line_indexes_.BinarySearch(line_idx);
+                return found;
+            }
         }
 
         public override object GetNthObject(int n) {
@@ -137,14 +141,14 @@ namespace lw_common.ui {
 
             if (!filter_view)
                 // not filtered
-                return (show_full_log ? items_.match_at(idx) : full_log_items_.match_at(idx)) as match_item;
+                return (show_full_log ?  full_log_items.match_at(idx) : items_.match_at(idx)) as match_item;
 
             // here, we're filtering the items
             int line_index = -1;
             lock (this) {
-                Debug.Assert(line_indexes_ != null);
-                if ( line_indexes_ != null)
-                    line_index = idx < line_indexes_.Count ? line_indexes_[idx] : -1;
+                Debug.Assert(sorted_line_indexes_ != null);
+                if ( sorted_line_indexes_ != null)
+                    line_index = idx < sorted_line_indexes_.Count ? sorted_line_indexes_[idx] : -1;
             }
             if (line_index < 0)
                 return null;
@@ -170,8 +174,8 @@ namespace lw_common.ui {
 
                 // here, we're filtering the items
                 lock (this) {
-                    Debug.Assert(line_indexes_ != null);
-                    return line_indexes_ != null ? line_indexes_.Count : 0;
+                    Debug.Assert(sorted_line_indexes_ != null);
+                    return sorted_line_indexes_ != null ? sorted_line_indexes_.Count : 0;
                 }
             }
         }
@@ -207,7 +211,7 @@ namespace lw_common.ui {
 
                     if (!filter_view_)
                         // here, user toggled off filtering - so, I'm either showing the view, or the full log
-                        line_indexes_ = null;
+                        sorted_line_indexes_ = null;
 
                     needs_ui_update_ = true;
                 }
@@ -234,7 +238,7 @@ namespace lw_common.ui {
             }
 
             lock (this)
-                line_indexes_ = line_indexes;
+                sorted_line_indexes_ = line_indexes;
         }
 
 

@@ -99,6 +99,12 @@ namespace lw_common {
 
         right_click_via_key,
 
+        // 1.3.26d+ - toggle showing just what matches a filter function on/off
+        toggle_filter_view,
+
+        // 1.3.26+ - toggle showing full log on/off
+        toggle_show_full_log,
+
         none,
     }
 

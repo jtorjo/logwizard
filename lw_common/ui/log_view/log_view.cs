@@ -362,6 +362,36 @@ namespace lw_common.ui
             }
         }
 
+        public bool filter_view {
+            get { return model_.filter_view; }
+        }
+
+        public bool show_full_log {
+            get { return model_.show_full_log; }
+        }
+
+        public void set_filter(bool filter_view, bool show_full_log) {
+            model_.item_filter = item_filter;
+            model_.set_filter(filter_view, show_full_log);
+        }
+
+        // further filtering
+        private bool item_filter(match_item item, bool applied_on_full_log) {
+            string sel_text = edit.sel_text;
+            if (cur_search_ == null && sel_text == "")
+                // no search - nothing matches
+                return false;
+
+            if (sel_text != "") {
+                sel_text = sel_text.ToLower();
+                string cur = log_view_cell.cell_value(item, cur_col_);
+                return cur.ToLower().Contains(sel_text);
+            }
+
+            // current search
+            return string_search.matches(item.match.line.part(info_type.msg), cur_search_);
+        }
+
         internal log_view_right_click right_click {
             get { return right_click_; }
         }

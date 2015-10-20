@@ -47,35 +47,42 @@ namespace lw_common {
 
         // returns true on success
         public bool release_and_reaquire() {
-            lock(this)
-                if ( mutex_ == null)
-                    mutex_ = new Mutex(true);
-            // this will wake up the refresh thread
-            mutex_.ReleaseMutex();
-            // now, reaquire - should be instant
-            int timeout = 1000;
-            bool received = mutex_.WaitOne(timeout);
+            try {
+                lock (this)
+                    if (mutex_ == null)
+                        mutex_ = new Mutex(true);
+                // this will wake up the refresh thread
+                mutex_.ReleaseMutex();
+                // now, reaquire - should be instant
+                int timeout = 1000;
+                bool received = mutex_.WaitOne(timeout);
 
-            if ( !received)
-                logger.Fatal("[log] " + friendly_name + " - could not reaquire lock ");
-            return received;
+                if (!received)
+                    logger.Fatal("[log] " + friendly_name + " - could not reaquire lock ");
+                return received;
+            } catch {
+                return false;
+            }
         }
 
         // returns true if event was received
         public bool wait_and_release() {
-            bool wait_event = mutex_ != null;
-            bool new_lines = false;
-            if (wait_event) {
-                new_lines = mutex_.WaitOne(wait_ms);
-                if (new_lines) {
-                    mutex_.ReleaseMutex();
-                    return true;
-                }
-            }
-            else 
-                Thread.Sleep(wait_ms);
+            try {
+                bool wait_event = mutex_ != null;
+                bool new_lines = false;
+                if (wait_event) {
+                    new_lines = mutex_.WaitOne(wait_ms);
+                    if (new_lines) {
+                        mutex_.ReleaseMutex();
+                        return true;
+                    }
+                } else
+                    Thread.Sleep(wait_ms);
 
-            return false;
+                return false;
+            } catch {
+                return false;
+            }
         }
     }
 }

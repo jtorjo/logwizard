@@ -1,11 +1,19 @@
 
-- implementing allowing toggles for view - step 
 
 - todo: after the user has done any toggle, i need to preserve the former selected item (go_to_closest_line)
 - todo: on full log - don't allow any toggling (even though theoretically it could be possible)
 
 - when toggling: disable the log_view + show "hourglass" cursor
   - while disabled, ignore any toggling
+
+
+
+
+1.3.26d
+- implementing allowing toggles for view - step 4
+  - toggling skeletron created
+  - note: at this point, i need to recompute how i go to the max. number of items in a view (since it's not filter.match_count anymore)
+
 
 1.3.26c
 - implementing allowing toggles for view - step 3

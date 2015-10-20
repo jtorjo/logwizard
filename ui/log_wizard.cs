@@ -2158,6 +2158,23 @@ namespace LogWizard
             case "ctrl-o":
                 return action_type.open_in_explorer;
 
+            case "ctrl-1":
+                return action_type.goto_position_1;
+            case "ctrl-2":
+                return action_type.goto_position_2;
+            case "ctrl-3":
+                return action_type.goto_position_3;
+            case "ctrl-4":
+                return action_type.goto_position_4;
+            case "ctrl-5":
+                return action_type.goto_position_5;
+            case "ctrl-e":
+                return action_type.export_notes;
+            case "ctrl-z":
+                return action_type.undo;
+
+            ////////////////////////////////////////////////////////////////////////////////
+            // toggles via hotkey
             case "alt-f":
                 return action_type.toggle_filters;
             case "alt-n":
@@ -2180,20 +2197,11 @@ namespace LogWizard
             case "alt-s":
                 return action_type.toggle_status;
 
-            case "ctrl-1":
-                return action_type.goto_position_1;
-            case "ctrl-2":
-                return action_type.goto_position_2;
-            case "ctrl-3":
-                return action_type.goto_position_3;
-            case "ctrl-4":
-                return action_type.goto_position_4;
-            case "ctrl-5":
-                return action_type.goto_position_5;
-            case "ctrl-e":
-                return action_type.export_notes;
-            case "ctrl-z":
-                return action_type.undo;
+            case "ctrl-alt-f":
+                return action_type.toggle_filter_view;
+            case "ctrl-alt-l":
+                return action_type.toggle_show_full_log;
+
             }
 
             return action_type.none;
@@ -2440,6 +2448,14 @@ namespace LogWizard
                 else if (global_ui.show_notes)
                     notes.undo();
                 break;
+
+            case action_type.toggle_filter_view:
+                lv.set_filter( !lv.filter_view, lv.show_full_log);
+                break;
+            case action_type.toggle_show_full_log:
+                lv.set_filter( lv.filter_view, !lv.show_full_log);
+                break;
+
             default:
                 Debug.Assert(false);
                 break;
