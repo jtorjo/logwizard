@@ -8,6 +8,13 @@
   - while disabled, ignore any toggling
 
 
+
+
+1.3.26f
+- implementing allowing toggles for view - step 6
+  - toggling "show full log" on/off works like a charm
+
+
 1.3.26e
 - implementing allowing toggles for view - step 5
   - using item_count instead of filter.match_count

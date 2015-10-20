@@ -775,6 +775,8 @@ namespace lw_common.ui
                 return; // not set yet
 
             bool needs_scroll = needs_scroll_to_last();
+
+            model_.refresh();
             int new_item_count = item_count;
             filter_.compute_matches(log_);
 
@@ -786,7 +788,6 @@ namespace lw_common.ui
             bool more_items = old_item_count_ < new_item_count;
             old_item_count_ = new_item_count;
 
-            model_.refresh();
             refresh_visible_columns();
             update_x_of_y();
 
