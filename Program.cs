@@ -76,7 +76,7 @@ namespace LogWizard
             try {
                 File.Delete("LogWizard.log");
             } catch {}
-            log4net.Config.XmlConfigurator.Configure( new FileInfo("lw.config"));
+            log4net.Config.XmlConfigurator.Configure( new FileInfo(util.is_debug ? "LogWizard.exe.config" : "lw.config"));
             var logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
             logger.Info("logging initialized, cur dir is " + Environment.CurrentDirectory );
             

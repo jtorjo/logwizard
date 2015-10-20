@@ -95,7 +95,7 @@ namespace LogWizard
 
         private text_reader text_ = null;
         private log_parser log_parser_ = null;
-        private log_view full_log_ctrl = null;
+        private readonly log_view full_log_ctrl_ = null;
 
         private int old_line_count_ = 0;
 
@@ -151,6 +151,12 @@ namespace LogWizard
 
             ++ignore_change_;
 
+            full_log_ctrl_ = new log_view( this, log_view.FULLLOG_NAME);
+            full_log_ctrl_.Dock = DockStyle.Fill;
+            filteredLeft.Panel2.Controls.Add(full_log_ctrl_);
+            full_log_ctrl_.show_name = false;
+            full_log_ctrl_.show_view(true);
+
             filtCtrl.design_mode = false;
             filtCtrl.on_save = save;
             filtCtrl.ui_to_view = (view_idx) => log_view_for_tab(view_idx).set_filter(filtCtrl.to_filter_row_list());
@@ -178,12 +184,6 @@ namespace LogWizard
             --ignore_change_;
             load();
             ++ignore_change_;
-
-            full_log_ctrl = new log_view( this, log_view.FULLLOG_NAME);
-            full_log_ctrl.Dock = DockStyle.Fill;
-            filteredLeft.Panel2.Controls.Add(full_log_ctrl);
-            full_log_ctrl.show_name = false;
-            full_log_ctrl.show_view(true);
 
             util.postpone(() => set_tabs_visible(leftPane, false), 1);
 
@@ -222,11 +222,11 @@ namespace LogWizard
                     viewsTab.SelectedIndex = lv_idx;
                     lv.go_to_closest_line(line_idx, log_view.select_type.do_not_notify_parent);
                 }
-                else if (full_log_ctrl != null) {
+                else if (full_log_ctrl_ != null) {
                     // in this case, we don't have that view - go to the full log
                     if ( !global_ui.show_fulllog)
                         show_full_log(show_full_log_type.both);
-                    full_log_ctrl.go_to_closest_line(line_idx, log_view.select_type.do_not_notify_parent);
+                    full_log_ctrl_.go_to_closest_line(line_idx, log_view.select_type.do_not_notify_parent);
                 } 
 
                 --ignore_change_;
@@ -458,7 +458,7 @@ namespace LogWizard
                 show_filteredleft_pane2(true);
                 global_ui.show_fulllog = true;
                 global_ui.show_current_view = false;
-                to_focus = full_log_ctrl;
+                to_focus = full_log_ctrl_;
                 break;
             default:
                 Debug.Assert(false);
@@ -753,8 +753,8 @@ namespace LogWizard
         }
 
         private void sync_full_log_colors(bool force_refresh = false) {
-            if (full_log_ctrl != null && global_ui.show_fulllog ) 
-                full_log_ctrl.update_colors(all_log_views(), viewsTab.SelectedIndex, force_refresh);
+            if (full_log_ctrl_ != null && global_ui.show_fulllog ) 
+                full_log_ctrl_.update_colors(all_log_views(), viewsTab.SelectedIndex, force_refresh);
         }
 
         private void save_filters() {
@@ -793,12 +793,15 @@ namespace LogWizard
 
         private List<log_view> all_log_views_and_full_log() {
             var all = all_log_views();
-            if ( full_log_ctrl != null)
-                all.Add(full_log_ctrl);
+            if ( full_log_ctrl_ != null)
+                all.Add(full_log_ctrl_);
             return all;
         }
 
         public void on_view_name_changed(log_view view, string name) {
+            if (ignore_change_ > 0)
+                return;
+
             ui_context cur = cur_context();
             for ( int i = 0; i < viewsTab.TabCount; ++i)
                 if ( log_view_for_tab(i) == view) {
@@ -835,6 +838,10 @@ namespace LogWizard
                 ui.copy_from(global_ui);
                 return ui;
             }
+        }
+
+        public log_view full_log {
+            get { return full_log_ctrl_; }
         }
 
         public void simple_action(log_view_right_click.simple_action simple) {
@@ -1257,8 +1264,8 @@ namespace LogWizard
                         if (other != lv)
                             update_non_active_filter(idx);
                     }
-                    full_log_ctrl.refresh();
-                    full_log_ctrl.set_view_selected_view_name(lv.name);
+                    full_log_ctrl_.refresh();
+                    full_log_ctrl_.set_view_selected_view_name(lv.name);
                 }
 
                 update_msg_details(false);
@@ -1356,7 +1363,7 @@ namespace LogWizard
             var sel = selected_view();
             update_notes_current_line();
 
-            if (sel == full_log_ctrl) {
+            if (sel == full_log_ctrl_) {
                 sync_full_log_colors(true);
                 return;
             }
@@ -1387,15 +1394,15 @@ namespace LogWizard
 
         private void on_log_changed_line_do_sync(int line_idx, log_view from) {
             if (global_ui.show_fulllog) {
-                if (from != full_log_ctrl && app.inst.sync_full_log_view)
-                    full_log_ctrl.go_to_row(line_idx, log_view.select_type.do_not_notify_parent);
+                if (from != full_log_ctrl_ && app.inst.sync_full_log_view)
+                    full_log_ctrl_.go_to_row(line_idx, log_view.select_type.do_not_notify_parent);
                 sync_full_log_colors(true);
             }
 
-            bool keep_all_in_sync = (from != full_log_ctrl && app.inst.sync_all_views) ||
+            bool keep_all_in_sync = (from != full_log_ctrl_ && app.inst.sync_all_views) ||
                                     // if the current log is full log, we will synchronize all views only if both checks are checked
                                     // (note: this is always a bit time consuming as well)
-                                    (from == full_log_ctrl && app.inst.sync_all_views && app.inst.sync_full_log_view);
+                                    (from == full_log_ctrl_ && app.inst.sync_all_views && app.inst.sync_full_log_view);
             if (keep_all_in_sync)
                 keep_logs_in_sync(from);
         }
@@ -1491,8 +1498,8 @@ namespace LogWizard
             }
 
             if (global_ui.show_fulllog) {
-                full_log_ctrl.refresh();
-                full_log_ctrl.set_view_selected_view_name(lv.name);
+                full_log_ctrl_.refresh();
+                full_log_ctrl_.set_view_selected_view_name(lv.name);
             }
 
             update_msg_details(false);
@@ -1560,7 +1567,7 @@ namespace LogWizard
         }
 
         private void on_new_log_parser() {
-            full_log_ctrl.set_log(new log_reader(log_parser_));
+            full_log_ctrl_.set_log(new log_reader(log_parser_));
             for (int i = 0; i < viewsTab.TabCount; ++i) {
                 var lv = log_view_for_tab(i);
                 if (lv != null)
@@ -1638,7 +1645,7 @@ namespace LogWizard
             log_parser_ = new log_parser(text_, new line_by_line_syntax { line_syntax = syntax });
             on_new_log_parser();
 
-            full_log_ctrl.set_filter(new List<raw_filter_row>());
+            full_log_ctrl_.set_filter(new List<raw_filter_row>());
 
             Text = reader_title() + " - Log Wizard " + version();
             if (logHistory.SelectedIndex == last_sel_)
@@ -1731,7 +1738,7 @@ namespace LogWizard
                 if (global_ui.show_current_view)
                     log_view_for_tab(viewsTab.SelectedIndex).set_focus();
                 else
-                    full_log_ctrl.set_focus();
+                    full_log_ctrl_.set_focus();
             }, 100);
         }
 
@@ -1846,8 +1853,8 @@ namespace LogWizard
 
             load();
 
-            if (global_ui.show_fulllog && full_log_ctrl != null)
-                full_log_ctrl.refresh();
+            if (global_ui.show_fulllog && full_log_ctrl_ != null)
+                full_log_ctrl_.refresh();
             refresh_cur_log_view();
             save();
         }
@@ -2018,7 +2025,7 @@ namespace LogWizard
         }
 
         private bool is_focus_on_full_log() {
-            return full_log_ctrl != null && full_log_ctrl.has_focus;
+            return full_log_ctrl_ != null && full_log_ctrl_.has_focus;
         }
 
         private bool is_focus_on_filter_panel() {
@@ -2465,7 +2472,7 @@ namespace LogWizard
 
             // second pane - the full log (if shown)
             if (global_ui.show_fulllog)
-                panes.Add(full_log_ctrl);
+                panes.Add(full_log_ctrl_);
 
             // third/fourth panes - the filters control and edit box (if visible)
             if (global_ui.show_filter)
@@ -2482,7 +2489,7 @@ namespace LogWizard
                 return;
             foreach (log_view lv in all_log_views_and_full_log())
                 if (lv != src) {
-                    if (global_ui.show_fulllog && lv == full_log_ctrl && app.inst.sync_full_log_view)
+                    if (global_ui.show_fulllog && lv == full_log_ctrl_ && app.inst.sync_full_log_view)
                         // in this case, we already synched the full log
                         continue;
 
@@ -2557,7 +2564,7 @@ namespace LogWizard
             if (sel < 0)
                 return null;
             if (is_focus_on_full_log())
-                return full_log_ctrl;
+                return full_log_ctrl_;
 
             var lv = ensure_we_have_log_view_for_tab(sel);
             return lv;
@@ -2601,7 +2608,7 @@ namespace LogWizard
             for (int i = 0; i < viewsTab.TabCount; ++i)
                 // always send a copy of the list - this way, the views can see which bookmarks are new/deleted
                 log_view_for_tab(i).set_bookmarks(bookmarks_.ToList());
-            full_log_ctrl.set_bookmarks(bookmarks_.ToList());
+            full_log_ctrl_.set_bookmarks(bookmarks_.ToList());
         }
 
         private void save_bookmarks() {
@@ -3314,7 +3321,7 @@ namespace LogWizard
                 remove_all_log_views();
                 on_file_drop(selected_file_name());
                 // we want to refresh it only after it's been loaded, so that it visually shows that
-                util.postpone(() => full_log_ctrl.force_refresh_visible_columns(), 2000);
+                util.postpone(() => full_log_ctrl_.force_refresh_visible_columns(), 2000);
             }
         }
 

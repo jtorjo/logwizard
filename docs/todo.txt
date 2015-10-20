@@ -43,7 +43,12 @@
 
 - bug: tn2 bet tab - select preflop, set match color , it will somehow override the color
 
+- todo : add asyncfilelogger
+
 - bug: 'New' does not work
+  - works now, but I need to put it into another position - equivalent of (Ctrl-1)
+  - very likely, I should allow up to Ctrl-9
+
 
 - log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)
   - i need to save this only if the user changes something
@@ -52,7 +57,9 @@
     - this needs to be expandable so that in the future i can do the same for details pane.
 	- see if anything like this is allowed by default by the control
 
-
+- how easy is it to access github to look for updates?
+  - easy to show in Status bar when new vresion available. Show it in About/history
+  - maybe mark huge features with "*", while normal features shown in "-"
 
 
 

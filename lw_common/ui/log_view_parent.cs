@@ -38,6 +38,9 @@ namespace lw_common.ui {
         // read-only
         ui_info current_ui { get; }
 
+        // returns the log that contains all lines
+        log_view full_log { get; }
+
         void simple_action(log_view_right_click.simple_action simple);
 
         void add_or_edit_filter(string filter_str, string filter_id , bool apply_to_existing_lines);
