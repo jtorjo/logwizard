@@ -101,6 +101,8 @@ namespace lw_common.ui
 
         private ui_info.show_row_type show_row_ = ui_info.show_row_type.full_row;
 
+        private int sel_line_idx_before_set_filter_ = 0;
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -361,6 +363,15 @@ namespace lw_common.ui
         }
 
         public void set_filter(bool filter_view, bool show_full_log) {
+            if (!Enabled)
+                // we're already in the process of computing a filter
+                return;
+
+            // until we finish running the filter, don't allow any more toggling
+            Enabled = false;
+            Cursor = Cursors.WaitCursor;
+
+            sel_line_idx_before_set_filter_ = sel_line_idx;
             model_.item_filter = item_filter;
             model_.set_filter(filter_view, show_full_log);
         }
@@ -611,7 +622,7 @@ namespace lw_common.ui
 
             }
             if (sel >= 0 && sel_row_idx != sel) {
-                select_idx( sel, select_type.notify_parent);
+                select_row_idx( sel, select_type.notify_parent);
                 ensure_line_visible(sel);
             }
             edit.update_sel();
@@ -767,7 +778,8 @@ namespace lw_common.ui
             if (log_ == null)
                 return; // not set yet
 
-            bool needs_scroll = needs_scroll_to_last();
+            bool needs_ui_update = model_.needs_ui_update;
+            bool needs_scroll = needs_scroll_to_last() && !needs_ui_update;
 
             model_.refresh();
             int new_item_count = item_count;
@@ -776,16 +788,27 @@ namespace lw_common.ui
             if (is_current_view)
                 last_item_count_while_current_view_ = new_item_count;
 
-            if (old_item_count_ == new_item_count)
+            if (old_item_count_ == new_item_count && !needs_ui_update)
                 return; // nothing changed
+
+            if (needs_ui_update) {
+                Enabled = true;
+                Cursor = Cursors.IBeam;
+                Focus();
+            }
+
+            model_.needs_ui_update = false;
             bool more_items = old_item_count_ < new_item_count;
             old_item_count_ = new_item_count;
 
             refresh_visible_columns();
             update_x_of_y();
 
+            if ( needs_ui_update)
+                go_to_closest_line(sel_line_idx_before_set_filter_, select_type.notify_parent);
+
             list.Refresh();
-            if (needs_scroll && more_items)
+            if (needs_scroll && more_items && !needs_ui_update)
                 go_last();
         }
 
@@ -885,7 +908,7 @@ namespace lw_common.ui
             var count = item_count;
             if (count > 0) {
                 if (ensure_line_visible(count - 1))
-                    select_idx(count - 1, select_type.do_not_notify_parent);
+                    select_row_idx(count - 1, select_type.do_not_notify_parent);
                 else
                 // in this case, we failed to go to the last item - try again ASAP
                     util.postpone(go_last, 10);
@@ -911,7 +934,7 @@ namespace lw_common.ui
         // by default, notify parent
         private select_type select_nofify_ = select_type.notify_parent;
 
-        private void select_idx(int row_idx, select_type notify) {
+        private void select_row_idx(int row_idx, select_type notify) {
             if (sel_row_idx == row_idx)
                 return; // already selected
 
@@ -931,7 +954,7 @@ namespace lw_common.ui
         // only called by smart edit on backspace
         internal void select_cell(int row_idx, int cell_idx) {
             cur_col_ = cell_idx;
-            select_idx(row_idx, select_type.notify_parent);
+            select_row_idx(row_idx, select_type.notify_parent);
             lv_parent.after_search();
         }
 
@@ -984,7 +1007,7 @@ namespace lw_common.ui
             if (row_idx >= item_count)
                 return;
 
-            select_idx(row_idx, notify);
+            select_row_idx(row_idx, notify);
             if (is_line_visible(row_idx))
                 // already visible
                 return;
@@ -1026,12 +1049,13 @@ namespace lw_common.ui
             if (filter_.match_count < 1)
                 return;
 
-            var closest = filter_.matches.binary_search_closest(line_idx);
+            var closest = model_.binary_search_closest(line_idx);
             if (closest.Item2 >= 0)
                 go_to_row(closest.Item2, notify);
         }
 
-        public bool matches_line(int line_idx) {
+        public bool filter_matches_line(int line_idx) {
+            // important: here, we actually want to use the filter, instead of the model
             var closest = filter_.matches.binary_search_closest(line_idx);
             if (closest.Item2 >= 0)
                 return closest.Item1.line_idx == line_idx;
@@ -1263,7 +1287,7 @@ namespace lw_common.ui
             // make sure f3/shift-f3 will work on the current search (cur_search_), not on the currently selected word(s)
             edit.escape();
 
-            select_idx(0, select_type.notify_parent);
+            select_row_idx(0, select_type.notify_parent);
             match_item i = item_at(0);
             bool include_row_zero = sel_row_idx == 0 || sel_row_idx == -1;
             if (include_row_zero && string_search.matches(i.match.line.part(info_type.msg), cur_search_)) {
@@ -1301,7 +1325,7 @@ namespace lw_common.ui
             }
 
             if (found >= 0) {
-                select_idx(found, select_type.notify_parent);
+                select_row_idx(found, select_type.notify_parent);
                 ensure_line_visible(found);
             } else
                 util.beep(util.beep_type.err);
@@ -1332,7 +1356,7 @@ namespace lw_common.ui
                     found = idx;
             }
             if (found >= 0) {
-                select_idx(found, select_type.notify_parent);
+                select_row_idx(found, select_type.notify_parent);
                 ensure_line_visible(found);
             } else
                 util.beep(util.beep_type.err);
@@ -1371,7 +1395,7 @@ namespace lw_common.ui
             }
 
             if (found >= 0) {
-                select_idx(found, select_type.notify_parent);
+                select_row_idx(found, select_type.notify_parent);
                 ensure_line_visible(found);
             } else
                 util.beep(util.beep_type.err);
@@ -1390,7 +1414,7 @@ namespace lw_common.ui
             }
 
             if (found >= 0) {
-                select_idx(found, select_type.notify_parent);
+                select_row_idx(found, select_type.notify_parent);
                 ensure_line_visible(found);
             } else
                 util.beep(util.beep_type.err);
@@ -1471,7 +1495,7 @@ namespace lw_common.ui
 
             if (mark >= 0) {
                 int idx = row_by_line_idx(mark).Index;
-                select_idx(idx, select_type.notify_parent);
+                select_row_idx(idx, select_type.notify_parent);
                 ensure_line_visible(idx);
             } else
                 util.beep(util.beep_type.err);
@@ -1490,7 +1514,7 @@ namespace lw_common.ui
 
             if (mark >= 0) {
                 int idx = row_by_line_idx(mark).Index;
-                select_idx(idx, select_type.notify_parent);
+                select_row_idx(idx, select_type.notify_parent);
                 ensure_line_visible(idx);
             } else
                 util.beep(util.beep_type.err);

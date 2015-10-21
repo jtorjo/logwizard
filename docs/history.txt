@@ -1,15 +1,11 @@
 
 
-- full log : not in sync after filter_.match_count finished + not in sync correctly - it points to other lines
-  - pehaps will be fixed by previous fix?
 
-- todo: end of refresh on teh other thread -> refresh log view +
-  - todo: after the user has done any toggle, i need to preserve the former selected item (go_to_closest_line)
+
+- bug: wait_and_release() -> need to check its return
 
 - todo: on full log - don't allow any toggling (even though theoretically it could be possible)
 
-- when toggling: disable the log_view + show "hourglass" cursor
-  - while disabled, ignore any toggling of the above (check for lv.Enabled)
 
 - todo: toggles filter/show-full-log -> save them per view (perhaps the filter - i should not save it?)
   - show them visually in "Toggles" menu + update "Filter..." text (based on existing search -> Filter by [word]/ by [search] / by current line)
@@ -18,7 +14,8 @@
 
 
 
-
+- todo: when reselecting previous selection -> keep its relative position as well (for instance, if it used to be the 5th shown row, preserve that)
+  - of course, preserve it only if possible - for instance, after filtering, we could end up having only 2 rows above, thus can't show as 5th
 
 
 
@@ -39,7 +36,15 @@
 				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
 				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
 				........
+
+
+1.3.27b
+- when toggling: disable the log_view + show "hourglass" cursor
+  - while disabled, ignore any toggling of the above (check for lv.Enabled)
+- done: end of refresh on teh other thread -> refresh log view +
+  - todo: after the user has done any toggle, i need to preserve the former selected item (go_to_closest_line)
 - lowlevelsroll : freeze/unfreeze?
+  note: not needed anymore = the issue with changing the colors; right now, works like a charm
 
 
 1.3.27a

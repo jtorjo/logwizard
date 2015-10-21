@@ -165,6 +165,34 @@ namespace lw_common.ui {
             return found as match_item;
         }
 
+        public Tuple<match_item, int> binary_search_closest(int line_idx) {
+            bool filter_view;
+            bool show_full_log;
+            lock (this) {
+                filter_view = filter_view_;
+                show_full_log = show_full_log_;
+            }
+
+            var closest = (show_full_log ? full_log_items.binary_search_closest(line_idx) : items_.binary_search_closest(line_idx));
+            if (closest.Item2 < 0)
+                // it wasn't found at all
+                return new Tuple<match_item, int>(closest.Item1 as match_item, closest.Item2);
+
+            if (!filter_view)
+                return new Tuple<match_item, int>(closest.Item1 as match_item, closest.Item2);
+
+            // here, we need to further apply the filter
+            int found;
+            lock(this)
+                found = sorted_line_indexes_.BinarySearch(closest.Item2);
+            if (found < 0)
+                found = ~found;
+            // note: at this point, we need to find the EXACT item (it's guaranteed to exist)
+            closest = (show_full_log ? full_log_items.binary_search_closest(found) : items_.binary_search_closest(found));
+            Debug.Assert(closest.Item2 == found);
+            return new Tuple<match_item, int>(closest.Item1 as match_item, closest.Item2);
+        }
+
         private int item_count_at_this_time {
             get {
                 bool filter_view;
@@ -200,7 +228,8 @@ namespace lw_common.ui {
 
         private void update_filter_thread() {
             while (!disposed_) {
-                change_event_.wait_and_release();
+                if (!change_event_.wait_and_release())
+                    continue;
 
                 bool filter_view;
                 bool show_full_log;
@@ -213,8 +242,7 @@ namespace lw_common.ui {
                 if (filter_view) 
                     // the user toggled on filtering
                     run_filter(show_full_log);
-                
-                
+                                
                 lock (this) {
                     filter_view_ = filter_view_now_;
                     show_full_log_ = show_full_log_now_;
@@ -225,6 +253,9 @@ namespace lw_common.ui {
 
                     needs_ui_update_ = true;
                 }
+                // let parent know we've updated
+                if ( parent_.IsHandleCreated)
+                    parent_.async_call(parent_.refresh);
             }
         }
 

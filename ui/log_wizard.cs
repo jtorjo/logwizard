@@ -2586,7 +2586,7 @@ namespace LogWizard
         public string matched_logs(int line_idx) {
             List<string> matched = new List<string>();
             foreach (var lv in all_log_views())
-                if (lv.matches_line(line_idx))
+                if (lv.filter_matches_line(line_idx))
                     matched.Add(lv.name);
 
             string selected = log_view_for_tab(viewsTab.SelectedIndex).name;
