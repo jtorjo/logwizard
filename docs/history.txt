@@ -1,9 +1,4 @@
 
-- lowlevelsroll : freeze/unfreeze?
-
-
-- **** i have to stop using match_at (since it's filter-dependent; or, have it return model.item_at)
-  ---------> note; var i = match_at(row_idx) as full_log_match_item; ----> this is in has_found_colors -> i have to think about it
 
 - full log : not in sync after filter_.match_count finished + not in sync correctly - it points to other lines
   - pehaps will be fixed by previous fix?
@@ -11,13 +6,44 @@
 - todo: end of refresh on teh other thread -> refresh log view +
   - todo: after the user has done any toggle, i need to preserve the former selected item (go_to_closest_line)
 
-
 - todo: on full log - don't allow any toggling (even though theoretically it could be possible)
 
 - when toggling: disable the log_view + show "hourglass" cursor
-  - while disabled, ignore any toggling
+  - while disabled, ignore any toggling of the above (check for lv.Enabled)
 
 - todo: toggles filter/show-full-log -> save them per view (perhaps the filter - i should not save it?)
+  - show them visually in "Toggles" menu + update "Filter..." text (based on existing search -> Filter by [word]/ by [search] / by current line)
+
+- bug: on tn2/debug -> msg column not shown on full log; also, file:line shown after msg on current view
+
+
+
+
+
+
+
+- if no selected text/no find -> use the current line to filter by (filter by all filters containing that line)
+  + if on filter control + a filter selected -> filter by that
+  - show a status message : "Filtering by ..."
+
+
+
+- bug: on debug/tableninja2.log -> we don't show all lines - we're pretty much behind
+  - note: it shows we read all lines, but it does not update -> perhaps item_count related?
+  - note: i was watching "bet" tab, but full log did not update correctly either
+  - note: it seems we entered an infinite loop - but not sure where?
+
+- bug: seems that after monitoring (live) for a file, if i drop another file, i will get an infinite number of "new lines" events
+				(0): 02:20:22,864 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
+				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
+				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
+				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
+				........
+- lowlevelsroll : freeze/unfreeze?
+
+
+1.3.27a
+- fix: i have to stop using match_at (since it's filter-dependent; or, have it return model.item_at)
 
 
 1.3.26j

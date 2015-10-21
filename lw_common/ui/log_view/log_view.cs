@@ -236,7 +236,7 @@ namespace lw_common.ui
             get {
                 int idx = sel_row_idx;
                 if (idx >= 0)
-                    return match_at(idx);
+                    return item_at(idx);
                 else
                     return null;
             }
@@ -284,7 +284,7 @@ namespace lw_common.ui
             get {
                 int sel = sel_row_idx;
                 if (sel >= 0)
-                    return match_at(sel).match.line_idx;
+                    return item_at(sel).match.line_idx;
                 return -1;
             }
         }
@@ -298,7 +298,7 @@ namespace lw_common.ui
             get {
                 int sel = sel_row_idx;
                 if (sel >= 0)
-                    return match_at(sel) .match.line.part(info_type.msg);
+                    return item_at(sel) .match.line.part(info_type.msg);
                 return "";
             }
         }
@@ -318,17 +318,7 @@ namespace lw_common.ui
                 return new Rectangle();
             }
         }
-        // fg and bg
-        public Tuple<Color,Color> sel_line_colors {
-            get {
-                int sel = sel_row_idx;
-                if (sel >= 0) {
-                    var i = match_at(sel) ;
-                    return new Tuple<Color, Color>(i.fg(this), i.bg(this));
-                }
-                return new Tuple<Color, Color>(Color.Black,Color.White);
-            }
-        }
+
         private bool is_current_view {
             get {
                 var parent = Parent as TabPage;
@@ -524,8 +514,11 @@ namespace lw_common.ui
             return m.Item1 != null ? list.GetItem(m.Item2) : null;
         }
 
-        private match_item match_at(int idx) {
+        private match_item item_at(int idx) {
+            return model_.item_at(idx);
+#if old_code
             return filter_.matches.match_at(idx) as match_item;
+#endif
         }
 
 
@@ -658,7 +651,7 @@ namespace lw_common.ui
         private bool has_value_at_column(info_type type, int max_rows_to_check) {
             int value_count = 0;
             for (int idx = 0; idx < max_rows_to_check; ++idx) {
-                var i = match_at(idx) ;
+                var i = item_at(idx) ;
                 if (i.line_idx < 0)
                     continue;
                 if (cell_value_by_type(i, type) != "")
@@ -799,7 +792,7 @@ namespace lw_common.ui
 
         // if first item is true, we found colors, and the colors are item2 & 3
         private Tuple<bool,Color,Color> has_found_colors(int row_idx, log_view other_log, bool is_sel) {
-            var i = match_at(row_idx) as full_log_match_item;
+            var i = item_at(row_idx) as full_log_match_item;
 
             int line_idx = i.match.line_idx;
             match_item found_line = null;
@@ -949,7 +942,7 @@ namespace lw_common.ui
                 return;
 
             if (select_nofify_ == select_type.notify_parent) {
-                int line_idx = match_at(sel).match.line_idx;
+                int line_idx = item_at(sel).match.line_idx;
                 lv_parent.on_sel_line(this, line_idx);
             }
 
@@ -1058,7 +1051,7 @@ namespace lw_common.ui
             int sel = sel_row_idx;
             if (sel < 0)
                 sel = 0; // just in case we haven't selected anything - start from beginning
-            var i = match_at(sel);
+            var i = item_at(sel);
             var time = i.match.line.time;
 
             if (time != DateTime.MinValue) {
@@ -1178,7 +1171,7 @@ namespace lw_common.ui
             cur_filter_row_idx_ = -1;
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
-                match_item i = match_at(idx);
+                match_item i = item_at(idx);
                 i.override_fg = util.transparent;
                 i.override_bg = util.transparent;
             }
@@ -1271,7 +1264,7 @@ namespace lw_common.ui
             edit.escape();
 
             select_idx(0, select_type.notify_parent);
-            match_item i = match_at(0);
+            match_item i = item_at(0);
             bool include_row_zero = sel_row_idx == 0 || sel_row_idx == -1;
             if (include_row_zero && string_search.matches(i.match.line.part(info_type.msg), cur_search_)) {
                 // line zero contains the text already
@@ -1302,7 +1295,7 @@ namespace lw_common.ui
                     continue;
                 }
 
-                match_item i = match_at(idx);
+                match_item i = item_at(idx);
                 if (string_search.matches(i.match.line.part(info_type.msg), cur_search_))
                     found = idx;
             }
@@ -1334,7 +1327,7 @@ namespace lw_common.ui
                     continue;
                 }
 
-                match_item i = match_at(idx);
+                match_item i = item_at(idx);
                 if (string_search.matches(i.match.line.part(info_type.msg), cur_search_))
                     found = idx;
             }
@@ -1350,7 +1343,7 @@ namespace lw_common.ui
             bool needs_refresh = false;
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
-                match_item i = match_at(idx);
+                match_item i = item_at(idx);
                 bool is_match = filter_row_idx >= 0 && i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                 bool needs_change = (is_match && (i.override_fg.ToArgb() != fg.ToArgb() || i.override_bg.ToArgb() != bg.ToArgb())) || (!is_match && (i.override_fg != util.transparent || i.override_bg != util.transparent));
 
@@ -1371,7 +1364,7 @@ namespace lw_common.ui
             int found = -1;
             int next_row = sel_row_idx >= 0 ? sel_row_idx + 1 : 0;
             for (int idx = next_row; idx < count && found < 0; ++idx) {
-                match_item i = match_at(idx);
+                match_item i = item_at(idx);
                 bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                 if (is_match)
                     found = idx;
@@ -1390,7 +1383,7 @@ namespace lw_common.ui
             int found = -1;
             int prev_row = sel_row_idx >= 0 ? sel_row_idx - 1 : filter_.match_count - 1;
             for (int idx = prev_row; idx >= 0 && found < 0; --idx) {
-                match_item i = match_at(idx);
+                match_item i = item_at(idx);
                 bool is_match = i.match.matches.Length > filter_row_idx && i.match.matches[filter_row_idx];
                 if (is_match)
                     found = idx;
@@ -1408,7 +1401,7 @@ namespace lw_common.ui
 
             int row_idx = 0;
             foreach (int idx in indices) {
-                match_item i = match_at(idx);
+                match_item i = item_at(idx);
 
                 int visible_idx = 0;
                 string font = list.Font.Name;
@@ -1437,21 +1430,6 @@ namespace lw_common.ui
             var export = this.export(sel, true);
             string html = export.to_html(), text = export.to_text();
             clipboard_util.copy(html, text);
-
-#if old_code
-            string full = "";
-            foreach (int row in sel) {
-                item i = match_at(row) ;
-                if (full != "")
-                    full += "\r\n";
-                full += i.match.line.part(info_type.msg);
-            }
-
-            try {
-                Clipboard.SetText(full);
-            } catch {
-            }
-#endif
         }
 
         public void copy_full_line_to_clipboard() {
@@ -1462,21 +1440,6 @@ namespace lw_common.ui
             var export = this.export(sel, false);
             string html = export.to_html(), text = export.to_text();
             clipboard_util.copy(html, text);
-
-#if old_code
-            string full = "";
-            foreach (int row in sel) {
-                item i = match_at(row) ;
-                if (full != "")
-                    full += "\r\n";
-                full += i.match.line.full_line;
-            }
-
-            try {
-                Clipboard.SetText(full);
-            } catch {
-            }
-#endif
         }
 
         public void set_bookmarks(List<int> line_idxs) {
@@ -1518,7 +1481,7 @@ namespace lw_common.ui
             if (filter_.match_count < 1)
                 return;
 
-            int start = sel_row_idx >= 0 ? sel_line_idx - 1 : match_at(sel_row_idx).match.line_idx;
+            int start = sel_row_idx >= 0 ? sel_line_idx - 1 : item_at(sel_row_idx).match.line_idx;
             int mark = bookmarks_.LastOrDefault(line => line <= start && row_by_line_idx(line) != null);
             if (mark == 0)
                 if (!bookmarks_.Contains(mark))
@@ -1663,7 +1626,7 @@ namespace lw_common.ui
 
             int count = filter_.match_count;
             for (int idx = 0; idx < count; ++idx) {
-                match_item i = match_at(idx);
+                match_item i = item_at(idx);
 
                 int visible_idx = 0;
                 string font = list.Font.Name;

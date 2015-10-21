@@ -137,7 +137,7 @@ namespace lw_common.ui {
             get { return item_count_; }
         }
 
-        private match_item item_at(int idx) {
+        internal match_item item_at(int idx) {
             bool filter_view;
             bool show_full_log;
             lock (this) {

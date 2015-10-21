@@ -23,6 +23,17 @@
 
 
 
+- https://codelympics.io/projects/3 ->>> add csv, xml, db, event viewer, outputdebugstring etc to viewing
+  - this also means adding the description pane
+  - adding aliases
+  - guessing the right file (from extension, etc.)
+  - allow editing log settings (depending on its type)
+
+
+
+
+
+
 
 - fg/bg: allow changing it (bug: fg does not work)
 
