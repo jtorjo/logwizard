@@ -829,8 +829,10 @@ namespace lw_common.ui
             refresh_visible_columns();
             update_x_of_y();
 
-            if ( needs_ui_update)
+            if (needs_ui_update) {
                 go_to_closest_line(sel_line_idx_before_set_filter_, select_type.notify_parent);
+                lv_parent.after_set_filter_update();
+            }
 
             list.Refresh();
             if (needs_scroll && more_items && !needs_ui_update)

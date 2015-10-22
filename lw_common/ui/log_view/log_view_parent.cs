@@ -56,5 +56,8 @@ namespace lw_common.ui {
         void go_to_view(int view_idx);
 
         Tuple<Color, Color> full_log_row_colors(int line_idx);
+
+        // called when extra filter has changed, or show-all-lines has changed
+        void after_set_filter_update();
     }
 }

@@ -984,6 +984,15 @@ namespace LogWizard
             return full_log. update_colors_for_line(row_idx, all_log_views(), sel);
         }
 
+        public void after_set_filter_update() {
+            var lv = log_view_for_tab(viewsTab.SelectedIndex);
+            string filter = lv.filter_view ? "Extra Filter: " + lv.filter_friendly_name : "";
+            string fulllog = lv.show_full_log ? "All Lines" : "View";
+
+            string status = lv.filter_view ? filter + " Applied On " + fulllog : "Showing " + fulllog;
+            set_status(status);
+        }
+
         public static List<log_wizard> forms {
             get { return forms_; }
         }
@@ -2732,7 +2741,7 @@ namespace LogWizard
 
         // sets the status for a given period - after that ends, the previous status is shown
         // if < 0, it's forever
-        private void set_status(string msg, status_type type = status_type.msg, int set_status_for_ms = 5000) {
+        private void set_status(string msg, status_type type = status_type.msg, int set_status_for_ms = 7500) {
             if (set_status_for_ms <= 0)
                 statuses_.Clear();
 
