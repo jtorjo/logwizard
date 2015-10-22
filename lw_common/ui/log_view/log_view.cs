@@ -389,6 +389,22 @@ namespace lw_common.ui
             get { return model_.item_count; }
         }
 
+        public string filter_friendly_name {
+            get {
+                string sel_text = edit.sel_text;
+                if ( sel_text != "")
+                    return sel_text + " (case-insensitive)";
+
+                if (cur_search_ != null)
+                    return cur_search_.friendly_name;
+
+                if (sel_row_idx >= 0)
+                    return "Filter(s) matching this line";
+
+                return "";
+            }
+        }
+
         // further filtering (toggle)
         private bool item_filter(match_item item, bool applied_on_full_log) {
             string sel_text = edit.sel_text;

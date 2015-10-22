@@ -99,6 +99,9 @@
             this.hotkeys = new System.Windows.Forms.LinkLabel();
             this.status = new System.Windows.Forms.Label();
             this.saveTimer = new System.Windows.Forms.Timer(this.components);
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripShowAllLines = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripExtraFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.newViewMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             this.toggleMenu.SuspendLayout();
@@ -161,7 +164,7 @@
             this.newFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.newFilteredView.ContextMenuStrip = this.newViewMenu;
             this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.newFilteredView.Location = new System.Drawing.Point(373, 29);
+            this.newFilteredView.Location = new System.Drawing.Point(371, 29);
             this.newFilteredView.Name = "newFilteredView";
             this.newFilteredView.Size = new System.Drawing.Size(18, 20);
             this.newFilteredView.TabIndex = 1;
@@ -201,8 +204,8 @@
             this.label7.Size = new System.Drawing.Size(113, 15);
             this.label7.TabIndex = 7;
             this.label7.Text = "Friendly Name (opt)";
-            this.tip.SetToolTip(this.label7, "You can assign a friendlier name to this log_parser, so you can easier locat" +
-        "e it in history");
+            this.tip.SetToolTip(this.label7, "You can assign a friendlier name to this log_parser, so you can easier locate it " +
+        "in history");
             // 
             // friendlyNameCtrl
             // 
@@ -211,8 +214,8 @@
             this.friendlyNameCtrl.Name = "friendlyNameCtrl";
             this.friendlyNameCtrl.Size = new System.Drawing.Size(111, 23);
             this.friendlyNameCtrl.TabIndex = 8;
-            this.tip.SetToolTip(this.friendlyNameCtrl, "You can assign a friendlier name to this log_parser, so you can easier locat" +
-        "e it in history");
+            this.tip.SetToolTip(this.friendlyNameCtrl, "You can assign a friendlier name to this log_parser, so you can easier locate it " +
+        "in history");
             this.friendlyNameCtrl.TextChanged += new System.EventHandler(this.friendlyName_TextChanged);
             // 
             // logSyntaxCtrl
@@ -242,7 +245,7 @@
             // 
             this.delFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.delFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.delFilteredView.Location = new System.Drawing.Point(391, 29);
+            this.delFilteredView.Location = new System.Drawing.Point(389, 29);
             this.delFilteredView.Name = "delFilteredView";
             this.delFilteredView.Size = new System.Drawing.Size(18, 20);
             this.delFilteredView.TabIndex = 2;
@@ -302,7 +305,7 @@
             this.synchronizedWithFullLog.Checked = true;
             this.synchronizedWithFullLog.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizedWithFullLog.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizedWithFullLog.Location = new System.Drawing.Point(460, 29);
+            this.synchronizedWithFullLog.Location = new System.Drawing.Point(458, 29);
             this.synchronizedWithFullLog.Name = "synchronizedWithFullLog";
             this.synchronizedWithFullLog.Size = new System.Drawing.Size(46, 20);
             this.synchronizedWithFullLog.TabIndex = 1;
@@ -318,7 +321,7 @@
             this.synchronizeWithExistingLogs.Checked = true;
             this.synchronizeWithExistingLogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizeWithExistingLogs.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(414, 29);
+            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(412, 29);
             this.synchronizeWithExistingLogs.Name = "synchronizeWithExistingLogs";
             this.synchronizeWithExistingLogs.Size = new System.Drawing.Size(46, 20);
             this.synchronizeWithExistingLogs.TabIndex = 3;
@@ -394,10 +397,13 @@
             this.sourcePanetopmostToolStripMenuItem,
             this.topmostToolStripMenuItem,
             this.detailsToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.toolStripShowAllLines,
+            this.toolStripExtraFilter,
             this.toolStripSeparator1,
             this.whatIsThisToolStripMenuItem});
             this.toggleMenu.Name = "toggleMenu";
-            this.toggleMenu.Size = new System.Drawing.Size(178, 274);
+            this.toggleMenu.Size = new System.Drawing.Size(178, 346);
             // 
             // currentViewToolStripMenuItem
             // 
@@ -726,7 +732,7 @@
             this.filteredLeft.Panel1.Controls.Add(this.newFilteredView);
             this.filteredLeft.Panel1.Controls.Add(this.viewsTab);
             this.filteredLeft.Size = new System.Drawing.Size(979, 451);
-            this.filteredLeft.SplitterDistance = 544;
+            this.filteredLeft.SplitterDistance = 542;
             this.filteredLeft.SplitterWidth = 6;
             this.filteredLeft.TabIndex = 0;
             this.filteredLeft.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.filteredLeft_SplitterMoved);
@@ -742,7 +748,7 @@
             this.viewsTab.Location = new System.Drawing.Point(0, 3);
             this.viewsTab.Name = "viewsTab";
             this.viewsTab.SelectedIndex = 0;
-            this.viewsTab.Size = new System.Drawing.Size(539, 449);
+            this.viewsTab.Size = new System.Drawing.Size(537, 449);
             this.viewsTab.TabIndex = 0;
             this.viewsTab.SelectedIndexChanged += new System.EventHandler(this.viewsTab_SelectedIndexChanged);
             this.viewsTab.DragDrop += new System.Windows.Forms.DragEventHandler(this.filteredViews_DragDrop);
@@ -754,7 +760,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(531, 421);
+            this.tabPage1.Size = new System.Drawing.Size(529, 421);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -769,7 +775,7 @@
             this.dropHere.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.dropHere.Location = new System.Drawing.Point(3, 3);
             this.dropHere.Name = "dropHere";
-            this.dropHere.Size = new System.Drawing.Size(520, 421);
+            this.dropHere.Size = new System.Drawing.Size(518, 421);
             this.dropHere.TabIndex = 0;
             this.dropHere.Text = "Drop it Like it\'s Hot!\r\nJust drop a file here, and get to work!\r\n";
             this.dropHere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -892,6 +898,25 @@
             this.saveTimer.Interval = 15000;
             this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(174, 6);
+            // 
+            // toolStripShowAllLines
+            // 
+            this.toolStripShowAllLines.Name = "toolStripShowAllLines";
+            this.toolStripShowAllLines.Size = new System.Drawing.Size(177, 22);
+            this.toolStripShowAllLines.Text = "Show All Lines";
+            this.toolStripShowAllLines.Click += new System.EventHandler(this.toolStripShowAllLines_Click);
+            // 
+            // toolStripExtraFilter
+            // 
+            this.toolStripExtraFilter.Name = "toolStripExtraFilter";
+            this.toolStripExtraFilter.Size = new System.Drawing.Size(177, 22);
+            this.toolStripExtraFilter.Text = "Extra Filter:";
+            this.toolStripExtraFilter.Click += new System.EventHandler(this.toolStripExtraFilter_Click);
+            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1013,6 +1038,9 @@
         private System.Windows.Forms.ToolStripMenuItem createANewViewFromScratchToolStripMenuItem;
         private System.Windows.Forms.Button testSyntax;
         private System.Windows.Forms.LinkLabel helpSyntax;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripShowAllLines;
+        private System.Windows.Forms.ToolStripMenuItem toolStripExtraFilter;
     }
 }
 

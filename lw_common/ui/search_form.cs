@@ -41,6 +41,22 @@ namespace lw_common.ui {
             public bool use_regex = false;
             public Regex regex = null;
 
+            public string friendly_name {
+                get {
+                    List<string> attr = new List<string>();
+                    if ( !case_sensitive)
+                        attr.Add("case-insensitive");
+                    if ( full_word)
+                        attr.Add("whole word");
+                    var extra = util.concatenate(attr, ",");
+
+                    if (!use_regex)
+                        return text + (extra != "" ? " (" + extra + ")" : "");
+
+                    return "Regex " + regex.ToString() + (extra != "" ? " (" + extra + ")" : "");
+                }
+            }
+
             public Color fg = util.transparent, bg = util.transparent;
             public bool mark_lines_with_color = false;
         }

@@ -3140,6 +3140,14 @@ namespace LogWizard
             detailsToolStripMenuItem.Checked = global_ui.show_details;
             // we don't have this pane yet
             detailsToolStripMenuItem.Enabled = false;
+
+            var lv = selected_view();
+            bool on_full_log = is_focus_on_full_log();
+            toolStripExtraFilter.Enabled = !on_full_log && lv.filter_friendly_name != "";
+            toolStripShowAllLines.Enabled = !on_full_log;
+            toolStripExtraFilter.Checked = lv.filter_view;
+            toolStripShowAllLines.Checked = lv.show_full_log;
+            toolStripExtraFilter.Text = lv.filter_friendly_name != "" ? "Extra Filter: " + lv.filter_friendly_name : "(no filter)";
         }
 
 
@@ -3231,6 +3239,14 @@ namespace LogWizard
 
         private void whatIsThisToolStripMenuItem_Click(object sender, EventArgs e) {
             Process.Start("https://github.com/jtorjo/logwizard/wiki/Toggles");
+        }
+
+        private void toolStripShowAllLines_Click(object sender, EventArgs e) {
+            handle_action(action_type.toggle_show_full_log);
+        }
+
+        private void toolStripExtraFilter_Click(object sender, EventArgs e) {
+            handle_action(action_type.toggle_filter_view);
         }
 
         // if copy_of_view is not null, we're creating a copy of that view
@@ -3335,6 +3351,7 @@ namespace LogWizard
                 util.postpone(() => full_log_ctrl_.force_refresh_visible_columns(), 2000);
             }
         }
+
 
     }
 }
