@@ -1086,6 +1086,8 @@ namespace LogWizard
                     util.postpone(() => try_to_go_to_selected_line(global_ui.selected_row_idx), 250);
 
             util.postpone(() => show_tabs(global_ui.show_tabs), 100);
+
+
             /* not tested
             if (cur.topmost) {
                 util.bring_to_topmost(this);
@@ -1106,20 +1108,11 @@ namespace LogWizard
 
         private void show_row_based_on_global_ui() {
             // 1.3.11d+ - right now, we're showing this as soon as we have enough rows
-            foreach (var lv in all_log_views_and_full_log())
-                lv.show_row(global_ui.show_row_for_view(lv.name));
-#if old_code
-            bool is_up_to_date = true;
-            foreach (var lv in all_log_views_and_full_log())
-                if (!lv.is_filter_up_to_date)
-                    is_up_to_date = false;
-
-            if (is_up_to_date)
-                foreach (var lv in all_log_views_and_full_log())
-                    lv.show_row(global_ui.show_row_for_view(lv.name));
-            else
-                util.postpone(() => show_row_based_on_global_ui(), 100);
-#endif
+            foreach (var lv in all_log_views_and_full_log()) {
+                var view = global_ui.view(lv.name);
+                lv.show_row( view.show_row);
+                lv.set_filter( false, view.show_full_log );
+            }
         }
 
 
@@ -2361,10 +2354,12 @@ namespace LogWizard
                     view.increase_font(-1);
                 break;
 
-            case action_type.toggle_show_msg_only:
+            case action_type.toggle_show_msg_only: {
                 var next = global_ui.next_show_row_for_view(lv.name);
                 lv.show_row(next);
-                global_ui.show_row_for_view(lv.name, next);
+                var old = global_ui.view(lv.name);
+                global_ui.view(lv.name, new ui_info.view_info(next, old.show_full_log));
+            }
                 break;
             case action_type.scroll_up:
                 lv.scroll_up();
@@ -2449,8 +2444,11 @@ namespace LogWizard
             case action_type.toggle_filter_view:
                 lv.set_filter( !lv.filter_view, lv.show_full_log);
                 break;
-            case action_type.toggle_show_full_log:
-                lv.set_filter( lv.filter_view, !lv.show_full_log);
+            case action_type.toggle_show_full_log: {
+                lv.set_filter(lv.filter_view, !lv.show_full_log);
+                var old = global_ui.view(lv.name);
+                global_ui.view(lv.name, new ui_info.view_info(old.show_row, !old.show_full_log) );
+            }
                 break;
 
             default:

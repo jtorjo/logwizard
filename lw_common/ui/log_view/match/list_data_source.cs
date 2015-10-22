@@ -78,11 +78,11 @@ namespace lw_common.ui {
         }
 
         public bool filter_view {
-            get { return filter_view_now_; }
+            get { lock(this) return filter_view_now_; }
         }
 
         public bool show_full_log {
-            get { return show_full_log_now_; }
+            get { lock(this) return show_full_log_now_; }
         }
 
         // set both filter options in one step (so that change_event_ is triggered only once!)

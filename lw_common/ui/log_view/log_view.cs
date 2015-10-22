@@ -372,6 +372,10 @@ namespace lw_common.ui
                 // we're already in the process of computing a filter
                 return;
 
+            if (model_.filter_view == filter_view && model_.show_full_log == show_full_log)
+                // nothing changed
+                return;
+
             // until we finish running the filter, don't allow any more toggling
             Enabled = false;
             Cursor = Cursors.WaitCursor;

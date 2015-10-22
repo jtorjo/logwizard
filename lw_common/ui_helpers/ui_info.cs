@@ -99,7 +99,50 @@ namespace lw_common {
             // ... this makes sense only for the full-log
             msg_and_view_only, full_row
         }
-        public Dictionary<string,show_row_type> show_row = new Dictionary<string, show_row_type>(); 
+
+        // contains per-view settings
+        public class view_info {
+            internal show_row_type show_row_ = show_row_type.full_row;
+            // 1.3.28+ if true, we're showing the full log (the rows that don't match the filter are shown in gray)
+            internal bool show_full_log_ = false;
+
+            public show_row_type show_row {
+                get { return show_row_; }
+            }
+
+            public bool show_full_log {
+                get { return show_full_log_; }
+            }
+
+            internal view_info() {
+            }
+
+            public view_info(show_row_type show_row, bool show_full_log) {
+                show_row_ = show_row;
+                show_full_log_ = show_full_log;
+            }
+
+            internal string to_string() {
+                // 1 = the version - just in case later on i want to change how i save this
+                return "1," + (int) show_row_ + "," + (show_full_log_ ? "1" : "0");
+            }
+
+            internal static view_info from_string(string s) {
+                view_info vi = new view_info();
+                if ( s == "")
+                    return vi;
+                var from = s.Split(',');
+                Debug.Assert(from.Length == 3);
+                vi.show_row_ = (show_row_type) int.Parse(from[1]);
+                vi.show_full_log_ = from[2] != "0";
+                return vi;
+            }
+
+        }
+        private readonly view_info default_view_info_  = new view_info();
+
+        // FIXME (minor) I should ignore views that have been deleted
+        private Dictionary<string, view_info> views_ = new Dictionary<string, view_info>(); 
 
         public void copy_from(ui_info other) {
             left = other.left;
@@ -127,26 +170,29 @@ namespace lw_common {
 
             show_left_pane_ = other.show_left_pane_;
             show_notes_ = other.show_notes_;
+            // ... get a copy
+            views_ = other.views_.ToDictionary(x => x.Key, x => x.Value);
         }
 
-        public show_row_type show_row_for_view(string name) {
-            if (show_row.ContainsKey(name))
-                return show_row[name];
+        // note: this is read-only
+        public view_info view(string name) {
+            if (views_.ContainsKey(name))
+                return views_[name];
             else 
-                return show_row_type.full_row;
+                return default_view_info_;            
         }
 
-        public void show_row_for_view(string name, show_row_type show) {
-            if (show_row.ContainsKey(name))
-                show_row[name] = show;
-            else 
-                show_row.Add(name, show);
+        public void view(string name, view_info vi) {
+            if (!views_.ContainsKey(name))
+                views_.Add(name, vi);
+            else
+                views_[name] = vi;            
         }
 
         public show_row_type next_show_row_for_view(string name) {
             bool is_full_log = name == "[All]";
 
-            switch (show_row_for_view(name)) {
+            switch (view(name).show_row) {
             case show_row_type.msg_only:
                 return is_full_log ? show_row_type.msg_and_view_only : show_row_type.full_row;
             case show_row_type.msg_and_view_only:
@@ -166,7 +212,7 @@ namespace lw_common {
             app.load_save(load, ref top, prefix + ".top", -1);
             app.load_save(load, ref width, prefix + ".width", -1);
             app.load_save(load, ref height, prefix + ".height", -1);
-            app.load_save(load, ref maximized, prefix + "maximized", false);
+            app.load_save(load, ref maximized, prefix + ".maximized", false);
 
             app.load_save(load, ref show_filter_, prefix + ".show_filter", true);
             app.load_save(load, ref show_source, prefix + ".show_source", true);
@@ -180,37 +226,29 @@ namespace lw_common {
             app.load_save(load, ref show_details, prefix + ".show_details", false);
             app.load_save(load, ref topmost, prefix + ".topmost", false);
 
-            app.load_save(load, ref selected_view, prefix + "selected_view", selected_view);
-            app.load_save(load, ref log_name, prefix + "log_name");
-            app.load_save(load, ref selected_row_idx, prefix + "selected_row_idx", -1);
-            app.load_save(load, ref full_log_splitter_pos, prefix + "full_log_splitter_pos", -1);
-            app.load_save(load, ref left_pane_pos, prefix + "left_pane_pos", -1);
+            app.load_save(load, ref selected_view, prefix + ".selected_view", selected_view);
+            app.load_save(load, ref log_name, prefix + ".log_name");
+            app.load_save(load, ref selected_row_idx, prefix + ".selected_row_idx", -1);
+            app.load_save(load, ref full_log_splitter_pos, prefix + ".full_log_splitter_pos", -1);
+            app.load_save(load, ref left_pane_pos, prefix + ".left_pane_pos", -1);
 
             app.load_save(load, ref show_left_pane_, prefix + ".show_left_pane", true);
-            app.load_save(load, ref show_notes_, prefix + "show_notes", false);
+            app.load_save(load, ref show_notes_, prefix + ".show_notes", false);
 
-            if (load)
-                load_show_row(prefix);
-            else
-                save_show_row(prefix);
+            load_save_view_info(load, prefix + ".view_info");
         }
 
-        private void load_show_row(string prefix) {
-            show_row.Clear();
-            string str = "";
-            app.load_save(true, ref str, prefix + "show_row");
-            foreach (var kv in str.Split( new string[] { ","},StringSplitOptions.RemoveEmptyEntries )) {
-                string[] words = kv.Split('=');
-                try {
-                    show_row.Add(words[0], (show_row_type) int.Parse(words[1]));
-                } catch {
-                }
+        private void load_save_view_info(bool load, string prefix) {
+            if (load) {
+                Dictionary<string,string> view = new Dictionary<string, string>();
+                app.load_save(load, ref view, prefix);
+                views_.Clear();
+                foreach ( var kv in view)
+                    views_.Add( kv.Key, view_info.from_string(kv.Value));
+            } else {
+                var view = views_.ToDictionary(x => x.Key, x => x.Value.to_string());
+                app.load_save(load, ref view, prefix);
             }
-        }
-
-        public void save_show_row(string prefix) {
-            string str = util.concatenate(show_row.Select(x => x.Key + "=" + (int) x.Value), ",");
-            app.load_save(false, ref str, prefix + "show_row");
         }
 
         public void load(string prefix) {
