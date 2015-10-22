@@ -363,6 +363,11 @@ namespace lw_common.ui
         }
 
         public void set_filter(bool filter_view, bool show_full_log) {
+            if (is_full_log)
+                // on full log - don't allow any toggling (even though theoretically it could be possible)
+                // the idea is that the full log should always be FULL LOG - the existing views, you can abuse them in any way :)
+                return;
+
             if (!Enabled)
                 // we're already in the process of computing a filter
                 return;

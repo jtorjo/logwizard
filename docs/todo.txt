@@ -3,27 +3,24 @@
 
 -------------------------------------------------------
 
-	- allow toggling "matches filter(s) X,Y,Z ON/OFF" - this toggle should be customizable (several filters or simply just an extra function?)
-	  - in other words, say i may have a filter or several filters
-	    a. i want to be able to say "at this point, show only messages from these filters" BUT easily be able to toggle back to "show everything in this view"
-		b. i want to be abe to also do "show everything in the current log (while preserving the filters)" and easily be able to toggle back
-		  - i need to modify the way the log model is kept - i will need to keep 3 models: the view itself, the toggled-view (a.), the full-log-view
-		    - very likely - i need to share the full-log-view between all views
-			- need to think about memory efficiency
-	- teh logview needs to refresh and also, old_item_count_ / last_item_count_while_current_view_  -> see how to update them
-	--------- IMPORTANT: this needs to work even when new lines are added!!!!!!! (like, monitoring live)
-	 - when on a line when showing all logs 
-	   -> right click should show teh "Include lines starting/containing"
-	   -> we should not have "Filter/Goto ..." menu
-	   - tothink about the rest
-    - toggling - will preserve the seleted row + its location on the screen!!! (based on its rectangle bounds - computed the first row that is visible, and scroll to there)
-
-	-- at this point, i need to update the filter menu (based on whether current line matches the filters or not)
+- bug: on tn2/debug -> msg column not shown on full log; also, file:line shown after msg on current view
 
 
+- bug: on debug/tableninja2.log -> we don't show all lines - we're pretty much behind
+  - note: it shows we read all lines, but it does not update -> perhaps item_count related?
+  - note: i was watching "bet" tab, but full log did not update correctly either
+    - to test with tn2 , and betting on lots of tables
+  - note: it seems we entered an infinite loop - but not sure where?
+
+- bug: seems that after monitoring (live) for a file, if i drop another file, i will get an infinite number of "new lines" events
+				(0): 02:20:22,864 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
+				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
+				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
+				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
+				........
 
 
-- https://codelympics.io/projects/3 ->>> add csv, xml, db, event viewer, outputdebugstring etc to viewing
+- ??  https://codelympics.io/projects/3 ->>> add csv, xml, db, event viewer, outputdebugstring etc to viewing
   - this also means adding the description pane
   - adding aliases
   - guessing the right file (from extension, etc.)
@@ -138,11 +135,6 @@
 
 
 
-- notes article: if feedback is positive, perhaps allow easy sharing of notes over intranet
-  (so that you automatically save your notes on the intranet as well, and as you load them, you automatically merge them with what is there)
-    - easy way to do: each user writes its notes to intranet into a guid-named file (thus - each user will only write its files so there are no clashes)
-	  - you simply know the guid of the other users, and auto-import their notes 
-	    - (need to find a way to know all the authors for a given file) -> probably use the guid that identifies the file and suffix it by the author name (to think what to do when user changes author name)
 
 
 
@@ -156,8 +148,7 @@
 - refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
   otherwise, i could end up ignoring a column if the first 10 values are empty
 
-- parse lines ending in 0xa
-
+- list_data_source filter/show full log: this needs to work even when new lines are added!!!!!!! (like, monitoring live)
 
 
 

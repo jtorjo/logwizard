@@ -62,3 +62,11 @@
 
 
 - perhaps integrate with github - so that when looking at a message coming from a file:line -> look and see who modified that line?
+
+
+- notes article: if feedback is positive, perhaps allow easy sharing of notes over intranet
+  (so that you automatically save your notes on the intranet as well, and as you load them, you automatically merge them with what is there)
+    - easy way to do: each user writes its notes to intranet into a guid-named file (thus - each user will only write its files so there are no clashes)
+	  - you simply know the guid of the other users, and auto-import their notes 
+	    - (need to find a way to know all the authors for a given file) -> probably use the guid that identifies the file and suffix it by the author name (to think what to do when user changes author name)
+  - probably i may do this, but it's for sure not a priority
