@@ -1,22 +1,18 @@
 
-	 - when on a line when showing all logs 
-	   -> right click should show teh "Include lines starting/containing"
-	   -> we should not have "Filter/Goto ..." menu
-	   - tothink about the rest
-
-
-
 - bug: tn2 bet tab - select preflop, set match color , it will somehow override the color
   (same happened for "process")
-
 
 - see if i can rather quickly find and fix the OLV rendenring issue
 
 
 
+1.3.29d
+- if line from full logs but not from current view (matches.Count = 0)
+  - don't show Filter >> "Set/Change Color" menu
+  - don't show Filter >> "Exclude" menu
 
 
-1.3.29b
+1.3.29c
 - if current view has NO Filtters
   - Include ONLY Lines containing/starting with
 

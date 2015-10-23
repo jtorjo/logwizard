@@ -163,6 +163,9 @@ namespace lw_common.ui {
             if (parent_.sel_col_idx != parent_.msgCol.fixed_index())
                 // at this time (1.2), we only care about filtering the message column
                 return;
+            bool belongs_to_view = parent_.sel.matches.Count > 0;
+            if (!belongs_to_view)
+                return;
 
             bool sel_at_start = parent_.sel_subitem_text.StartsWith(sel);
             if (sel_at_start) {
@@ -175,6 +178,10 @@ namespace lw_common.ui {
 
         private void append_filter_goto_actions(List<action> actions) {
             Debug.Assert(!parent_.is_full_log);
+
+            if (parent_.sel.matches.Count == 0)
+                // this is a line that does not belong to the current view
+                return;
 
             bool is_single_filter = util.to_list(parent_.sel.match.matches).Count(x => x) == 1;
             if ( is_single_filter)
@@ -241,13 +248,16 @@ namespace lw_common.ui {
             }
 
             if (!parent_.is_full_log) {
-                var i = parent_.sel;
-                Debug.Assert(i != null);
-                bool is_default = i.match.font.fg == filter_line.font_info.default_font.fg;
-                if (is_default)
-                    append_filter_create_actions(actions);
-                else
-                    append_filter_existing_actions(actions);
+                bool belongs_to_view = parent_.sel.matches.Count > 0;
+                if (belongs_to_view) {
+                    var i = parent_.sel;
+                    Debug.Assert(i != null);
+                    bool is_default = i.match.font.fg == filter_line.font_info.default_font.fg;
+                    if (is_default)
+                        append_filter_create_actions(actions);
+                    else
+                        append_filter_existing_actions(actions);
+                }
             }
 
             if ( parent_.filter_row_count > 0 && !parent_.is_full_log)
