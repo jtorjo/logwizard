@@ -134,17 +134,21 @@ namespace lw_common.ui {
             if (!allow_include)
                 return;
 
+            // if this is a view with no filters so far, append ONLY to the "Include" message
+            bool is_only = !parent_.is_full_log && parent_.filter.row_count == 0;
+            string only = is_only ? "ONLY " : "";
+
             bool sel_at_start = parent_.sel_subitem_text.StartsWith(sel);
             if ( sel_at_start)
-                add_filter_color_actions(actions, "Include Lines Starting With " + small_sel(), 
+                add_filter_color_actions(actions, "Include " + only + "Lines Starting With " + small_sel(), 
                     () => include_lines(true, true, true), () => include_lines(true, false, true), () => include_lines(true, false, true, true) );
-            add_filter_color_actions(actions, "Include Lines Containing " + small_sel(), 
+            add_filter_color_actions(actions, "Include " + only + "Lines Containing " + small_sel(), 
                 () => include_lines(false, true, true), () => include_lines(false, false, true),  () => include_lines(false, false, true, true) );
 
             if ( sel_at_start)
-                add_filter_color_actions(actions, "Include Lines Starting With " + small_sel() + " (case-INsensitive)", 
+                add_filter_color_actions(actions, "Include " + only + "Lines Starting With " + small_sel() + " (case-INsensitive)", 
                     () => include_lines(true, true, false), () => include_lines(true, false, false), () => include_lines(true, false, false, true) );
-            add_filter_color_actions(actions, "Include Lines Containing " + small_sel() + " (case-INsensitive)", 
+            add_filter_color_actions(actions, "Include " + only + "Lines Containing " + small_sel() + " (case-INsensitive)", 
                 () => include_lines(false, true, false), () => include_lines(false, false, false) , () => include_lines(false, false, false, true));
         }
 
