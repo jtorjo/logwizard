@@ -566,6 +566,26 @@
   - allow zooming on the chart? tothink
   - switching from graph to log and vice versa needs to be ***seamless***
   - while in the chart/graph - i should be able to move with hotkeys as well
+	- normally, you would keep the graph on top of the current view (belonging to it) - however, you should be able to "undock" it
+	- you should be able to "add" to it any data you want - from any view - and they would show on top of each other (on the timeline)
+	- you can even choose colors for each data (like time > 1000 -> red, time > 100 -> yellow, rest -> green)
+	- once again, you can choose data from any view - to add to the graph
+	- you can even consider your current view + the possible extra filters -> just add them on top of the current graph 
+	 (you should also be able to erase data from there)
+	 - you should be able to zoom in/out the timeline (by default -> from start to end)
+	 - you should be able to select if to ignore "empty" lines or not (that is, lines that don't produce any info)
+	 - you should be able to click anywhere in the graph and it would take you there (synchronized with the existing views)
+	   - switch to another view -> and it would sync automatically
+	   - allow "extra synchronizing" -> so that if i click on an exact dot that "belongs" to a certain view -> it would automatically take me there (to that tab, to that line)
+	     (if by any chance that is line is not visible, just go to the closest)
+	 - allow maching of colors 
+	   - if the user wants that -> when showing dots in the graph -> show them with the line/match color of the matching filter
+	   - you can also choose to have each filter shown differently (in the graph) - so that the user can visually see when each filter happens
+	 - i will have to think about threads/categories as well - probably we can fit them in there as well
+    - find "gaps"
+	  TOTHINK - how can we find (what will be useful?) - to show visually differences from messages of a given type 
+	  (like, all times > 1000 -> what are the gaps between them? -> perhaps find min, max, avg)
+
   
 - timeline (pro_v)
   - i need to be able to show each view (lines by color?) on timeline - for instance, be able to find where exactly (on the timeline) are most messages, errors, etc

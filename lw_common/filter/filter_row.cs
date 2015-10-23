@@ -25,10 +25,9 @@ using System.Linq;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
-using lw_common;
 
-namespace LogWizard {
-    class filter_row : raw_filter_row {
+namespace lw_common {
+    public class filter_row : raw_filter_row {
         public filter_row(string text, bool apply_to_existing_lines) : base(text, apply_to_existing_lines) {
         }
 

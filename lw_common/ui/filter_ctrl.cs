@@ -142,8 +142,12 @@ namespace lw_common.ui {
             get { return win32.focused_ctrl() == curFilterCtrl; }
         }
 
-        public bool can_handle_toggle_enable_dimmed_now {
+        public bool is_focus_on_filter_list {
             get { return win32.focused_ctrl() == filterCtrl; }
+        }
+
+        public bool can_handle_toggle_enable_dimmed_now {
+            get { return is_focus_on_filter_list; }
         }
 
         public int sel {

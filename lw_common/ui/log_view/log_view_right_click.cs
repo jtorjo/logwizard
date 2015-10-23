@@ -125,7 +125,7 @@ namespace lw_common.ui {
             string sel = parent_.smart_edit_sel_text;
             if (sel == "")
                 return;
-            if (parent_.sel_col_idx != parent_.msgCol.Index)
+            if (parent_.sel_col_idx != parent_.msgCol.fixed_index())
                 // at this time (1.2), we only care about filtering the message column
                 return;
 
@@ -147,7 +147,7 @@ namespace lw_common.ui {
             string sel = parent_.smart_edit_sel_text;
             if (sel == "")
                 return;
-            if (parent_.sel_col_idx != parent_.msgCol.Index)
+            if (parent_.sel_col_idx != parent_.msgCol.fixed_index())
                 // at this time (1.2), we only care about filtering the message column
                 return;
 
@@ -185,7 +185,7 @@ namespace lw_common.ui {
             string sel = parent_.smart_edit_sel_text;
             if (sel == "")
                 return;
-            if (parent_.sel_col_idx != parent_.msgCol.Index)
+            if (parent_.sel_col_idx != parent_.msgCol.fixed_index())
                 // at this time (1.2), we only care about filtering the message column
                 return;
 
@@ -204,7 +204,7 @@ namespace lw_common.ui {
             string sel = parent_.smart_edit_sel_text;
             if (sel == "")
                 return;
-            if (parent_.sel_col_idx != parent_.msgCol.Index)
+            if (parent_.sel_col_idx != parent_.msgCol.fixed_index())
                 // at this time (1.2), we only care about filtering the message column
                 return;
 

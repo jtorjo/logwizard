@@ -836,6 +836,14 @@ namespace LogWizard
             get { return full_log_ctrl_; }
         }
 
+        public int selected_row_index {
+            get {
+                if (filtCtrl.is_editing_any_filter || filtCtrl.is_focus_on_filter_list)
+                    return filtCtrl.sel;
+                return -1;                
+            }
+        }
+
         public void simple_action(log_view_right_click.simple_action simple) {
             // - Adding a filter/changing a filter + Edit -> need to figure out if it's existing or not, to know what filter to select for later editing!
             switch (simple) {
@@ -992,6 +1000,7 @@ namespace LogWizard
             string status = lv.filter_view ? filter + " Applied On " + fulllog : "Showing " + fulllog;
             set_status(status);
         }
+
 
         public static List<log_wizard> forms {
             get { return forms_; }

@@ -128,7 +128,7 @@ namespace lw_common {
             }
             drawer_.set_parent(lv);
 
-            int msg_col = lv.msgCol.Index;
+            int msg_col = lv.msgCol.fixed_index();
             string msg_txt = lv.sel_line_text;
 
             txt.Clear();

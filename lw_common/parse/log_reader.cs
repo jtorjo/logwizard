@@ -24,9 +24,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using log4net.Repository.Hierarchy;
-using lw_common;
 
-namespace LogWizard {
+namespace lw_common {
     /* 1.0.20+ we need a different reader for each log_view. This way, when the file we're monitoring is appended to,
                all the readers get correctly refreshed
 

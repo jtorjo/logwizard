@@ -118,7 +118,7 @@ namespace lw_common.ui {
             if (i == null)
                 return;
 
-            var col_idx = Column.Index;
+            var col_idx = Column.fixed_index();
             string text = GetText();
             override_print_ = i.override_print(parent_, text, col_idx);
 

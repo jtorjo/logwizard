@@ -102,7 +102,7 @@ namespace lw_common.ui {
             List<Tuple<int, int, print_info>> print = new List<Tuple<int, int, print_info>>();
 
             // 1.2.6 - for now, just for msg do match-color
-            if (col_idx == parent.msgCol.Index) {
+            if (col_idx == parent.msgCol.fixed_index()) {
                 var from_filter = parent.filter.match_indexes(base.line, info_type.msg);
                 foreach ( var ff in from_filter)
                     print.Add( new Tuple<int, int, print_info>( ff.start, ff.len, new print_info {
@@ -122,7 +122,7 @@ namespace lw_common.ui {
             }
 
             string find = parent.cur_search != null ? parent.cur_search.text : "";
-            if (col_idx == parent.msgCol.Index && find != "") {
+            if (col_idx == parent.msgCol.fixed_index() && find != "") {
                 var matches = string_search.match_indexes(text, parent.cur_search);
                 if (matches.Count > 0) {
                     // if we're showing both selected text and the results of a find, differentiate them visually

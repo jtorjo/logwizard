@@ -127,7 +127,7 @@ namespace lw_common.ui
 
             // just an example:
             //render_.set_override("settings", new log_view_render.print_info { fg = Color.Blue, bold = true });
-            cur_col_ = msgCol.Index;
+            cur_col_ = msgCol.fixed_index();
             edit.on_sel_changed = on_edit_sel_changed;
             edit.on_search_ahead = search_ahead;
             edit.init(this);
@@ -381,8 +381,89 @@ namespace lw_common.ui
             Cursor = Cursors.WaitCursor;
 
             sel_line_idx_before_set_filter_ = sel_line_idx;
-            model_.item_filter = item_filter;
+
+            bool needs_to_set_item_filter_now = filter_view && !model_.filter_view;
+            if (needs_to_set_item_filter_now) {
+                string sel_text = edit.sel_text;
+                if (cur_search_ != null || sel_text != "")
+                    model_.item_filter = item_search_filter;
+                else {
+                    // search by current filter 
+                    if (lv_parent.selected_row_index >= 0) {
+                        // search by selected filter (we're focused on teh filters pane)
+                        List<int> filters = new List<int>();
+                        filters.Add(lv_parent.selected_row_index);
+                        model_.item_filter = (i, a) => item_run_several_filters(i, filters);
+                    } else {
+                        // search by filters matching this line
+                        var filters = filters_matching_sel_line();
+                        model_.item_filter = (i, a) => item_run_several_filters(i, filters);
+                    }
+                }
+            }
+            else 
+                Debug.Assert(model_.item_filter != null);
             model_.set_filter(filter_view, show_full_log);
+        }
+
+        private List<int> filters_matching_sel_line() {
+            List<int> filter_row_indexes = new List<int>();
+            if ( sel_row_idx < 0)
+                return filter_row_indexes;
+
+            int row_idx = 0;
+            foreach (var match in util.to_list(sel.matches)) {
+                if ( match)
+                    filter_row_indexes.Add(row_idx);
+                ++row_idx;
+            }
+
+            return filter_row_indexes;
+        }
+
+
+        // note: even if applied on the full log, or just on the view itself, this will yield exactly the same results
+        //
+        // it's because the filters are already applied on the full log, thus yielding a specific set of results
+        private bool item_run_several_filters(match_item i, List<int> row_indexes) {
+            if (row_indexes.Count < 1)
+                // no filter(s) to apply
+                return true;
+
+            int count = i.matches.Count;
+            if (count < 1)
+                // it's not from our view, it's from the full log
+                return false;
+
+            foreach ( int idx in row_indexes)
+                if (idx < count) {
+                    if (!i.matches[idx])
+                        return false;
+                } else {
+                    // our filter has less rows than are selectected from the current line ???
+                    Debug.Assert(false);
+                    return false;
+                }
+
+            return true;
+        }
+
+
+        // further filtering (toggle)
+        private bool item_search_filter(match_item item, bool applied_on_full_log) {
+            string sel_text = edit.sel_text;
+            if (cur_search_ == null && sel_text == "")
+                // no search - nothing matches
+                return false;
+
+            if (sel_text != "") {
+                sel_text = sel_text.ToLower();
+                string cur = log_view_cell.cell_value(item, cur_col_);
+                return cur.ToLower().Contains(sel_text);
+            }
+
+            // current search
+            return string_search.matches(item.match.line.part(info_type.msg), cur_search_);
         }
 
         public int item_count {
@@ -405,22 +486,6 @@ namespace lw_common.ui
             }
         }
 
-        // further filtering (toggle)
-        private bool item_filter(match_item item, bool applied_on_full_log) {
-            string sel_text = edit.sel_text;
-            if (cur_search_ == null && sel_text == "")
-                // no search - nothing matches
-                return false;
-
-            if (sel_text != "") {
-                sel_text = sel_text.ToLower();
-                string cur = log_view_cell.cell_value(item, cur_col_);
-                return cur.ToLower().Contains(sel_text);
-            }
-
-            // current search
-            return string_search.matches(item.match.line.part(info_type.msg), cur_search_);
-        }
 
         internal log_view_right_click right_click {
             get { return right_click_; }
@@ -1199,7 +1264,7 @@ namespace lw_common.ui
         private static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
 
         private void list_CellToolTipShowing(object sender, ToolTipShowingEventArgs e) {
-            if (e.ColumnIndex == msgCol.Index)
+            if (e.ColumnIndex == msgCol.fixed_index())
                 ShowWindow(e.ToolTipControl.Handle, 0);
         }
 
@@ -1459,7 +1524,7 @@ namespace lw_common.ui
                 for (int column_idx = 0; column_idx < list.AllColumns.Count; ++column_idx) {
                     bool do_print = list.AllColumns[column_idx].IsVisible;
                     if (msg_only)
-                        do_print = column_idx == msgCol.Index;
+                        do_print = column_idx == msgCol.fixed_index();
                     if (do_print) {
                         string txt = cell_value(i, column_idx);
                         export_text.cell c = new export_text.cell(row_idx, visible_idx, txt) {fg = i.fg(this), bg = i.bg(this), font = font, font_size = 7};
@@ -1577,11 +1642,11 @@ namespace lw_common.ui
             switch (show) {
             case ui_info.show_row_type.msg_only:
                 for (int idx = 0; idx < list.AllColumns.Count; ++idx)
-                    show_column( list.AllColumns[idx], full_widths_[idx], idx == msgCol.Index || idx == lineCol.Index );
+                    show_column( list.AllColumns[idx], full_widths_[idx], idx == msgCol.fixed_index() || idx == lineCol.fixed_index() );
                 break;
             case ui_info.show_row_type.msg_and_view_only:
                 for (int idx = 0; idx < list.AllColumns.Count; ++idx)
-                    show_column( list.AllColumns[idx], full_widths_[idx], idx == msgCol.Index || idx == lineCol.Index || idx == viewCol.Index );
+                    show_column( list.AllColumns[idx], full_widths_[idx], idx == msgCol.fixed_index() || idx == lineCol.fixed_index() || idx == viewCol.fixed_index() );
                 break;
             case ui_info.show_row_type.full_row:
                 for (int idx = 0; idx < list.AllColumns.Count; ++idx)
@@ -1724,13 +1789,13 @@ namespace lw_common.ui
                 // see if the current key will start editing
                 if (keyData == Keys.Space && app.inst.edit_mode == app.edit_mode_type.with_space) {
                     is_editing_ = true;
-                    cur_col_ = msgCol.Index;
+                    cur_col_ = msgCol.fixed_index();
                     edit.update_ui();
                     return true;
                 } else if (keyData == Keys.Right && app.inst.edit_mode == app.edit_mode_type.with_right_arrow) {
                     is_editing_ = true;
                     editing_row_ = sel_row_idx;
-                    cur_col_ = msgCol.Index;
+                    cur_col_ = msgCol.fixed_index();
                     edit.go_to_char(0);
                     return true;
                 }

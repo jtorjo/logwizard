@@ -59,5 +59,9 @@ namespace lw_common.ui {
 
         // called when extra filter has changed, or show-all-lines has changed
         void after_set_filter_update();
+
+        // if >= 0, it's the selected row (the one is FOCUSED on - in the filter control)
+        int selected_row_index { get; }
+    
     }
 }

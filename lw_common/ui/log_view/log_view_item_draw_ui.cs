@@ -134,7 +134,7 @@ namespace lw_common.ui {
             Color bg = i.bg(parent_);
             Color dark_bg = i.sel_bg(parent_);
 
-            if (col_idx == parent_.msgCol.Index) {
+            if (col_idx == parent_.msgCol.fixed_index()) {
                 if (is_sel) 
                     color = is_sel ? dark_bg : bg;
                 else if (app.inst.use_bg_gradient) {
@@ -158,7 +158,7 @@ namespace lw_common.ui {
             match_item i = item.RowObject as match_item;
             int row_idx = item.Index;
 
-            if (col_idx == parent_.msgCol.Index) {
+            if (col_idx == parent_.msgCol.fixed_index()) {
                 bool is_sel = !ignore_selection ? parent_.multi_sel_idx.Contains(row_idx) : false;
                 if (!is_sel && app.inst.use_bg_gradient) {
                     Rectangle r = item.GetSubItemBounds(col_idx);
