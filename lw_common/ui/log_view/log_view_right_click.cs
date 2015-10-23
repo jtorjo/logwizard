@@ -121,12 +121,17 @@ namespace lw_common.ui {
             return sel;
         }
 
-        private void append_filter_fulllog_actions(List<action> actions) {
+        private void append_filter_include_actions(List<action> actions) {
             string sel = parent_.smart_edit_sel_text;
             if (sel == "")
                 return;
             if (parent_.sel_col_idx != parent_.msgCol.fixed_index())
                 // at this time (1.2), we only care about filtering the message column
+                return;
+
+            bool does_belong_to_view = parent_.sel.matches.Count > 0;
+            bool allow_include = parent_.is_full_log || !does_belong_to_view;
+            if (!allow_include)
                 return;
 
             bool sel_at_start = parent_.sel_subitem_text.StartsWith(sel);
@@ -141,6 +146,10 @@ namespace lw_common.ui {
                     () => include_lines(true, true, false), () => include_lines(true, false, false), () => include_lines(true, false, false, true) );
             add_filter_color_actions(actions, "Include Lines Containing " + small_sel() + " (case-INsensitive)", 
                 () => include_lines(false, true, false), () => include_lines(false, false, false) , () => include_lines(false, false, false, true));
+        }
+
+        private void append_filter_fulllog_actions(List<action> actions) {
+            append_filter_include_actions(actions);
         }
 
         private void append_current_view_filter_actions(List<action> actions) {
@@ -222,8 +231,10 @@ namespace lw_common.ui {
         private void append_filter_actions(List<action> actions) {
             if (parent_.is_full_log)
                 append_filter_fulllog_actions(actions);
-            else
+            else {
+                append_filter_include_actions(actions);
                 append_current_view_filter_actions(actions);
+            }
 
             if (!parent_.is_full_log) {
                 var i = parent_.sel;

@@ -1,17 +1,12 @@
 
-
-
-
-
-
-
 	 - when on a line when showing all logs 
 	   -> right click should show teh "Include lines starting/containing"
 	   -> we should not have "Filter/Goto ..." menu
 	   - tothink about the rest
-    - toggling - will preserve the seleted row + its location on the screen!!! (based on its rectangle bounds - computed the first row that is visible, and scroll to there)
 
 	-- at this point, i need to update the filter menu (based on whether current line matches the filters or not)
+
+  *************perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
 
 
 - bug: tn2 bet tab - select preflop, set match color , it will somehow override the color
@@ -20,6 +15,15 @@
 
 - see if i can rather quickly find and fix the OLV rendenring issue
 
+
+
+- if current view has NO Filtters
+  - Include ONLY Lines containing/starting with
+
+
+1.3.29a
+- if line from full logs but not from current view (matches.Count = 0)
+  - Include Lines menu
 
 
 1.3.28f

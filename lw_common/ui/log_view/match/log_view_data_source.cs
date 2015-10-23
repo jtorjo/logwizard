@@ -9,7 +9,7 @@ using LogWizard;
 using lw_common;
 
 namespace lw_common.ui {
-    internal class list_data_source : AbstractVirtualListDataSource, IDisposable {
+    internal class log_view_data_source : AbstractVirtualListDataSource, IDisposable {
 
         private VirtualObjectListView lv_ = null;
         private log_view parent_;
@@ -38,7 +38,7 @@ namespace lw_common.ui {
         // when this is set to true, the UI needs update
         private bool needs_ui_update_ = false;
 
-        private easy_mutex change_event_ = new easy_mutex("list_data_source");
+        private easy_mutex change_event_ = new easy_mutex("log_view_data_source");
 
         private bool disposed_ = false;
 
@@ -52,7 +52,7 @@ namespace lw_common.ui {
 
         private int item_count_ = 0;
 
-        public list_data_source(VirtualObjectListView lv, log_view parent ) : base(lv) {
+        public log_view_data_source(VirtualObjectListView lv, log_view parent ) : base(lv) {
             lv_ = lv;
             parent_ = parent;
             items_ = parent.filter.matches ;
@@ -145,9 +145,18 @@ namespace lw_common.ui {
                 show_full_log = show_full_log_;
             }
 
-            if (!filter_view)
+            if (!filter_view) {
                 // not filtered
-                return (show_full_log ?  full_log_items.match_at(idx) : items_.match_at(idx)) as match_item;
+                if ( !show_full_log)
+                    return items_.match_at(idx) as match_item;
+
+                // it's showing all items - however, if item is in current view as well, preserve it (color and everything)
+                var i = full_log_items.match_at(idx) as match_item;
+                var in_cur_view = items_.binary_search(i.line_idx).Item1 as match_item;
+                if (in_cur_view != null)
+                    i = in_cur_view;
+                return i;
+            }
 
             // here, we're filtering the items
             int line_index = -1;

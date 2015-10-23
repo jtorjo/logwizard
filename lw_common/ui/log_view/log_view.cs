@@ -65,7 +65,7 @@ namespace lw_common.ui
 
         private const int MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS = 10;
 
-        private list_data_source model_ = null;
+        private log_view_data_source model_ = null;
         private int visible_columns_refreshed_ = 0;
 
         // lines that are bookmarks (sorted by index)
@@ -114,7 +114,7 @@ namespace lw_common.ui
             InitializeComponent();
             this.parent = parent;
             viewName.Text = name;
-            model_ = new list_data_source(this.list, this ) { name = name };
+            model_ = new log_view_data_source(this.list, this ) { name = name };
             list.VirtualListDataSource = model_;
             list.RowHeight = 18;
 

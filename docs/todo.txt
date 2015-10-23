@@ -4,6 +4,7 @@
 -------------------------------------------------------
 
 - bug: on tn2/debug -> msg column not shown on full log; also, file:line shown after msg on current view
+ - i think it's fixed (fixed_index)
 
 
 - bug: on debug/tableninja2.log -> we don't show all lines - we're pretty much behind
@@ -26,7 +27,6 @@
   - guessing the right file (from extension, etc.)
   - allow editing log settings (depending on its type)
 
-  *************perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
 
 
 
