@@ -101,6 +101,7 @@ namespace lw_common.ui
 
         private ui_info.show_row_type show_row_ = ui_info.show_row_type.full_row;
 
+        private int sel_y_offset_before_set_filter_ = 0;
         private int sel_line_idx_before_set_filter_ = 0;
 
         public log_view(Form parent, string name)
@@ -380,6 +381,7 @@ namespace lw_common.ui
             Enabled = false;
             Cursor = Cursors.WaitCursor;
 
+            sel_y_offset_before_set_filter_ = visible_row_y_offset(sel_row_idx);
             sel_line_idx_before_set_filter_ = sel_line_idx;
 
             bool needs_to_set_item_filter_now = filter_view && !model_.filter_view;
@@ -693,7 +695,7 @@ namespace lw_common.ui
                     int existing = selected_indices_array().Min();
                     if (existing > 0) {
                         list.SelectedIndices.Add(existing - 1);
-                        ensure_line_visible(existing);
+                        ensure_row_visible(existing);
                     }
                     return;
                 }
@@ -704,7 +706,7 @@ namespace lw_common.ui
                     int existing = selected_indices_array().Max();
                     if (existing < count - 1) {
                         list.SelectedIndices.Add(existing + 1);
-                        ensure_line_visible(existing);                        
+                        ensure_row_visible(existing);                        
                     }
                     return;
                 }
@@ -713,7 +715,7 @@ namespace lw_common.ui
             }
             if (sel >= 0 && sel_row_idx != sel) {
                 select_row_idx( sel, select_type.notify_parent);
-                ensure_line_visible(sel);
+                ensure_row_visible(sel);
             }
             edit.update_sel();
         }
@@ -896,6 +898,8 @@ namespace lw_common.ui
 
             if (needs_ui_update) {
                 go_to_closest_line(sel_line_idx_before_set_filter_, select_type.notify_parent);
+                try_set_visible_row_y_offset(sel_row_idx, sel_y_offset_before_set_filter_);
+                edit.update_ui();
                 lv_parent.after_set_filter_update();
             }
 
@@ -987,6 +991,47 @@ namespace lw_common.ui
             return new Tuple<int, int>(top_idx, bottom_idx);
         }
 
+        // y offset - how many rows are visible, on top of this row?
+        private int visible_row_y_offset(int row_idx) {
+            if (model_.item_count < 1)
+                return 0;
+
+            const int PAD = 5;
+            var top = list.GetItemAt(PAD, list.HeaderControl.ClientRectangle.Height + PAD);
+            int row_height = top.Bounds.Height;
+
+            var row = list.GetItem(row_idx).Bounds;
+            if (row.Height == 0 || row.Width == 0) {
+                // in this case, this row is not visible at this time
+                Debug.Assert(false);
+                return 0;                
+            }
+
+            int offset = (row.Y - top.Bounds.Y) / row_height;
+            Debug.Assert(offset >= 0);
+            return offset;
+        }
+
+        // tries to set the visible "y offset"
+        // y offset - how many rows are visible, on top of this row?
+        private void try_set_visible_row_y_offset(int row_idx, int y_offset) {
+            if (row_idx < 0)
+                // there was nothing selected
+                return;
+
+            if (row_idx <= y_offset) {
+                // in this case, we can't make this possible, since there are not enough rows before this
+                ensure_row_visible(0);
+                return;
+            }
+
+            var visible = visible_row_indexes();
+            int top_idx = row_idx - y_offset;
+            int bottom_idx = top_idx + visible.Item2 - visible.Item1 - 1;
+            ensure_row_visible(top_idx);
+            ensure_row_visible(bottom_idx);
+        }
+
         // specifies the name of selected view (on the right pane)
         public void set_view_selected_view_name(string name) {
             if (selected_view_ == name)
@@ -999,7 +1044,7 @@ namespace lw_common.ui
         private void go_last() {
             var count = item_count;
             if (count > 0) {
-                if (ensure_line_visible(count - 1))
+                if (ensure_row_visible(count - 1))
                     select_row_idx(count - 1, select_type.do_not_notify_parent);
                 else
                 // in this case, we failed to go to the last item - try again ASAP
@@ -1069,26 +1114,26 @@ namespace lw_common.ui
             }
         }
 
-        private bool is_line_visible(int line_idx) {
+        private bool is_row_visible(int row_idx) {
             var visible = visible_row_indexes();
             // 1.1.20+ - if it's the last visible line (it's only shown partially - in that case, force it into view
-            return (visible.Item1 <= line_idx && visible.Item2 - 1 >= line_idx);
+            return (visible.Item1 <= row_idx && visible.Item2 - 1 >= row_idx);
         }
 
 
-        private bool ensure_line_visible(int line_idx) {
-            if (is_line_visible(line_idx))
+        private bool ensure_row_visible(int row_idx) {
+            if (is_row_visible(row_idx))
                 return true;
             var visible = visible_row_indexes();
             logger.Debug("[view] visible indexes for " + name + " : " + visible.Item1 + " - " + visible.Item2);
             // 1.1.15+ note : this sometimes flickers, we want to avoid this as much as possible
 
-            if (line_idx >= list.GetItemCount())
+            if (row_idx >= list.GetItemCount())
                 // can happen if list isn't fully refreshed
                 return false;
 
             try {
-                list.EnsureVisible(line_idx);
+                list.EnsureVisible(row_idx);
                 return true;
             } catch {
                 return false;
@@ -1100,7 +1145,7 @@ namespace lw_common.ui
                 return;
 
             select_row_idx(row_idx, notify);
-            if (is_line_visible(row_idx))
+            if (is_row_visible(row_idx))
                 // already visible
                 return;
 
@@ -1113,9 +1158,9 @@ namespace lw_common.ui
                 top_idx = 0;
             // we want to show the line in the *middle* of the control (height-wise)
             if (top_idx < list.GetItemCount())
-                ensure_line_visible(top_idx);
+                ensure_row_visible(top_idx);
             if (bottom_idx < list.GetItemCount())
-                ensure_line_visible(bottom_idx);
+                ensure_row_visible(bottom_idx);
         }
 
         public void rename_view() {
@@ -1384,7 +1429,7 @@ namespace lw_common.ui
             bool include_row_zero = sel_row_idx == 0 || sel_row_idx == -1;
             if (include_row_zero && string_search.matches(i.match.line.part(info_type.msg), cur_search_)) {
                 // line zero contains the text already
-                ensure_line_visible(0);
+                ensure_row_visible(0);
                 lv_parent.after_search();
             } else
                 search_for_text_next();
@@ -1418,7 +1463,7 @@ namespace lw_common.ui
 
             if (found >= 0) {
                 select_row_idx(found, select_type.notify_parent);
-                ensure_line_visible(found);
+                ensure_row_visible(found);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1449,7 +1494,7 @@ namespace lw_common.ui
             }
             if (found >= 0) {
                 select_row_idx(found, select_type.notify_parent);
-                ensure_line_visible(found);
+                ensure_row_visible(found);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1488,7 +1533,7 @@ namespace lw_common.ui
 
             if (found >= 0) {
                 select_row_idx(found, select_type.notify_parent);
-                ensure_line_visible(found);
+                ensure_row_visible(found);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1507,7 +1552,7 @@ namespace lw_common.ui
 
             if (found >= 0) {
                 select_row_idx(found, select_type.notify_parent);
-                ensure_line_visible(found);
+                ensure_row_visible(found);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1588,7 +1633,7 @@ namespace lw_common.ui
             if (mark >= 0) {
                 int idx = row_by_line_idx(mark).Index;
                 select_row_idx(idx, select_type.notify_parent);
-                ensure_line_visible(idx);
+                ensure_row_visible(idx);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1607,7 +1652,7 @@ namespace lw_common.ui
             if (mark >= 0) {
                 int idx = row_by_line_idx(mark).Index;
                 select_row_idx(idx, select_type.notify_parent);
-                ensure_line_visible(idx);
+                ensure_row_visible(idx);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1672,7 +1717,7 @@ namespace lw_common.ui
             var r = list.GetItem(sel).Bounds;
             if (r.Bottom + r.Height < list.ClientRectangle.Height) {
                 list.LowLevelScroll(0, -r.Height);
-                ensure_line_visible(sel);
+                ensure_row_visible(sel);
             } else
                 on_action(action_type.arrow_up);
         }
@@ -1688,7 +1733,7 @@ namespace lw_common.ui
             var r = list.GetItem(sel).Bounds;
             if (r.Bottom + r.Height < list.ClientRectangle.Height) {
                 list.LowLevelScroll(0, r.Height);
-                ensure_line_visible(sel);
+                ensure_row_visible(sel);
             } else
                 on_action(action_type.arrow_down);
         }

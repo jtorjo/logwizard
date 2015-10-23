@@ -342,11 +342,24 @@
 
 
 
+- allow wrapping lines (pro_v?)
+  allow showing everthing the full line contains on the next rows
+  probably have an extra 100 rows just for that and use them only if needed?
+  we will adjust all the time, based on what row is to be shown now
+  - also, we need to re-adjust when the user resizes the msg column
+  - do we really want this?
+
+
+
+
 
 
 
 
 - logging article??? c# - like, when to log, what to log, logging libs (log4net,nlog), performance, async logging
+
+
+
 
 
 
