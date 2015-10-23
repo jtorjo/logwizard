@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace lw_common {
@@ -44,6 +45,17 @@ namespace lw_common {
             match_bg = other.match_bg;
         }
 
+        public void merge(font_info other) {
+            if (fg == util.transparent)
+                fg = other.fg;
+            if (bg == util.transparent)
+                bg = other.bg;
+            if (match_fg == util.transparent)
+                match_fg = other.match_fg;
+            if (match_bg == util.transparent)
+                match_bg = other.match_bg;
+        }
+
         public override string ToString() {
             return "fg=" + util.color_to_str(fg) + ", bg=" + util.color_to_str(bg) +
                    ", m_fg=" + util.color_to_str(match_fg) + ", m_bg=" + util.color_to_str(match_bg);
@@ -56,6 +68,8 @@ namespace lw_common {
 
         private static readonly font_info default_font_ = new font_info {  };
         private static readonly font_info full_log_gray_ = new font_info { fg = app.inst.full_log_gray_fg, bg = app.inst.full_log_gray_bg };
+
+
 
         public static font_info default_font {
             get { return default_font_; }

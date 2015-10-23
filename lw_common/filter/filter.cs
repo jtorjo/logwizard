@@ -508,26 +508,28 @@ namespace LogWizard {
                         }
 
                     if (any_match) {
-                        font_info font;
-                        if (existing_filter_font != null)
-                            font = existing_filter_font;
-                        else {
-                            // in this case, prefer the first "enabled" filter
-                            int enabled_idx = -1;
-                            for (int filter_idx = 0; filter_idx < matches.Length && enabled_idx < 0; ++filter_idx)
-                                if (matches[filter_idx] && rows[filter_idx].enabled)
-                                    enabled_idx = filter_idx;
-                            int used_idx = -1;
-                            if (enabled_idx < 0)
-                                for (int filter_idx = 0; filter_idx < matches.Length && used_idx < 0; ++filter_idx)
-                                    if (matches[filter_idx] && rows[filter_idx].dimmed)
-                                        used_idx = filter_idx;
-                            if (enabled_idx >= 0 || used_idx >= 0) {
-                                int idx = enabled_idx >= 0 ? enabled_idx : used_idx;
-                                font = rows[idx].get_match(line_idx).font;
-                            } else
-                                font = font_info.default_font;
+                        font_info font = existing_filter_font ?? font_info.default_font_copy;
+
+                        int enabled_idx = -1;
+                        for (int filter_idx = 0; filter_idx < matches.Length && enabled_idx < 0; ++filter_idx)
+                            if (matches[filter_idx] && rows[filter_idx].enabled)
+                                enabled_idx = filter_idx;
+                        int used_idx = -1;
+                        if (enabled_idx < 0)
+                            for (int filter_idx = 0; filter_idx < matches.Length && used_idx < 0; ++filter_idx)
+                                if (matches[filter_idx] && rows[filter_idx].dimmed)
+                                    used_idx = filter_idx;
+
+                        if (enabled_idx >= 0 || used_idx >= 0) {
+                            if (enabled_idx >= 0) {
+                                // 1.3.29g+ apply and merge all enabled filters
+                                for (int filter_idx = 0; filter_idx < matches.Length; ++filter_idx)
+                                    if (matches[filter_idx] && rows[filter_idx].enabled)
+                                        font.merge(rows[filter_idx].get_match(line_idx).font);
+                            } else 
+                                font.merge( rows[used_idx].get_match(line_idx).font);
                         }
+
                         new_matches.Add( new_match(new BitArray(matches), new_log.line_at(line_idx), line_idx, font ));
                         continue;
                     }
