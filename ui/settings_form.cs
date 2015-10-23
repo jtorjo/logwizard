@@ -74,12 +74,20 @@ namespace LogWizard.ui {
             }
             syncColorsGrayOutNonActive.Checked = app.inst.sync_colors_all_views_gray_non_active;
 
-            logBgSingleColor.Checked = !app.inst.use_bg_gradient;
-            logBgGradient.Checked = app.inst.use_bg_gradient;
 
+            logFg.SelectedItem = app.inst.fg;
             logBg.SelectedItem = app.inst.bg;
-            logBgFrom.SelectedItem = app.inst.bg_from;
-            logBgTo.SelectedItem = app.inst.bg_to;
+            dimmedFg.SelectedItem = app.inst.dimmed_fg;
+            dimmedBg.SelectedItem = app.inst.dimmed_bg;
+            bookmarkFg.SelectedItem = app.inst.bookmark_fg;
+            bookmarkBg.SelectedItem = app.inst.bookmark_bg;
+            fullLogGrayFg.SelectedItem = app.inst.full_log_gray_fg;
+            fullLogGrayBg.SelectedItem = app.inst.full_log_gray_bg;
+            // 1.3.29+ - hide this - it was mainly for testing - i know it's a bit cool, but let just ignore it for now
+            //logBgSingleColor.Checked = !app.inst.use_bg_gradient;
+            //logBgGradient.Checked = app.inst.use_bg_gradient;
+            //logBgFrom.SelectedItem = app.inst.bg_from;
+            //logBgTo.SelectedItem = app.inst.bg_to;
 
             noteAuthorName.Text = app.inst.notes_author_name;
             noteInitials.Text = app.inst.notes_initials;
@@ -139,10 +147,18 @@ namespace LogWizard.ui {
             else Debug.Assert(false);
             app.inst.sync_colors_all_views_gray_non_active = syncColorsGrayOutNonActive.Checked;
 
-            app.inst.use_bg_gradient = logBgGradient.Checked;
+            app.inst.fg = logFg.SelectedItem;
             app.inst.bg = logBg.SelectedItem;
-            app.inst.bg_from = logBgFrom.SelectedItem;
-            app.inst.bg_to = logBgTo.SelectedItem;
+            app.inst.dimmed_fg = dimmedFg.SelectedItem;
+            app.inst.dimmed_bg = dimmedBg.SelectedItem;
+            app.inst.bookmark_fg = bookmarkFg.SelectedItem;
+            app.inst.bookmark_bg = bookmarkBg.SelectedItem;
+            app.inst.full_log_gray_fg = fullLogGrayFg.SelectedItem;
+            app.inst.full_log_gray_bg = fullLogGrayBg.SelectedItem;
+            // 1.3.29+ - hide this - it was mainly for testing - i know it's a bit cool, but let just ignore it for now
+            // app.inst.use_bg_gradient = logBgGradient.Checked;
+            //app.inst.bg_from = logBgFrom.SelectedItem;
+            //app.inst.bg_to = logBgTo.SelectedItem;
 
             app.inst.notes_author_name = noteAuthorName.Text;
             app.inst.notes_initials = noteInitials.Text;

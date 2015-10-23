@@ -246,11 +246,8 @@ namespace lw_common {
             // 1.2.6g+
             public Color match_fg = util.transparent, match_bg = util.transparent;
 
-            // basically this is what "Used" means - dim this filter_row compared to the rest
-            public static font_info dimmed = new font_info { bg = Color.White, fg = Color.LightGray };
-
-            private static readonly font_info default_font_ = new font_info { bg = Color.White, fg = Color.Black };
-            private static readonly font_info full_log_gray_ = new font_info { bg = Color.White, fg = Color.LightSlateGray };
+            private static readonly font_info default_font_ = new font_info {  };
+            private static readonly font_info full_log_gray_ = new font_info { fg = app.inst.full_log_gray_fg, bg = app.inst.full_log_gray_bg };
 
             public static font_info default_font {
                 get { return default_font_; }

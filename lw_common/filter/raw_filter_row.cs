@@ -306,18 +306,12 @@ namespace lw_common {
                     line.case_sensitive = false;
         }
 
+        private Color get_fg_color(Color c, bool enabled) {
+            return enabled ? c : app.inst.dimmed_fg;
+        }
 
         private Color get_bg_color(Color c, bool enabled) {
-            if (enabled)
-                return c != util.transparent ? c : Color.White;
-            else
-                return Color.White;
-        }
-        private Color get_fg_color(Color c, bool enabled) {
-            if (enabled)
-                return c != util.transparent ? c : Color.Black;
-            else
-                return Color.LightGray;
+            return enabled ? c : app.inst.dimmed_bg;
         }
 
         public void preserve_cache_copy(raw_filter_row from) {

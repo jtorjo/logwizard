@@ -71,8 +71,6 @@ namespace lw_common.ui
         // lines that are bookmarks (sorted by index)
         private List<int> bookmarks_ = new List<int>();
 
-        private Color bookmark_bg_ = Color.Blue, bookmark_fg_ = Color.White;
-
         private int font_size_ = 9; // default font size
 
         private List<int> full_widths_ = new List<int>();
@@ -493,13 +491,14 @@ namespace lw_common.ui
             get { return right_click_; }
         }
 
-        internal Color bookmark_bg {
-            get { return bookmark_bg_; }
+        internal Color bookmark_fg {
+            get { return app.inst.bookmark_fg; }
         }
 
-        internal Color bookmark_fg {
-            get { return bookmark_fg_; }
+        internal Color bookmark_bg {
+            get { return app.inst.bookmark_bg; }
         }
+
 
         // while this is true, has anything_changed always returns false (basically, we want this during loading,
         // since it happens on a different thread - it's pretty complicated to find out when the complete loading has occured)

@@ -819,8 +819,8 @@ namespace lw_common.ui {
         private void update_color(OLVListItem olv_row) {
             Color bg, fg;
             if (!app.inst.show_filter_row_in_filter_color) {
-                fg = Color.Black;
-                bg = Color.White;
+                fg = app.inst.fg;
+                bg = app.inst.bg;
             } else {
                 filter_item i = olv_row.RowObject as filter_item;
                 var row = new raw_filter_row(i.text, i.apply_to_existing_lines);
@@ -833,9 +833,9 @@ namespace lw_common.ui {
                     bg = row.match_bg;
 
                 if (fg == util.transparent)
-                    fg = Color.Black;
+                    fg = app.inst.fg;
                 if (bg == util.transparent)
-                    bg = Color.White;
+                    bg = app.inst.bg;
             }
 
             if (olv_row.BackColor.ToArgb() != bg.ToArgb())

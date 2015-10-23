@@ -106,6 +106,8 @@ namespace lw_common.ui {
         public Color print_bg_color(OLVListItem item, print_info print) {
             match_item i = item.RowObject as match_item;            
             Color bg = print.bg != util.transparent ? print.bg : util.darker_color( i.bg(parent_) );
+            if (bg == util.transparent)
+                bg = app.inst.bg;
             return bg;
         }
 
@@ -117,6 +119,8 @@ namespace lw_common.ui {
             match_item i = item.RowObject as match_item;            
             Color fg = i.fg(parent_);
             Color print_fg = print.fg != util.transparent ? print.fg : fg;
+            if (print_fg == util.transparent)
+                print_fg = app.inst.fg;
             return print_fg;
         }
 
@@ -150,7 +154,7 @@ namespace lw_common.ui {
                 color = is_sel ? dark_bg : bg;
 
             if (color == util.transparent)
-                color = Color.White;
+                color = app.inst.bg;
             return color;
         }
 

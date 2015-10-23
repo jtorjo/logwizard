@@ -79,8 +79,19 @@ namespace lw_common {
         public synchronize_colors_type syncronize_colors = synchronize_colors_type.none;
         public bool sync_colors_all_views_gray_non_active = false;
 
-        public bool use_bg_gradient = true;
+        public bool use_bg_gradient = false;
         public Color bg = Color.White;
+        public Color fg = Color.Black;
+
+        public Color full_log_gray_fg = Color.LightSlateGray;        
+        public Color full_log_gray_bg = Color.White;
+
+        public Color dimmed_fg = Color.LightGray;
+        public Color dimmed_bg = Color.White;
+
+        public Color bookmark_bg = Color.Blue, bookmark_fg = Color.White;
+
+        // 1.3.29+ - hide this - it was mainly for testing - i know it's a bit cool, but let just ignore it for now
         public Color bg_from = Color.White;
         public Color bg_to = Color.AntiqueWhite;
 
@@ -245,7 +256,19 @@ namespace lw_common {
             load_save(load, ref sync_colors_all_views_gray_non_active, "synchronize_colors_gray_non_active", false);
 
             load_save(load, ref use_bg_gradient, "use_bg_gradient", false);
+
+            load_save(load, ref fg, "fg", Color.Black);
             load_save(load, ref bg, "bg", Color.White);
+
+            load_save(load, ref bookmark_fg, "bookmark_fg", Color.White);
+            load_save(load, ref bookmark_bg, "bookmark_bg", Color.Blue);
+
+            load_save(load, ref dimmed_fg, "dimmed_fg", Color.LightGray);
+            load_save(load, ref dimmed_bg, "dimmed_bg", Color.White);
+
+            load_save(load, ref full_log_gray_fg, "full_log_gray_fg", Color.LightSlateGray);
+            load_save(load, ref full_log_gray_bg, "full_log_gray_bg", Color.White);
+
             load_save(load, ref bg_from, "bg_from", Color.White);
             load_save(load, ref bg_to, "bg_to", util.str_to_color("#FEFBF8") );
 

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using LogWizard;
 
@@ -78,24 +79,35 @@ namespace lw_common.ui {
             return is_focused ? darker_bg : dark_bg;
         }
 
+
         public virtual Color fg(log_view parent) {
+            Color result;
+
             if (parent.has_bookmark(base.line_idx))
-                return parent.bookmark_fg;
-            if (override_fg != util.transparent)
-                return override_fg;
+                result = parent.bookmark_fg;
+            else if (override_fg != util.transparent)
+                result = override_fg;
+            else if (parent.filter.matches.binary_search(line_idx).Item2 < 0)
+                result = filter_line.font_info.full_log_gray.fg;
+            else 
+                result = font.fg;
 
-            if (parent.filter.matches.binary_search(line_idx).Item2 < 0)
-                return filter_line.font_info.full_log_gray.fg;
-
-            return font.fg;
+            if (result == util.transparent)
+                result = app.inst.fg;
+            return result;
         }
 
         public virtual Color bg(log_view parent) {
+            Color result;
             if (parent.has_bookmark(base.line_idx))
-                return parent.bookmark_bg;
+                result = parent.bookmark_bg;
             if (override_bg != util.transparent)
-                return override_bg;
-            return font.bg;
+                result = override_bg;
+            else 
+                result = font.bg;
+            if (result == util.transparent)
+                result = app.inst.bg;
+            return result;
         }
 
         private List<Tuple<int, int, print_info>> override_print_from_all_places(log_view parent, string text, int col_idx) {

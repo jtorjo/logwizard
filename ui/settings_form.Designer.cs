@@ -65,13 +65,23 @@
             this.hotkeyslink = new System.Windows.Forms.LinkLabel();
             this.useHotkeys = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.filterShowFilterRowInFilterColor = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.logBgTo = new ColorPicker.ColorPickerCombobox();
-            this.logBgFrom = new ColorPicker.ColorPickerCombobox();
-            this.logBg = new ColorPicker.ColorPickerCombobox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.fullLogGrayFg = new ColorPicker.ColorPickerCombobox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.fullLogGrayBg = new ColorPicker.ColorPickerCombobox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.dimmedFg = new ColorPicker.ColorPickerCombobox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.dimmedBg = new ColorPicker.ColorPickerCombobox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.logFg = new ColorPicker.ColorPickerCombobox();
             this.label13 = new System.Windows.Forms.Label();
-            this.logBgGradient = new System.Windows.Forms.RadioButton();
-            this.logBgSingleColor = new System.Windows.Forms.RadioButton();
+            this.logBg = new ColorPicker.ColorPickerCombobox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -100,9 +110,10 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.filterShowFilterRowInFilterColor = new System.Windows.Forms.CheckBox();
-            this.label21 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.bookmarkFg = new ColorPicker.ColorPickerCombobox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.bookmarkBg = new ColorPicker.ColorPickerCombobox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -111,6 +122,7 @@
             this.tabPage1.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -120,7 +132,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.fileToContext)).BeginInit();
             this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).BeginInit();
-            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -273,7 +284,7 @@
             this.groupBox3.Controls.Add(this.syncColorsAllViews);
             this.groupBox3.Controls.Add(this.syncColorsCurView);
             this.groupBox3.Controls.Add(this.syncColorsNone);
-            this.groupBox3.Location = new System.Drawing.Point(6, 208);
+            this.groupBox3.Location = new System.Drawing.Point(6, 278);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(628, 146);
             this.groupBox3.TabIndex = 5;
@@ -559,78 +570,180 @@
             this.tabPage2.Text = "Colors";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.label21);
+            this.groupBox8.Controls.Add(this.filterShowFilterRowInFilterColor);
+            this.groupBox8.Location = new System.Drawing.Point(6, 8);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(625, 74);
+            this.groupBox8.TabIndex = 7;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "General";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(44, 40);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(556, 26);
+            this.label21.TabIndex = 1;
+            this.label21.Text = resources.GetString("label21.Text");
+            // 
+            // filterShowFilterRowInFilterColor
+            // 
+            this.filterShowFilterRowInFilterColor.AutoSize = true;
+            this.filterShowFilterRowInFilterColor.Location = new System.Drawing.Point(22, 18);
+            this.filterShowFilterRowInFilterColor.Name = "filterShowFilterRowInFilterColor";
+            this.filterShowFilterRowInFilterColor.Size = new System.Drawing.Size(276, 21);
+            this.filterShowFilterRowInFilterColor.TabIndex = 0;
+            this.filterShowFilterRowInFilterColor.Text = "Filter Pane: Show Each Filter in its color";
+            this.filterShowFilterRowInFilterColor.UseVisualStyleBackColor = true;
+            // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.logBgTo);
-            this.groupBox5.Controls.Add(this.logBgFrom);
-            this.groupBox5.Controls.Add(this.logBg);
+            this.groupBox5.Controls.Add(this.label28);
+            this.groupBox5.Controls.Add(this.bookmarkFg);
+            this.groupBox5.Controls.Add(this.label29);
+            this.groupBox5.Controls.Add(this.bookmarkBg);
+            this.groupBox5.Controls.Add(this.label27);
+            this.groupBox5.Controls.Add(this.label25);
+            this.groupBox5.Controls.Add(this.fullLogGrayFg);
+            this.groupBox5.Controls.Add(this.label26);
+            this.groupBox5.Controls.Add(this.fullLogGrayBg);
+            this.groupBox5.Controls.Add(this.label23);
+            this.groupBox5.Controls.Add(this.dimmedFg);
+            this.groupBox5.Controls.Add(this.label24);
+            this.groupBox5.Controls.Add(this.dimmedBg);
+            this.groupBox5.Controls.Add(this.label22);
+            this.groupBox5.Controls.Add(this.logFg);
             this.groupBox5.Controls.Add(this.label13);
-            this.groupBox5.Controls.Add(this.logBgGradient);
-            this.groupBox5.Controls.Add(this.logBgSingleColor);
+            this.groupBox5.Controls.Add(this.logBg);
             this.groupBox5.Location = new System.Drawing.Point(3, 88);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(628, 114);
+            this.groupBox5.Size = new System.Drawing.Size(628, 184);
             this.groupBox5.TabIndex = 6;
             this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Log Background";
+            this.groupBox5.Text = "Log";
             // 
-            // logBgTo
+            // label27
             // 
-            this.logBgTo.Location = new System.Drawing.Point(234, 67);
-            this.logBgTo.Name = "logBgTo";
-            this.logBgTo.SelectedItem = System.Drawing.Color.Wheat;
-            this.logBgTo.Size = new System.Drawing.Size(42, 23);
-            this.logBgTo.TabIndex = 8;
-            this.logBgTo.Text = "colorPickerCombobox3";
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Location = new System.Drawing.Point(19, 159);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(421, 13);
+            this.label27.TabIndex = 18;
+            this.label27.Text = "If you change these, settings will take full effect after application Restart.";
             // 
-            // logBgFrom
+            // label25
             // 
-            this.logBgFrom.Location = new System.Drawing.Point(137, 67);
-            this.logBgFrom.Name = "logBgFrom";
-            this.logBgFrom.SelectedItem = System.Drawing.Color.Wheat;
-            this.logBgFrom.Size = new System.Drawing.Size(42, 23);
-            this.logBgFrom.TabIndex = 7;
-            this.logBgFrom.Text = "logBgFrom";
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(19, 121);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(113, 17);
+            this.label25.TabIndex = 17;
+            this.label25.Text = "Full Log Gray Fg";
             // 
-            // logBg
+            // fullLogGrayFg
             // 
-            this.logBg.Location = new System.Drawing.Point(137, 34);
-            this.logBg.Name = "logBg";
-            this.logBg.SelectedItem = System.Drawing.Color.Wheat;
-            this.logBg.Size = new System.Drawing.Size(42, 23);
-            this.logBg.TabIndex = 6;
-            this.logBg.Text = "logBg";
+            this.fullLogGrayFg.Location = new System.Drawing.Point(186, 121);
+            this.fullLogGrayFg.Name = "fullLogGrayFg";
+            this.fullLogGrayFg.SelectedItem = System.Drawing.Color.Wheat;
+            this.fullLogGrayFg.Size = new System.Drawing.Size(42, 17);
+            this.fullLogGrayFg.TabIndex = 16;
+            this.fullLogGrayFg.Text = "colorPickerCombobox3";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(269, 121);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(114, 17);
+            this.label26.TabIndex = 15;
+            this.label26.Text = "Full Log Gray Bg";
+            // 
+            // fullLogGrayBg
+            // 
+            this.fullLogGrayBg.Location = new System.Drawing.Point(389, 121);
+            this.fullLogGrayBg.Name = "fullLogGrayBg";
+            this.fullLogGrayBg.SelectedItem = System.Drawing.Color.Wheat;
+            this.fullLogGrayBg.Size = new System.Drawing.Size(42, 17);
+            this.fullLogGrayBg.TabIndex = 14;
+            this.fullLogGrayBg.Text = "colorPickerCombobox4";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(19, 96);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(137, 17);
+            this.label23.TabIndex = 13;
+            this.label23.Text = "Dimmed Foreground";
+            // 
+            // dimmedFg
+            // 
+            this.dimmedFg.Location = new System.Drawing.Point(186, 96);
+            this.dimmedFg.Name = "dimmedFg";
+            this.dimmedFg.SelectedItem = System.Drawing.Color.Wheat;
+            this.dimmedFg.Size = new System.Drawing.Size(42, 17);
+            this.dimmedFg.TabIndex = 12;
+            this.dimmedFg.Text = "colorPickerCombobox1";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(244, 96);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(139, 17);
+            this.label24.TabIndex = 11;
+            this.label24.Text = "Dimmed Background";
+            // 
+            // dimmedBg
+            // 
+            this.dimmedBg.Location = new System.Drawing.Point(389, 96);
+            this.dimmedBg.Name = "dimmedBg";
+            this.dimmedBg.SelectedItem = System.Drawing.Color.Wheat;
+            this.dimmedBg.Size = new System.Drawing.Size(42, 17);
+            this.dimmedBg.TabIndex = 10;
+            this.dimmedBg.Text = "colorPickerCombobox2";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(19, 18);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(82, 17);
+            this.label22.TabIndex = 9;
+            this.label22.Text = "Foreground";
+            // 
+            // logFg
+            // 
+            this.logFg.Location = new System.Drawing.Point(186, 18);
+            this.logFg.Name = "logFg";
+            this.logFg.SelectedItem = System.Drawing.Color.Wheat;
+            this.logFg.Size = new System.Drawing.Size(42, 17);
+            this.logFg.TabIndex = 8;
+            this.logFg.Text = "colorPickerCombobox1";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(197, 71);
+            this.label13.Location = new System.Drawing.Point(299, 18);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(20, 17);
-            this.label13.TabIndex = 5;
-            this.label13.Text = "to";
+            this.label13.Size = new System.Drawing.Size(84, 17);
+            this.label13.TabIndex = 7;
+            this.label13.Text = "Background";
             // 
-            // logBgGradient
+            // logBg
             // 
-            this.logBgGradient.AutoSize = true;
-            this.logBgGradient.Location = new System.Drawing.Point(13, 69);
-            this.logBgGradient.Name = "logBgGradient";
-            this.logBgGradient.Size = new System.Drawing.Size(81, 21);
-            this.logBgGradient.TabIndex = 1;
-            this.logBgGradient.TabStop = true;
-            this.logBgGradient.Text = "Gradient";
-            this.logBgGradient.UseVisualStyleBackColor = true;
-            // 
-            // logBgSingleColor
-            // 
-            this.logBgSingleColor.AutoSize = true;
-            this.logBgSingleColor.Location = new System.Drawing.Point(13, 36);
-            this.logBgSingleColor.Name = "logBgSingleColor";
-            this.logBgSingleColor.Size = new System.Drawing.Size(59, 21);
-            this.logBgSingleColor.TabIndex = 0;
-            this.logBgSingleColor.TabStop = true;
-            this.logBgSingleColor.Text = "Color";
-            this.logBgSingleColor.UseVisualStyleBackColor = true;
+            this.logBg.Location = new System.Drawing.Point(389, 18);
+            this.logBg.Name = "logBg";
+            this.logBg.SelectedItem = System.Drawing.Color.Wheat;
+            this.logBg.Size = new System.Drawing.Size(42, 17);
+            this.logBg.TabIndex = 6;
+            this.logBg.Text = "logBg";
             // 
             // tabPage3
             // 
@@ -939,36 +1052,41 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // groupBox8
+            // label28
             // 
-            this.groupBox8.Controls.Add(this.label21);
-            this.groupBox8.Controls.Add(this.filterShowFilterRowInFilterColor);
-            this.groupBox8.Location = new System.Drawing.Point(6, 8);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(625, 74);
-            this.groupBox8.TabIndex = 7;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "General";
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(19, 55);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(149, 17);
+            this.label28.TabIndex = 22;
+            this.label28.Text = "Bookmark Foreground";
             // 
-            // filterShowFilterRowInFilterColor
+            // bookmarkFg
             // 
-            this.filterShowFilterRowInFilterColor.AutoSize = true;
-            this.filterShowFilterRowInFilterColor.Location = new System.Drawing.Point(22, 18);
-            this.filterShowFilterRowInFilterColor.Name = "filterShowFilterRowInFilterColor";
-            this.filterShowFilterRowInFilterColor.Size = new System.Drawing.Size(276, 21);
-            this.filterShowFilterRowInFilterColor.TabIndex = 0;
-            this.filterShowFilterRowInFilterColor.Text = "Filter Pane: Show Each Filter in its color";
-            this.filterShowFilterRowInFilterColor.UseVisualStyleBackColor = true;
+            this.bookmarkFg.Location = new System.Drawing.Point(186, 55);
+            this.bookmarkFg.Name = "bookmarkFg";
+            this.bookmarkFg.SelectedItem = System.Drawing.Color.Wheat;
+            this.bookmarkFg.Size = new System.Drawing.Size(42, 17);
+            this.bookmarkFg.TabIndex = 21;
+            this.bookmarkFg.Text = "colorPickerCombobox1";
             // 
-            // label21
+            // label29
             // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(44, 40);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(556, 26);
-            this.label21.TabIndex = 1;
-            this.label21.Text = resources.GetString("label21.Text");
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(232, 55);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(151, 17);
+            this.label29.TabIndex = 20;
+            this.label29.Text = "Bookmark Background";
+            // 
+            // bookmarkBg
+            // 
+            this.bookmarkBg.Location = new System.Drawing.Point(389, 55);
+            this.bookmarkBg.Name = "bookmarkBg";
+            this.bookmarkBg.SelectedItem = System.Drawing.Color.Wheat;
+            this.bookmarkBg.Size = new System.Drawing.Size(42, 17);
+            this.bookmarkBg.TabIndex = 19;
+            this.bookmarkBg.Text = "colorPickerCombobox2";
             // 
             // settings_form
             // 
@@ -996,6 +1114,8 @@
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -1011,8 +1131,6 @@
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).EndInit();
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1053,11 +1171,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.RadioButton logBgGradient;
-        private System.Windows.Forms.RadioButton logBgSingleColor;
-        private ColorPicker.ColorPickerCombobox logBgTo;
-        private ColorPicker.ColorPickerCombobox logBgFrom;
         private ColorPicker.ColorPickerCombobox logBg;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.TabPage tabPage6;
@@ -1097,6 +1210,22 @@
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.CheckBox filterShowFilterRowInFilterColor;
+        private System.Windows.Forms.Label label22;
+        private ColorPicker.ColorPickerCombobox logFg;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label25;
+        private ColorPicker.ColorPickerCombobox fullLogGrayFg;
+        private System.Windows.Forms.Label label26;
+        private ColorPicker.ColorPickerCombobox fullLogGrayBg;
+        private System.Windows.Forms.Label label23;
+        private ColorPicker.ColorPickerCombobox dimmedFg;
+        private System.Windows.Forms.Label label24;
+        private ColorPicker.ColorPickerCombobox dimmedBg;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label28;
+        private ColorPicker.ColorPickerCombobox bookmarkFg;
+        private System.Windows.Forms.Label label29;
+        private ColorPicker.ColorPickerCombobox bookmarkBg;
 
     }
 }

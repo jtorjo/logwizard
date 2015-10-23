@@ -629,27 +629,8 @@ namespace LogWizard {
 
 
         private static BitArray empty_match = new BitArray(0);
-        /*
-        private void add_addition_line(int line_idx, Color fg, log_reader log) {
-            // if insert_idx > 0 , that means we already have it
-            int insert_idx = match_indexes_.BinarySearch(line_idx);
-            if (insert_idx < 0) {
-                match_indexes_.Insert(~insert_idx, line_idx);
-                matches_.Insert(~insert_idx, new match {
-                    matches = empty_match, line = log.line_at(line_idx), line_idx = line_idx, font = new filter_line.font_info {
-                        bg = Color.White, fg = fg
-                    }
-                } );
-            }
-        }
-        */
-
         private match new_match(BitArray ba, line l, int idx, filter_line.font_info f ) {
             match m = create_match(ba, f, l, idx);
-
-//            if ( idx >= 0)
-  //              logger.Debug("[filter] " + name + " " + (idx+1) + "-> " + f);
-
             return m;
         }
 
@@ -658,7 +639,7 @@ namespace LogWizard {
             int insert_idx = matches_.insert_line_idx(line_idx);
             if ( insert_idx >= 0)
                 matches_.insert(insert_idx, new_match(empty_match, log.line_at(line_idx), line_idx, new filter_line.font_info {
-                        bg = Color.White, fg = fg
+                        bg = util.transparent, fg = fg
                     }));            
         }
 

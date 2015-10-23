@@ -31,7 +31,7 @@
 
 
 
-
+- bug: allow mousewheel (probably just hide the edit?)
 
 - fg/bg: allow changing it (bug: fg does not work)
 
@@ -50,6 +50,7 @@
 
 - bug: allow selecting text with the mouse (not just shift-arrows)
 
+- bug : clicking with mouse -> does not select the right column (when clicking on the msg)
 
 - todo : add asyncfilelogger
 
