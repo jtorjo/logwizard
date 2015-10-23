@@ -252,7 +252,7 @@ namespace lw_common.ui {
                 if (belongs_to_view) {
                     var i = parent_.sel;
                     Debug.Assert(i != null);
-                    bool is_default = i.match.font.fg == filter_line.font_info.default_font.fg;
+                    bool is_default = i.match.font.fg == font_info.default_font.fg;
                     if (is_default)
                         append_filter_create_actions(actions);
                     else

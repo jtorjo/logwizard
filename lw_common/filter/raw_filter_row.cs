@@ -79,7 +79,7 @@ namespace lw_common {
         protected List<filter_line> items_ = new List<filter_line>();
         protected List<addition> additions_ = new List<addition>();
 
-        protected readonly filter_line.font_info font_ = null;
+        protected readonly font_info font_ = null;
 
         // if true, this is applied after the normal filters
         //
@@ -172,7 +172,7 @@ namespace lw_common {
             enabled_ = other.enabled;
             dimmed_ = other.dimmed_;
 
-            font_ = filter_line.font_info.default_font_copy;
+            font_ = font_info.default_font_copy;
             update_font();
         }
 
@@ -200,7 +200,7 @@ namespace lw_common {
                 }
             }
             unique_id_ += "" + apply_to_existing_lines;
-            font_ = filter_line.font_info.default_font_copy;
+            font_ = font_info.default_font_copy;
             init(lines, additions);
 
             if (items_.Count < 1)
@@ -212,7 +212,7 @@ namespace lw_common {
         } 
 
         public class match {
-            public filter_line.font_info font = null;
+            public font_info font = null;
         }
 
 
@@ -233,8 +233,8 @@ namespace lw_common {
             get { return font_.bg; }
         }
 
-        private filter_line.font_info get_raw_font_info() {
-            var result = new filter_line.font_info();
+        private font_info get_raw_font_info() {
+            var result = new font_info();
             foreach ( var item in items_)
                 if (item.part == part_type.font) {
                     if (item.fi.fg != util.transparent || item.fi.bg != util.transparent) {
@@ -250,7 +250,7 @@ namespace lw_common {
             return result;
         }
 
-        private filter_line.font_info get_font_info() {
+        private font_info get_font_info() {
             var result = get_raw_font_info();
             result.bg = get_bg_color(result.bg, enabled);
             result.fg = get_fg_color(result.fg, enabled);

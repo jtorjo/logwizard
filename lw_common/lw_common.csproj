@@ -50,6 +50,7 @@
     <Compile Include="filter\filter.cs" />
     <Compile Include="filter\filter_line.cs" />
     <Compile Include="filter\filter_row.cs" />
+    <Compile Include="filter\font_info.cs" />
     <Compile Include="filter\raw_filter_row.cs" />
     <Compile Include="filter\line.cs" />
     <Compile Include="notes\md5_log_keeper.cs" />

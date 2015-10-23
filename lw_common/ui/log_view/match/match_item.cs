@@ -38,7 +38,7 @@ namespace lw_common.ui {
 
         public Color override_bg = util.transparent, override_fg = util.transparent;
 
-        public match_item(BitArray matches, filter_line.font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx) {
+        public match_item(BitArray matches, font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx) {
         }
 
         public int line { get { return base.line_idx + 1; }}
@@ -88,7 +88,7 @@ namespace lw_common.ui {
             else if (override_fg != util.transparent)
                 result = override_fg;
             else if (parent.filter.matches.binary_search(line_idx).Item2 < 0)
-                result = filter_line.font_info.full_log_gray.fg;
+                result = font_info.full_log_gray.fg;
             else 
                 result = font.fg;
 

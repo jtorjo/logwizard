@@ -143,7 +143,7 @@ namespace lw_common.ui
             get { return filter_; }
         }
 
-        private filter.match create_match_object(BitArray matches, filter_line.font_info font, line line, int lineIdx) {
+        private filter.match create_match_object(BitArray matches, font_info font, line line, int lineIdx) {
             return is_full_log ? new full_log_match_item(matches, font, line, lineIdx, this) : new match_item(matches, font, line, lineIdx, this);
         }
 
@@ -916,7 +916,7 @@ namespace lw_common.ui
             match_item found_line = null;
             switch (app.inst.syncronize_colors) {
             case app.synchronize_colors_type.none: // nothing to do
-                return new Tuple<bool, Color, Color>(true, filter_line.font_info.default_font.fg, filter_line.font_info.default_font.bg);
+                return new Tuple<bool, Color, Color>(true, font_info.default_font.fg, font_info.default_font.bg);
             case app.synchronize_colors_type.with_current_view:
                 found_line = other_log.filter_.matches.binary_search(line_idx).Item1 as match_item;
                 if (found_line != null) 
@@ -968,7 +968,7 @@ namespace lw_common.ui
             if ( found_colors != null && found_colors.Item1)
                 return new Tuple<Color, Color>(found_colors.Item2, found_colors.Item3);
 
-            return new Tuple<Color, Color>( filter_line.font_info.full_log_gray.fg, filter_line.font_info.full_log_gray.bg );
+            return new Tuple<Color, Color>( font_info.full_log_gray.fg, font_info.full_log_gray.bg );
         }
 
         // returns the rows that are visible

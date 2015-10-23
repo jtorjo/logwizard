@@ -5,6 +5,10 @@
 - see if i can rather quickly find and fix the OLV rendenring issue
 
 
+1.3.29f
+- moved filter_line outside filter_line scope
+
+
 1.3.29e
 - avoid using hard-coded colors - especially in log view
 

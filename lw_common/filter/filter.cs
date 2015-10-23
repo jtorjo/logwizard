@@ -40,13 +40,13 @@ namespace LogWizard {
             // also used to know how many lines were matched by a filter
             public readonly BitArray matches = null;
 
-            public readonly filter_line.font_info font = null;
+            public readonly font_info font = null;
             public readonly line line = null;
             // convention - if we can't find a specific line (match_at), we'll return a line with the index -1
             //              (so that we don't return null)
             public readonly int line_idx = 0;
 
-            public match(BitArray matches, filter_line.font_info font, line line, int lineIdx) {
+            public match(BitArray matches, font_info font, line line, int lineIdx) {
                 this.matches = matches;
                 this.font = font;
                 this.line = line;
@@ -172,7 +172,7 @@ namespace LogWizard {
         // the filter matches
         private match_list matches_ ;
 
-        public delegate match create_match_func(BitArray matches, filter_line.font_info font, line line, int lineIdx);
+        public delegate match create_match_func(BitArray matches, font_info font, line line, int lineIdx);
         private create_match_func create_match;
 
         private bool rows_changed_ = false;
@@ -199,7 +199,7 @@ namespace LogWizard {
         public filter(create_match_func creator) {
             create_match = creator;
 
-            var empty_match = new_match(new BitArray(0), line.empty_line(), -1, filter_line.font_info.default_font_copy);
+            var empty_match = new_match(new BitArray(0), line.empty_line(), -1, font_info.default_font_copy);
             matches_ = new match_list(empty_match);
         }
 
@@ -489,7 +489,7 @@ namespace LogWizard {
                         any_match = true;
 
                     // 1.0.69 "apply to existing filters" is applied afterwards
-                    filter_line.font_info existing_filter_font = null;
+                    font_info existing_filter_font = null;
                     if ( any_match)
                         for (int filter_idx = 0; filter_idx < matches.Length && any_match; ++filter_idx) {
                             var row = rows[filter_idx];
@@ -508,7 +508,7 @@ namespace LogWizard {
                         }
 
                     if (any_match) {
-                        filter_line.font_info font;
+                        font_info font;
                         if (existing_filter_font != null)
                             font = existing_filter_font;
                         else {
@@ -526,14 +526,14 @@ namespace LogWizard {
                                 int idx = enabled_idx >= 0 ? enabled_idx : used_idx;
                                 font = rows[idx].get_match(line_idx).font;
                             } else
-                                font = filter_line.font_info.default_font;
+                                font = font_info.default_font;
                         }
                         new_matches.Add( new_match(new BitArray(matches), new_log.line_at(line_idx), line_idx, font ));
                         continue;
                     }
 
                     if (run_filter_count == 0) 
-                        new_matches.Add( new_match(new BitArray(0), new_log.line_at(line_idx), line_idx, filter_line.font_info.default_font ));
+                        new_matches.Add( new_match(new BitArray(0), new_log.line_at(line_idx), line_idx, font_info.default_font ));
                 }
 
                 bool replace = false;
@@ -629,7 +629,7 @@ namespace LogWizard {
 
 
         private static BitArray empty_match = new BitArray(0);
-        private match new_match(BitArray ba, line l, int idx, filter_line.font_info f ) {
+        private match new_match(BitArray ba, line l, int idx, font_info f ) {
             match m = create_match(ba, f, l, idx);
             return m;
         }
@@ -638,7 +638,7 @@ namespace LogWizard {
             // IMPORTANT: I did NOT test the binary_search_insert!
             int insert_idx = matches_.insert_line_idx(line_idx);
             if ( insert_idx >= 0)
-                matches_.insert(insert_idx, new_match(empty_match, log.line_at(line_idx), line_idx, new filter_line.font_info {
+                matches_.insert(insert_idx, new_match(empty_match, log.line_at(line_idx), line_idx, new font_info {
                         bg = util.transparent, fg = fg
                     }));            
         }
