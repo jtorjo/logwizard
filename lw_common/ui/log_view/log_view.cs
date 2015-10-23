@@ -401,7 +401,7 @@ namespace lw_common.ui
                     }
                 }
             }
-            else 
+            else if ( filter_view) 
                 Debug.Assert(model_.item_filter != null);
             model_.set_filter(filter_view, show_full_log);
         }

@@ -26,6 +26,7 @@
   - guessing the right file (from extension, etc.)
   - allow editing log settings (depending on its type)
 
+  *************perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
 
 
 
@@ -49,7 +50,6 @@
 
 - bug: allow selecting text with the mouse (not just shift-arrows)
 
-- bug: tn2 bet tab - select preflop, set match color , it will somehow override the color
 
 - todo : add asyncfilelogger
 
@@ -75,7 +75,6 @@
 
 
 
-  *************perhaps i need an extra "Include only lines containing/starting with ???" (for when user hasn't made any filters)
 
 - filter regex: RegexOptions.Singleline
 

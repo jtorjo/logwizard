@@ -272,7 +272,17 @@ namespace lw_common.ui {
 
             int count = items.count;
             for (int idx = 0; idx < count; ++idx) {
-                var i = items.match_at(idx) as match_item;
+                match_item i;
+                if (!run_on_full_log)
+                    i = items.match_at(idx) as match_item;
+                else {
+                    // at this point - we're run on the full log - however, if we find an item that exists in current view, use that
+                    // (so that we can reference the matches)
+                    i = items.match_at(idx) as match_item;
+                    var in_cur_view = items_.binary_search(i.line_idx).Item1 as match_item;
+                    if (in_cur_view != null)
+                        i = in_cur_view;
+                }
                 if ( item_filter(i, run_on_full_log))
                     if ( i.line_idx >= 0)
                         line_indexes.Add( i.line_idx);

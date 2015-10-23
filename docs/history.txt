@@ -1,8 +1,6 @@
 
 
 
-- if no selected text/no find -> use the current line to filter by (filter by all filters containing that line)
-  - if on a filter line -> use that
 
 
 - todo: when reselecting previous selection -> keep its relative position as well (for instance, if it used to be the 5th shown row, preserve that)
@@ -18,7 +16,18 @@
 	-- at this point, i need to update the filter menu (based on whether current line matches the filters or not)
 
 
+- bug: tn2 bet tab - select preflop, set match color , it will somehow override the color
+  (same happened for "process")
+
+
 - see if i can rather quickly find and fix the OLV rendenring issue
+
+
+
+1.3.28e
+- if no selected text/no find -> use the current line to filter by (filter by all filters containing that line)
+  - if on a filter line -> use that
+  - fixed issue when run on full log
 
 
 1.3.28d
