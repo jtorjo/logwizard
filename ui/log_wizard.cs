@@ -1289,6 +1289,9 @@ namespace LogWizard
         }
 
         private void on_rewritten_log() {
+            foreach ( var lv in all_log_views_and_full_log())
+                lv.clear();
+            
             if (app.inst.bring_to_top_on_restart) {
                 if (app.inst.make_topmost_on_restart) {
                     lw_util.bring_to_topmost(this);

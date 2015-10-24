@@ -90,7 +90,7 @@ namespace LogWizard {
                     return idx >= 0 && idx < matches_.Count ? matches_[idx] : empty_match;
             }
 
-            private void clear() {
+            internal void clear() {
                 lock (this)
                     matches_.Clear();
             }
@@ -100,7 +100,8 @@ namespace LogWizard {
                 lock (this) {
                     //return matches_.IndexOf(m);
                     int idx = matches_.binary_search_closest(x => x.line_idx, m.line_idx).Item2;
-                    Debug.Assert(matches_[idx] == m);
+                    if ( idx >= 0)
+                        Debug.Assert(matches_[idx] == m);
                     return idx;
                 }
             }
@@ -228,6 +229,14 @@ namespace LogWizard {
             }
 
             start_compute_matches_thread();
+        }
+
+        public void clear() {
+            lock (this) {
+                matches_.clear();
+                force_recompute_matches_ = true;
+                is_up_to_date_ = false;
+            }
         }
 
         public int row_count {
@@ -392,7 +401,16 @@ namespace LogWizard {
                 }
                 if (needs_recompute)
                     old = null;
-                compute_matches_impl(new_, old);
+                try {
+                    compute_matches_impl(new_, old);
+                } catch(Exception e) {
+                    // very likely the log got re-written
+                    logger.Error("[filter] refresh error " + e.Message);
+                    lock (this)
+                        force_recompute_matches_ = true;
+                    continue;
+                }
+
                 // the reason I do this here - I need to let the main thread know htat the log was fully set (and the matches are from This log)
                 // ONLY after I have read from it at least once
                 lock (this)

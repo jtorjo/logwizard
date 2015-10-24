@@ -25,9 +25,12 @@ using System.Linq;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
+using log4net.Repository.Hierarchy;
 
 namespace lw_common {
     public class filter_row : raw_filter_row {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public filter_row(string text, bool apply_to_existing_lines) : base(text, apply_to_existing_lines) {
         }
 
@@ -67,19 +70,25 @@ namespace lw_common {
 
             // note: in order to match, all lines must match
             int new_line_count = log.line_count;
-            for (int i = old_line_count_; i < new_line_count; ++i) {
-                bool matches = true;
-                foreach (filter_line fi in items_)
-                    if ( fi.part != part_type.font)
-                        if ( !fi.matches(log.line_at(i))) {
-                            matches = false;
-                            break;
-                        }
-                if ( matches)
-                    line_matches_.Add(i);
+            try {
+                for (int i = old_line_count_; i < new_line_count; ++i) {
+                    bool matches = true;
+                    foreach (filter_line fi in items_)
+                        if (fi.part != part_type.font)
+                            if (!fi.matches(log.line_at(i))) {
+                                matches = false;
+                                break;
+                            }
+                    if (matches)
+                        line_matches_.Add(i);
+                }
+                // if we have at least one line - we'll recheck this last line next time - just in case we did not fully read it last time
+                old_line_count_ = new_line_count > 0 ? new_line_count - 1 : new_line_count;
+            } catch (Exception e) {
+                logger.Error("[filter] error computing line matches for filter row : " + e.Message);
+                // restart everything - probably the log got re-written
+                old_line_count_ = 0;
             }
-            // if we have at least one line - we'll recheck this last line next time - just in case we did not fully read it last time
-            old_line_count_ = new_line_count > 0 ? new_line_count -1 : new_line_count;
         }
 
 

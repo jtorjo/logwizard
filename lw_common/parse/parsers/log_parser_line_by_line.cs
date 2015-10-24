@@ -162,8 +162,8 @@ namespace lw_common.parse.parsers {
                 if (idx < lines_.Count)
                     return lines_[idx];
                 else {
-                    logger.Error("[log] invalid line request " + idx + " / " + lines_.Count);
-                    return line.empty_line();
+                    // this can happen, when the log has been re-written, and everything is being refreshed
+                    throw new line.exception("invalid line request " + idx + " / " + lines_.Count);
                 }
             }
         }

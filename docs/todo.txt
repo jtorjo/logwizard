@@ -3,15 +3,13 @@
 
 -------------------------------------------------------
 
-- bug: on tn2/debug -> msg column not shown on full log; also, file:line shown after msg on current view
- - i think it's fixed (fixed_index)
+- todo: keep latest 20-30 logs
 
 
-- bug: on debug/tableninja2.log -> we don't show all lines - we're pretty much behind
-  - note: it shows we read all lines, but it does not update -> perhaps item_count related?
-  - note: i was watching "bet" tab, but full log did not update correctly either
-    - to test with tn2 , and betting on lots of tables
-  - note: it seems we entered an infinite loop - but not sure where?
+
+
+ - bug: when going to view X(realtime), there's something there, goint to view Y, when X gets updated (new lines) -> it does not go to the end
+
 
 - bug: seems that after monitoring (live) for a file, if i drop another file, i will get an infinite number of "new lines" events
 				(0): 02:20:22,864 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log

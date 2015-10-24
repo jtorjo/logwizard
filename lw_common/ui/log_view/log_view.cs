@@ -865,6 +865,11 @@ namespace lw_common.ui
             this.async_call(refresh);
         }
 
+        public void clear() {
+            filter_.clear();
+            refresh();
+        }
+
         public void refresh() {
             if (log_ == null)
                 return; // not set yet
@@ -1982,7 +1987,7 @@ namespace lw_common.ui
                         widths[i] += offset_x;
 
                     int char_idx = widths.FindLastIndex(x => x < mouse.X);
-                    if (widths.Last() < mouse.X)
+                    if (widths.Count == 0 || widths.Last() < mouse.X)
                         char_idx = widths.Count;
 
                     cur_col_ = col_idx;

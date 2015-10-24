@@ -36,7 +36,6 @@ namespace lw_common
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const string LINE_SEP = "\r\n";
         public const int COMPUTE_AVG_LINE_AFTER = 2000;
 
         private StringBuilder string_ = new StringBuilder();
@@ -50,7 +49,7 @@ namespace lw_common
 
         // tests to see we've computed the lines correctly
         private void test_compute_lines() {
-            string[] lines = string_.ToString().Split(new string[] {LINE_SEP}, StringSplitOptions.None);
+            string[] lines = string_.ToString().Split(new string[] {"\r\n"}, StringSplitOptions.None);
             Debug.Assert(lines.Length == line_count);
             for (int i = 0; i < lines.Length; ++i) {
                 string cur = line_at(i);
@@ -68,10 +67,15 @@ namespace lw_common
             if (lines == "")
                 return;
 
+            // 1.3.31+ - the reason i log this - is that in case there's any error parsing the log, I should be able to reproduce,
+            //           by fully rereading the original log + re-adding the exact sequences
+            logger.Debug("[line] added lines: " + string_.Length + "," + lines.Length);
+
             was_last_line_incomplete = false;
             if (string_.Length > 0 && lines.Length > 0) {
                 
                 bool might_be_incomplete = line_count > indexes_.Count;
+                const string LINE_SEP = "\r\n";
                 bool starts_with_enter = LINE_SEP.Contains(lines[0]);
                 was_last_line_incomplete = might_be_incomplete && !starts_with_enter;
             }
@@ -81,6 +85,9 @@ namespace lw_common
             int old_line_count = line_count;
             compute_indexes(len);
             added_line_count = line_count - old_line_count;
+            // 1.3.31b+
+            if (ends_in_enter())
+                ++added_line_count;
 
             is_last_line_incomplete = line_count > indexes_.Count;
             logger.Debug("[line] we have read " + line_count + " lines");
@@ -132,12 +139,19 @@ namespace lw_common
 
                 int count = indexes_.Count + 1;
                 if (indexes_.Count > 0) {
-                    bool ends_in_enter = indexes_.Last() + 2 >= string_.Length;
-                    if (ends_in_enter)
+                    if (ends_in_enter())
                         --count;
                 }
                 return count;
             }
+        }
+
+        private bool ends_in_enter() {
+            if (indexes_.Count > 0) {
+                bool ends_in_enter = indexes_.Last() + 2 >= string_.Length;
+                return ends_in_enter;
+            } else
+                return false;
         }
 
         public string line_at(int idx) {

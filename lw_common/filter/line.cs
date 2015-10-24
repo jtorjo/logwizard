@@ -120,6 +120,11 @@ namespace lw_common {
 
 
     public class line {
+        public class exception : Exception {
+            public exception(string message = "invalid line") : base(message) {
+            }
+        }
+
         private sub_string sub_;
         // note: I could theoretically keep the length as a ubyte - and only the length of the message as a short
         //       however, I don't think it's worth doing, since if in the future, I would parse more complicated logs,
@@ -209,8 +214,14 @@ namespace lw_common {
                 return "";
 
             string msg = sub_.msg;
-            var result = msg.Substring(parts[(int) i * 2], parts[(int) i * 2 + 1]);
-            return result;
+            try {
+                short start = parts[(int) i * 2], len = parts[(int) i * 2 + 1];
+                if ( start < msg.Length && start + len <= msg.Length)
+                    return msg.Substring(parts[(int) i * 2], parts[(int) i * 2 + 1]);
+            } catch {
+            }
+            // this can happen when the log has changed or has been re-written, thus, the sub_ has become suddenly empty
+            return "";
         }
     }
 }
