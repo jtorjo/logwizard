@@ -342,8 +342,10 @@
             this.msgCol.FillsFreeSpace = true;
             this.msgCol.Groupable = false;
             this.msgCol.IsEditable = false;
+            this.msgCol.MinimumWidth = 100;
             this.msgCol.Sortable = false;
             this.msgCol.Text = "Message";
+            this.msgCol.Width = 100;
             // 
             // panel1
             // 

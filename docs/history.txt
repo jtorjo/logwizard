@@ -1,5 +1,12 @@
 
 
+1.3.31a
+- made msgcol minwidth = 100 
+  rationale: otherwise, when view would be too small, the msgcol would end up being totally hidden
+             the problem with that is that after reshowing the view to a biggger size, the msgcol would remain hidden
+			 -> we don't want that
+
+
 1.3.30
 - fix: see if i can rather quickly find and fix the OLV rendenring issue
 
