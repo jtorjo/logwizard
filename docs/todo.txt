@@ -98,7 +98,7 @@
 
 
 
-
+- review license - what does gpl3 really mean?
 
 
 -- article: filter your logs inside out! 

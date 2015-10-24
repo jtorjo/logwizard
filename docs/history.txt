@@ -1,6 +1,7 @@
 
 
-- see if i can rather quickly find and fix the OLV rendenring issue
+1.3.30
+- fix: see if i can rather quickly find and fix the OLV rendenring issue
 
 
 1.3.29g

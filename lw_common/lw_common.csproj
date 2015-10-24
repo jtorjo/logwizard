@@ -131,10 +131,10 @@
     <Compile Include="ui\select_zip_file_form.Designer.cs">
       <DependentUpon>select_zip_file_form.cs</DependentUpon>
     </Compile>
-    <Compile Include="ui\smart_readonly_textbox.cs">
+    <Compile Include="ui\log_view\smart_readonly_textbox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ui\smart_readonly_textbox.Designer.cs">
+    <Compile Include="ui\log_view\smart_readonly_textbox.Designer.cs">
       <DependentUpon>smart_readonly_textbox.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\solid_brush_list.cs" />
@@ -179,7 +179,7 @@
     <EmbeddedResource Include="ui\select_zip_file_form.resx">
       <DependentUpon>select_zip_file_form.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ui\smart_readonly_textbox.resx">
+    <EmbeddedResource Include="ui\log_view\smart_readonly_textbox.resx">
       <DependentUpon>smart_readonly_textbox.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

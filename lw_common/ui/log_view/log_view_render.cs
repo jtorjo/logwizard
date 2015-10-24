@@ -32,6 +32,7 @@ using lw_common;
 
 namespace lw_common.ui {
     class log_view_render : BaseRenderer {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private log_view parent_;
         private log_view_item_draw_ui drawer_ = null;
@@ -114,6 +115,9 @@ namespace lw_common.ui {
         } 
 
         public override void Render(Graphics g, Rectangle r) {
+            // 1.3.30+ solved rendering issue :)
+            DrawBackground(g, r);
+
             var i = ListItem.RowObject as match_item;
             if (i == null)
                 return;

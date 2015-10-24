@@ -150,6 +150,7 @@
             this.list.OwnerDraw = true;
             this.list.ShowGroups = false;
             this.list.ShowItemToolTips = true;
+            this.list.ShowSortIndicators = false;
             this.list.Size = new System.Drawing.Size(693, 403);
             this.list.TabIndex = 3;
             this.list.UseCompatibleStateImageBehavior = false;
@@ -337,8 +338,11 @@
             // msgCol
             // 
             this.msgCol.AspectName = "msg";
+            this.msgCol.CellVerticalAlignment = System.Drawing.StringAlignment.Near;
             this.msgCol.FillsFreeSpace = true;
+            this.msgCol.Groupable = false;
             this.msgCol.IsEditable = false;
+            this.msgCol.Sortable = false;
             this.msgCol.Text = "Message";
             // 
             // panel1

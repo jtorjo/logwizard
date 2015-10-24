@@ -114,7 +114,7 @@ namespace lw_common.ui
             viewName.Text = name;
             model_ = new log_view_data_source(this.list, this ) { name = name };
             list.VirtualListDataSource = model_;
-            list.RowHeight = 18;
+            //list.RowHeight = 18;
 
             load_font();
             lv_parent.handle_subcontrol_keys(this);
@@ -1148,7 +1148,8 @@ namespace lw_common.ui
                 // already visible
                 return;
 
-            int rows = list.Height / list.RowHeight;
+            // 1.3.30+ use RowHeightEffective (don't manually set RowHeight)
+            int rows = list.Height / list.RowHeightEffective;
             int bottom_idx = row_idx + rows / 2;
             if (bottom_idx >= item_count)
                 bottom_idx = item_count - 1;

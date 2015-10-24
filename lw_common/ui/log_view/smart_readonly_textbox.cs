@@ -129,7 +129,7 @@ namespace lw_common.ui {
                 return;
             }
 
-            int offset_x = parent_.list.Left;
+            int offset_x = parent_.list.Left + 4;
             int offset_y = parent_.list.Top;
             var location = new Point(offset_x + bounds.X, offset_y + bounds.Y + 2);
             if (location.Y + bounds.Height > parent_.Height) {

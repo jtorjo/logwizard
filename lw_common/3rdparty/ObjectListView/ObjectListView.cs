@@ -10115,6 +10115,9 @@ namespace BrightIdeasSoftware
         /// <param name="g">A Graphics</param>
         /// <param name="itemsThatWereRedrawn">The items that were redrawn and whose decorations should also be redrawn</param>
         protected virtual void DrawAllDecorations(Graphics g, List<OLVListItem> itemsThatWereRedrawn) {
+            // john.torjo
+            return;
+
             g.TextRenderingHint = ObjectListView.TextRenderingHint;
             g.SmoothingMode = ObjectListView.SmoothingMode;
 
