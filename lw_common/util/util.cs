@@ -333,7 +333,6 @@ namespace lw_common {
             if (sep_bracket >= 0 || sep_square_bracket >= 0) 
                 time = time.Replace(sep_bracket >= 0 ? '(' : '[', '.').Replace(sep_bracket >= 0 ? ")" : "]" , "");
             
-
             // in this case, just hh:mm
             if (time.Count(c => c == ':') == 1) {
                 int sep0 = time.IndexOf(':');
@@ -356,7 +355,10 @@ namespace lw_common {
                 time = "0" + time;
             // hh:mm:ss or hh:m:s
             int sep2 = time.IndexOf(':', 3);
-            Debug.Assert(sep2 == -1 || sep2 == 4 || sep2 == 5);
+            if (!(sep2 == -1 || sep2 == 4 || sep2 == 5))
+                // invalid string
+                return time;
+
             if (sep2 == 4)
                 time = time.Substring(0, 3) + "0" + time.Substring(3);
             if (sep2 > 0) {

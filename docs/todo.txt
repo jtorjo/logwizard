@@ -21,8 +21,6 @@
 - bug notes export: they are not sorted by id when expoted
 - bug: next bookmark does not sync with full log
 
-- bug: drag drop a file from a different context -> not all view names (in tabcontrol) are changed 
-  (probably the current one is not updated correctly? or the first one?)
 
 - bug: 'New' does not work
   - works now, but I need to put it into another position - equivalent of (Ctrl-1)

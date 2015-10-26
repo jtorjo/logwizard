@@ -421,10 +421,10 @@ namespace lw_common.parse.parsers {
         private bool parse_time(string line, Tuple<int,int> idx) {
             if (idx.Item1 < 0)
                 return true;
-            if (line.Length < idx.Item2)
+            if (line.Length < idx.Item1 + idx.Item2)
                 // we don't have enough line to hold the time/date/level
                 return false;
-            string sub = line.Substring(idx.Item1, idx.Item2 - idx.Item1);
+            string sub = line.Substring(idx.Item1, idx.Item2);
             int max = Math.Min(idx.Item2, 8); // ignore milis
             bool ok = true;
             for ( int i = 0; i < max; ++i)
@@ -437,11 +437,11 @@ namespace lw_common.parse.parsers {
         private bool parse_date(string line, Tuple<int,int> idx) {
             if (idx.Item1 < 0)
                 return true;
-            if (line.Length < idx.Item2)
+            if (line.Length < idx.Item1 + idx.Item2)
                 // we don't have enough line to hold the time/date/level
                 return false;
 
-            string sub = line.Substring(idx.Item1, idx.Item2 - idx.Item1);
+            string sub = line.Substring(idx.Item1, idx.Item2);
             int digits = 0, sep = 0;
             foreach ( char c in sub)
                 if (Char.IsDigit(c) || Char.IsWhiteSpace(c))
@@ -456,11 +456,11 @@ namespace lw_common.parse.parsers {
         private bool parse_level(string line, Tuple<int,int> idx) {
             if (idx.Item1 < 0)
                 return true;
-            if (line.Length < idx.Item2)
+            if (line.Length < idx.Item1 + idx.Item2)
                 // we don't have enough line to hold the time/date/level
                 return false;
             
-            string sub = line.Substring(idx.Item1, idx.Item2 - idx.Item1).TrimEnd();
+            string sub = line.Substring(idx.Item1, idx.Item2).TrimEnd();
             return sub == "INFO" || sub == "ERROR" || sub == "FATAL" || sub == "DEBUG" || sub == "WARN";
         }
 

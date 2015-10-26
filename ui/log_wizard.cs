@@ -764,7 +764,9 @@ namespace LogWizard
             foreach ( Control c in tab.Controls)
                 c.Visible = false;
 
-            log_view new_ = new log_view( this, viewsTab.TabPages[idx].Text );
+            Debug.Assert( idx < cur_context().views.Count );
+            string name = cur_context().views[idx].name;
+            log_view new_ = new log_view( this, name );
             new_.Dock = DockStyle.Fill;
             tab.Controls.Add(new_);
             new_.show_name = false;
@@ -2563,6 +2565,8 @@ namespace LogWizard
         }
 
         private void activate_pane(Control cur_pane) {
+            Debug.Assert(cur_pane != null);
+
             active_pane_ = cur_pane;
             var lv_pane = cur_pane as log_view;
             var list_pane = cur_pane as ObjectListView;
@@ -2901,6 +2905,8 @@ namespace LogWizard
         }
 
         private void log_wizard_Activated(object sender, EventArgs e) {
+            if (ignore_change_ > 0)
+                return;
             on_activate();
         }
 
