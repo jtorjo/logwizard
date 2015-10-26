@@ -1,7 +1,9 @@
 
+- rename view - if name already exists, append suffix to it
 
+- bug: when going to view X(realtime), there's something there, goint to view Y, when X gets updated (new lines) -> it does not go to the end
+- bug: when the source pane is shown, we sometimes end up showing something wrong in the view name
 
- - bug: when going to view X(realtime), there's something there, goint to view Y, when X gets updated (new lines) -> it does not go to the end
 
 
 - bug: seems that after monitoring (live) for a file, if i drop another file, i will get an infinite number of "new lines" events
@@ -10,6 +12,13 @@
 				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
 				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
 				........
+
+
+1.3.31d
+- removed spurious usages of ensure_we_have_log_view_for_tab
+  - we should pretty much use it only when context gets changed (or new views get added)
+- renaming a view -> only via right click (not on toggle Source pane), and only called when rename is complete (not on each typed character)
+
 
 1.3.31c
 - keep latest 20-30 logs

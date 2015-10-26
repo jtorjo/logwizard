@@ -28,6 +28,7 @@
   - works now, but I need to put it into another position - equivalent of (Ctrl-1)
   - very likely, I should allow up to Ctrl-9
     - when going to another position - and that position is "virgin", copy from teh current position (for instance, if going from position 2 to position 9, copy settings from position 2)
+  - IMPORTANT: regular save() should happen in Dummy() -> since we will have several log_wizard windows
 
 - log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)
   - i need to save this only if the user changes something

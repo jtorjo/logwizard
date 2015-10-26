@@ -189,6 +189,15 @@ namespace lw_common {
                 views_[name] = vi;            
         }
 
+        public void rename_view(string old_name, string new_name) {
+            if (!views_.ContainsKey(old_name))
+                // we don't have any per-view info for this view, so we don't really care
+                return;
+
+            views_.Add( new_name, views_[old_name]);
+            views_.Remove(old_name);
+        }
+
         public show_row_type next_show_row_for_view(string name) {
             bool is_full_log = name == "[All]";
 

@@ -166,7 +166,7 @@ namespace LogWizard
                 full_log.Refresh();
             };
             filtCtrl.mark_match = (filter_idx) => {
-                var lv = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
+                var lv = log_view_for_tab(viewsTab.SelectedIndex);
                 Color fg = util.str_to_color(sett.get("filter_fg", "transparent"));
                 Color bg = util.str_to_color(sett.get("filter_bg", "#faebd7"));
                 lv.mark_match(filter_idx, fg, bg);
@@ -402,12 +402,6 @@ namespace LogWizard
                 sourceUp.Panel1Collapsed = true;
                 sourceUp.Panel1.Hide();
             }
-            if ( curContextCtrl.SelectedIndex >= 0)
-                for ( int i = 0; i < cur_context().views.Count; ++i) {
-                    log_view lv = log_view_for_tab(i);
-                    if ( lv != null)
-                        lv.show_name = show;
-                }
         }
 
         private void show_filteredleft_pane1(bool show) {
@@ -443,14 +437,14 @@ namespace LogWizard
                 show_filteredleft_pane2(true);
                 global_ui.show_fulllog = true;
                 global_ui.show_current_view = true;
-                to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
+                to_focus = log_view_for_tab(viewsTab.SelectedIndex);
                 break;
             case show_full_log_type.just_view:
                 show_filteredleft_pane1(true);
                 show_filteredleft_pane2(false);
                 global_ui.show_fulllog = false;
                 global_ui.show_current_view = true;
-                to_focus = ensure_we_have_log_view_for_tab(viewsTab.SelectedIndex);
+                to_focus = log_view_for_tab(viewsTab.SelectedIndex);
                 break;
             case show_full_log_type.just_full_log:
                 show_filteredleft_pane1(false);
@@ -753,9 +747,15 @@ namespace LogWizard
             // 1.0.91+ - note: the current view (cur.views[cur_view]) is up to date at all times - that's how filter_ctrl works
         }
 
+        private log_view log_view_for_tab(int idx) {
+            TabPage tab = viewsTab.TabPages[idx];
+            foreach ( Control c in tab.Controls)
+                if ( c is log_view)
+                    return (log_view)c; // we have it
+            return null;
+        }
+
         private log_view ensure_we_have_log_view_for_tab(int idx) {
-            //if ( text_ == null)
-              //  return;
             TabPage tab = viewsTab.TabPages[idx];
             foreach ( Control c in tab.Controls)
                 if ( c is log_view)
@@ -767,7 +767,7 @@ namespace LogWizard
             log_view new_ = new log_view( this, viewsTab.TabPages[idx].Text );
             new_.Dock = DockStyle.Fill;
             tab.Controls.Add(new_);
-            new_.show_name = global_ui.show_source;
+            new_.show_name = false;
             new_.set_bookmarks(bookmarks_.ToList());
             if ( log_parser_ != null)
                 new_.set_log( new log_reader(log_parser_));
@@ -777,7 +777,7 @@ namespace LogWizard
         private List<log_view> all_log_views() {
             List<log_view> other_logs = new List<log_view>();
             for (int idx = 0; idx < viewsTab.TabCount; ++idx) {
-                var other = ensure_we_have_log_view_for_tab(idx);
+                var other = log_view_for_tab(idx);
                 other_logs.Add(other);
             }
             return other_logs;
@@ -790,25 +790,22 @@ namespace LogWizard
             return all;
         }
 
+        // this is called when the user has manually changed the view name
         public void on_view_name_changed(log_view view, string name) {
             if (ignore_change_ > 0)
                 return;
+            if (view == full_log)
+                return;
 
             ui_context cur = cur_context();
-            for ( int i = 0; i < viewsTab.TabCount; ++i)
-                if ( log_view_for_tab(i) == view) {
-                    viewsTab.TabPages[i].Text = name;
-                    view.name = name;
-                    cur.views[i].name = name;
-                }
-        }
-
-        private log_view log_view_for_tab(int idx) {
-            TabPage tab = viewsTab.TabPages[idx];
-            foreach ( Control c in tab.Controls)
-                if ( c is log_view)
-                    return (log_view)c; // we have it
-            return null;
+            int view_idx = all_log_views().IndexOf(view);
+            ui_view cur_view = cur.views[view_idx];
+            string old_name = cur_view.name;
+            if (name == old_name)
+                // nothing changed
+                return;
+            cur_view.name = name;
+            global_ui.rename_view(old_name, name);
         }
 
         public Rectangle client_rect_no_filter {
@@ -1191,9 +1188,9 @@ namespace LogWizard
                 remove_log_view_tab(idx);
             } else {
                 // it's the last tab, clear the filter
-                cur.views[0].name = "New_1";
+                cur.views[0].name = "View_1";
                 cur.views[0].filters = new List<ui_filter>();
-                on_view_name_changed(ensure_we_have_log_view_for_tab(0), cur.views[0].name);
+                on_view_name_changed(log_view_for_tab(0), cur.views[0].name);
                 load_filters();
                 save();
             }
@@ -1261,8 +1258,10 @@ namespace LogWizard
                 // no log yet
                 return;
             log_view lv = log_view_for_tab(viewsTab.SelectedIndex);
-            if (lv == null)
+            if (lv == null) {
+                Debug.Assert(false);
                 return;
+            }
 
             if (app.inst.instant_refresh_all_views) {
                 refresh_all_views();
@@ -1272,7 +1271,7 @@ namespace LogWizard
                 lv.refresh();
                 if (global_ui.show_fulllog) {
                     for (int idx = 0; idx < viewsTab.TabCount; ++idx) {
-                        var other = ensure_we_have_log_view_for_tab(idx);
+                        var other = log_view_for_tab(idx);
                         if (other != lv)
                             update_non_active_filter(idx);
                     }
@@ -1317,7 +1316,7 @@ namespace LogWizard
         }
 
         private void update_non_active_filter(int idx) {
-            var lv = ensure_we_have_log_view_for_tab(idx);
+            var lv = log_view_for_tab(idx);
             if (lv.is_filter_set)
                 return;
 
@@ -1494,14 +1493,16 @@ namespace LogWizard
                 // no log yet
                 return;
             log_view lv = log_view_for_tab(viewsTab.SelectedIndex);
-            if (lv == null)
+            if (lv == null) {
+                Debug.Assert(false);
                 return;
+            }
 
             update_filter(lv);
             lv.refresh();
 
             for (int idx = 0; idx < viewsTab.TabCount; ++idx) {
-                var other = ensure_we_have_log_view_for_tab(idx);
+                var other = log_view_for_tab(idx);
                 if (other != lv) {
                     update_non_active_filter(idx);
                     other.refresh();
@@ -1664,10 +1665,12 @@ namespace LogWizard
                 return;
             last_sel_ = logHistory.SelectedIndex;
             add_reader_to_history();
+#if old_code
             // FIXME I don't think this is needed
             ui_context cur = cur_context();
             for (int idx = 0; idx < cur.views.Count; ++idx)
                 ensure_we_have_log_view_for_tab(idx);
+#endif
             load_bookmarks();
             logger.Info("new reader_ " + history_[logHistory.SelectedIndex].name);
 
@@ -2598,7 +2601,7 @@ namespace LogWizard
             if (is_focus_on_full_log())
                 return full_log_ctrl_;
 
-            var lv = ensure_we_have_log_view_for_tab(sel);
+            var lv = log_view_for_tab(sel);
             return lv;
         }
 
@@ -3367,6 +3370,7 @@ namespace LogWizard
                 text_.Dispose();
                 text_ = null;
                 remove_all_log_views();
+                load();
                 on_file_drop(selected_file_name());
                 // we want to refresh it only after it's been loaded, so that it visually shows that
                 util.postpone(() => full_log_ctrl_.force_refresh_visible_columns(), 2000);

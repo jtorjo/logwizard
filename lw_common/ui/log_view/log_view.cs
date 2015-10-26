@@ -102,6 +102,8 @@ namespace lw_common.ui
         private int sel_y_offset_before_set_filter_ = 0;
         private int sel_line_idx_before_set_filter_ = 0;
 
+        private int ignore_change_ = 0;
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -111,7 +113,9 @@ namespace lw_common.ui
 
             InitializeComponent();
             this.parent = parent;
+            ++ignore_change_;
             viewName.Text = name;
+            --ignore_change_;
             model_ = new log_view_data_source(this.list, this ) { name = name };
             list.VirtualListDataSource = model_;
             //list.RowHeight = 18;
@@ -168,9 +172,9 @@ namespace lw_common.ui
         }
 
 
-        private void filterName_TextChanged(object sender, EventArgs e)
-        {
-            lv_parent.on_view_name_changed(this, viewName.Text);
+        private void filterName_TextChanged(object sender, EventArgs e) {
+            if (ignore_change_ > 0)
+                return;
         }
 
         public bool is_filter_set {
@@ -1289,6 +1293,10 @@ namespace lw_common.ui
                     bool new_show_header = show_name_ || show_header_;
                     if (old_show_header != new_show_header)
                         update_show_header();
+
+                    // the idea is to notify teh parent of the change only after the change has been complete
+                    if ( !show_name_)
+                        lv_parent.on_view_name_changed(this, viewName.Text);
                 }
             }
         }
@@ -2073,6 +2081,10 @@ namespace lw_common.ui
         private void list_MouseDown(object sender, MouseEventArgs e) {
             if ((e.Button & MouseButtons.Right) == MouseButtons.Right)
                 right_click_.right_click();
+        }
+
+        private void viewName_Leave(object sender, EventArgs e) {
+            show_name = false;
         }
     }
 

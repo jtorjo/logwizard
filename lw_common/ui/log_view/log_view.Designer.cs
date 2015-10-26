@@ -85,6 +85,7 @@
             this.viewName.TabIndex = 2;
             this.tip.SetToolTip(this.viewName, "Name of the Filtered View (shows up as the tab name)");
             this.viewName.TextChanged += new System.EventHandler(this.filterName_TextChanged);
+            this.viewName.Leave += new System.EventHandler(this.viewName_Leave);
             // 
             // list
             // 
