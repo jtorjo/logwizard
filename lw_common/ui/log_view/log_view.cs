@@ -891,8 +891,13 @@ namespace lw_common.ui
             if (is_current_view)
                 last_item_count_while_current_view_ = new_item_count;
 
-            if (old_item_count_ == new_item_count && !needs_ui_update)
-                return; // nothing changed
+            if (old_item_count_ == new_item_count && !needs_ui_update) {
+                // nothing changed
+                if ( model_.item_count > 0 && list.SelectedIndex == -1 && !is_full_log && is_current_view)
+                    // just switched to another view where nothing was selected - go to end by default
+                    go_last();
+                return; 
+            }
 
             if (needs_ui_update) {
                 Enabled = true;
@@ -1087,7 +1092,7 @@ namespace lw_common.ui
                 return; // already selected
 
             // 1.0.67+ - there's a bug in objectlistview - if we're not the current view, we can't really select a row
-            if (!is_current_view && !is_full_log)
+            if (!is_current_view && !is_full_log && list.SelectedIndex == -1)
                 return;
 
             select_nofify_ = notify;

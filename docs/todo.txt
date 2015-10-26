@@ -22,6 +22,11 @@
 - bug: next bookmark does not sync with full log
 
 
+
+
+
+
+
 - bug: 'New' does not work
   - works now, but I need to put it into another position - equivalent of (Ctrl-1)
   - very likely, I should allow up to Ctrl-9
@@ -75,6 +80,10 @@
 
 
 
+  If time allows:
+- parse by line "xx: yy", and empty line is end-of-record
+  = take care of the case when we read a partial entry
+- parse xml, csv? (first version, that is)
 
 
 
@@ -82,8 +91,6 @@
 
 
 
-
-- review license - what does gpl3 really mean?
 
 
 -- article: filter your logs inside out! 
@@ -111,8 +118,6 @@
 - todo : add asyncfilelogger
 
 
-- parse by line "xx: yy", and empty line is end-of-record
-  = take care of the case when we read a partial entry
 
 
 

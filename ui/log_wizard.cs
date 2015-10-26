@@ -1683,7 +1683,7 @@ namespace LogWizard
                 ensure_we_have_log_view_for_tab(idx);
 #endif
             load_bookmarks();
-            logger.Info("new reader_ " + history_[logHistory.SelectedIndex].name);
+            logger.Info("new reader " + history_[logHistory.SelectedIndex].name);
 
             // at this point, some file has been dropped
             log_view_for_tab(0).Visible = true;

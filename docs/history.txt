@@ -1,10 +1,5 @@
 
 
-
-- bug: when going to view X(realtime), there's something there, goint to view Y, when X gets updated (new lines) -> it does not go to the end
-
-
-
 - bug: seems that after monitoring (live) for a file, if i drop another file, i will get an infinite number of "new lines" events
 				(0): 02:20:22,864 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
 				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
@@ -12,6 +7,9 @@
 				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
 				........
 
+1.3.31g
+- fix: when going to view X(realtime), there's something there, goint to view Y, when X gets updated (new lines) -> it does not go to the end
+- reviewed license - gpl3 is totally ok
 
 
 1.3.31f
