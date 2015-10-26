@@ -1,9 +1,11 @@
 
-- bug : clicking with mouse -> does not select the right column (when clicking on the msg)
 
 - bug: allow mousewheel (probably just hide the edit?)
 
 - bug: allow selecting text with the mouse (not just shift-arrows)
+
+
+
 
 
 - font: allow changing it
@@ -14,6 +16,9 @@
 - bug notes export: they are not sorted by id when expoted
 - bug: next bookmark does not sync with full log
 
+
+1.3.32a
+- bug : clicking with mouse -> does not select the right column (when clicking on the msg)
 
 
 1.3.31i

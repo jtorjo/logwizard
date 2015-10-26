@@ -2000,6 +2000,10 @@ namespace lw_common.ui
 
             int col_idx = e.ColumnIndex;
             if (col_idx >= 0 && e.RowIndex >= 0) {
+                // find the index within all columns (not just the visible ones)
+                col_idx = list.AllColumns.FindIndex(x => x == e.Column);
+                Debug.Assert(col_idx >= 0);
+
                 var mouse = list.PointToClient(Cursor.Position);
                 using (Graphics g = CreateGraphics()) {
                     string text = list.GetItem(e.RowIndex).GetSubItem(e.ColumnIndex).Text;
