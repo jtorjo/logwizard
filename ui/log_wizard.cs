@@ -560,8 +560,6 @@ namespace LogWizard
             sourceTypeCtrl.SelectedIndex = 0;
             friendlyNameCtrl.Text = "";
             --ignore_change_;
-            // this will force us to process this change
-            last_sel_ = -2;
 
             history_select(file, friendly_name);
             on_new_file_log(file);
@@ -1126,7 +1124,7 @@ namespace LogWizard
             if (lv.is_filter_up_to_date) 
                 lv.update_edit();
             else 
-                util.postpone(update_list_view_edit, 100);
+                util.postpone(update_list_view_edit, 250);
         }
 
         private void try_to_go_to_selected_line(int selected_row_idx) {
@@ -1641,8 +1639,6 @@ namespace LogWizard
             return logHistory.SelectedIndex;
         }
 
-        private int last_sel_ = -1;
-
         private void on_new_log() {
             string size = text_ is file_text_reader ? " (" + new FileInfo(text_.name).Length + " bytes)" : "";
             set_status_forever("Log: " + text_.name + size);
@@ -1678,10 +1674,6 @@ namespace LogWizard
             full_log_ctrl_.set_filter(new List<raw_filter_row>());
 
             Text = reader_title() + " - Log Wizard " + version();
-            if (logHistory.SelectedIndex == last_sel_)
-                // note: sometimes this gets called twice - for instance, when user drops the combo and then selects an entry with the mouse
-                return;
-            last_sel_ = logHistory.SelectedIndex;
             add_reader_to_history();
 #if old_code
             // FIXME I don't think this is needed
@@ -1701,7 +1693,7 @@ namespace LogWizard
                 merge_notes();
             }
 
-            util.postpone(update_list_view_edit, 100);
+            util.postpone(update_list_view_edit, 250);
         }
 
         private void merge_notes() {

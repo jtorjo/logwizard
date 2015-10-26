@@ -3,20 +3,6 @@
 
 -------------------------------------------------------
 
-- bug : clicking with mouse -> does not select the right column (when clicking on the msg)
-
-- bug: allow mousewheel (probably just hide the edit?)
-
-- bug: allow selecting text with the mouse (not just shift-arrows)
-
-
-- font: allow changing it
-
-- bug: selecting a word and pressing f3 will take you correctly, but will select the former selection as well
-- bug: selecting something with arrow right, and then pressing arrow left will select an extra char from left instead of acting as backspace
-
-- bug notes export: they are not sorted by id when expoted
-- bug: next bookmark does not sync with full log
 
 
 

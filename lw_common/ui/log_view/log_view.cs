@@ -572,8 +572,7 @@ namespace lw_common.ui
         }
 
         public void update_edit() {
-            edit.escape();
-            edit.update_ui();            
+            edit.force_refresh();            
         }
 
         public string name {

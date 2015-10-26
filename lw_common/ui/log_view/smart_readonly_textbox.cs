@@ -116,6 +116,17 @@ namespace lw_common.ui {
             return should_be;
         }
 
+        internal void force_refresh() {
+            last_positions_.Clear();
+            sel_len_ = 0;
+
+            readd_all_text();
+            update_selected_text();
+            update_cached_sel_text();
+
+            update_ui();
+        }
+
         public void update_ui() {
             if (parent_ == null)
                 return;
