@@ -579,6 +579,7 @@ namespace lw_common.ui
                 filter_.name = value;
                 if (log_ != null)
                     log_.tab_name = value;
+                update_x_of_y();
             }
         }
 
@@ -794,6 +795,8 @@ namespace lw_common.ui
         }
 
         private void show_column(OLVColumn col, int width, bool show) {
+            if (col.Width == 0)
+                col.Width = width;
             if (col.IsVisible == show)
                 return;
 
@@ -1175,6 +1178,7 @@ namespace lw_common.ui
         public void rename_view() {
             old_view_name_ = name;
             show_name = true;
+            edit.Visible = false;
             viewName.Focus();
         }
 
@@ -1294,9 +1298,11 @@ namespace lw_common.ui
                     if (old_show_header != new_show_header)
                         update_show_header();
 
-                    // the idea is to notify teh parent of the change only after the change has been complete
-                    if ( !show_name_)
+                    // the idea is to notify the parent of the change only after the change has been complete
+                    if (!show_name_) {
+                        update_x_of_y();
                         lv_parent.on_view_name_changed(this, viewName.Text);
+                    }
                 }
             }
         }

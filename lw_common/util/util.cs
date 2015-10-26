@@ -947,6 +947,20 @@ namespace lw_common {
                 logger.Error("Copy_logs Error: " + err);             
         }
 
+        // makes sure the returned names does not match any of the existing names
+        public static string unique_name(IEnumerable<string> existing_names, string name, string name_suffix = "_") {
+            if (!existing_names.Contains(name))
+                return name;
+
+            // at this point, we know name exists, find a suffix
+            int idx = 2;
+            while (true) {
+                string copy = name + name_suffix + idx;
+                if (!existing_names.Contains(copy))
+                    return copy;
+                ++idx;
+            }
+        }
 
     }
 }

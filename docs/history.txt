@@ -1,5 +1,4 @@
 
-- rename view - if name already exists, append suffix to it
 
 - bug: when going to view X(realtime), there's something there, goint to view Y, when X gets updated (new lines) -> it does not go to the end
 - bug: when the source pane is shown, we sometimes end up showing something wrong in the view name
@@ -12,6 +11,9 @@
 				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
 				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
 				........
+
+1.3.31e
+- rename view - if name already exists, append suffix to it
 
 
 1.3.31d

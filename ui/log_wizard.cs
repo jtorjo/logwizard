@@ -804,6 +804,15 @@ namespace LogWizard
             if (name == old_name)
                 // nothing changed
                 return;
+
+            var other_views = all_log_views();
+            other_views.Remove(view);
+            var other_view_names = other_views.Select(x => x.name);
+            string new_name = util.unique_name(other_view_names, name, "_");
+            if (new_name != name) 
+                // in this case, another view already had that name - we want names to be unique
+                view.name = name = new_name;
+
             cur_view.name = name;
             global_ui.rename_view(old_name, name);
         }
