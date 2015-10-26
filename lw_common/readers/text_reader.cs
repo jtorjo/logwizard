@@ -20,8 +20,10 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using lw_common;
 
 namespace LogWizard
 {
@@ -30,19 +32,22 @@ namespace LogWizard
         public const string UNKNOWN_SYNTAX = find_log_syntax.UNKNOWN_SYNTAX;
         private bool disposed_ = false;
 
-        public delegate void on_new_lines_func();
-        // it's called: 
-        //  - after the log has been fully read, when there are new lines appended to it
-        public on_new_lines_func on_new_lines;
+        protected log_parser parser_ = null;
 
 
         public virtual string name {
             get { return ""; }
         }
 
-        
-        
-        
+
+
+
+        internal void set_parser(log_parser parser) {
+            // call this only once!
+            Debug.Assert(parser_ == null);
+            parser_ = parser;
+        }
+
         // reads text at position - and updates position
         public abstract string read_next_text() ;
 
@@ -109,6 +114,8 @@ namespace LogWizard
         public void Dispose() {
             disposed_ = true;
             on_dispose();
+            if ( parser_ != null)
+                parser_.on_text_reader_dispose();
         }
     }
 }

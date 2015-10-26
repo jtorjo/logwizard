@@ -3,9 +3,6 @@
 
 -------------------------------------------------------
 
-
-
-
 - bug : clicking with mouse -> does not select the right column (when clicking on the msg)
 
 - bug: allow mousewheel (probably just hide the edit?)
@@ -23,6 +20,13 @@
 
 
 
+
+- tip cp: allow only a class to access some functions
+  - q: can i make this available on several classes?
+  - explain why : normally, you have a class just be private, or the class be inside another class
+  - have lock class derive from lock_base<> so that i can just say some_class.lock ??
+  - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
+  - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
 
 
 
@@ -416,6 +420,10 @@
 
 
 
+
+- (pro_v) allow applying a transformation on a given filter
+  DEBUG [new] window table 1518A8/pid20664-v/PokerStarsTableFrameClass/1359422357 1 - $400/$800 Ante $50 USD - No Limit Hold'em/{X=90,Y=34,Width=774,Height=562}/p0/o0
+   that could become .... 774 x 562 ... - and have a way to see the full info
 
 
 - (pro_v) allow using the surrounding lines - if a $part ends in a number, it's the prev/next line. 

@@ -28,9 +28,12 @@ using System.Threading;
 namespace lw_common {
     class easy_mutex {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private Mutex mutex_ = null;
 
         private int wait_ms = app.inst.check_new_lines_interval_ms;
+
+        private bool abandoned_ = false;
 
         public string friendly_name;
 
@@ -47,6 +50,8 @@ namespace lw_common {
 
         // returns true on success
         public bool release_and_reaquire() {
+            if (abandoned_)
+                return false;
             try {
                 lock (this)
                     if (mutex_ == null)
@@ -60,13 +65,25 @@ namespace lw_common {
                 if (!received)
                     logger.Fatal("[log] " + friendly_name + " - could not reaquire lock ");
                 return received;
-            } catch {
-                return false;
+            } catch (AbandonedMutexException ame) {
+                // this should never happen - we are the acquire thread!!!
+                logger.Fatal("[log] " + friendly_name + " - abandoned on releaseandacquire " + ame);
+                abandoned_ = true;
             }
+            catch(Exception e) {
+                logger.Fatal("[log] " + friendly_name + " - exception on easy mutex " + e);
+                abandoned_ = true;
+            }
+            return false;
         }
 
         // returns true if event was received
         public bool wait_and_release() {
+            if (abandoned_) {
+                Thread.Sleep(wait_ms);
+                return false;
+            }
+
             try {
                 bool wait_event = mutex_ != null;
                 bool new_lines = false;
@@ -80,9 +97,16 @@ namespace lw_common {
                     Thread.Sleep(wait_ms);
 
                 return false;
-            } catch {
-                return false;
+            } catch (AbandonedMutexException ame) {
+                if ( abandoned_)
+                    logger.Fatal("[log] " + friendly_name + " - exception on easy mutex " + ame);
+                abandoned_ = true;
             }
+            catch(Exception e) {
+                logger.Fatal("[log] " + friendly_name + " - exception on easy mutex " + e);
+                abandoned_ = true;
+            }
+            return false;
         }
     }
 }

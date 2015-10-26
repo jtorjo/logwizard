@@ -208,7 +208,7 @@ namespace LogWizard
                             lock (this) {
                                 read_byte_count_ += (ulong) read_bytes;
                                 last_part_.Append(now) ;
-                                genenerate_new_lines_event = fully_read_once_ && on_new_lines != null;
+                                genenerate_new_lines_event = fully_read_once_ && parser_ != null;
                             }
                         }
                     }
@@ -227,7 +227,7 @@ namespace LogWizard
                     on_rewritten_file();
 
                 if (genenerate_new_lines_event)
-                    on_new_lines();
+                    parser_.on_log_has_new_lines();
             } catch(Exception e) {
                 logger.Error("[file] can't read file - " + file_ + " : " + e.Message);
             }

@@ -571,6 +571,11 @@ namespace lw_common.ui
             }
         }
 
+        public void update_edit() {
+            edit.escape();
+            edit.update_ui();            
+        }
+
         public string name {
             get { return viewName.Text; }
             set {

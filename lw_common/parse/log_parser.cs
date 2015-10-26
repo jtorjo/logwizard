@@ -56,8 +56,7 @@ namespace lw_common
         public log_parser(text_reader reader, syntax_base syntax) {
             Debug.Assert(reader != null);
             reader_ = reader;
-
-            reader.on_new_lines += on_log_has_new_lines;
+            reader_.set_parser(this);
 
             if (syntax is line_by_line_syntax) 
                 forward_to_parser_ = new log_parser_line_by_line(reader, syntax as line_by_line_syntax);
@@ -69,7 +68,7 @@ namespace lw_common
             new Thread(refresh_thread) {IsBackground = true}.Start();
         }
 
-        private void on_log_has_new_lines() {
+        internal void on_log_has_new_lines() {
             if (disposed_)
                 return;
             new_lines_event_.release_and_reaquire();
@@ -105,6 +104,10 @@ namespace lw_common
             }
         }
 
+        internal void on_text_reader_dispose() {
+            Dispose();
+        }
+
         public int line_count {
             get { return forward_to_parser_.line_count; }
         }
@@ -125,7 +128,6 @@ namespace lw_common
         //
         // be VERY careful calling this - I should call this only when the syntax has changed
         private void force_reload() {
-
             lock (this) {
                 forced_reload_.Clear();
                 logger.Info("[log] forced reload: " + reader_.name);

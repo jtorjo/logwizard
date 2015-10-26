@@ -1110,7 +1110,6 @@ namespace LogWizard
             if (global_ui.selected_row_idx > 0)
                 if (selected_file_name() == global_ui.log_name)
                     util.postpone(() => try_to_go_to_selected_line(global_ui.selected_row_idx), 250);
-
             util.postpone(() => show_tabs(global_ui.show_tabs), 100);
 
 
@@ -1120,6 +1119,14 @@ namespace LogWizard
                 update_topmost_image();
                 update_toggle_topmost_visibility();                
             }*/
+        }
+
+        private void update_list_view_edit() {
+            var lv = log_view_for_tab(viewsTab.SelectedIndex);
+            if (lv.is_filter_up_to_date) 
+                lv.update_edit();
+            else 
+                util.postpone(update_list_view_edit, 100);
         }
 
         private void try_to_go_to_selected_line(int selected_row_idx) {
@@ -1693,6 +1700,8 @@ namespace LogWizard
                 notes.load(notes_keeper.inst.notes_file_for_file(text_.name));
                 merge_notes();
             }
+
+            util.postpone(update_list_view_edit, 100);
         }
 
         private void merge_notes() {
