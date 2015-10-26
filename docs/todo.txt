@@ -3,29 +3,17 @@
 
 -------------------------------------------------------
 
-- todo: keep latest 20-30 logs
 
 
 
-
- - bug: when going to view X(realtime), there's something there, goint to view Y, when X gets updated (new lines) -> it does not go to the end
-
-
-- bug: seems that after monitoring (live) for a file, if i drop another file, i will get an infinite number of "new lines" events
-				(0): 02:20:22,864 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
-				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
-				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
-				(0): 02:20:22,865 9760       DEBUG - [log] new lines for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log
-				........
-
-
-- font: allow changing it
+- bug : clicking with mouse -> does not select the right column (when clicking on the msg)
 
 - bug: allow mousewheel (probably just hide the edit?)
 
 - bug: allow selecting text with the mouse (not just shift-arrows)
 
-- bug : clicking with mouse -> does not select the right column (when clicking on the msg)
+
+- font: allow changing it
 
 - bug: selecting a word and pressing f3 will take you correctly, but will select the former selection as well
 - bug: selecting something with arrow right, and then pressing arrow left will select an extra char from left instead of acting as backspace

@@ -62,24 +62,10 @@ namespace LogWizard
             Application.SetCompatibleTextRenderingDefault(false);
 
             // uncomment this to test how we'd behave in release
-            //util.is_debug = false;
+            // util.is_debug = false;
 
-            if (!util.is_debug) {
-                Environment.CurrentDirectory = local_dir();
-                try {
-                    if (!File.Exists("logwizard_user.txt"))
-                        File.Copy("logwizard.txt", "logwizard_user.txt");
-                } catch {
-                }
-            }
-
-            try {
-                File.Delete("LogWizard.log");
-            } catch {}
-            log4net.Config.XmlConfigurator.Configure( new FileInfo(util.is_debug ? "LogWizard.exe.config" : "lw.config"));
-            var logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-            logger.Info("logging initialized, cur dir is " + Environment.CurrentDirectory );
-            
+            util.set_current_dir();
+            util.init_log();
             app.inst.init( new settings_file(util.is_debug ? "logwizard_debug.txt" : "logwizard_user.txt") );
 
             util.force_break_into_debugger();

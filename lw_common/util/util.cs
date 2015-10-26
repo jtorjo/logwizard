@@ -35,6 +35,7 @@ using System.Threading;
 using System.Windows.Forms;
 using ColorSchemeExtension;
 using href.Utils;
+using log4net;
 using Microsoft.Win32;
 using Timer = System.Windows.Forms.Timer;
 
@@ -66,6 +67,9 @@ namespace lw_common {
     public class util {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        // made rather huge, just in case users forget to send us the logs, but at a rather later time when they mention a bug,
+        // we really want everything - by default, we'll send much less logs.
+        private const int MAX_OLD_LOGS = 25;
 
         // this way I can emulate "release" behavior in debug mode - I want to avoid using #ifs as much as possible
 #if DEBUG
@@ -877,6 +881,72 @@ namespace lw_common {
                    .Replace(SHOULD_NEVER_EXIST, "\r\n");
             return txt;
         }
+
+        private static List<string> copy_logs_errors = new List<string>();
+        private static void copy_former_logs(string prefix) {
+            // at this point, logging is NOT initialized yet
+            string suffix = ".log";
+            prefix += suffix;
+
+            try {
+                string last = prefix + "." + (MAX_OLD_LOGS+1) + suffix;
+                if ( File.Exists(last))
+                    File.Delete(last);
+            }
+            catch (Exception e) {
+                copy_logs_errors.Add("Error while erasing last file :" + e.Message); 
+            }
+            for ( int i = MAX_OLD_LOGS; i >= 0; --i)
+                try {
+                    string now = prefix + (i > 0 ? "." + i + suffix : "") ;
+                    string next = prefix + "." + (i+1) + suffix;
+                    if ( File.Exists(now))
+                        File.Move(now, next);
+                }
+                catch(Exception e) {
+                    copy_logs_errors.Add("Error while copying log " + i + ":" + e.Message); 
+                }
+            try {
+                string last = prefix + "." + (MAX_OLD_LOGS+1);
+                if ( File.Exists(last))
+                    File.Delete(last);
+            }
+            catch (Exception e) {
+                copy_logs_errors.Add("Error while erasing last file :" + e.Message); 
+            }
+        }
+
+        public static string appdata_dir() {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\";
+            return path;
+        }
+
+        public static string local_dir() {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LogWizard\\";
+            return path;
+        }
+
+
+        static public void set_current_dir() {
+             if (!is_debug) {
+                Environment.CurrentDirectory = local_dir();
+                try {
+                    if (!File.Exists("logwizard_user.txt"))
+                        File.Copy("logwizard.txt", "logwizard_user.txt");
+                } catch {}
+            }            
+        }
+
+        static public void init_log() {
+            copy_former_logs("LogWizard");
+
+            log4net.Config.XmlConfigurator.Configure( new FileInfo(util.is_debug ? "LogWizard.exe.config" : "lw.config"));
+            var logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+            logger.Info("logging initialized, cur dir is " + Environment.CurrentDirectory );
+            foreach ( string err in copy_logs_errors)
+                logger.Error("Copy_logs Error: " + err);             
+        }
+
 
     }
 }
