@@ -10,20 +10,22 @@ namespace lw_common {
 
     public static class mouse_wheel
     {
+        public delegate void on_wheel_func(Message m);
+
         // http://stackoverflow.com/questions/7852824/usercontrol-how-to-add-mousewheel-listener
-        // used the one from jeromerg
-        private class MouseWheelMessageFilter : IMessageFilter
+        // used the one from jeromerg - modified the hell out of it
+        private class wheel_filter : IMessageFilter
         {
-            [DllImport("user32.dll")]
-            private static extern IntPtr WindowFromPoint(Point pt);
-
             private readonly Control ctrl_;
-            private readonly Action<MouseEventArgs> mOnMouseWheel;
 
-            public MouseWheelMessageFilter(Control ctrl, Action<MouseEventArgs> onMouseWheel)
+            private on_wheel_func on_wheel_;
+
+            private bool ignore_message_ = false;
+
+            public wheel_filter(Control ctrl, on_wheel_func on_wheel)
             {
                 ctrl_ = ctrl;
-                mOnMouseWheel = onMouseWheel;
+                on_wheel_ = on_wheel;
             }
 
             public bool PreFilterMessage(ref Message m)
@@ -35,41 +37,20 @@ namespace lw_common {
                 if (win32.focused_ctrl() != ctrl_)
                     return false;
 
-                MouseButtons buttons = GetMouseButtons( m.WParam.ToInt64());
-                long delta = m.WParam.ToInt64() >> 16;
+                if (ignore_message_)
+                    return false;
 
-                var e = new MouseEventArgs(buttons, 0, 0, 0, (int)delta);
-
-                mOnMouseWheel(e);
+                ignore_message_ = true;
+                on_wheel_(m);
+                ignore_message_ = false;
 
                 return true;
             }
-
-            private static MouseButtons GetMouseButtons(long wParam)
-            {
-                MouseButtons buttons = MouseButtons.None;
-
-                if(HasFlag(wParam, 0x0001)) buttons |= MouseButtons.Left;
-                if(HasFlag(wParam, 0x0010)) buttons |= MouseButtons.Middle;
-                if(HasFlag(wParam, 0x0002)) buttons |= MouseButtons.Right;
-                if(HasFlag(wParam, 0x0020)) buttons |= MouseButtons.XButton1;
-                if(HasFlag(wParam, 0x0040)) buttons |= MouseButtons.XButton2;
-
-                return buttons;
-            }
-
-            private static bool HasFlag(long input, long flag)
-            {
-                return (input & flag) == flag;
-            }
         }
 
-        public static void add(Control ctrl, Action<MouseEventArgs> onMouseWheel)
+        public static void add(Control ctrl, on_wheel_func on_wheel)
         {
-            if (ctrl == null || onMouseWheel == null)
-                throw new ArgumentNullException();
-
-            var filter = new MouseWheelMessageFilter(ctrl, onMouseWheel);
+            var filter = new wheel_filter(ctrl, on_wheel);
             Application.AddMessageFilter(filter);
             ctrl.Disposed += (s, e) => Application.RemoveMessageFilter(filter);
         }
