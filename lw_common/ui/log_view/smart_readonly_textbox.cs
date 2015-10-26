@@ -82,6 +82,7 @@ namespace lw_common.ui {
 
             // initially, until initialized,should be hidden
             util.postpone(() => Left = -200, 1);
+            mouse_wheel.add(this, wheel);
         }
 
         public void init(log_view parent) {
@@ -582,6 +583,11 @@ namespace lw_common.ui {
         private void smart_readonly_textbox_MouseUp(object sender, MouseEventArgs e) {
             if (e.Button == MouseButtons.Right)
                 parent_.right_click.right_click();
+        }
+
+        private int mouse_idx = 0;
+        private void wheel(MouseEventArgs e) {
+            logger.Info("wheel on " + e.Delta + "/" + mouse_idx++ + " on " + parent_.name );
         }
 
     }
