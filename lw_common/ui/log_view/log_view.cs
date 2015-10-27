@@ -161,14 +161,7 @@ namespace lw_common.ui
         }
 
         private void load_font() {
-            string[] font_names = app.inst.sett.get("font_names").Split(',');
-            foreach ( string name in font_names)
-                try {
-                    var f = new Font(name, font_size_); 
-                    list.Font = f;
-                    break;
-                } catch {
-                }
+            list.Font = app.inst.font;
         }
 
 
@@ -393,10 +386,10 @@ namespace lw_common.ui
                     model_.item_filter = item_search_filter;
                 else {
                     // search by current filter 
-                    if (lv_parent.selected_row_index >= 0) {
+                    if (lv_parent.selected_filter_row_index >= 0) {
                         // search by selected filter (we're focused on teh filters pane)
                         List<int> filters = new List<int>();
-                        filters.Add(lv_parent.selected_row_index);
+                        filters.Add(lv_parent.selected_filter_row_index);
                         model_.item_filter = (i, a) => item_run_several_filters(i, filters);
                     } else {
                         // search by filters matching this line

@@ -141,7 +141,6 @@ namespace LogWizard
             sourceTypeCtrl.SelectedIndex = 0;
             bool first_time = contexts_.Count == 0;
             if (first_time) {
-                app.inst.load();
                 load_contexts(sett);
 
                 notes_keeper.inst.init( util.is_debug ? "notes" : Program.local_dir() + "\\notes", app.inst.identify_notes_files);
@@ -842,7 +841,7 @@ namespace LogWizard
             get { return full_log_ctrl_; }
         }
 
-        public int selected_row_index {
+        public int selected_filter_row_index {
             get {
                 if (filtCtrl.is_editing_any_filter || filtCtrl.is_focus_on_filter_list)
                     return filtCtrl.sel;
@@ -2598,7 +2597,8 @@ namespace LogWizard
         private void settingsCtrl_Click(object sender, EventArgs e) {
             var old_sync_colors = app.inst.syncronize_colors;
             var old_sync_gray = app.inst.sync_colors_all_views_gray_non_active;
-            new settings_form(this).ShowDialog();
+            var sett = new settings_form(this);
+            sett.ShowDialog();
             notes.set_author(app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
 
             bool sync_changed = app.inst.syncronize_colors != old_sync_colors || old_sync_gray != app.inst.sync_colors_all_views_gray_non_active;
@@ -2606,6 +2606,31 @@ namespace LogWizard
                 full_log.Refresh();
 
             filtCtrl.update_colors();
+
+            if ( sett.wants_reset_settings)
+                reset_settings();
+            if ( sett.needs_restart)
+                restart_app();
+        }
+
+        private void reset_settings() {
+            foreach (var lw in log_wizard.forms) {
+                lw.stop_saving();
+                lw.Visible = false;
+            }
+
+            string dir = Program.local_dir();
+            try {
+                File.Copy(dir + "\\logwizard.txt", dir + "\\logwizard_user.txt", true);
+            } catch {
+            }
+        }
+        private void restart_app() {
+            foreach (var lw in log_wizard.forms) {
+                lw.stop_saving();
+                lw.Visible = false;
+            }
+            util.restart_app();            
         }
 
         private log_view selected_view() {

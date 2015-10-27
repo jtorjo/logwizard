@@ -1,4 +1,4 @@
-﻿namespace LogWizard.ui {
+﻿namespace lw_common.ui {
     partial class settings_form {
         /// <summary>
         /// Required designer variable.
@@ -25,7 +25,7 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(settings_form));
-            this.label2 = new System.Windows.Forms.Label();
+            this.fontLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.viewLine = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -69,6 +69,10 @@
             this.label21 = new System.Windows.Forms.Label();
             this.filterShowFilterRowInFilterColor = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.bookmarkFg = new ColorPicker.ColorPickerCombobox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.bookmarkBg = new ColorPicker.ColorPickerCombobox();
             this.label27 = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
             this.fullLogGrayFg = new ColorPicker.ColorPickerCombobox();
@@ -110,10 +114,9 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.label28 = new System.Windows.Forms.Label();
-            this.bookmarkFg = new ColorPicker.ColorPickerCombobox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.bookmarkBg = new ColorPicker.ColorPickerCombobox();
+            this.browseFont = new System.Windows.Forms.Button();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -134,14 +137,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).BeginInit();
             this.SuspendLayout();
             // 
-            // label2
+            // fontLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(397, 22);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(157, 17);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Font: [Courier New, 9pt]";
+            this.fontLabel.AutoSize = true;
+            this.fontLabel.Location = new System.Drawing.Point(6, 24);
+            this.fontLabel.Name = "fontLabel";
+            this.fontLabel.Size = new System.Drawing.Size(44, 17);
+            this.fontLabel.TabIndex = 1;
+            this.fontLabel.Text = "Font: ";
             // 
             // groupBox1
             // 
@@ -212,9 +215,9 @@
             this.groupBox2.Controls.Add(this.bringToTopOnRestart);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.toggleTopmost);
-            this.groupBox2.Location = new System.Drawing.Point(6, 211);
+            this.groupBox2.Location = new System.Drawing.Point(6, 238);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(628, 192);
+            this.groupBox2.Size = new System.Drawing.Size(628, 160);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Top / Topmost";
@@ -224,7 +227,7 @@
             this.makeTopmostOnRestart.AutoSize = true;
             this.makeTopmostOnRestart.Enabled = false;
             this.makeTopmostOnRestart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.makeTopmostOnRestart.Location = new System.Drawing.Point(256, 101);
+            this.makeTopmostOnRestart.Location = new System.Drawing.Point(256, 88);
             this.makeTopmostOnRestart.Name = "makeTopmostOnRestart";
             this.makeTopmostOnRestart.Size = new System.Drawing.Size(185, 21);
             this.makeTopmostOnRestart.TabIndex = 4;
@@ -235,7 +238,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(22, 125);
+            this.label4.Location = new System.Drawing.Point(22, 112);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(481, 39);
             this.label4.TabIndex = 3;
@@ -245,7 +248,7 @@
             // 
             this.bringToTopOnRestart.AutoSize = true;
             this.bringToTopOnRestart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bringToTopOnRestart.Location = new System.Drawing.Point(10, 101);
+            this.bringToTopOnRestart.Location = new System.Drawing.Point(10, 88);
             this.bringToTopOnRestart.Name = "bringToTopOnRestart";
             this.bringToTopOnRestart.Size = new System.Drawing.Size(206, 21);
             this.bringToTopOnRestart.TabIndex = 2;
@@ -376,6 +379,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label31);
             this.groupBox4.Controls.Add(this.reset);
             this.groupBox4.Controls.Add(this.label9);
             this.groupBox4.Location = new System.Drawing.Point(6, 6);
@@ -435,6 +439,8 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.label30);
+            this.groupBox7.Controls.Add(this.browseFont);
             this.groupBox7.Controls.Add(this.editSearchAllColumns);
             this.groupBox7.Controls.Add(this.editSearchCurColumnOnly);
             this.groupBox7.Controls.Add(this.editSearchBelow);
@@ -445,10 +451,10 @@
             this.groupBox7.Controls.Add(this.label18);
             this.groupBox7.Controls.Add(this.hotkeyslink);
             this.groupBox7.Controls.Add(this.useHotkeys);
-            this.groupBox7.Controls.Add(this.label2);
+            this.groupBox7.Controls.Add(this.fontLabel);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(628, 199);
+            this.groupBox7.Size = new System.Drawing.Size(628, 222);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General";
@@ -456,7 +462,7 @@
             // editSearchAllColumns
             // 
             this.editSearchAllColumns.AutoSize = true;
-            this.editSearchAllColumns.Location = new System.Drawing.Point(375, 167);
+            this.editSearchAllColumns.Location = new System.Drawing.Point(375, 195);
             this.editSearchAllColumns.Name = "editSearchAllColumns";
             this.editSearchAllColumns.Size = new System.Drawing.Size(147, 21);
             this.editSearchAllColumns.TabIndex = 11;
@@ -467,7 +473,7 @@
             // editSearchCurColumnOnly
             // 
             this.editSearchCurColumnOnly.AutoSize = true;
-            this.editSearchCurColumnOnly.Location = new System.Drawing.Point(145, 167);
+            this.editSearchCurColumnOnly.Location = new System.Drawing.Point(145, 195);
             this.editSearchCurColumnOnly.Name = "editSearchCurColumnOnly";
             this.editSearchCurColumnOnly.Size = new System.Drawing.Size(224, 21);
             this.editSearchCurColumnOnly.TabIndex = 10;
@@ -478,7 +484,7 @@
             // editSearchBelow
             // 
             this.editSearchBelow.AutoSize = true;
-            this.editSearchBelow.Location = new System.Drawing.Point(261, 140);
+            this.editSearchBelow.Location = new System.Drawing.Point(261, 173);
             this.editSearchBelow.Name = "editSearchBelow";
             this.editSearchBelow.Size = new System.Drawing.Size(99, 21);
             this.editSearchBelow.TabIndex = 9;
@@ -488,7 +494,7 @@
             // editSearchAfter
             // 
             this.editSearchAfter.AutoSize = true;
-            this.editSearchAfter.Location = new System.Drawing.Point(145, 140);
+            this.editSearchAfter.Location = new System.Drawing.Point(145, 173);
             this.editSearchAfter.Name = "editSearchAfter";
             this.editSearchAfter.Size = new System.Drawing.Size(103, 21);
             this.editSearchAfter.TabIndex = 8;
@@ -498,7 +504,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(6, 141);
+            this.label20.Location = new System.Drawing.Point(6, 174);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(119, 17);
             this.label20.TabIndex = 7;
@@ -508,7 +514,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(97, 96);
+            this.label19.Location = new System.Drawing.Point(97, 124);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(513, 39);
             this.label19.TabIndex = 6;
@@ -522,7 +528,7 @@
             "Always",
             "With SPACE key",
             "With RightArrow key"});
-            this.editMode.Location = new System.Drawing.Point(100, 64);
+            this.editMode.Location = new System.Drawing.Point(100, 92);
             this.editMode.Name = "editMode";
             this.editMode.Size = new System.Drawing.Size(275, 24);
             this.editMode.TabIndex = 5;
@@ -530,7 +536,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 67);
+            this.label18.Location = new System.Drawing.Point(6, 95);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(71, 17);
             this.label18.TabIndex = 4;
@@ -539,7 +545,7 @@
             // hotkeyslink
             // 
             this.hotkeyslink.AutoSize = true;
-            this.hotkeyslink.Location = new System.Drawing.Point(57, 19);
+            this.hotkeyslink.Location = new System.Drawing.Point(57, 52);
             this.hotkeyslink.Name = "hotkeyslink";
             this.hotkeyslink.Size = new System.Drawing.Size(59, 17);
             this.hotkeyslink.TabIndex = 3;
@@ -550,7 +556,7 @@
             // useHotkeys
             // 
             this.useHotkeys.AutoSize = true;
-            this.useHotkeys.Location = new System.Drawing.Point(10, 18);
+            this.useHotkeys.Location = new System.Drawing.Point(10, 51);
             this.useHotkeys.Name = "useHotkeys";
             this.useHotkeys.Size = new System.Drawing.Size(52, 21);
             this.useHotkeys.TabIndex = 2;
@@ -626,6 +632,42 @@
             this.groupBox5.TabIndex = 6;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Log";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(19, 55);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(149, 17);
+            this.label28.TabIndex = 22;
+            this.label28.Text = "Bookmark Foreground";
+            // 
+            // bookmarkFg
+            // 
+            this.bookmarkFg.Location = new System.Drawing.Point(186, 55);
+            this.bookmarkFg.Name = "bookmarkFg";
+            this.bookmarkFg.SelectedItem = System.Drawing.Color.Wheat;
+            this.bookmarkFg.Size = new System.Drawing.Size(42, 17);
+            this.bookmarkFg.TabIndex = 21;
+            this.bookmarkFg.Text = "colorPickerCombobox1";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(232, 55);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(151, 17);
+            this.label29.TabIndex = 20;
+            this.label29.Text = "Bookmark Background";
+            // 
+            // bookmarkBg
+            // 
+            this.bookmarkBg.Location = new System.Drawing.Point(389, 55);
+            this.bookmarkBg.Name = "bookmarkBg";
+            this.bookmarkBg.SelectedItem = System.Drawing.Color.Wheat;
+            this.bookmarkBg.Size = new System.Drawing.Size(42, 17);
+            this.bookmarkBg.TabIndex = 19;
+            this.bookmarkBg.Text = "colorPickerCombobox2";
             // 
             // label27
             // 
@@ -1052,41 +1094,39 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // label28
+            // browseFont
             // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(19, 55);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(149, 17);
-            this.label28.TabIndex = 22;
-            this.label28.Text = "Bookmark Foreground";
+            this.browseFont.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.browseFont.Location = new System.Drawing.Point(236, 22);
+            this.browseFont.Name = "browseFont";
+            this.browseFont.Size = new System.Drawing.Size(29, 20);
+            this.browseFont.TabIndex = 12;
+            this.browseFont.Text = "...";
+            this.tip.SetToolTip(this.browseFont, "Browse Font...");
+            this.browseFont.UseVisualStyleBackColor = true;
+            this.browseFont.Click += new System.EventHandler(this.browseFont_Click);
             // 
-            // bookmarkFg
+            // label30
             // 
-            this.bookmarkFg.Location = new System.Drawing.Point(186, 55);
-            this.bookmarkFg.Name = "bookmarkFg";
-            this.bookmarkFg.SelectedItem = System.Drawing.Color.Wheat;
-            this.bookmarkFg.Size = new System.Drawing.Size(42, 17);
-            this.bookmarkFg.TabIndex = 21;
-            this.bookmarkFg.Text = "colorPickerCombobox1";
+            this.label30.AutoSize = true;
+            this.label30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label30.ForeColor = System.Drawing.Color.Red;
+            this.label30.Location = new System.Drawing.Point(271, 26);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(106, 13);
+            this.label30.TabIndex = 13;
+            this.label30.Text = "Requires Restart!";
             // 
-            // label29
+            // label31
             // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(232, 55);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(151, 17);
-            this.label29.TabIndex = 20;
-            this.label29.Text = "Bookmark Background";
-            // 
-            // bookmarkBg
-            // 
-            this.bookmarkBg.Location = new System.Drawing.Point(389, 55);
-            this.bookmarkBg.Name = "bookmarkBg";
-            this.bookmarkBg.SelectedItem = System.Drawing.Color.Wheat;
-            this.bookmarkBg.Size = new System.Drawing.Size(42, 17);
-            this.bookmarkBg.TabIndex = 19;
-            this.bookmarkBg.Text = "colorPickerCombobox2";
+            this.label31.AutoSize = true;
+            this.label31.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label31.ForeColor = System.Drawing.Color.Red;
+            this.label31.Location = new System.Drawing.Point(445, 57);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(106, 13);
+            this.label31.TabIndex = 14;
+            this.label31.Text = "Requires Restart!";
             // 
             // settings_form
             // 
@@ -1137,7 +1177,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label fontLabel;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox viewLine;
         private System.Windows.Forms.Label label1;
@@ -1226,6 +1266,9 @@
         private ColorPicker.ColorPickerCombobox bookmarkFg;
         private System.Windows.Forms.Label label29;
         private ColorPicker.ColorPickerCombobox bookmarkBg;
+        private System.Windows.Forms.Button browseFont;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label31;
 
     }
 }

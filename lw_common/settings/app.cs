@@ -136,6 +136,11 @@ namespace lw_common {
         // at what interval should we check for new lines?
         public int check_new_lines_interval_ms = 50;
 
+        public string font_name = "";
+        // note: we can keep several font names, just in case one is not present on the user's machine (read-only)
+        private string[] default_font_names;
+        public int font_size = 9;
+
 
         // file-by-file
         public bool bring_to_top_on_restart = false;
@@ -179,6 +184,7 @@ namespace lw_common {
         public void init(settings_file sett_file) {
             Debug.Assert(sett_ == null);
             sett_ = sett_file;
+            load();
         }
 
         internal static void load_save(bool load, ref bool prop, string name, bool default_ = false) {
@@ -242,6 +248,23 @@ namespace lw_common {
             }
         }
 
+        public Font font {
+            get {
+                if ( font_name != "")
+                    try {
+                        return new Font(font_name, font_size); 
+                    } catch {
+                    }
+                foreach ( var name in default_font_names)
+                    try {
+                        return new Font(name, font_size); 
+                    } catch {
+                    }
+
+                Debug.Assert(false);
+                return new Font(FontFamily.GenericMonospace, font_size);
+            }
+        }
 
         private void load_save(bool load) {
             load_save(load, ref show_view_line_count, "show_view_line_count", true);
@@ -291,6 +314,17 @@ namespace lw_common {
             load_save(load, ref edit_search_all_columns, "edit_search_all_columns", false);
 
             load_save(load, ref show_filter_row_in_filter_color, "show_filter_row_in_filter_color", true);
+
+            load_save(load, ref font_name, "font_name");
+            load_save(load, ref font_size, "font_size", 9);
+            string default_font_names = "";
+            load_save(load, ref font_name, "font_name");
+            load_save(load, ref default_font_names, "default_font_names");
+            if ( default_font_names == "" && load)
+                // older version used this name
+                load_save(load, ref default_font_names, "font_names");
+            if (load)
+                this.default_font_names = default_font_names.Split(',');
         }
 
         private string initials(string name) {
@@ -321,7 +355,7 @@ namespace lw_common {
             return ini.ToUpper();
         }
 
-        public void load() {
+        private void load() {
             load_save(true);
         }
 

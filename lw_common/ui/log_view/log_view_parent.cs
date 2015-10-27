@@ -68,7 +68,7 @@ namespace lw_common.ui {
         void after_set_filter_update();
 
         // if >= 0, it's the selected row (the one is FOCUSED on - in the filter control)
-        int selected_row_index { get; }
+        int selected_filter_row_index { get; }
     
     }
 }

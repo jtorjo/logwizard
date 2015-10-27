@@ -1,4 +1,4 @@
-font_names=Consolas,Courier New,Terminal,Monoid,Tahoma,Arial
+default_font_names=Consolas,Courier New,Terminal,Monoid,Tahoma,Arial
 
 context_count=2
 

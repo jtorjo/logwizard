@@ -599,7 +599,7 @@ namespace lw_common {
         }
 
         public static void restart_app() {
-            string app_name = Assembly.GetExecutingAssembly().Location;
+            string app_name = Assembly.GetEntryAssembly().Location;
             Application.Exit();
             Thread.Sleep(500);
             Process.Start(app_name);

@@ -137,6 +137,12 @@
     <Compile Include="ui\log_view\smart_readonly_textbox.Designer.cs">
       <DependentUpon>smart_readonly_textbox.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\settings_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\settings_form.Designer.cs">
+      <DependentUpon>settings_form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\solid_brush_list.cs" />
     <Compile Include="ui_helpers\log_wizard_serializable_classes.cs" />
     <Compile Include="ui_helpers\ui_info.cs" />
@@ -182,6 +188,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ui\log_view\smart_readonly_textbox.resx">
       <DependentUpon>smart_readonly_textbox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\settings_form.resx">
+      <DependentUpon>settings_form.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

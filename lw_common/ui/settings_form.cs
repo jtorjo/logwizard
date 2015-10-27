@@ -30,10 +30,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using lw_common;
 
-namespace LogWizard.ui {
-    partial class settings_form : Form {
+namespace lw_common.ui {
+    public partial class settings_form : Form {
 
         private class item {
             public string key = "";
@@ -42,13 +41,27 @@ namespace LogWizard.ui {
 
         private const int MAX_ITEMS = 50;
 
-        public settings_form(log_wizard parent) {
+        private bool wants_reset_settings_ = false;
+        private bool needs_restart_ = false;
+
+        public settings_form(Form parent) {
             InitializeComponent();
             load();
             TopMost = parent.TopMost;
         }
 
+        public bool wants_reset_settings {
+            get { return wants_reset_settings_; }
+        }
+
+        public bool needs_restart {
+            get { return needs_restart_; }
+        }
+
         private void load() {
+            var font = app.inst.font;
+            fontLabel.Text = "Font: [" + font.Name + ", " + (int) Math.Round(font.Size) + "pt]";
+
             viewLineCount.Checked = app.inst.show_view_line_count;
             viewLine.Checked = app.inst.show_view_selected_line;
             viewIndex.Checked = app.inst.show_view_selected_index;
@@ -230,22 +243,33 @@ namespace LogWizard.ui {
             if (!want_reset)
                 return;
 
-            foreach (var lw in log_wizard.forms) {
-                lw.stop_saving();
-                lw.Visible = false;
-            }
-
-            string dir = Program.local_dir();
-            try {
-                File.Copy(dir + "\\logwizard.txt", dir + "\\logwizard_user.txt", true);
-            } catch {
-            }
-
-            util.restart_app();
+            wants_reset_settings_ = true;
+            needs_restart_ = true;
+            DialogResult = DialogResult.OK;
         }
 
         private void hotkeyslink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             Process.Start("https://github.com/jtorjo/logwizard/wiki/Hotkeys");
+        }
+
+        private void browseFont_Click(object sender, EventArgs e) {
+            var dlg = new FontDialog();
+            dlg.FixedPitchOnly = true;
+            dlg.FontMustExist = true;
+            dlg.Font = app.inst.font;
+            dlg.ShowEffects = false;
+            if (dlg.ShowDialog() == DialogResult.OK) {
+                var font = dlg.Font;
+                int new_font_size = (int)Math.Round(font.Size);
+                bool any_change = app.inst.font_name != font.Name || app.inst.font_size != new_font_size;
+                app.inst.font_name = font.Name;
+                app.inst.font_size = new_font_size;
+                if (any_change) {
+                    app.inst.save();
+                    needs_restart_ = true;
+                    DialogResult = DialogResult.OK;
+                }
+            }
         }
     }
 }
