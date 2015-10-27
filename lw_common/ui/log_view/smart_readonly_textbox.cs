@@ -70,6 +70,11 @@ namespace lw_common.ui {
 
         private int mouse_down_start_ = -1;
 
+        private enum move_direction_type {
+            left, right, none
+        }
+        private move_direction_type moving_ = move_direction_type.none;
+
         private class position {
             // the exact cell
             public int row = 0, col = 0;
@@ -394,17 +399,34 @@ namespace lw_common.ui {
         }
 
         public void sel_to_left() {
+            if ( sel_len_ == 0)
+                moving_ = move_direction_type.left;
+
             if (sel_start_ > 0) {
-                ++sel_len_;
-                --sel_start_;
+                if (moving_ == move_direction_type.left) {
+                    ++sel_len_;
+                    --sel_start_;
+                } else {
+                    --sel_len_;
+                    readd_all_text();
+                }
                 update_cached_sel_text();
                 update_selected_text();
             }
         }
 
         public void sel_to_right() {
+            if ( sel_len_ == 0)
+                moving_ = move_direction_type.right;
+
             if (sel_start_ + sel_len_ < TextLength) {
-                ++sel_len_;
+                if (moving_ == move_direction_type.right)
+                    ++sel_len_;
+                else {
+                    ++sel_start_;
+                    --sel_len_;
+                    readd_all_text();
+                }
                 update_cached_sel_text();
                 update_selected_text();
             }
@@ -557,6 +579,7 @@ namespace lw_common.ui {
                 escape();
                 return;
             }
+            moving_ = move_direction_type.right;
 
             string new_text = raw_sel_text() + e.KeyChar, new_text_with_space = "";
             if (raw_sel_text() != "")
@@ -637,6 +660,7 @@ namespace lw_common.ui {
         }
 
         private void smart_readonly_textbox_MouseUp(object sender, MouseEventArgs e) {
+            moving_ = move_direction_type.none;
             mouse_down_start_ = -1;
             if (e.Button == MouseButtons.Right)
                 parent_.right_click.right_click();

@@ -1,21 +1,21 @@
 
 
 
-- bug: selecting something with arrow right, and then pressing arrow left will select an extra char from left instead of acting as backspace
-
-
-
+- bug notes export: they are not sorted by id when expoted
+- bug: next bookmark does not sync with full log
 
 - font: allow changing it
 
 
-- bug notes export: they are not sorted by id when expoted
-- bug: next bookmark does not sync with full log
+
+
+1.3.32e
+- fix: bug: selecting something with arrow right, and then pressing arrow left will select an extra char from left instead of acting as backspace
 
 
 1.3.32d
-- bug: allow selecting text with the mouse (not just shift-arrows)
-- bug: selecting a word and pressing f3 will take you correctly, but will select the former selection as well
+- fix: bug: allow selecting text with the mouse (not just shift-arrows)
+- fix: bug: selecting a word and pressing f3 will take you correctly, but will select the former selection as well
 
 
 1.3.32c
