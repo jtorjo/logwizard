@@ -135,7 +135,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="lw_util\lw_util.cs" />
     <Compile Include="ui\about_form.cs">
       <SubType>Form</SubType>
     </Compile>

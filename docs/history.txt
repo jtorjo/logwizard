@@ -7,6 +7,10 @@
   - to check: when do i re-load logwizard forms? and more importantly - do i need to?
 
 
+1.3.33f
+  - done: must make sure we don't allow changing the position of a LogWizard form to an existing custom position from another LogWizard form
+
+
 1.3.33e
 - "New" works -> it will take you to the next available custom position
   - however, must make sure we don't allow changing the position of a LogWizard form to an existing custom position from another LogWizard form

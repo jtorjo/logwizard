@@ -644,7 +644,7 @@ namespace LogWizard
 
             history_select(file, friendly_name);
             on_new_file_log(file);
-            lw_util.bring_to_top(this);
+            util.bring_to_top(this);
         }
 
         // to show/hide the "details" view - the details view contains all information in the message (that is not usually shown in the list)
@@ -1367,17 +1367,32 @@ namespace LogWizard
                 on_rewritten_log();
         }
 
+        // ... just setting .TopMost sometimes does not work
+        private static void bring_to_topmost(log_wizard form) {
+            form.TopMost = true;
+            form.update_toggle_topmost_visibility();
+            win32.MakeTopMost(form);
+            /*
+            form.TopMost = false;
+            form.Activated += FormOnActivated;
+
+            form.BringToFront();
+            form.Focus();
+            form.Activate();
+            */
+        }
+
         private void on_rewritten_log() {
             foreach ( var lv in all_log_views_and_full_log())
                 lv.clear();
             
             if (app.inst.bring_to_top_on_restart) {
                 if (app.inst.make_topmost_on_restart) {
-                    lw_util.bring_to_topmost(this);
+                    bring_to_topmost(this);
                     update_topmost_image();
                     update_toggle_topmost_visibility();
                 } else
-                    lw_util.bring_to_top(this);
+                    util.bring_to_top(this);
             }
         }
 
@@ -2583,6 +2598,24 @@ namespace LogWizard
         }
 
         private void toggle_custom_ui(int idx) {
+            foreach ( var f in forms)
+                if ( f != this)
+                    if (f.toggled_to_custom_ui_ == idx) {
+                        // another form has this custom UI - just bring it to top
+                        util.bring_to_top(f);
+                        return;
+                    }
+            if ( toggled_to_custom_ui_ == idx) 
+                // in this case, we're toggling off the custom UI for this form (moving to default location)
+                // however, first - check if we already have a form to the default location. If so, go to that
+                foreach ( var f in forms)
+                    if ( f != this)
+                        if (f.toggled_to_custom_ui_ == -1) {
+                            // another form has this custom UI - just bring it to top
+                            util.bring_to_top(f);
+                            return;
+                        }
+
             int new_ui = idx == toggled_to_custom_ui_ ? -1 : idx;
             if (new_ui != -1) {
                 // going to a custom position
@@ -3212,7 +3245,7 @@ namespace LogWizard
             if (in_zip.Count < 1)
                 return; // no files
 
-            lw_util.bring_to_top(this);
+            util.bring_to_top(this);
             on_zip_file_drop(file, in_zip[0].Item1);
             set_status("Taking the first file that matches the [" + app.inst.look_into_zip_files_str + "] pattern. A Shift-[drag-and-drop] will show you a list of files.");
         }
@@ -3226,7 +3259,7 @@ namespace LogWizard
                 return;
             }
 
-            lw_util.bring_to_top(this);
+            util.bring_to_top(this);
             select_zip_file_form sel = new select_zip_file_form(file, in_zip);
             if (sel.ShowDialog() == DialogResult.OK)
                 on_zip_file_drop(file, sel.selected_file);

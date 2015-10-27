@@ -884,6 +884,19 @@ namespace lw_common {
             return txt;
         }
 
+
+        public static void bring_to_top(Form form) {
+            win32.BringToTop(form);
+            /*
+            form.BringToFront();
+            form.Focus();
+            form.Activate();
+
+            form.TopMost = true;
+            form.TopMost = false;
+            */
+        }
+
         private static List<string> copy_logs_errors = new List<string>();
         private static void copy_former_logs(string prefix) {
             // at this point, logging is NOT initialized yet
