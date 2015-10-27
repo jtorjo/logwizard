@@ -31,7 +31,7 @@ using BrightIdeasSoftware;
 using log4net.Repository.Hierarchy;
 
 namespace lw_common.ui {
-    public partial class smart_readonly_textbox : RichTextBox {
+    internal partial class smart_readonly_textbox : RichTextBox {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int ON_CLICK_WAIT_BEFORE_SELECTING_WORD_MS = 450;
@@ -126,6 +126,11 @@ namespace lw_common.ui {
         }
 
         internal void force_refresh() {
+            if (!Visible)
+                return;
+            if (parent_.sel_row_idx < 0)
+                return;
+
             last_positions_.Clear();
             sel_len_ = 0;
 
@@ -660,10 +665,15 @@ namespace lw_common.ui {
         }
 
         private void smart_readonly_textbox_MouseUp(object sender, MouseEventArgs e) {
-            moving_ = move_direction_type.none;
-            mouse_down_start_ = -1;
+            on_mouse_up();
             if (e.Button == MouseButtons.Right)
                 parent_.right_click.right_click();
+        }
+
+        public void on_mouse_up() {
+            moving_ = move_direction_type.none;
+            mouse_down_start_ = -1;
+            parent_.lv_parent.sel_changed(log_view_sel_change_type.click);
         }
 
         private int mouse_idx = 0;

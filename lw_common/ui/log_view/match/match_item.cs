@@ -101,10 +101,11 @@ namespace lw_common.ui {
             Color result;
             if (parent.has_bookmark(base.line_idx))
                 result = parent.bookmark_bg;
-            if (override_bg != util.transparent)
+            else if (override_bg != util.transparent)
                 result = override_bg;
             else 
                 result = font.bg;
+
             if (result == util.transparent)
                 result = app.inst.bg;
             return result;

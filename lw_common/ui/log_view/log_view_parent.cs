@@ -27,6 +27,13 @@ using System.Windows.Forms;
 using LogWizard;
 
 namespace lw_common.ui {
+
+    public enum log_view_sel_change_type {
+        search, bookmark, click, 
+        // user pressed backspace, thus we go back to the cell containing [search-1]
+        backspace
+    }
+
     public interface log_view_parent {
         void handle_subcontrol_keys(Control c);
         void on_view_name_changed(log_view view, string name);
@@ -46,7 +53,7 @@ namespace lw_common.ui {
         void add_or_edit_filter(string filter_str, string filter_id , bool apply_to_existing_lines);
 
         // called after we've searched to something (thus, changed the current line)
-        void after_search();
+        void sel_changed(log_view_sel_change_type change);
 
         void select_filter_rows(List<int> filter_row_indexes);
 

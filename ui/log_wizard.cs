@@ -940,7 +940,7 @@ namespace LogWizard
             last_edited_filter_id_ = filter_id;
         }
 
-        public void after_search() {
+        public void sel_changed(log_view_sel_change_type type) {
             on_log_changed_line();
         }
 
@@ -2654,10 +2654,9 @@ namespace LogWizard
 
         // notifies the views of our bookmarks
         private void notify_views_of_bookmarks() {
-            for (int i = 0; i < viewsTab.TabCount; ++i)
+            foreach (var lv in all_log_views_and_full_log())
                 // always send a copy of the list - this way, the views can see which bookmarks are new/deleted
-                log_view_for_tab(i).set_bookmarks(bookmarks_.ToList());
-            full_log_ctrl_.set_bookmarks(bookmarks_.ToList());
+                lv.set_bookmarks(bookmarks_.ToList());
         }
 
         private void save_bookmarks() {

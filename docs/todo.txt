@@ -1,27 +1,15 @@
 
 - take some picture(s) with logwizard - to place on github
 
--------------------------------------------------------
-
-
-
-
-
-- tip cp: allow only a class to access some functions
-  - q: can i make this available on several classes?
-  - explain why : normally, you have a class just be private, or the class be inside another class
-  - have lock class derive from lock_base<> so that i can just say some_class.lock ??
-  - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
-  - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
-
-
-
+------------------------------------------------------
 
 - bug: 'New' does not work
   - works now, but I need to put it into another position - equivalent of (Ctrl-1)
   - very likely, I should allow up to Ctrl-9
     - when going to another position - and that position is "virgin", copy from teh current position (for instance, if going from position 2 to position 9, copy settings from position 2)
   - IMPORTANT: regular save() should happen in Dummy() -> since we will have several log_wizard windows
+  - to check: when do i re-load logwizard forms? and more importantly - do i need to?
+
 
 - log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)
   - i need to save this only if the user changes something
@@ -39,6 +27,17 @@
   - guessing the right file (from extension, etc.)
   - allow editing log settings (depending on its type)
 
+
+
+
+
+
+- tip cp: allow only a class to access some functions
+  - q: can i make this available on several classes?
+  - explain why : normally, you have a class just be private, or the class be inside another class
+  - have lock class derive from lock_base<> so that i can just say some_class.lock ??
+  - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
+  - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
 
 
 

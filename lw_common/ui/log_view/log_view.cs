@@ -1112,7 +1112,7 @@ namespace lw_common.ui
         internal void select_cell(int row_idx, int cell_idx) {
             cur_col_ = cell_idx;
             select_row_idx(row_idx, select_type.notify_parent);
-            lv_parent.after_search();
+            lv_parent.sel_changed(log_view_sel_change_type.backspace);
         }
 
         private void list_SelectedIndexChanged(object sender, EventArgs e) {
@@ -1421,7 +1421,7 @@ namespace lw_common.ui
                 search_for_text_next();
             else if (cur_filter_row_idx_ >= 0)
                 search_for_next_match(cur_filter_row_idx_);
-            lv_parent.after_search();
+            lv_parent.sel_changed(log_view_sel_change_type.search);
         }
 
         public void search_prev() {
@@ -1438,7 +1438,7 @@ namespace lw_common.ui
                 search_for_text_prev();
             else if (cur_filter_row_idx_ >= 0)
                 search_for_prev_match(cur_filter_row_idx_);
-            lv_parent.after_search();
+            lv_parent.sel_changed(log_view_sel_change_type.search);
         }
 
         // note: starts from the next row, or, if on row zero -> starts from row zero
@@ -1458,7 +1458,7 @@ namespace lw_common.ui
             if (include_row_zero && string_search.matches(i.match.line.part(info_type.msg), cur_search_)) {
                 // line zero contains the text already
                 ensure_row_visible(0);
-                lv_parent.after_search();
+                lv_parent.sel_changed(log_view_sel_change_type.search);
             } else
                 search_for_text_next();
         }
@@ -1648,6 +1648,7 @@ namespace lw_common.ui
                 if (row != null) 
                     list.RefreshItem(row);                
             }
+            edit.force_refresh();
         }
 
         public void next_bookmark() {
@@ -1660,8 +1661,9 @@ namespace lw_common.ui
 
             if (mark >= 0) {
                 int idx = row_by_line_idx(mark).Index;
-                select_row_idx(idx, select_type.notify_parent);
-                ensure_row_visible(idx);
+                edit.clear_sel();
+                go_to_row(idx, select_type.notify_parent);
+                lv_parent.sel_changed(log_view_sel_change_type.bookmark);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1679,8 +1681,9 @@ namespace lw_common.ui
 
             if (mark >= 0) {
                 int idx = row_by_line_idx(mark).Index;
-                select_row_idx(idx, select_type.notify_parent);
-                ensure_row_visible(idx);
+                edit.clear_sel();
+                go_to_row(idx, select_type.notify_parent);
+                lv_parent.sel_changed(log_view_sel_change_type.bookmark);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -2055,7 +2058,7 @@ namespace lw_common.ui
                 go_to_row(found_row, select_type.notify_parent);
                 edit.update_ui();
                 edit.go_to_text(txt);
-                lv_parent.after_search();
+                lv_parent.sel_changed(log_view_sel_change_type.search);
             }
         }
 
@@ -2070,7 +2073,7 @@ namespace lw_common.ui
         private void list_MouseClick(object sender, MouseEventArgs e) {
         }
         private void list_MouseUp(object sender, MouseEventArgs e) {
-
+            edit.on_mouse_up();
         }
         private void list_MouseDown(object sender, MouseEventArgs e) {
             if ((e.Button & MouseButtons.Right) == MouseButtons.Right)
