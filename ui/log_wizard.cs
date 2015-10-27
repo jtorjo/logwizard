@@ -224,7 +224,7 @@ namespace LogWizard
                     if (!custom_ui_[idx].was_set_at_least_once) {
                         // use the last form's UI
                         int last_ui = forms.Last().toggled_to_custom_ui_;
-                        custom_ui_[idx].copy_from( custom_ui_[last_ui]);
+                        custom_ui_[idx].copy_from( last_ui >= 0 ? custom_ui_[last_ui] : default_ui_);
                         // just a bit lower than the last UI - so that both are visible
                         custom_ui_[idx].left += 50;
                         custom_ui_[idx].top += 50;

@@ -1,42 +1,7 @@
 
 - take some picture(s) with logwizard - to place on github
 
-------------------------------------------------------
-
-
-
-- log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)
-  - i need to save this only if the user changes something
-  - this needs to be per each view + for full log
-  - i need an easy way to allow showing / hiding columns 
-    - this needs to be expandable so that in the future i can do the same for details pane.
-	- see if anything like this is allowed by default by the control
- = IMPORTANT - see if changing DisplayIndex affects position in the AllColumns -> that would be rather bad
-
-
-
-- ??  https://codelympics.io/projects/3 ->>> add csv, xml, db, event viewer, outputdebugstring etc to viewing
-  - this also means adding the description pane
-  - adding aliases
-  - guessing the right file (from extension, etc.)
-  - allow editing log settings (depending on its type)
-
-
-
-
-
-
-- tip cp: allow only a class to access some functions
-  - q: can i make this available on several classes?
-  - explain why : normally, you have a class just be private, or the class be inside another class
-  - have lock class derive from lock_base<> so that i can just say some_class.lock ??
-  - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
-  - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
-
-
-
-
-
+----------------------------------------------------
 
 - filter regex: RegexOptions.Singleline
 
@@ -58,6 +23,29 @@
    - if i edit something selected from the combo, save it there
    - if i select something from the combo -> move to last (the first to be shown next time)
    - if history contains at least 2 items, automatically drop combo when shown
+
+
+
+
+
+
+
+- tip cp: allow only a class to access some functions
+  - q: can i make this available on several classes?
+  - explain why : normally, you have a class just be private, or the class be inside another class
+  - have lock class derive from lock_base<> so that i can just say some_class.lock ??
+  - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
+  - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
+
+- ??  https://codelympics.io/projects/3 ->>> add csv, xml, db, event viewer, outputdebugstring etc to viewing
+  - this also means adding the description pane
+  - adding aliases
+  - guessing the right file (from extension, etc.)
+  - allow editing log settings (depending on its type)
+
+
+
+
 
 
 
