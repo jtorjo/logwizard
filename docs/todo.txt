@@ -129,7 +129,7 @@
 
 
 
-
+- set associations (.txt, .log, etc) -> don't automatically associate with LW -> have an option to do so
 
 
 - bug:	I opened a file, A.txt, in LW.

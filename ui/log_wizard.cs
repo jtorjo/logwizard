@@ -116,8 +116,8 @@ namespace LogWizard
         private string status_prefix_ = "";
 
         private int toggled_to_custom_ui_ = -1;
-        private ui_info default_ui_ = new ui_info();
-        private ui_info[] custom_ui_ = new ui_info[] {
+        private static ui_info default_ui_ = new ui_info();
+        private static ui_info[] custom_ui_ = new ui_info[] {
             new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info(), 
             new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info()
         };
@@ -220,8 +220,18 @@ namespace LogWizard
             List<int> used = forms.Select(x => x.toggled_to_custom_ui_).ToList();
 
             for ( int idx = 0; idx < custom_ui_.Length; ++idx)
-                if (!used.Contains(idx))
+                if (!used.Contains(idx)) {
+                    if (!custom_ui_[idx].was_set_at_least_once) {
+                        // use the last form's UI
+                        int last_ui = forms.Last().toggled_to_custom_ui_;
+                        custom_ui_[idx].copy_from( custom_ui_[last_ui]);
+                        // just a bit lower than the last UI - so that both are visible
+                        custom_ui_[idx].left += 50;
+                        custom_ui_[idx].top += 50;
+                        save();
+                    }
                     return idx;
+                }
 
             Debug.Assert(false);
             return -1;
@@ -1126,6 +1136,7 @@ namespace LogWizard
                 leftPane.SelectedIndex = 2;
             else {
                 Debug.Assert(false);
+                global_ui.show_filter = true;
                 leftPane.SelectedIndex = 0;
             }
         }
@@ -1692,7 +1703,9 @@ namespace LogWizard
                 if (history_[i].name == name) {
                     found = true;
                     bool is_sample = name.ToLower().EndsWith("logwizardsetupsample.log");
-                    if (is_sample)
+                    // if not default form - don't move the selection to the end
+                    bool is_default_form = toggled_to_custom_ui_ < 0;
+                    if (is_sample || !is_default_form)
                         logHistory.SelectedIndex = i;
                     else {
                         // whatever the user selects, move it to the end
@@ -1707,6 +1720,7 @@ namespace LogWizard
                 }
 
             if (logHistory.SelectedIndex < 0) {
+                // FIXME (minor) if not on the default form -> i should not put it last (since that will be automatically loaded at restart)
                 history_.Add(new history {name = name, type = 0, friendly_name = friendly_name});
                 logHistory.Items.Add(history_.Last().ui_friendly_name);
                 logHistory.SelectedIndex = logHistory.Items.Count - 1;
@@ -2619,8 +2633,11 @@ namespace LogWizard
             int new_ui = idx == toggled_to_custom_ui_ ? -1 : idx;
             if (new_ui != -1) {
                 // going to a custom position
-                if (!custom_ui_[idx].was_set_at_least_once)
-                    custom_ui_[idx].copy_from(global_ui);
+                if (!custom_ui_[idx].was_set_at_least_once) {
+                    // 1.3.33+ - copy from the existing position - this way, we can create a "copy" of where we were
+                    custom_ui_[idx].copy_from(toggled_to_custom_ui_ < 0 ? default_ui_ : custom_ui_[toggled_to_custom_ui_]);
+                    set_status("Copied existing Settings from Position " + (toggled_to_custom_ui_ + 1));
+                }
             } else {
                 // going to default position (from a custom position)
             }
