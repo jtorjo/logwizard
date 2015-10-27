@@ -1,8 +1,11 @@
 
 
 
-
 - font: allow changing it
+
+1.3.33a
+- text in msg_details - can i center it just a bit?
+  - of course we can : awesomeness :D
 
 1.3.32g
 - fix: bug: next/prev bookmark does not sync with full log

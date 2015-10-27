@@ -32,11 +32,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txt.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txt.Location = new System.Drawing.Point(0, 0);
+            this.txt.Location = new System.Drawing.Point(0, 5);
             this.txt.Name = "txt";
             this.txt.ReadOnly = true;
             this.txt.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-            this.txt.Size = new System.Drawing.Size(647, 165);
+            this.txt.Size = new System.Drawing.Size(647, 158);
             this.txt.TabIndex = 0;
             this.txt.Text = "";
             // 

@@ -137,7 +137,7 @@ namespace lw_common {
             var prints = lv.sel.override_print(lv, msg_txt, msg_col);
             var full_row = lv.list.GetItem(lv.sel_row_idx);
 
-            txt.BackColor = drawer_.bg_color(full_row, msg_col);
+            BackColor = txt.BackColor = drawer_.bg_color(full_row, msg_col);
             int last_idx = 0;
 
             for (int print_idx = 0; print_idx < prints.Count; ++print_idx) {
