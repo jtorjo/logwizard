@@ -93,8 +93,6 @@ namespace lw_common {
     [Serializable]
     public class ui_context {
         public string name  = "";
-        public string auto_match = "";
-
         public string default_syntax = "";
 
         public List<ui_view> views = new List<ui_view>();
@@ -133,13 +131,11 @@ namespace lw_common {
         public void copy_from(ui_context other) {
             default_syntax = other.default_syntax;
             name = other.name;
-            auto_match = other.auto_match;
             views = other.views.ToList();
         }
 
         private void load_save(bool load, string prefix) {
             app.load_save(load, ref name, prefix + ".name", "Default" );
-            app.load_save(load, ref auto_match, prefix + ".auto_match");
             app.load_save(load, ref default_syntax, prefix + ".default_syntax");
 
             int view_count = views.Count;

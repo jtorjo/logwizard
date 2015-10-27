@@ -90,6 +90,12 @@ namespace lw_common {
         goto_position_3, 
         goto_position_4, 
         goto_position_5,
+        // 1.3.33+
+        goto_position_6,
+        goto_position_7,
+        goto_position_8,
+        goto_position_9,
+        goto_position_10,
  
         toggle_enabled_dimmed,
 

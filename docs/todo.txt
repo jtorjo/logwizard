@@ -3,12 +3,6 @@
 
 ------------------------------------------------------
 
-- bug: 'New' does not work
-  - works now, but I need to put it into another position - equivalent of (Ctrl-1)
-  - very likely, I should allow up to Ctrl-9
-    - when going to another position - and that position is "virgin", copy from teh current position (for instance, if going from position 2 to position 9, copy settings from position 2)
-  - IMPORTANT: regular save() should happen in Dummy() -> since we will have several log_wizard windows
-  - to check: when do i re-load logwizard forms? and more importantly - do i need to?
 
 
 - log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)

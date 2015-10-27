@@ -29,7 +29,9 @@ using LogWizard;
 namespace lw_common.ui {
 
     public enum log_view_sel_change_type {
-        search, bookmark, click, 
+        search,
+        bookmark,
+        click,
         // user pressed backspace, thus we go back to the cell containing [search-1]
         backspace
     }
@@ -50,7 +52,7 @@ namespace lw_common.ui {
 
         void simple_action(log_view_right_click.simple_action simple);
 
-        void add_or_edit_filter(string filter_str, string filter_id , bool apply_to_existing_lines);
+        void add_or_edit_filter(string filter_str, string filter_id, bool apply_to_existing_lines);
 
         // called after we've searched to something (thus, changed the current line)
         void sel_changed(log_view_sel_change_type change);
@@ -69,6 +71,7 @@ namespace lw_common.ui {
 
         // if >= 0, it's the selected row (the one is FOCUSED on - in the filter control)
         int selected_filter_row_index { get; }
-    
+
+        bool can_edit_context { get; }
     }
 }

@@ -176,6 +176,11 @@ namespace lw_common.ui {
             actions.Add(new action { category = "Filter", name = "Exclude Lines Containing " + small_sel() + " (case-INsensitive)", on_click = () => exclude_lines(false, false) });
         }
 
+        private void append_filter_disabled_actions(List<action> actions) {
+            Debug.Assert(!parent_.lv_parent.can_edit_context);
+            actions.Add(new action { category = "Filter", name = "Can't edit Filter here", enabled = false});
+        }
+
         private void append_filter_goto_actions(List<action> actions) {
             Debug.Assert(!parent_.is_full_log);
 
@@ -189,7 +194,8 @@ namespace lw_common.ui {
             else
                 actions.Add(new action { category = "Filter/Go to...", name = "Select All Filters that matched this Line", on_click = find_filter_matching_line });
 
-            actions.Add(new action { category = "Filter/Go to...", name = "Edit " + (is_single_filter ? "" : "First ") + "Filter that matched this Line", on_click = edit_first_filter_matching_line });
+            if ( parent_.lv_parent.can_edit_context)
+                actions.Add(new action { category = "Filter/Go to...", name = "Edit " + (is_single_filter ? "" : "First ") + "Filter that matched this Line", on_click = edit_first_filter_matching_line });
 
             //   - show what other views contain this line - "Go to Other View Containing this line" -> and show which other views contain it
             var other_views = parent_.lv_parent.other_views_containing_this_line(parent_.sel_row_idx);
@@ -240,25 +246,29 @@ namespace lw_common.ui {
         }
 
         private void append_filter_actions(List<action> actions) {
-            if (parent_.is_full_log)
-                append_filter_fulllog_actions(actions);
-            else {
-                append_filter_include_actions(actions);
-                append_current_view_filter_actions(actions);
-            }
+            if (parent_.lv_parent.can_edit_context) {
+                if (parent_.is_full_log)
+                    append_filter_fulllog_actions(actions);
+                else {
+                    append_filter_include_actions(actions);
+                    append_current_view_filter_actions(actions);
+                }
 
-            if (!parent_.is_full_log) {
-                bool belongs_to_view = parent_.sel.matches.Count > 0;
-                if (belongs_to_view) {
-                    var i = parent_.sel;
-                    Debug.Assert(i != null);
-                    bool is_default = i.match.font.fg == font_info.default_font.fg;
-                    if (is_default)
-                        append_filter_create_actions(actions);
-                    else
-                        append_filter_existing_actions(actions);
+                if (!parent_.is_full_log) {
+                    bool belongs_to_view = parent_.sel.matches.Count > 0;
+                    if (belongs_to_view) {
+                        var i = parent_.sel;
+                        Debug.Assert(i != null);
+                        bool is_default = i.match.font.fg == font_info.default_font.fg;
+                        if (is_default)
+                            append_filter_create_actions(actions);
+                        else
+                            append_filter_existing_actions(actions);
+                    }
                 }
             }
+            else 
+                append_filter_disabled_actions(actions);
 
             if ( parent_.filter_row_count > 0 && !parent_.is_full_log)
                 // here, I know there's at least a filter
@@ -286,19 +296,26 @@ namespace lw_common.ui {
             }
         }
 
+        private void append_view_disabled_actions(List<action> actions) {
+            Debug.Assert(!parent_.lv_parent.can_edit_context);
+            actions.Add(new action { category = "View", name = "Can't edit View here", enabled = false});
+        }
         private void append_view_actions(List<action> actions) {
-            actions.Add(new action { category = "View", name = "Rename View", on_click = do_rename_view });
-            
-            // not implemented yet
-            actions.Add(new action { category = "View", name = "Move View to Left", simple = simple_action.view_to_left, enabled = false });
-            actions.Add(new action { category = "View", name = "Move View to Right", simple = simple_action.view_to_right, enabled = false });
+            if (parent_.lv_parent.can_edit_context) {
+                actions.Add(new action {category = "View", name = "Rename View", on_click = do_rename_view});
 
-            actions.Add(new action { category = "View", separator = true  });
+                // not implemented yet
+                actions.Add(new action {category = "View", name = "Move View to Left", simple = simple_action.view_to_left, enabled = false});
+                actions.Add(new action {category = "View", name = "Move View to Right", simple = simple_action.view_to_right, enabled = false});
 
-            actions.Add(new action { category = "View", name = "Add View (Copy of This)", simple = simple_action.view_add_copy });
-            actions.Add(new action { category = "View", name = "Add View (From Scratch)", simple = simple_action.view_add_new });
-            actions.Add(new action { category = "View", name = "Delete Current View", simple = simple_action.view_delete });
-            
+                actions.Add(new action {category = "View", separator = true});
+
+                actions.Add(new action {category = "View", name = "Add View (Copy of This)", simple = simple_action.view_add_copy});
+                actions.Add(new action {category = "View", name = "Add View (From Scratch)", simple = simple_action.view_add_new});
+                actions.Add(new action {category = "View", name = "Delete Current View", simple = simple_action.view_delete});
+            }
+            else 
+                append_view_disabled_actions(actions);
         }
 
         // appends Buttons such as Toggles,Preferences..etc

@@ -117,7 +117,10 @@ namespace LogWizard
 
         private int toggled_to_custom_ui_ = -1;
         private ui_info default_ui_ = new ui_info();
-        private ui_info[] custom_ui_ = new ui_info[] { new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info() };
+        private ui_info[] custom_ui_ = new ui_info[] {
+            new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info(), 
+            new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info()
+        };
 
         // if non-empty, we need to merge our notes with other notes
         private string post_merge_file_ = "";
@@ -132,6 +135,8 @@ namespace LogWizard
         private enum show_full_log_type {
             both, just_view, just_full_log
         }
+
+        private bool can_edit_context_ = true;
 
         public log_wizard()
         {
@@ -171,10 +176,7 @@ namespace LogWizard
                 lv.mark_match(filter_idx, fg, bg);
             };
 
-            foreach ( ui_context ctx in contexts_)
-                curContextCtrl.Items.Add(ctx.name);
-            // just select something
-            curContextCtrl.SelectedIndex = 0;
+            recreate_contexts_combo();
 
             foreach ( history hist in history_)
                 logHistory.Items.Add(hist.ui_friendly_name);
@@ -205,6 +207,65 @@ namespace LogWizard
                 if (open_cmd_line_file)
                     on_file_drop(Program.open_file_name);
             }, 10);
+        }
+
+        private void recreate_contexts_combo() {
+            ++ignore_change_;
+            
+            int old_sel = curContextCtrl.SelectedIndex;
+            string old_name = old_sel >= 0 ? curContextCtrl.Items[old_sel].ToString() : "";
+            curContextCtrl.Items.Clear();
+            foreach ( ui_context ctx in contexts_)
+                curContextCtrl.Items.Add(ctx.name);
+
+            if (old_sel < 0)
+                // just select something
+                curContextCtrl.SelectedIndex = 0;
+            else {
+                bool found = false;
+                for (int idx = 0; idx < contexts_.Count && !found; idx++) {
+                    ui_context ctx = contexts_[idx];
+                    if (ctx.name == old_name) {
+                        curContextCtrl.SelectedIndex = idx;
+                        found = true;
+                    }
+                }
+                if ( !found)
+                    // probably the former selection was erased - just select something
+                    curContextCtrl.SelectedIndex = 0;
+            }
+
+            --ignore_change_;
+        }
+
+        private void update_contexts_combos_in_all_forms() {
+            foreach(var f in forms)
+                f.recreate_contexts_combo();
+        }
+
+        /* IMPORTANT: 
+                the idea here is not to allow the user to edit the same context from two different LogWizard forms
+                In other words, he could be in form A, add a new view, and in form B, modify something else (and so on).
+
+                While this theoretically could be possible, it's rather complicated to implement (namely, synchronizing all forms having the same context)
+                For now, avoid this altogether: only the first form can edit the context. The other forms with the same context will have everything disabled.
+
+                For two different forms each having different contexts, we don't care
+        */
+        private void on_context_changed() {
+            List<string> used_contexts = new List<string>();
+            foreach (var f in forms) {
+                string cur_context = f.cur_context().name;
+                f.can_edit_context_ = !used_contexts.Contains(cur_context);
+                used_contexts.Add(cur_context);
+            }
+
+            foreach (var f in forms) {
+                f.sourceUp.Panel1.Enabled = f.can_edit_context_;
+                f.filtCtrl.Enabled = f.can_edit_context_;
+                f.newFilteredView.Enabled = f.can_edit_context_;
+                f.delFilteredView.Enabled = f.can_edit_context_;
+            }
         }
 
 
@@ -263,6 +324,9 @@ namespace LogWizard
             g.DrawString(viewsTab.TabPages[e.Index].Text, font, brush, bounds, new StringFormat(_StringFlags));
         }
 
+        public bool can_edit_context {
+            get { return can_edit_context_; }
+        }
 
         private ui_info global_ui {
             get {
@@ -740,10 +804,6 @@ namespace LogWizard
                 filtCtrl.view_to_ui( cur.views[cur_view], cur_view);
         }
 
-        private void save_filters() {
-            // 1.0.91+ - note: the current view (cur.views[cur_view]) is up to date at all times - that's how filter_ctrl works
-        }
-
         private log_view log_view_for_tab(int idx) {
             TabPage tab = viewsTab.TabPages[idx];
             foreach ( Control c in tab.Controls)
@@ -807,7 +867,7 @@ namespace LogWizard
             var other_views = all_log_views();
             other_views.Remove(view);
             var other_view_names = other_views.Select(x => x.name);
-            string new_name = util.unique_name(other_view_names, name, "_");
+            string new_name = util.unique_name(other_view_names, name);
             if (new_name != name) 
                 // in this case, another view already had that name - we want names to be unique
                 view.name = name = new_name;
@@ -1227,10 +1287,6 @@ namespace LogWizard
             if (ignore_change_ > 0)
                 return;
 
-            ui_context cur = cur_context();
-            //cur.auto_match = contextMatch.Text;
-
-            save_filters();
             save_contexts();
 
             default_ui_.save("ui.default");
@@ -1457,7 +1513,6 @@ namespace LogWizard
               - the idea is for the uesr not to have to mistakenly delete a context when he's selecting a different type of file,
                 (since he would want new filters). thus, just create a new context where he can do anything
         */
-
         private void create_context_for_file(string name) {
             ui_context file_ctx = file_to_context(name);
             if (file_ctx.name != "Default")
@@ -1470,7 +1525,8 @@ namespace LogWizard
             var syntax = new find_log_syntax().try_find_log_syntax_file(name);
             if (syntax != find_log_syntax.UNKNOWN_SYNTAX)
                 new_ctx.default_syntax = syntax;
-            curContextCtrl.Items.Add(new_ctx.name);
+
+            update_contexts_combos_in_all_forms();
         }
 
         private void on_new_file_log(string name) {
@@ -1835,13 +1891,14 @@ namespace LogWizard
         private void addContext_Click(object sender, EventArgs e) {
             new_context_form new_ = new new_context_form(this);
             new_.Location = Cursor.Position;
-            if (new_.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+            if (new_.ShowDialog() == DialogResult.OK) {
                 ui_context new_ctx = new ui_context();
                 if (new_.basedOnExisting.Checked)
                     new_ctx.copy_from(cur_context());
-                new_ctx.name = new_.name.Text;
+                // 1.3.33+ - we want unique context names!
+                new_ctx.name = util.unique_name( contexts_.Select(x => x.name), new_.name.Text);
                 contexts_.Add(new_ctx);
-                curContextCtrl.Items.Add(new_ctx.name);
+                update_contexts_combos_in_all_forms();
                 curContextCtrl.SelectedIndex = curContextCtrl.Items.Count - 1;
             }
         }
@@ -1853,7 +1910,7 @@ namespace LogWizard
 
             int sel = curContextCtrl.SelectedIndex;
             contexts_.RemoveAt(sel);
-            curContextCtrl.Items.RemoveAt(sel);
+            update_contexts_combos_in_all_forms();
             curContextCtrl.SelectedIndex = curContextCtrl.Items.Count > sel ? sel : 0;
         }
 
@@ -1865,6 +1922,11 @@ namespace LogWizard
         }
 
         private void curContextCtrl_SelectedIndexChanged(object sender, EventArgs e) {
+            if (ignore_change_ > 0)
+                return;
+
+            on_context_changed();
+
             // first, remove all log views, so that the new filters (from the new context) are loaded
             remove_all_log_views();
 
@@ -2460,6 +2522,25 @@ namespace LogWizard
             case action_type.goto_position_5:
                 toggle_custom_ui(4);
                 break;
+
+            case action_type.goto_position_6:
+                toggle_custom_ui(5);
+                break;
+            case action_type.goto_position_7:
+                toggle_custom_ui(6);
+                break;
+            case action_type.goto_position_8:
+                toggle_custom_ui(7);
+                break;
+            case action_type.goto_position_9:
+                toggle_custom_ui(8);
+                break;
+            case action_type.goto_position_10:
+                toggle_custom_ui(9);
+                break;
+
+
+
 
             case action_type.toggle_enabled_dimmed:
                 filtCtrl.toggle_enabled_dimmed();
@@ -3057,10 +3138,8 @@ namespace LogWizard
                     if (exists == null) {
                         // we don't yet have this context - create it
                         imported_context.name = imported_context_name;
-                        ++ignore_change_;
                         contexts_.Add(imported_context);
-                        curContextCtrl.Items.Add(imported_context_name);
-                        --ignore_change_;
+                        update_contexts_combos_in_all_forms();
                     }
                     app.inst.forced_file_to_context.Add(import_dir + "\\" + unique_name, imported_context_name);
                     save();
