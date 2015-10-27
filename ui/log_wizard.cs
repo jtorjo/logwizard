@@ -141,13 +141,13 @@ namespace LogWizard
         public log_wizard()
         {
             InitializeComponent();
+            toggled_to_custom_ui_ = first_available_toggle_custom_ui();
             forms_.Add(this);
             Text += " " + version();
             sourceTypeCtrl.SelectedIndex = 0;
             bool first_time = contexts_.Count == 0;
             if (first_time) {
                 load_contexts(sett);
-
                 notes_keeper.inst.init( util.is_debug ? "notes" : Program.local_dir() + "\\notes", app.inst.identify_notes_files);
             }
             notes.set_author( app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
@@ -198,6 +198,8 @@ namespace LogWizard
             update_toggle_topmost_visibility();
             --ignore_change_;
 
+            update_status_prefix();
+
             // 1.0.80d+ - the reason we postpone this is so taht we don't set up all UI in the constructor - the splitters would get extra SplitterMove() events,
             //            and we would end up positioning them wrong
             util.postpone(() => {
@@ -207,6 +209,22 @@ namespace LogWizard
                 if (open_cmd_line_file)
                     on_file_drop(Program.open_file_name);
             }, 10);
+        }
+
+        // note: we don't allow two forms to use the same UI - that would be insane - if one would toggle somethin in Form A (or just move it), 
+        //       we would need to synchronize Form B or just ignore everything in Form B - and then how would we decide where we save settings from?
+        private int first_available_toggle_custom_ui() {
+            if (forms.Count < 1)
+                return -1;
+
+            List<int> used = forms.Select(x => x.toggled_to_custom_ui_).ToList();
+
+            for ( int idx = 0; idx < custom_ui_.Length; ++idx)
+                if (!used.Contains(idx))
+                    return idx;
+
+            Debug.Assert(false);
+            return -1;
         }
 
         private void recreate_contexts_combo() {
@@ -1293,16 +1311,7 @@ namespace LogWizard
             for (int i = 0; i < custom_ui_.Length; ++i)
                 custom_ui_[i].save("ui.custom" + i);
 
-            bool dirty = app.inst.sett.dirty;
             app.inst.save();
-
-            if (!dirty)
-                // no change
-                return;
-
-            foreach (log_wizard lw in forms_)
-                if (lw != this)
-                    lw.load();
         }
 
 
@@ -2584,9 +2593,13 @@ namespace LogWizard
             }
             toggled_to_custom_ui_ = new_ui;
             load_ui();
-            status_prefix_ = toggled_to_custom_ui_ < 0 ? "" : "[Position " + (idx + 1) + "]";
-            force_udpate_status_text();
+            update_status_prefix();
             save();
+        }
+
+        private void update_status_prefix() {
+            status_prefix_ = toggled_to_custom_ui_ < 0 ? "" : "[Position " + (toggled_to_custom_ui_ + 1) + "]";
+            force_udpate_status_text();            
         }
 
         private List<Control> panes() {
