@@ -170,6 +170,7 @@
             this.list.Leave += new System.EventHandler(this.list_Leave);
             this.list.MouseClick += new System.Windows.Forms.MouseEventHandler(this.list_MouseClick);
             this.list.MouseDown += new System.Windows.Forms.MouseEventHandler(this.list_MouseDown);
+            this.list.MouseUp += new System.Windows.Forms.MouseEventHandler(this.list_MouseUp);
             // 
             // lineCol
             // 

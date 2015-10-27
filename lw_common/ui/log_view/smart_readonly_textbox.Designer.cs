@@ -44,6 +44,7 @@
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.smart_readonly_textbox_MouseClick);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.smart_readonly_textbox_KeyPress);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.smart_readonly_textbox_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.smart_readonly_textbox_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.smart_readonly_textbox_MouseUp);
             this.ResumeLayout(false);
 

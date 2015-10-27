@@ -61,7 +61,7 @@ namespace lw_common.ui
         // the reason we have this class - is for memory eficiency - since all views (except full log) don't need the info here
 
 
-        private log_view_render render_;
+        private readonly log_view_render render_;
 
         private const int MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS = 10;
 
@@ -1490,8 +1490,8 @@ namespace lw_common.ui
             }
 
             if (found >= 0) {
-                select_row_idx(found, select_type.notify_parent);
-                ensure_row_visible(found);
+                edit.clear_sel();
+                go_to_row(found, select_type.notify_parent);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1521,8 +1521,8 @@ namespace lw_common.ui
                     found = idx;
             }
             if (found >= 0) {
-                select_row_idx(found, select_type.notify_parent);
-                ensure_row_visible(found);
+                edit.clear_sel();
+                go_to_row(found, select_type.notify_parent);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1560,8 +1560,8 @@ namespace lw_common.ui
             }
 
             if (found >= 0) {
-                select_row_idx(found, select_type.notify_parent);
-                ensure_row_visible(found);
+                edit.clear_sel();
+                go_to_row(found, select_type.notify_parent);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1579,8 +1579,8 @@ namespace lw_common.ui
             }
 
             if (found >= 0) {
-                select_row_idx(found, select_type.notify_parent);
-                ensure_row_visible(found);
+                edit.clear_sel();
+                go_to_row(found, select_type.notify_parent);
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1854,6 +1854,10 @@ namespace lw_common.ui
             get { return cur_search_; }
         }
 
+        internal log_view_render render {
+            get { return render_; }
+        }
+
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
             bool is_renaming = win32.focused_ctrl() == viewName;
@@ -1994,37 +1998,6 @@ namespace lw_common.ui
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void list_CellClick(object sender, CellClickEventArgs e) {
-            if (!is_editing)
-                return;
-
-            int col_idx = e.ColumnIndex;
-            if (col_idx >= 0 && e.RowIndex >= 0) {
-                // find the index within all columns (not just the visible ones)
-                col_idx = list.AllColumns.FindIndex(x => x == e.Column);
-                Debug.Assert(col_idx >= 0);
-
-                var mouse = list.PointToClient(Cursor.Position);
-                using (Graphics g = CreateGraphics()) {
-                    string text = list.GetItem(e.RowIndex).GetSubItem(e.ColumnIndex).Text;
-                    var widths = render_.text_widths(g, text);
-                    int offset_x = list.GetItem(e.RowIndex).GetSubItemBounds(e.ColumnIndex).X;
-
-                    for (int i = 0; i < widths.Count; ++i)
-                        widths[i] += offset_x;
-
-                    int char_idx = widths.FindLastIndex(x => x < mouse.X);
-                    if (widths.Count == 0 || widths.Last() < mouse.X)
-                        char_idx = widths.Count;
-
-                    cur_col_ = col_idx;
-                    if (char_idx < 0)
-                        char_idx = 0;
-                    edit.go_to_char(char_idx);
-                    edit.after_click();
-                }
-            }
-        }
 
         private void on_edit_sel_changed() {
             // logger.Debug("[lv] sel= [" + edit.sel_text + "]");
@@ -2090,21 +2063,52 @@ namespace lw_common.ui
             util.postpone(edit.update_ui, 1);
         }
 
+        private void list_CellClick(object sender, CellClickEventArgs e) {
+            //on_mouse_click();
+        }
+
         private void list_MouseClick(object sender, MouseEventArgs e) {
+        }
+        private void list_MouseUp(object sender, MouseEventArgs e) {
+
+        }
+        private void list_MouseDown(object sender, MouseEventArgs e) {
+            if ((e.Button & MouseButtons.Right) == MouseButtons.Right)
+                right_click_.right_click();
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
+                on_mouse_click(e.Location);
+        }
+
+        private void on_mouse_click(Point mouse) {
+            if (!is_editing)
+                return;
+
+            var i = list.OlvHitTest(mouse.X, mouse.Y);
+            if (i.Item == null || i.SubItem == null)
+                return;
+
+            int row_idx = i.RowIndex;
+            int col_idx = i.ColumnIndex;
+            if (col_idx >= 0 && row_idx >= 0) {
+                // find the index within all columns (not just the visible ones)
+                col_idx = list.AllColumns.FindIndex(x => x == i.Column);
+                Debug.Assert(col_idx >= 0);
+                cur_col_ = col_idx;
+
+                edit.on_mouse_click(list.PointToScreen(mouse));
+            }
+            
         }
 
         public void do_right_click_via_key() {
             right_click_.right_click_at_caret();
         }
 
-        private void list_MouseDown(object sender, MouseEventArgs e) {
-            if ((e.Button & MouseButtons.Right) == MouseButtons.Right)
-                right_click_.right_click();
-        }
 
         private void viewName_Leave(object sender, EventArgs e) {
             show_name = false;
         }
+
     }
 
 }

@@ -89,6 +89,8 @@ namespace lw_common {
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        [DllImport("user32.dll")]
+        public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
@@ -96,6 +98,7 @@ namespace lw_common {
         static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
         static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
 
+        public const int WM_LBUTTONDOWN = 0x0201;
         const UInt32 SWP_NOSIZE = 0x0001;
 
         const UInt32 SWP_NOMOVE = 0x0002;

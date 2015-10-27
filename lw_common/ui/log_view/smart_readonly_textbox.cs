@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
 using log4net.Repository.Hierarchy;
 
 namespace lw_common.ui {
@@ -66,6 +67,8 @@ namespace lw_common.ui {
 
         private log_view_item_draw_ui drawer_ = null;
         print_info default_print_ = new print_info();
+
+        private int mouse_down_start_ = -1;
 
         private class position {
             // the exact cell
@@ -241,21 +244,74 @@ namespace lw_common.ui {
                 sel_start_ = SelectionStart;
                 sel_len_ = 0;
                 --ignore_change_;
+                logger.Debug("[smart] go to " + char_idx + "/" + SelectionStart );
 
                 update_ui();
             }
         }
 
-        public void after_click() {
+        private int char_at_mouse() {
+            return char_at_mouse(Cursor.Position);
+        }
+
+        private int char_at_mouse(Point mouse_screen) {
+            var mouse = parent_.list.PointToClient(mouse_screen);
+            var i = parent_.list.OlvHitTest(mouse.X, mouse.Y);
+            if (i.Item == null || i.SubItem == null)
+                return 0;
+
+            int row_idx = i.RowIndex;
+            int col_idx = i.ColumnIndex;
+            Debug.Assert(col_idx >= 0 && row_idx >= 0);
+
+            using (Graphics g = CreateGraphics()) {
+                string text = parent_.list.GetItem(row_idx).GetSubItem(i.ColumnIndex).Text;
+                var widths = parent_.render.text_widths(g, text);
+                int offset_x = parent_.list.GetItem(row_idx).GetSubItemBounds(i.ColumnIndex).X;
+
+                for (int idx = 0; idx < widths.Count; ++idx)
+                    widths[idx] += offset_x;
+
+                int char_idx = widths.FindLastIndex(x => x < mouse.X);
+                if (widths.Count == 0 || widths.Last() < mouse.X)
+                    char_idx = widths.Count;
+
+                if (char_idx < 0)
+                    char_idx = 0;
+                return char_idx;
+            }
+        }
+
+        public void on_mouse_click(Point mouse_screen) {
+            var mouse = parent_.list.PointToClient(mouse_screen);
+            var i = parent_.list.OlvHitTest(mouse.X, mouse.Y);
+
+            Debug.Assert(i.Item != null && i.SubItem != null);
+            int row_idx = i.RowIndex;
+            Debug.Assert(parent_.is_editing);
+
+            mouse_down_start_ = char_at_mouse(mouse_screen);
+            go_to_char( mouse_down_start_);
+            after_click(row_idx);
+
+            Focus();
+        }
+
+        private void after_click(int row_idx) {
+            logger.Debug("[smart] after click " + SelectionStart + "," + SelectionLength);
             after_click_sel_col_ = sel_col_;
-            after_click_sel_row_ = parent_.sel_row_idx;
+            after_click_sel_row_ = row_idx;
             after_click_sel_start_ = sel_start_;
-            if ( sel_len_ == 0)
-                util.postpone(check_if_user_hasnt_moved, ON_CLICK_WAIT_BEFORE_SELECTING_WORD_MS );
+            if (sel_len_ == 0) 
+                util.postpone(check_if_user_hasnt_moved, ON_CLICK_WAIT_BEFORE_SELECTING_WORD_MS);
+
+            // note: sending/posting a wm_lbuttondown to the control does not really work
         }
 
         private void check_if_user_hasnt_moved() {
-            if (sel_col_ == after_click_sel_col_ && sel_len_ == 0 && sel_row_ == after_click_sel_row_ && sel_start_ == after_click_sel_start_) {
+            if (sel_col_ == after_click_sel_col_ && sel_len_ == 0 && sel_row_ == after_click_sel_row_ && sel_start_ == after_click_sel_start_ 
+                // 1.3.32+ - if selection length > 0 - user already started selecting... (via mouse maybe)
+                && SelectionLength == 0) {
                 // user hasn't moved after he clicked
                 string txt = Text;
                 bool clicked_in_middle_of_row = SelectionStart < TextLength;
@@ -581,6 +637,7 @@ namespace lw_common.ui {
         }
 
         private void smart_readonly_textbox_MouseUp(object sender, MouseEventArgs e) {
+            mouse_down_start_ = -1;
             if (e.Button == MouseButtons.Right)
                 parent_.right_click.right_click();
         }
@@ -589,6 +646,26 @@ namespace lw_common.ui {
         private void wheel(Message m) {
             //logger.Info("wheel on " + "/" + mouse_idx++ + " on " + parent_.name );
             win32.SendMessage(parent_.list.Handle, m.Msg, m.WParam, m.LParam);
+        }
+
+        private void smart_readonly_textbox_MouseMove(object sender, MouseEventArgs e) {
+            // note: at this point, this won't handle horizontal scrolling correctly (in other words, if text bigger than what's shown)
+            //       lets all thank MS for such an awesome control!
+            if (mouse_down_start_ >= 0) {
+                int now = char_at_mouse();
+                int old_len = sel_len_;
+                if (now > mouse_down_start_) {
+                    sel_start_ = mouse_down_start_;
+                    sel_len_ = now - mouse_down_start_;
+                } else {
+                    sel_start_ = now;
+                    sel_len_ = mouse_down_start_ - now;
+                }
+                if (old_len > sel_len_)
+                    readd_all_text();
+                update_cached_sel_text();
+                update_selected_text();
+            }
         }
 
     }
