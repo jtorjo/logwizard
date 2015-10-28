@@ -11,6 +11,12 @@
   + allow giving friendly names to the regexes, so in the future we can easily reselect them - this needs to be available only for regexes (for normal searches, makes no sense)
   + find: in preview -> when finding something, select it and auto-filter it (so that only the lines containing the text will be shown)
 
+
+1.3.35d
+- find preview: the preview rows are loaded correctly
+  - even the column order + widths is preserved!
+
+
 1.3.35c
 - no need for help_form anymore
 

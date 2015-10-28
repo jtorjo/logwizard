@@ -33,6 +33,8 @@ using LogWizard;
 namespace lw_common.ui {
     public partial class search_form : Form {
 
+        private const int MAX_PREVIEW_ROWS = 1000;
+
         public class search_for {
             public bool case_sensitive = false;
             public bool full_word = false;
@@ -63,8 +65,81 @@ namespace lw_common.ui {
         private search_for search_ = new search_for();
         private settings_file sett;
 
+        private List< List<string>> preview_items_ = new List<List<string>>();
+        // contains the rows that match
+        private List<int> matches_ = new List<int>(); 
+
+        private class item {
+            public List<string> parts = new List<string>();
+
+            public item(List<string> parts) {
+                this.parts = parts;
+            }
+
+            public string part(int i) {
+                return parts.Count > i ? parts[i] : "";
+            }
+
+            public string t0 { get { return part(0); }}
+            public string t1 { get { return part(1); }}
+            public string t2 { get { return part(2); }}
+            public string t3 { get { return part(3); }}
+            public string t4 { get { return part(4); }}
+            public string t5 { get { return part(5); }}
+            public string t6 { get { return part(6); }}
+            public string t7 { get { return part(7); }}
+            public string t8 { get { return part(8); }}
+            public string t9 { get { return part(9); }}
+
+            public string t10 { get { return part(10); }}
+            public string t11 { get { return part(11); }}
+            public string t12 { get { return part(12); }}
+            public string t13 { get { return part(13); }}
+            public string t14 { get { return part(14); }}
+            public string t15 { get { return part(15); }}
+            public string t16 { get { return part(16); }}
+            public string t17 { get { return part(17); }}
+            public string t18 { get { return part(18); }}
+            public string t19 { get { return part(19); }}
+
+            public string t20 { get { return part(20); }}
+            public string t21 { get { return part(21); }}
+            public string t22 { get { return part(22); }}
+            public string t23 { get { return part(23); }}
+            public string t24 { get { return part(24); }}
+            public string t25 { get { return part(25); }}
+            public string t26 { get { return part(26); }}
+            public string t27 { get { return part(27); }}
+            public string t28 { get { return part(28); }}
+            public string t29 { get { return part(29); }}
+
+            public string t30 { get { return part(30); }}
+            public string t31 { get { return part(31); }}
+            public string t32 { get { return part(32); }}
+            public string t33 { get { return part(33); }}
+            public string t34 { get { return part(34); }}
+            public string t35 { get { return part(35); }}
+            public string t36 { get { return part(36); }}
+            public string t37 { get { return part(37); }}
+            public string t38 { get { return part(38); }}
+            public string t39 { get { return part(39); }}
+
+            public string t40 { get { return part(40); }}
+            public string t41 { get { return part(41); }}
+            public string t42 { get { return part(42); }}
+            public string t43 { get { return part(43); }}
+            public string t44 { get { return part(44); }}
+            public string t45 { get { return part(45); }}
+            public string t46 { get { return part(46); }}
+            public string t47 { get { return part(47); }}
+            public string t48 { get { return part(48); }}
+            public string t49 { get { return part(49); }}
+
+            public string t50 { get { return part(50); }}
+        }
+
         // 1.2.7+ if there's something selected by the user, override what we had
-        public search_form(Form parent, string smart_edit_search_for_text) {
+        public search_form(Form parent, log_view lv, string smart_edit_search_for_text) {
             this.sett = app.inst.sett;
             InitializeComponent();
             fg.BackColor = util.str_to_color( sett.get("search_fg", "transparent"));
@@ -96,6 +171,71 @@ namespace lw_common.ui {
 
             update_autorecognize_radio();
             TopMost = parent.TopMost;
+
+            result.Font = lv.list.Font;
+            load_surrounding_rows(lv);
+            update_preview_text();
+        }
+
+        private void load_surrounding_rows(log_view lv) {
+            int sel = lv.sel_row_idx;
+            if (sel < 0)
+                sel = 0;
+            // get as many rows as possible, in both directions
+            int max_count = Math.Min(MAX_PREVIEW_ROWS, lv.item_count);
+            int min = sel - max_count / 2, max = sel + max_count / 2;
+            if (min < 0) {
+                max += -min;
+                min = 0;
+            }
+            if (max > lv.item_count) {
+                min -= max - lv.item_count;
+                max = lv.item_count;
+            }
+            if (min < 0)
+                min = 0;
+            if (max > lv.item_count)
+                max = lv.item_count;
+            // at this point, we know the start and end
+
+            // see which columns actuall have useful data
+            List< Tuple<int,int>> columns_and_displayidx = new List<Tuple<int,int>>();
+            for (int col_idx = 0; col_idx < lv.list.AllColumns.Count; ++col_idx) {
+                if ( lv.list.AllColumns[col_idx].Width > 0)
+                    columns_and_displayidx.Add( new Tuple<int, int>(col_idx, lv.list.AllColumns[col_idx].DisplayIndex ));
+            }
+            var columns = columns_and_displayidx.OrderBy(x => x.Item2).Select(x => x.Item1).ToList();
+
+            for (int idx = min; idx < max; ++idx) {
+                var i = lv.item_at(idx);
+                List<string> row = new List<string>();
+                foreach (int col_idx in columns)
+                    row.Add(log_view_cell.cell_value(i, col_idx));
+                preview_items_.Add(row);
+            }
+
+            int preview_col_idx = 0;
+            foreach (int col_idx in columns) {
+                result.AllColumns[preview_col_idx].Width = lv.list.AllColumns[col_idx].Width;
+                result.AllColumns[preview_col_idx].Text = lv.list.AllColumns[col_idx] != lv.msgCol ? lv.list.AllColumns[col_idx].Text : "Message";
+                result.AllColumns[preview_col_idx].FillsFreeSpace = lv.list.AllColumns[col_idx].FillsFreeSpace;
+                ++preview_col_idx;
+            }
+            for (; preview_col_idx < result.AllColumns.Count; ++preview_col_idx)
+                result.AllColumns[preview_col_idx].IsVisible = false;
+            result.RebuildColumns();
+
+            for ( int match_idx = 0; match_idx < preview_items_.Count; ++match_idx)
+                matches_.Add(match_idx);
+            rebuild_result();
+        }
+
+        private void rebuild_result() {
+            result.Freeze();
+            result.ClearObjects();
+            foreach (var match_idx in matches_) 
+                result.AddObject( new item( preview_items_[match_idx] ) );
+            result.Unfreeze();
         }
 
         public static search_for default_search {
@@ -192,6 +332,15 @@ namespace lw_common.ui {
 
         private void update_autorecognize_radio() {
             radioAutoRecognize.Text = "Auto recognized (" + (is_auto_regex(txt.Text) ? "Regex" : "Text") + ")";
+        }
+
+        private void update_preview_text() {
+            preview.Text = "Previewing surrounding " + preview_items_.Count + " rows.";
+
+        }
+
+        private void checkResults_Tick(object sender, EventArgs e) {
+
         }
     }
 }
