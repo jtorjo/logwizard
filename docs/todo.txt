@@ -23,6 +23,7 @@
    - if i edit something selected from the combo, save it there
    - if i select something from the combo -> move to last (the first to be shown next time)
    - if history contains at least 2 items, automatically drop combo when shown
+     - when user types more than 2 letters, un-drop the combo TOTHINK - esc should work first to undo the combo
 
 
 

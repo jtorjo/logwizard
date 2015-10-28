@@ -94,6 +94,10 @@ namespace test_ui {
             get { return -1; }
         }
 
+        public bool can_edit_context {
+            get { return true; }
+        }
+
         private void refresh_Tick(object sender, EventArgs e) {
             //refresh.Enabled = false;
             //new settings_form(this).ShowDialog();

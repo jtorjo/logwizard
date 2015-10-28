@@ -25,6 +25,7 @@ logwizardsetup/Release64/*
 *.exe
 *.sample
 *.sample.log
+log4net.xml
 
 # MSTest test Results
 [Tt]est[Rr]esult*/

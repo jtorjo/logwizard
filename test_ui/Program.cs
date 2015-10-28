@@ -23,8 +23,9 @@ namespace test_ui {
 
             app.inst.init(new settings_file( @"C:\john\code\logwiz\logwizard\bin\x64\Dbg64\logwizard_debug.txt"));
 
+            Application.Run(new test_olv());
 //            Application.Run(new test_edit_ctrl());
-            Application.Run(new test_log_view());
+//            Application.Run(new test_log_view());
 //            Application.Run(new test_notes_ctrl());
 //            Application.Run(new test_filter_ctrl());
         }

@@ -149,8 +149,9 @@
             this.list.Location = new System.Drawing.Point(2, 22);
             this.list.Name = "list";
             this.list.OwnerDraw = true;
+            this.list.SelectColumnsOnRightClick = false;
+            this.list.SelectColumnsOnRightClickBehaviour = BrightIdeasSoftware.ObjectListView.ColumnSelectBehaviour.None;
             this.list.ShowGroups = false;
-            this.list.ShowItemToolTips = true;
             this.list.ShowSortIndicators = false;
             this.list.Size = new System.Drawing.Size(693, 403);
             this.list.TabIndex = 3;

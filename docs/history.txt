@@ -7,10 +7,18 @@
 	- see if anything like this is allowed by default by the control
  = IMPORTANT - see if changing DisplayIndex affects position in the AllColumns -> that would be rather bad
 
-1.3.34
 
+1.3.34a
+- right click on column header 
+  - allows hiding/showing columns
+  - allows moving columns to left/right
+ = IMPORTANT - see if changing DisplayIndex affects position in the AllColumns -> that would be rather bad
+   - tested: it does not happen
+
+ 
 1.3.33h
-- fixed small bug
+- fixed small bug when New pressed first time
+
 
 1.3.33g
 - switching to a position that is "virgin" -> copy from existing position

@@ -135,6 +135,67 @@ namespace lw_common.ui
             edit.on_search_ahead = search_ahead;
             edit.init(this);
             edit.BringToFront();
+
+            list.ColumnRightClick += list_ColumnRightClick;
+        }
+
+        private void list_ColumnRightClick(object sender, ColumnClickEventArgs e) {
+            int col_idx = e.Column; // ... index within the visible columns
+            var cur_col = list.GetColumn(col_idx);
+
+            // show the Filter actions first (the rest will be shown in their respective categories)
+            ContextMenuStrip menu = new ContextMenuStrip();
+            foreach (var col in list.AllColumns)
+                if (col.Width > 0) {
+                    ToolStripMenuItem sub = new ToolStripMenuItem(col.Text);
+                    sub.Checked = col.IsVisible;
+                    if (col.Index == 0)
+                        sub.Enabled = false;
+                    var c = col;
+                    sub.Click += (a,ee) => toggle_column_visible(c,sub);
+                    menu.Items.Add(sub);
+                }
+
+            string cur_col_text = cur_col == msgCol ? "Message" : cur_col.Text;
+            menu.Items.Add(new ToolStripSeparator());
+            var to_left = new ToolStripMenuItem("Move [" + cur_col_text + "] to Left (<-)");
+            var to_right = new ToolStripMenuItem("Move [" + cur_col_text + "] to Right (->)");
+            to_left.Click += (a,ee) => move_column_to_left(cur_col);
+            to_right.Click += (a,ee) => move_column_to_right(cur_col);
+
+            menu.Items.Add(to_left);
+            menu.Items.Add(to_right);
+
+            menu.Closing += menu_Closing;
+            edit.Visible = false;
+            menu.Show(list, list.PointToClient(Cursor.Position));
+        }
+
+        void menu_Closing(object sender, ToolStripDropDownClosingEventArgs e) {
+            e.Cancel = e.CloseReason == ToolStripDropDownCloseReason.ItemClicked;
+            if (!e.Cancel)
+                edit.update_ui();
+        }
+
+        private void toggle_column_visible(OLVColumn col, ToolStripMenuItem sub) {
+            col.IsVisible = !col.IsVisible;
+            sub.Checked = col.IsVisible;
+            list.RebuildColumns();
+        }
+
+        private void move_column_to_left(OLVColumn col) {
+            if ( col.DisplayIndex > 0)
+                col.DisplayIndex = col.DisplayIndex - 1;
+            foreach ( var c in list.AllColumns)
+                c.LastDisplayIndex = c.DisplayIndex;
+            list.Refresh();
+        }
+        private void move_column_to_right(OLVColumn col) {
+            if ( col.DisplayIndex < list.Columns.Count - 1)
+                col.DisplayIndex = col.DisplayIndex + 1;
+            foreach ( var c in list.AllColumns)
+                c.LastDisplayIndex = c.DisplayIndex;
+            list.Refresh();
         }
 
         internal log_view_parent lv_parent {
