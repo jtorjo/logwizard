@@ -12,6 +12,12 @@
   + find: in preview -> when finding something, select it and auto-filter it (so that only the lines containing the text will be shown)
 
 
+- show column where found in blue
+
+1.3.35e
+- find preview - preview works - only rows matching are shown
+
+
 1.3.35d
 - find preview: the preview rows are loaded correctly
   - even the column order + widths is preserved!

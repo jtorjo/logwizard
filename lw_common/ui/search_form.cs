@@ -28,14 +28,60 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using log4net.Repository.Hierarchy;
 using LogWizard;
 
 namespace lw_common.ui {
     public partial class search_form : Form {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int MAX_PREVIEW_ROWS = 1000;
 
         public class search_for {
+            protected bool Equals(search_for other) {
+                bool equals = case_sensitive == other.case_sensitive && 
+                    full_word == other.full_word && 
+                    string.Equals(text, other.text) && 
+                    use_regex == other.use_regex;
+
+                if (use_regex && equals) {
+                    // compare regexes
+                    if (regex == null || other.regex == null)
+                        // equal if they are both null
+                        return regex == other.regex;
+                    // both are non-null
+                    equals = Equals(regex.ToString(), other.regex.ToString());
+                }
+
+                return equals;
+            }
+
+            public override bool Equals(object obj) {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((search_for) obj);
+            }
+
+            public override int GetHashCode() {
+                unchecked {
+                    var hashCode = case_sensitive.GetHashCode();
+                    hashCode = (hashCode * 397) ^ full_word.GetHashCode();
+                    hashCode = (hashCode * 397) ^ (text != null ? text.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ use_regex.GetHashCode();
+                    hashCode = (hashCode * 397) ^ (regex != null ? regex.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+
+            public static bool operator ==(search_for left, search_for right) {
+                return Equals(left, right);
+            }
+
+            public static bool operator !=(search_for left, search_for right) {
+                return !Equals(left, right);
+            }
+
             public bool case_sensitive = false;
             public bool full_word = false;
             public string text = "";
@@ -67,7 +113,9 @@ namespace lw_common.ui {
 
         private List< List<string>> preview_items_ = new List<List<string>>();
         // contains the rows that match
-        private List<int> matches_ = new List<int>(); 
+        private List<int> matches_ = new List<int>();
+
+        private search_for prev_search_ = null;
 
         private class item {
             public List<string> parts = new List<string>();
@@ -174,6 +222,11 @@ namespace lw_common.ui {
 
             result.Font = lv.list.Font;
             load_surrounding_rows(lv);
+
+            prev_search_ = current_search();
+            run_search();
+            rebuild_result();
+
             update_preview_text();
         }
 
@@ -227,7 +280,6 @@ namespace lw_common.ui {
 
             for ( int match_idx = 0; match_idx < preview_items_.Count; ++match_idx)
                 matches_.Add(match_idx);
-            rebuild_result();
         }
 
         private void rebuild_result() {
@@ -239,44 +291,47 @@ namespace lw_common.ui {
         }
 
         public static search_for default_search {
-            get {
-                var sett = app.inst.sett;
+            get { return get_cur_search(""); }
+        }
 
-                int type = int.Parse(sett.get("search_type", "0"));
-                switch (type) {
-                case 0: // auto
-                    break;
-                case 1: // text
-                    break;
-                case 2: // regex
-                    break;
-                    default: Debug.Assert(false);
-                    break;
-                }
-                string text = sett.get("search_text");
-                bool use_regex = type == 2;
-                if (type == 0)
-                    use_regex = is_auto_regex(text);
-                Regex regex = null;
-                if ( use_regex)
-                    try {
-                        regex = new Regex(text, RegexOptions.Singleline);
-                    } catch {
-                        regex = null;
-                    }
 
-                search_for default_ = new search_for {
-                    fg = util.str_to_color( sett.get("search_fg", "transparent")),
-                    bg = util.str_to_color( sett.get("search_bg", "#faebd7") ),
-                    case_sensitive = sett.get("search_case_sensitive", "0") != "0",
-                    full_word = sett.get("search_full_word", "0") != "0",
-                    use_regex = use_regex, 
-                    regex = regex, 
-                    text = text, 
-                    mark_lines_with_color = sett.get("search_mark_lines_with_color", "1") != "0"
-                };
-                return default_;
+        public static search_for get_cur_search(string prefix) {
+            var sett = app.inst.sett;
+
+            int type = int.Parse(sett.get(prefix + "search_type", "0"));
+            switch (type) {
+            case 0: // auto
+                break;
+            case 1: // text
+                break;
+            case 2: // regex
+                break;
+                default: Debug.Assert(false);
+                break;
             }
+            string text = sett.get(prefix + "search_text");
+            bool use_regex = type == 2;
+            if (type == 0)
+                use_regex = is_auto_regex(text);
+            Regex regex = null;
+            if ( use_regex)
+                try {
+                    regex = new Regex(text, RegexOptions.Singleline);
+                } catch {
+                    regex = null;
+                }
+
+            search_for cur = new search_for {
+                fg = util.str_to_color( sett.get(prefix + "search_fg", "transparent")),
+                bg = util.str_to_color( sett.get(prefix + "search_bg", "#faebd7") ),
+                case_sensitive = sett.get(prefix + "search_case_sensitive", "0") != "0",
+                full_word = sett.get(prefix + "search_full_word", "0") != "0",
+                use_regex = use_regex, 
+                regex = regex, 
+                text = text, 
+                mark_lines_with_color = sett.get(prefix + "search_mark_lines_with_color", "1") != "0"
+            };
+            return cur;
         }
 
         public search_for search {
@@ -295,22 +350,26 @@ namespace lw_common.ui {
                 bg.BackColor = color;
         }
 
+        private void save_cur_search(string prefix) {
+            sett.set(prefix + "search_bg", util.color_to_str(bg.BackColor));
+            sett.set(prefix + "search_fg", util.color_to_str(fg.BackColor));
+            sett.set(prefix + "search_case_sensitive", caseSensitive.Checked ? "1" : "0");
+            sett.set(prefix + "search_full_word", fullWord.Checked ? "1" : "0");
+            sett.set(prefix + "search_mark_lines_with_color", mark.Checked ? "1" : "0");
+            sett.set(prefix + "search_text", txt.Text);
+
+            int type = 0;
+            if (radioAutoRecognize.Checked) type = 0;
+            else if (radioText.Checked) type = 1;
+            else if (radioRegex.Checked) type = 2;
+            else Debug.Assert(false);
+
+            sett.set(prefix + "search_type", "" + type);
+        }
+
         private void ok_Click(object sender, EventArgs e) {
             if (txt.Text != "") {
-                sett.set("search_bg", util.color_to_str(bg.BackColor));
-                sett.set("search_fg", util.color_to_str(fg.BackColor));
-                sett.set("search_case_sensitive", caseSensitive.Checked ? "1" : "0");
-                sett.set("search_full_word", fullWord.Checked ? "1" : "0");
-                sett.set("search_mark_lines_with_color", mark.Checked ? "1" : "0");
-                sett.set("search_text", txt.Text);
-
-                int type = 0;
-                if (radioAutoRecognize.Checked) type = 0;
-                else if (radioText.Checked) type = 1;
-                else if (radioRegex.Checked) type = 2;
-                else Debug.Assert(false);
-
-                sett.set("search_type", "" + type);
+                save_cur_search("");
                 sett.save();
                 search_ = default_search;
                 DialogResult = DialogResult.OK;
@@ -334,13 +393,69 @@ namespace lw_common.ui {
             radioAutoRecognize.Text = "Auto recognized (" + (is_auto_regex(txt.Text) ? "Regex" : "Text") + ")";
         }
 
-        private void update_preview_text() {
-            preview.Text = "Previewing surrounding " + preview_items_.Count + " rows.";
 
+        private search_for current_search() {
+            save_cur_search("current_");
+            return get_cur_search("current_");
         }
 
         private void checkResults_Tick(object sender, EventArgs e) {
+            var cur = current_search();
+            if (prev_search_ == null) 
+                prev_search_ = cur;
+            if (prev_search_ == cur)
+                // nothing changed
+                return;
 
+            prev_search_ = cur;
+            logger.Info("new search: " + cur.text);
+
+            run_search();
+            rebuild_result();
+            update_preview_text();
+        }
+
+        private void update_preview_text() {
+            bool no_matches = prev_search_.text == "" || (prev_search_.use_regex && prev_search_.regex == null);
+            preview.Text = "Previewing surrounding " + preview_items_.Count + " rows. ";
+            if (no_matches) {
+                preview.Text += " NO MATCHES.";
+                return;
+            }
+            preview.Text += "" + matches_.Count + " matches.";
+        }
+
+        private void load_all_matches() {
+            matches_.Clear();
+            for ( int match_idx = 0; match_idx < preview_items_.Count; ++match_idx)
+                matches_.Add(match_idx);            
+        }
+
+        private void run_search() {
+            if (prev_search_.text == "") {
+                // nothing to search for
+                load_all_matches();
+                return;
+            }
+            if ( prev_search_.use_regex)
+                if (prev_search_.regex == null) {
+                    // in this case, the regex is invalid
+                    load_all_matches();
+                    return;
+                }
+
+            List<int> matches = new List<int>();
+            for (int idx = 0; idx < preview_items_.Count; ++idx) {
+                bool matches_now = false;
+                foreach ( string cell in preview_items_[idx])
+                    if (string_search.matches(cell, prev_search_)) {
+                        matches_now = true;
+                        break;
+                    }
+                if ( matches_now)
+                    matches.Add(idx);
+            }
+            matches_ = matches;
         }
     }
 }
