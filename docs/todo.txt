@@ -3,20 +3,9 @@
 
 ----------------------------------------------------
 
-- filter regex: RegexOptions.Singleline
 
 - find: have a "To Filter" button (good when doing regex search)
 
-- improve find: find-type as you go - very useful for regexes: basically
-  (every 250ms or so - if something changed)
-  have a testing 500-1000 lines from the beginning of the current view, in which we "test-the find", and as soon as we find something, we insta-show it
-     (basically, the lines should be from around the current line +/- a number of lines below and after)
-	 (two ways - either only show the $msg + $line, or everything ) 
-	 + exclude $line from the search!!!
-    -> show how many times the text was found
-  and for regexes, if it's a bad regex, show it in red
-  + allow giving friendly names to the regexes, so in the future we can easily reselect them - this needs to be available only for regexes (for normal searches, makes no sense)
-  + find: in preview -> when finding something, select it and auto-filter it (so that only the lines containing the text will be shown)
 
 - improve find dialog:
   have combo box with the latest 20 searches (for each search, we save everything - like, it's text/regex, colors, casesensitive etc)

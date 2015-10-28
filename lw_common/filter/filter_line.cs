@@ -253,7 +253,7 @@ namespace lw_common {
         private void create_regex() {
             try {
                 if (comparison == comparison_type.regex)
-                    regex_ = case_sensitive ? new Regex(text) : new Regex(text, RegexOptions.IgnoreCase);
+                    regex_ = case_sensitive ? new Regex(text, RegexOptions.Singleline) : new Regex(text, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             } catch (Exception e) {
                 logger.Error("invalid regex: " + text + " : " + e.Message);
             }

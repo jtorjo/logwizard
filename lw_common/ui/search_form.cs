@@ -123,7 +123,7 @@ namespace lw_common.ui {
                 Regex regex = null;
                 if ( use_regex)
                     try {
-                        regex = new Regex(text);
+                        regex = new Regex(text, RegexOptions.Singleline);
                     } catch {
                         regex = null;
                     }
@@ -133,7 +133,10 @@ namespace lw_common.ui {
                     bg = util.str_to_color( sett.get("search_bg", "#faebd7") ),
                     case_sensitive = sett.get("search_case_sensitive", "0") != "0",
                     full_word = sett.get("search_full_word", "0") != "0",
-                    use_regex = use_regex, regex = regex, text = text, mark_lines_with_color = true
+                    use_regex = use_regex, 
+                    regex = regex, 
+                    text = text, 
+                    mark_lines_with_color = sett.get("search_mark_lines_with_color", "1") != "0"
                 };
                 return default_;
             }
@@ -161,6 +164,7 @@ namespace lw_common.ui {
                 sett.set("search_fg", util.color_to_str(fg.BackColor));
                 sett.set("search_case_sensitive", caseSensitive.Checked ? "1" : "0");
                 sett.set("search_full_word", fullWord.Checked ? "1" : "0");
+                sett.set("search_mark_lines_with_color", mark.Checked ? "1" : "0");
                 sett.set("search_text", txt.Text);
 
                 int type = 0;
@@ -170,20 +174,30 @@ namespace lw_common.ui {
                 else Debug.Assert(false);
 
                 sett.set("search_type", "" + type);
-
                 sett.save();
 
+#if old_code
                 bool use_regex = radioRegex.Checked;
                 if (radioAutoRecognize.Checked)
                     use_regex = is_auto_regex(txt.Text);
                 Regex regex = null;
                 if ( use_regex)
                     try {
-                        regex = new Regex(txt.Text);
+                        regex = new Regex(txt.Text, RegexOptions.Singleline);
                     } catch {
                         regex = null;
                     }
-                search_ = new search_for {use_regex = use_regex, regex = regex, case_sensitive = caseSensitive.Checked, full_word = fullWord.Checked, text = txt.Text, bg = bg.BackColor, fg = fg.BackColor, mark_lines_with_color = mark.Checked};
+                search_ = new search_for {
+                    fg = fg.BackColor, 
+                    bg = bg.BackColor, 
+                    case_sensitive = caseSensitive.Checked, 
+                    full_word = fullWord.Checked, 
+                    use_regex = use_regex, 
+                    regex = regex, 
+                    text = txt.Text, 
+                    mark_lines_with_color = mark.Checked};
+#endif
+                search_ = default_search;
                 DialogResult = DialogResult.OK;
             }
         }
