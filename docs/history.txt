@@ -13,7 +13,10 @@
   - load: if file/view != "" - use it, otherwise, use context/view
   - note: reason i'm saving in contex is so that other files that belong to this context benefit from it by default
 
-- todo: if just changing width of a column - need to notify the rest
+
+
+1.3.34d
+- fix: if just changing width of a column - need to notify the rest
 
 
 1.3.34c

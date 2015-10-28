@@ -103,6 +103,8 @@ namespace lw_common.ui
 
         private string column_positions_ = "";
 
+        private bool is_changing_column_width_ = false;
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -136,6 +138,34 @@ namespace lw_common.ui
             edit.BringToFront();
 
             list.ColumnRightClick += list_ColumnRightClick;
+            list.ColumnWidthChanged += List_on_column_width_changed;
+            list.ColumnWidthChanging += List_on_column_width_changing;
+        }
+
+        private void List_on_column_width_changing(object sender, ColumnWidthChangingEventArgs e) {
+            if (e.ColumnIndex == msgCol.Index)
+                return;
+            edit.Visible = false;
+            is_changing_column_width_ = true;
+            //var col = list.GetColumn(e.ColumnIndex);
+            //logger.Debug("[view] column width changing " + col.Text + " / "  + col.Width);
+        }
+
+        private void List_on_column_width_changed(object sender, ColumnWidthChangedEventArgs e) {
+            if (!is_changing_column_width_)
+                return;
+            if (e.ColumnIndex == msgCol.Index)
+                return;
+
+            is_changing_column_width_ = false;
+            //var col = list.GetColumn(e.ColumnIndex);
+            //logger.Debug("[view] column width FULLY CHANGED " + col.Text + " / "  + col.Width);
+            
+            edit.update_ui();
+            var new_positions = log_view_show_columns.save_column_positions(this);
+            if (new_positions != "")
+                column_positions_ = new_positions;
+            lv_parent.after_column_positions_modified(this);
         }
 
         private void list_ColumnRightClick(object sender, ColumnClickEventArgs e) {
