@@ -38,7 +38,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>1</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Debug\ObjectListView_lw.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -167,10 +168,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CustomDictionary.xml" />
-    <None Include="FullClassDiagram.cd" />
-    <None Include="ObjectListView2012.nuspec">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Resources\sort-descending.png" />
     <None Include="Resources\sort-ascending.png" />
     <None Include="Resources\filter.png" />

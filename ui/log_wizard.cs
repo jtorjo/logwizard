@@ -267,7 +267,7 @@ namespace LogWizard
         }
 
         public void after_column_positions_modified(log_view lv) {
-            string positions = lv.save_column_positions();
+            string positions = lv.column_positions;
             if (positions == "")
                 // user changed nothing
                 return;
@@ -275,7 +275,7 @@ namespace LogWizard
             if ( !lv.apply_column_settings_only_to_me)
                 foreach ( var other in all_log_views())
                     if ( other != lv && !other.apply_column_settings_only_to_me)
-                        other.load_column_positions(positions);
+                        other.column_positions = positions ;
 
             // now, save them
             save();
@@ -1244,7 +1244,7 @@ namespace LogWizard
             // 1.3.11d+ - right now, we're showing this as soon as we have enough rows
             foreach (var lv in all_log_views_and_full_log()) {
                 var view = global_ui.view(lv.name);
-                lv.show_row( view.show_row);
+                lv.column_positions = view.column_positions;
                 lv.set_filter( false, view.show_full_log );
             }
         }
@@ -1363,6 +1363,8 @@ namespace LogWizard
             if (text_ == null)
                 // no log yet
                 return;
+
+            log_view_show_columns.refresh_visible_columns(all_log_views(), full_log);
             log_view lv = log_view_for_tab(viewsTab.SelectedIndex);
             if (lv == null) {
                 Debug.Assert(false);
@@ -2324,8 +2326,6 @@ namespace LogWizard
             case "alt-l":
                 return action_type.toggle_fulllog;
 
-            case "alt-m":
-                return action_type.toggle_show_msg_only;
             case "alt-t":
                 return action_type.toggle_title;
             case "alt-v":
@@ -2504,13 +2504,6 @@ namespace LogWizard
                     view.increase_font(-1);
                 break;
 
-            case action_type.toggle_show_msg_only: {
-                var next = global_ui.next_show_row_for_view(lv.name);
-                lv.show_row(next);
-                var old = global_ui.view(lv.name);
-                global_ui.view(lv.name, new ui_info.view_info(next, old.show_full_log));
-            }
-                break;
             case action_type.scroll_up:
                 lv.scroll_up();
                 break;
@@ -2616,7 +2609,7 @@ namespace LogWizard
             case action_type.toggle_show_full_log: {
                 lv.set_filter(lv.filter_view, !lv.show_full_log);
                 var old = global_ui.view(lv.name);
-                global_ui.view(lv.name, new ui_info.view_info(old.show_row, !old.show_full_log) );
+                global_ui.view(lv.name, new ui_info.view_info(old.column_positions, !old.show_full_log) );
             }
                 break;
 
@@ -3570,7 +3563,7 @@ namespace LogWizard
                 load();
                 on_file_drop(selected_file_name());
                 // we want to refresh it only after it's been loaded, so that it visually shows that
-                util.postpone(() => full_log_ctrl_.force_refresh_visible_columns(), 2000);
+                util.postpone(() => full_log_ctrl_.force_refresh_visible_columns( all_log_views() ), 2000);
             }
         }
 

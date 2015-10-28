@@ -47,7 +47,6 @@ namespace lw_common.ui
         private const int SEARCH_AROUND_ROWS = 100;
 
         public const string FULLLOG_NAME = "__all_this_is_fulllog__";
-        private const int DEFAULT_COL_WIDTH = 80;
 
         private Form parent;
         private readonly filter filter_ ;
@@ -65,17 +64,13 @@ namespace lw_common.ui
 
         private readonly log_view_render render_;
 
-        private const int MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS = 10;
-
         private log_view_data_source model_ = null;
-        private int visible_columns_refreshed_ = 0;
+        internal int visible_columns_refreshed_ = 0;
 
         // lines that are bookmarks (sorted by index)
         private List<int> bookmarks_ = new List<int>();
 
         private int font_size_ = 9; // default font size
-
-        private List<int> full_widths_ = new List<int>();
 
         private bool pad_name_on_left_ = false;
 
@@ -99,14 +94,14 @@ namespace lw_common.ui
         // in case the user edits and presses Escape
         private string old_view_name_ = "";
 
-        private ui_info.show_row_type show_row_ = ui_info.show_row_type.full_row;
-
         private int sel_y_offset_before_set_filter_ = 0;
         private int sel_line_idx_before_set_filter_ = 0;
 
         private int ignore_change_ = 0;
 
         public bool apply_column_settings_only_to_me = false;
+
+        private string column_positions_ = "";
 
         public log_view(Form parent, string name)
         {
@@ -188,6 +183,9 @@ namespace lw_common.ui
             e.Cancel = e.CloseReason == ToolStripDropDownCloseReason.ItemClicked;
             if (!e.Cancel) {
                 edit.update_ui();
+                var new_positions = log_view_show_columns.save_column_positions(this);
+                if (new_positions != "")
+                    column_positions_ = new_positions;
                 lv_parent.after_column_positions_modified(this);
             }
         }
@@ -218,77 +216,15 @@ namespace lw_common.ui
             list.Refresh();
         }
 
-        public void load_column_positions(string str, bool force_show_all = true) {
-            if (str == "")
-                return;
-
-            Dictionary<int, int > display_indexes = new Dictionary<int, int>();
-            foreach ( var pos in str.Split(';'))
-                if (pos != "") {
-                    string[] infos = pos.Split(',');
-                    Debug.Assert(infos.Length == 4);
-                    int col_idx = int.Parse(infos[0]);
-                    int display_index = int.Parse(infos[1]);
-                    int width = int.Parse(infos[2]);
-                    bool visible = infos[3] == "1";
-                    if (list.AllColumns[col_idx].Width > 0 || force_show_all) {
-                        // this means this column is visible - so we can apply column positioning
-                        // (othwerise, this column doesn't even exist for this specific file - nothing to do)
-                        list.AllColumns[col_idx].Width = width;
-                        list.AllColumns[col_idx].IsVisible = visible;
-                        if ( visible)
-                            display_indexes.Add(col_idx, display_index);
-                    }
-                }
-
-            // need to convert display indexes into what can be displayed - you can't have a display index bigger than
-            // the number of shown columns
-            Dictionary<int,int> loaded_index_to_index = new Dictionary<int, int>();
-            int cur_idx = 0;
-            foreach ( var loaded_idx in  display_indexes.Select(x => x.Value).OrderBy(x => x) )
-                loaded_index_to_index.Add(loaded_idx, cur_idx++);
-
-            foreach (var display_idx in display_indexes) {
-                var col = list.AllColumns[display_idx.Key];
-                if (col.IsVisible)
-                    col.DisplayIndex = loaded_index_to_index[display_idx.Value];
-                else 
-                    col.LastDisplayIndex = loaded_index_to_index[display_idx.Value];
+        public string column_positions {
+            get { return column_positions_; }
+            set {
+                if (column_positions_ == value)
+                    return;
+                column_positions_ = value; 
+                if ( column_positions_ != "")
+                    log_view_show_columns.load_column_positions(this, column_positions_);
             }
-
-            list.RebuildColumns();
-        }
-
-
-        private string default_column_positions_string() {
-            string positions = "";
-            // column: display index, width, visible
-            for (int col_idx = 0; col_idx < list.AllColumns.Count; ++col_idx) {
-                var col = list.AllColumns[col_idx];
-                int display_index = col.DisplayIndex >= 0 ? col.DisplayIndex : col.LastDisplayIndex;
-                if (col.Width > 0)
-                    positions += "" + col_idx + "," + display_index + "," + (col == msgCol ? col.Width : DEFAULT_COL_WIDTH)+ "," + "1" + ";";
-            }
-            return positions;
-        }
-
-        public string save_column_positions() {
-            if (visible_columns_refreshed_ < MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
-                return "";
-
-            string positions = "";
-            // column: display index, width, visible
-            for (int col_idx = 0; col_idx < list.AllColumns.Count; ++col_idx) {
-                var col = list.AllColumns[col_idx];
-                int display_index = col.DisplayIndex >= 0 ? col.DisplayIndex : col.LastDisplayIndex;
-                if (col.Width > 0)
-                    positions += "" + col_idx + "," + display_index + "," + col.Width + "," + (col.IsVisible ? "1" : "0") + ";";
-            }
-
-            if (positions == default_column_positions_string())
-                // user hasn't changed anything
-                return "";
-            return positions;
         }
 
         internal log_view_parent lv_parent {
@@ -309,9 +245,9 @@ namespace lw_common.ui
             return name;
         }
 
-        public void force_refresh_visible_columns() {
+        public void force_refresh_visible_columns(List<log_view> all_views) {
             visible_columns_refreshed_ = 0;
-            refresh_visible_columns();
+            log_view_show_columns.refresh_visible_columns(all_views, this);
         }
 
         private void load_font() {
@@ -772,11 +708,8 @@ namespace lw_common.ui
             return m.Item1 != null ? list.GetItem(m.Item2) : null;
         }
 
-        private match_item item_at(int idx) {
+        internal match_item item_at(int idx) {
             return model_.item_at(idx);
-#if old_code
-            return filter_.matches.match_at(idx) as match_item;
-#endif
         }
 
 
@@ -897,61 +830,13 @@ namespace lw_common.ui
             return log_view_cell.cell_value(i, column_idx);
         }
 
-        private string cell_value_by_type(match_item i, info_type type) {
-            return log_view_cell.cell_value_by_type(i, type);
-        }
-
         OLVColumn column(info_type type) {
             return log_view_cell.column(this, type);
         }
 
-
-        private bool has_value_at_column(info_type type, int max_rows_to_check) {
-            int value_count = 0;
-            for (int idx = 0; idx < max_rows_to_check; ++idx) {
-                var i = item_at(idx) ;
-                if (i.line_idx < 0)
-                    continue;
-                if (cell_value_by_type(i, type) != "")
-                    ++value_count;
-            }
-            bool has_values = (value_count > 0);
-            return has_values;
-        }
-
-        // when we have a number of columns - based on the info on each column, we hide or show them
-        private void refresh_visible_columns() {
-            if (visible_columns_refreshed_ >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
-                return;
-
-            int count = item_count;
-            bool needs_refresh = count != visible_columns_refreshed_;
-            if (needs_refresh) {
-                int row_count = Math.Min(count, MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);
-                for (int type_as_int = 0; type_as_int < (int) info_type.max; ++type_as_int) {
-                    info_type type = (info_type) type_as_int;
-                    bool is_visible = type == info_type.msg || has_value_at_column(type, row_count);
-                    show_column(column(type), (is_visible ? DEFAULT_COL_WIDTH : 0), is_visible);
-                }
-                visible_columns_refreshed_ = count;
-            }
-
-            list.RebuildColumns();
-            if (count >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS) {
-                visible_columns_refreshed_ = MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS;
-                full_widths_.Clear();
-                show_row_impl(show_row_);
-            }
-        }
-
+        // FIXME I should not need this, since I'm now saving full column positions!
         private void show_column(OLVColumn col, int width, bool show) {
-            if (col.Width == 0)
-                col.Width = width;
-            if (col.IsVisible == show)
-                return;
-
-            col.Width = width;
-            col.IsVisible = show;
+            log_view_show_columns.show_column(col, width, show);
         }
 
         private void compute_title_fonts() {
@@ -1059,7 +944,6 @@ namespace lw_common.ui
             bool more_items = old_item_count_ < new_item_count;
             old_item_count_ = new_item_count;
 
-            refresh_visible_columns();
             update_x_of_y();
 
             if (needs_ui_update) {
@@ -1845,43 +1729,6 @@ namespace lw_common.ui
                 load_font();
             }
         }
-
-
-        public void show_row(ui_info.show_row_type show) {
-            show_row_ = show;
-            if ( visible_columns_refreshed_ >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
-                show_row_impl(show);
-        }
-
-        private void show_row_impl(ui_info.show_row_type show) {
-            if (full_widths_.Count < 1)
-                // save_to them now
-                for (int idx = 0; idx < list.AllColumns.Count; ++idx)
-                    full_widths_.Add(list.AllColumns[idx].Width);
-
-            logger.Info("[view] showing rows - " + name + " = " + show);
-
-            switch (show) {
-            case ui_info.show_row_type.msg_only:
-                for (int idx = 0; idx < list.AllColumns.Count; ++idx)
-                    show_column( list.AllColumns[idx], full_widths_[idx], idx == msgCol.fixed_index() || idx == lineCol.fixed_index() );
-                break;
-            case ui_info.show_row_type.msg_and_view_only:
-                for (int idx = 0; idx < list.AllColumns.Count; ++idx)
-                    show_column( list.AllColumns[idx], full_widths_[idx], idx == msgCol.fixed_index() || idx == lineCol.fixed_index() || idx == viewCol.fixed_index() );
-                break;
-            case ui_info.show_row_type.full_row:
-                for (int idx = 0; idx < list.AllColumns.Count; ++idx)
-                    show_column( list.AllColumns[idx], full_widths_[idx], full_widths_[idx] > 0 );
-                break;
-            default:
-                Debug.Assert(false);
-                break;
-            }
-
-            list.RebuildColumns();
-        }
-
 
         public void scroll_up() {
             if (item_count < 1)

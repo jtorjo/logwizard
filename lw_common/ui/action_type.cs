@@ -54,7 +54,6 @@ namespace lw_common {
 
         // 1.0.35+
         increase_font, decrease_font,
-        toggle_show_msg_only,
         // ... equivalent of ctrl-up/down
         scroll_up, scroll_down,
 

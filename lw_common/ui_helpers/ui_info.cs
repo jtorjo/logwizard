@@ -94,47 +94,49 @@ namespace lw_common {
 
         // IMPORTANT: Update Toggles UI when adding stuff here!
 
-        public enum show_row_type {
-            msg_only, 
-            // ... this makes sense only for the full-log
-            msg_and_view_only, full_row
-        }
-
         // contains per-view settings
         public class view_info {
-            internal show_row_type show_row_ = show_row_type.full_row;
             // 1.3.28+ if true, we're showing the full log (the rows that don't match the filter are shown in gray)
             internal bool show_full_log_ = false;
 
-            public show_row_type show_row {
-                get { return show_row_; }
-            }
+            internal string column_positions_ = "";
 
             public bool show_full_log {
                 get { return show_full_log_; }
             }
 
+            public string column_positions {
+                get { return column_positions_; }
+            }
+
             internal view_info() {
             }
 
-            public view_info(show_row_type show_row, bool show_full_log) {
-                show_row_ = show_row;
+            public view_info(string column_positions, bool show_full_log) {
+                column_positions_ = column_positions;
                 show_full_log_ = show_full_log;
             }
 
             internal string to_string() {
-                // 1 = the version - just in case later on i want to change how i save this
-                return "1," + (int) show_row_ + "," + (show_full_log_ ? "1" : "0");
+                // '/' is the separator
+                Debug.Assert(!column_positions_.Contains("/"));
+
+                // 2 = the version - just in case later on i want to change how i save this
+                return "2/" + (show_full_log_ ? "1" : "0") + "/" + column_positions_;
             }
 
             internal static view_info from_string(string s) {
                 view_info vi = new view_info();
                 if ( s == "")
                     return vi;
-                var from = s.Split(',');
+                var from = s.Split('/');
+                if (from[0] != "2")
+                    // older version
+                    return vi;
+
                 Debug.Assert(from.Length == 3);
-                vi.show_row_ = (show_row_type) int.Parse(from[1]);
-                vi.show_full_log_ = from[2] != "0";
+                vi.show_full_log_ = from[1] != "0";
+                vi.column_positions_ = from[2];
                 return vi;
             }
 
@@ -196,24 +198,6 @@ namespace lw_common {
 
             views_.Add( new_name, views_[old_name]);
             views_.Remove(old_name);
-        }
-
-        public show_row_type next_show_row_for_view(string name) {
-            bool is_full_log = name == "[All]";
-
-            switch (view(name).show_row) {
-            case show_row_type.msg_only:
-                return is_full_log ? show_row_type.msg_and_view_only : show_row_type.full_row;
-            case show_row_type.msg_and_view_only:
-                return show_row_type.full_row;
-            case show_row_type.full_row:
-                return show_row_type.msg_only;
-            default:
-                Debug.Assert(false);
-                break;
-            }
-
-            return show_row_type.full_row;
         }
 
         private void load_save(bool load, string prefix) {

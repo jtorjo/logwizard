@@ -13,6 +13,15 @@
   - load: if file/view != "" - use it, otherwise, use context/view
   - note: reason i'm saving in contex is so that other files that belong to this context benefit from it by default
 
+- todo: if just changing width of a column - need to notify the rest
+
+
+1.3.34c
+- load/save of columns + saving them to all views works like a charm
+  - "apply to currnet view only" also works
+- removed toggle_show_msg_only - we now have way more advanced way of showing/hiding/resizing columns
+- done: refactoring of visible_columns_refreshed
+
 
 1.3.34b
 - load/save of columns + saving them to all views seems to work
