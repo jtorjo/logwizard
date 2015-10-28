@@ -1,18 +1,9 @@
 
-- log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)
-  - i need to save this only if the user changes something
-  - this needs to be per each view + for full log
 
-
-
-- column positions 
-  - by default: apply to all views
-  -> keep in file/view + context_ui
-  - save: save only if string != "" (otherwise, preserve what we already have)
-  - save: context_ui/view + file/view
-  - load: if file/view != "" - use it, otherwise, use context/view
-  - note: reason i'm saving in contex is so that other files that belong to this context benefit from it by default
-
+1.3.34e
+- saving column positions works
+  - works even if you choose to save them for all-views, or just for a specific view
+  - at this time, saved in the context-ui
 
 
 1.3.34d

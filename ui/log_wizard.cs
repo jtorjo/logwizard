@@ -278,6 +278,12 @@ namespace LogWizard
                         other.column_positions = positions ;
 
             // now, save them
+            if (lv.apply_column_settings_only_to_me) {
+                var old = global_ui.view(lv.name);
+                global_ui.view( lv.name, new ui_info.view_info(lv.column_positions, old.show_full_log));
+            } else
+                global_ui.global_column_positions = lv.column_positions;
+
             save();
         }
 
@@ -1244,7 +1250,8 @@ namespace LogWizard
             // 1.3.11d+ - right now, we're showing this as soon as we have enough rows
             foreach (var lv in all_log_views_and_full_log()) {
                 var view = global_ui.view(lv.name);
-                lv.column_positions = view.column_positions;
+                lv.column_positions = view.column_positions != "" ? view.column_positions : global_ui.global_column_positions;
+                lv.apply_column_settings_only_to_me = view.column_positions != "";
                 lv.set_filter( false, view.show_full_log );
             }
         }

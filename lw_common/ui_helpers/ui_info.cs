@@ -92,6 +92,9 @@ namespace lw_common {
         private bool show_left_pane_ = true;
         private bool show_notes_ = false;
 
+        // 1.3.34+ - column positions - they apply to all views
+        public string global_column_positions = "";
+
         // IMPORTANT: Update Toggles UI when adding stuff here!
 
         // contains per-view settings
@@ -173,7 +176,7 @@ namespace lw_common {
             show_left_pane_ = other.show_left_pane_;
             show_notes_ = other.show_notes_;
             // ... get a copy
-            views_ = other.views_.ToDictionary(x => x.Key, x => x.Value);
+            views_ = other.views_.ToDictionary(x => x.Key, x => new view_info(x.Value.column_positions, x.Value.show_full_log) );
         }
 
         // note: this is read-only
@@ -227,6 +230,8 @@ namespace lw_common {
 
             app.load_save(load, ref show_left_pane_, prefix + ".show_left_pane", true);
             app.load_save(load, ref show_notes_, prefix + ".show_notes", false);
+
+            app.load_save(load, ref global_column_positions, prefix + ".global_column_positions");
 
             load_save_view_info(load, prefix + ".view_info");
         }
