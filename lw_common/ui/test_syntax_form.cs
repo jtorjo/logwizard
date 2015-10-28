@@ -30,10 +30,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
-using lw_common;
 using lw_common.parse;
 
-namespace LogWizard.ui {
+namespace lw_common.ui {
     public partial class test_syntax_form : Form {
         private const int LEAST_LINES = 10;
 

@@ -27,11 +27,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace LogWizard
+namespace lw_common.ui
 {
-    partial class new_context_form : Form
+    public partial class new_context_form : Form
     {
-        public new_context_form(log_wizard parent)
+        public new_context_form(Form parent)
         {
             InitializeComponent();
             TopMost = parent.TopMost;

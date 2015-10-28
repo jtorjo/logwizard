@@ -1,4 +1,4 @@
-﻿namespace LogWizard.ui {
+﻿namespace lw_common.ui {
     partial class test_syntax_form {
         /// <summary>
         /// Required designer variable.

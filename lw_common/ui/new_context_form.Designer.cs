@@ -1,6 +1,6 @@
-﻿namespace LogWizard
+﻿namespace lw_common.ui
 {
-    partial class new_context_form
+    public partial class new_context_form
     {
         /// <summary>
         /// Required designer variable.

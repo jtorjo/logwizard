@@ -24,9 +24,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using lw_common;
 
-namespace LogWizard {
+namespace lw_common {
     public class find_log_syntax {
         public const string UNKNOWN_SYNTAX = "$msg[0]";
 

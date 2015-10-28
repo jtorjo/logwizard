@@ -1,5 +1,5 @@
-﻿namespace LogWizard.ui {
-    partial class about_form {
+﻿namespace lw_common.ui {
+    public partial class about_form {
         /// <summary>
         /// Required designer variable.
         /// </summary>

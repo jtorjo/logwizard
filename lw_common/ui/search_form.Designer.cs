@@ -190,7 +190,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancel;
-            this.ClientSize = new System.Drawing.Size(486, 156);
+            this.ClientSize = new System.Drawing.Size(784, 313);
             this.Controls.Add(this.fullWord);
             this.Controls.Add(this.caseSensitive);
             this.Controls.Add(this.radioRegex);

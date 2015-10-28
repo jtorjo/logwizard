@@ -104,14 +104,11 @@ namespace lw_common.ui {
 
                 int type = int.Parse(sett.get("search_type", "0"));
                 switch (type) {
-                case 0:
-                    // auto
+                case 0: // auto
                     break;
-                case 1:
-                    // text
+                case 1: // text
                     break;
-                case 2:
-                    // regex
+                case 2: // regex
                     break;
                     default: Debug.Assert(false);
                     break;
@@ -175,28 +172,6 @@ namespace lw_common.ui {
 
                 sett.set("search_type", "" + type);
                 sett.save();
-
-#if old_code
-                bool use_regex = radioRegex.Checked;
-                if (radioAutoRecognize.Checked)
-                    use_regex = is_auto_regex(txt.Text);
-                Regex regex = null;
-                if ( use_regex)
-                    try {
-                        regex = new Regex(txt.Text, RegexOptions.Singleline);
-                    } catch {
-                        regex = null;
-                    }
-                search_ = new search_for {
-                    fg = fg.BackColor, 
-                    bg = bg.BackColor, 
-                    case_sensitive = caseSensitive.Checked, 
-                    full_word = fullWord.Checked, 
-                    use_regex = use_regex, 
-                    regex = regex, 
-                    text = txt.Text, 
-                    mark_lines_with_color = mark.Checked};
-#endif
                 search_ = default_search;
                 DialogResult = DialogResult.OK;
             }

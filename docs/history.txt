@@ -12,6 +12,10 @@
   + find: in preview -> when finding something, select it and auto-filter it (so that only the lines containing the text will be shown)
 
 
+1.3.35b
+- refactoring: moved most forms into lw_common
+
+
 1.3.35a
 - filter regex: RegexOptions.Singleline
 - search : reuse default_search

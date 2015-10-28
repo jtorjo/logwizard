@@ -76,6 +76,12 @@
     <Compile Include="settings\settings_file.cs" />
     <Compile Include="string\large_string.cs" />
     <Compile Include="string\sub_string.cs" />
+    <Compile Include="ui\about_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\about_form.Designer.cs">
+      <DependentUpon>about_form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\action_type.cs" />
     <Compile Include="ui\filter_ctrl.cs">
       <SubType>UserControl</SubType>
@@ -84,6 +90,12 @@
       <DependentUpon>filter_ctrl.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\gradient_brush_list.cs" />
+    <Compile Include="ui\help_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\help_form.Designer.cs">
+      <DependentUpon>help_form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\log_view\log_view.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -106,6 +118,12 @@
     </Compile>
     <Compile Include="ui\msg_details_ctrl.Designer.cs">
       <DependentUpon>msg_details_ctrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\new_context_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\new_context_form.Designer.cs">
+      <DependentUpon>new_context_form.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\note_ctrl.cs">
       <SubType>UserControl</SubType>
@@ -145,6 +163,12 @@
       <DependentUpon>settings_form.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\solid_brush_list.cs" />
+    <Compile Include="ui\test_syntax_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\test_syntax_form.Designer.cs">
+      <DependentUpon>test_syntax_form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui_helpers\log_wizard_serializable_classes.cs" />
     <Compile Include="ui_helpers\ui_info.cs" />
     <Compile Include="util\clipboard_util.cs" />
@@ -166,14 +190,23 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ui\about_form.resx">
+      <DependentUpon>about_form.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ui\filter_ctrl.resx">
       <DependentUpon>filter_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\help_form.resx">
+      <DependentUpon>help_form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\log_view\log_view.resx">
       <DependentUpon>log_view.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\msg_details_ctrl.resx">
       <DependentUpon>msg_details_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\new_context_form.resx">
+      <DependentUpon>new_context_form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\note_ctrl.resx">
       <DependentUpon>note_ctrl.cs</DependentUpon>
@@ -192,6 +225,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ui\settings_form.resx">
       <DependentUpon>settings_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\test_syntax_form.resx">
+      <DependentUpon>test_syntax_form.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

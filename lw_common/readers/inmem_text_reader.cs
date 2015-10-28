@@ -23,8 +23,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LogWizard;
 
-namespace LogWizard {
+namespace lw_common {
     // in-memory text - mainly for guessing the log syntax
     //
     public class inmem_text_reader : text_reader {
