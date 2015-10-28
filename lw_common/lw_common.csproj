@@ -90,12 +90,6 @@
       <DependentUpon>filter_ctrl.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\gradient_brush_list.cs" />
-    <Compile Include="ui\help_form.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ui\help_form.Designer.cs">
-      <DependentUpon>help_form.cs</DependentUpon>
-    </Compile>
     <Compile Include="ui\log_view\log_view.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -195,9 +189,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ui\filter_ctrl.resx">
       <DependentUpon>filter_ctrl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ui\help_form.resx">
-      <DependentUpon>help_form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\log_view\log_view.resx">
       <DependentUpon>log_view.cs</DependentUpon>
