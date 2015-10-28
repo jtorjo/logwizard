@@ -2,10 +2,22 @@
 - log_view: column width + column display position -> save them - by default per file. should have option to save per context!!! (file overrides context)
   - i need to save this only if the user changes something
   - this needs to be per each view + for full log
-  - i need an easy way to allow showing / hiding columns 
-    - this needs to be expandable so that in the future i can do the same for details pane.
-	- see if anything like this is allowed by default by the control
- = IMPORTANT - see if changing DisplayIndex affects position in the AllColumns -> that would be rather bad
+
+
+
+- column positions 
+  - by default: apply to all views
+  -> keep in file/view + context_ui
+  - save: save only if string != "" (otherwise, preserve what we already have)
+  - save: context_ui/view + file/view
+  - load: if file/view != "" - use it, otherwise, use context/view
+  - note: reason i'm saving in contex is so that other files that belong to this context benefit from it by default
+
+
+1.3.34b
+- load/save of columns + saving them to all views seems to work
+- BEFORE refactoring of visible_columns_refreshed
+  - it should happen noly for the full log -> and as soon as we have it, refresh everything else
 
 
 1.3.34a

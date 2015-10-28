@@ -266,6 +266,21 @@ namespace LogWizard
             --ignore_change_;
         }
 
+        public void after_column_positions_modified(log_view lv) {
+            string positions = lv.save_column_positions();
+            if (positions == "")
+                // user changed nothing
+                return;
+
+            if ( !lv.apply_column_settings_only_to_me)
+                foreach ( var other in all_log_views())
+                    if ( other != lv && !other.apply_column_settings_only_to_me)
+                        other.load_column_positions(positions);
+
+            // now, save them
+            save();
+        }
+
         private void update_contexts_combos_in_all_forms() {
             foreach(var f in forms)
                 f.recreate_contexts_combo();

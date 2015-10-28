@@ -30,6 +30,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
@@ -46,6 +47,7 @@ namespace lw_common.ui
         private const int SEARCH_AROUND_ROWS = 100;
 
         public const string FULLLOG_NAME = "__all_this_is_fulllog__";
+        private const int DEFAULT_COL_WIDTH = 80;
 
         private Form parent;
         private readonly filter filter_ ;
@@ -104,6 +106,8 @@ namespace lw_common.ui
 
         private int ignore_change_ = 0;
 
+        public bool apply_column_settings_only_to_me = false;
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -158,6 +162,15 @@ namespace lw_common.ui
 
             string cur_col_text = cur_col == msgCol ? "Message" : cur_col.Text;
             menu.Items.Add(new ToolStripSeparator());
+            ToolStripMenuItem apply_to_all = new ToolStripMenuItem("Apply Settings To All Views");
+            // for full log - always applies to self-only
+            if (is_full_log)
+                apply_column_settings_only_to_me = true;
+            apply_to_all.Checked = !apply_column_settings_only_to_me;
+            apply_to_all.Click += (a, ee) => toggle_apply_column_settings_to_all(apply_to_all);
+            apply_to_all.Enabled = !is_full_log;
+            menu.Items.Add(apply_to_all);
+            menu.Items.Add(new ToolStripSeparator());
             var to_left = new ToolStripMenuItem("Move [" + cur_col_text + "] to Left (<-)");
             var to_right = new ToolStripMenuItem("Move [" + cur_col_text + "] to Right (->)");
             to_left.Click += (a,ee) => move_column_to_left(cur_col);
@@ -173,8 +186,15 @@ namespace lw_common.ui
 
         void menu_Closing(object sender, ToolStripDropDownClosingEventArgs e) {
             e.Cancel = e.CloseReason == ToolStripDropDownCloseReason.ItemClicked;
-            if (!e.Cancel)
+            if (!e.Cancel) {
                 edit.update_ui();
+                lv_parent.after_column_positions_modified(this);
+            }
+        }
+
+        private void toggle_apply_column_settings_to_all(ToolStripMenuItem sub) {
+            apply_column_settings_only_to_me = !apply_column_settings_only_to_me;
+            sub.Checked = !apply_column_settings_only_to_me;
         }
 
         private void toggle_column_visible(OLVColumn col, ToolStripMenuItem sub) {
@@ -196,6 +216,79 @@ namespace lw_common.ui
             foreach ( var c in list.AllColumns)
                 c.LastDisplayIndex = c.DisplayIndex;
             list.Refresh();
+        }
+
+        public void load_column_positions(string str, bool force_show_all = true) {
+            if (str == "")
+                return;
+
+            Dictionary<int, int > display_indexes = new Dictionary<int, int>();
+            foreach ( var pos in str.Split(';'))
+                if (pos != "") {
+                    string[] infos = pos.Split(',');
+                    Debug.Assert(infos.Length == 4);
+                    int col_idx = int.Parse(infos[0]);
+                    int display_index = int.Parse(infos[1]);
+                    int width = int.Parse(infos[2]);
+                    bool visible = infos[3] == "1";
+                    if (list.AllColumns[col_idx].Width > 0 || force_show_all) {
+                        // this means this column is visible - so we can apply column positioning
+                        // (othwerise, this column doesn't even exist for this specific file - nothing to do)
+                        list.AllColumns[col_idx].Width = width;
+                        list.AllColumns[col_idx].IsVisible = visible;
+                        if ( visible)
+                            display_indexes.Add(col_idx, display_index);
+                    }
+                }
+
+            // need to convert display indexes into what can be displayed - you can't have a display index bigger than
+            // the number of shown columns
+            Dictionary<int,int> loaded_index_to_index = new Dictionary<int, int>();
+            int cur_idx = 0;
+            foreach ( var loaded_idx in  display_indexes.Select(x => x.Value).OrderBy(x => x) )
+                loaded_index_to_index.Add(loaded_idx, cur_idx++);
+
+            foreach (var display_idx in display_indexes) {
+                var col = list.AllColumns[display_idx.Key];
+                if (col.IsVisible)
+                    col.DisplayIndex = loaded_index_to_index[display_idx.Value];
+                else 
+                    col.LastDisplayIndex = loaded_index_to_index[display_idx.Value];
+            }
+
+            list.RebuildColumns();
+        }
+
+
+        private string default_column_positions_string() {
+            string positions = "";
+            // column: display index, width, visible
+            for (int col_idx = 0; col_idx < list.AllColumns.Count; ++col_idx) {
+                var col = list.AllColumns[col_idx];
+                int display_index = col.DisplayIndex >= 0 ? col.DisplayIndex : col.LastDisplayIndex;
+                if (col.Width > 0)
+                    positions += "" + col_idx + "," + display_index + "," + (col == msgCol ? col.Width : DEFAULT_COL_WIDTH)+ "," + "1" + ";";
+            }
+            return positions;
+        }
+
+        public string save_column_positions() {
+            if (visible_columns_refreshed_ < MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
+                return "";
+
+            string positions = "";
+            // column: display index, width, visible
+            for (int col_idx = 0; col_idx < list.AllColumns.Count; ++col_idx) {
+                var col = list.AllColumns[col_idx];
+                int display_index = col.DisplayIndex >= 0 ? col.DisplayIndex : col.LastDisplayIndex;
+                if (col.Width > 0)
+                    positions += "" + col_idx + "," + display_index + "," + col.Width + "," + (col.IsVisible ? "1" : "0") + ";";
+            }
+
+            if (positions == default_column_positions_string())
+                // user hasn't changed anything
+                return "";
+            return positions;
         }
 
         internal log_view_parent lv_parent {
@@ -831,7 +924,6 @@ namespace lw_common.ui
             if (visible_columns_refreshed_ >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
                 return;
 
-            const int DEFAULT_COL_WIDTH = 80;
             int count = item_count;
             bool needs_refresh = count != visible_columns_refreshed_;
             if (needs_refresh) {

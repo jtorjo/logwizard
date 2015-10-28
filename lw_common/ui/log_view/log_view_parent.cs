@@ -73,5 +73,7 @@ namespace lw_common.ui {
         int selected_filter_row_index { get; }
 
         bool can_edit_context { get; }
+
+        void after_column_positions_modified(log_view lv);
     }
 }

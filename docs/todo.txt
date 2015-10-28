@@ -44,6 +44,11 @@
   - guessing the right file (from extension, etc.)
   - allow editing log settings (depending on its type)
 
+- saving column positions
+  - also, perhaps i should allow "Applying this Layout" to other views as well
+     - have a submenu - Apply to Other Views -> allow "Select All", "Select None", and have each other view shown (by default, unchecked)
+	 - by default, of course, this layout applies only to the current view
+	 - have a menu item "Apply Now" -> which will do just that
 
 
 
@@ -244,7 +249,9 @@
 
 
 
-
+- saving column positions
+  - now that i have this, does it really make sense to have alt-m ? (for toggling msg-only)
+  - probably i could allow it in a weird way where i actually simply hide/show columns and then save the positions (instead of saving "show_row")
 
 
 
