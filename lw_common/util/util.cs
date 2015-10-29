@@ -830,6 +830,9 @@ namespace lw_common {
         public static List<int> find_all_matches(string text, string search_for) {
             Debug.Assert(search_for != null);
             List<int> all = new List<int>();
+            if (search_for == "")
+                return all;
+
             int at = 0;
             while (true) {
                 int next = text.IndexOf(search_for, at);

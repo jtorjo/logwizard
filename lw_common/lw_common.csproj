@@ -107,6 +107,9 @@
     <Compile Include="ui\log_view\match\log_view_data_source.cs" />
     <Compile Include="ui\log_view\match\match_full_item.cs" />
     <Compile Include="ui\log_view\match\match_item.cs" />
+    <Compile Include="ui\log_view\search_renderer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ui\msg_details_ctrl.cs">
       <SubType>UserControl</SubType>
     </Compile>

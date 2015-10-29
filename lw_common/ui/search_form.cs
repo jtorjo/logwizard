@@ -116,6 +116,13 @@ namespace lw_common.ui {
         private List<int> matches_ = new List<int>();
 
         private search_for prev_search_ = null;
+        private search_renderer render_ = null;
+
+        private int line_col_ = 0;
+
+        public search_for running_search {
+            get { return prev_search_; }
+        }
 
         private class item {
             public List<string> parts = new List<string>();
@@ -190,6 +197,7 @@ namespace lw_common.ui {
         public search_form(Form parent, log_view lv, string smart_edit_search_for_text) {
             this.sett = app.inst.sett;
             InitializeComponent();
+            render_ = new search_renderer(lv, this);
             fg.BackColor = util.str_to_color( sett.get("search_fg", "transparent"));
             bg.BackColor = util.str_to_color( sett.get("search_bg", "#faebd7") ); // antiquewhite
 
@@ -272,6 +280,11 @@ namespace lw_common.ui {
                 result.AllColumns[preview_col_idx].Width = lv.list.AllColumns[col_idx].Width;
                 result.AllColumns[preview_col_idx].Text = lv.list.AllColumns[col_idx] != lv.msgCol ? lv.list.AllColumns[col_idx].Text : "Message";
                 result.AllColumns[preview_col_idx].FillsFreeSpace = lv.list.AllColumns[col_idx].FillsFreeSpace;
+                // note: the line column never enters the search
+                if (lv.lineCol == lv.list.AllColumns[col_idx])
+                    line_col_ = preview_col_idx;
+                else 
+                    result.AllColumns[preview_col_idx].Renderer = render_;
                 ++preview_col_idx;
             }
             for (; preview_col_idx < result.AllColumns.Count; ++preview_col_idx)
@@ -288,6 +301,7 @@ namespace lw_common.ui {
             foreach (var match_idx in matches_) 
                 result.AddObject( new item( preview_items_[match_idx] ) );
             result.Unfreeze();
+            result.Refresh();
         }
 
         public static search_for default_search {
@@ -336,6 +350,10 @@ namespace lw_common.ui {
 
         public search_for search {
             get { return search_; }
+        }
+
+        public int line_col {
+            get { return line_col_; }
         }
 
         private void fg_Click(object sender, EventArgs e) {
@@ -447,15 +465,23 @@ namespace lw_common.ui {
             List<int> matches = new List<int>();
             for (int idx = 0; idx < preview_items_.Count; ++idx) {
                 bool matches_now = false;
-                foreach ( string cell in preview_items_[idx])
+                for (int col_idx = 0; col_idx < preview_items_[idx].Count; col_idx++) {
+                    if (col_idx == line_col_)
+                        continue;
+                    string cell = preview_items_[idx][col_idx];
                     if (string_search.matches(cell, prev_search_)) {
                         matches_now = true;
                         break;
                     }
+                }
                 if ( matches_now)
                     matches.Add(idx);
             }
             matches_ = matches;
+        }
+
+        private void search_form_FormClosed(object sender, FormClosedEventArgs e) {
+            checkResults.Enabled = false;
         }
     }
 }

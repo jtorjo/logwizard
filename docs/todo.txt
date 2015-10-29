@@ -4,15 +4,8 @@
 ----------------------------------------------------
 
 
-- find: have a "To Filter" button (good when doing regex search)
 
 
-- improve find dialog:
-  have combo box with the latest 20 searches (for each search, we save everything - like, it's text/regex, colors, casesensitive etc)
-   - if i edit something selected from the combo, save it there
-   - if i select something from the combo -> move to last (the first to be shown next time)
-   - if history contains at least 2 items, automatically drop combo when shown
-     - when user types more than 2 letters, un-drop the combo TOTHINK - esc should work first to undo the combo
 
 
 
@@ -33,11 +26,6 @@
   - guessing the right file (from extension, etc.)
   - allow editing log settings (depending on its type)
 
-- saving column positions
-  - also, perhaps i should allow "Applying this Layout" to other views as well
-     - have a submenu - Apply to Other Views -> allow "Select All", "Select None", and have each other view shown (by default, unchecked)
-	 - by default, of course, this layout applies only to the current view
-	 - have a menu item "Apply Now" -> which will do just that
 
 
 

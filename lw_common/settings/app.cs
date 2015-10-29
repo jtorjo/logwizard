@@ -95,6 +95,9 @@ namespace lw_common {
         public Color bg_from = Color.White;
         public Color bg_to = Color.AntiqueWhite;
 
+        // 1.3.35+ - note - at this time, I don't allow changing these
+        public Color search_found_fg = Color.Blue;
+        public Color search_found_full_line_fg = Color.OrangeRed;
 
         // what extensions to look at - when parsing a zip file (in other words, what files do we consider "probable" logs)
         public string look_into_zip_files_str = "";

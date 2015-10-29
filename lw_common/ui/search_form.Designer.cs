@@ -361,6 +361,7 @@
             this.result.Location = new System.Drawing.Point(12, 136);
             this.result.MultiSelect = false;
             this.result.Name = "result";
+            this.result.OwnerDraw = true;
             this.result.ShowGroups = false;
             this.result.Size = new System.Drawing.Size(654, 175);
             this.result.TabIndex = 14;
@@ -638,6 +639,7 @@
             this.Name = "search_form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Search For...";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.search_form_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.result)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
