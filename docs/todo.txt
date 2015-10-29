@@ -40,7 +40,7 @@
 - parse by line "xx: yy", and empty line is end-of-record
   = take care of the case when we read a partial entry
 - parse xml, csv? (first version, that is)
-
+  take quicklook http://www.codeproject.com/Articles/30795/C-WPF-Log-Net-Viewer
 
 
 

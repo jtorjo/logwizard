@@ -122,18 +122,27 @@ namespace lw_common.ui {
             public string t50 { get { return part(50); }}
         }
 
+        private List<string> last_view_names_ = null;
+        private int unique_search_id_ = 0;
+
         // 1.2.7+ if there's something selected by the user, override what we had
         public search_form(Form parent, log_view lv, string smart_edit_search_for_text) {
             this.sett = app.inst.sett;
             InitializeComponent();
             render_ = new search_renderer(lv, this);
-            fg.BackColor = util.str_to_color( sett.get("search_fg", "transparent"));
-            bg.BackColor = util.str_to_color( sett.get("search_bg", "#faebd7") ); // antiquewhite
+            
+            var search = search_form_history.inst.last_search;
+            unique_search_id_ = search.unique_id;
+            last_view_names_ = search.last_view_names.ToList();
+            if ( !last_view_names_.Contains(lv.name))
+                last_view_names_.Add(lv.name);
 
-            caseSensitive.Checked = sett.get("search_case_sensitive", "0") != "0";
-            fullWord.Checked = sett.get("search_full_word", "0") != "0";
-            int type = int.Parse(sett.get("search_type", "0"));
-            switch (type) {
+            fg.BackColor = search.fg;
+            bg.BackColor = search.bg;
+
+            caseSensitive.Checked = search.case_sensitive;
+            fullWord.Checked = search.full_word;
+            switch (search.type) {
             case 0:
                 radioAutoRecognize.Checked = true;
                 break;
@@ -147,7 +156,7 @@ namespace lw_common.ui {
                 break;
             }
 
-            txt.Text = sett.get("search_text");
+            txt.Text = search.text;
 
             if (smart_edit_search_for_text != "") {
                 txt.Text = smart_edit_search_for_text;
@@ -160,7 +169,7 @@ namespace lw_common.ui {
             result.Font = lv.list.Font;
             load_surrounding_rows(lv);
 
-            prev_search_ = current_search();
+            prev_search_ = search;
             run_search();
             rebuild_result();
 
@@ -234,55 +243,11 @@ namespace lw_common.ui {
         }
 
         public static search_for default_search {
-            get { return get_cur_search(""); }
-        }
-
-
-        public static search_for get_cur_search(string prefix) {
-            var sett = app.inst.sett;
-
-            int type = int.Parse(sett.get(prefix + "search_type", "0"));
-            switch (type) {
-            case 0: // auto
-                break;
-            case 1: // text
-                break;
-            case 2: // regex
-                break;
-                default: Debug.Assert(false);
-                break;
-            }
-            string text = sett.get(prefix + "search_text");
-            bool use_regex = type == 2;
-            if (type == 0)
-                use_regex = is_auto_regex(text);
-            Regex regex = null;
-            if ( use_regex)
-                try {
-                    regex = new Regex(text, RegexOptions.Singleline);
-                } catch {
-                    regex = null;
-                }
-
-            search_for cur = new search_for {
-                fg = util.str_to_color( sett.get(prefix + "search_fg", "transparent")),
-                bg = util.str_to_color( sett.get(prefix + "search_bg", "#faebd7") ),
-                case_sensitive = sett.get(prefix + "search_case_sensitive", "0") != "0",
-                full_word = sett.get(prefix + "search_full_word", "0") != "0",
-                use_regex = use_regex, 
-                regex = regex, 
-                text = text, 
-                mark_lines_with_color = sett.get(prefix + "search_mark_lines_with_color", "1") != "0"
-            };
-            return cur;
+            get { return search_form_history.inst.default_search; }
         }
 
         public search_for search {
             get { return search_; }
-        }
-
-        public int line_col {
-            get { return line_col_; }
         }
 
         private void fg_Click(object sender, EventArgs e) {
@@ -297,28 +262,31 @@ namespace lw_common.ui {
                 bg.BackColor = color;
         }
 
-        private void save_cur_search(string prefix) {
-            sett.set(prefix + "search_bg", util.color_to_str(bg.BackColor));
-            sett.set(prefix + "search_fg", util.color_to_str(fg.BackColor));
-            sett.set(prefix + "search_case_sensitive", caseSensitive.Checked ? "1" : "0");
-            sett.set(prefix + "search_full_word", fullWord.Checked ? "1" : "0");
-            sett.set(prefix + "search_mark_lines_with_color", mark.Checked ? "1" : "0");
-            sett.set(prefix + "search_text", txt.Text);
-
+        private search_for current_search() {
             int type = 0;
             if (radioAutoRecognize.Checked) type = 0;
             else if (radioText.Checked) type = 1;
             else if (radioRegex.Checked) type = 2;
             else Debug.Assert(false);
 
-            sett.set(prefix + "search_type", "" + type);
+            return new search_for() {
+                bg = bg.BackColor, 
+                fg = fg.BackColor, 
+                case_sensitive = caseSensitive.Checked,
+                full_word = fullWord.Checked, 
+                mark_lines_with_color = mark.Checked, 
+                text = txt.Text, 
+                type = type,
+                friendly_regex_name = friendlyRegexName.Text,
+                last_view_names = last_view_names_.ToArray()
+            };
         }
 
         private void ok_Click(object sender, EventArgs e) {
             if (txt.Text != "") {
-                save_cur_search("");
-                sett.save();
-                search_ = default_search;
+                search_ = current_search();
+                search_.unique_id = unique_search_id_;
+                search_form_history.inst.save_last_search( search_);
                 DialogResult = DialogResult.OK;
             }
         }
@@ -332,18 +300,11 @@ namespace lw_common.ui {
         }
 
         private static bool is_auto_regex(string text) {
-            bool is_regex = text.IndexOfAny(new char[] {'[', ']', '(', ')', '\\'}) >= 0;
-            return is_regex;
+            return search_for.is_auto_regex(text);
         }
 
         private void update_autorecognize_radio() {
             radioAutoRecognize.Text = "Auto recognized (" + (is_auto_regex(txt.Text) ? "Regex" : "Text") + ")";
-        }
-
-
-        private search_for current_search() {
-            save_cur_search("current_");
-            return get_cur_search("current_");
         }
 
         private void checkResults_Tick(object sender, EventArgs e) {
@@ -355,11 +316,11 @@ namespace lw_common.ui {
                 return;
 
             prev_search_ = cur;
-            logger.Info("new search: " + cur.text);
-
+            logger.Info("[search] searching: " + cur.text);
             run_search();
             rebuild_result();
             update_preview_text();
+            logger.Info("[search] searching: " + cur.text  + " - complete");
         }
 
         private void update_preview_text() {

@@ -91,7 +91,7 @@
             this.olvColumn49 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn50 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn51 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.friendlyRegexName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.preview = new System.Windows.Forms.Label();
             this.checkResults = new System.Windows.Forms.Timer(this.components);
@@ -572,15 +572,15 @@
             // 
             this.olvColumn51.AspectName = "t50";
             // 
-            // textBox1
+            // friendlyRegexName
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.friendlyRegexName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(483, 25);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(189, 23);
-            this.textBox1.TabIndex = 16;
+            this.friendlyRegexName.Enabled = false;
+            this.friendlyRegexName.Location = new System.Drawing.Point(483, 25);
+            this.friendlyRegexName.Name = "friendlyRegexName";
+            this.friendlyRegexName.Size = new System.Drawing.Size(189, 23);
+            this.friendlyRegexName.TabIndex = 16;
             // 
             // label2
             // 
@@ -616,7 +616,7 @@
             this.CancelButton = this.cancel;
             this.ClientSize = new System.Drawing.Size(678, 323);
             this.Controls.Add(this.preview);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.friendlyRegexName);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.result);
             this.Controls.Add(this.fullWord);
@@ -714,7 +714,7 @@
         private BrightIdeasSoftware.OLVColumn olvColumn49;
         private BrightIdeasSoftware.OLVColumn olvColumn50;
         private BrightIdeasSoftware.OLVColumn olvColumn51;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox friendlyRegexName;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label preview;
         private System.Windows.Forms.Timer checkResults;

@@ -224,7 +224,7 @@ namespace lw_common {
                 //
                 // note: if escape is true, we're only escaping via \
                 bool is_quote = (use_simple_quote && str[i] == '\'') || (use_double_quote && str[i] == '"');
-                bool is_next_quote = !escape && is_quote && (i+1 < str.Length) && (use_simple_quote && str[i+1] == '\'') || (use_double_quote && str[i+1] == '"');
+                bool is_next_quote = !escape && is_quote && (i+1 < str.Length) && ((use_simple_quote && str[i+1] == '\'') || (use_double_quote && str[i+1] == '"'));
 
                 if (inside)
                     // if using simple & double quotes - if string starts with ' no need to escape " and vice-versa
@@ -280,7 +280,7 @@ namespace lw_common {
             return list;
         }
 
-        public static string from_list(List<string> list, string delimeter, type split_type = type.use_any_quotes | type.ignore_trailing_spaces) {
+        public static string from_list(IList< string> list, string delimeter, type split_type = type.use_any_quotes | type.ignore_trailing_spaces) {
             if ((split_type & type.ignore_empty_entries) == type.ignore_empty_entries)
                 list = list.Where(x => x.Length > 0).ToList();
 

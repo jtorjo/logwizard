@@ -2382,7 +2382,7 @@ namespace LogWizard
                 var sel_text = lv.smart_edit_sel_text;
                 if (sel_text != "") {
                     search.text = sel_text;
-                    search.use_regex = false;
+                    search.type = 1; // text 
                 }
                 lv.search_for_text(search);
                 lv.search_next();
