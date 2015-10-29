@@ -11,8 +11,9 @@
    - if history contains at least 2 items, automatically drop combo when shown
      - when user types more than 2 letters, un-drop the combo TOTHINK - esc should work first to undo the combo
 
-- find: have a "To Filter" button (good when doing regex search)
 
+1.3.36a
+- refactored search_for -> out of scope
 
 
 1.3.35f

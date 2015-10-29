@@ -129,12 +129,14 @@
       <DependentUpon>note_ctrl.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\print_info.cs" />
-    <Compile Include="ui\search_form.cs">
+    <Compile Include="ui\search\search_for.cs" />
+    <Compile Include="ui\search\search_form.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ui\search_form.Designer.cs">
+    <Compile Include="ui\search\search_form.Designer.cs">
       <DependentUpon>search_form.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\search\search_form_history.cs" />
     <Compile Include="ui\select_color_form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -205,7 +207,7 @@
     <EmbeddedResource Include="ui\note_ctrl.resx">
       <DependentUpon>note_ctrl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ui\search_form.resx">
+    <EmbeddedResource Include="ui\search\search_form.resx">
       <DependentUpon>search_form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\select_color_form.resx">

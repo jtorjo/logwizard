@@ -48,7 +48,7 @@ namespace lw_common {
             return false;
         }
 
-        public static List< Tuple<int,int>> match_indexes(string line, search_form.search_for search) {
+        public static List< Tuple<int,int>> match_indexes(string line, search_for search) {
             if (search.use_regex && search.regex == null)
                 // the regex is invalid
                 return new List<Tuple<int, int>>();
@@ -82,7 +82,7 @@ namespace lw_common {
         }
 
 
-        public static bool matches(string line, search_form.search_for search) {
+        public static bool matches(string line, search_for search) {
             if (search.use_regex && search.regex == null)
                 // the regex is invalid
                 return true;

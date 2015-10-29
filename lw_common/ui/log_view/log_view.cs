@@ -86,7 +86,7 @@ namespace lw_common.ui
         private bool is_editing_ = false;
         private int editing_row_ = -1;
 
-        private search_form.search_for cur_search_ = null;
+        private search_for cur_search_ = null;
         private int cur_filter_row_idx_ = -1;
 
         private log_view_right_click right_click_;
@@ -1409,7 +1409,7 @@ namespace lw_common.ui
             e.Handled = true;
         }
 
-        public void search_for_text(search_form.search_for search) {
+        public void search_for_text(search_for search) {
             cur_search_ = search;
             // as of 1.2.6, we mark the words visually
             list.Refresh();
@@ -1876,7 +1876,7 @@ namespace lw_common.ui
             }
         }
 
-        internal search_form.search_for cur_search {
+        internal search_for cur_search {
             get { return cur_search_; }
         }
 

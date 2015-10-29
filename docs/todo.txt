@@ -8,18 +8,6 @@
 
 
 
-
-
-
-
-
-- tip cp: allow only a class to access some functions
-  - q: can i make this available on several classes?
-  - explain why : normally, you have a class just be private, or the class be inside another class
-  - have lock class derive from lock_base<> so that i can just say some_class.lock ??
-  - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
-  - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
-
 - ??  https://codelympics.io/projects/3 ->>> add csv, xml, db, event viewer, outputdebugstring etc to viewing
   - this also means adding the description pane
   - adding aliases
@@ -29,12 +17,26 @@
 
 
 
+-- article: filter your logs inside out! 
+  tagline: Editing Filtes can now be a joy! / Log viewing can be a joy!
+  example: have a filter that shows all numbers in red (white bg) - how amazing is that?
+   or maybe, telephone numbers
+		There are quite a few reasons you'll want to do logging in your application, but lets settle for the most common: 
+		* find bugs, 
+		* find as much information when something goes south.
+		In both cases, you will need to deeply analyze your log. And I'm not saying - just dump some chart about how many errors were found or about how many requests your application handled, or whatever.
+		I'm talking about really analyzing your log - to understand what actually happened. Filtering through the log, picking the right information, until you find out what let to the bug/problem.
 
 
 
 
 
-  If time allows:
+
+
+- use "fch = FindFirstChangeNotification (szNewPath, FALSE, FILE_NOTIFY_CHANGE_SIZE);" => to monitor for file changes ???
+
+- todo : add asyncfilelogger
+
 - parse by line "xx: yy", and empty line is end-of-record
   = take care of the case when we read a partial entry
 - parse xml, csv? (first version, that is)
@@ -47,29 +49,14 @@
 
 
 
--- article: filter your logs inside out! 
-  tagline: Editing Filtes can now be a joy! / Log viewing can be a joy!
-  example: have a filter that shows all numbers in red (white bg) - how amazing is that?
-   or maybe, telephone numbers
-		There are quite a few reasons you'll want to do logging in your application, but lets settle for the most common: 
-		* find bugs, 
-		* find as much information when something goes south.
 
-		In both cases, you will need to deeply analyze your log. And I'm not saying - just dump some chart about how many errors were found or about how many requests your application handled, or whatever.
-
-		I'm talking about really analyzing your log - to understand what actually happened. Filtering through the log, picking the right information, until you find out what let to the bug/problem.
-
-
-
-
-
-
-
-- use "fch = FindFirstChangeNotification (szNewPath, FALSE, FILE_NOTIFY_CHANGE_SIZE);" => to monitor for file changes ???
-
-- allow mouse scrolling
-
-- todo : add asyncfilelogger
+- tip cp: allow only a class to access some functions
+  - q: can i make this available on several classes?
+  - explain why : normally, you have a class just be private, or the class be inside another class
+  - have lock class derive from lock_base<> so that i can just say some_class.lock ??
+  - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
+  - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
+  - in my bio - update it with link to my above aritcle?
 
 
 
@@ -79,23 +66,29 @@
 
 
 
-  - add aliases as well
+- add aliases as well
     - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
 
 - refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
   otherwise, i could end up ignoring a column if the first 10 values are empty
 
-- list_data_source filter/show full log: this needs to work even when new lines are added!!!!!!! (like, monitoring live)
 
-- http://www.codeproject.com/Articles/512956/NET-Shell-Extensions-Shell-Context-Menus
-  allow previewing a log file: that is, showing what each tab would look like; perhaps a set of files as well?
-  this would allow me to look at several tn2 logs at the same time and show how many items each view has (they should all have the same context!)
-  -- also, this should only work if the files have a file-to-context or forced-file-to-context set
+
+
 
 - how easy is it to access github to look for updates?
   - easy to show in Status bar when new vresion available. Show it in About/history
   - maybe mark huge features with "*", while normal features shown in "-"
+  + article
 
+
+
+
+
+- find: have a "To Filter" button (good when doing regex search)
+  - two possibilities -> Apply to existing Lines, Apply to Full Log
+    + select Color/Match Color/default color?
+	-- make this rather generic, so that later i can add more attributes if needed (this is also used in right-click)
 
 
 
@@ -112,49 +105,6 @@
 		This rename is a kind of file update.
 		So, I expected LW to update the display, but it does not.
 		Even Refresh doesn't work.
-
-
-
-
-
-
-   ------------> perhaps threads first (i think it's less code???? TOTHINK)
-
-- option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?; probably - yes)
-
-- alert -> allow showing a msg, beep, etc. when a certain msg is found
-  for instance "same scrape" -> show a message when that happens
-  or, when "overridden theme" gets written (for alerts - force refresh of the view all the time)
-  by default -> the alert would show the message itself + perhaps beep?
-  alerts - to be also shown in a left pane (as a new tab)
-  when an alert happens -and it actually matches the current view - just show the alert sign (no need to show the message itself since the user already sees it)
-  --------> when an alert happens, show it in the line number as an "!" icon - also, all views that contain an alert should have the "!" icon
-  --------> checkbox - beep on alert + checkbox - bring LogWizard to top on alert
-  ----- i should look for an alert in all the filters (in other words, maybe two filters match a line -> the first filter gives the color; but maybe the second one matches the alert)
-
-  -> alerts - allow an alert to stop the program (have setting: alerts : break into code, default = yes).
-     in this case, I need to create a special logger (that writes to shmem). then, use signals - after each log, we wait until the "alert" filters have been run
-	 if an alert triggers (one that should be on - if "break into code" is turned off, then an alert must be specifically set to "break"),
-	 then we stop the program. otherwise, the program continue
-	 in our program -> we first run the 'alert' filters that can break (synchronously) - if anything matches, we signal this. otherwise, we allow the original program
-	 (the one being debugged), to continue.
-	 (note: see if it's easier to monitor for console)
-	 note: when writing to shmem, the log pattern should match what you would write the the file.
-	 (shmem -> have a setting - how to identify the beginning of hte program - like, a specific message gets written -> restarts logging)
-
-  - new article (about monitoring your own log while debugging) + "bring to top/most on alt-tab"? "Logging and Debugging - they can get along"
-
-  - alert: email? later = command line client that would monitor a certain log? and just do alerts? (include the msg?)
-    - cmd line args: [type-of-log] [log-name]
-	- allow dumping one of hte views?
-	- TOTHINK when should we dump an email? by default, probably not. maybe only on the command line client?
-	- later: in time, allow for this to be very thin (memory-wise), since we don't need to remember the matches - we only need to dump alerts, if needed
-	- cmd line client should also be able to dump a certain view into another file (.txt or .html); this way, you might run it on Test results?
-
-
-
-
-
 
 
 
@@ -196,6 +146,38 @@
 
 
 
+- option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?; probably - yes)
+
+- alert -> allow showing a msg, beep, etc. when a certain msg is found
+  for instance "same scrape" -> show a message when that happens
+  or, when "overridden theme" gets written (for alerts - force refresh of the view all the time)
+  by default -> the alert would show the message itself + perhaps beep?
+  alerts - to be also shown in a left pane (as a new tab)
+  when an alert happens -and it actually matches the current view - just show the alert sign (no need to show the message itself since the user already sees it)
+  --------> when an alert happens, show it in the line number as an "!" icon - also, all views that contain an alert should have the "!" icon
+  --------> checkbox - beep on alert + checkbox - bring LogWizard to top on alert
+  ----- i should look for an alert in all the filters (in other words, maybe two filters match a line -> the first filter gives the color; but maybe the second one matches the alert)
+
+  -> alerts - allow an alert to stop the program (have setting: alerts : break into code, default = yes).
+     in this case, I need to create a special logger (that writes to shmem). then, use signals - after each log, we wait until the "alert" filters have been run
+	 if an alert triggers (one that should be on - if "break into code" is turned off, then an alert must be specifically set to "break"),
+	 then we stop the program. otherwise, the program continue
+	 in our program -> we first run the 'alert' filters that can break (synchronously) - if anything matches, we signal this. otherwise, we allow the original program
+	 (the one being debugged), to continue.
+	 (note: see if it's easier to monitor for console)
+	 note: when writing to shmem, the log pattern should match what you would write the the file.
+	 (shmem -> have a setting - how to identify the beginning of hte program - like, a specific message gets written -> restarts logging)
+
+  - new article (about monitoring your own log while debugging) + "bring to top/most on alt-tab"? "Logging and Debugging - they can get along"
+
+  - alert: email? later = command line client that would monitor a certain log? and just do alerts? (include the msg?)
+    - cmd line args: [type-of-log] [log-name]
+	- allow dumping one of hte views?
+	- TOTHINK when should we dump an email? by default, probably not. maybe only on the command line client?
+	- later: in time, allow for this to be very thin (memory-wise), since we don't need to remember the matches - we only need to dump alerts, if needed
+	- cmd line client should also be able to dump a certain view into another file (.txt or .html); this way, you might run it on Test results?
+
+
 
 
 
@@ -226,42 +208,8 @@
 
 
 
-- saving column positions
-  - now that i have this, does it really make sense to have alt-m ? (for toggling msg-only)
-  - probably i could allow it in a weird way where i actually simply hide/show columns and then save the positions (instead of saving "show_row")
 
-
-
-
-
-
-
-
-
-
-
-
-- "start monitoring" have a list in settings of locations to monitor
-  - at the first sign of a file that was rewritten -> select that file
-  (stoppable with ESC)
-  - awesome when debugging several apps -> thus, you can have several custom locations - move there, then "start monitoring" and the file is selected
-   (care if the file is already open in another window)
-   useful even wehn debugging a single app at a time.
-
-
-
-
-
-- low pane: all buttons should become images + have icons for find/find next/find prev + tothink : should i add icons for anything else?
-
-- bug: toggling enabled/dimmed will end up causing exceptions - seems it's because of all the forced reloads
-
-- smart edit: 
-  - allow synchronizing what i type-search with full log (that is, show in both current view and full log) 
-    - both ways, from current view to full log and back
-  - allow synchronizing full log - match color with current view
-
-- view the event log + article -- 
+  - view the event log + article -- 
   http://www.aspheute.com/english/20000811.asp
   http://www.codeproject.com/Articles/14455/Eventlog-Viewer
   http://www.codeproject.com/Articles/91/WindowsNT-Event-Log-Viewer
@@ -285,12 +233,60 @@
 
 
 
-- allow wrapping lines (pro_v?)
-  allow showing everthing the full line contains on the next rows
-  probably have an extra 100 rows just for that and use them only if needed?
-  we will adjust all the time, based on what row is to be shown now
-  - also, we need to re-adjust when the user resizes the msg column
-  - do we really want this?
+
+
+
+
+
+
+
+
+- for non-line, non-time, not-msg columns
+  - allow "snoop around", have something that looks like "show dropdown"
+    - this is basically an extremely easy filter for that column - it shows the unique values surrounding maybe 1000 lines or so 
+	  (perhaps allowing selecting unique values from all lines? - probably 50K should be enough) 
+	    -> allow snooping in all lines as well if the user wants to
+	  - for each unique value - show how many lines match it
+	  - this will be shown really nice and small exactly matching the [width] of the column
+	  - selecting any row will filter by that -> allow converting that to filter
+	  - show in status pane -> that we're filtering by that (allow ESC to toggle the filter off?)
+
+
+
+
+
+- "start monitoring" have a list in settings of locations to monitor
+  - at the first sign of a file that was rewritten -> select that file
+  (stoppable with ESC)
+  - awesome when debugging several apps -> thus, you can have several custom locations - move there, then "start monitoring" and the file is selected
+   (care if the file is already open in another window)
+   useful even wehn debugging a single app at a time.
+
+
+
+
+
+- low pane + status: 
+  - they should combine into one
+  - first: by default, Status is shown , and at the end, there will be a button called "What's Up?'" (or some other name)
+    - from the button, access all the existing commands (Toggles,Refresh, Hotkeys Help etc.)
+	- from the button - have something called - show history (which shows the combo)
+	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
+
+
+- bug: toggling enabled/dimmed will end up causing exceptions - seems it's because of all the forced reloads
+
+- smart edit: 
+  - allow synchronizing what i type-search with full log (that is, show in both current view and full log) 
+    - both ways, from current view to full log and back
+  - allow synchronizing full log - match color with current view
+
+
+
+
+
+
+
 
 
 
@@ -305,6 +301,13 @@
 
 
 
+- (pro_v) allow chaining find filters
+  - like, we are type-searching for something in msg-column and filter by that
+  - then go to another column, and filter on top of our search by something else (snoop around)
+  - then do an extra snoop around, etc.
+  - ESC will go back one filter
+  - have friendly names of each filter, and show them in teh UI somehow like a "Find browse history", where the user can go back several searches
+   note: I think this may be complicated to implemnent - see if it's worth it
 
 
 
