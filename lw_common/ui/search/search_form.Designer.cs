@@ -26,7 +26,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(search_form));
             this.label1 = new System.Windows.Forms.Label();
-            this.txt = new System.Windows.Forms.TextBox();
             this.mark = new System.Windows.Forms.CheckBox();
             this.fg = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -95,26 +94,20 @@
             this.label2 = new System.Windows.Forms.Label();
             this.preview = new System.Windows.Forms.Label();
             this.checkResults = new System.Windows.Forms.Timer(this.components);
+            this.combo = new System.Windows.Forms.ComboBox();
+            this.markAsNewEntry = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.result)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 26);
+            this.label1.Location = new System.Drawing.Point(13, 20);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "Text";
-            // 
-            // txt
-            // 
-            this.txt.Location = new System.Drawing.Point(65, 25);
-            this.txt.Name = "txt";
-            this.txt.Size = new System.Drawing.Size(412, 23);
-            this.txt.TabIndex = 1;
-            this.txt.TextChanged += new System.EventHandler(this.txt_TextChanged);
             // 
             // mark
             // 
@@ -122,7 +115,7 @@
             this.mark.AutoSize = true;
             this.mark.Checked = true;
             this.mark.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mark.Location = new System.Drawing.Point(315, 72);
+            this.mark.Location = new System.Drawing.Point(337, 86);
             this.mark.Name = "mark";
             this.mark.Size = new System.Drawing.Size(202, 21);
             this.mark.TabIndex = 2;
@@ -134,9 +127,9 @@
             this.fg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.fg.BackColor = System.Drawing.SystemColors.Control;
             this.fg.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.fg.Location = new System.Drawing.Point(574, 72);
+            this.fg.Location = new System.Drawing.Point(574, 86);
             this.fg.Name = "fg";
-            this.fg.Size = new System.Drawing.Size(28, 23);
+            this.fg.Size = new System.Drawing.Size(28, 17);
             this.fg.TabIndex = 3;
             this.fg.Click += new System.EventHandler(this.fg_Click);
             // 
@@ -144,7 +137,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(544, 73);
+            this.label3.Location = new System.Drawing.Point(544, 85);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(24, 17);
             this.label3.TabIndex = 4;
@@ -154,7 +147,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(608, 74);
+            this.label4.Location = new System.Drawing.Point(608, 86);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(25, 17);
             this.label4.TabIndex = 6;
@@ -164,16 +157,16 @@
             // 
             this.bg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.bg.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bg.Location = new System.Drawing.Point(638, 72);
+            this.bg.Location = new System.Drawing.Point(638, 86);
             this.bg.Name = "bg";
-            this.bg.Size = new System.Drawing.Size(28, 23);
+            this.bg.Size = new System.Drawing.Size(28, 18);
             this.bg.TabIndex = 5;
             this.bg.Click += new System.EventHandler(this.bg_Click);
             // 
             // ok
             // 
             this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ok.Location = new System.Drawing.Point(510, 105);
+            this.ok.Location = new System.Drawing.Point(510, 110);
             this.ok.Name = "ok";
             this.ok.Size = new System.Drawing.Size(75, 25);
             this.ok.TabIndex = 7;
@@ -185,7 +178,7 @@
             // 
             this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancel.Location = new System.Drawing.Point(591, 105);
+            this.cancel.Location = new System.Drawing.Point(591, 110);
             this.cancel.Name = "cancel";
             this.cancel.Size = new System.Drawing.Size(75, 25);
             this.cancel.TabIndex = 8;
@@ -196,43 +189,45 @@
             // radioAutoRecognize
             // 
             this.radioAutoRecognize.AutoSize = true;
+            this.radioAutoRecognize.Checked = true;
             this.radioAutoRecognize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioAutoRecognize.Location = new System.Drawing.Point(68, 52);
+            this.radioAutoRecognize.Location = new System.Drawing.Point(68, 65);
             this.radioAutoRecognize.Name = "radioAutoRecognize";
             this.radioAutoRecognize.Size = new System.Drawing.Size(96, 17);
             this.radioAutoRecognize.TabIndex = 9;
             this.radioAutoRecognize.TabStop = true;
             this.radioAutoRecognize.Text = "Auto recognize";
             this.radioAutoRecognize.UseVisualStyleBackColor = true;
+            this.radioAutoRecognize.CheckedChanged += new System.EventHandler(this.radioAutoRecognize_CheckedChanged);
             // 
             // radioText
             // 
             this.radioText.AutoSize = true;
             this.radioText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioText.Location = new System.Drawing.Point(358, 52);
+            this.radioText.Location = new System.Drawing.Point(358, 65);
             this.radioText.Name = "radioText";
             this.radioText.Size = new System.Drawing.Size(46, 17);
             this.radioText.TabIndex = 10;
-            this.radioText.TabStop = true;
             this.radioText.Text = "Text";
             this.radioText.UseVisualStyleBackColor = true;
+            this.radioText.CheckedChanged += new System.EventHandler(this.radioText_CheckedChanged);
             // 
             // radioRegex
             // 
             this.radioRegex.AutoSize = true;
             this.radioRegex.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioRegex.Location = new System.Drawing.Point(422, 52);
+            this.radioRegex.Location = new System.Drawing.Point(422, 65);
             this.radioRegex.Name = "radioRegex";
             this.radioRegex.Size = new System.Drawing.Size(56, 17);
             this.radioRegex.TabIndex = 11;
-            this.radioRegex.TabStop = true;
             this.radioRegex.Text = "Regex";
             this.radioRegex.UseVisualStyleBackColor = true;
+            this.radioRegex.CheckedChanged += new System.EventHandler(this.radioRegex_CheckedChanged);
             // 
             // caseSensitive
             // 
             this.caseSensitive.AutoSize = true;
-            this.caseSensitive.Location = new System.Drawing.Point(65, 72);
+            this.caseSensitive.Location = new System.Drawing.Point(65, 86);
             this.caseSensitive.Name = "caseSensitive";
             this.caseSensitive.Size = new System.Drawing.Size(121, 21);
             this.caseSensitive.TabIndex = 12;
@@ -242,7 +237,7 @@
             // fullWord
             // 
             this.fullWord.AutoSize = true;
-            this.fullWord.Location = new System.Drawing.Point(192, 72);
+            this.fullWord.Location = new System.Drawing.Point(192, 86);
             this.fullWord.Name = "fullWord";
             this.fullWord.Size = new System.Drawing.Size(87, 21);
             this.fullWord.TabIndex = 13;
@@ -358,7 +353,7 @@
             this.olvColumn50,
             this.olvColumn51});
             this.result.FullRowSelect = true;
-            this.result.Location = new System.Drawing.Point(12, 136);
+            this.result.Location = new System.Drawing.Point(12, 142);
             this.result.MultiSelect = false;
             this.result.Name = "result";
             this.result.OwnerDraw = true;
@@ -577,18 +572,19 @@
             this.friendlyRegexName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.friendlyRegexName.Enabled = false;
-            this.friendlyRegexName.Location = new System.Drawing.Point(483, 25);
+            this.friendlyRegexName.Location = new System.Drawing.Point(483, 19);
             this.friendlyRegexName.Name = "friendlyRegexName";
             this.friendlyRegexName.Size = new System.Drawing.Size(189, 23);
-            this.friendlyRegexName.TabIndex = 16;
+            this.friendlyRegexName.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(480, 3);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(483, 3);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(191, 17);
+            this.label2.Size = new System.Drawing.Size(140, 13);
             this.label2.TabIndex = 15;
             this.label2.Text = "Friendly name (for the regex)";
             // 
@@ -596,7 +592,7 @@
             // 
             this.preview.AutoSize = true;
             this.preview.ForeColor = System.Drawing.Color.Blue;
-            this.preview.Location = new System.Drawing.Point(13, 113);
+            this.preview.Location = new System.Drawing.Point(13, 118);
             this.preview.Name = "preview";
             this.preview.Size = new System.Drawing.Size(77, 17);
             this.preview.TabIndex = 17;
@@ -608,6 +604,35 @@
             this.checkResults.Interval = 250;
             this.checkResults.Tick += new System.EventHandler(this.checkResults_Tick);
             // 
+            // combo
+            // 
+            this.combo.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.combo.FormattingEnabled = true;
+            this.combo.ItemHeight = 16;
+            this.combo.Location = new System.Drawing.Point(68, 19);
+            this.combo.MaxDropDownItems = 10;
+            this.combo.Name = "combo";
+            this.combo.Size = new System.Drawing.Size(408, 22);
+            this.combo.TabIndex = 0;
+            this.combo.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.combo_DrawItem);
+            this.combo.SelectedIndexChanged += new System.EventHandler(this.combo_SelectedIndexChanged);
+            this.combo.TextUpdate += new System.EventHandler(this.combo_TextUpdate);
+            this.combo.DropDownClosed += new System.EventHandler(this.combo_DropDownClosed);
+            // 
+            // markAsNewEntry
+            // 
+            this.markAsNewEntry.AutoSize = true;
+            this.markAsNewEntry.Checked = true;
+            this.markAsNewEntry.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.markAsNewEntry.Enabled = false;
+            this.markAsNewEntry.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.markAsNewEntry.Location = new System.Drawing.Point(241, 45);
+            this.markAsNewEntry.Name = "markAsNewEntry";
+            this.markAsNewEntry.Size = new System.Drawing.Size(240, 17);
+            this.markAsNewEntry.TabIndex = 2;
+            this.markAsNewEntry.Text = "Mark this as a new Entry in the Search History";
+            this.markAsNewEntry.UseVisualStyleBackColor = true;
+            // 
             // search_form
             // 
             this.AcceptButton = this.ok;
@@ -615,6 +640,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancel;
             this.ClientSize = new System.Drawing.Size(678, 323);
+            this.Controls.Add(this.markAsNewEntry);
+            this.Controls.Add(this.combo);
             this.Controls.Add(this.preview);
             this.Controls.Add(this.friendlyRegexName);
             this.Controls.Add(this.label2);
@@ -631,7 +658,6 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.fg);
             this.Controls.Add(this.mark);
-            this.Controls.Add(this.txt);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -649,7 +675,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txt;
         private System.Windows.Forms.CheckBox mark;
         private System.Windows.Forms.Label fg;
         private System.Windows.Forms.Label label3;
@@ -718,5 +743,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label preview;
         private System.Windows.Forms.Timer checkResults;
+        private System.Windows.Forms.ComboBox combo;
+        private System.Windows.Forms.CheckBox markAsNewEntry;
     }
 }

@@ -59,12 +59,17 @@ namespace lw_common.ui {
 
         // saves this as being the last search
         public void save_last_search(search_for last) {
-            Debug.Assert(last.unique_id > 0);
+            Debug.Assert(last.unique_id >= 0);
+            Debug.Assert(last.text != "");
+            if (last.text == "")
+                return; // no text?
 
             // moves this search to the end! (which visually means - to the top)
             var exists = history_.FirstOrDefault(x => x.unique_id == last.unique_id);
             if (exists != null)
                 history_.Remove(exists);
+            if (last.unique_id == 0)
+                last.unique_id = ++next_unique_id_;
             history_.Add(last);
             while ( history_.Count > MAX_SEARCH_COUNT)
                 history_.RemoveAt(0);
@@ -76,8 +81,10 @@ namespace lw_common.ui {
         public List<search_for> all_searches_cur_view_first(string view_name) {
             List<search_for> searches = history_.ToList();
 
+
             if ( searches.Count < 1)
                 searches.Add(default_search);
+            searches.Reverse();
             return searches;
         } 
 
