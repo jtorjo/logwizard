@@ -1,24 +1,8 @@
 
 - take some picture(s) with logwizard - to place on github
 
-----------------------------------------------------
-
-
-
-
-
-
-- ??  https://codelympics.io/projects/3 ->>> add csv, xml, db, event viewer, outputdebugstring etc to viewing
-  - this also means adding the description pane
-  - adding aliases
-  - guessing the right file (from extension, etc.)
-  - allow editing log settings (depending on its type)
-
-
-
-
 -- article: filter your logs inside out! 
-  tagline: Editing Filtes can now be a joy! / Log viewing can be a joy!
+  tagline: a Log Viewer ... Editing Filtes can now be a joy! / Log viewing can be a joy!
   example: have a filter that shows all numbers in red (white bg) - how amazing is that?
    or maybe, telephone numbers
 		There are quite a few reasons you'll want to do logging in your application, but lets settle for the most common: 
@@ -26,25 +10,38 @@
 		* find as much information when something goes south.
 		In both cases, you will need to deeply analyze your log. And I'm not saying - just dump some chart about how many errors were found or about how many requests your application handled, or whatever.
 		I'm talking about really analyzing your log - to understand what actually happened. Filtering through the log, picking the right information, until you find out what let to the bug/problem.
+----------------------------------------------------
 
 
 
 
-
-
+W1/nov 2015
+- todo : add asyncfilelogger
 
 - use "fch = FindFirstChangeNotification (szNewPath, FALSE, FILE_NOTIFY_CHANGE_SIZE);" => to monitor for file changes ???
-
-- todo : add asyncfilelogger
+  - make as setting (disabled by default)
 
 - parse by line "xx: yy", and empty line is end-of-record
   = take care of the case when we read a partial entry
 - parse xml, csv? (first version, that is)
   take quicklook http://www.codeproject.com/Articles/30795/C-WPF-Log-Net-Viewer
 
+- add aliases as well
+    - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
 
+- refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
+  otherwise, i could end up ignoring a column if the first 10 values are empty
+   --- so basically have a way to force some columns to be visible
+       - perhaps if i just use what the parser is giving me, i would simply never need this "guessing"
 
+- edit toggles - when clicking something, don't hide the menu (like in the columns menu)
 
+- low pane + status: 
+  - they should combine into one
+  - first: by default, Status is shown , and at the end, there will be a button called "What's Up?'" (or some other name)
+    - from the button, access all the existing commands (Toggles,Refresh, Hotkeys Help etc.)
+	- from the button - have something called - show history (which shows the combo)
+	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
 
 
 
@@ -66,35 +63,21 @@
 
 
 
-- add aliases as well
-    - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
-
-- refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
-  otherwise, i could end up ignoring a column if the first 10 values are empty
 
 
 
 
-
+W2/nov 2015
 - how easy is it to access github to look for updates?
   - easy to show in Status bar when new vresion available. Show it in About/history
   - maybe mark huge features with "*", while normal features shown in "-"
-  + article
+  + article (code should be cpol?) (probably tip)
 
-
-
-
-
-- find: have a "To Filter" button (good when doing regex search)
-  - two possibilities -> Apply to existing Lines, Apply to Full Log
-    + select Color/Match Color/default color?
-	-- make this rather generic, so that later i can add more attributes if needed (this is also used in right-click)
-
-
-
+---------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
+ ***- this needs to exist for each type of log - even files (specify type: line-by-line, log line, xml, csv etc.)
+ - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))
 
 - set associations (.txt, .log, etc) -> don't automatically associate with LW -> have an option to do so
-
 
 - bug:	I opened a file, A.txt, in LW.
 		Then I copied that to A-copy.txt.  So I have A.txt and A-copy.txt.
@@ -106,13 +89,45 @@
 		So, I expected LW to update the display, but it does not.
 		Even Refresh doesn't work.
 
+- (if time available) find: have a "To Filter" button (good when doing regex search)
+  - two possibilities -> Apply to existing Lines, Apply to Full Log
+    + select Color/Match Color/default color?
+	-- make this rather generic, so that later i can add more attributes if needed (this is also used in right-click)
+
+
+
+
+
+
+
+
+
+
+W3/nov 2015
+  - view the event log + article -- 
+  http://www.aspheute.com/english/20000811.asp
+  http://www.codeproject.com/Articles/14455/Eventlog-Viewer
+  http://www.codeproject.com/Articles/91/WindowsNT-Event-Log-Viewer
+		- debug viewer (OutputDebugString)
+		  https://technet.microsoft.com/en-us/library/bb896647.aspx
+		  https://github.com/djeedjay/DebugViewPP (Dbgviewreader.cpp, dblogreader.cpp)
+		  -------> to make this really useful, from process-id -> get the process name. Thus, you can make a filter based on process name, that will always be meaningful
+  -- implement toggle details 
+     - allow several details in there
+	 - allow specifying which columns to be in details, and which in list (they can overlap)
+	 - save column widths / positions in global_ui
+
+
+
+
+
 
 
 
 
             
 
-
+W4/nov 2015
 
 - threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
   - this should basically be by assigning a color to each thread's BACKGROUND. Then update the background for each line accordingly
@@ -209,24 +224,6 @@
 
 
 
-  - view the event log + article -- 
-  http://www.aspheute.com/english/20000811.asp
-  http://www.codeproject.com/Articles/14455/Eventlog-Viewer
-  http://www.codeproject.com/Articles/91/WindowsNT-Event-Log-Viewer
-		- debug viewer (OutputDebugString)
-		  https://technet.microsoft.com/en-us/library/bb896647.aspx
-		  https://github.com/djeedjay/DebugViewPP (Dbgviewreader.cpp, dblogreader.cpp)
-		  -------> to make this really useful, from process-id -> get the process name. Thus, you can make a filter based on process name, that will always be meaningful
-  -- implement toggle details 
-     - allow several details in there
-	 - allow specifying which columns to be in details, and which in list (they can overlap)
-	 - save column widths / positions in global_ui
-
----------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
- - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))
-   - i also need to allow caching (pro_v?)
-     - like, remember the last "X" sessions, the user should be able to always bring back any former sessions, and also filter by date(s)
-	 - very likely: i should store them locally, but only allow access on pro_v
 
 
 
@@ -262,16 +259,15 @@
    (care if the file is already open in another window)
    useful even wehn debugging a single app at a time.
 
+- level column -> allow transforming it into pictures
+  - this should work on any column - we should be able to transform any context into picts
+  - there should be 2 ways: to picture, to text + picture (when to-picture only -> take a lot less space(width))
+  - (pro_v) - i should allow regexes for the categorizing a column into pictures (allow to-picture or to-picture + to-picture + space)
 
 
 
 
-- low pane + status: 
-  - they should combine into one
-  - first: by default, Status is shown , and at the end, there will be a button called "What's Up?'" (or some other name)
-    - from the button, access all the existing commands (Toggles,Refresh, Hotkeys Help etc.)
-	- from the button - have something called - show history (which shows the combo)
-	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
+
 
 
 - bug: toggling enabled/dimmed will end up causing exceptions - seems it's because of all the forced reloads
@@ -280,7 +276,6 @@
   - allow synchronizing what i type-search with full log (that is, show in both current view and full log) 
     - both ways, from current view to full log and back
   - allow synchronizing full log - match color with current view
-
 
 
 
@@ -415,57 +410,12 @@
   i think the problem is that i'm reading a partial line and matching against that - very likely i should not include the last line until some time has passed or fully read
 
 
-
-
-
-
-
-
-
-
-
-
-
-- creating filters tutorial - have 2 tutorials for creating the same views (the views for TN2scrapepot) - one when editing filters manually, one with selecting words, and converting them to filters
-
-
-
-
-
-
-- defaults: retest when using logwizard for first time 
-  - also, Find -> have a button "Append to Filter" or something -> if the view name is "New_...", rename this as the contents of the search or something TOTHINK
-  - right click on a column -> have an easy "Filter In/Out" dialog where the user can choose to execute something on that column
-    - make sure we can do this with keys - i need to have a way to select a certain column with keys - so that when rightclicking on it, it would then open the Filter In/Out dialog
-	  -- i should print the existing selected cell (column) with a slightly darker background (perhaps just use left/right arrows?)
-	     probably: by default, there is no cell celected (just the row) - if pressing ->, we'll start selecting from the left-to-right
-		                                                                - if pressing <-, we'll start selecting from right-to-left
-	- the defaults (to filter IN or OUT) should be based on whether in current view or full log
-
-
-
-
-
-
-
-
-
-- settings page: 
-  - font for showing the message (like, Courier New?)
-  - show column "Filter(s)" on full log (it takes more time to synchronize) (Speed tab)
-  - colors for bookmarks
-  - if to add "*" to the tab title when something changed -> this forces refresh of all  tabs all the time (Speed tab)
-
-- level column -> allow transforming it into pictures
-  - this should work on any column - we should be able to transform any context into picts
-  - there should be 2 ways: to picture, to text + picture (when to-picture only -> take a lot less space(width))
-  - (pro_v) - i should allow regexes for the categorizing a column into pictures (allow to-picture or to-picture + to-picture + space)
+- (pro_v) for non-file "non-persistent" logs (such as, Outputdebugstring, sockets?)
+   - i also need to allow caching
+     - like, remember the last "X" sessions, the user should be able to always bring back any former sessions, and also filter by date(s)
+	 - very likely: i should store them locally, but only allow access on pro_v
 
 - article: testing with logwizard (allow command line as well?) 
-
-
-
-
 
 
 - move file locally (toggle its location? - between current location/saved location)

@@ -341,7 +341,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ObjectListView_lw, Version=2.8.1.7896, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ObjectListView_lw, Version=2.8.1.8027, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_264ACE8638B5C7A7BA9DDD169AFBE2E3"
@@ -485,7 +485,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.3.36.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_70135191B71EE9820831F349BF8A823E"
@@ -597,7 +597,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_E297CB39A550491681319D6F014A659B"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -624,7 +624,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
         "ProductCode" = "8:{00DE02EF-E3BA-4348-A4D6-02A7E74F385B}"
-        "PackageCode" = "8:{3AD1653D-5EAB-4969-B06E-63DC4CD6F9A1}"
+        "PackageCode" = "8:{ABBB0B86-8060-4BA6-8B3C-D60782ECB5EA}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -645,7 +645,7 @@
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
