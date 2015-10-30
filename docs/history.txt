@@ -1,8 +1,5 @@
 
 
-- find - store the last view(s) where the find occured 
- *********(perhaps last 10 views or so - i don't want to store all views cause that could end up being a lot)
-       - when entering search, show the results that occured in this view at the top - also, show them in bold or something? (if possible)
 
 
 
@@ -10,6 +7,9 @@
 
 
 -- logwizard - 1000 lines - search for target on zorder -> too much time - to see + to log this
+
+1.3.36g
+- search last view names: hold only last 15 last views
 
 
 1.3.36f

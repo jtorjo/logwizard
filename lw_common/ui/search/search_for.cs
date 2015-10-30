@@ -9,6 +9,8 @@ using System.Windows.Forms.VisualStyles;
 
 namespace lw_common.ui {
     public class search_for {
+        internal const int MAX_LAST_VIEW_NAMES = 15;
+
         protected bool Equals(search_for other) {
             bool equals = case_sensitive == other.case_sensitive && 
                           full_word == other.full_word && 

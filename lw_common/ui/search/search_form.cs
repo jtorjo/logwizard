@@ -308,6 +308,8 @@ namespace lw_common.ui {
             var last_view_names = last_view_names_.ToList();
             if ( !last_view_names.Contains(lv_.name))
                 last_view_names.Add(lv_.name);
+            while ( last_view_names.Count > search_for.MAX_LAST_VIEW_NAMES)
+                last_view_names_.RemoveAt(0);
 
             return new search_for() {
                 bg = bg.BackColor, 
