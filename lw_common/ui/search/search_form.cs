@@ -37,6 +37,8 @@ namespace lw_common.ui {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const int MAX_PREVIEW_ROWS = 1000;
+        // re-showing rows is VERY expensive - so, we want to allow just a few - the user will get it if he's got the right search or not
+        private const int MAX_SHOW_ROWS = 20;
 
         private search_for search_ = new search_for();
 
@@ -270,8 +272,12 @@ namespace lw_common.ui {
         private void rebuild_result() {
             result.Freeze();
             result.ClearObjects();
-            foreach (var match_idx in matches_) 
-                result.AddObject( new item( preview_items_[match_idx] ) );
+            int add_count = 0;
+            foreach (var match_idx in matches_) {
+                result.AddObject(new item(preview_items_[match_idx]));
+                if (++add_count >= MAX_SHOW_ROWS)
+                    break;
+            }
             result.Unfreeze();
             result.Refresh();
         }
@@ -403,7 +409,9 @@ namespace lw_common.ui {
                 preview.Text += " NO MATCHES.";
                 return;
             }
-            preview.Text += "" + matches_.Count + " matches.";
+            preview.Text += "" + matches_.Count + " matches";
+            if (matches_.Count > MAX_SHOW_ROWS)
+                preview.Text += ", showing only " + result.GetItemCount();
         }
 
         private void load_all_matches() {
