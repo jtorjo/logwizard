@@ -89,6 +89,7 @@
     <Compile Include="ui\filter_ctrl.Designer.cs">
       <DependentUpon>filter_ctrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\font_list.cs" />
     <Compile Include="ui\gradient_brush_list.cs" />
     <Compile Include="ui\log_view\log_view.cs">
       <SubType>UserControl</SubType>

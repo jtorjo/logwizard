@@ -79,12 +79,18 @@ namespace lw_common.ui {
         }
 
         public List<search_for> all_searches_cur_view_first(string view_name) {
-            List<search_for> searches = history_.ToList();
+            var searches = history_.ToList();
+            searches.Reverse();
 
+            var having_view = searches.Where(x => x.last_view_names.Contains(view_name)).ToList();
+            var not_having_view = searches.Where(x => !x.last_view_names.Contains(view_name)).ToList();
+
+            searches.Clear();
+            searches.AddRange(having_view);
+            searches.AddRange(not_having_view);
 
             if ( searches.Count < 1)
                 searches.Add(default_search);
-            searches.Reverse();
             return searches;
         } 
 

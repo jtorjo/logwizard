@@ -129,6 +129,8 @@ namespace lw_common.ui {
 
         private bool dropped_first_time_ = false;
 
+        private font_list fonts_ = new font_list();
+
         /* Edit mode:
            1. if more than 1 entry, the combo is dropped down by default
            2. if you type any letter while the combo is first dropped down (or paste something), it will auto close the dropdown
@@ -452,8 +454,11 @@ namespace lw_common.ui {
             else
                 brush = Brushes.Black;
 
+            bool italic = false;
+            bool bold = history_[e.Index].last_view_names.Contains(lv_.name);
+
             // Draw the text    
-            e.Graphics.DrawString(text, ((Control)sender).Font, brush, e.Bounds.X, e.Bounds.Y);
+            e.Graphics.DrawString(text, fonts_.get_font( ((Control)sender).Font, bold, italic), brush, e.Bounds.X, e.Bounds.Y);
 
         }
 
