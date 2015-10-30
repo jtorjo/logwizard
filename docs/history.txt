@@ -1,5 +1,7 @@
 
 
+1.4.1
+- tested in release - works like a boss :D
 
 
 1.3.36i
