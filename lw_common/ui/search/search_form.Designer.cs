@@ -23,7 +23,6 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(search_form));
             this.label1 = new System.Windows.Forms.Label();
             this.mark = new System.Windows.Forms.CheckBox();
@@ -93,7 +92,6 @@
             this.friendlyRegexName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.preview = new System.Windows.Forms.Label();
-            this.checkResults = new System.Windows.Forms.Timer(this.components);
             this.combo = new System.Windows.Forms.ComboBox();
             this.markAsNewEntry = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.result)).BeginInit();
@@ -598,12 +596,6 @@
             this.preview.TabIndex = 17;
             this.preview.Text = "Preview: ...";
             // 
-            // checkResults
-            // 
-            this.checkResults.Enabled = true;
-            this.checkResults.Interval = 250;
-            this.checkResults.Tick += new System.EventHandler(this.checkResults_Tick);
-            // 
             // combo
             // 
             this.combo.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
@@ -742,7 +734,6 @@
         private System.Windows.Forms.TextBox friendlyRegexName;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label preview;
-        private System.Windows.Forms.Timer checkResults;
         private System.Windows.Forms.ComboBox combo;
         private System.Windows.Forms.CheckBox markAsNewEntry;
     }

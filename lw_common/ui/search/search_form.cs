@@ -27,6 +27,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 using log4net.Repository.Hierarchy;
 using LogWizard;
@@ -131,6 +132,8 @@ namespace lw_common.ui {
 
         private font_list fonts_ = new font_list();
 
+        private bool closed_ = false;
+
         /* Edit mode:
            1. if more than 1 entry, the combo is dropped down by default
            2. if you type any letter while the combo is first dropped down (or paste something), it will auto close the dropdown
@@ -158,9 +161,6 @@ namespace lw_common.ui {
             update_autorecognize_radio();
 
             prev_search_ = current_search();
-            run_search();
-            rebuild_result();
-            update_preview_text();
 
             util.postpone(() => {
                 combo.Focus();                
@@ -169,6 +169,8 @@ namespace lw_common.ui {
                     combo.DroppedDown = true;
                 }
             },1);
+
+            new Thread(do_searches_thread) {IsBackground = true }.Start();
         }
 
         private void load_combo() {
@@ -206,10 +208,6 @@ namespace lw_common.ui {
 
             combo.Text = search.text;
             update_autorecognize_radio();
-
-            run_search();
-            rebuild_result();
-            update_preview_text();
         }
 
         private void load_surrounding_rows(log_view lv) {
@@ -348,21 +346,54 @@ namespace lw_common.ui {
             radioAutoRecognize.Text = "Auto recognized (" + (is_auto_regex(combo.Text) ? "Regex" : "Text") + ")";
         }
 
-        private void checkResults_Tick(object sender, EventArgs e) {
-            if (combo.DroppedDown)
-                return;
+        private void do_searches_thread() {
+            try {
+                do_searches_thread_impl();
+            } catch (ObjectDisposedException) {
+                // main thread ended
+            } catch (Exception e) {
+                logger.Fatal("error on searches " + e);
+            }
+        }
 
-            var cur = current_search();
-            if (prev_search_ == cur)
-                // nothing changed
-                return;
 
-            prev_search_ = cur;
-            logger.Info("[search] searching: " + cur.text);
+        private void do_searches_thread_impl() {
+            // first time, show all
             run_search();
-            rebuild_result();
-            update_preview_text();
-            logger.Info("[search] searching: " + cur.text  + " - complete");
+            this.async_call_and_wait(() => {
+                rebuild_result();
+                update_preview_text();
+            });
+
+            while (!closed_) {
+                Thread.Sleep(250);
+                bool needs_run = false;
+                search_for cur = null;
+                this.async_call_and_wait(() => {                    
+                    if (combo.DroppedDown)
+                        return;
+
+                    var cur_search = current_search();
+                    if (prev_search_ == cur_search)
+                        // nothing changed
+                        return;
+
+                    cur = cur_search;
+                    prev_search_ = cur;
+                    preview.Text = "Computing [" + prev_search_ + "]";
+                });
+
+                if (cur == null)
+                    continue;
+
+                logger.Info("[search] searching: " + cur.text);
+                run_search();
+                this.async_call_and_wait(() => {
+                    rebuild_result();
+                    update_preview_text();
+                });
+                logger.Info("[search] searching: " + cur.text  + " - complete");
+            }
         }
 
         private void update_preview_text() {
@@ -413,7 +444,7 @@ namespace lw_common.ui {
         }
 
         private void search_form_FormClosed(object sender, FormClosedEventArgs e) {
-            checkResults.Enabled = false;
+            closed_ = true;
         }
 
         private void combo_SelectedIndexChanged(object sender, EventArgs e) {
