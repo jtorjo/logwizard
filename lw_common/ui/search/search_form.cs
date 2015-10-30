@@ -415,16 +415,22 @@ namespace lw_common.ui {
             if (combo.DroppedDown)
                 return;
 
+            Debug.Assert(!dropped_first_time_);
+
             int sel = combo.SelectedIndex;
             if (sel >= 0) {
                 unique_search_id_ = history_[sel].unique_id;
                 markAsNewEntry.Checked = false;
                 markAsNewEntry.Enabled = true;
                 load_from_search(history_[sel]);
+                // at this point, properly update the combo text
+                util.postpone(() => combo.Text = history_[sel].text, 1);
             } else {
                 markAsNewEntry.Checked = true;
                 markAsNewEntry.Enabled = false;
+                combo.Text = "";
             }
+
         }
 
         private void combo_TextUpdate(object sender, EventArgs e) {
