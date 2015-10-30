@@ -145,6 +145,9 @@ namespace lw_common.ui {
             lv_ = lv;
             render_ = new search_renderer(lv, this);
             history_ = search_form_history.inst.all_searches_cur_view_first(lv.name);
+            // use the last ones...
+            fg.BackColor = history_[0].fg;
+            bg.BackColor = history_[0].bg;
             load_combo();
 
             load_surrounding_rows(lv);

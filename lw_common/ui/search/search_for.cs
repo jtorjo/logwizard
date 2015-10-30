@@ -86,8 +86,8 @@ namespace lw_common.ui {
         // FIXME use load_save
         internal void save(string prefix) {
             var sett = app.inst.sett;
-            sett.set(prefix + ".bg", util.color_to_str(bg));
             sett.set(prefix + ".fg", util.color_to_str(fg));
+            sett.set(prefix + ".bg", util.color_to_str(bg));
             sett.set(prefix + ".case_sensitive", case_sensitive ? "1" : "0");
             sett.set(prefix + ".full_word", full_word ? "1" : "0");
             sett.set(prefix + ".mark_lines_with_color", mark_lines_with_color ? "1" : "0");
