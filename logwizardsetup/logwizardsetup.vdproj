@@ -124,13 +124,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_69F744972D2505679D513EB2818224FF"
+        "OwnerKey" = "8:_73FF3A1F6C3530BE3286143D5769BD46"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_73FF3A1F6C3530BE3286143D5769BD46"
+        "OwnerKey" = "8:_69F744972D2505679D513EB2818224FF"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -454,7 +454,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_92392AC5156DEBEF4C502203C9121527"
@@ -623,15 +623,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
-        "ProductCode" = "8:{1E6F8433-5012-47FD-B1CE-544B7AE57D5A}"
-        "PackageCode" = "8:{FCBAE798-2CB7-4885-923F-FD0AD96910A9}"
+        "ProductCode" = "8:{20989BB9-10CB-4909-9846-6CB74D6EB9B6}"
+        "PackageCode" = "8:{9A3F0128-B8AF-45A6-AB4F-E1590FFC11B2}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.4.3"
+        "ProductVersion" = "8:1.4.4"
         "Manufacturer" = "8:John Torjo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1201,7 +1201,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_900BA54346A2479085BF08862BE89061"
             {
-            "SourcePath" = "8:..\\obj\\x64\\Release64\\LogWizard.exe"
+            "SourcePath" = "8:..\\obj\\x64\\Dbg64\\LogWizard.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E297CB39A550491681319D6F014A659B"

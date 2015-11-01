@@ -1,5 +1,9 @@
 
 
+1.4.4b
+- generated 32-bit and 64-bit setup kits
+
+
 1.4.4
 - solved bug: regexes not correctly searched
 - view containing all lines
