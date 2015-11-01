@@ -167,7 +167,7 @@ namespace LogWizard
             filtCtrl.on_rerun_view = (view_idx) => refreshFilter_Click(null, null);
             filtCtrl.on_refresh_view = (view_idx) => {
                 log_view_for_tab(view_idx).Refresh();
-                full_log.Refresh();
+                full_log.list.Refresh();
             };
             filtCtrl.mark_match = (filter_idx) => {
                 var lv = log_view_for_tab(viewsTab.SelectedIndex);
@@ -1392,7 +1392,10 @@ namespace LogWizard
                     }
                     full_log_ctrl_.refresh();
                     full_log_ctrl_.set_view_selected_view_name(lv.name);
-                }
+                } else
+                    // 1.4.3+ we always refresh the full log - since we allow toggling "show all lines" in all views
+                    //        we need the full log to contain all lines
+                    full_log.refresh();
 
                 update_msg_details(false);
                 refresh_filter_found();
@@ -1642,7 +1645,10 @@ namespace LogWizard
             if (global_ui.show_fulllog) {
                 full_log_ctrl_.refresh();
                 full_log_ctrl_.set_view_selected_view_name(lv.name);
-            }
+            } else
+                // 1.4.3+ we always refresh the full log - since we allow toggling "show all lines" in all views
+                //        we need the full log to contain all lines
+                full_log_ctrl_.refresh();
 
             update_msg_details(false);
             refresh_filter_found();
@@ -2002,7 +2008,7 @@ namespace LogWizard
 
             load();
 
-            if (global_ui.show_fulllog && full_log_ctrl_ != null)
+            if (full_log_ctrl_ != null)
                 full_log_ctrl_.refresh();
             refresh_cur_log_view();
             save();
@@ -2766,7 +2772,7 @@ namespace LogWizard
 
             bool sync_changed = app.inst.syncronize_colors != old_sync_colors || old_sync_gray != app.inst.sync_colors_all_views_gray_non_active;
             if (sync_changed)
-                full_log.Refresh();
+                full_log.list.Refresh();
 
             filtCtrl.update_colors();
 

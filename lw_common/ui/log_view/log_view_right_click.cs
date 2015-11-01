@@ -129,8 +129,8 @@ namespace lw_common.ui {
                 // at this time (1.2), we only care about filtering the message column
                 return;
 
-            bool does_belong_to_view = parent_.sel.matches.Count > 0;
-            bool allow_include = parent_.is_full_log || !does_belong_to_view;
+            bool does_belong_to_view = parent_.sel.has_matches_via_include(parent_.filter) ;
+            bool allow_include = parent_.is_full_log || !parent_.filter.has_include_filters || !does_belong_to_view;
             if (!allow_include)
                 return;
 
@@ -163,7 +163,9 @@ namespace lw_common.ui {
             if (parent_.sel_col_idx != parent_.msgCol.fixed_index())
                 // at this time (1.2), we only care about filtering the message column
                 return;
-            bool belongs_to_view = parent_.sel.matches.Count > 0;
+            // 1.4.2 - allow excluding lines: this should work at all times - if it's matched by the filter, 
+            //                                or i don't have any include filters (thus, by default, all lines are included)
+            bool belongs_to_view = parent_.sel.has_matches_via_include(parent_.filter);
             if (!belongs_to_view)
                 return;
 

@@ -1,19 +1,14 @@
 
 - take some picture(s) with logwizard - to place on github
 
--- article: filter your logs inside out! 
-  tagline: a Log Viewer ... Editing Filtes can now be a joy! / Log viewing can be a joy!
-  example: have a filter that shows all numbers in red (white bg) - how amazing is that?
-   or maybe, telephone numbers
-		There are quite a few reasons you'll want to do logging in your application, but lets settle for the most common: 
-		* find bugs, 
-		* find as much information when something goes south.
-		In both cases, you will need to deeply analyze your log. And I'm not saying - just dump some chart about how many errors were found or about how many requests your application handled, or whatever.
-		I'm talking about really analyzing your log - to understand what actually happened. Filtering through the log, picking the right information, until you find out what let to the bug/problem.
+
+
+
 ----------------------------------------------------
 
+-- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
 
-
+- https://github.com/NLog/NLog/wiki/Tools
 
 W1/nov 2015
 - todo : add asyncfilelogger
@@ -94,7 +89,7 @@ W2/nov 2015
     + select Color/Match Color/default color?
 	-- make this rather generic, so that later i can add more attributes if needed (this is also used in right-click)
 
-
+- add/del view , sync view buttons -> hide them by default - they should be visible only if the mouse is around them (on the y axis)
 
 
 
@@ -156,7 +151,7 @@ W4/nov 2015
 
 
 
-
+- bug: sync colors - when sync with all logs -> then when showing all lines -> they will shown with the colors from the other views
 
 
 
@@ -303,13 +298,14 @@ W4/nov 2015
   - ESC will go back one filter
   - have friendly names of each filter, and show them in teh UI somehow like a "Find browse history", where the user can go back several searches
    note: I think this may be complicated to implemnent - see if it's worth it
+   - note: i need to make this fast - in other words, each chained filter needs to run on top of the other ones (so that we don't run on ALL lines)
 
 
 
 
 
-
-
+- (pro_v) allow you to publish your specific data that the user can see, allow tweaking stuff (http://www.codeproject.com/Articles/986154/DNS-Server-is-the-best-tool-in-the-box)
+  - with your custom menus etc - special price?
 
 
 

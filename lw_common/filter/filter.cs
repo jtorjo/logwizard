@@ -46,6 +46,21 @@ namespace LogWizard {
             //              (so that we don't return null)
             public readonly int line_idx = 0;
 
+            // returns true if at least one "include" filter matches this (or, if we don't have any include filters)
+            public bool has_matches_via_include(filter f) {
+                if (!f.has_include_filters)
+                    // in this case, we match all
+                    return true;
+                if (matches.Count == 0)
+                    return false;
+                // it needs to match at least one include filter!
+                for ( int idx = 0; idx < matches.Count; ++idx)
+                    if ( matches[idx])
+                        if (f.is_include_filter(idx))
+                            return true;
+                return false;
+            }
+
             public match(BitArray matches, font_info font, line line, int lineIdx) {
                 this.matches = matches;
                 this.font = font;
@@ -237,6 +252,23 @@ namespace LogWizard {
                 force_recompute_matches_ = true;
                 is_up_to_date_ = false;
             }
+        }
+
+        public bool has_include_filters {
+            get {
+                lock (this) {
+                    if (rows_.Count == 0)
+                        return false; // optimization
+
+                    var first =rows_.FirstOrDefault(x => !x.apply_to_existing_lines);
+                    return first != null;
+                }
+            }
+        }
+
+        public bool is_include_filter(int row_idx) {
+            lock (this)
+                return !rows_[row_idx].apply_to_existing_lines;
         }
 
         public int row_count {

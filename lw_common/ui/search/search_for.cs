@@ -45,7 +45,7 @@ namespace lw_common.ui {
         }
         public bool use_regex {
             get {
-                if (type == 1)
+                if (type == 0)
                     return is_auto_regex(text);
                 if (type == 2)
                     return true;

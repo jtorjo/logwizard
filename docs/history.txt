@@ -1,5 +1,16 @@
 
 
+1.4.4
+- solved bug: regexes not correctly searched
+- view containing all lines
+  - allow excluding lines (this should work at all times)
+  - the "ONLY" should be shown only when there are no "include" filters at all
+- fix: bug : toggling "show all lines" on uk_small does not work (doesn't show anything)
+  - bug occurs only if full log was never shown (i would need to force it in this case)
+  --> the fix will always refresh the full log
+      we always refresh the full log - since we allow toggling "show all lines" in all views, we need the full log to contain all lines
+
+
 1.4.1
 - tested in release - works like a boss :D
 
