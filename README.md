@@ -1,5 +1,7 @@
 # LogWizard - Meet the Log Viewer that makes monitoring log files a joy!
 
+![LogWizard](https://github.com/jtorjo/logwizard/blob/master/images/00shot_first.png)
+
 I created **LogWizard** to help anyone that really needs to deal with logs, in order to _hunt down bugs and/or issues that happen somewhere else_ (read = at customer site).
 
 My team and I have created a rather large piece of software that is running on thousands of machines every day. Our customers, when they encounter an issue, send us their logs. The software is pretty big, we run 10+ threads, we log a lot of information, and parsing through it is pretty complex. Focusing on a certain issue (the customer's) has always been rather complicated. And yes, we tried other Log Viewers, but lets just say they were not up to the task.
