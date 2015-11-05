@@ -20,13 +20,49 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
+using LogWizard;
 
 namespace lw_common.parse.parsers {
 
 
     class text_file_part_on_single_line  : log_parser_base {
+
+        private settings_as_string sett_;
+
+        private char separator_ = ':';
+
+        public text_file_part_on_single_line(text_reader reader, settings_as_string sett) {
+            sett_ = sett;
+        }
+
+        public static bool is_single_line(string file, settings_as_string sett) {
+            string[] lines = util.read_beginning_of_file(file, 16834).Split( '\n' );
+            for (int index = 0; index < lines.Length; index++) 
+                lines[index] = lines[index].Replace("\r", "");
+
+            int empty_lines = 0;
+            string separator = sett.get("separator");
+            if (separator == "")
+                separator = ":";
+            int contains_separator = 0;
+            foreach ( string line in lines)
+                if (line == "")
+                    ++empty_lines;
+                else if (line.Contains(separator))
+                    ++contains_separator;
+
+            // at least 3 entries
+            if ( empty_lines > 3)
+                if (contains_separator + empty_lines == lines.Length)
+                    return true;
+
+            return false;
+        }
+
+
         public override void read_to_end() {
         }
 

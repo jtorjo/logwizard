@@ -26,7 +26,12 @@ using lw_common.parse.parsers;
 
 namespace lw_common.parse.syntaxes.file {
     public class line_by_line_syntax {
-        public string line_syntax = "";
+        public line_by_line_syntax(settings_as_string sett) {
+            line_syntax = sett.get("syntax");
+            if_line_does_not_match_assume_from_prev_line = sett.get("if_line") == "1";
+        }
+
+        public readonly string line_syntax = "";
 
         // if true, if a line does not match the syntax, assume it's from previous line
         public bool if_line_does_not_match_assume_from_prev_line = false;

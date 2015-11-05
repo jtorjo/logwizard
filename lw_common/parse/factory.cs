@@ -44,12 +44,21 @@ namespace lw_common.parse {
             return null;
         }
 
-        private static log_parser_base create_file_parser(file_text_reader reader, string settings) {
-            string file_name = reader.name;
-            string syntax = get_single_setting(settings, "syntax");
+        private static log_parser_base create_file_parser(file_text_reader reader, string sett) {
+            string file_name = reader.name.ToLower();
+            var all = new settings_as_string(sett);
 
+            if ( file_name.EndsWith(".xml"))
+                return new xml_file(reader, all);
+            if ( file_name.EndsWith(".csv"))
+                return new csv_file(reader, all);
 
-            return new text_file_line_by_line(reader, new line_by_line_syntax() {line_syntax = syntax});
+            string syntax = all.get("syntax");
+            if ( syntax == "" || syntax == find_log_syntax.UNKNOWN_SYNTAX)
+                if ( text_file_part_on_single_line.is_single_line(reader.name, all))
+                    return new text_file_part_on_single_line(reader, all);
+
+            return new text_file_line_by_line(reader, new line_by_line_syntax(all));
         }
     }
 }

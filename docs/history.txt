@@ -1,7 +1,5 @@
 
 
-- store settings
-  - each type of log can have them. where can we keep them?
 
 
 - by default, guess the parser of the file
@@ -18,6 +16,11 @@
     - allow for aliases based on column index like _0=Date, _1=Time , and so on - both types of aliases need to work
 	-> where do i keep them? context, file?
 	-aliases should be able to use in filters (case-insensitive? lo-case?, ***lo-case-no-space probably)
+
+
+
+1.4.8d
+
 
 
 1.4.8c

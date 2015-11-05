@@ -22,9 +22,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using LogWizard;
 
 namespace lw_common.parse.parsers {
     class csv_file : log_parser_base {
+
+        private settings_as_string sett_;
+        public csv_file(text_reader reader, settings_as_string sett) {
+            sett_ = sett;
+        }
+
         public override void read_to_end() {
         }
 

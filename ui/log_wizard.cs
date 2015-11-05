@@ -1812,12 +1812,7 @@ namespace LogWizard
 
             Text = reader_title() + " - Log Wizard " + version();
             add_reader_to_history();
-#if old_code
-            // FIXME I don't think this is needed
-            ui_context cur = cur_context();
-            for (int idx = 0; idx < cur.views.Count; ++idx)
-                ensure_we_have_log_view_for_tab(idx);
-#endif
+
             load_bookmarks();
             logger.Info("new reader " + history_[logHistory.SelectedIndex].name);
 
