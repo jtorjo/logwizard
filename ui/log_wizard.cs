@@ -34,6 +34,7 @@ using System.Xml.Serialization;
 using BrightIdeasSoftware;
 using lw_common;
 using lw_common.parse;
+using lw_common.parse.syntaxes.file;
 using lw_common.ui;
 using LogWizard.context;
 using LogWizard.Properties;
@@ -637,7 +638,7 @@ namespace LogWizard
                     return context_from_forced;
             }
 
-            string from_header = log_to_default_context.file_to_context(name);
+            string from_header = log_to.file_to_context(name);
             if (from_header != null) {
                 // ... case-insensitive search (easier for user)
                 var context_from_header = contexts_.FirstOrDefault(x => x.name.ToLower() == from_header.ToLower());
@@ -1587,7 +1588,7 @@ namespace LogWizard
             contexts_.Add(new_ctx);
             var syntax = new find_log_syntax().try_find_log_syntax_file(name);
             if (syntax != find_log_syntax.UNKNOWN_SYNTAX)
-                new_ctx.default_syntax = syntax;
+                new_ctx.default_settings = syntax;
 
             update_contexts_combos_in_all_forms();
         }
@@ -1770,29 +1771,30 @@ namespace LogWizard
 
             // by default - try to find the syntax by reading the header info
             //              otherwise, try to parse it
-            string syntax = null;
-            if (text_ is file_text_reader)
-                syntax = log_to_default_syntax.file_to_syntax(text_.name);
-            string name = text_.name;
+            string file_default_syntax = text_ is file_text_reader ? log_to.file_to_syntax(text_.name) : "";
+            if (file_default_syntax != "")
+                file_default_syntax = "syntax=" + file_default_syntax;  // this overrides file settings
 
+            string name = text_.name;
             if (history_.Count < 1)
                 history_select(name);
 
             // 1.1.25+ if I can't find the syntax from file-to-syntax, or by parsing the log, see if the context associated with this file has log-syntax
-            if (syntax == null) {
-                ui_context file_ctx = file_to_context(name);
-                if (file_ctx.default_syntax != "")
-                    syntax = file_ctx.default_syntax;
-            }
+            string context_settings = file_to_context(name).default_settings;
+            string file_syntax = "syntax=" + text_.try_to_find_log_syntax();
+            file_syntax = factory.merge_settings(text_, file_syntax, file_default_syntax);
+            // if user specifically overrides settings for a log, use that
+            string log_settings = log_to.log_to_settings(name);
+            if (log_settings == "")
+                log_settings = file_syntax;
 
-            if (syntax == null)
-                syntax = text_.try_to_find_log_syntax();
+            string settings = factory.merge_settings(text_, context_settings, log_settings);
 
-            logSyntaxCtrl.Text = syntax;
+            logSyntaxCtrl.Text = factory.get_single_setting(settings, "syntax");
             logSyntaxCtrl.ForeColor = logSyntaxCtrl.Text != find_log_syntax.UNKNOWN_SYNTAX ? Color.Black : Color.Red;
 
             // note: we recreate the log, so that cached filters know to rebuild
-            log_parser_ = new log_parser(text_, new line_by_line_syntax { line_syntax = syntax });
+            log_parser_ = new log_parser(text_, settings);
             on_new_log_parser();
 
             full_log_ctrl_.set_filter(new List<raw_filter_row>());
@@ -3573,7 +3575,7 @@ namespace LogWizard
             var test = new test_syntax_form(guess, logSyntaxCtrl.Text);
             if (test.ShowDialog() == DialogResult.OK) {
                 // use the syntax
-                cur_context().default_syntax = test.found_syntax;
+                cur_context().default_settings = test.found_syntax;
                 save();
 
                 // force complete refresh

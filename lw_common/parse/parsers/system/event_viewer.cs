@@ -22,28 +22,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using lw_common;
 
-namespace LogWizard {
-    // find out information on the file/log - from its header
-    public class log_to_default_context {
-        /*
-        private static Dictionary<string, string> file_to_context_ = new Dictionary<string, string>() {
-            { "HM2 Version: 2.", "HM2" },
-            { "HM3 Version=3", "HM3" },
-            { "[find] Starting ScrapeFindPot", "TN2ScrapeFindPot" },
-            { "Welcome to TableNinja!", "TableNinja" },
-            { "This is a LogWizard Setup sample!", "SetupSample" },
-            //{ "", "" },
-        }; 
-        */
-        public static string file_to_context(string name) {
-            string file_header = util.read_beginning_of_file(name, 8192);
-            foreach ( var ftc in app.inst.file_to_context)
-                if (file_header.Contains(ftc.Key))
-                    return ftc.Value;
+namespace lw_common.parse.parsers.system {
+    class event_viewer : log_parser_base {
+        public override void read_to_end() {
+        }
 
+        public override int line_count {
+            get { return 0; }
+        }
+
+        public override line line_at(int idx) {
             return null;
+        }
+
+        public override void force_reload() {
+        }
+
+        public override bool up_to_date {
+            get { return false; }
         }
     }
 }

@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using lw_common.parse;
+using lw_common.parse.syntaxes.file;
 
 namespace lw_common.ui {
     public partial class test_syntax_form : Form {
@@ -172,7 +173,7 @@ namespace lw_common.ui {
             result.ClearObjects();
 
             // parse each line
-            log_parser parse = new log_parser(new inmem_text_reader(lines.Text), new line_by_line_syntax { line_syntax = syntax.Text } );
+            log_parser parse = new log_parser(new inmem_text_reader(lines.Text), "syntax=" + syntax.Text );
             while (!parse.up_to_date)
                 Thread.Sleep(10);
 

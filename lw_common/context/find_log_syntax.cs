@@ -27,6 +27,8 @@ using System.Text;
 
 namespace lw_common {
     public class find_log_syntax {
+        // 1.4.8+ the "syntax" applied only to line-by-line log files
+        //        other types of logs can return "" if they can't find it
         public const string UNKNOWN_SYNTAX = "$msg[0]";
 
         public const int READ_TO_GUESS_SYNTAX = 8192;

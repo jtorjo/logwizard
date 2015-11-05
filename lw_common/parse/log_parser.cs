@@ -55,16 +55,15 @@ namespace lw_common
 
         private bool file_rewritten_ = false;
 
-        public log_parser(text_reader reader, syntax_base syntax) {
+        private string settings_ = "";
+
+        public log_parser(text_reader reader, string settings) {
             Debug.Assert(reader != null);
             reader_ = reader;
+            settings_ = settings;
             reader_.set_parser(this);
 
-            if (syntax is line_by_line_syntax) 
-                forward_to_parser_ = new log_parser_line_by_line(reader, syntax as line_by_line_syntax);
-            else 
-                // don't know the real parser!
-                Debug.Assert(false);
+            forward_to_parser_ = factory.create(reader, settings);
 
             force_reload();
             new Thread(refresh_thread) {IsBackground = true}.Start();
@@ -129,6 +128,14 @@ namespace lw_common
 
         public bool up_to_date {
             get { return forward_to_parser_.up_to_date;  }
+        }
+
+        public string settings {
+            get { return settings_; }
+            set {
+                settings_ = value;
+                forward_to_parser_.on_settings_changed(settings_);
+            }
         }
 
         public line line_at(int idx) {

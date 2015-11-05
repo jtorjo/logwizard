@@ -93,7 +93,7 @@ namespace lw_common {
     [Serializable]
     public class ui_context {
         public string name  = "";
-        public string default_syntax = "";
+        public string default_settings = "";
 
         public List<ui_view> views = new List<ui_view>();
 
@@ -114,7 +114,7 @@ namespace lw_common {
 
         public bool has_not_empty_views {
             get {
-                if (default_syntax != "" && default_syntax != find_log_syntax.UNKNOWN_SYNTAX)
+                if (default_settings != "" && default_settings != find_log_syntax.UNKNOWN_SYNTAX)
                     // user just set the syntax - very likely he'll use this file in the future
                     return true;
 
@@ -129,14 +129,25 @@ namespace lw_common {
         }
 
         public void copy_from(ui_context other) {
-            default_syntax = other.default_syntax;
+            default_settings = other.default_settings;
             name = other.name;
             views = other.views.ToList();
         }
 
         private void load_save(bool load, string prefix) {
             app.load_save(load, ref name, prefix + ".name", "Default" );
-            app.load_save(load, ref default_syntax, prefix + ".default_syntax");
+
+            if (load) {
+                app.load_save(load, ref default_settings, prefix + ".default_settings");
+                if (default_settings == "") {
+                    // ... 1.4.8- kept the old name for persistenting
+                    app.load_save(load, ref default_settings, prefix + ".default_syntax");
+                    if (default_settings != "")
+                        default_settings = "syntax=" + default_settings;
+                }
+            }
+            else
+                app.load_save(load, ref default_settings, prefix + ".default_settings");
 
             int view_count = views.Count;
             app.load_save(load, ref view_count, prefix + ".view_count", 0);

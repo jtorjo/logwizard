@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using lw_common;
 using lw_common.parse;
+using lw_common.parse.syntaxes.file;
 using lw_common.ui;
 using LogWizard;
 

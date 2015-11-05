@@ -1,15 +1,27 @@
 
 
+- store settings
+  - each type of log can have them. where can we keep them?
 
+
+- by default, guess the parser of the file
 
 
 - parse by line "xx: yy", and empty line is end-of-record
   = take care of the case when we read a partial entry
 - parse xml, csv? (first version, that is)
   take quicklook http://www.codeproject.com/Articles/30795/C-WPF-Log-Net-Viewer
+  xml -> use DOM?
 
 - add aliases as well
     - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
+    - allow for aliases based on column index like _0=Date, _1=Time , and so on - both types of aliases need to work
+	-> where do i keep them? context, file?
+	-aliases should be able to use in filters (case-insensitive? lo-case?, ***lo-case-no-space probably)
+
+1.4.8a
+- storing settings - loading settings works
+  - this allows us to store any settings - in context and/or log - regardless of logs
 
 
 1.4.7d

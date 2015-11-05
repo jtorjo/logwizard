@@ -22,29 +22,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using lw_common.parse.parsers;
 
-namespace lw_common.parse.parsers {
-    internal abstract class log_parser_base : IDisposable {
-        protected bool disposed_ = false;
+namespace lw_common.parse.syntaxes.file {
+    public class line_by_line_syntax {
+        public string line_syntax = "";
 
-        public abstract void read_to_end();
-
-        public abstract int line_count { get; }
-
-        public abstract line line_at(int idx);
-
-        public abstract void force_reload();
-
-        public abstract bool up_to_date { get; }
-
-        public virtual void on_settings_changed(string settings) {
-            
-        }
-
-        public void Dispose() {
-            disposed_ = true;
-        }
-
-
+        // if true, if a line does not match the syntax, assume it's from previous line
+        public bool if_line_does_not_match_assume_from_prev_line = false;
     }
 }

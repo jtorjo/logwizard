@@ -26,15 +26,16 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using lw_common.parse.parsers;
+using lw_common.parse.syntaxes.file;
 using LogWizard;
 
 namespace lw_common.parse.parsers {
 
-    /* reads everything in the log, and allows easy access to its lines
+    /*  reads everything in the log FILE, and allows easy access to its lines
 
         parses the syntax line-by-line - we assume a single line contains a full log entry
     */
-    internal class log_parser_line_by_line : log_parser_base {
+    internal class text_file_line_by_line : log_parser_base {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private class syntax_info {
@@ -102,7 +103,7 @@ namespace lw_common.parse.parsers {
         private bool lines_min_capacity_updated_ = false;
 
 
-        public log_parser_line_by_line(text_reader reader, line_by_line_syntax syntax) {            
+        public text_file_line_by_line(text_reader reader, line_by_line_syntax syntax) {            
             string syntax_str = syntax.line_syntax;
             Debug.Assert(reader != null);
             parse_syntax(syntax_str);

@@ -23,8 +23,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace lw_common.parse {
-    // base class for all log syntaxes 
-    public class syntax_base {
+namespace lw_common.parse.parsers {
+    class xml_file : log_parser_base {
+        public override void read_to_end() {
+        }
+
+        public override int line_count {
+            get { return 0; }
+        }
+
+        public override line line_at(int idx) {
+            return null;
+        }
+
+        public override void force_reload() {
+        }
+
+        public override bool up_to_date {
+            get { return false; }
+        }
     }
 }

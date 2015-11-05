@@ -27,18 +27,7 @@ using lw_common;
 
 namespace LogWizard.context {
     // find out information on the file/log - from its header
-    public class log_to_default_syntax {
-        /*
-        private static Dictionary<string, string> file_to_syntax_ = new Dictionary<string, string>() {
-            { "HM2 Version: 2.", "$time[0,12] $ctx1['[','-'] $func[' ',']'] $ctx2['[[','] ]'] $msg" },
-            {"HM3 Version=3", "$time[0,12] $ctx1['[',']'] $ctx2['[','] '] $msg|$time[0,12] $ctx1['[',']'] $msg['---']|$time[0,12] $ctx1['[',']'] $msg['  ']"},
-
-            { "This is a LogWizard Setup sample", "$time[0,12] $ctx1[13,10] $level[24,5] $class[' ','- '] $msg" },
-            { "Welcome to TableNinja! debug", "$file[0,': '] $time['',12] $ctx1[' ',10] $level[' ','- '] $msg" },
-            //{ "", "" },
-            { "logging started: \nCalling process: \nmsiexec.exe ===", "$ctx1['MSI (',') '] $ctx2['(',')'] $time['[',']: ']  $msg" },
-        }; 
-        */
+    public class log_to {
         public static string file_to_syntax(string name) {
             string file_header = util.read_beginning_of_file(name, 8192);
             foreach (var fts in app.inst.file_to_syntax) {
@@ -53,6 +42,21 @@ namespace LogWizard.context {
             }
 
             return null;
+        }
+
+        public static string file_to_context(string name) {
+            string file_header = util.read_beginning_of_file(name, 8192);
+            foreach ( var ftc in app.inst.file_to_context)
+                if (file_header.Contains(ftc.Key))
+                    return ftc.Value;
+
+            return null;
+        }
+
+        public static string log_to_settings(string name) {
+            if (app.inst.file_to_settings.ContainsKey(name))
+                return app.inst.file_to_settings[name];
+            return "";
         }
     }
 }
