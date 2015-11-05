@@ -42,6 +42,7 @@ namespace LogWizard
 
 
 
+
         internal void set_parser(log_parser parser) {
             // call this only once!
             Debug.Assert(parser_ == null);
@@ -54,6 +55,8 @@ namespace LogWizard
         public virtual bool has_more_cached_text() {
             return false;
         }
+
+
 
 
 

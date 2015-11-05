@@ -112,6 +112,10 @@ namespace LogWizard {
 
             // 1.0.84 note: if this is proves too slow, i'll do a binary search by m.line_idx !!!
             public int index_of(match m) {
+                if (m.line_idx < 0)
+                    // it's the empty match
+                    return -1;
+
                 lock (this) {
                     //return matches_.IndexOf(m);
                     int idx = matches_.binary_search_closest(x => x.line_idx, m.line_idx).Item2;
@@ -206,11 +210,12 @@ namespace LogWizard {
         private easy_mutex new_lines_event_ = new easy_mutex("new lines (filter)");
 
         public enum change_type {
-            new_lines, changed_filter
+            new_lines, changed_filter, file_rewritten
         }
         public delegate void on_change_func(change_type change);
         public on_change_func on_change;
 
+        private bool file_rewritten_ = false;
 
         public filter(create_match_func creator) {
             create_match = creator;
@@ -411,15 +416,26 @@ namespace LogWizard {
 
 
         // we get notified of new lines from reader
-        internal void on_new_reader_lines() {
+        internal void on_new_reader_lines(bool file_rewritten) {
             if (disposed_)
                 return;
-            new_lines_event_.release_and_reaquire();
+            lock (this)
+                if (file_rewritten) {
+                    file_rewritten_ = true;
+                    logger.Debug("[filter] file rewritten " + name);
+                }
+            new_lines_event_.signal();
         }
 
         private void compute_matches_thread() {
             while (!disposed_) {
-                bool new_lines_found = new_lines_event_.wait_and_release();
+                bool new_lines_found = new_lines_event_.wait();
+                bool file_rewritten = false;
+                if ( new_lines_found)
+                    lock (this) {
+                        file_rewritten = file_rewritten_;
+                        file_rewritten_ = false;
+                    }
 
                 bool needs_recompute = false;
                 lock (this) needs_recompute = force_recompute_matches_;
@@ -448,10 +464,12 @@ namespace LogWizard {
                 lock (this)
                     old_log_ = new_;
 
-                if (new_lines_found && on_change != null)
-                    on_change(change_type.new_lines);
-                else if ( needs_recompute)
-                    on_change(change_type.changed_filter);
+                if (on_change != null) {
+                    if (new_lines_found) 
+                        on_change(file_rewritten ? change_type.file_rewritten : change_type.new_lines);
+                    else if (needs_recompute)
+                        on_change(change_type.changed_filter);
+                }
             }
         }
 

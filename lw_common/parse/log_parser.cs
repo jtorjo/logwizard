@@ -46,12 +46,14 @@ namespace lw_common
         // for each of these readers, we have returned a "yes" to forced_reload
         private readonly HashSet<log_reader> forced_reload_ = new HashSet<log_reader>();
 
-        public delegate void on_new_lines_func();
+        public delegate void on_new_lines_func(bool file_rewritten);
         public on_new_lines_func on_new_lines;
 
         private readonly easy_mutex new_lines_event_ = new easy_mutex("new lines (parser)");
 
         private readonly log_parser_base forward_to_parser_ = null;
+
+        private bool file_rewritten_ = false;
 
         public log_parser(text_reader reader, syntax_base syntax) {
             Debug.Assert(reader != null);
@@ -68,10 +70,13 @@ namespace lw_common
             new Thread(refresh_thread) {IsBackground = true}.Start();
         }
 
-        internal void on_log_has_new_lines() {
+        internal void on_log_has_new_lines(bool file_rewritten) {
             if (disposed_)
                 return;
-            new_lines_event_.release_and_reaquire();
+            lock (this)
+                if ( file_rewritten)
+                    file_rewritten_ = true;
+            new_lines_event_.signal();
         }
 
 
@@ -90,7 +95,7 @@ namespace lw_common
                 bool wait_event = reader_.fully_read_once;
                 bool new_lines_found = false;
                 if (wait_event) {
-                    new_lines_found = new_lines_event_.wait_and_release();
+                    new_lines_found = new_lines_event_.wait();
                     if (new_lines_found) 
                         logger.Debug("[log] new lines for " + reader_.name);
                 }
@@ -99,8 +104,14 @@ namespace lw_common
 
                 forward_to_parser_.read_to_end();
 
-                if ( !disposed_&& new_lines_found && on_new_lines != null)
-                    on_new_lines();
+                if (!disposed_ && new_lines_found && on_new_lines != null) {
+                    bool file_rewritten;
+                    lock (this) {
+                        file_rewritten = file_rewritten_;
+                        file_rewritten_ = false;
+                    }
+                    on_new_lines(file_rewritten);
+                }
             }
         }
 

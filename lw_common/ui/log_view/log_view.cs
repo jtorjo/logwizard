@@ -925,16 +925,21 @@ namespace lw_common.ui
         }
 
         private void on_change(filter.change_type change) {
-            logger.Debug("[view] change: " + change + "on " + name);
+            logger.Debug("[view] change: " + change + " on " + name);
             switch (change) {
             case filter.change_type.new_lines:
-                break;
             case filter.change_type.changed_filter:
+                this.async_call(refresh);
                 break;
+
+            case filter.change_type.file_rewritten:
+                this.async_call(clear);
+                break;
+
             default:
-                throw new ArgumentOutOfRangeException("change", change, null);
+                Debug.Assert(false);
+                break;
             }
-            this.async_call(refresh);
         }
 
         public void clear() {

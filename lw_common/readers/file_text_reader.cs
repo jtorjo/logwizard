@@ -223,11 +223,14 @@ namespace LogWizard
                             update_buffer();
                     } else
                         file_rewritten = true;
-                if ( file_rewritten)
+
+                if (file_rewritten) {
                     on_rewritten_file();
+                    genenerate_new_lines_event = true;
+                }
 
                 if (genenerate_new_lines_event)
-                    parser_.on_log_has_new_lines();
+                    parser_.on_log_has_new_lines(file_rewritten);
             } catch(Exception e) {
                 logger.Error("[file] can't read file - " + file_ + " : " + e.Message);
             }

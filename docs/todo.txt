@@ -1,29 +1,17 @@
 ----------------------------------------------------
 
--- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
 
 - https://github.com/NLog/NLog/wiki/Tools
 
 W1/nov 2015
-- todo : add asyncfilelogger
 
-- use "fch = FindFirstChangeNotification (szNewPath, FALSE, FILE_NOTIFY_CHANGE_SIZE);" => to monitor for file changes ???
-  - make as setting (disabled by default)
-
-- parse by line "xx: yy", and empty line is end-of-record
-  = take care of the case when we read a partial entry
-- parse xml, csv? (first version, that is)
-  take quicklook http://www.codeproject.com/Articles/30795/C-WPF-Log-Net-Viewer
-
-- add aliases as well
-    - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
+- edit toggles - when clicking something, don't hide the menu (like in the columns menu)
 
 - refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
   otherwise, i could end up ignoring a column if the first 10 values are empty
    --- so basically have a way to force some columns to be visible
        - perhaps if i just use what the parser is giving me, i would simply never need this "guessing"
 
-- edit toggles - when clicking something, don't hide the menu (like in the columns menu)
 
 - low pane + status: 
   - they should combine into one
@@ -115,6 +103,7 @@ W3/nov 2015
 	 - save column widths / positions in global_ui
 
 
+-- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
 
 
 

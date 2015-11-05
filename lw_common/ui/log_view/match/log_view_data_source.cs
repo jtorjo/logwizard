@@ -94,7 +94,7 @@ namespace lw_common.ui {
                 filter_view_now_ = filter_view;
                 show_full_log_now_ = show_full_log;
             }
-            change_event_.release_and_reaquire();
+            change_event_.signal();
         }
 
         public bool needs_ui_update {
@@ -237,7 +237,7 @@ namespace lw_common.ui {
 
         private void update_filter_thread() {
             while (!disposed_) {
-                if (!change_event_.wait_and_release())
+                if (!change_event_.wait())
                     continue;
 
                 bool filter_view;
@@ -304,7 +304,7 @@ namespace lw_common.ui {
 
         public void Dispose() {
             disposed_ = true;
-            change_event_.release_and_reaquire();
+            change_event_.signal();
         }
     }
 }

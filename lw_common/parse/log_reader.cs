@@ -42,7 +42,7 @@ namespace lw_common {
         // for testing/debugging
         private string tab_name_ = "";
 
-        public delegate void on_new_lines_func();
+        public delegate void on_new_lines_func(bool file_rewritten);
 
         public on_new_lines_func on_new_lines;
 
@@ -52,14 +52,14 @@ namespace lw_common {
             parser_.on_new_lines += on_parser_new_lines;
         }
 
-        private void on_parser_new_lines() {
+        private void on_parser_new_lines(bool file_rewritten) {
             Debug.Assert(!disposed_);
             if (disposed_)
                 return;
 
-            // logger.Debug("[parse] new lines on tab " + tab_name);
+            logger.Debug("[parse] new lines on tab " + tab_name + " / rewritten=" + file_rewritten);
             if (on_new_lines != null)
-                on_new_lines();
+                on_new_lines(file_rewritten);
         }
 
         public string tab_name {

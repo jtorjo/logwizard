@@ -1,6 +1,27 @@
 
+- use "fch = FindFirstChangeNotification (szNewPath, FALSE, FILE_NOTIFY_CHANGE_SIZE);" => to monitor for file changes ???
+  - make as setting (disabled by default)
 
-1.4.5d
+- filter; new lines -> only when no of lines changes or file rewritten
+
+
+
+- parse by line "xx: yy", and empty line is end-of-record
+  = take care of the case when we read a partial entry
+- parse xml, csv? (first version, that is)
+  take quicklook http://www.codeproject.com/Articles/30795/C-WPF-Log-Net-Viewer
+
+- add aliases as well
+    - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
+
+
+1.4.7a
+- log view: get event on file rewritten as well
+- fixed bug: sometimes some "new lines" events did not get triggered
+
+
+1.4.6
+- added asyncfilelogger
 
 
 1.4.4b
