@@ -95,6 +95,16 @@ namespace lw_common {
         [DllImport("user32.dll")]
         private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr FindFirstChangeNotification(string lpPathName, bool bWatchSubtree, uint dwNotifyFilter);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool FindNextChangeNotification(IntPtr hChangeHandle);
+
+        [DllImport("kernel32.dll", SetLastError=true)]
+        public static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
+
+
         static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
         static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
 
@@ -105,6 +115,14 @@ namespace lw_common {
         const UInt32 TOPMOST_FLAGS = SWP_NOMOVE | SWP_NOSIZE;
 
         public const int WM_COPYDATA = 0x004A;
+
+        public const uint FILE_NOTIFY_CHANGE_FILE_NAME = 0x00000001;
+        public const uint FILE_NOTIFY_CHANGE_SIZE = 0x00000008 ;
+
+        public const UInt32 INFINITE = 0xFFFFFFFF;
+        public const UInt32 WAIT_ABANDONED = 0x00000080;
+        public const UInt32 WAIT_OBJECT_0 = 0x00000000;
+        public const UInt32 WAIT_TIMEOUT = 0x00000102;
 
         public static void BringToTop(Form form) {
             IntPtr hWnd = form.Handle;

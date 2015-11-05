@@ -79,7 +79,10 @@ namespace LogWizard
             } catch {
                 file_ = file;
             }
-            new Thread(read_all_file_thread) {IsBackground = true}.Start();
+
+            var thread = app.inst.use_file_monitoring_api ? new Thread(read_all_file_thread_file_monitoring_api) {IsBackground = true}
+                                                          : new Thread(read_all_file_thread) {IsBackground = true};
+            thread.Start();
         }
 
         private ulong max_read_in_one_go {
@@ -90,6 +93,31 @@ namespace LogWizard
             while (!disposed) {
                 Thread.Sleep( app.inst.check_new_lines_interval_ms);
                 read_file_block();
+            }
+        }
+
+        private void read_all_file_thread_file_monitoring_api() {
+            string dir = Path.GetDirectoryName(file_);
+            var monitor = win32.FindFirstChangeNotification(dir, false, win32.FILE_NOTIFY_CHANGE_SIZE | win32.FILE_NOTIFY_CHANGE_FILE_NAME);
+            if (monitor == IntPtr.Zero) {
+                logger.Error("[reader] can't monitor file " + file_ );
+                read_all_file_thread();
+                return;
+            }
+
+            // we need to first read it all
+            while (!disposed && !fully_read_once_) {
+                Thread.Sleep( app.inst.check_new_lines_interval_ms);
+                read_file_block();
+            }
+
+            while (!disposed) {
+                bool change = win32.WaitForSingleObject(monitor, 1000) == win32.WAIT_OBJECT_0;
+                if (change) {
+                    logger.Info("[reader] file api change - " + file_);
+                    read_file_block();
+                    win32.FindNextChangeNotification(monitor);
+                }
             }
         }
 

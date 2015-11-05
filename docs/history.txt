@@ -1,6 +1,4 @@
 
-- use "fch = FindFirstChangeNotification (szNewPath, FALSE, FILE_NOTIFY_CHANGE_SIZE);" => to monitor for file changes ???
-  - make as setting (disabled by default)
 
 
 
@@ -12,6 +10,11 @@
 
 - add aliases as well
     - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
+
+
+1.4.7d
+- allow FindFirstChangeNotification API to monitor for changes
+  - make as setting (disabled by default)
 
 
 1.4.7c

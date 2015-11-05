@@ -48,12 +48,15 @@
             this.syncColorsCurView = new System.Windows.Forms.RadioButton();
             this.syncColorsNone = new System.Windows.Forms.RadioButton();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label31 = new System.Windows.Forms.Label();
             this.reset = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.tip = new System.Windows.Forms.ToolTip(this.components);
+            this.browseFont = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.label30 = new System.Windows.Forms.Label();
             this.editSearchAllColumns = new System.Windows.Forms.RadioButton();
             this.editSearchCurColumnOnly = new System.Windows.Forms.RadioButton();
             this.editSearchBelow = new System.Windows.Forms.CheckBox();
@@ -114,9 +117,8 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.browseFont = new System.Windows.Forms.Button();
-            this.label30 = new System.Windows.Forms.Label();
-            this.label31 = new System.Windows.Forms.Label();
+            this.useFileMonitoringApi = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -389,6 +391,17 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Reset All Settings";
             // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label31.ForeColor = System.Drawing.Color.Red;
+            this.label31.Location = new System.Drawing.Point(445, 57);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(106, 13);
+            this.label31.TabIndex = 14;
+            this.label31.Text = "Requires Restart!";
+            // 
             // reset
             // 
             this.reset.Location = new System.Drawing.Point(557, 51);
@@ -408,6 +421,18 @@
             this.label9.TabIndex = 0;
             this.label9.Text = "Resets all settings to their defaults.\r\nYou will lose your history,\r\nand LogWizar" +
     "d will restart.";
+            // 
+            // browseFont
+            // 
+            this.browseFont.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.browseFont.Location = new System.Drawing.Point(236, 22);
+            this.browseFont.Name = "browseFont";
+            this.browseFont.Size = new System.Drawing.Size(29, 20);
+            this.browseFont.TabIndex = 12;
+            this.browseFont.Text = "...";
+            this.tip.SetToolTip(this.browseFont, "Browse Font...");
+            this.browseFont.UseVisualStyleBackColor = true;
+            this.browseFont.Click += new System.EventHandler(this.browseFont_Click);
             // 
             // tabControl1
             // 
@@ -439,6 +464,8 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.label2);
+            this.groupBox7.Controls.Add(this.useFileMonitoringApi);
             this.groupBox7.Controls.Add(this.label30);
             this.groupBox7.Controls.Add(this.browseFont);
             this.groupBox7.Controls.Add(this.editSearchAllColumns);
@@ -454,15 +481,26 @@
             this.groupBox7.Controls.Add(this.fontLabel);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(628, 222);
+            this.groupBox7.Size = new System.Drawing.Size(628, 228);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General";
             // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label30.ForeColor = System.Drawing.Color.Red;
+            this.label30.Location = new System.Drawing.Point(504, 26);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(106, 13);
+            this.label30.TabIndex = 13;
+            this.label30.Text = "Requires Restart!";
+            // 
             // editSearchAllColumns
             // 
             this.editSearchAllColumns.AutoSize = true;
-            this.editSearchAllColumns.Location = new System.Drawing.Point(375, 195);
+            this.editSearchAllColumns.Location = new System.Drawing.Point(375, 202);
             this.editSearchAllColumns.Name = "editSearchAllColumns";
             this.editSearchAllColumns.Size = new System.Drawing.Size(147, 21);
             this.editSearchAllColumns.TabIndex = 11;
@@ -473,7 +511,7 @@
             // editSearchCurColumnOnly
             // 
             this.editSearchCurColumnOnly.AutoSize = true;
-            this.editSearchCurColumnOnly.Location = new System.Drawing.Point(145, 195);
+            this.editSearchCurColumnOnly.Location = new System.Drawing.Point(145, 202);
             this.editSearchCurColumnOnly.Name = "editSearchCurColumnOnly";
             this.editSearchCurColumnOnly.Size = new System.Drawing.Size(224, 21);
             this.editSearchCurColumnOnly.TabIndex = 10;
@@ -484,7 +522,7 @@
             // editSearchBelow
             // 
             this.editSearchBelow.AutoSize = true;
-            this.editSearchBelow.Location = new System.Drawing.Point(261, 173);
+            this.editSearchBelow.Location = new System.Drawing.Point(261, 180);
             this.editSearchBelow.Name = "editSearchBelow";
             this.editSearchBelow.Size = new System.Drawing.Size(99, 21);
             this.editSearchBelow.TabIndex = 9;
@@ -494,7 +532,7 @@
             // editSearchAfter
             // 
             this.editSearchAfter.AutoSize = true;
-            this.editSearchAfter.Location = new System.Drawing.Point(145, 173);
+            this.editSearchAfter.Location = new System.Drawing.Point(145, 180);
             this.editSearchAfter.Name = "editSearchAfter";
             this.editSearchAfter.Size = new System.Drawing.Size(103, 21);
             this.editSearchAfter.TabIndex = 8;
@@ -504,7 +542,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(6, 174);
+            this.label20.Location = new System.Drawing.Point(6, 181);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(119, 17);
             this.label20.TabIndex = 7;
@@ -514,7 +552,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(97, 124);
+            this.label19.Location = new System.Drawing.Point(97, 139);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(513, 39);
             this.label19.TabIndex = 6;
@@ -528,7 +566,7 @@
             "Always",
             "With SPACE key",
             "With RightArrow key"});
-            this.editMode.Location = new System.Drawing.Point(100, 92);
+            this.editMode.Location = new System.Drawing.Point(100, 111);
             this.editMode.Name = "editMode";
             this.editMode.Size = new System.Drawing.Size(275, 24);
             this.editMode.TabIndex = 5;
@@ -536,7 +574,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 95);
+            this.label18.Location = new System.Drawing.Point(6, 114);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(71, 17);
             this.label18.TabIndex = 4;
@@ -1094,39 +1132,27 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // browseFont
+            // useFileMonitoringApi
             // 
-            this.browseFont.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.browseFont.Location = new System.Drawing.Point(236, 22);
-            this.browseFont.Name = "browseFont";
-            this.browseFont.Size = new System.Drawing.Size(29, 20);
-            this.browseFont.TabIndex = 12;
-            this.browseFont.Text = "...";
-            this.tip.SetToolTip(this.browseFont, "Browse Font...");
-            this.browseFont.UseVisualStyleBackColor = true;
-            this.browseFont.Click += new System.EventHandler(this.browseFont_Click);
+            this.useFileMonitoringApi.AutoSize = true;
+            this.useFileMonitoringApi.Location = new System.Drawing.Point(6, 78);
+            this.useFileMonitoringApi.Name = "useFileMonitoringApi";
+            this.useFileMonitoringApi.Size = new System.Drawing.Size(360, 21);
+            this.useFileMonitoringApi.TabIndex = 14;
+            this.useFileMonitoringApi.Text = "Use File Monitoring API (FindFirstChangeNotification)";
+            this.useFileMonitoringApi.UseVisualStyleBackColor = true;
+            this.useFileMonitoringApi.CheckedChanged += new System.EventHandler(this.useFileMonitoringApi_CheckedChanged);
             // 
-            // label30
+            // label2
             // 
-            this.label30.AutoSize = true;
-            this.label30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label30.ForeColor = System.Drawing.Color.Red;
-            this.label30.Location = new System.Drawing.Point(271, 26);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(106, 13);
-            this.label30.TabIndex = 13;
-            this.label30.Text = "Requires Restart!";
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label31.ForeColor = System.Drawing.Color.Red;
-            this.label31.Location = new System.Drawing.Point(445, 57);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(106, 13);
-            this.label31.TabIndex = 14;
-            this.label31.Text = "Requires Restart!";
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.Red;
+            this.label2.Location = new System.Drawing.Point(504, 81);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(106, 13);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "Requires Restart!";
             // 
             // settings_form
             // 
@@ -1269,6 +1295,8 @@
         private System.Windows.Forms.Button browseFont;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.CheckBox useFileMonitoringApi;
+        private System.Windows.Forms.Label label2;
 
     }
 }

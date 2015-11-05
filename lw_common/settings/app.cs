@@ -144,6 +144,11 @@ namespace lw_common {
         private string[] default_font_names;
         public int font_size = 9;
 
+        public bool use_file_monitoring_api = false;
+
+
+
+
 
         // file-by-file
         public bool bring_to_top_on_restart = false;
@@ -328,6 +333,8 @@ namespace lw_common {
                 load_save(load, ref default_font_names, "font_names");
             if (load)
                 this.default_font_names = default_font_names.Split(',');
+
+            load_save(load, ref use_file_monitoring_api, "use_file_monitoring_api", false);
         }
 
         private string initials(string name) {

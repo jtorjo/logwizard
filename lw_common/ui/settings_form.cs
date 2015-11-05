@@ -145,6 +145,7 @@ namespace lw_common.ui {
                 editSearchCurColumnOnly.Checked = true;
 
             filterShowFilterRowInFilterColor.Checked = app.inst.show_filter_row_in_filter_color;
+            useFileMonitoringApi.Checked = app.inst.use_file_monitoring_api;
         }
 
         private void save() {
@@ -221,6 +222,7 @@ namespace lw_common.ui {
             app.inst.edit_search_all_columns = editSearchAllColumns.Checked;
 
             app.inst.show_filter_row_in_filter_color = filterShowFilterRowInFilterColor.Checked;
+            app.inst.use_file_monitoring_api = useFileMonitoringApi.Checked;
 
             app.inst.save();
         }
@@ -270,6 +272,10 @@ namespace lw_common.ui {
                     DialogResult = DialogResult.OK;
                 }
             }
+        }
+
+        private void useFileMonitoringApi_CheckedChanged(object sender, EventArgs e) {
+
         }
     }
 }
