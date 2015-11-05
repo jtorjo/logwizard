@@ -9,12 +9,11 @@ using LogWizard;
 
 namespace lw_common.parse {
     public class factory {
-        private const string V2_PREFIX = "[v2]";
 
         // these are the settings that are to be saved in the context
         static public string get_context_dependent_settings(text_reader reader, string settings) {
             if (reader is file_text_reader) {
-                return new settings_as_string(settings).sub(new []{ "syntax"}).ToString();
+                return new settings_as_string(settings).sub(new []{ "syntax", "aliases" }).ToString();
             }
 
             return settings;
@@ -25,7 +24,7 @@ namespace lw_common.parse {
         }
 
         // note: log-dependent settings always override the context
-        static public string merge_settings(text_reader reader, string context, string log) {
+        static public string merge_settings(string context, string log) {
             var sett = new settings_as_string(context);
             sett.merge(new settings_as_string(log));
             return sett.ToString() ;

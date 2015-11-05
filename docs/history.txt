@@ -19,6 +19,14 @@
 	-> where do i keep them? context, file?
 	-aliases should be able to use in filters (case-insensitive? lo-case?, ***lo-case-no-space probably)
 
+
+1.4.8c
+- extra testing, saved minor bugs (saving settings)
+
+
+1.4.8b
+- storing settings - save context dependent settings
+
 1.4.8a
 - storing settings - loading settings works
   - this allows us to store any settings - in context and/or log - regardless of logs

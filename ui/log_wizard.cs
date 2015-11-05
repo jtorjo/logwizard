@@ -1338,7 +1338,16 @@ namespace LogWizard
         private void save() {
             if (ignore_change_ > 0)
                 return;
+            if (text_ == null)
+                return;
 
+            if (log_parser_ != null) {
+                string sett = factory.get_context_dependent_settings(text_, log_parser_.settings);
+                cur_context().default_settings = sett;
+            }
+            if ( !app.inst.file_to_settings.ContainsKey(text_.name))
+                app.inst.file_to_settings.Add(text_.name, "");
+            app.inst.file_to_settings[text_.name] = factory.get_log_dependent_settings(text_, log_parser_.settings);
             save_contexts();
 
             default_ui_.save("ui.default");
@@ -1771,9 +1780,9 @@ namespace LogWizard
 
             // by default - try to find the syntax by reading the header info
             //              otherwise, try to parse it
-            string file_default_syntax = text_ is file_text_reader ? log_to.file_to_syntax(text_.name) : "";
-            if (file_default_syntax != "")
-                file_default_syntax = "syntax=" + file_default_syntax;  // this overrides file settings
+            string file_to_syntax = text_ is file_text_reader ? log_to.file_to_syntax(text_.name) : null;
+            if (file_to_syntax == null)
+                file_to_syntax = "";
 
             string name = text_.name;
             if (history_.Count < 1)
@@ -1781,14 +1790,16 @@ namespace LogWizard
 
             // 1.1.25+ if I can't find the syntax from file-to-syntax, or by parsing the log, see if the context associated with this file has log-syntax
             string context_settings = file_to_context(name).default_settings;
-            string file_syntax = "syntax=" + text_.try_to_find_log_syntax();
-            file_syntax = factory.merge_settings(text_, file_syntax, file_default_syntax);
+            string file_default_syntax = "syntax=" + text_.try_to_find_log_syntax();
             // if user specifically overrides settings for a log, use that
             string log_settings = log_to.log_to_settings(name);
-            if (log_settings == "")
-                log_settings = file_syntax;
+            if (file_to_syntax != "")
+                log_settings = factory.merge_settings(log_settings, "syntax=" + file_to_syntax); // this overrides file settings
+            else if (log_settings == "")
+                if ( factory.get_single_setting(context_settings,"syntax") == "")
+                    log_settings = file_default_syntax;
 
-            string settings = factory.merge_settings(text_, context_settings, log_settings);
+            string settings = factory.merge_settings(context_settings, log_settings);
 
             logSyntaxCtrl.Text = factory.get_single_setting(settings, "syntax");
             logSyntaxCtrl.ForeColor = logSyntaxCtrl.Text != find_log_syntax.UNKNOWN_SYNTAX ? Color.Black : Color.Red;
