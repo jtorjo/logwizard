@@ -72,6 +72,14 @@ namespace lw_common.ui {
 
         public Color sel_bg(log_view parent) {
             var bg = this.bg(parent);
+
+            if ( parent.needs_scroll)
+                // the idea is that if this view updates a LOT and we're at the last row, 
+                // it's disturbing to the eye to constantly have new rows added (thus the former "last" would go up - being marked as "selected",
+                // then the selection would change to be the new "last", and so on)
+                if (parent.filter.last_change.AddSeconds(3.5) > DateTime.Now)
+                    return bg;
+
             Color dark_bg = util.darker_color(bg);
             Color darker_bg = util.darker_color(dark_bg);
             var focus = win32.focused_ctrl();

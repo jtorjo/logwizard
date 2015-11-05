@@ -209,6 +209,8 @@ namespace LogWizard {
 
         private easy_mutex new_lines_event_ = new easy_mutex("new lines (filter)");
 
+        private DateTime last_change_ = DateTime.MinValue;
+
         public enum change_type {
             new_lines, changed_filter, file_rewritten
         }
@@ -290,6 +292,10 @@ namespace LogWizard {
 
         public bool is_up_to_date {
             get { lock (this) return is_up_to_date_;  }
+        }
+
+        public DateTime last_change {
+            get { lock (this) return last_change_; }
         }
 
         // note: the only time this can return null is this: since we're refreshing on another thread,
@@ -620,11 +626,14 @@ namespace LogWizard {
                         replace = true;
                         force_recompute_matches_ = false;
                     }
-                if ( new_matches.Count > 0)
-                    if (replace) 
+                if (new_matches.Count > 0) {
+                    if (replace)
                         matches_.set_range(new_matches);
                     else
                         matches_.add_range(new_matches);
+                    lock (this)
+                        last_change_ = DateTime.Now;
+                }
 
                 apply_additions(old_match_count, new_log, rows);
                 if (new_matches.Count > app.inst.no_ui.min_filter_capacity) {

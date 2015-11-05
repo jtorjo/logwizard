@@ -105,6 +105,8 @@ namespace lw_common.ui
 
         private bool is_changing_column_width_ = false;
 
+        private bool needs_scroll_ = false;
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -952,7 +954,7 @@ namespace lw_common.ui
                 return; // not set yet
 
             bool needs_ui_update = model_.needs_ui_update;
-            bool needs_scroll = needs_scroll_to_last() && !needs_ui_update;
+            needs_scroll_ = needs_scroll_to_last() && !needs_ui_update;
 
             model_.refresh();
             int new_item_count = item_count;
@@ -989,7 +991,7 @@ namespace lw_common.ui
             }
 
             list.Refresh();
-            if (needs_scroll && more_items && !needs_ui_update)
+            if (needs_scroll_ && more_items && !needs_ui_update)
                 go_last();
         }
 
@@ -1887,6 +1889,10 @@ namespace lw_common.ui
 
         internal log_view_render render {
             get { return render_; }
+        }
+
+        internal bool needs_scroll {
+            get { return needs_scroll_; }
         }
 
 
