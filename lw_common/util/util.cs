@@ -48,19 +48,29 @@ namespace lw_common {
         {
             if (control == null)
                 return;
-            if (control.InvokeRequired)
-                control.Invoke( new Action(() => { action(); })  );
-            else
-                action();
+
+            try {
+                if (control.InvokeRequired)
+                    control.Invoke( new Action(() => { action(); })  );
+                else
+                    action();
+            } catch (ObjectDisposedException) {
+                // can happen when calling something from thread X while UI thread is being closed
+            }
         }
 
         public static void async_call(this Control control, Action action) {
             if (control == null)
                 return;
-            if (control.InvokeRequired)
-                control.BeginInvoke( new Action(() => { action(); })  );
-            else
-                action();
+
+            try {
+                if (control.InvokeRequired)
+                    control.BeginInvoke(new Action(() => { action(); }));
+                else
+                    action();
+            } catch (ObjectDisposedException) {
+                // can happen when calling something from thread X while UI thread is being closed
+            }
         }
     }
 

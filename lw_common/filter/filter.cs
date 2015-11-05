@@ -439,6 +439,7 @@ namespace LogWizard {
 
                 bool needs_recompute = false;
                 lock (this) needs_recompute = force_recompute_matches_;
+                int old_count = match_count;
 
                 log_reader new_, old;
                 lock (this) {
@@ -465,9 +466,16 @@ namespace LogWizard {
                     old_log_ = new_;
 
                 if (on_change != null) {
-                    if (new_lines_found) 
-                        on_change(file_rewritten ? change_type.file_rewritten : change_type.new_lines);
-                    else if (needs_recompute)
+                    int new_count = match_count;
+                    if (old_count != new_count)
+                        // this can happen if we compute matches while also being notified (in the other thread)
+                        new_lines_found = true;
+
+                    if (new_lines_found) {
+                        bool raise_event = file_rewritten || (old_count != new_count);
+                        if ( raise_event)
+                            on_change(file_rewritten ? change_type.file_rewritten : change_type.new_lines);
+                    } else if (needs_recompute)
                         on_change(change_type.changed_filter);
                 }
             }
@@ -612,10 +620,11 @@ namespace LogWizard {
                         replace = true;
                         force_recompute_matches_ = false;
                     }
-                if (replace) 
-                    matches_.set_range(new_matches);
-                else
-                    matches_.add_range(new_matches);
+                if ( new_matches.Count > 0)
+                    if (replace) 
+                        matches_.set_range(new_matches);
+                    else
+                        matches_.add_range(new_matches);
 
                 apply_additions(old_match_count, new_log, rows);
                 if (new_matches.Count > app.inst.no_ui.min_filter_capacity) {

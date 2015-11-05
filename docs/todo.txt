@@ -27,11 +27,6 @@ W1/nov 2015
 
 - pgup/pgdown/etc. - -> don't do any low level scroll whatsoever - i know the top index to be shown -> just ensure_visible + select item!
 
-- when monitoring real-time + on last line
-  - don't show it with a different color (the selection color) - it can be distracting
-  - we should show it on the normal color only if no updates for a while (like, 5 seconds or so - otherwise, show it with normal bg)
-
-
 - tip cp: allow only a class to access some functions
   - q: can i make this available on several classes?
   - explain why : normally, you have a class just be private, or the class be inside another class

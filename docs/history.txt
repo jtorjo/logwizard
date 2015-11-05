@@ -2,8 +2,10 @@
 - use "fch = FindFirstChangeNotification (szNewPath, FALSE, FILE_NOTIFY_CHANGE_SIZE);" => to monitor for file changes ???
   - make as setting (disabled by default)
 
-- filter; new lines -> only when no of lines changes or file rewritten
 
+- when monitoring real-time + on last line
+  - don't show it with a different color (the selection color) - it can be distracting
+  - we should show it on the normal color only if no updates for a while (like, 5 seconds or so - otherwise, show it with normal bg)
 
 
 - parse by line "xx: yy", and empty line is end-of-record
@@ -13,6 +15,11 @@
 
 - add aliases as well
     - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
+
+
+1.4.7b
+- filter: new lines -> only when no of lines changes or file rewritten
+- generate "new lines" events every time new lines are added to a view
 
 
 1.4.7a
