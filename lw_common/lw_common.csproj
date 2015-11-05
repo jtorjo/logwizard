@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="3rdparty\ColorEx.cs" />
+    <Compile Include="async_log\async_file_appender.cs" />
     <Compile Include="context\find_log_syntax.cs" />
     <Compile Include="context\log_to_default_context.cs" />
     <Compile Include="context\log_to_default_syntax.cs" />

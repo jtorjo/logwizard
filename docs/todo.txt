@@ -1,9 +1,3 @@
-
-- take some picture(s) with logwizard - to place on github
-
-
-
-
 ----------------------------------------------------
 
 -- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
@@ -38,8 +32,16 @@ W1/nov 2015
 	- from the button - have something called - show history (which shows the combo)
 	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
 
+- bug: resizing logview -> update UI of edit - same for moving!
+- bug: find enter something new, like "sit". press Enter. It will end up opening the combo (instead of taking effect) - this is only a problem in "full log"
+  - same stuff happens on ctrl-h on "full log"
+- bug: escape() - should re-add existing edit text(otherwise, former selection is shown on edit)
 
+- pgup/pgdown/etc. - -> don't do any low level scroll whatsoever - i know the top index to be shown -> just ensure_visible + select item!
 
+- when monitoring real-time + on last line
+  - don't show it with a different color (the selection color) - it can be distracting
+  - we should show it on the normal color only if no updates for a while (like, 5 seconds or so - otherwise, show it with normal bg)
 
 
 - tip cp: allow only a class to access some functions
@@ -146,6 +148,8 @@ W4/nov 2015
 			   - only current shown thread (from full log) 
 			   - everything (from full log) + everything (from view) 
 			   - which is the view itself
+
+
 
 
 
@@ -366,6 +370,11 @@ W4/nov 2015
 
 
 
+- (pro_v) allow formatters for columns - like -> allow stripping or changing info based on the message
+  example:
+  [new] window popup 81E26/pid7740-v/#32770/Tournament Registration/{X=910,Y=328,Width=249,Height=268}/p11460/o11460
+  - i want to have something like 910,328, 249x268
+    - the idea is to strip info from long lines and allow seing it when hovering or something?
 
 - (pro_v) allow applying a transformation on a given filter
   DEBUG [new] window table 1518A8/pid20664-v/PokerStarsTableFrameClass/1359422357 1 - $400/$800 Ante $50 USD - No Limit Hold'em/{X=90,Y=34,Width=774,Height=562}/p0/o0
