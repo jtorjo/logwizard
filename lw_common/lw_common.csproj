@@ -61,6 +61,7 @@
     <Compile Include="parse\log_entry_line.cs" />
     <Compile Include="parse\parsers\file\csv_file.cs" />
     <Compile Include="parse\parsers\file\text_file_part_on_single_line.cs" />
+    <Compile Include="parse\parsers\file\xml\string_builder_reader.cs" />
     <Compile Include="parse\parsers\file\xml_file.cs" />
     <Compile Include="parse\parsers\system\debug_print.cs" />
     <Compile Include="parse\parsers\system\event_viewer.cs" />

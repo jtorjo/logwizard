@@ -2,19 +2,16 @@
 
 
 
-
-
-- parse by line "xx: yy", and empty line is end-of-record
-  = take care of the case when we read a partial entry
-- parse xml, csv? (first version, that is)
-  take quicklook http://www.codeproject.com/Articles/30795/C-WPF-Log-Net-Viewer
-  xml -> use DOM?
-
 - add aliases as well
 	-> where do i keep them? context, file?
 	  - both - if not found in file, take from context
 	    - note: this is implemented in 'factory' class - i just need to make sure they get saved correctly, when user modifies them
 	-aliases should be able to use in filters (***lo-case-no-space probably)
+	  - in filters - i should be able to use - the column name or the friendly-name-locase-no-space
+
+
+1.4.8f
+- added xml and csv parsers - NOT TESTED
 
 
 1.4.8e

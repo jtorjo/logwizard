@@ -119,6 +119,28 @@ namespace lw_common.parse.parsers {
             }
         }
 
+        public override List<string> column_names {
+            get { lock(this) return column_names_.ToList(); }
+        }
+
+        // forces the WHOLE FILE to be reloaded
+        //
+        // be VERY careful calling this - I should call this only when the syntax has changed
+        public override void force_reload() {
+            lock (this) {
+                entries_.Clear();
+                last_entry_ = new log_entry_line();
+                string_.clear();
+                valid_line_count_ = 0;
+                column_names_.Clear();
+            }
+        }
+
+        public override bool up_to_date {
+            get { return up_to_date_; }
+        }
+
+
         public override void read_to_end() {
             // assume text is written line by line (thus, we read full lines)
 
@@ -185,28 +207,6 @@ namespace lw_common.parse.parsers {
                 entries_.AddRange(entries_now);
             }
         }
-
-        public override List<string> column_names {
-            get { lock(this) return column_names_.ToList(); }
-        }
-
-        // forces the WHOLE FILE to be reloaded
-        //
-        // be VERY careful calling this - I should call this only when the syntax has changed
-        public override void force_reload() {
-            lock (this) {
-                entries_.Clear();
-                last_entry_ = new log_entry_line();
-                string_.clear();
-                valid_line_count_ = 0;
-                column_names_.Clear();
-            }
-        }
-
-        public override bool up_to_date {
-            get { return up_to_date_; }
-        }
-
 
 
 

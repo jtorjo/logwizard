@@ -22,20 +22,6 @@ W1/nov 2015
 
 
 
-- low pane + status: 
-  - they should combine into one
-  - first: by default, Status is shown , and at the end, there will be a button called "What's Up?'" (or some other name)
-    - from the button, access all the existing commands (Toggles,Refresh, Hotkeys Help etc.)
-	- from the button - have something called - show history (which shows the combo)
-	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
-
-- tip cp: allow only a class to access some functions
-  - q: can i make this available on several classes?
-  - explain why : normally, you have a class just be private, or the class be inside another class
-  - have lock class derive from lock_base<> so that i can just say some_class.lock ??
-  - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
-  - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
-  - in my bio - update it with link to my above aritcle?
 
 
 
@@ -71,6 +57,21 @@ W2/nov 2015
 		This rename is a kind of file update.
 		So, I expected LW to update the display, but it does not.
 		Even Refresh doesn't work.
+
+- low pane + status: 
+  - they should combine into one
+  - first: by default, Status is shown , and at the end, there will be a button called "What's Up?'" (or some other name)
+    - from the button, access all the existing commands (Toggles,Refresh, Hotkeys Help etc.)
+	- from the button - have something called - show history (which shows the combo)
+	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
+
+- tip cp: allow only a class to access some functions
+  - q: can i make this available on several classes?
+  - explain why : normally, you have a class just be private, or the class be inside another class
+  - have lock class derive from lock_base<> so that i can just say some_class.lock ??
+  - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
+  - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
+  - in my bio - update it with link to my above aritcle?
 
 - (if time available) find: have a "To Filter" button (good when doing regex search)
   - two possibilities -> Apply to existing Lines, Apply to Full Log
