@@ -33,6 +33,7 @@ namespace lw_common.parse.parsers {
         }
 
         public override void read_to_end() {
+            // use last_
         }
 
         public override int line_count {

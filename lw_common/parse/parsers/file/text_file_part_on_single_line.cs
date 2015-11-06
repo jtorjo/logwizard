@@ -30,7 +30,11 @@ namespace lw_common.parse.parsers {
 
     class text_file_part_on_single_line  : log_parser_base {
 
+        private memory_optimized_list<line> lines_ = new memory_optimized_list<line>() { name = "parser-posl"};
+
         private settings_as_string sett_;
+
+        private log_entry_line last_ = new log_entry_line();
 
         private char separator_ = ':';
 
@@ -62,23 +66,41 @@ namespace lw_common.parse.parsers {
             return false;
         }
 
-
-        public override void read_to_end() {
-        }
-
         public override int line_count {
-            get { return 0; }
+            get { lock(this)  return lines_.Count; }
         }
 
         public override line line_at(int idx) {
-            return null;
+            lock (this) {
+                if (idx < lines_.Count)
+                    return lines_[idx];
+                else {
+                    // this can happen, when the log has been re-written, and everything is being refreshed
+                    throw new line.exception("invalid line request " + idx + " / " + lines_.Count);
+                }
+            }
         }
 
+        public override void read_to_end() {
+            // assume text is written line by line (thus, we read full lines)
+
+            // by default, _0 => first item, _1 = second item, and so on (aliases)
+
+
+            // use last_
+
+            // look for empty line
+
+        }
         public override void force_reload() {
         }
 
         public override bool up_to_date {
             get { return false; }
         }
+
+
+
+
     }
 }

@@ -93,7 +93,7 @@ namespace lw_common.parse.parsers {
 
 
         private large_string string_ = new large_string();
-        private memory_optimized_list<line> lines_ = new memory_optimized_list<line>() { name = "parser"};
+        private memory_optimized_list<line> lines_ = new memory_optimized_list<line>() { name = "parser-lbl"};
 
         private DateTime was_last_line_incomplete_ = DateTime.MinValue;
 

@@ -55,8 +55,10 @@
     <Compile Include="filter\line.cs" />
     <Compile Include="notes\md5_log_keeper.cs" />
     <Compile Include="notes\notes_keeper.cs" />
+    <Compile Include="parse\aliases.cs" />
     <Compile Include="parse\factory.cs" />
     <Compile Include="parse\log_parser.cs" />
+    <Compile Include="parse\log_entry_line.cs" />
     <Compile Include="parse\parsers\file\csv_file.cs" />
     <Compile Include="parse\parsers\file\text_file_part_on_single_line.cs" />
     <Compile Include="parse\parsers\file\xml_file.cs" />

@@ -58,6 +58,7 @@ W2/nov 2015
 ---------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
  ***- this needs to exist for each type of log - even files (specify type: line-by-line, log line, xml, csv etc.)
  - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))
+ ------------ note: i do have them now, in string_as_settings
 
 - set associations (.txt, .log, etc) -> don't automatically associate with LW -> have an option to do so
 
@@ -78,6 +79,14 @@ W2/nov 2015
 
 - add/del view , sync view buttons -> hide them by default - they should be visible only if the mouse is around them (on the y axis)
   - care about whether showing header or not?
+
+
+
+
+
+
+
+
 
 
 
