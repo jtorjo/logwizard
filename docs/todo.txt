@@ -3,7 +3,7 @@
 
 - https://github.com/NLog/NLog/wiki/Tools
 
-W1/nov 2015
+W2/nov 2015
 
 - edit toggles - when clicking something, don't hide the menu (like in the columns menu)
 
@@ -20,22 +20,6 @@ W1/nov 2015
 - pgup/pgdown/etc. - -> don't do any low level scroll whatsoever - i know the top index to be shown -> just ensure_visible + select item!
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-W2/nov 2015
 - how easy is it to access github to look for updates?
   - easy to show in Status bar when new vresion available. Show it in About/history
   - maybe mark huge features with "*", while normal features shown in "-"
@@ -64,6 +48,8 @@ W2/nov 2015
     - from the button, access all the existing commands (Toggles,Refresh, Hotkeys Help etc.)
 	- from the button - have something called - show history (which shows the combo)
 	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
+
+- bug: shift -arrow down - does not work, it goes to end.
 
 - tip cp: allow only a class to access some functions
   - q: can i make this available on several classes?

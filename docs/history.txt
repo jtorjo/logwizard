@@ -1,5 +1,5 @@
 
-
+-todo: test xml and csv parsers 
 
 
 - add aliases as well
@@ -9,6 +9,10 @@
 	-aliases should be able to use in filters (***lo-case-no-space probably)
 	  - in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 
+
+1.4.8g
+- synchronize colors - sync just with the current view by default
+- created simple project for simulating xml logger
 
 1.4.8f
 - added xml and csv parsers - NOT TESTED
