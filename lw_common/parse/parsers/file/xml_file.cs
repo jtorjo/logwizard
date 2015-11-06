@@ -108,6 +108,8 @@ namespace lw_common.parse.parsers {
                 text_reader = xml_text_reader_;
             }
 
+            // FIXME read all attributes , and save them as name.attr_name ; if name contains "xxx:", ignore that
+            // timestamp -> date + time
             log_entry_line entry = new log_entry_line();
             while (text_reader.Read()) {
                 if (text_reader.NodeType == XmlNodeType.Element) {
