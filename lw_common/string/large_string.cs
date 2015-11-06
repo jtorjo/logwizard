@@ -40,6 +40,7 @@ namespace lw_common
 
         private StringBuilder string_ = new StringBuilder();
 
+        // index of each enter
         private memory_optimized_list<int> indexes_ = new memory_optimized_list<int>() { name = "large_string_indexes", min_capacity = app.inst.no_ui.min_lines_capacity };
 
         private bool test_we_computed_lines_correctly = false; //util.is_debug;
@@ -107,6 +108,13 @@ namespace lw_common
 
             if (test_we_computed_lines_correctly)
                 test_compute_lines();
+        }
+
+        // 1.4.8+
+        public void add_preparsed_line(string line) {
+            string_.Append(line);
+            indexes_.Add( string_.Length);
+            string_.Append("\r\n");
         }
 
         public void clear() {

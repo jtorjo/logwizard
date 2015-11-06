@@ -220,6 +220,10 @@ namespace LogWizard
                         return;
 
                 long len = new FileInfo(file_).Length;
+                if (len == 0 && util.is_debug)
+                    // when testing, I can manually add lines to a log - if in notepad++, this will temporarily set file length to zero
+                    return;
+
                 bool file_rewritten = false;
                 long offset;
                 lock (this) offset = (long) read_byte_count_;

@@ -2,7 +2,6 @@
 
 
 
-- by default, guess the parser of the file
 
 
 - parse by line "xx: yy", and empty line is end-of-record
@@ -12,11 +11,19 @@
   xml -> use DOM?
 
 - add aliases as well
-    - for line-by-line -> write the name in {} -> when used in filtering, it should be lower-case
-    - allow for aliases based on column index like _0=Date, _1=Time , and so on - both types of aliases need to work
 	-> where do i keep them? context, file?
-	-aliases should be able to use in filters (case-insensitive? lo-case?, ***lo-case-no-space probably)
+	  - both - if not found in file, take from context
+	    - note: this is implemented in 'factory' class - i just need to make sure they get saved correctly, when user modifies them
+	-aliases should be able to use in filters (***lo-case-no-space probably)
 
+
+1.4.8e
+- parser for line "xx: yy" and empty line is end-of-record - works
+- aliases work (converting alias name to info-type)
+    - allow for aliases based on column index like _0=Date, _1=Time , and so on - both types of aliases need to work
+- done: add aliases as well
+	- i keep them in both context/file - if not found in file, take from context
+	  - note: this is implemented in 'factory' class - i just need to make sure they get saved correctly, when user modifies them
 
 
 1.4.8d

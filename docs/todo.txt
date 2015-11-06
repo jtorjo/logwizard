@@ -12,14 +12,14 @@ W1/nov 2015
    --- so basically have a way to force some columns to be visible
        - perhaps if i just use what the parser is giving me, i would simply never need this "guessing"
 
-
-
 - bug: resizing logview -> update UI of edit - same for moving!
 - bug: find enter something new, like "sit". press Enter. It will end up opening the combo (instead of taking effect) - this is only a problem in "full log"
   - same stuff happens on ctrl-h on "full log"
 - bug: escape() - should re-add existing edit text(otherwise, former selection is shown on edit)
 
 - pgup/pgdown/etc. - -> don't do any low level scroll whatsoever - i know the top index to be shown -> just ensure_visible + select item!
+
+
 
 
 - low pane + status: 

@@ -24,9 +24,9 @@ namespace lw_common {
             }
         }
 
-        public string get(string name) {
+        public string get(string name, string default_ = "") {
             lock(this)
-                return sett_.ContainsKey(name) ? sett_[name] : "";
+                return sett_.ContainsKey(name) ? sett_[name] : default_;
         }
 
         public void set(string name, string val) {

@@ -1622,8 +1622,11 @@ namespace LogWizard
                 curContextCtrl.SelectedIndex = contexts_.IndexOf(file_ctx);
 
             if (logSyntaxCtrl.Text == find_log_syntax.UNKNOWN_SYNTAX) {
-                set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Test' button on the top-right.", status_type.err);
-                show_source(true);
+                if (log_parser_.needs_text_syntax) {
+                    set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Test' button on the top-right.",
+                        status_type.err);
+                    show_source(true);
+                }
             } else if (!cur_context().has_not_empty_views)
                 set_status("Don't the columns look ok? Perpaps LogWizard did not correctly parse them... If so, Toggle the Source Pane ON (Alt-O), anc click on 'Test'.", status_type.warn, 15000);
 

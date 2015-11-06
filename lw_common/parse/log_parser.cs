@@ -69,6 +69,20 @@ namespace lw_common
             new Thread(refresh_thread) {IsBackground = true}.Start();
         }
 
+        public bool needs_text_syntax {
+            get { return forward_to_parser_ is text_file_line_by_line; }
+        }
+
+        public List<string> column_names {
+            get { return forward_to_parser_.column_names; }
+        }
+
+        public aliases aliases {
+            get {
+                return new aliases( new settings_as_string(settings).get("aliases"));
+            }
+        }
+
         internal void on_log_has_new_lines(bool file_rewritten) {
             if (disposed_)
                 return;

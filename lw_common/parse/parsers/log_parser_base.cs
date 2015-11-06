@@ -37,6 +37,11 @@ namespace lw_common.parse.parsers {
 
         public abstract bool up_to_date { get; }
 
+        // column names - parsed from the log (if any)
+        public virtual  List<string> column_names {
+            get { return new List<string>(); }
+        }
+
         public virtual void on_settings_changed(string settings) {
             
         }
