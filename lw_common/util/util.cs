@@ -412,7 +412,29 @@ namespace lw_common {
             time_str = normalize_time_str(time_str);
             DateTime.TryParseExact( time_str, "HH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out time);
             return time;
-        } 
+        }
+
+        // checks really fast if this is a timestamp (does not perform a full check, just looks for some key facts)
+        //
+        // log4net: 2015-11-07T01:15:54.3091773+02:00 or 2015-11-07T01:15:54.3091773
+        public static bool is_timestamp_fast(string str) {
+            bool is_ = str.Length == 27 || str.Length == 33;
+            if (is_)
+                is_ = str[10] == 'T';
+            if (is_)
+                is_ = str[13] == ':' && str[16] == ':';
+            return is_;
+        }
+
+        // splits timestamp into date and time
+        public static Tuple<string, string> split_timestamp(string str) {
+            Debug.Assert(is_timestamp_fast(str));
+
+            string date = str.Substring(0, 10);
+            // 1.4.8+ note: at this time, we only process/allow 3 digits passed second
+            string time = str.Substring(11, 12); 
+            return new Tuple<string, string>(date, time);
+        }
 
         /*
         private static void test_normalize_time(string a, string b) {

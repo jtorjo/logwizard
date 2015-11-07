@@ -9,6 +9,9 @@ using System.Text;
 namespace lw_common.parse.parsers.file.xml {
     /* 
         the reason i have this: I want to constantly append to it, as the file grows (in case we go real-time)
+
+
+        1.4.8k+ apparently, i don't need this, since I can use a parser context, and can constantly parse new fragments
     */
     public class string_builder_reader : TextReader 
     {

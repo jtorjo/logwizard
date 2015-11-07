@@ -12,11 +12,34 @@ namespace lw_common.parse {
         // .. so i know the order they were added
         private readonly List<string> names_ = new List<string>(); 
 
+
+        // performs an analysis of the text, and then adds it. looks for common patterns, such as whether it's a timestamp or not
+        //
+        // note: this can end up adding multiple parts
+        public void analyze_and_add(string name, string value) {
+            bool is_timestamp = name.Contains("timestamp");
+            if (!is_timestamp)
+                // check for possible timestamp entries
+                is_timestamp = util.is_timestamp_fast(value);
+
+            if ( is_timestamp)
+                add_timestamp_to_entry(name, value);
+            else 
+                add(name, value);
+        }
+
         public void add(string name, string value) {
             infos_.Add(name, entry_.Length);
             names_.Add(name);
             entry_ += value;
         }
+
+        private void add_timestamp_to_entry(string name, string text) {
+            var stamp = util.split_timestamp(text);
+            add("date", stamp.Item1);
+            add("time", stamp.Item2);
+        }
+
 
         // it's basically something to be appended to last entry
         public void append_to_last(string value) {

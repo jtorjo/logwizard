@@ -9,6 +9,15 @@
 	-aliases should be able to use in filters (***lo-case-no-space probably)
 	  - in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 
+- aliases
+
+- settings for file (UI)
+
+
+
+1.4.8k
+- parsing from xml file - works
+
 
 1.4.8j
 - aliases: If nothing is set, everything matches to ctx1, ctx2, ... and the last one matches to msg.

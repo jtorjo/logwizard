@@ -50,6 +50,7 @@ namespace lw_common.parse.parsers.file {
             on_new_lines( reader_.read_next_text());
         }
 
+
         public override int line_count {
             get { lock(this)  return entries_.Count; }
         }
