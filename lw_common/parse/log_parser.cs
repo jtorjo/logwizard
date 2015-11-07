@@ -87,7 +87,7 @@ namespace lw_common
 
         public aliases aliases {
             get {
-                return new aliases( new settings_as_string(settings).get("aliases"));
+                return forward_to_parser_.aliases;
             }
             set {
                 var sett = new settings_as_string(settings);

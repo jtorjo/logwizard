@@ -218,6 +218,17 @@ namespace lw_common.ui
 
         private void edit_aliases() {
             lv_parent.on_edit_aliases();
+            update_column_names();
+        }
+
+        internal void update_column_names() {
+            foreach (info_type i in Enum.GetValues(typeof (info_type))) {
+                // for msg column - we use the default name
+                if (i == info_type.max || i == info_type.msg)
+                    continue;
+                var col = log_view_cell.column(this, i);
+                col.Text = filter_.log.aliases.friendly_name(i);
+            }
         }
 
         private void menu_Closing(object sender, ToolStripDropDownClosingEventArgs e) {

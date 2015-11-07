@@ -28,7 +28,7 @@ namespace lw_common.parse.parsers {
         protected bool disposed_ = false;
 
         protected settings_as_string sett_;
-        protected aliases aliases_;
+        private aliases aliases_;
 
         public log_parser_base(settings_as_string sett) {
             sett_ = sett;
@@ -48,6 +48,10 @@ namespace lw_common.parse.parsers {
         // column names - parsed from the log (if any)
         public virtual  List<string> column_names {
             get { return new List<string>(); }
+        }
+
+        public aliases aliases {
+            get { return aliases_; }
         }
 
         public void on_settings_changed(string settings) {

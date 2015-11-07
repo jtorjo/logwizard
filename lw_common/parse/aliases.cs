@@ -76,17 +76,20 @@ namespace lw_common.parse {
 
         public aliases(string aliases_string) {
             sett_ = new settings_as_string(aliases_string.Replace(separator_, "\r\n"));
-
-            foreach (string name in sett_.names()) {
-                var value = sett_.get(name);
-                var used_value = string_to_info_type(value);
-                if (used_value != info_type.max)
-                    name_to_column_.set( value, used_value);
-            }
+            init();
         }
 
         private aliases() {
             
+        }
+
+        private void init() {
+            foreach (string name in sett_.names()) {
+                var value_str = get_value_part( sett_.get(name));
+                var used_value = string_to_info_type(value_str);
+                if (used_value != info_type.max)
+                    name_to_column_.set( name, used_value);
+            }            
         }
 
         public string get(string column) {
@@ -102,7 +105,13 @@ namespace lw_common.parse {
         }
 
         public static aliases from_enter_separated_string(string s) {
-            return new aliases() { sett_ = new settings_as_string(s) };
+            var result = new aliases() { sett_ = new settings_as_string(s) };
+            result.init();
+            // this will force matching all log columns to our Logwizard columns
+            var names = result.sett_.names().ToList();
+            foreach (var name in names)
+                result.to_info_type(name, names);
+            return result;
         }
 
 
@@ -127,7 +136,7 @@ namespace lw_common.parse {
         }
 
 
-        public string friendly_name(info_type info, List<string> names) {
+        public string friendly_name(info_type info) {
             string as_string = info.ToString();
             var found = sett_.get(as_string);
             if (found != "")
@@ -140,6 +149,18 @@ namespace lw_common.parse {
                 // the 'value' syntax is "name[{Friendly Name}]"
                 if (found_as_idx.IndexOf("{") >= 0) 
                     return get_friendly_name_part(found_as_idx);
+            }
+
+            if (name_to_column_.has_value(info)) {
+                string name = name_to_column_.value_to_key(info);
+                found = sett_.get(name);
+                if (found != "") {
+                    // hand=ctx1{Some Awesome Title}
+                    // ctx1=Some Awesome Title
+                    if ( found != get_friendly_name_part(found))
+                        return get_friendly_name_part(found);
+                } 
+                return name;
             }
 
             return as_string;

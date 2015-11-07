@@ -59,7 +59,7 @@ namespace lw_common.parse.parsers.file {
             lock (this) {
                 if (idx < entries_.Count) {
                     var entry = entries_[idx];
-                    var l = new line( new sub_string(string_, idx), entry.idx_in_line(aliases_)  );
+                    var l = new line( new sub_string(string_, idx), entry.idx_in_line(aliases)  );
                     return l;
                 } else {
                     // this can happen, when the log has been re-written, and everything is being refreshed

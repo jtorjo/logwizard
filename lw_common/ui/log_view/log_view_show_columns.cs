@@ -39,6 +39,10 @@ namespace lw_common.ui {
                 foreach (log_view lv in all_views)
                     apply_column_positions(lv);
                 apply_column_positions(full_log);
+
+                full_log.update_column_names();
+                foreach (log_view lv in all_views)
+                    lv.update_column_names();
             }
         }
 
