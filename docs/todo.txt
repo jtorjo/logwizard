@@ -45,6 +45,7 @@ d2/3
        - perhaps if i just use what the parser is giving me, i would simply never need this "guessing"
 	   - also, care about aliases?
 	   - if a column does not show up in aliases, no point in showing it????( probably for line-by-line i need to manually compute aliases from syntax)
+	   - when the log file is changed, i need to update the visible columns based on what info the file has
 
 
 ---------- for non-file logs (like, event log, db, sockets?, outputdebugstring)

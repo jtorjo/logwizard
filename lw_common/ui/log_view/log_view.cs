@@ -222,6 +222,9 @@ namespace lw_common.ui
         }
 
         internal void update_column_names() {
+            if (filter.log == null)
+                return;
+
             foreach (info_type i in Enum.GetValues(typeof (info_type))) {
                 // for msg column - we use the default name
                 if (i == info_type.max || i == info_type.msg)
