@@ -135,12 +135,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ui\go_to_line_time_form.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ui\go_to_line_time_form.Designer.cs">
-      <DependentUpon>go_to_line_time_form.cs</DependentUpon>
-    </Compile>
     <Compile Include="ui\Dummy.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,9 +151,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ui\Dummy.resx">
       <DependentUpon>Dummy.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ui\go_to_line_time_form.resx">
-      <DependentUpon>go_to_line_time_form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\log_wizard.resx">
       <DependentUpon>log_wizard.cs</DependentUpon>

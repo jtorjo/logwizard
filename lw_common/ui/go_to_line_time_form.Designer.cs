@@ -1,4 +1,4 @@
-﻿namespace LogWizard.ui {
+﻿namespace lw_common.ui {
     partial class go_to_line_time_form {
         /// <summary>
         /// Required designer variable.

@@ -1,5 +1,3 @@
-
-
 - add aliases as well
 	-> where do i keep them? context, file?
 	  - both - if not found in file, take from context
@@ -8,7 +6,20 @@
 	  - in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 
 - edit aliases
+  - need to pass the column names when editing
+  - help: as default string, just have something like each_name=[something] (for names that are not recognized)
+  - show in help the types of aliases
 
+
+
+
+- edit toggles - when clicking something, don't hide the menu (like in the columns menu)
+
+- bug: resizing logview -> update UI of edit - same for moving!
+
+
+1.4.8m
+- moved go_to_linetime into lw_common
 
 
 1.4.8l

@@ -27,11 +27,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using lw_common;
 
-namespace LogWizard.ui {
-    partial class go_to_line_time_form : Form {
-        public go_to_line_time_form(log_wizard parent) {
+namespace lw_common.ui {
+    public partial class go_to_line_time_form : Form {
+        public go_to_line_time_form(Form parent) {
             InitializeComponent();
             TopMost = parent.TopMost;
         }

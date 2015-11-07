@@ -37,7 +37,6 @@ using lw_common.parse;
 using lw_common.ui;
 using LogWizard.context;
 using LogWizard.Properties;
-using LogWizard.ui;
 
 namespace LogWizard
 {

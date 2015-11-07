@@ -98,6 +98,12 @@
       <DependentUpon>filter_ctrl.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\font_list.cs" />
+    <Compile Include="ui\go_to_line_time_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\go_to_line_time_form.Designer.cs">
+      <DependentUpon>go_to_line_time_form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\gradient_brush_list.cs" />
     <Compile Include="ui\log_view\log_view.cs">
       <SubType>UserControl</SubType>
@@ -204,6 +210,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ui\filter_ctrl.resx">
       <DependentUpon>filter_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\go_to_line_time_form.resx">
+      <DependentUpon>go_to_line_time_form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\log_view\log_view.resx">
       <DependentUpon>log_view.cs</DependentUpon>

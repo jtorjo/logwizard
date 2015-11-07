@@ -1,23 +1,17 @@
-----------------------------------------------------
-
 
 - https://github.com/NLog/NLog/wiki/Tools
 
 W2/nov 2015
 
-- edit toggles - when clicking something, don't hide the menu (like in the columns menu)
-
-- refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
-  otherwise, i could end up ignoring a column if the first 10 values are empty
-   --- so basically have a way to force some columns to be visible
-       - perhaps if i just use what the parser is giving me, i would simply never need this "guessing"
-
-- bug: resizing logview -> update UI of edit - same for moving!
-- bug: find enter something new, like "sit". press Enter. It will end up opening the combo (instead of taking effect) - this is only a problem in "full log"
-  - same stuff happens on ctrl-h on "full log"
+d1
 - bug: escape() - should re-add existing edit text(otherwise, former selection is shown on edit)
 
-- pgup/pgdown/etc. - -> don't do any low level scroll whatsoever - i know the top index to be shown -> just ensure_visible + select item!
+- bug: find enter something new, like "sit". press Enter. It will end up opening the combo (instead of taking effect) - this is only a problem in "full log"
+  - same stuff happens on ctrl-h on "full log"
+
+- pgup/pgdown/etc. - -> don't do any low level scroll whatsoever - i know the top index to be shown -> just ensure_visible + select item + refresh!
+
+
 
 
 - how easy is it to access github to look for updates?
@@ -25,31 +19,45 @@ W2/nov 2015
   - maybe mark huge features with "*", while normal features shown in "-"
   + article (code should be cpol?) (probably tip)
 
----------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
- ***- this needs to exist for each type of log - even files (specify type: line-by-line, log line, xml, csv etc.)
- - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))
- ------------ note: i do have them now, in string_as_settings
 
-- set associations (.txt, .log, etc) -> don't automatically associate with LW -> have an option to do so
-
-- bug:	I opened a file, A.txt, in LW.
-		Then I copied that to A-copy.txt.  So I have A.txt and A-copy.txt.
-		Then deleted A.txt.
-		So, LW now clears the display for A.txt.
-		So far so good.
-		Next, I renamed A-copy.txt to A.txt.
-		This rename is a kind of file update.
-		So, I expected LW to update the display, but it does not.
-		Even Refresh doesn't work.
-
+d2
 - low pane + status: 
-  - they should combine into one
+  - they should combine into one - i should use a better status control, maybe richedit (readonly)?
   - first: by default, Status is shown , and at the end, there will be a button called "What's Up?'" (or some other name)
     - from the button, access all the existing commands (Toggles,Refresh, Hotkeys Help etc.)
 	- from the button - have something called - show history (which shows the combo)
 	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
 
 - bug: shift -arrow down - does not work, it goes to end.
+
+- add/del view , sync view buttons -> hide them by default - they should be visible only if the mouse is around them (on the y axis)
+  - care about whether showing header or not?
+
+
+d2/3
+- refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
+  otherwise, i could end up ignoring a column if the first 10 values are empty
+   --- so basically have a way to force some columns to be visible
+       - perhaps if i just use what the parser is giving me, i would simply never need this "guessing"
+	   - also, care about aliases?
+	   - if a column does not show up in aliases, no point in showing it????( probably for line-by-line i need to manually compute aliases from syntax)
+
+
+---------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
+ ***- this needs to exist for each type of log - even files (specify type: line-by-line, log line, xml, csv etc.)
+ - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))
+ ------------ note: i do have them now, in string_as_settings
+ - after showing dialog, need to find out if settings change require restart!
+
+- bug:	I opened a file, A.txt, in LW. Then I copied that to A-copy.txt.  So I have A.txt and A-copy.txt. Then deleted A.txt. So, LW now clears the display for A.txt.
+		So far so good. Next, I renamed A-copy.txt to A.txt. This rename is a kind of file update. So, I expected LW to update the display, but it does not. Even Refresh doesn't work.
+
+d4
+- set associations (.txt, .log, .zip? .xml .csv etc) -> don't automatically associate with LW -> have an option to do so
+  - note: i need to start another app to do this (with admin credentials)
+
+
+
 
 - tip cp: allow only a class to access some functions
   - q: can i make this available on several classes?
@@ -64,8 +72,6 @@ W2/nov 2015
     + select Color/Match Color/default color?
 	-- make this rather generic, so that later i can add more attributes if needed (this is also used in right-click)
 
-- add/del view , sync view buttons -> hide them by default - they should be visible only if the mouse is around them (on the y axis)
-  - care about whether showing header or not?
 
 
 
