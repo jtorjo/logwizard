@@ -67,6 +67,7 @@ namespace lw_common.parse.parsers {
         protected override void on_new_lines(string next) {
             string now = "";
             string delimeter;
+            bool needs_set_column_names;
             lock (this) {
                 last_ += next;
                 if (last_.Length < MIN_LEN && delimeter_name_ == "")
@@ -100,6 +101,7 @@ namespace lw_common.parse.parsers {
                     // there's not enought text to parse a single log entry
                     return;
                 delimeter = delimeter_name_;
+                needs_set_column_names = column_names_.Count < 1;
             }
             
             XmlTextReader reader = new XmlTextReader(now, XmlNodeType.Element, xml_parse_context_) { Namespaces = false };
@@ -107,7 +109,7 @@ namespace lw_common.parse.parsers {
             // timestamp -> date + time
             log_entry_line entry = new log_entry_line();
             string last_element = "";
-
+            List<string> column_names_now = null;
             try {
                 while (reader.Read()) {
                     if (reader.NodeType == XmlNodeType.Element) {
@@ -132,6 +134,8 @@ namespace lw_common.parse.parsers {
                     } else if (reader.NodeType == XmlNodeType.EndElement) {
                         if (reader.Name == delimeter) {
                             // we read a full object
+                            if (needs_set_column_names && column_names_now == null)
+                                column_names_now = entry.names;
                             lock (this) {
                                 entries_.Add(entry);
                                 string_.add_preparsed_line(entry.ToString());
@@ -141,6 +145,10 @@ namespace lw_common.parse.parsers {
                         }
                     }
                 }
+
+                if ( column_names_now != null)
+                    lock (this)
+                        column_names_ = column_names_now;
             } catch (Exception e) {
                 logger.Fatal("[parse] could not parse xml: " + e);
             }

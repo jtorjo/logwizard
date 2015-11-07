@@ -1,6 +1,4 @@
 
--todo: test xml and csv parsers 
-
 
 - add aliases as well
 	-> where do i keep them? context, file?
@@ -9,10 +7,13 @@
 	-aliases should be able to use in filters (***lo-case-no-space probably)
 	  - in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 
-- aliases
+- edit aliases
 
-- settings for file (UI)
 
+
+1.4.8l
+- parsing csv files works
+- xml: set the column names as well
 
 
 1.4.8k

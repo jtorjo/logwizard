@@ -67,7 +67,10 @@ namespace lw_common.parse {
 
             for (int i = 0; i < sorted.Count; ++i) {
                 int len = i < sorted.Count - 1 ? sorted[i + 1].Item2 - sorted[i].Item2 : -1;
-                idx[sorted[i].Item1] = new Tuple<int, int>(sorted[i].Item2, len);
+                int cur_idx = sorted[i].Item1;
+                // we can have too many columns - we will ignore the last ones
+                if ( cur_idx < idx.Length)
+                    idx[sorted[i].Item1] = new Tuple<int, int>(sorted[i].Item2, len);
             }
 
             return idx;
