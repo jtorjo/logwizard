@@ -1545,6 +1545,18 @@ namespace LogWizard
             update_notes_current_line();
         }
 
+        public void on_edit_aliases() {
+            var form = new alias_form(log_parser_.aliases, log_parser_.column_names);
+            if (form.ShowDialog() == DialogResult.OK) {
+                log_parser_.aliases = form.new_aliases;
+                logger.Debug("changed aliases, resolving= " + form.new_aliases.dump_resolve_names());
+                save();
+                if ( form.needs_restart) 
+                    if ( MessageBox.Show("Would you like to restart LogWizard now?", "LogWizard", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        util.restart_app();
+            }
+        }
+
         private void on_log_changed_line_do_sync(int line_idx, log_view from) {
             if (global_ui.show_fulllog) {
                 if (from != full_log_ctrl_ && app.inst.sync_full_log_view)

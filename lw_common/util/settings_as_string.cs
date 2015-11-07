@@ -1,4 +1,24 @@
-﻿using System;
+﻿/* 
+ * Copyright (C) 2014-2015 John Torjo
+ *
+ * This file is part of LogWizard
+ *
+ * LogWizard is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LogWizard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you wish to use this code in a closed source application, please contact john.code@torjo.com
+*/
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,19 +28,23 @@ namespace lw_common {
 
     // thread-safe
     public class settings_as_string {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private Dictionary<string,string> sett_ = new Dictionary<string, string>();
 
         public settings_as_string(string str) {
             var lines = str.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines) {
+                if (line.Trim() == "")
+                    continue;
+
                 int idx = line.IndexOf("=");
                 if (idx >= 0) {
                     string name = line.Substring(0, idx);
                     string value = line.Substring(idx + 1);
-                    sett_.Add(name,value);
+                    sett_.Add(name, value);
+                } else {
+                    logger.Warn("invalid settings_as_string line, ignoring " + line);
                 }
-                else 
-                    Debug.Assert(false);
             }
         }
 

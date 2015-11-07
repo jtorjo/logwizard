@@ -91,6 +91,12 @@
       <DependentUpon>about_form.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\action_type.cs" />
+    <Compile Include="ui\alias_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\alias_form.Designer.cs">
+      <DependentUpon>alias_form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\filter_ctrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -186,6 +192,7 @@
     <Compile Include="ui_helpers\log_wizard_serializable_classes.cs" />
     <Compile Include="ui_helpers\ui_info.cs" />
     <Compile Include="util\clipboard_util.cs" />
+    <Compile Include="util\double_dictionary.cs" />
     <Compile Include="util\easy_mutex.cs" />
     <Compile Include="util\export_text.cs" />
     <Compile Include="util\list_extensions.cs" />
@@ -207,6 +214,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ui\about_form.resx">
       <DependentUpon>about_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\alias_form.resx">
+      <DependentUpon>alias_form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\filter_ctrl.resx">
       <DependentUpon>filter_ctrl.cs</DependentUpon>

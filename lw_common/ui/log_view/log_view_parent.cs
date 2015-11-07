@@ -40,6 +40,7 @@ namespace lw_common.ui {
         void handle_subcontrol_keys(Control c);
         void on_view_name_changed(log_view view, string name);
         void on_sel_line(log_view lv, int line_idx);
+        void on_edit_aliases();
 
         string matched_logs(int line_idx);
         Rectangle client_rect_no_filter { get; }
@@ -75,5 +76,6 @@ namespace lw_common.ui {
         bool can_edit_context { get; }
 
         void after_column_positions_modified(log_view lv);
+
     }
 }

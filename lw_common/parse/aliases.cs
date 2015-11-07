@@ -1,4 +1,24 @@
-﻿using System;
+﻿/* 
+ * Copyright (C) 2014-2015 John Torjo
+ *
+ * This file is part of LogWizard
+ *
+ * LogWizard is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LogWizard is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If you wish to use this code in a closed source application, please contact john.code@torjo.com
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,31 +55,77 @@ namespace lw_common.parse {
         private settings_as_string sett_;
         private string separator_ = "|@#@|";
 
-        // if true, something that is non-friendly-name has changed - (an alias -> info-type)
-        // thus, if true, this means we need to rebuild the whole log
-        private bool has_non_friendly_name_info_changed_ = false;
+        // these are the names that have not been assigned to aliases
+        //
+        // if I have something like "target_url=ctx2", then ctx2 becomes used (so that I don't map two log column names for the same logwizard column)
+        private List<info_type> all_columns_ = new[] {
+            info_type.ctx1,
+            info_type.ctx2, info_type.ctx3, info_type.ctx4,
+            info_type.ctx5, info_type.ctx6, info_type.ctx7, info_type.ctx8, info_type.ctx9, info_type.ctx10, info_type.ctx11, info_type.ctx12, info_type.ctx13,
+            info_type.ctx14, info_type.ctx15, 
+
+            info_type.date, info_type.time, info_type.level, info_type.thread,
+            info_type.file,
+            info_type.func, info_type.class_, 
+            
+            info_type.msg,
+
+        }.ToList();
+
+        private double_dictionary<string, info_type> name_to_column_ = new double_dictionary<string, info_type>();
 
         public aliases(string aliases_string) {
             sett_ = new settings_as_string(aliases_string.Replace(separator_, "\r\n"));
+
+            foreach (string name in sett_.names()) {
+                var value = sett_.get(name);
+                var used_value = string_to_info_type(value);
+                if (used_value != info_type.max)
+                    name_to_column_.set( value, used_value);
+            }
         }
 
-        public void set(string column, string alias) {
-            if (sett_.get(column) == alias)
-                return; // nothing changed
-
-            sett_.set(column, alias);
-            // FIXME see if alias is xx{yy}, thus, see if only {yy} has changed, or it's index-to-info-type
-            // thus, need to update has_non_friendly_name_info_changed
+        private aliases() {
+            
         }
 
         public string get(string column) {
-            string alias = sett_.get(column);
-            return alias == "" ? column : alias;
+            return sett_.get(column, column);
         }
 
         public override string ToString() {
             return sett_.ToString().Replace("\r\n", separator_);
         }
+        
+        public string to_enter_separated_string() {
+            return sett_.ToString();
+        }
+
+        public static aliases from_enter_separated_string(string s) {
+            return new aliases() { sett_ = new settings_as_string(s) };
+        }
+
+
+        private List<string> sorted_non_friendly_name_lines() {
+            List<string> non_friendly = new List<string>();
+            foreach (string name in sett_.names()) {
+                if (is_known_column_name(name))
+                    // it's just setting a title for a known column 
+                    continue;
+                string value = get_value_part( sett_.get(name));
+                if ( value != "")
+                    non_friendly.Add(name + "=" + value);
+            }
+            non_friendly.Sort();
+            return non_friendly;
+        } 
+
+        // if the non-friendly info changes, this requires a re-parse of the whole log
+        // for now (1.4.8), just restart LogWizard
+        public bool is_non_friendly_name_info_the_same(aliases other) {
+            return sorted_non_friendly_name_lines().SequenceEqual(other.sorted_non_friendly_name_lines());
+        }
+
 
         public string friendly_name(info_type info, List<string> names) {
             string as_string = info.ToString();
@@ -118,18 +184,32 @@ namespace lw_common.parse {
         }
 
         // If nothing is set, everything matches to ctx1, ctx2, ... and the last one matches to msg.
-        private info_type alias_index_to_info_type(int idx, int len) {
-            if (idx == len - 1)
-                return info_type.msg;
-
-            if (idx >= 0 && idx < 15)
-                return idx + info_type.ctx1;
+        private info_type first_non_used_column(string name) {
+            foreach ( info_type col in all_columns_)
+                if (!name_to_column_.has_value(col)) {
+                    name_to_column_.set(name, col);
+                    return col;
+                }
 
             return info_type.max;
         }
 
+        public bool is_known_column_name(string colum_name) {
+            return string_to_info_type(colum_name) != info_type.max;
+        }
+
+        // converts a "log" column name into what we use internally ("time", "file", etc)
+        public string to_logwizard_column_name(string name) {
+            return get_value_part(sett_.get(name, name));
+        }
+
+        public string dump_resolve_names() {
+            return util.concatenate(sett_.names().Where(n => to_logwizard_column_name(n) != n).Select(n => n + "=" + to_logwizard_column_name(n)) , ", ");
+        }
 
         private info_type string_to_info_type(string str) {
+            return info_type_io.from_str(str);
+            /*
             switch (str) {
             case "time" :   return info_type.time;
             case "date":    return info_type.date;
@@ -158,7 +238,7 @@ namespace lw_common.parse {
             case "ctx15":    return info_type.ctx15;
             }
             // unknown
-            return info_type.max;
+            return info_type.max;*/
         }
 
         // if it returns max, the alias was invalid
@@ -184,11 +264,17 @@ namespace lw_common.parse {
                         return to_info;
                 }
 
+                if (name_to_column_.has_key(alias))
+                    return name_to_column_.key_to_value(alias);
+
                 // if we get here it's another alias - look into existing names
+                if (names.Count > 0 && alias == names.Last() && !name_to_column_.has_value(info_type.msg))
+                    // by default, the last name is the msg
+                    return info_type.msg;
+
                 int idx = names.IndexOf(alias);
                 if (idx >= 0)
-                    // Example: _0 = file{File Name}
-                    return alias_index_to_info_type(idx, names.Count);
+                    return first_non_used_column(alias);
             } catch (Exception e) {
                 logger.Info("invalid alias " + alias + " : " + e.Message);
             }

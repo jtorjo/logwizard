@@ -4,6 +4,10 @@
 W2/nov 2015
 
 d1
+- edit toggles - when clicking something, don't hide the menu (like in the columns menu)
+
+- bug: resizing logview -> update UI of edit - same for moving!
+
 - bug: escape() - should re-add existing edit text(otherwise, former selection is shown on edit)
 
 - bug: find enter something new, like "sit". press Enter. It will end up opening the combo (instead of taking effect) - this is only a problem in "full log"
@@ -51,6 +55,11 @@ d2/3
 
 - bug:	I opened a file, A.txt, in LW. Then I copied that to A-copy.txt.  So I have A.txt and A-copy.txt. Then deleted A.txt. So, LW now clears the display for A.txt.
 		So far so good. Next, I renamed A-copy.txt to A.txt. This rename is a kind of file update. So, I expected LW to update the display, but it does not. Even Refresh doesn't work.
+
+-aliases should be able to use in filters (***lo-case-no-space probably)
+	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
+	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
+	 -- see when i can resolve these names (as soon as aliases is loaded???)
 
 d4
 - set associations (.txt, .log, .zip? .xml .csv etc) -> don't automatically associate with LW -> have an option to do so

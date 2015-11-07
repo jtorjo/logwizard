@@ -77,9 +77,22 @@ namespace lw_common
             get { return forward_to_parser_.column_names; }
         }
 
+        public string settings {
+            get { return settings_; }
+            set {
+                settings_ = value;
+                forward_to_parser_.on_settings_changed(settings_);
+            }
+        }
+
         public aliases aliases {
             get {
                 return new aliases( new settings_as_string(settings).get("aliases"));
+            }
+            set {
+                var sett = new settings_as_string(settings);
+                sett.set("aliases", value.ToString());
+                settings = sett.ToString();
             }
         }
 
@@ -142,14 +155,6 @@ namespace lw_common
 
         public bool up_to_date {
             get { return forward_to_parser_.up_to_date;  }
-        }
-
-        public string settings {
-            get { return settings_; }
-            set {
-                settings_ = value;
-                forward_to_parser_.on_settings_changed(settings_);
-            }
         }
 
         public line line_at(int idx) {

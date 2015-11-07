@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using log4net.Repository.Hierarchy;
+using lw_common.parse;
 
 namespace lw_common {
     /* 1.0.20+ we need a different reader for each log_view. This way, when the file we're monitoring is appended to,
@@ -77,6 +78,10 @@ namespace lw_common {
 
         public bool forced_reload {
             get { return parser_.forced_reload(this); }
+        }
+
+        public aliases aliases {
+            get { return parser_.aliases; }
         }
 
         public bool up_to_date {

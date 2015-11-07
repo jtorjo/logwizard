@@ -1,21 +1,23 @@
-- add aliases as well
-	-> where do i keep them? context, file?
-	  - both - if not found in file, take from context
-	    - note: this is implemented in 'factory' class - i just need to make sure they get saved correctly, when user modifies them
-	-aliases should be able to use in filters (***lo-case-no-space probably)
-	  - in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 
+
+- aliases-> show in column title names
+
+
+
+
+1.4.8n
+- aliases -> they match correctly (those that by default don't have any match), if user edits them
+  - I avoid having two log columns matching to the same logwizard column
 - edit aliases
   - need to pass the column names when editing
   - help: as default string, just have something like each_name=[something] (for names that are not recognized)
   - show in help the types of aliases
-
-
-
-
-- edit toggles - when clicking something, don't hide the menu (like in the columns menu)
-
-- bug: resizing logview -> update UI of edit - same for moving!
+- if col=lw_column, the remainder of the columns must match to the remaining 
+  if suit_1=ctx1, the ctx can not be used by something else!
+- add aliases as well
+	-> where do i keep them? context, file?
+	  - both - if not found in file, take from context
+	    - note: this is implemented in 'factory' class - i just need to make sure they get saved correctly, when user modifies them
 
 
 1.4.8m

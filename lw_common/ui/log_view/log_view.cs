@@ -206,12 +206,21 @@ namespace lw_common.ui
             menu.Items.Add(to_left);
             menu.Items.Add(to_right);
 
+            menu.Items.Add(new ToolStripSeparator());
+            var edit_aliases = new ToolStripMenuItem("Edit Aliases...");
+            menu.Items.Add(edit_aliases);
+            edit_aliases.Click += (a,ee) => this.edit_aliases();
+
             menu.Closing += menu_Closing;
             edit.Visible = false;
             menu.Show(list, list.PointToClient(Cursor.Position));
         }
 
-        void menu_Closing(object sender, ToolStripDropDownClosingEventArgs e) {
+        private void edit_aliases() {
+            lv_parent.on_edit_aliases();
+        }
+
+        private void menu_Closing(object sender, ToolStripDropDownClosingEventArgs e) {
             e.Cancel = e.CloseReason == ToolStripDropDownCloseReason.ItemClicked;
             if (!e.Cancel) {
                 edit.update_ui();
