@@ -24,6 +24,9 @@ namespace lw_common.parse {
             info type to friendly string
             ctx1=Country
             ctx2=City
+
+
+        If nothing is set, everything matches to ctx1, ctx2, ... and the last one matches to msg.
     */
     public class aliases {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -114,6 +117,18 @@ namespace lw_common.parse {
             return info_type.max;
         }
 
+        // If nothing is set, everything matches to ctx1, ctx2, ... and the last one matches to msg.
+        private info_type alias_index_to_info_type(int idx, int len) {
+            if (idx == len - 1)
+                return info_type.msg;
+
+            if (idx >= 0 && idx < 15)
+                return idx + info_type.ctx1;
+
+            return info_type.max;
+        }
+
+
         private info_type string_to_info_type(string str) {
             switch (str) {
             case "time" :   return info_type.time;
@@ -173,7 +188,7 @@ namespace lw_common.parse {
                 int idx = names.IndexOf(alias);
                 if (idx >= 0)
                     // Example: _0 = file{File Name}
-                    return index_to_info_type(idx);
+                    return alias_index_to_info_type(idx, names.Count);
             } catch (Exception e) {
                 logger.Info("invalid alias " + alias + " : " + e.Message);
             }
