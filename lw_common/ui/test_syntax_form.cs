@@ -31,7 +31,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using lw_common.parse;
-using lw_common.parse.syntaxes.file;
 
 namespace lw_common.ui {
     public partial class test_syntax_form : Form {

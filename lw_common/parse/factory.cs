@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using lw_common.parse.parsers;
-using lw_common.parse.syntaxes.file;
 using LogWizard;
 
 namespace lw_common.parse {
@@ -58,7 +57,7 @@ namespace lw_common.parse {
                 if ( text_file_part_on_single_line.is_single_line(reader.name, all))
                     return new text_file_part_on_single_line(reader, all);
 
-            return new text_file_line_by_line(reader, new line_by_line_syntax(all));
+            return new text_file_line_by_line(reader, all);
         }
     }
 }

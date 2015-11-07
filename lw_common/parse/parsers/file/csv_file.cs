@@ -22,16 +22,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using lw_common.parse.parsers.file;
 using LogWizard;
 
 namespace lw_common.parse.parsers {
-    class csv_file : log_parser_base {
-
-        private file_text_reader reader_;
-        private bool up_to_date_ = false;
-
-        // this contains the full string
-        private large_string string_ = new large_string();
+    class csv_file : file_parser_base {
 
         // this contains the last lines that were read - the reason i have this is for correct parsing of Enters, regardless of how they are
         // ('\r', '\r\n', \n\r', '\n')
@@ -39,89 +34,26 @@ namespace lw_common.parse.parsers {
         // used ONLY in read_to_end
         private large_string last_lines_string_ = new large_string();
 
-        private settings_as_string sett_;
-        private aliases aliases_;
-
-        private memory_optimized_list<log_entry_line> entries_ = new memory_optimized_list<log_entry_line>() { name = "parser-entries-csv"};
-
-        private List<string> column_names_ = new List<string>();
-
         // if true, the first line is the header (containing column names)
         private bool has_header_line_ = true;
 
-        public csv_file(file_text_reader reader, settings_as_string sett) {
-            reader_ = reader;
-            sett_ = sett;
-            read_settings();
+        public csv_file(file_text_reader reader, settings_as_string sett) : base(reader,sett) {
         }
 
-        public override void on_settings_changed(string settings) {
-            sett_ = new settings_as_string(settings);
-            read_settings();
-            // FIXME
-        }
-
-        private void read_settings() {            
-            aliases_ = new aliases(sett_.get("aliases"));
+        protected override void on_updated_settings() {
+            base.on_updated_settings();
             has_header_line_ = sett_.get("has_header", "1") == "1";
-        }
-
-        public override List<string> column_names {
-            get { lock(this) return column_names_.ToList(); }
-        }
-
-        public override int line_count {
-            get { lock(this)  return entries_.Count; }
-        }
-
-        public override line line_at(int idx) {
-            lock (this) {
-                if (idx < entries_.Count) {
-                    var entry = entries_[idx];
-                    var l = new line( new sub_string(string_, idx), entry.idx_in_line(aliases_)  );
-                    return l;
-                } else {
-                    // this can happen, when the log has been re-written, and everything is being refreshed
-                    throw new line.exception("invalid line request " + idx + " / " + entries_.Count);
-                }
-            }
         }
 
         public override void force_reload() {
             lock (this) {
-                entries_.Clear();
-                string_.clear();
-                column_names_.Clear();
+                last_lines_string_.clear();
             }
         }
 
-        public override bool up_to_date {
-            get { return up_to_date_; }
-        }
-
-
-        public override void read_to_end() {
-            ulong old_len = reader_.full_len;
-            reader_.compute_full_length();
-            ulong new_len = reader_.full_len;
-            // when reader's position is zero -> it's either the first time, or file was re-rewritten
-            if (old_len > new_len || reader_.pos == 0) 
-                // file got re-written
-                force_reload();
-
-            bool fully_read = old_len == new_len && reader_.is_up_to_date();
-
-            if ( !reader_.has_more_cached_text()) {
-                lock (this) 
-                    up_to_date_ = fully_read;
-                return;
-            }
-            
-            lock (this)
-                up_to_date_ = false;
-
+        protected override void on_new_lines(string new_lines) {
             int line_count = 0;
-            last_lines_string_.set_lines(reader_.read_next_text(), ref line_count);
+            last_lines_string_.set_lines(new_lines, ref line_count);
             if (line_count < 1)
                 return;
 

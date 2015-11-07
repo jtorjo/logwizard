@@ -41,7 +41,7 @@ namespace lw_common.ui {
         public match_item(BitArray matches, font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx) {
         }
 
-        public int line { get { return base.line_idx + 1; }}
+        public new int line { get { return base.line_idx + 1; }}
         public string date { get { return base.line.part(info_type.date); }}
         public string time { get { return base.line.part(info_type.time); }}
         public string level { get { return base.line.part(info_type.level); }}

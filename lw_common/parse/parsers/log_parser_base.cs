@@ -27,6 +27,14 @@ namespace lw_common.parse.parsers {
     internal abstract class log_parser_base : IDisposable {
         protected bool disposed_ = false;
 
+        protected settings_as_string sett_;
+        protected aliases aliases_;
+
+        public log_parser_base(settings_as_string sett) {
+            sett_ = sett;
+            on_updated_settings();            
+        }
+
         public abstract void read_to_end();
 
         public abstract int line_count { get; }
@@ -42,8 +50,13 @@ namespace lw_common.parse.parsers {
             get { return new List<string>(); }
         }
 
-        public virtual void on_settings_changed(string settings) {
-            
+        public void on_settings_changed(string settings) {
+            sett_ = new settings_as_string(settings);
+            on_updated_settings();            
+        }
+
+        protected virtual void on_updated_settings() {            
+            aliases_ = new aliases(sett_.get("aliases"));
         }
 
         public void Dispose() {

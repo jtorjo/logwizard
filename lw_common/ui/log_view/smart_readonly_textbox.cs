@@ -676,7 +676,7 @@ namespace lw_common.ui {
             parent_.lv_parent.sel_changed(log_view_sel_change_type.click);
         }
 
-        private int mouse_idx = 0;
+        //private int mouse_idx = 0;
         private void wheel(Message m) {
             //logger.Info("wheel on " + "/" + mouse_idx++ + " on " + parent_.name );
             win32.SendMessage(parent_.list.Handle, m.Msg, m.WParam, m.LParam);

@@ -42,5 +42,8 @@ namespace lw_common.parse.parsers.system {
         public override bool up_to_date {
             get { return false; }
         }
+
+        public debug_print(settings_as_string sett) : base(sett) {
+        }
     }
 }

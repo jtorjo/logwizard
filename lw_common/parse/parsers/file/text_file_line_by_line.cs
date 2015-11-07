@@ -26,7 +26,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using lw_common.parse.parsers;
-using lw_common.parse.syntaxes.file;
 using LogWizard;
 
 namespace lw_common.parse.parsers {
@@ -81,8 +80,6 @@ namespace lw_common.parse.parsers {
 
         private List<syntax_info> syntaxes_ = new List<syntax_info>();
 
-
-        private const string LINE_SEP = "\r\n";
         // FIXME not a good idea
         private const int CACHE_LAST_INCOMPLETE_LINE_MS = 50000;
 
@@ -102,9 +99,14 @@ namespace lw_common.parse.parsers {
 
         private bool lines_min_capacity_updated_ = false;
 
+        // if true, if a line does not match the syntax, assume it's from previous line
+        // 1.4.8+ - not used yet
+        private bool if_line_does_not_match_assume_from_prev_line = false;
 
-        public text_file_line_by_line(text_reader reader, line_by_line_syntax syntax) {            
-            string syntax_str = syntax.line_syntax;
+        public text_file_line_by_line(text_reader reader, settings_as_string sett) : base(sett) {
+            string syntax_str = sett.get("syntax");
+            if_line_does_not_match_assume_from_prev_line = sett.get("if_line", "0") == "1";
+
             Debug.Assert(reader != null);
             parse_syntax(syntax_str);
             reader_ = reader;
