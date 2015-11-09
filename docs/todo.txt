@@ -21,8 +21,6 @@ d2
 	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
 	- should have "Open" menu (with submenus) -> which for now just opens a file (later: Event viewer, etc)
 
-- bug: shift -arrow down - does not work, it goes to end.
-
 - add/del view , sync view buttons -> hide them by default - they should be visible only if the mouse is around them (on the y axis)
   - care about whether showing header or not?
 

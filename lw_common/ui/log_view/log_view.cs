@@ -52,6 +52,7 @@ namespace lw_common.ui
         private readonly filter filter_ ;
         private log_reader log_ = null;
 
+        // only for showing the View(s) column correctly
         private string selected_view_ = null;
 
         private int last_item_count_while_current_view_ = 0;
@@ -785,7 +786,8 @@ namespace lw_common.ui
             if (sel < 0 && count > 0)
                 sel = 0; // assume we start from the top
 
-            // int rows_per_page = list.RowsPerPage;
+            var visible_rows = visible_row_indexes();
+            int rows_per_page = visible_rows.Item2 - visible_rows.Item1;
             int height = list.Height - list.HeaderControl.ClientRectangle.Height;
             switch (action) {
             case action_type.home:
@@ -796,26 +798,14 @@ namespace lw_common.ui
                 break;
             case action_type.pageup:
                 if (sel >= 0) {
-                    var r = list.GetItem(sel).Bounds;
-                    var middle = new Point( r.Left + r.Width / 2, r.Top + r.Height / 2 );
-                    list.LowLevelScroll(0, -height);
-                    int new_sel = list.HitTest(middle).Item.Index;
-                    if (new_sel != sel)
-                        sel = new_sel;
-                    else
-                        sel = 0; // reached top
+                    int new_sel = sel - rows_per_page;
+                    sel = new_sel >= 0 ? new_sel : 0;
                 }
                 break;
             case action_type.pagedown:
                 if (sel < count - 1) {
-                    var r = list.GetItem(sel).Bounds;
-                    var middle = new Point( r.Left + r.Width / 2, r.Top + r.Height / 2 );
-                    list.LowLevelScroll(0, height);
-                    int new_sel = list.HitTest(middle).Item.Index;
-                    if (new_sel != sel)
-                        sel = new_sel;
-                    else
-                        sel = count - 1; // reached bottom
+                    int new_sel = sel + rows_per_page;
+                    sel = new_sel <= count - 1 ? new_sel : count - 1;
                 }
                 break;
             case action_type.arrow_up:
@@ -1139,6 +1129,7 @@ namespace lw_common.ui
 
         // specifies the name of selected view (on the right pane)
         public void set_view_selected_view_name(string name) {
+            Debug.Assert(is_full_log);
             if (selected_view_ == name)
                 // we already have this set correctly
                 return;

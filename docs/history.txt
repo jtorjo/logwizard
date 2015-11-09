@@ -3,11 +3,18 @@
 
 
 
-- pgup/pgdown/etc. - -> don't do any low level scroll whatsoever - i know the top index to be shown -> just ensure_visible + select item + refresh!
+
+- bug: shift -arrow down - does not work, it goes to end.
+
+
 
 - ctrl-right/left -> if something selected in edit (at least one char) -> function as word selection (only if on the same line as selection; 
   that is, if user selected something then went away, ctrl-right/left work normally)
   perhaps: just use ctrl-tab / ctrl-shift-tab!!!!!!!!!!!!!!!
+
+
+1.4.9d
+- pgup/pgdown/etc. - -> don't do any low level scroll whatsoever - i know the top index to be shown -> just ensure_visible + select item + refresh!
 
 
 1.4.9c
