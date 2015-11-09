@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * If you wish to use this code in a closed source application, please contact john.code@torjo.com
+ * If you wish to use this code in a closed source application, please contact john.code@torjo.com 
+ *
+ * **** Get Latest version at https://github.com/jtorjo/logwizard **** 
 */
 using System;
 using System.Collections.Generic;
@@ -26,6 +28,7 @@ using System.Reflection;
 using System.Text;
 
 namespace lw_common {
+    // more info at https://developer.github.com/v3/repos/releases/
     public class read_github_release {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

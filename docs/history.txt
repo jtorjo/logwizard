@@ -3,6 +3,8 @@
 
 
 
+1.4.9h
+- added Get Latest version messages
 
 
 1.4.9g

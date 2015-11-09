@@ -16,7 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * If you wish to use this code in a closed source application, please contact john.code@torjo.com
+ * If you wish to use this code in a closed source application, please contact john.code@torjo.com 
+ *  * **** Get Latest version at https://github.com/jtorjo/logwizard **** 
 */
 using System.Reflection;
 using System.Runtime.CompilerServices;
