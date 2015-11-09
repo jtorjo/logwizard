@@ -10,6 +10,7 @@ d1
   + article (code should be cpol?) (probably tip)
   + need to show this in status as well
   - ignore versions that don't match the x.y.z syntax
+  --> update original article (comment -> with things i solved)
 
 
 d2

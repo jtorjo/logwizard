@@ -973,7 +973,7 @@ namespace lw_common.ui
 
             if (old_item_count_ == new_item_count && !needs_ui_update) {
                 // nothing changed
-                if ( model_.item_count > 0 && list.SelectedIndex == -1 && !is_full_log && is_current_view)
+                if ( model_.item_count > 0 && sel_row_idx == -1 && !is_full_log && is_current_view)
                     // just switched to another view where nothing was selected - go to end by default
                     go_last();
                 return; 
