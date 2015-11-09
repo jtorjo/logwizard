@@ -407,14 +407,13 @@ namespace lw_common.ui {
             if ( sel_len_ == 0)
                 moving_ = move_direction_type.left;
 
-            if (sel_start_ > 0) {
-                if (moving_ == move_direction_type.left) {
-                    ++sel_len_;
-                    --sel_start_;
-                } else {
-                    --sel_len_;
-                    readd_all_text();
-                }
+            bool moved = false;
+            bool needs_readd = false;
+            move_sel_one_char_left(ref moved, ref needs_readd);
+            if ( needs_readd)
+                readd_all_text();
+
+            if (moved) {
                 update_cached_sel_text();
                 update_selected_text();
             }
@@ -424,18 +423,125 @@ namespace lw_common.ui {
             if ( sel_len_ == 0)
                 moving_ = move_direction_type.right;
 
-            if (sel_start_ + sel_len_ < TextLength) {
-                if (moving_ == move_direction_type.right)
-                    ++sel_len_;
-                else {
-                    ++sel_start_;
-                    --sel_len_;
-                    readd_all_text();
-                }
+            bool moved = false;
+            bool needs_readd = false;
+            move_sel_one_char_right(ref moved, ref needs_readd);
+            if ( needs_readd)
+                readd_all_text();
+            if (moved) {
                 update_cached_sel_text();
                 update_selected_text();
             }
         }
+
+
+        // returns true if we need to readd all text
+        private void move_sel_one_char_left(ref bool moved, ref bool needs_readd) {
+            moved = false;
+            needs_readd = false;
+
+            if (moving_ == move_direction_type.left) {
+                if (sel_start_ <= 0)
+                    return ;
+                if (sel_len_ + sel_start_ >= TextLength)
+                    return ;
+
+                moved = true;
+                ++sel_len_;
+                --sel_start_;
+            } else {
+                if (sel_len_ <= 0)
+                    return ;
+
+                moved = true;
+                needs_readd = true;
+                --sel_len_;
+            }            
+        }
+
+        private void move_sel_one_char_right(ref bool moved, ref bool needs_readd) {
+            moved = false;
+            needs_readd = false;
+
+            if (moving_ == move_direction_type.right) {
+                if (sel_len_ + sel_start_ >= TextLength)
+                    return ;
+
+                moved = true;
+                ++sel_len_;
+            } else {
+                if (sel_len_ <= 0)
+                    return ;
+
+                moved = true;
+                needs_readd = true;
+                ++sel_start_;
+                --sel_len_;
+            }
+        }
+
+
+        public void sel_to_word_left() {
+            if ( sel_len_ == 0)
+                moving_ = move_direction_type.left;
+
+            bool moved_now = false;
+            bool needs_readd_now = false;
+            move_sel_one_char_left(ref moved_now, ref needs_readd_now);
+            bool needs_readd = needs_readd_now;
+            bool moved = moved_now;
+
+            while (moved_now) {
+                bool reached_word = string_search.is_delim_or_does_not_exist(Text, moving_ == move_direction_type.left ? sel_start_ : sel_start_ + sel_len_ - 1);
+                if (reached_word)
+                    break;
+                move_sel_one_char_left(ref moved_now, ref needs_readd_now);
+                needs_readd = needs_readd | needs_readd_now;
+            }
+                
+            if ( needs_readd)
+                readd_all_text();
+            if (moved) {
+                update_cached_sel_text();
+                update_selected_text();
+            }
+        }
+
+        public void sel_to_word_right() {
+            if ( sel_len_ == 0)
+                moving_ = move_direction_type.right;
+
+            bool moved_now = false;
+            bool needs_readd_now = false;
+            move_sel_one_char_right(ref moved_now, ref needs_readd_now);
+            bool needs_readd = needs_readd_now;
+            bool moved = moved_now;
+
+            while (moved_now) {
+                bool reached_word = string_search.is_delim_or_does_not_exist(Text, moving_ == move_direction_type.right ? sel_start_ + sel_len_ - 1 : sel_start_ );
+                if (reached_word)
+                    break;
+                move_sel_one_char_right(ref moved_now, ref needs_readd_now);
+                needs_readd = needs_readd | needs_readd_now;
+            }
+                
+            if ( needs_readd)
+                readd_all_text();
+            if (moved) {
+                update_cached_sel_text();
+                update_selected_text();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
 
         private string raw_sel_text() {
             if (sel_len_ < 1)

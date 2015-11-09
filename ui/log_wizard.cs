@@ -2105,8 +2105,14 @@ namespace LogWizard
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
-            if (keyData == (Keys.Control | Keys.Tab) || keyData == (Keys.Control | Keys.Shift | Keys.Tab))
+            if (keyData == (Keys.Control | Keys.Tab)) {
+                handle_action(action_type.next_view);
                 return true;
+            }
+            if (keyData == (Keys.Control | Keys.Shift | Keys.Tab)) {
+                handle_action(action_type.prev_view);
+                return true;
+            }
 
             // 1.2.12 - tried, but doesn't work
 #if old_code
@@ -2288,11 +2294,12 @@ namespace LogWizard
             case "ctrl-shift-c":
                 return action_type.copy_to_clipboard;
 
+                /* 1.4.9+ use ctrl-tab, ctrl-shift-tab ; ctrl-left/right can be used for word moving inside smart edit
             case "ctrl-right":
                 return action_type.next_view;
             case "ctrl-left":
                 return action_type.prev_view;
-
+                */
             case "home":
                 return action_type.home;
             case "end":

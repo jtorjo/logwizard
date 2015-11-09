@@ -1997,13 +1997,25 @@ namespace lw_common.ui
 
                 bool is_shift_right = keyData == (Keys.Right | Keys.Shift);
                 bool is_shift_left = keyData == (Keys.Left | Keys.Shift);
-                if (is_shift_left && edit.Visible) {
-                    edit.sel_to_left();
-                    return true;
-                }
-                if (is_shift_right && edit.Visible) {
-                    edit.sel_to_right();
-                    return true;
+                bool is_ctrl_shift_right = keyData == (Keys.Right | Keys.Control | Keys.Shift);
+                bool is_ctrl_shift_left = keyData == (Keys.Left | Keys.Control | Keys.Shift);
+                if (edit.Visible) {
+                    if (is_shift_left) {
+                        edit.sel_to_left();
+                        return true;
+                    }
+                    else if (is_shift_right) {
+                        edit.sel_to_right();
+                        return true;
+                    }
+                    else if (is_ctrl_shift_left) {
+                        edit.sel_to_word_left();
+                        return true;
+                    }
+                    else if (is_ctrl_shift_right) {
+                        edit.sel_to_word_right();
+                        return true;
+                    }                    
                 }
 
                 switch (keyData) {

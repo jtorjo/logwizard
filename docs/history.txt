@@ -7,9 +7,11 @@
 
 
 
-- ctrl-right/left -> if something selected in edit (at least one char) -> function as word selection (only if on the same line as selection; 
-  that is, if user selected something then went away, ctrl-right/left work normally)
-  perhaps: just use ctrl-tab / ctrl-shift-tab!!!!!!!!!!!!!!!
+
+1.4.9f
+- ctrl-tab/ctrl-shift-tab -> for navigating the tabs
+- ctrl-right/left -> for word selection
+  - ctrl-shift-arrows works correctly now
 
 
 1.4.9e
