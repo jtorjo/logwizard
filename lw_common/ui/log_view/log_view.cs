@@ -1465,30 +1465,24 @@ namespace lw_common.ui
             var msg_details = this.msg_details;
             if (msg_details != null && msg_details.visible()) {
                 msg_details.force_hide(this);
-                return;
             }
-
-            if (edit.sel_text != "") {
+            else if (edit.sel_text != "") {
                 edit.escape();
-                return;
             }
-
-            if (cur_search_ != null) {
+            else if (cur_search_ != null) {
                 cur_search_ = null;
                 list.Refresh();
-                return;
             }
-
-            if (cur_filter_row_idx_ >= 0) {
+            else if (cur_filter_row_idx_ >= 0) {
                 unmark();
-                return;
             }
-
-            if (app.inst.edit_mode != app.edit_mode_type.always && is_editing) {
+            else if (app.inst.edit_mode != app.edit_mode_type.always && is_editing) {
                 is_editing_ = false;
                 edit.update_ui();
-                return;
             }
+
+            if ( edit.sel_text == "")
+                edit.force_refresh();
         }
 
 

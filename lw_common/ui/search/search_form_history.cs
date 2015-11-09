@@ -68,6 +68,13 @@ namespace lw_common.ui {
             var exists = history_.FirstOrDefault(x => x.unique_id == last.unique_id);
             if (exists != null)
                 history_.Remove(exists);
+            else {
+                // 1.4.9 - if we already have this search, just bring it to the top
+                exists = history_.FirstOrDefault(x => x == last);
+                if ( exists != null)
+                    history_.Remove(exists);
+            }
+
             if (last.unique_id == 0)
                 last.unique_id = ++next_unique_id_;
             history_.Add(last);

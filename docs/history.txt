@@ -1,10 +1,7 @@
 
 
 
-- bug: escape() - should re-add existing edit text(otherwise, former selection is shown on edit)
 
-- bug: find enter something new, like "sit". press Enter. It will end up opening the combo (instead of taking effect) - this is only a problem in "full log"
-  - same stuff happens on ctrl-h on "full log"
 
 - pgup/pgdown/etc. - -> don't do any low level scroll whatsoever - i know the top index to be shown -> just ensure_visible + select item + refresh!
 
@@ -13,8 +10,15 @@
   perhaps: just use ctrl-tab / ctrl-shift-tab!!!!!!!!!!!!!!!
 
 
+1.4.9c
+- fix: escape() - should re-add existing edit text(otherwise, former selection is shown on edit)
+- bug: find enter something new, like "sit". press Enter. It will end up opening the combo (instead of taking effect) - this is only a problem in "full log"
+  - same stuff happens on ctrl-h on "full log"
+- search: if already exists, just add it to end (that is, the user manually types an existing search - don't clutter the history)
+
+
 1.4.9b
-- bug: resizing logview -> update UI of edit - same for moving!
+- fix: resizing logview -> update UI of edit - same for moving!
 
 
 1.4.9a

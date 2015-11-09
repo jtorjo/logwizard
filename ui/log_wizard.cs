@@ -570,6 +570,10 @@ namespace LogWizard
                 break;
             }
 
+            if (!global_ui.show_current_view)
+                // 1.4.9 - so that on activate, we focus correctly
+                active_pane_ = full_log_ctrl_;
+
             // can't focus now, it would sometimes get the hotkey ('L') to be sent twice, and we'd end up toggling twice with a single press
             if ( to_focus != null)
                 util.postpone(() => {
@@ -2759,6 +2763,7 @@ namespace LogWizard
         }
 
         private void activate_pane(Control cur_pane) {
+            logger.Debug("activating pane " + cur_pane);
             Debug.Assert(cur_pane != null);
 
             active_pane_ = cur_pane;
@@ -2782,6 +2787,8 @@ namespace LogWizard
             if (active_pane_ != null) {
                 if (active_pane_ is log_view)
                     active_pane_ = selected_view();
+                if (!global_ui.show_current_view)
+                    active_pane_ = full_log_ctrl_;
                 activate_pane(active_pane_);
             } else
                 activate_pane(panes()[0]);
