@@ -397,6 +397,8 @@
             this.Name = "log_view";
             this.Size = new System.Drawing.Size(697, 427);
             this.Load += new System.EventHandler(this.log_view_Load);
+            this.LocationChanged += new System.EventHandler(this.log_view_LocationChanged);
+            this.SizeChanged += new System.EventHandler(this.log_view_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.list)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

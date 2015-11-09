@@ -2164,6 +2164,14 @@ namespace lw_common.ui
             show_name = false;
         }
 
+        private void log_view_SizeChanged(object sender, EventArgs e) {
+            edit.update_ui();
+        }
+
+        private void log_view_LocationChanged(object sender, EventArgs e) {
+            edit.update_ui();
+        }
+
     }
 
 }
