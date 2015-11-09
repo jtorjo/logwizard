@@ -5,7 +5,12 @@
 
 
 
-
+1.4.9g
+- targetting .net4 (as opposed to .net4.5)
+  - note: i used to target 4.5 for allowing bigger than 2Gb objects - this may not be needed anymore?
+  - in case i run into issues, i may go back to 4.5
+- getting release info from github (not complete yet)
+- added fastjson (http://www.codeproject.com/Articles/159450/fastJSON)
 
 
 1.4.9f

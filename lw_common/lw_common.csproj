@@ -211,6 +211,7 @@
     <Compile Include="util\memory_optimized_list.cs" />
     <Compile Include="util\mouse_wheel.cs" />
     <Compile Include="util\olv_extensions.cs" />
+    <Compile Include="util\read_github_release.cs" />
     <Compile Include="util\settings_as_string.cs" />
     <Compile Include="util\split.cs" />
     <Compile Include="util\string_search.cs" />
@@ -281,6 +282,10 @@
     <ProjectReference Include="3rdparty\EncodingTools\EncodingTools.csproj">
       <Project>{ca19d4de-b232-491a-92bf-7bf3a2758694}</Project>
       <Name>EncodingTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="3rdparty\fastJSON\fastJSON net35.csproj">
+      <Project>{fdaf5695-e651-4d4d-8e15-0bd9fbef5069}</Project>
+      <Name>fastJSON net35</Name>
     </ProjectReference>
     <ProjectReference Include="3rdparty\log4net-1.2.11\src\log4net.vs2010.csproj">
       <Project>{181fe707-e161-4722-9f38-6aaab6faa106}</Project>

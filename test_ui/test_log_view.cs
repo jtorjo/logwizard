@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using lw_common;
 using lw_common.parse;
-using lw_common.parse.syntaxes.file;
 using lw_common.ui;
 using LogWizard;
 
@@ -42,6 +41,9 @@ namespace test_ui {
         }
 
         public void on_sel_line(log_view lv, int line_idx) {
+        }
+
+        public void on_edit_aliases() {
         }
 
         public string matched_logs(int line_idx) {
@@ -97,6 +99,9 @@ namespace test_ui {
 
         public bool can_edit_context {
             get { return true; }
+        }
+
+        public void after_column_positions_modified(log_view lv) {
         }
 
         private void refresh_Tick(object sender, EventArgs e) {

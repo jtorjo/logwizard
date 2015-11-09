@@ -20,7 +20,12 @@ namespace test_ui {
             util.init_exceptions();
 
             //test_export.test();
-
+            /* works
+            var git = new read_github_release( File.ReadAllText("github.txt"));
+            var s1 = util.concatenate( git.stable_releases("1.0"), "\r\n");
+            var s2 = util.concatenate( git.beta_releases("1.2"), "\r\n");
+            var s3 = util.concatenate( git.beta_releases(), "\r\n");
+            */
             app.inst.init(new settings_file( @"C:\john\code\logwiz\logwizard\bin\x64\Dbg64\logwizard_debug.txt"));
 
             Application.Run(new test_olv());
