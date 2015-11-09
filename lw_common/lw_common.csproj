@@ -97,6 +97,12 @@
     <Compile Include="ui\alias_form.Designer.cs">
       <DependentUpon>alias_form.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\animated_button.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ui\animated_button.Designer.cs">
+      <DependentUpon>animated_button.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\filter_ctrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -183,6 +189,12 @@
       <DependentUpon>settings_form.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\solid_brush_list.cs" />
+    <Compile Include="ui\status_ctrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\status_ctrl.Designer.cs">
+      <DependentUpon>status_ctrl.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\test_syntax_form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -250,6 +262,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ui\settings_form.resx">
       <DependentUpon>settings_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\status_ctrl.resx">
+      <DependentUpon>status_ctrl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\test_syntax_form.resx">
       <DependentUpon>test_syntax_form.cs</DependentUpon>

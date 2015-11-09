@@ -1,5 +1,22 @@
 
 
+- bug: resizing logview -> update UI of edit - same for moving!
+
+- bug: escape() - should re-add existing edit text(otherwise, former selection is shown on edit)
+
+- bug: find enter something new, like "sit". press Enter. It will end up opening the combo (instead of taking effect) - this is only a problem in "full log"
+  - same stuff happens on ctrl-h on "full log"
+
+- pgup/pgdown/etc. - -> don't do any low level scroll whatsoever - i know the top index to be shown -> just ensure_visible + select item + refresh!
+
+- ctrl-right/left -> if something selected in edit (at least one char) -> function as word selection (only if on the same line as selection; 
+  that is, if user selected something then went away, ctrl-right/left work normally)
+  perhaps: just use ctrl-tab / ctrl-shift-tab!!!!!!!!!!!!!!!
+
+1.4.9a
+- edit toggles - when clicking something, don't hide the menu (like in the columns menu)
+
+
 1.4.8p
 - retestd on my usual log
 

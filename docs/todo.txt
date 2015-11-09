@@ -4,33 +4,22 @@
 W2/nov 2015
 
 d1
-- edit toggles - when clicking something, don't hide the menu (like in the columns menu)
-
-- bug: resizing logview -> update UI of edit - same for moving!
-
-- bug: escape() - should re-add existing edit text(otherwise, former selection is shown on edit)
-
-- bug: find enter something new, like "sit". press Enter. It will end up opening the combo (instead of taking effect) - this is only a problem in "full log"
-  - same stuff happens on ctrl-h on "full log"
-
-- pgup/pgdown/etc. - -> don't do any low level scroll whatsoever - i know the top index to be shown -> just ensure_visible + select item + refresh!
-
-
-
-
 - how easy is it to access github to look for updates?
   - easy to show in Status bar when new vresion available. Show it in About/history
   - maybe mark huge features with "*", while normal features shown in "-"
   + article (code should be cpol?) (probably tip)
+  + need to show this in status as well
+  - ignore versions that don't match the x.y.z syntax
 
 
 d2
 - low pane + status: 
   - they should combine into one - i should use a better status control, maybe richedit (readonly)?
-  - first: by default, Status is shown , and at the end, there will be a button called "What's Up?'" (or some other name)
+  - first: by default, Status is shown , and at the end, there will be a button called "What's Up?'" (or some other name) ----------> animated_button
     - from the button, access all the existing commands (Toggles,Refresh, Hotkeys Help etc.)
 	- from the button - have something called - show history (which shows the combo)
 	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
+	- should have "Open" menu (with submenus) -> which for now just opens a file (later: Event viewer, etc)
 
 - bug: shift -arrow down - does not work, it goes to end.
 
@@ -45,7 +34,7 @@ d2/3
        - perhaps if i just use what the parser is giving me, i would simply never need this "guessing"
 	   - also, care about aliases?
 	   - if a column does not show up in aliases, no point in showing it????( probably for line-by-line i need to manually compute aliases from syntax)
-	   - when the log file is changed, i need to update the visible columns based on what info the file has
+	   -********* when the log file is changed, i need to update the visible columns based on what info the file has
 
 
 ---------- for non-file logs (like, event log, db, sockets?, outputdebugstring)

@@ -121,7 +121,6 @@ namespace lw_common.ui
             --ignore_change_;
             model_ = new log_view_data_source(this.list, this ) { name = name };
             list.VirtualListDataSource = model_;
-            //list.RowHeight = 18;
 
             load_font();
             lv_parent.handle_subcontrol_keys(this);
@@ -149,8 +148,6 @@ namespace lw_common.ui
                 return;
             edit.Visible = false;
             is_changing_column_width_ = true;
-            //var col = list.GetColumn(e.ColumnIndex);
-            //logger.Debug("[view] column width changing " + col.Text + " / "  + col.Width);
         }
 
         private void List_on_column_width_changed(object sender, ColumnWidthChangedEventArgs e) {
@@ -160,8 +157,6 @@ namespace lw_common.ui
                 return;
 
             is_changing_column_width_ = false;
-            //var col = list.GetColumn(e.ColumnIndex);
-            //logger.Debug("[view] column width FULLY CHANGED " + col.Text + " / "  + col.Width);
             
             edit.update_ui();
             var new_positions = log_view_show_columns.save_column_positions(this);

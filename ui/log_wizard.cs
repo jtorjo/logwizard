@@ -501,6 +501,7 @@ namespace LogWizard
             --ignore_change_;
         }
         private void show_source(bool show) {
+            logger.Debug("showing source pane " + show);
             bool shown = !sourceUp.Panel1Collapsed;
             if (show == shown)
                 return;
@@ -759,7 +760,7 @@ namespace LogWizard
         private void toggle_view_tabs() {
             bool visible_now = !are_tabs_visible(viewsTab);
             show_tabs(visible_now);
-            global_ui.show_tabs = global_ui.show_tabs = visible_now;
+            global_ui.show_tabs = visible_now;
             save();
         }
 
@@ -780,7 +781,7 @@ namespace LogWizard
         private void toggle_view_header() {
             bool show = !all_log_views()[0].show_header;
             show_header( show);
-            global_ui.show_header = global_ui.show_header = show;
+            global_ui.show_header = show;
             save();
         }
 
@@ -3078,10 +3079,8 @@ namespace LogWizard
                 TopMost = !TopMost;
                 global_ui.topmost = TopMost;
                 update_topmost_image();
-            } else {
-                update_toggles();
-                toggleMenu.Show(Cursor.Position);
-            }
+            } else 
+                show_toggles_menu();
         }
 
         private void toggleTopmost_Click(object sender, EventArgs e) {
@@ -3382,6 +3381,7 @@ namespace LogWizard
 
 
         private void update_toggles() {
+            logger.Debug("update toggles, " + global_ui.show_source);
             currentViewToolStripMenuItem.Checked = global_ui.show_current_view;
             fullLogToolStripMenuItem.Checked = global_ui.show_fulllog;
             tableHeaderToolStripMenuItem.Checked = global_ui.show_header;
@@ -3488,8 +3488,19 @@ namespace LogWizard
         }
 
         private void toggles_Click(object sender, EventArgs e) {
+            show_toggles_menu();
+        }
+
+        private void show_toggles_menu() {
             update_toggles();
+            toggleMenu.Closing += Toggle_menu_on_closing;            
             toggleMenu.Show(Cursor.Position, util.menu_direction(toggleMenu, Cursor.Position));
+        }
+
+        private void Toggle_menu_on_closing(object sender, ToolStripDropDownClosingEventArgs e) {
+            e.Cancel = e.CloseReason == ToolStripDropDownCloseReason.ItemClicked;
+            if ( e.Cancel)
+                util.postpone(update_toggles,1);
         }
 
         private void whatIsThisToolStripMenuItem_Click(object sender, EventArgs e) {

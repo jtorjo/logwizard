@@ -120,7 +120,11 @@ namespace log4net.Appender
 			//
 			// Write the string to the Debug system
 			//
-			System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent), loggingEvent.LoggerName);
+		    var write = RenderLoggingEvent(loggingEvent);
+            // john.torjo - I don't understand why anyone would use this, except to just piss me off
+			//System.Diagnostics.Debug.Write(write, loggingEvent.LoggerName);
+			System.Diagnostics.Debug.Write(write);
+
 	 
 			//
 			// Flush the Debug system if needed
