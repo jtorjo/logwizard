@@ -1,6 +1,10 @@
 
 
 
+1.4.9i
+- getting release info from github - works like a charm :D
+  - show in status
+  - show in about dialog, like a boss :D
 
 
 1.4.9h

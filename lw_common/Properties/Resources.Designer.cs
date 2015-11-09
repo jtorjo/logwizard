@@ -63,6 +63,16 @@ namespace lw_common.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap buggy {
+            get {
+                object obj = ResourceManager.GetObject("buggy", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap eyedropper {
             get {
                 object obj = ResourceManager.GetObject("eyedropper", resourceCulture);

@@ -33,6 +33,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Xml.Serialization;
 using BrightIdeasSoftware;
 using lw_common;
@@ -140,6 +141,8 @@ namespace LogWizard
 
         private bool can_edit_context_ = true;
 
+        private static List<read_github_release.release_info> new_releases_, cur_release_; 
+
         public log_wizard()
         {
             InitializeComponent();
@@ -151,6 +154,8 @@ namespace LogWizard
             if (first_time) {
                 load_contexts(sett);
                 notes_keeper.inst.init( util.is_debug ? "notes" : Program.local_dir() + "\\notes", app.inst.identify_notes_files);
+
+                new Thread(load_release_info_thread) {IsBackground = true}.Start();
             }
             notes.set_author( app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
             notes.on_note_selected = on_note_selected;
@@ -211,6 +216,26 @@ namespace LogWizard
                 if (open_cmd_line_file)
                     on_file_drop(Program.open_file_name);
             }, 10);
+        }
+
+        private void load_release_info_thread() {
+            if (util.is_debug)
+                return;
+
+            var info = new read_github_release("jtorjo", "logwizard");
+            new_releases_ = info.beta_releases();
+            cur_release_ = info.release_before();
+            if ( info.error)
+                logger.Error("can't load latest release info: " + info.error_msg);
+
+            // show only stable & beta versions
+            var last = new_releases_.FirstOrDefault(x => x.is_stable || x.is_beta);
+            if (last != null) {
+                string suffix = last.is_stable ? "" : "(beta)";
+                this.async_call(() =>
+                    util.postpone(() =>                    
+                        set_status("New Version: " + last.version + " " + suffix + " - " + last.short_description + ". Click 'About' for more details!", status_type.msg, 30000), 15000));
+            }
         }
 
         // note: we don't allow two forms to use the same UI - that would be insane - if one would toggle somethin in Form A (or just move it), 
@@ -2904,7 +2929,7 @@ namespace LogWizard
         }
 
         private void about_Click(object sender, EventArgs e) {
-            new about_form(this).Show();
+            new about_form(this,new_releases_, cur_release_).Show();
         }
 
         private void log_wizard_Deactivate(object sender, EventArgs e) {

@@ -23,14 +23,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 
 namespace lw_common {
     // more info at https://developer.github.com/v3/repos/releases/
     public class read_github_release {
-        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public delegate bool is_good_version_func(Dictionary<string, object> ver);
 
@@ -92,13 +93,39 @@ namespace lw_common {
 
         private object json_page_ = null;
 
+        private string error_msg_ = "";
+
         public read_github_release(string github_user, string github_repository) {
             is_stable = default_is_stable;
             is_beta = default_is_beta;
 
-            // todo
+            // Example:
             // https://api.github.com/repos/jtorjo/logwizard/releases
+            // GET /repos/:owner/:repo/releases
+            parse_releases_page( read_html_page("https://api.github.com/repos/" + github_user + "/" + github_repository + "/releases") );
         }
+
+        private string read_html_page(string url) {
+            try {
+                WebClient client = new WebClient();
+                // this is optional
+                client.Headers.Add ("user-agent", "Mozilla/5.0 (Windows NT 6.1; rv:15.0) Gecko/20120716 Firefox/15.0a2");
+                Stream data = client.OpenRead (url);
+                StreamReader reader = new StreamReader (data);
+                string s = reader.ReadToEnd ();
+                return s;
+            } catch(Exception e) {
+                add_error( "Can't read html page " + url + " : " + e.Message);
+                return "";
+            }
+        }
+
+        private void add_error(string err) {
+            if (error_msg_ != "")
+                error_msg_ += "\r\n";
+            error_msg_ += err;
+        }
+
 
         // this is just for testing, read from local file
         public read_github_release(string github_releases_page) {
@@ -106,6 +133,14 @@ namespace lw_common {
             is_beta = default_is_beta;
 
             parse_releases_page(github_releases_page);
+        }
+
+        public bool error {
+            get { return error_msg_ != ""; }
+        }
+
+        public string error_msg {
+            get { return error_msg_; }
         }
 
         private bool is_valid_version(Dictionary<string, object> release) {
@@ -126,7 +161,11 @@ namespace lw_common {
 
 
         private void parse_releases_page(string page) {
-            json_page_ = fastJSON.JSON.ToObject(page);
+            try {
+                json_page_ = fastJSON.JSON.ToObject(page);
+            } catch(Exception e) {
+                add_error("Can't parse json : " + e.Message);
+            }
         }
 
         private release_info to_release(Dictionary<string, object> ver) {
@@ -149,26 +188,46 @@ namespace lw_common {
             return release;
         }
 
+        public List<release_info> release_before(string up_to_version) {
+            Version max = new Version(up_to_version);
+            List<release_info> releases = new List<release_info>();
+            bool found_top = false;
+            if ( json_page_ != null)
+                foreach (object o in (object[]) json_page_) {
+                    var ver = (Dictionary<string, object>) o;
+                    if ( is_valid_version(ver))
+                        if (new Version(ver["tag_name"].ToString()) <= max) 
+                            found_top = true;
+
+                    if ( found_top)
+                        releases.Add( to_release(ver) );
+                }
+
+            return releases;
+        }
+
         public List<release_info> stable_releases(string after_version) {
             Version min = new Version(after_version);
             List<release_info> releases = new List<release_info>();
             bool at_least_one_bigger = false;
-            foreach (object o in (object[]) json_page_) {
-                var ver = (Dictionary<string, object>) o;
-                if ( is_valid_version(ver))
-                    if (new Version(ver["tag_name"].ToString()) <= min) 
-                        break;
-                if ( is_valid_version(ver))
-                    at_least_one_bigger = true;
 
-                // if this version is not a valid version, we will show it in the list
-                // (perhaps an interim - still, the user should be able to see it)
-                bool is_stable = true;
-                if ( is_valid_version(ver))
-                    if (!this.is_stable(ver))
-                        is_stable = false;
-                releases.Add( to_release(ver) );
-            }
+            if ( json_page_ != null)
+                foreach (object o in (object[]) json_page_) {
+                    var ver = (Dictionary<string, object>) o;
+                    if ( is_valid_version(ver))
+                        if (new Version(ver["tag_name"].ToString()) <= min) 
+                            break;
+                    if ( is_valid_version(ver))
+                        at_least_one_bigger = true;
+
+                    // if this version is not a valid version, we will show it in the list
+                    // (perhaps an interim - still, the user should be able to see it)
+                    bool is_stable = true;
+                    if ( is_valid_version(ver))
+                        if (!this.is_stable(ver))
+                            is_stable = false;
+                    releases.Add( to_release(ver) );
+                }
 
             if ( !at_least_one_bigger)
                 releases.Clear();
@@ -181,22 +240,24 @@ namespace lw_common {
             Version min = new Version(after_version);
             List<release_info> releases = new List<release_info>();
             bool at_least_one_bigger = false;
-            foreach (object o in (object[]) json_page_) {
-                var ver = (Dictionary<string, object>) o;
-                if ( is_valid_version(ver))
-                    if (new Version(ver["tag_name"].ToString()) <= min) 
-                        break;
-                if ( is_valid_version(ver))
-                    at_least_one_bigger = true;
 
-                // if this version is not a valid version, we will show it in the list
-                // (perhaps an interim - still, the user should be able to see it)
-                bool is_beta = true;
-                if ( is_valid_version(ver))
-                    if (!this.is_beta(ver) && !is_stable(ver))
-                        is_beta = false;
-                releases.Add( to_release(ver) );
-            }
+            if ( json_page_ != null)
+                foreach (object o in (object[]) json_page_) {
+                    var ver = (Dictionary<string, object>) o;
+                    if ( is_valid_version(ver))
+                        if (new Version(ver["tag_name"].ToString()) <= min) 
+                            break;
+                    if ( is_valid_version(ver))
+                        at_least_one_bigger = true;
+
+                    // if this version is not a valid version, we will show it in the list
+                    // (perhaps an interim - still, the user should be able to see it)
+                    bool is_beta = true;
+                    if ( is_valid_version(ver))
+                        if (!this.is_beta(ver) && !is_stable(ver))
+                            is_beta = false;
+                    releases.Add( to_release(ver) );
+                }
 
             if ( !at_least_one_bigger)
                 releases.Clear();
@@ -204,18 +265,23 @@ namespace lw_common {
             return releases;
         }
 
-        public List<release_info> stable_releases() {
+        private static string version() {
             var assembly = Assembly.GetEntryAssembly();
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = fileVersionInfo.ProductVersion;
-            return stable_releases(version);
+            return version;
+        }
+
+        public List<release_info> stable_releases() {
+            return stable_releases(version());
         } 
 
         public List<release_info> beta_releases() {
-            var assembly = Assembly.GetEntryAssembly();
-            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-            string version = fileVersionInfo.ProductVersion;
-            return beta_releases(version);
+            return beta_releases(version());
+        }
+
+        public List<release_info> release_before() {
+            return release_before(version());
         } 
 
     }

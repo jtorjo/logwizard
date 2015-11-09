@@ -4,14 +4,7 @@
 W2/nov 2015
 
 d1
-- how easy is it to access github to look for updates?
-  - easy to show in Status bar when new vresion available. Show it in About/history
-  - maybe mark huge features with "*", while normal features shown in "-" 
-       --------> show all releases (that is, from what user has up-to-date)
-	             beta/stable
-  + article (code gpl3) (probably tip)
-  + need to show this in status as well
-  - ignore versions that don't match the x.y.z syntax
+  + tip (gpl3) 
   --> update original article (comment -> with things i solved)
 
 
