@@ -1,5 +1,9 @@
 
 
+1.5.0
+- retested getting release info from github 
+- released to git
+
 
 1.4.9i
 - getting release info from github - works like a charm :D

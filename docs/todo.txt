@@ -5,7 +5,7 @@ W2/nov 2015
 
 d1
   + tip (gpl3) 
-  --> update original article (comment -> with things i solved)
+  --> update original article (comment -> with things i solved + update my bio)
 
 
 d2
@@ -30,7 +30,7 @@ d2/3
 	   - if a column does not show up in aliases, no point in showing it????( probably for line-by-line i need to manually compute aliases from syntax)
 	   -********* when the log file is changed, i need to update the visible columns based on what info the file has
 
-
+d3
 ---------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
  ***- this needs to exist for each type of log - even files (specify type: line-by-line, log line, xml, csv etc.)
  - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))

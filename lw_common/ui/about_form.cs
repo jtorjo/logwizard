@@ -72,9 +72,7 @@ namespace lw_common.ui {
 
         private string friendly_ver_string(read_github_release.release_info ver) {
             string friendly = "[" + ver.version + "] " + ver.short_description + " ";
-            if (ver.is_beta)
-                friendly += "(beta)";
-            else if (!ver.is_stable)
+            if (!ver.is_stable && !ver.is_beta)
                 // not beta, nor stable
                 friendly += "(interim)";
             friendly += "\r\n";
