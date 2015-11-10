@@ -1,5 +1,10 @@
 
 
+1.5.1b
+- retested getting release info from github 
+- fixed small bug
+
+
 1.5.1
 - retested getting release info from github 
 - released to git

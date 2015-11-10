@@ -97,7 +97,7 @@ namespace lw_common {
 
         // returns true if event was received
         public bool wait() {
-            if (util.is_debug && listener_thread_id_ == 0)
+            if (listener_thread_id_ == 0)
                 listener_thread_id_ = Thread.CurrentThread.ManagedThreadId;
             Debug.Assert(listener_thread_id_ == Thread.CurrentThread.ManagedThreadId);
 

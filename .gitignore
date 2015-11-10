@@ -21,6 +21,7 @@ packages/ObjectListView.Official.2.8.1/*
 logwizardsetup/Release/*
 logwizardsetup/Dbg64/*
 logwizardsetup/Release64/*
+output/*
 
 *.exe
 *.sample
