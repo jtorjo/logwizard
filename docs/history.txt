@@ -1,4 +1,7 @@
 
+1.5.2a
+- github release: if stable is later than beta, just show stable
+
 
 1.5.1b
 - retested getting release info from github 

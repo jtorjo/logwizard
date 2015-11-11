@@ -49,10 +49,19 @@ namespace lw_common.ui {
                 if (stable_ver != null)
                     stableGroup.Text += " (" + stable_ver.version + ")";
 
+                bool stable_is_highest = false;
                 var beta_ver = new_releases_.FirstOrDefault(x => x.is_beta);
+                if (beta_ver != null && stable_ver != null) {
+                    // see if the stable version is higher than beta
+                    int stable_idx = new_releases_.IndexOf(stable_ver), beta_idx = new_releases_.IndexOf(beta_ver);
+                    stable_is_highest = stable_idx < beta_idx;
+                    if (stable_is_highest)
+                        beta_ver = null;
+                }
                 downloadBeta64.Enabled = beta_ver != null && beta_ver.download_64bit_url != "";
                 downloadBeta32.Enabled = beta_ver != null && beta_ver.download_32bit_url != "";
-                beta.Text = beta_ver != null ? friendly_ver_string(beta_ver) : "Congratulations! You have the latest Beta version.";
+                beta.Text = beta_ver != null ? friendly_ver_string(beta_ver) : 
+                    (stable_is_highest ? "Congratulations! You have the latest Stable version." : "Congratulations! You have the latest Beta version.");
                 if (beta_ver != null)
                     betaGroup.Text += " (" + beta_ver.version + ")";
             }

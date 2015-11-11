@@ -359,7 +359,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ObjectListView_lw, Version=2.8.1.5304, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ObjectListView_lw, Version=2.8.1.5781, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_264ACE8638B5C7A7BA9DDD169AFBE2E3"
@@ -673,7 +673,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
         "ProductCode" = "8:{D1C685F0-99A3-4075-BA16-79ED241F9F20}"
-        "PackageCode" = "8:{E7CF6CB5-40ED-4135-B118-4D50A136C45C}"
+        "PackageCode" = "8:{D0EE9545-A172-4AC2-A7C2-07320E7874E3}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1250,7 +1250,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_900BA54346A2479085BF08862BE89061"
             {
-            "SourcePath" = "8:..\\obj\\x64\\Dbg64\\LogWizard.exe"
+            "SourcePath" = "8:..\\obj\\x86\\Release\\LogWizard.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E297CB39A550491681319D6F014A659B"

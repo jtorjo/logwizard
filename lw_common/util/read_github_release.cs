@@ -226,7 +226,8 @@ namespace lw_common {
                     if ( is_valid_version(ver))
                         if (!this.is_stable(ver))
                             is_stable = false;
-                    releases.Add( to_release(ver) );
+                    if ( is_stable)
+                        releases.Add( to_release(ver) );
                 }
 
             if ( !at_least_one_bigger)
@@ -250,12 +251,6 @@ namespace lw_common {
                     if ( is_valid_version(ver))
                         at_least_one_bigger = true;
 
-                    // if this version is not a valid version, we will show it in the list
-                    // (perhaps an interim - still, the user should be able to see it)
-                    bool is_beta = true;
-                    if ( is_valid_version(ver))
-                        if (!this.is_beta(ver) && !is_stable(ver))
-                            is_beta = false;
                     releases.Add( to_release(ver) );
                 }
 

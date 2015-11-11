@@ -4,8 +4,6 @@
 W2/nov 2015
 
 d1
-  + tip (gpl3) 
-  --> update original article (comment -> with things i solved + update my bio)
 
 
 d2
@@ -16,6 +14,7 @@ d2
 	- from the button - have something called - show history (which shows the combo)
 	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
 	- should have "Open" menu (with submenus) -> which for now just opens a file (later: Event viewer, etc)
+  --> update original article (comment -> with things i solved )
 
 - add/del view , sync view buttons -> hide them by default - they should be visible only if the mouse is around them (on the y axis)
   - care about whether showing header or not?
