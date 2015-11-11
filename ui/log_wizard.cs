@@ -146,6 +146,7 @@ namespace LogWizard
         public log_wizard()
         {
             InitializeComponent();
+            whatsup.animate = false;
             toggled_to_custom_ui_ = first_available_toggle_custom_ui();
             forms_.Add(this);
             Text += " " + version();
@@ -217,11 +218,22 @@ namespace LogWizard
                 if (open_cmd_line_file)
                     on_file_drop(Program.open_file_name);
             }, 10);
+
+            util.postpone(animate_whatsup, util.is_debug ? 2500 : 10000);
+        }
+
+        private void animate_whatsup() {
+            if (sett.get("animate_whatsup", "1") != "1")
+                return;
+            sett.set("animate_whatsup", "0");
+            sett.save();
+            whatsup.animate = true;
+            whatsup.animate_interval_ms = 30000;
         }
 
         private void load_release_info_thread() {
-//            if (util.is_debug)
-  //              return;
+            if (util.is_debug)
+                return;
 
             var info = new read_github_release("jtorjo", "logwizard");
             new_releases_ = util.is_debug ? info.beta_releases("1.1") : info.beta_releases();
@@ -857,10 +869,6 @@ namespace LogWizard
             toggle_full_log();
         }
 
-        private void newView_Click(object sender, EventArgs e)
-        {
-            new log_wizard( ).Show();
-        }
 
         private void LogNinja_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -1937,6 +1945,7 @@ namespace LogWizard
 
             //sourceName_TextChanged(null,null);
             on_log_listory_changed();
+            logHistory.Visible = false;
 
             util.postpone(() => {
                 if (global_ui.show_current_view)
@@ -2096,16 +2105,6 @@ namespace LogWizard
         }
 
 
-        private void refreshFilter_Click(object sender, EventArgs e) {
-            if (text_ != null)
-                log_parser_.reload();
-            refresh_filter_found();
-
-            util.add_timer((has_ended) => {
-                refreshFilter.Enabled = has_ended;
-                refreshFilter.Text = has_ended ? "Refresh" : util.add_dots(refreshFilter.Text, 3);
-            }, 2500, 250);
-        }
 
 
         private int handled_key_idx_ = 0;
@@ -2565,6 +2564,7 @@ namespace LogWizard
                 if (logHistory.DroppedDown)
                     close_history_dropdown();
                 else {
+                    logHistory.Visible = true;
                     logHistory.Focus();
                     logHistory.DroppedDown = true;
                 }
@@ -2830,24 +2830,6 @@ namespace LogWizard
         }
 
 
-        private void settingsCtrl_Click(object sender, EventArgs e) {
-            var old_sync_colors = app.inst.syncronize_colors;
-            var old_sync_gray = app.inst.sync_colors_all_views_gray_non_active;
-            var sett = new settings_form(this);
-            sett.ShowDialog();
-            notes.set_author(app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
-
-            bool sync_changed = app.inst.syncronize_colors != old_sync_colors || old_sync_gray != app.inst.sync_colors_all_views_gray_non_active;
-            if (sync_changed)
-                full_log.list.Refresh();
-
-            filtCtrl.update_colors();
-
-            if ( sett.wants_reset_settings)
-                reset_settings();
-            if ( sett.needs_restart)
-                restart_app();
-        }
 
         private void reset_settings() {
             foreach (var lw in log_wizard.forms) {
@@ -2928,9 +2910,6 @@ namespace LogWizard
             sett.save();
         }
 
-        private void about_Click(object sender, EventArgs e) {
-            new about_form(this,new_releases_, cur_release_).Show();
-        }
 
         private void log_wizard_Deactivate(object sender, EventArgs e) {
         }
@@ -3112,18 +3091,6 @@ namespace LogWizard
             return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Max Value Software\\Holdem Manager\\3.0\\Logs\\holdemmanager3.log.txt";
         }
 
-        private void monitor_Click(object sender, EventArgs e) {
-            List<MenuItem> items = new List<MenuItem>();
-            if (File.Exists(tn2_file()))
-                items.Add(new MenuItem("TableNinja II", (o, args) => on_file_drop(tn2_file())));
-            if (File.Exists(hm2_file()))
-                items.Add(new MenuItem("HM2", (o, args) => on_file_drop(hm2_file())));
-            if (File.Exists(hm3_file()))
-                items.Add(new MenuItem("HM3", (o, args) => on_file_drop(hm3_file())));
-
-            monitor.ContextMenu = new ContextMenu(items.ToArray());
-            monitor.ContextMenu.Show(monitor, monitor.PointToClient(Cursor.Position));
-        }
 
         private void toggleTopmost_MouseClick(object sender, MouseEventArgs e) {
             bool is_right_click = (e.Button & MouseButtons.Right) == MouseButtons.Right;
@@ -3180,18 +3147,11 @@ namespace LogWizard
         }
 
 
-        private void hotkeys_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Process.Start("https://github.com/jtorjo/logwizard/wiki/Hotkeys");
-        }
 
         private void leftPane_SizeChanged(object sender, EventArgs e) {
             logger.Info("left pane = " + leftPane.Width + " x " + leftPane.Height + " [" + filtersTab.Width + " x " + filtersTab.Height + "]");
         }
 
-        private void export_Click(object sender, EventArgs e) {
-            //export_notes();
-            exportMenu.Show(Cursor.Position);
-        }
 
         // within our .logwizard file - easily identify our files
         private const string log_wizard_zip_file_prefix = "___logwizard___";
@@ -3539,9 +3499,6 @@ namespace LogWizard
             toggle_details();
         }
 
-        private void toggles_Click(object sender, EventArgs e) {
-            show_toggles_menu();
-        }
 
         private void show_toggles_menu() {
             update_toggles();
@@ -3671,6 +3628,98 @@ namespace LogWizard
             }
         }
 
+
+        private void toggles_Click(object sender, EventArgs e) {
+        }
+        private void refreshFilter_Click(object sender, EventArgs e) {
+        }
+        private void hotkeys_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+        }
+        private void about_Click(object sender, EventArgs e) {
+        }
+        private void export_Click(object sender, EventArgs e) {
+        }
+        private void monitor_Click(object sender, EventArgs e) {
+        }
+        private void settingsCtrl_Click(object sender, EventArgs e) {
+        }
+        private void newView_Click(object sender, EventArgs e)
+        {
+        }
+
+
+
+
+        private void whatsup_Click(object sender, EventArgs e) {
+            whatupMenu.Show(Cursor.Position);
+        }
+
+        private void whatsupOpen_Click(object sender, EventArgs e) {
+            // not impleemented yet
+        }
+
+        private void whatsupNew_Click(object sender, EventArgs e) {
+            new log_wizard( ).Show();
+        }
+
+        private void whatsupToggles_Click(object sender, EventArgs e) {
+            show_toggles_menu();
+        }
+
+        private void whatsupPreferences_Click(object sender, EventArgs e) {
+            var old_sync_colors = app.inst.syncronize_colors;
+            var old_sync_gray = app.inst.sync_colors_all_views_gray_non_active;
+            var sett = new settings_form(this);
+            sett.ShowDialog();
+            notes.set_author(app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
+
+            bool sync_changed = app.inst.syncronize_colors != old_sync_colors || old_sync_gray != app.inst.sync_colors_all_views_gray_non_active;
+            if (sync_changed)
+                full_log.list.Refresh();
+
+            filtCtrl.update_colors();
+
+            if ( sett.wants_reset_settings)
+                reset_settings();
+            if ( sett.needs_restart)
+                restart_app();
+        }
+
+        private void historyToolStripMenuItem_Click(object sender, EventArgs e) {
+            logHistory.Visible = true;
+            handle_action(action_type.toggle_history_dropdown);
+        }
+
+        private void hotkeysHelpToolStripMenuItem_Click(object sender, EventArgs e) {
+            Process.Start("https://github.com/jtorjo/logwizard/wiki/Hotkeys");
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (text_ != null)
+                log_parser_.reload();
+            refresh_filter_found();
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e) {
+            exportMenu.Show(Cursor.Position);
+        }
+
+        private void monitorToolStripMenuItem_Click(object sender, EventArgs e) {
+            List<MenuItem> items = new List<MenuItem>();
+            if (File.Exists(tn2_file()))
+                items.Add(new MenuItem("TableNinja II", (o, args) => on_file_drop(tn2_file())));
+            if (File.Exists(hm2_file()))
+                items.Add(new MenuItem("HM2", (o, args) => on_file_drop(hm2_file())));
+            if (File.Exists(hm3_file()))
+                items.Add(new MenuItem("HM3", (o, args) => on_file_drop(hm3_file())));
+
+            var monitor_menu = new ContextMenu(items.ToArray());
+            monitor_menu.Show(this, PointToClient(Cursor.Position));
+        }
+
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e) {
+            new about_form(this,new_releases_, cur_release_).Show();
+        }
 
     }
 }

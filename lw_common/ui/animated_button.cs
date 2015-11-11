@@ -22,6 +22,7 @@ namespace lw_common.ui {
         public animated_button() {
             InitializeComponent();
             animate_interval_ms = util.is_debug ? 5000 : 30000;
+            animate = false;
         }
 
         public bool animate {
@@ -72,12 +73,12 @@ namespace lw_common.ui {
                 int offset_x = (Width - widths.Sum()) / 2;
                 int offset_y = (Height - height) / 2;
 
-                g.FillRectangle( brushes_.brush(BackColor), ClientRectangle );
+                ControlPaint.DrawButton(g, ClientRectangle, ButtonState.Flat);
                 bool bold = false;
                 int start = offset_x;
                 for (int i = 0; i < sub.Count; i++) {
                     string s = sub[i];
-                    g.DrawString(s, fonts_.get_font(Font, bold, false, false), brushes_.brush(ForeColor), start, offset_y);
+                    g.DrawString(s, fonts_.get_font(Font, false, false, false), brushes_.brush(bold ? Color.Red : ForeColor), start, offset_y);
                     start += widths[i];
                     bold = !bold;
                 }

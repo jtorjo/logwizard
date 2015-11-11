@@ -30,7 +30,6 @@
             // 
             // drawNextChar
             // 
-            this.drawNextChar.Enabled = true;
             this.drawNextChar.Tick += new System.EventHandler(this.drawNext_Tick);
             // 
             // drawNextAnimation

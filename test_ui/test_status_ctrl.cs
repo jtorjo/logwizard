@@ -14,7 +14,8 @@ namespace test_ui {
             status.set_text("te<fg red>sti<bg yellow>ng<a http://torjo.com>[--linky--blinky]</a>  12</fg>3\r\n45<a http://www.codeproject.com>second linky</a> hihi6\r\n78</bg>9");
             animated.animate = true;
             animated.animate_speed_ms = 100;
-            animated.animate_interval_ms = 20000;
+            animated.animate_count = 10;
+//            animated.animate_interval_ms = 20000;
         }
 
         private void status_MouseMove(object sender, MouseEventArgs e) {

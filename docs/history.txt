@@ -11,6 +11,10 @@
 - add/del view , sync view buttons -> hide them by default - they should be visible only if the mouse is around them (on the y axis)
   - care about whether showing header or not?
 
+1.5.2g
+- moved every former command from lower pane into the "What's up" button
+
+
 1.5.2f
 - implemented animated button - now, we bold a single char
 
