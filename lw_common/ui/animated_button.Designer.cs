@@ -23,9 +23,26 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            components = new System.ComponentModel.Container();
+            this.components = new System.ComponentModel.Container();
+            this.drawNextChar = new System.Windows.Forms.Timer(this.components);
+            this.drawNextAnimation = new System.Windows.Forms.Timer(this.components);
+            this.SuspendLayout();
+            // 
+            // drawNextChar
+            // 
+            this.drawNextChar.Enabled = true;
+            this.drawNextChar.Tick += new System.EventHandler(this.drawNext_Tick);
+            // 
+            // drawNextAnimation
+            // 
+            this.drawNextAnimation.Tick += new System.EventHandler(this.drawNextAnimation_Tick);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer drawNextChar;
+        private System.Windows.Forms.Timer drawNextAnimation;
     }
 }

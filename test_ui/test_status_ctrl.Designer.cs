@@ -23,18 +23,23 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.animated_button1 = new lw_common.ui.animated_button();
+            this.animated = new lw_common.ui.animated_button();
             this.status = new lw_common.ui.status_ctrl();
             this.SuspendLayout();
             // 
-            // animated_button1
+            // animated
             // 
-            this.animated_button1.Location = new System.Drawing.Point(302, 167);
-            this.animated_button1.Name = "animated_button1";
-            this.animated_button1.Size = new System.Drawing.Size(75, 23);
-            this.animated_button1.TabIndex = 1;
-            this.animated_button1.Text = "animated_button1";
-            this.animated_button1.UseVisualStyleBackColor = true;
+            this.animated.animate = true;
+            this.animated.animate_count = 5;
+            this.animated.animate_interval_ms = 5000;
+            this.animated.animate_speed_ms = 100;
+            this.animated.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.animated.Location = new System.Drawing.Point(302, 167);
+            this.animated.Name = "animated";
+            this.animated.Size = new System.Drawing.Size(124, 23);
+            this.animated.TabIndex = 1;
+            this.animated.Text = "What\'s up, doc?";
+            this.animated.UseVisualStyleBackColor = true;
             // 
             // status
             // 
@@ -51,7 +56,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(844, 261);
-            this.Controls.Add(this.animated_button1);
+            this.Controls.Add(this.animated);
             this.Controls.Add(this.status);
             this.Name = "test_status_ctrl";
             this.Text = "test_status_ctrl";
@@ -62,6 +67,6 @@
         #endregion
 
         private lw_common.ui.status_ctrl status;
-        private lw_common.ui.animated_button animated_button1;
+        private lw_common.ui.animated_button animated;
     }
 }

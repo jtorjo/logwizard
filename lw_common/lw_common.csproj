@@ -231,6 +231,9 @@
     <EmbeddedResource Include="ui\alias_form.resx">
       <DependentUpon>alias_form.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ui\animated_button.resx">
+      <DependentUpon>animated_button.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ui\filter_ctrl.resx">
       <DependentUpon>filter_ctrl.cs</DependentUpon>
     </EmbeddedResource>
