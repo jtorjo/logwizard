@@ -3721,5 +3721,17 @@ namespace LogWizard
             new about_form(this,new_releases_, cur_release_).Show();
         }
 
+        private void refreshAddViewButtons_Tick(object sender, EventArgs e) {
+            var button_rect= newFilteredView.RectangleToScreen(newFilteredView.ClientRectangle);
+            var mouse = Cursor.Position;
+            const int PAD = 20;
+            bool visible = button_rect.Top - PAD <= mouse.Y && button_rect.Bottom >= mouse.Y;
+
+            newFilteredView.Visible = visible;
+            delFilteredView.Visible = visible;
+            synchronizeWithExistingLogs.Visible = visible;
+            synchronizedWithFullLog.Visible = visible;
+        }
+
     }
 }
