@@ -71,6 +71,9 @@ namespace lw_common.ui {
 
         private void update_cur_line_text(Graphics g) {
             g.FillRectangle(brushes_.brush(BackColor), ClientRectangle );
+            string all_chars = "qwertyuiop[]\';lkjhgfdsazxcvbnm,./QWERTYUIOPLKJHGFDSAZXCVBNM";
+            var height = (int)(g.MeasureString(all_chars, Font).Height + .5);
+            int height_offset = (Height - height) / 2;
 
             List<part> cur_line = this.cur_line();
             link_start_ = link_len_ = 0;
@@ -84,7 +87,7 @@ namespace lw_common.ui {
 
                 var width = (int)g.MeasureString(p.text, font).Width + 1;
                 g.FillRectangle(brushes_.brush(bg), start, rect.Top, width, rect.Height);
-                g.DrawString(p.text, font, brushes_.brush(fg), start, 0);
+                g.DrawString(p.text, font, brushes_.brush(fg), start, height_offset);
                 if (p.link != "") {
                     link_start_ = start;
                     link_len_ = width;

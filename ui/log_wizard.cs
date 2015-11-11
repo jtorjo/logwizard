@@ -736,15 +736,13 @@ namespace LogWizard
                 int height = status_height_ - 1;
                 main.Height -= height;
                 lower.Top -= height;
-                status.Top -= height;
-                status.Height = status_height_;
+                lower.Height += height;
             } else {
-                status_height_ = status.Height;
-                status.Height = 1;
+                status_height_ = lower.Height;
+                lower.Height = 1;
                 int height = status_height_ - 1;
                 main.Height += height;
                 lower.Top += height;
-                status.Top += height;
             }
         }
 
@@ -755,7 +753,7 @@ namespace LogWizard
         }
 
 
-        private int extra_width_ = 0;
+        private int extra_width_ = 0, extra_height_ = 0;
         private void show_title(bool show) {
             bool shown = FormBorderStyle == FormBorderStyle.Sizable;
             if (show == shown)
@@ -763,13 +761,12 @@ namespace LogWizard
 
             if (!show) {
                 extra_width_ = Width - RectangleToScreen(ClientRectangle).Width;
+                extra_height_ = Height - RectangleToScreen(ClientRectangle).Height;
                 FormBorderStyle = FormBorderStyle.None;
-                main.Height += lower.Height;
-                Height += lower.Height;
+                Height += extra_height_;
                 Width += extra_width_;
             } else {
-                main.Height -= lower.Height;
-                Height -= lower.Height;
+                Height -= extra_height_;
                 Width -= extra_width_;
                 FormBorderStyle = FormBorderStyle.Sizable;
             }

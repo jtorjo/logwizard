@@ -94,15 +94,14 @@
             this.refresh = new System.Windows.Forms.Timer(this.components);
             this.monitor = new System.Windows.Forms.Button();
             this.lower = new System.Windows.Forms.Panel();
+            this.status = new lw_common.ui.status_ctrl();
             this.export = new System.Windows.Forms.Button();
             this.exportMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportLogNotestoLogWizardFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportNotestotxtAndhtmlFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeys = new System.Windows.Forms.LinkLabel();
-            this.status_old = new System.Windows.Forms.Label();
             this.saveTimer = new System.Windows.Forms.Timer(this.components);
-            this.status = new lw_common.ui.status_ctrl();
             this.newViewMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             this.toggleMenu.SuspendLayout();
@@ -165,7 +164,7 @@
             this.newFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.newFilteredView.ContextMenuStrip = this.newViewMenu;
             this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.newFilteredView.Location = new System.Drawing.Point(367, 29);
+            this.newFilteredView.Location = new System.Drawing.Point(361, 29);
             this.newFilteredView.Name = "newFilteredView";
             this.newFilteredView.Size = new System.Drawing.Size(18, 20);
             this.newFilteredView.TabIndex = 1;
@@ -246,7 +245,7 @@
             // 
             this.delFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.delFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.delFilteredView.Location = new System.Drawing.Point(385, 29);
+            this.delFilteredView.Location = new System.Drawing.Point(379, 29);
             this.delFilteredView.Name = "delFilteredView";
             this.delFilteredView.Size = new System.Drawing.Size(18, 20);
             this.delFilteredView.TabIndex = 2;
@@ -306,7 +305,7 @@
             this.synchronizedWithFullLog.Checked = true;
             this.synchronizedWithFullLog.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizedWithFullLog.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizedWithFullLog.Location = new System.Drawing.Point(454, 29);
+            this.synchronizedWithFullLog.Location = new System.Drawing.Point(448, 29);
             this.synchronizedWithFullLog.Name = "synchronizedWithFullLog";
             this.synchronizedWithFullLog.Size = new System.Drawing.Size(46, 20);
             this.synchronizedWithFullLog.TabIndex = 1;
@@ -322,7 +321,7 @@
             this.synchronizeWithExistingLogs.Checked = true;
             this.synchronizeWithExistingLogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizeWithExistingLogs.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(408, 29);
+            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(402, 29);
             this.synchronizeWithExistingLogs.Name = "synchronizeWithExistingLogs";
             this.synchronizeWithExistingLogs.Size = new System.Drawing.Size(46, 20);
             this.synchronizeWithExistingLogs.TabIndex = 3;
@@ -552,7 +551,7 @@
             // main.Panel2
             // 
             this.main.Panel2.Controls.Add(this.sourceUp);
-            this.main.Size = new System.Drawing.Size(1258, 520);
+            this.main.Size = new System.Drawing.Size(1258, 540);
             this.main.SplitterDistance = 273;
             this.main.SplitterWidth = 6;
             this.main.TabIndex = 4;
@@ -569,7 +568,7 @@
             this.leftPane.Location = new System.Drawing.Point(-1, 4);
             this.leftPane.Name = "leftPane";
             this.leftPane.SelectedIndex = 0;
-            this.leftPane.Size = new System.Drawing.Size(277, 513);
+            this.leftPane.Size = new System.Drawing.Size(277, 533);
             this.leftPane.TabIndex = 13;
             this.leftPane.SizeChanged += new System.EventHandler(this.leftPane_SizeChanged);
             // 
@@ -579,7 +578,7 @@
             this.filtersTab.Location = new System.Drawing.Point(4, 24);
             this.filtersTab.Name = "filtersTab";
             this.filtersTab.Padding = new System.Windows.Forms.Padding(3);
-            this.filtersTab.Size = new System.Drawing.Size(269, 485);
+            this.filtersTab.Size = new System.Drawing.Size(269, 505);
             this.filtersTab.TabIndex = 0;
             this.filtersTab.Text = "Filters";
             this.filtersTab.UseVisualStyleBackColor = true;
@@ -591,7 +590,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.filtCtrl.Location = new System.Drawing.Point(3, 2);
             this.filtCtrl.Name = "filtCtrl";
-            this.filtCtrl.Size = new System.Drawing.Size(264, 485);
+            this.filtCtrl.Size = new System.Drawing.Size(264, 505);
             this.filtCtrl.TabIndex = 0;
             // 
             // tabPage3
@@ -601,7 +600,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(269, 487);
+            this.tabPage3.Size = new System.Drawing.Size(269, 508);
             this.tabPage3.TabIndex = 1;
             this.tabPage3.Text = "By Threads / By Context";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -630,7 +629,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(269, 487);
+            this.tabPage4.Size = new System.Drawing.Size(269, 508);
             this.tabPage4.TabIndex = 2;
             this.tabPage4.Text = "Notes / Bookmarks";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -644,7 +643,7 @@
             this.notes.Location = new System.Drawing.Point(4, 3);
             this.notes.Margin = new System.Windows.Forms.Padding(4);
             this.notes.Name = "notes";
-            this.notes.Size = new System.Drawing.Size(258, 477);
+            this.notes.Size = new System.Drawing.Size(258, 498);
             this.notes.TabIndex = 1;
             // 
             // sourceUp
@@ -677,7 +676,7 @@
             // sourceUp.Panel2
             // 
             this.sourceUp.Panel2.Controls.Add(this.filteredLeft);
-            this.sourceUp.Size = new System.Drawing.Size(979, 520);
+            this.sourceUp.Size = new System.Drawing.Size(979, 540);
             this.sourceUp.SplitterDistance = 65;
             this.sourceUp.TabIndex = 0;
             // 
@@ -752,8 +751,8 @@
             this.filteredLeft.Panel1.Controls.Add(this.delFilteredView);
             this.filteredLeft.Panel1.Controls.Add(this.newFilteredView);
             this.filteredLeft.Panel1.Controls.Add(this.viewsTab);
-            this.filteredLeft.Size = new System.Drawing.Size(979, 451);
-            this.filteredLeft.SplitterDistance = 538;
+            this.filteredLeft.Size = new System.Drawing.Size(979, 471);
+            this.filteredLeft.SplitterDistance = 532;
             this.filteredLeft.SplitterWidth = 6;
             this.filteredLeft.TabIndex = 0;
             this.filteredLeft.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.filteredLeft_SplitterMoved);
@@ -769,7 +768,7 @@
             this.viewsTab.Location = new System.Drawing.Point(0, 3);
             this.viewsTab.Name = "viewsTab";
             this.viewsTab.SelectedIndex = 0;
-            this.viewsTab.Size = new System.Drawing.Size(533, 449);
+            this.viewsTab.Size = new System.Drawing.Size(527, 469);
             this.viewsTab.TabIndex = 0;
             this.viewsTab.SelectedIndexChanged += new System.EventHandler(this.viewsTab_SelectedIndexChanged);
             this.viewsTab.DragDrop += new System.Windows.Forms.DragEventHandler(this.filteredViews_DragDrop);
@@ -781,7 +780,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(525, 421);
+            this.tabPage1.Size = new System.Drawing.Size(519, 441);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -796,7 +795,7 @@
             this.dropHere.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.dropHere.Location = new System.Drawing.Point(3, 3);
             this.dropHere.Name = "dropHere";
-            this.dropHere.Size = new System.Drawing.Size(514, 421);
+            this.dropHere.Size = new System.Drawing.Size(508, 441);
             this.dropHere.TabIndex = 0;
             this.dropHere.Text = "Drop it Like it\'s Hot!\r\nJust drop a file here, and get to work!\r\n";
             this.dropHere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -844,10 +843,20 @@
             this.lower.Controls.Add(this.about);
             this.lower.Controls.Add(this.settingsCtrl);
             this.lower.Controls.Add(this.refreshFilter);
-            this.lower.Location = new System.Drawing.Point(0, 520);
+            this.lower.Location = new System.Drawing.Point(0, 541);
             this.lower.Name = "lower";
             this.lower.Size = new System.Drawing.Size(1261, 27);
             this.lower.TabIndex = 15;
+            // 
+            // status
+            // 
+            this.status.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.status.Location = new System.Drawing.Point(3, 2);
+            this.status.Name = "status";
+            this.status.Size = new System.Drawing.Size(506, 24);
+            this.status.TabIndex = 18;
             // 
             // export
             // 
@@ -903,39 +912,17 @@
             this.hotkeys.Text = "Hotkeys";
             this.hotkeys.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.hotkeys_LinkClicked);
             // 
-            // status_old
-            // 
-            this.status_old.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.status_old.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.status_old.Location = new System.Drawing.Point(-4, 549);
-            this.status_old.Name = "status_old";
-            this.status_old.Size = new System.Drawing.Size(1264, 19);
-            this.status_old.TabIndex = 18;
-            this.status_old.Text = " ";
-            // 
             // saveTimer
             // 
             this.saveTimer.Enabled = true;
             this.saveTimer.Interval = 15000;
             this.saveTimer.Tick += new System.EventHandler(this.saveTimer_Tick);
             // 
-            // status
-            // 
-            this.status.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.status.Location = new System.Drawing.Point(3, 0);
-            this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(478, 24);
-            this.status.TabIndex = 18;
-            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1255, 568);
-            this.Controls.Add(this.status_old);
             this.Controls.Add(this.toggleTopmost);
             this.Controls.Add(this.main);
             this.Controls.Add(this.lower);
@@ -1021,7 +1008,6 @@
         private System.Windows.Forms.Button monitor;
         private System.Windows.Forms.Panel lower;
         private System.Windows.Forms.PictureBox toggleTopmost;
-        private System.Windows.Forms.Label status_old;
         private System.Windows.Forms.Timer saveTimer;
         private System.Windows.Forms.LinkLabel hotkeys;
         private lw_common.ui.filter_ctrl filtCtrl;

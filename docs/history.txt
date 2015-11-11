@@ -12,8 +12,14 @@
   - care about whether showing header or not?
 
 
+1.5.2e
+- put status inside low pane 
+  - toggle status/title work correctly
+
+
 1.5.2d
 - status control - added to LogWizard
+
 
 1.5.2c
 - status control - works AWESOMELY !!!
