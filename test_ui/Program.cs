@@ -43,17 +43,17 @@ namespace test_ui {
             //test_export.test();
             /* works
             var git = new read_github_release( File.ReadAllText("github.txt"));
+            var git = new read_github_release( "jtorjo", "logwizard");
             var s1 = util.concatenate( git.stable_releases("1.0"), "\r\n");
             var s2 = util.concatenate( git.beta_releases("1.2"), "\r\n");
             var s3 = util.concatenate( git.beta_releases(), "\r\n");
             */
-            var git = new read_github_release( "jtorjo", "logwizard");
-            var s1 = util.concatenate( git.stable_releases("1.3"), "\r\n");
 
 
             app.inst.init(new settings_file( @"C:\john\code\logwiz\logwizard\bin\x64\Dbg64\logwizard_debug.txt"));
 
-            Application.Run(new test_olv());
+            Application.Run(new test_status_ctrl());
+//            Application.Run(new test_olv());
 //            Application.Run(new test_edit_ctrl());
 //            Application.Run(new test_log_view());
 //            Application.Run(new test_notes_ctrl());

@@ -510,7 +510,7 @@ namespace lw_common.ui {
             bool bold = history_[e.Index].last_view_names.Contains(lv_.name);
 
             // Draw the text    
-            e.Graphics.DrawString(text, fonts_.get_font( ((Control)sender).Font, bold, italic), brush, e.Bounds.X, e.Bounds.Y);
+            e.Graphics.DrawString(text, fonts_.get_font( ((Control)sender).Font, bold, italic, false), brush, e.Bounds.X, e.Bounds.Y);
 
         }
 

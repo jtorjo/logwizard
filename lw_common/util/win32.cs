@@ -106,6 +106,10 @@ namespace lw_common {
         [DllImport("kernel32.dll", SetLastError=true)]
         public static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
 
+         [DllImport("user32.dll", EntryPoint = "ShowCaret")]
+         public static extern long ShowCaret(IntPtr hwnd);
+         [DllImport("user32.dll", EntryPoint = "HideCaret")]
+         public static extern long HideCaret(IntPtr hwnd);
 
         static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
         static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);

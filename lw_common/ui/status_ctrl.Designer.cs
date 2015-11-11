@@ -23,7 +23,9 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.status = new System.Windows.Forms.RichTextBox();
+            this.goToNextLine = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // status
@@ -46,6 +48,13 @@
             this.status.TabStop = false;
             this.status.Text = "";
             this.status.WordWrap = false;
+            this.status.MouseMove += new System.Windows.Forms.MouseEventHandler(this.status_MouseMove);
+            // 
+            // goToNextLine
+            // 
+            this.goToNextLine.Enabled = true;
+            this.goToNextLine.Interval = 2500;
+            this.goToNextLine.Tick += new System.EventHandler(this.goToNextLine_Tick);
             // 
             // status_ctrl
             // 
@@ -60,5 +69,6 @@
         #endregion
 
         private System.Windows.Forms.RichTextBox status;
+        private System.Windows.Forms.Timer goToNextLine;
     }
 }

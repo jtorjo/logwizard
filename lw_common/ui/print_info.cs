@@ -58,9 +58,19 @@ namespace lw_common.ui {
             return !Equals(left, right);
         }
 
+        public void copy_from(print_info other) {
+            fg = other.fg;
+            bg = other.bg;
+            underline = other.underline;
+            bold = other.bold;
+            italic = other.italic;
+            font_name = other.font_name;
+            text = other.text;
+        }
+
         public Color fg = util.transparent;
         public Color bg = util.transparent;
-        public bool bold = false, italic = false;
+        public bool bold = false, italic = false, underline = false;
         public string font_name = "";
             
         // useful when sorting - to avoid collisions

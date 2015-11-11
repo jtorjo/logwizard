@@ -46,12 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="test_edit_ctrl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="test_edit_ctrl.Designer.cs">
-      <DependentUpon>test_edit_ctrl.cs</DependentUpon>
-    </Compile>
     <Compile Include="test_export.cs" />
     <Compile Include="test_filter_ctrl.cs">
       <SubType>Form</SubType>
@@ -79,6 +73,12 @@
     <Compile Include="test_olv.Designer.cs">
       <DependentUpon>test_olv.cs</DependentUpon>
     </Compile>
+    <Compile Include="test_status_ctrl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="test_status_ctrl.Designer.cs">
+      <DependentUpon>test_status_ctrl.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -88,9 +88,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="test_edit_ctrl.resx">
-      <DependentUpon>test_edit_ctrl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="test_filter_ctrl.resx">
       <DependentUpon>test_filter_ctrl.cs</DependentUpon>
     </EmbeddedResource>
@@ -102,6 +99,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="test_olv.resx">
       <DependentUpon>test_olv.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="test_status_ctrl.resx">
+      <DependentUpon>test_status_ctrl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>

@@ -1,4 +1,22 @@
 
+- low pane + status: 
+  - they should combine into one - i should use a better status control, maybe richedit (readonly)?
+  - first: by default, Status is shown , and at the end, there will be a button called "What's Up?'" (or some other name) ----------> animated_button
+    - from the button, access all the existing commands (Toggles,Refresh, Hotkeys Help etc.)
+	- from the button - have something called - show history (which shows the combo)
+	- the history combo is hidden by default (it will cover the status only when the user wants to have it shown)
+	- should have "Open" menu (with submenus) -> which for now just opens a file (later: Event viewer, etc)
+  --> update original article (comment -> with things i solved )
+
+- add/del view , sync view buttons -> hide them by default - they should be visible only if the mouse is around them (on the y axis)
+  - care about whether showing header or not?
+
+
+
+1.5.2b
+- status control - before removing the idiotic richtextbox
+
+
 1.5.2a
 - github release: if stable is later than beta, just show stable
 
