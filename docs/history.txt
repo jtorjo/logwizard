@@ -12,6 +12,9 @@
   - care about whether showing header or not?
 
 
+1.5.2c
+- status control - works AWESOMELY !!!
+
 
 1.5.2b
 - status control - before removing the idiotic richtextbox

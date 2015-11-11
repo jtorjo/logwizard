@@ -42,35 +42,60 @@ namespace lw_common.ui {
         // the currently shown line (in case there are several)
         private int cur_line_idx_ = 0;
 
+        // in case there's a link - at this time, we only handle at most one link per line
+        private int link_start_ = 0, link_len_ = 0;
+
         private font_list fonts_ = new font_list();
+        private solid_brush_list brushes_ = new solid_brush_list();
 
         public status_ctrl() {
             InitializeComponent();
         }
 
-        private void update_cur_line_text() {
+        public int time_per_line_ms {
+            set { goToNextLine.Interval = value; }
+        }
+
+        private List<part> cur_line() {
             int line_idx = 0;
             List<part> cur_line = new List<part>();
-            foreach ( var p in parts_)
-                if (line_idx == cur_line_idx_) {
+            foreach (var p in parts_) {
+                if (line_idx == cur_line_idx_) 
                     cur_line.Add(p);
-                    if (p.ends_line)
-                        ++line_idx;
-                }
 
-            status.Clear();
-            string text = util.concatenate(cur_line.Select(x => x.text), "");
-            status.AppendText(text);
-            int start = 0;
-            foreach (var p in cur_line) {
-                status.Select(start, p.text.Length);
-                if (p.print.fg != util.transparent)
-                    status.SelectionColor = p.print.fg;
-                if (p.print.bg != util.transparent)
-                    status.SelectionBackColor = p.print.bg;
-                string font = p.print.font_name != "" ? p.print.font_name : status.Font.Name;
-                status.SelectionFont = fonts_.get_font(font, (int)status.Font.Size, p.print.bold, p.print.italic, p.print.underline ) ;
+                if (p.ends_line)
+                    ++line_idx;
             }
+            return cur_line;
+        } 
+
+        private void update_cur_line_text(Graphics g) {
+            g.FillRectangle(brushes_.brush(BackColor), ClientRectangle );
+
+            List<part> cur_line = this.cur_line();
+            link_start_ = link_len_ = 0;
+            int start = 0;
+            var rect = ClientRectangle;
+            foreach (var p in cur_line) {
+                var fg = (p.print.fg != util.transparent) ? p.print.fg : ForeColor;
+                var bg = (p.print.bg != util.transparent) ? p.print.bg : BackColor;
+                string font_name = p.print.font_name != "" ? p.print.font_name : Font.Name;
+                var font = fonts_.get_font(font_name, (int)Font.Size, p.print.bold, p.print.italic, p.print.underline ) ;
+
+                var width = (int)g.MeasureString(p.text, font).Width + 1;
+                g.FillRectangle(brushes_.brush(bg), start, rect.Top, width, rect.Height);
+                g.DrawString(p.text, font, brushes_.brush(fg), start, 0);
+                if (p.link != "") {
+                    link_start_ = start;
+                    link_len_ = width;
+                }
+                start += width;
+            }
+        }
+
+        protected override void OnPrint(PaintEventArgs e) {
+            var g = e.Graphics;
+            update_cur_line_text(g);
         }
 
         // <a link> ... </a>
@@ -88,6 +113,8 @@ namespace lw_common.ui {
                     var new_ = new part { text = text.Substring(0, delimeter), link = cur_link };
                     cur_link = "";
                     new_.print.copy_from(cur_print);
+                    if ( new_.link != "")
+                        new_.print.fg = Color.DodgerBlue;
                     parts_.Add(new_);
                     int end_delimeter = text.IndexOf(">", delimeter);
                     string format = text.Substring(delimeter + 1, end_delimeter - delimeter - 1);
@@ -117,7 +144,8 @@ namespace lw_common.ui {
             }
 
             cur_line_idx_ = 0;
-            update_cur_line_text();
+            Invalidate();
+            Update();
         }
 
         private void parse_format(string format, ref print_info print, ref string link) {
@@ -174,16 +202,39 @@ namespace lw_common.ui {
         }
 
         private void goToNextLine_Tick(object sender, EventArgs e) {
+            if (Cursor == Cursors.Hand)
+                // user is over a link - don't move to next line at this time
+                return;
+
             int line_count = parts_.Count(p => p.ends_line) + 1;
             int old_idx = cur_line_idx_;
             cur_line_idx_ = (cur_line_idx_ + 1) % line_count;
-            if ( cur_line_idx_ != old_idx)
-                update_cur_line_text();
+            if (cur_line_idx_ != old_idx) {
+                Invalidate();
+                Update();
+            }
         }
 
-        private void status_MouseMove(object sender, MouseEventArgs e) {
-            // of course it doesn't work, it would have been too simple
-            status.Cursor = Cursors.Arrow;
+        private void status_ctrl_Paint(object sender, PaintEventArgs e) {
+            var g = e.Graphics;
+            update_cur_line_text(g);
+        }
+
+        private void status_ctrl_MouseMove(object sender, MouseEventArgs e) {
+            Cursor = e.X >= link_start_ && e.X < link_start_ + link_len_ ? Cursors.Hand : Cursors.Default;
+        }
+
+        private void status_ctrl_MouseUp(object sender, MouseEventArgs e) {
+            if (Cursor == Cursors.Hand) {
+                // user wants to go to the link
+                List<part> cur_line = this.cur_line();
+                var link_part = cur_line.FirstOrDefault(x => x.link != "");
+                Debug.Assert(link_part != null);
+                try {
+                    Process.Start(link_part.link);
+                } catch {}
+
+            }
         }
 
     }

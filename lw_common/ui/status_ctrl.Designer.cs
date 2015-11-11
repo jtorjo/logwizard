@@ -24,31 +24,8 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.status = new System.Windows.Forms.RichTextBox();
             this.goToNextLine = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
-            // 
-            // status
-            // 
-            this.status.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.status.BackColor = System.Drawing.Color.White;
-            this.status.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.status.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.status.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.status.Location = new System.Drawing.Point(0, 0);
-            this.status.Multiline = false;
-            this.status.Name = "status";
-            this.status.ReadOnly = true;
-            this.status.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.status.ShortcutsEnabled = false;
-            this.status.Size = new System.Drawing.Size(613, 24);
-            this.status.TabIndex = 0;
-            this.status.TabStop = false;
-            this.status.Text = "";
-            this.status.WordWrap = false;
-            this.status.MouseMove += new System.Windows.Forms.MouseEventHandler(this.status_MouseMove);
             // 
             // goToNextLine
             // 
@@ -59,16 +36,17 @@
             // status_ctrl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.Controls.Add(this.status);
             this.Name = "status_ctrl";
             this.Size = new System.Drawing.Size(613, 24);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.status_ctrl_Paint);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.status_ctrl_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.status_ctrl_MouseUp);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox status;
         private System.Windows.Forms.Timer goToNextLine;
     }
 }

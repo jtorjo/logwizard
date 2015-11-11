@@ -29,7 +29,7 @@
             // 
             // animated_button1
             // 
-            this.animated_button1.Location = new System.Drawing.Point(300, 57);
+            this.animated_button1.Location = new System.Drawing.Point(302, 167);
             this.animated_button1.Name = "animated_button1";
             this.animated_button1.Size = new System.Drawing.Size(75, 23);
             this.animated_button1.TabIndex = 1;
@@ -38,10 +38,11 @@
             // 
             // status
             // 
+            this.status.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.status.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.status.Location = new System.Drawing.Point(12, 27);
             this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(613, 24);
+            this.status.Size = new System.Drawing.Size(613, 117);
             this.status.TabIndex = 0;
             this.status.MouseMove += new System.Windows.Forms.MouseEventHandler(this.status_MouseMove);
             // 
