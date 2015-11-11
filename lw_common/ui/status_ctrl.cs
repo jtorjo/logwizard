@@ -107,6 +107,7 @@ namespace lw_common.ui {
         public void set_text(string text) {
             print_info cur_print = new print_info();
             string cur_link = "";
+            parts_.Clear();
             while (text != "") {
                 int delimeter = text.IndexOf("<");
                 if (delimeter > 0) {
@@ -137,9 +138,11 @@ namespace lw_common.ui {
                     string after = parts_[i].text.Substring(enter + 2);
                     parts_[i].text = before;
                     parts_[i].ends_line = true;
-                    var new_ = new part() {text = after, link = parts_[i].link};
-                    new_.print.copy_from(parts_[i].print);
-                    parts_.Insert(i + 1, new_);
+                    if (after != "") {
+                        var new_ = new part() {text = after, link = parts_[i].link};
+                        new_.print.copy_from(parts_[i].print);
+                        parts_.Insert(i + 1, new_);
+                    }
                 }
             }
 
@@ -202,9 +205,11 @@ namespace lw_common.ui {
         }
 
         private void goToNextLine_Tick(object sender, EventArgs e) {
-            if (Cursor == Cursors.Hand)
-                // user is over a link - don't move to next line at this time
-                return;
+            if (Cursor == Cursors.Hand) {
+                if ( RectangleToScreen(ClientRectangle).Contains(Cursor.Position))
+                    // user is over a link - don't move to next line at this time
+                    return;
+            }
 
             int line_count = parts_.Count(p => p.ends_line) + 1;
             int old_idx = cur_line_idx_;

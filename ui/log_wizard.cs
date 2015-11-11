@@ -206,6 +206,7 @@ namespace LogWizard
             --ignore_change_;
 
             update_status_prefix();
+            set_status_forever("");
 
             // 1.0.80d+ - the reason we postpone this is so taht we don't set up all UI in the constructor - the splitters would get extra SplitterMove() events,
             //            and we would end up positioning them wrong
@@ -219,11 +220,11 @@ namespace LogWizard
         }
 
         private void load_release_info_thread() {
-            if (util.is_debug)
-                return;
+//            if (util.is_debug)
+  //              return;
 
             var info = new read_github_release("jtorjo", "logwizard");
-            new_releases_ = info.beta_releases();
+            new_releases_ = util.is_debug ? info.beta_releases("1.1") : info.beta_releases();
             cur_release_ = info.release_before();
             if ( info.error)
                 logger.Error("can't load latest release info: " + info.error_msg);
@@ -231,10 +232,12 @@ namespace LogWizard
             // show only stable & beta versions
             var last = new_releases_.FirstOrDefault(x => x.is_stable || x.is_beta);
             if (last != null) {
-                string suffix = last.is_stable ? "" : "(beta)";
+                string version_prefix = " <a " + last.friendly_url + ">New Version</a>: "   ;
                 this.async_call(() =>
                     util.postpone(() =>                    
-                        set_status("New Version: " + last.version + " " + suffix + " - " + last.short_description + ". Click 'About' for more details!", status_type.msg, 30000), 15000));
+                        set_status(version_prefix + last.version + " - " + last.short_description + "\r\n" 
+                            + util.concatenate(last.features.Select(x => version_prefix + "* " + x), "\r\n"), status_type.msg, 
+                            30000), util.is_debug ? 1 : 15000));
             }
         }
 
@@ -3038,9 +3041,8 @@ namespace LogWizard
                 // show errors longer
                 set_status_for_ms = Math.Max(set_status_for_ms, 15000);
             statuses_.Add(new Tuple<string, status_type, DateTime>(msg, type, set_status_for_ms > 0 ? DateTime.Now.AddMilliseconds(set_status_for_ms) : DateTime.MaxValue));
-            status.Text = status_prefix_ + msg;
-            status.ForeColor = status_color(type);
-            status.BackColor = status_bg_color(type);
+            show_last_status();
+
             if (type == status_type.err && !global_ui.show_status) {
                 global_ui.temporarily_show_status = true;
                 show_status(global_ui.temporarily_show_status);
@@ -3050,12 +3052,27 @@ namespace LogWizard
                 util.beep(util.beep_type.err);
         }
 
+        private void show_last_status() {
+            if (statuses_.Count < 1) 
+                return;
+            var last = statuses_.Last();
+            var type = last.Item2;
+            var msg = last.Item1;
+
+            string color_prefix = "";
+            if (status_color(type) != util.transparent)
+                color_prefix += "<fg " + util.color_to_str(status_color(type)) + ">";
+            if (status_bg_color(type) != util.transparent)
+                color_prefix += "<bg " + util.color_to_str(status_bg_color(type)) + ">";
+            status.set_text( color_prefix + status_prefix_ + msg);
+        }
+
         private Color status_color(status_type type) {
-            return type == status_type.err ? Color.DarkRed : Color.Black;
+            return type == status_type.err ? Color.DarkRed : util.transparent;
         }
 
         private Color status_bg_color(status_type type) {
-            return type == status_type.err ? Color.Yellow : Color.White;
+            return type == status_type.err ? Color.Yellow : util.transparent;
         }
 
         private void set_status_forever(string msg) {
@@ -3070,11 +3087,7 @@ namespace LogWizard
             }
 
             if (needs_update || force) {
-                status.Text = statuses_.Count > 0 ? status_prefix_ + statuses_.Last().Item1 : "";
-                if (statuses_.Count > 0) {
-                    status.ForeColor = status_color(statuses_.Last().Item2);
-                    status.BackColor = status_bg_color(statuses_.Last().Item2);
-                }
+                show_last_status();
 
                 bool is_err = statuses_.Count > 0 && statuses_.Last().Item2 == status_type.err;
                 if (!is_err)
