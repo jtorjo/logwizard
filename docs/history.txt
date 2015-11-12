@@ -1,4 +1,32 @@
+- refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
+  otherwise, i could end up ignoring a column if the first 10 values are empty
+   --- so basically have a way to force some columns to be visible
+       - perhaps if i just use what the parser is giving me, i would simply never need this "guessing"
+	   - also, care about aliases?
+	   - if a column does not show up in aliases, no point in showing it????( probably for line-by-line i need to manually compute aliases from syntax)
+	   -********* when the log file is changed, i need to update the visible columns based on what info the file has
 
+d3
+---------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
+ ***- this needs to exist for each type of log - even files (specify type: line-by-line, log line, xml, csv etc.)
+ - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))
+ ------------ note: i do have them now, in string_as_settings
+ - after showing dialog, need to find out if settings change require restart!
+
+- bug:	I opened a file, A.txt, in LW. Then I copied that to A-copy.txt.  So I have A.txt and A-copy.txt. Then deleted A.txt. So, LW now clears the display for A.txt.
+		So far so good. Next, I renamed A-copy.txt to A.txt. This rename is a kind of file update. So, I expected LW to update the display, but it does not. Even Refresh doesn't work.
+
+-aliases should be able to use in filters (***lo-case-no-space probably)
+	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
+	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
+	 -- see when i can resolve these names (as soon as aliases is loaded???)
+
+
+1.5.4a
+- fix: some hotkeys did not work anymore after moving actions into "What's Up?" button
+- font (selecting font): enable ScriptsOnly
+- font (settings): allow showing variable fonts as well (NOT recommended)
+- settings: allow showing beta updates; if unchecked, only stables ones are shown (enabled by default)
 
 
 1.5.3

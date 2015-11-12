@@ -172,7 +172,7 @@ namespace LogWizard
             filtCtrl.design_mode = false;
             filtCtrl.on_save = save;
             filtCtrl.ui_to_view = (view_idx) => log_view_for_tab(view_idx).set_filter(filtCtrl.to_filter_row_list());
-            filtCtrl.on_rerun_view = (view_idx) => refreshFilter_Click(null, null);
+            filtCtrl.on_rerun_view = (view_idx) => refreshToolStripMenuItem_Click(null, null);
             filtCtrl.on_refresh_view = (view_idx) => {
                 log_view_for_tab(view_idx).Refresh();
                 full_log.list.Refresh();
@@ -242,7 +242,7 @@ namespace LogWizard
                 logger.Error("can't load latest release info: " + info.error_msg);
 
             // show only stable & beta versions
-            var last = new_releases_.FirstOrDefault(x => x.is_stable || x.is_beta);
+            var last = new_releases_.FirstOrDefault(x => x.is_stable || (x.is_beta && app.inst.show_beta_releases));
             if (last != null) {
                 string version_prefix = " <a " + last.friendly_url + ">New Version</a>: "   ;
                 this.async_call(() =>
@@ -1022,13 +1022,13 @@ namespace LogWizard
                 break;
 
             case log_view_right_click.simple_action.button_toggles:
-                toggles_Click(null,null);
+                show_toggles_menu();
                 break;
             case log_view_right_click.simple_action.button_preferences:
-                settingsCtrl_Click(null,null);
+                whatsupPreferences_Click(null,null);
                 break;
             case log_view_right_click.simple_action.button_refresh:
-                refreshFilter_Click(null,null);
+                refreshToolStripMenuItem_Click(null,null);
                 break;
 
             case log_view_right_click.simple_action.export_log_and_notes:
@@ -2570,10 +2570,10 @@ namespace LogWizard
                 }
                 break;
             case action_type.new_log_wizard:
-                newView_Click(null, null);
+                new log_wizard( ).Show();
                 break;
             case action_type.show_preferences:
-                settingsCtrl_Click(null, null);
+                whatsupPreferences_Click(null, null);
                 break;
 
             case action_type.increase_font:
@@ -2607,7 +2607,7 @@ namespace LogWizard
                 }
                 break;
             case action_type.refresh:
-                refreshFilter_Click(null, null);
+                refreshToolStripMenuItem_Click(null, null);
                 break;
             case action_type.toggle_title:
                 toggle_title();
@@ -3629,23 +3629,6 @@ namespace LogWizard
         }
 
 
-        private void toggles_Click(object sender, EventArgs e) {
-        }
-        private void refreshFilter_Click(object sender, EventArgs e) {
-        }
-        private void hotkeys_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-        }
-        private void about_Click(object sender, EventArgs e) {
-        }
-        private void export_Click(object sender, EventArgs e) {
-        }
-        private void monitor_Click(object sender, EventArgs e) {
-        }
-        private void settingsCtrl_Click(object sender, EventArgs e) {
-        }
-        private void newView_Click(object sender, EventArgs e)
-        {
-        }
 
 
 

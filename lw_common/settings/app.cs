@@ -169,7 +169,8 @@ namespace lw_common {
 
         public bool use_file_monitoring_api = false;
 
-
+        public bool show_beta_releases = true;
+        public bool show_variable_fonts_as_well = false;
 
 
 
@@ -359,6 +360,8 @@ namespace lw_common {
                 this.default_font_names = default_font_names.Split(',');
 
             load_save(load, ref use_file_monitoring_api, "use_file_monitoring_api", false);
+            load_save(load, ref show_beta_releases, "show_beta_releases", true);
+            load_save(load, ref show_variable_fonts_as_well, "show_variable_fonts_as_well", false);
         }
 
         private string initials(string name) {

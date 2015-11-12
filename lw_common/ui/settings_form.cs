@@ -148,6 +148,8 @@ namespace lw_common.ui {
 
             filterShowFilterRowInFilterColor.Checked = app.inst.show_filter_row_in_filter_color;
             useFileMonitoringApi.Checked = app.inst.use_file_monitoring_api;
+            showBetaUpdates.Checked = app.inst.show_beta_releases;
+            showVariableFontsAsWell.Checked = app.inst.show_variable_fonts_as_well;
         }
 
         private void save() {
@@ -225,6 +227,8 @@ namespace lw_common.ui {
 
             app.inst.show_filter_row_in_filter_color = filterShowFilterRowInFilterColor.Checked;
             app.inst.use_file_monitoring_api = useFileMonitoringApi.Checked;
+            app.inst.show_beta_releases = showBetaUpdates.Checked;
+            app.inst.show_variable_fonts_as_well = showVariableFontsAsWell.Checked;
 
             app.inst.save();
         }
@@ -258,7 +262,8 @@ namespace lw_common.ui {
 
         private void browseFont_Click(object sender, EventArgs e) {
             var dlg = new FontDialog();
-            dlg.FixedPitchOnly = true;
+            dlg.ScriptsOnly = true;
+            dlg.FixedPitchOnly = !showVariableFontsAsWell.Checked;
             dlg.FontMustExist = true;
             dlg.Font = app.inst.font;
             dlg.ShowEffects = false;

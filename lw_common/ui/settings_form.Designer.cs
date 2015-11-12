@@ -56,6 +56,8 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.useFileMonitoringApi = new System.Windows.Forms.CheckBox();
             this.label30 = new System.Windows.Forms.Label();
             this.editSearchAllColumns = new System.Windows.Forms.RadioButton();
             this.editSearchCurColumnOnly = new System.Windows.Forms.RadioButton();
@@ -117,8 +119,9 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.useFileMonitoringApi = new System.Windows.Forms.CheckBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.showBetaUpdates = new System.Windows.Forms.CheckBox();
+            this.showVariableFontsAsWell = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -137,12 +140,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.fileToContext)).BeginInit();
             this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).BeginInit();
+            this.groupBox9.SuspendLayout();
             this.SuspendLayout();
             // 
             // fontLabel
             // 
             this.fontLabel.AutoSize = true;
-            this.fontLabel.Location = new System.Drawing.Point(6, 24);
+            this.fontLabel.Location = new System.Drawing.Point(6, 53);
             this.fontLabel.Name = "fontLabel";
             this.fontLabel.Size = new System.Drawing.Size(44, 17);
             this.fontLabel.TabIndex = 1;
@@ -154,9 +158,9 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.viewIndex);
             this.groupBox1.Controls.Add(this.viewLineCount);
-            this.groupBox1.Location = new System.Drawing.Point(6, 404);
+            this.groupBox1.Location = new System.Drawing.Point(6, 468);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(628, 122);
+            this.groupBox1.Size = new System.Drawing.Size(654, 63);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Views";
@@ -164,17 +168,17 @@
             // viewLine
             // 
             this.viewLine.AutoSize = true;
-            this.viewLine.Location = new System.Drawing.Point(16, 95);
+            this.viewLine.Location = new System.Drawing.Point(396, 37);
             this.viewLine.Name = "viewLine";
-            this.viewLine.Size = new System.Drawing.Size(205, 21);
+            this.viewLine.Size = new System.Drawing.Size(226, 21);
             this.viewLine.TabIndex = 3;
-            this.viewLine.Text = "Show Log Line Index in View";
+            this.viewLine.Text = "Absolute Log Line Index in View";
             this.viewLine.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 24);
+            this.label1.Location = new System.Drawing.Point(9, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(355, 17);
             this.label1.TabIndex = 2;
@@ -183,21 +187,21 @@
             // viewIndex
             // 
             this.viewIndex.AutoSize = true;
-            this.viewIndex.Location = new System.Drawing.Point(16, 73);
+            this.viewIndex.Location = new System.Drawing.Point(196, 37);
             this.viewIndex.Name = "viewIndex";
-            this.viewIndex.Size = new System.Drawing.Size(195, 21);
+            this.viewIndex.Size = new System.Drawing.Size(194, 21);
             this.viewIndex.TabIndex = 1;
-            this.viewIndex.Text = "Show current index in View";
+            this.viewIndex.Text = "Relative Line Index in View";
             this.viewIndex.UseVisualStyleBackColor = true;
             // 
             // viewLineCount
             // 
             this.viewLineCount.AutoSize = true;
-            this.viewLineCount.Location = new System.Drawing.Point(16, 50);
+            this.viewLineCount.Location = new System.Drawing.Point(16, 37);
             this.viewLineCount.Name = "viewLineCount";
-            this.viewLineCount.Size = new System.Drawing.Size(210, 21);
+            this.viewLineCount.Size = new System.Drawing.Size(174, 21);
             this.viewLineCount.TabIndex = 0;
-            this.viewLineCount.Text = "Show number of lines in View";
+            this.viewLineCount.Text = "Number of lines in View";
             this.viewLineCount.UseVisualStyleBackColor = true;
             // 
             // close
@@ -217,9 +221,9 @@
             this.groupBox2.Controls.Add(this.bringToTopOnRestart);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.toggleTopmost);
-            this.groupBox2.Location = new System.Drawing.Point(6, 238);
+            this.groupBox2.Location = new System.Drawing.Point(6, 332);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(628, 160);
+            this.groupBox2.Size = new System.Drawing.Size(654, 130);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Top / Topmost";
@@ -229,7 +233,7 @@
             this.makeTopmostOnRestart.AutoSize = true;
             this.makeTopmostOnRestart.Enabled = false;
             this.makeTopmostOnRestart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.makeTopmostOnRestart.Location = new System.Drawing.Point(256, 88);
+            this.makeTopmostOnRestart.Location = new System.Drawing.Point(256, 58);
             this.makeTopmostOnRestart.Name = "makeTopmostOnRestart";
             this.makeTopmostOnRestart.Size = new System.Drawing.Size(185, 21);
             this.makeTopmostOnRestart.TabIndex = 4;
@@ -240,7 +244,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(22, 112);
+            this.label4.Location = new System.Drawing.Point(22, 82);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(481, 39);
             this.label4.TabIndex = 3;
@@ -250,7 +254,7 @@
             // 
             this.bringToTopOnRestart.AutoSize = true;
             this.bringToTopOnRestart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bringToTopOnRestart.Location = new System.Drawing.Point(10, 88);
+            this.bringToTopOnRestart.Location = new System.Drawing.Point(10, 58);
             this.bringToTopOnRestart.Name = "bringToTopOnRestart";
             this.bringToTopOnRestart.Size = new System.Drawing.Size(206, 21);
             this.bringToTopOnRestart.TabIndex = 2;
@@ -262,7 +266,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(22, 44);
+            this.label3.Location = new System.Drawing.Point(320, 25);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(280, 26);
             this.label3.TabIndex = 1;
@@ -425,7 +429,7 @@
             // browseFont
             // 
             this.browseFont.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.browseFont.Location = new System.Drawing.Point(236, 22);
+            this.browseFont.Location = new System.Drawing.Point(236, 51);
             this.browseFont.Name = "browseFont";
             this.browseFont.Size = new System.Drawing.Size(29, 20);
             this.browseFont.TabIndex = 12;
@@ -451,6 +455,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox9);
             this.tabPage1.Controls.Add(this.groupBox7);
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.groupBox1);
@@ -464,34 +469,50 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.showVariableFontsAsWell);
+            this.groupBox7.Controls.Add(this.showBetaUpdates);
             this.groupBox7.Controls.Add(this.label2);
             this.groupBox7.Controls.Add(this.useFileMonitoringApi);
             this.groupBox7.Controls.Add(this.label30);
             this.groupBox7.Controls.Add(this.browseFont);
-            this.groupBox7.Controls.Add(this.editSearchAllColumns);
-            this.groupBox7.Controls.Add(this.editSearchCurColumnOnly);
-            this.groupBox7.Controls.Add(this.editSearchBelow);
-            this.groupBox7.Controls.Add(this.editSearchAfter);
-            this.groupBox7.Controls.Add(this.label20);
-            this.groupBox7.Controls.Add(this.label19);
-            this.groupBox7.Controls.Add(this.editMode);
-            this.groupBox7.Controls.Add(this.label18);
             this.groupBox7.Controls.Add(this.hotkeyslink);
             this.groupBox7.Controls.Add(this.useHotkeys);
             this.groupBox7.Controls.Add(this.fontLabel);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(628, 228);
+            this.groupBox7.Size = new System.Drawing.Size(654, 143);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.Red;
+            this.label2.Location = new System.Drawing.Point(504, 113);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(106, 13);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "Requires Restart!";
+            // 
+            // useFileMonitoringApi
+            // 
+            this.useFileMonitoringApi.AutoSize = true;
+            this.useFileMonitoringApi.Location = new System.Drawing.Point(9, 110);
+            this.useFileMonitoringApi.Name = "useFileMonitoringApi";
+            this.useFileMonitoringApi.Size = new System.Drawing.Size(360, 21);
+            this.useFileMonitoringApi.TabIndex = 14;
+            this.useFileMonitoringApi.Text = "Use File Monitoring API (FindFirstChangeNotification)";
+            this.useFileMonitoringApi.UseVisualStyleBackColor = true;
+            this.useFileMonitoringApi.CheckedChanged += new System.EventHandler(this.useFileMonitoringApi_CheckedChanged);
             // 
             // label30
             // 
             this.label30.AutoSize = true;
             this.label30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label30.ForeColor = System.Drawing.Color.Red;
-            this.label30.Location = new System.Drawing.Point(504, 26);
+            this.label30.Location = new System.Drawing.Point(504, 55);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(106, 13);
             this.label30.TabIndex = 13;
@@ -500,7 +521,7 @@
             // editSearchAllColumns
             // 
             this.editSearchAllColumns.AutoSize = true;
-            this.editSearchAllColumns.Location = new System.Drawing.Point(375, 202);
+            this.editSearchAllColumns.Location = new System.Drawing.Point(369, 134);
             this.editSearchAllColumns.Name = "editSearchAllColumns";
             this.editSearchAllColumns.Size = new System.Drawing.Size(147, 21);
             this.editSearchAllColumns.TabIndex = 11;
@@ -511,7 +532,7 @@
             // editSearchCurColumnOnly
             // 
             this.editSearchCurColumnOnly.AutoSize = true;
-            this.editSearchCurColumnOnly.Location = new System.Drawing.Point(145, 202);
+            this.editSearchCurColumnOnly.Location = new System.Drawing.Point(139, 134);
             this.editSearchCurColumnOnly.Name = "editSearchCurColumnOnly";
             this.editSearchCurColumnOnly.Size = new System.Drawing.Size(224, 21);
             this.editSearchCurColumnOnly.TabIndex = 10;
@@ -522,7 +543,7 @@
             // editSearchBelow
             // 
             this.editSearchBelow.AutoSize = true;
-            this.editSearchBelow.Location = new System.Drawing.Point(261, 180);
+            this.editSearchBelow.Location = new System.Drawing.Point(255, 112);
             this.editSearchBelow.Name = "editSearchBelow";
             this.editSearchBelow.Size = new System.Drawing.Size(99, 21);
             this.editSearchBelow.TabIndex = 9;
@@ -532,7 +553,7 @@
             // editSearchAfter
             // 
             this.editSearchAfter.AutoSize = true;
-            this.editSearchAfter.Location = new System.Drawing.Point(145, 180);
+            this.editSearchAfter.Location = new System.Drawing.Point(139, 112);
             this.editSearchAfter.Name = "editSearchAfter";
             this.editSearchAfter.Size = new System.Drawing.Size(103, 21);
             this.editSearchAfter.TabIndex = 8;
@@ -542,7 +563,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(6, 181);
+            this.label20.Location = new System.Drawing.Point(0, 113);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(119, 17);
             this.label20.TabIndex = 7;
@@ -552,7 +573,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(97, 139);
+            this.label19.Location = new System.Drawing.Point(91, 50);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(513, 39);
             this.label19.TabIndex = 6;
@@ -566,7 +587,7 @@
             "Always",
             "With SPACE key",
             "With RightArrow key"});
-            this.editMode.Location = new System.Drawing.Point(100, 111);
+            this.editMode.Location = new System.Drawing.Point(94, 22);
             this.editMode.Name = "editMode";
             this.editMode.Size = new System.Drawing.Size(275, 24);
             this.editMode.TabIndex = 5;
@@ -574,7 +595,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 114);
+            this.label18.Location = new System.Drawing.Point(0, 25);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(71, 17);
             this.label18.TabIndex = 4;
@@ -583,7 +604,7 @@
             // hotkeyslink
             // 
             this.hotkeyslink.AutoSize = true;
-            this.hotkeyslink.Location = new System.Drawing.Point(57, 52);
+            this.hotkeyslink.Location = new System.Drawing.Point(53, 19);
             this.hotkeyslink.Name = "hotkeyslink";
             this.hotkeyslink.Size = new System.Drawing.Size(59, 17);
             this.hotkeyslink.TabIndex = 3;
@@ -594,7 +615,7 @@
             // useHotkeys
             // 
             this.useHotkeys.AutoSize = true;
-            this.useHotkeys.Location = new System.Drawing.Point(10, 51);
+            this.useHotkeys.Location = new System.Drawing.Point(6, 18);
             this.useHotkeys.Name = "useHotkeys";
             this.useHotkeys.Size = new System.Drawing.Size(52, 21);
             this.useHotkeys.TabIndex = 2;
@@ -1132,27 +1153,47 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // useFileMonitoringApi
+            // groupBox9
             // 
-            this.useFileMonitoringApi.AutoSize = true;
-            this.useFileMonitoringApi.Location = new System.Drawing.Point(6, 78);
-            this.useFileMonitoringApi.Name = "useFileMonitoringApi";
-            this.useFileMonitoringApi.Size = new System.Drawing.Size(360, 21);
-            this.useFileMonitoringApi.TabIndex = 14;
-            this.useFileMonitoringApi.Text = "Use File Monitoring API (FindFirstChangeNotification)";
-            this.useFileMonitoringApi.UseVisualStyleBackColor = true;
-            this.useFileMonitoringApi.CheckedChanged += new System.EventHandler(this.useFileMonitoringApi_CheckedChanged);
+            this.groupBox9.Controls.Add(this.editMode);
+            this.groupBox9.Controls.Add(this.label18);
+            this.groupBox9.Controls.Add(this.label19);
+            this.groupBox9.Controls.Add(this.label20);
+            this.groupBox9.Controls.Add(this.editSearchAllColumns);
+            this.groupBox9.Controls.Add(this.editSearchAfter);
+            this.groupBox9.Controls.Add(this.editSearchCurColumnOnly);
+            this.groupBox9.Controls.Add(this.editSearchBelow);
+            this.groupBox9.Location = new System.Drawing.Point(6, 155);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(654, 172);
+            this.groupBox9.TabIndex = 6;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Smart Edit";
             // 
-            // label2
+            // showBetaUpdates
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(504, 81);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 13);
-            this.label2.TabIndex = 15;
-            this.label2.Text = "Requires Restart!";
+            this.showBetaUpdates.AutoSize = true;
+            this.showBetaUpdates.Location = new System.Drawing.Point(236, 15);
+            this.showBetaUpdates.Name = "showBetaUpdates";
+            this.showBetaUpdates.Size = new System.Drawing.Size(192, 21);
+            this.showBetaUpdates.TabIndex = 16;
+            this.showBetaUpdates.Text = "Notify me of Beta Updates";
+            this.tip.SetToolTip(this.showBetaUpdates, "If selected, when there are Beta Updates, you are notified (in the Status bar)\r\nI" +
+        "f not selected, you are notified only of Stable Updates");
+            this.showBetaUpdates.UseVisualStyleBackColor = true;
+            // 
+            // showVariableFontsAsWell
+            // 
+            this.showVariableFontsAsWell.AutoSize = true;
+            this.showVariableFontsAsWell.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showVariableFontsAsWell.Location = new System.Drawing.Point(236, 77);
+            this.showVariableFontsAsWell.Name = "showVariableFontsAsWell";
+            this.showVariableFontsAsWell.Size = new System.Drawing.Size(257, 17);
+            this.showVariableFontsAsWell.TabIndex = 17;
+            this.showVariableFontsAsWell.Text = "Show Variable fonts as well (NOT recommended)";
+            this.tip.SetToolTip(this.showVariableFontsAsWell, "If selected, when there are Beta Updates, you are notified (in the Status bar)\r\nI" +
+        "f not selected, you are notified only of Stable Updates");
+            this.showVariableFontsAsWell.UseVisualStyleBackColor = true;
             // 
             // settings_form
             // 
@@ -1197,6 +1238,8 @@
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).EndInit();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1297,6 +1340,9 @@
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.CheckBox useFileMonitoringApi;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.CheckBox showBetaUpdates;
+        private System.Windows.Forms.CheckBox showVariableFontsAsWell;
 
     }
 }
