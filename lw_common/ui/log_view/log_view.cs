@@ -177,6 +177,13 @@ namespace lw_common.ui
             ContextMenuStrip menu = new ContextMenuStrip();
             foreach (var col in list.AllColumns)
                 if (col.Width > 0) {
+                    var idx = log_view_cell.column_to_type(this, col);
+                    bool must_show = col.Index == lineCol.Index || (col.Index == viewCol.Index && is_full_log);
+                    if (!must_show && idx == info_type.max)
+                        continue;
+                    bool has_values = must_show || log_view_show_columns.has_value_at_column(this, idx);
+                    if (!has_values)
+                        continue;
                     ToolStripMenuItem sub = new ToolStripMenuItem(col.Text);
                     sub.Checked = col.IsVisible;
                     if (col.Index == 0)

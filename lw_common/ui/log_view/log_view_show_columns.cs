@@ -42,7 +42,6 @@ namespace lw_common.ui {
             if (aliases.has_column(type, columns))
                 return true;
 
-
             int value_count = 0;
             for (int idx = 0; idx < max_rows_to_check; ++idx) {
                 var i = lv.item_at(idx) ;
@@ -53,6 +52,11 @@ namespace lw_common.ui {
             }
             bool has_values = (value_count > 0);
             return has_values;
+        }
+
+        public static bool has_value_at_column(log_view lv, info_type type) {
+            int max = Math.Min(lv.item_count, MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);
+            return has_value_at_column(lv, type, max);
         }
 
         static public void refresh_visible_columns(List<log_view> all_views, log_view full_log) {
@@ -95,7 +99,7 @@ namespace lw_common.ui {
                 for (int type_as_int = 0; type_as_int < (int) info_type.max; ++type_as_int) {
                     info_type type = (info_type) type_as_int;
                     bool is_visible = has_value_at_column(lv, type, row_count);
-                    show_column(log_view_cell.column(lv,type), (is_visible ? DEFAULT_COL_WIDTH : 0), is_visible);
+                    show_column(log_view_cell.column(lv,type), DEFAULT_COL_WIDTH, is_visible);
                 }
                 lv.visible_columns_refreshed_ = count;                
             }

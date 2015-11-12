@@ -92,6 +92,88 @@ namespace lw_common.ui {
             }
         }
 
+
+
+
+
+
+
+
+
+        internal static info_type column_to_type(log_view lv, OLVColumn col) {
+            if (col == lv.lineCol)
+                return info_type.max;
+            if (col == lv.viewCol)
+                return info_type.max;
+            if (col == lv.dateCol)
+                return info_type.date;
+
+            if (col == lv.timeCol)
+                return info_type.time;
+            if (col == lv.levelCol)
+                return info_type.level;
+            if (col == lv.threadCol)
+                return info_type.thread;
+            if (col == lv.fileCol)
+                return info_type.file;
+            if (col == lv.funcCol)
+                return info_type.func;
+            if (col == lv.classCol)
+                return info_type.class_;
+
+            if (col == lv.ctx1Col)
+                return info_type.ctx1;
+
+            if (col == lv.ctx2Col)
+                return info_type.ctx2;
+            if (col == lv.ctx3Col)
+                return info_type.ctx3;
+            if (col == lv.ctx4Col)
+                return info_type.ctx4;
+            if (col == lv.ctx5Col)
+                return info_type.ctx5;
+            if (col == lv.ctx6Col)
+                return info_type.ctx6;
+            if (col == lv.ctx7Col)
+                return info_type.ctx7;
+            if (col == lv.ctx8Col)
+                return info_type.ctx8;
+            if (col == lv.ctx9Col)
+                return info_type.ctx9;
+            if (col == lv.ctx10Col)
+                return info_type.ctx10;
+
+            if (col == lv.ctx11Col)
+                return info_type.ctx11;
+            if (col == lv.ctx12Col)
+                return info_type.ctx12;
+            if (col == lv.ctx13Col)
+                return info_type.ctx13;
+            if (col == lv.ctx14Col)
+                return info_type.ctx14;
+            if (col == lv.ctx15Col)
+                return info_type.ctx15;
+
+            if (col == lv.msgCol)
+                return info_type.msg;
+
+            Debug.Assert(false);
+            return info_type.max;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         internal static string cell_value_by_type(match_item i, info_type type) {
             switch (type) {
             case info_type.msg:
