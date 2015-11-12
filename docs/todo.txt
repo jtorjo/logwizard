@@ -28,12 +28,19 @@ d3
 	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
 	 -- see when i can resolve these names (as soon as aliases is loaded???)
+	 - Did you know - you can rename your columns
+	 - you can move, show/hide your columns
 
 d4
 - set associations (.txt, .log, .zip? .xml .csv etc) -> don't automatically associate with LW -> have an option to do so
   - note: i need to start another app to do this (with admin credentials)
 
-
+- tips, like "got a question? ask here, here, here"
+  - 2 types of tips: those for beginners (less than 20 runs of LW) and the others
+    - like, "Drag and drop a file to view it"
+	-  allo turning tips off.
+	- Why so dull? Common, lets use some colors (when opening a file for the first time (no views, in other words))
+	- Have a suggestion? Let me know!
 
 
 - tip cp: allow only a class to access some functions

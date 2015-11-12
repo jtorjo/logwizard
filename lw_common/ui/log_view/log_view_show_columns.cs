@@ -32,6 +32,17 @@ namespace lw_common.ui {
         private const int DEFAULT_COL_WIDTH = 80;
 
         static private bool has_value_at_column(log_view lv, info_type type, int max_rows_to_check) {
+            // msg is always shown
+            if (type == info_type.msg)
+                return true;
+
+            var aliases = lv.filter.log.aliases;
+            var columns = lv.filter.log.column_names;
+            // 1.5.4+ if the user has already specified clearly that we have this column, we consider it true
+            if (aliases.has_column(type, columns))
+                return true;
+
+
             int value_count = 0;
             for (int idx = 0; idx < max_rows_to_check; ++idx) {
                 var i = lv.item_at(idx) ;
@@ -83,7 +94,7 @@ namespace lw_common.ui {
                 int row_count = Math.Min(count, MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);
                 for (int type_as_int = 0; type_as_int < (int) info_type.max; ++type_as_int) {
                     info_type type = (info_type) type_as_int;
-                    bool is_visible = type == info_type.msg || has_value_at_column(lv, type, row_count);
+                    bool is_visible = has_value_at_column(lv, type, row_count);
                     show_column(log_view_cell.column(lv,type), (is_visible ? DEFAULT_COL_WIDTH : 0), is_visible);
                 }
                 lv.visible_columns_refreshed_ = count;                

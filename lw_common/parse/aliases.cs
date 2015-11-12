@@ -225,47 +225,29 @@ namespace lw_common.parse {
         public string to_logwizard_column_name(string name) {
             return get_value_part(sett_.get(name, name));
         }
+        // converts a "log" column name into what we use internally - info_type.time, info_type.file, etc.
+        public info_type to_info_type(string column_name) {
+            return string_to_info_type( get_value_part(sett_.get(column_name, column_name)));
+        }
+
+        public bool has_column(info_type type, List<string> column_names ) {
+            if (column_names.Contains(type.ToString()))
+                return true;
+            if (name_to_column_.has_value(type))
+                return true;
+            return false;
+        }
 
         public string dump_resolve_names() {
             return util.concatenate(sett_.names().Where(n => to_logwizard_column_name(n) != n).Select(n => n + "=" + to_logwizard_column_name(n)) , ", ");
         }
 
-        private info_type string_to_info_type(string str) {
+        private static info_type string_to_info_type(string str) {
             return info_type_io.from_str(str);
-            /*
-            switch (str) {
-            case "time" :   return info_type.time;
-            case "date":    return info_type.date;
-            case "level":   return info_type.level;
-            case "thread":  return info_type.thread;
-            case "file":    return info_type.file;
-            case "func":    return info_type.func;
-            case "class":   return info_type.class_;
-            case "msg":     return info_type.msg;
-
-            case "ctx1":    return info_type.ctx1;
-            case "ctx2":    return info_type.ctx2;
-            case "ctx3":    return info_type.ctx3;
-            case "ctx4":    return info_type.ctx4;
-            case "ctx5":    return info_type.ctx5;
-            case "ctx6":    return info_type.ctx6;
-            case "ctx7":    return info_type.ctx7;
-            case "ctx8":    return info_type.ctx8;
-            case "ctx9":    return info_type.ctx9;
-            case "ctx10":    return info_type.ctx10;
-
-            case "ctx11":    return info_type.ctx11;
-            case "ctx12":    return info_type.ctx12;
-            case "ctx13":    return info_type.ctx13;
-            case "ctx14":    return info_type.ctx14;
-            case "ctx15":    return info_type.ctx15;
-            }
-            // unknown
-            return info_type.max;*/
         }
 
         // if it returns max, the alias was invalid
-        public info_type to_info_type(string alias, List<string> names ) {
+        public info_type to_info_type(string alias, List<string> column_names ) {
             try {
                 // it's an index, like, _7
                 if (alias.StartsWith("_")) {
@@ -291,11 +273,11 @@ namespace lw_common.parse {
                     return name_to_column_.key_to_value(alias);
 
                 // if we get here it's another alias - look into existing names
-                if (names.Count > 0 && alias == names.Last() && !name_to_column_.has_value(info_type.msg))
+                if (column_names.Count > 0 && alias == column_names.Last() && !name_to_column_.has_value(info_type.msg))
                     // by default, the last name is the msg
                     return info_type.msg;
 
-                int idx = names.IndexOf(alias);
+                int idx = column_names.IndexOf(alias);
                 if (idx >= 0)
                     return first_non_used_column(alias);
             } catch (Exception e) {

@@ -68,7 +68,8 @@ namespace lw_common.ui
         private readonly log_view_render render_;
 
         private log_view_data_source model_ = null;
-        internal int visible_columns_refreshed_ = 0;
+        // 1.5.4+ - refresh first time as well (even when there are no rows)
+        internal int visible_columns_refreshed_ = -1;
 
         // lines that are bookmarks (sorted by index)
         private List<int> bookmarks_ = new List<int>();

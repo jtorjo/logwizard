@@ -5,6 +5,8 @@
 	   - also, care about aliases?
 	   - if a column does not show up in aliases, no point in showing it????( probably for line-by-line i need to manually compute aliases from syntax)
 	   -********* when the log file is changed, i need to update the visible columns based on what info the file has
+	   -------- special value "invisible_now" - normally, this column would be visible but now is not present at all
+
 
 d3
 ---------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
@@ -20,6 +22,13 @@ d3
 	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
 	 -- see when i can resolve these names (as soon as aliases is loaded???)
+
+
+
+
+1.5.4b
+- refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
+  - basically, if i find it in valid column names, I show it
 
 
 1.5.4a

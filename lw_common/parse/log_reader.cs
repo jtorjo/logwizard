@@ -86,6 +86,10 @@ namespace lw_common {
             get { return parser_.aliases; }
         }
 
+        public List<string> column_names {
+            get { return parser_.column_names; }
+        } 
+
         public bool up_to_date {
             get {
                 if (!parser_.up_to_date)

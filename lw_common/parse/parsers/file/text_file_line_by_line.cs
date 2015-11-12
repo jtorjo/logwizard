@@ -575,6 +575,27 @@ namespace lw_common.parse.parsers {
             return new line(l, syntax_info.line_contains_msg_only_);
         }
 
+        public override List<string> column_names {
+            get {
+                // syntax is like $name1[...] $name2[...] ...
+                string syntax = sett_.get("syntax");
+
+                var names = syntax.Split('$');
+                List<string> result = new List<string>();
+                foreach (var name in names) {
+                    int type = name.IndexOf('[');
+                    string column;
+                    if (type >= 0) 
+                        column = name.Substring(0,type).Trim();
+                    else 
+                        column = name.Trim();
+                    if ( column != "")
+                        result.Add(column);
+                }
+
+                return result;
+            }
+        }
     }
 
 }
