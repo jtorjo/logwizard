@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms.VisualStyles;
 using lw_common.parse.parsers;
 using LogWizard;
 
@@ -64,9 +65,43 @@ namespace lw_common.parse {
             return null;
         }
 
+        public static string guess_file_type(string file_name) {
+            if (file_name == "")
+                return "line-by-line";
+            
+            file_name = file_name.ToLower();
+            if (file_name.EndsWith(".xml"))
+                return "xml";
+            if (file_name.EndsWith(".csv"))
+                return "csv";
+
+            if (text_file_part_on_single_line.is_single_line(file_name, new settings_as_string("")))
+                return "part-by-line";
+
+            return "line-by-line";
+        }
+
         private static log_parser_base create_file_parser(file_text_reader reader, string sett) {
             string file_name = reader.name.ToLower();
             var all = new settings_as_string(sett);
+
+            var file_type = all.get("file_type");
+            switch (file_type) {
+            case "line-by-line":
+                return new text_file_line_by_line(reader, all);
+            case "part-by-line":
+                return new text_file_part_on_single_line(reader, all);
+            case "xml":
+                return new xml_file(reader, all);
+            case "csv":
+                return new csv_file(reader, all);
+            case "":
+                // best guess
+                break;
+            default:
+                Debug.Assert(false);
+                break;
+            }
 
             if ( file_name.EndsWith(".xml"))
                 return new xml_file(reader, all);

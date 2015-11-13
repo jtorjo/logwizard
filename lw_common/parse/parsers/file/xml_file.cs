@@ -60,7 +60,7 @@ namespace lw_common.parse.parsers {
         protected override void on_updated_settings() {
             base.on_updated_settings();
             // user can for what entry to look for!
-            user_set_delimeter_name_ = sett_.get("delimeter");
+            user_set_delimeter_name_ = sett_.get("xml.delimeter");
             if ( user_set_delimeter_name_ != "")
                 lock (this)
                     delimeter_name_ = user_set_delimeter_name_;

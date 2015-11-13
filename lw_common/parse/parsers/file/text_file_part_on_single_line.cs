@@ -49,7 +49,7 @@ namespace lw_common.parse.parsers {
 
         protected override void on_updated_settings() {
             base.on_updated_settings();
-            separator_char_ = sett_.get("separator", ":")[0];
+            separator_char_ = sett_.get("part.separator", ":")[0];
 
             //if ( util.is_debug)
               //  aliases_ = new aliases("_0=file|@#@|first=ctx1{Firsty}");
@@ -61,7 +61,7 @@ namespace lw_common.parse.parsers {
                 lines[index] = lines[index].Replace("\r", "");
 
             int empty_lines = 0;
-            string separator = sett.get("separator");
+            string separator = sett.get("part.separator");
             if (separator == "")
                 separator = ":";
             int contains_separator = 0;

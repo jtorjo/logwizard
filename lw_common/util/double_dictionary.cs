@@ -9,6 +9,15 @@ namespace lw_common {
         private Dictionary<K,V> keys_ = new Dictionary<K, V>(); 
         private Dictionary<V,K> values_ = new Dictionary<V, K>();
 
+        public double_dictionary() {
+            
+        }
+
+        public double_dictionary(Dictionary<K, V> source) {
+            foreach ( var kv in source)
+                set( kv.Key, kv.Value);            
+        }
+
         public void set(K key, V value) {
 
             if (keys_.ContainsKey(key)) {

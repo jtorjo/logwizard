@@ -1,3 +1,4 @@
+            // test it out + all "Edit syntax"
 
 
 
@@ -15,6 +16,11 @@
 	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
 	 -- see when i can resolve these names (as soon as aliases is loaded???)
+
+
+1.5.4f
+- edit settings - partially works 
+  still to do : test + allow editing syntax 
 
 
 1.5.4e

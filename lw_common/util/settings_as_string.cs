@@ -56,11 +56,16 @@ namespace lw_common {
         }
 
         public void set(string name, string val) {
-            lock(this)
+            lock (this) {
                 if (sett_.ContainsKey(name))
                     sett_[name] = val;
-                else 
+                else
                     sett_.Add(name, val);
+
+                if (val == "")
+                    sett_.Remove(name);
+            }
+
         }
 
         public string[] names() {

@@ -107,7 +107,7 @@ namespace lw_common.parse.parsers {
 
         public text_file_line_by_line(text_reader reader, settings_as_string sett) : base(sett) {
             string syntax_str = sett.get("syntax");
-            if_line_does_not_match_assume_from_prev_line = sett.get("if_line", "0") == "1";
+            if_line_does_not_match_assume_from_prev_line = sett.get("line.if_line", "0") == "1";
 
             Debug.Assert(reader != null);
             parse_syntax(syntax_str);

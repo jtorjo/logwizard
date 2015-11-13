@@ -38,13 +38,15 @@ namespace lw_common.parse.parsers {
 
         // if true, the first line is the header (containing column names)
         private bool has_header_line_ = true;
+        private string separator_ = ",";
 
         public csv_file(file_text_reader reader, settings_as_string sett) : base(reader,sett) {
         }
 
         protected override void on_updated_settings() {
             base.on_updated_settings();
-            has_header_line_ = sett_.get("has_header", "1") == "1";
+            has_header_line_ = sett_.get("csv.has_header", "1") == "1";
+            separator_ = sett_.get("csv.separator", ",");
         }
 
         public override void force_reload() {
@@ -64,14 +66,14 @@ namespace lw_common.parse.parsers {
                 lock (this) 
                     // if at least one entry - can't read column names
                     if (column_names_.Count < 1 && entries_.Count == 0) {
-                        column_names_ = split.to_list(last_lines_string_.line_at(0), ",");
+                        column_names_ = split.to_list(last_lines_string_.line_at(0), separator_);
                         start_idx = 1;
                     }
 
             List<log_entry_line> entries_now = new List<log_entry_line>();
             var column_names = this.column_names;
             for (int i = start_idx; i < line_count; ++i) {
-                var list = split.to_list(last_lines_string_.line_at(i), ",");
+                var list = split.to_list(last_lines_string_.line_at(i), separator_);
                 log_entry_line entry = new log_entry_line();
                 for ( int j = 0; j < column_names.Count; ++j)
                     entry.add( column_names[j], list.Count > j ? list[j] : "");

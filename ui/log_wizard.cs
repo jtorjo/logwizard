@@ -430,6 +430,7 @@ namespace LogWizard
         private bool are_tabs_visible(TabControl tab) {
             return tab.Top >= 0;
         }
+
         private void set_tabs_visible(TabControl tab, bool show) {
             int page_height = tab.SelectedTab != null ? tab.SelectedTab.Height : tab.TabPages[0].Height;
             int extra = tab.Height - page_height;
@@ -3701,7 +3702,7 @@ namespace LogWizard
         }
 
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e) {
-            new about_form(this,new_releases_, cur_release_).Show();
+            new about_form(this,new_releases_, cur_release_).Show(this);
         }
 
         private void refreshAddViewButtons_Tick(object sender, EventArgs e) {
@@ -3714,6 +3715,32 @@ namespace LogWizard
             delFilteredView.Visible = visible;
             synchronizeWithExistingLogs.Visible = visible;
             synchronizedWithFullLog.Visible = visible;
+        }
+
+        private void editSettings_Click(object sender, EventArgs e) {
+            if (logHistory.SelectedIndex < 0)
+                return;
+
+            var edit = new edit_log_settings_form(log_parser_.settings, selected_file_name(), history_[logHistory.SelectedIndex].friendly_name);
+            if (edit.ShowDialog(this) == DialogResult.OK) {
+                history_[logHistory.SelectedIndex].friendly_name = edit.friendly_name;
+                var new_settings = new settings_as_string(edit.settings);
+                bool will_restart = false;
+                if ( edit.needs_restart)
+                    if (MessageBox.Show("Changes will take effect only after restart.\r\n" +
+                                        "Would you like to restart LogWizard now?", "LogWizard", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        will_restart = true;
+
+                var old_syntax = new settings_as_string( log_parser_.settings).get("syntax");
+                var new_syntax = new_settings.get("syntax");
+                if ( new_settings.get("type") == "file")
+                    if (old_syntax != new_syntax && !will_restart) {
+                        // in this case, the user has changed the syntax - need to reload everything
+                    }
+
+                if ( will_restart)
+                    restart_app();
+            }
         }
 
     }
