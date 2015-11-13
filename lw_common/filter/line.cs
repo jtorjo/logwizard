@@ -44,7 +44,12 @@ namespace lw_common {
 
         msg,
 
-        max 
+        max, 
+        
+        // 1.5.4+ - special field, used only in full log - I need this only to have a one-to-one correspondence from column index to info_type
+        view ,
+        // 1.5.4+ - special field - I need this only to have a one-to-one correspondence from column index to info_type
+        line,
     }
 
     public static class info_type_io {
@@ -80,6 +85,8 @@ namespace lw_common {
             case "ctx14":    type = info_type.ctx14; break;
             case "ctx15":    type = info_type.ctx15; break;
 
+            case "view":     type = info_type.view; break;
+            case "line":     type = info_type.line; break;
             default:
                 break;
             }
@@ -112,6 +119,8 @@ namespace lw_common {
             case info_type.ctx15:               return "Ctx15";
             case info_type.msg:                 return "Message";
 
+            case info_type.view:                return "View(s)";
+            case info_type.line:                return "Line";
             default:
             case info_type.max:
                 Debug.Assert(false);

@@ -28,6 +28,8 @@ using BrightIdeasSoftware;
 
 namespace lw_common.ui {
     public static class log_view_show_columns {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private const int MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS = 10;
         private const int DEFAULT_COL_WIDTH = 80;
 
@@ -35,6 +37,12 @@ namespace lw_common.ui {
             // msg is always shown
             if (type == info_type.msg)
                 return true;
+            if (type == info_type.line || type == info_type.view)
+                return true;
+
+            if (max_rows_to_check == 0)
+                // before reading anything from the log
+                return false;
 
             var aliases = lv.filter.log.aliases;
             var columns = lv.filter.log.column_names;
@@ -54,17 +62,14 @@ namespace lw_common.ui {
             return has_values;
         }
 
-        public static bool has_value_at_column(log_view lv, info_type type) {
-            int max = Math.Min(lv.item_count, MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);
-            return has_value_at_column(lv, type, max);
-        }
-
         static public void refresh_visible_columns(List<log_view> all_views, log_view full_log) {
             Debug.Assert(full_log.is_full_log);
             if (refresh_visible_columns_any_change(full_log)) {
                 // notify all other views
-                foreach ( log_view lv in all_views)
+                foreach (log_view lv in all_views) {
+                    lv.visible_columns = full_log.visible_columns;
                     refresh_visible_columns(lv, full_log);
+                }
 
                 if ( full_log.visible_columns_refreshed_ >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
                     foreach (log_view lv in all_views)
@@ -82,7 +87,7 @@ namespace lw_common.ui {
             }
         }
 
-        static private void apply_column_positions(log_view lv) {
+        static internal void apply_column_positions(log_view lv) {
             if ( lv.column_positions != "")
                 load_column_positions(lv, lv.column_positions);
         }
@@ -95,16 +100,24 @@ namespace lw_common.ui {
             int count = lv.item_count;
             bool needs_refresh = count != lv.visible_columns_refreshed_;
             if (needs_refresh) {
+                List<info_type> visible_columns = new List<info_type>();
                 int row_count = Math.Min(count, MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);
-                for (int type_as_int = 0; type_as_int < (int) info_type.max; ++type_as_int) {
-                    info_type type = (info_type) type_as_int;
+                foreach (info_type type in Enum.GetValues(typeof (info_type))) {
+                    if (type == info_type.max)
+                        continue;
                     bool is_visible = has_value_at_column(lv, type, row_count);
-                    show_column(log_view_cell.column(lv,type), DEFAULT_COL_WIDTH, is_visible);
+                    show_column(lv, log_view_cell.column(lv,type), DEFAULT_COL_WIDTH, is_visible);
+                    if ( is_visible)
+                        visible_columns.Add(type);                    
                 }
-                lv.visible_columns_refreshed_ = count;                
+
+                lv.visible_columns_refreshed_ = count;
+                lv.visible_columns = visible_columns;
+                logger.Debug("visible columns (" + row_count + ") - " + util.concatenate(visible_columns, ", "));
+                
+                lv.list.RebuildColumns();
             }
 
-            lv.list.RebuildColumns();
             if (count >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS) 
                 lv.visible_columns_refreshed_ = MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS;
             return needs_refresh;
@@ -114,12 +127,14 @@ namespace lw_common.ui {
             for (int idx = 0; idx < lv.list.AllColumns.Count; ++idx) {
                 var col = lv.list.AllColumns[idx];
                 if (col != lv.viewCol) 
-                    show_column(col, full_log.list.AllColumns[idx].Width, full_log.list.AllColumns[idx].IsVisible);
+                    show_column(lv, col, full_log.list.AllColumns[idx].Width, full_log.list.AllColumns[idx].IsVisible);
             }
             lv.list.RebuildColumns();
         }
 
-        static internal void show_column(OLVColumn col, int width, bool show) {
+        static private void show_column(log_view lv, OLVColumn col, int width, bool show) {
+            //if( lv.is_full_log)
+              //  logger.Debug("showing column " + col.Text + " w=" + width +" visible=" + show);
             if (col.Width == 0)
                 col.Width = width;
             if (col.IsVisible == show)
@@ -131,7 +146,7 @@ namespace lw_common.ui {
 
 
 
-        static internal void load_column_positions(log_view lv, string str, bool force_show_all = true) {
+        static private void load_column_positions(log_view lv, string str) {
             if (str == "")
                 return;
 
@@ -145,14 +160,19 @@ namespace lw_common.ui {
                     int display_index = int.Parse(infos[1]);
                     int width = int.Parse(infos[2]);
                     bool visible = infos[3] == "1";
-                    if (lv.list.AllColumns[col_idx].Width > 0 || force_show_all) {
-                        // this means this column is visible - so we can apply column positioning
-                        // (othwerise, this column doesn't even exist for this specific file - nothing to do)
-                        lv.list.AllColumns[col_idx].Width = width;
-                        lv.list.AllColumns[col_idx].IsVisible = visible;
-                        if ( visible)
-                            display_indexes.Add(display_index, col_idx);
-                    }
+
+                    // this means this column is visible - so we can apply column positioning
+                    // (othwerise, this column doesn't even exist for this specific file - nothing to do)
+                    lv.list.AllColumns[col_idx].Width = width;
+                    // 1.5.4+ - if we don't have a value in the given column, don't show it
+                    if (! lv.visible_columns.Contains( log_view_cell.cell_idx_to_type(col_idx)))
+                        visible = false;
+                    if (!lv.is_full_log && log_view_cell.cell_idx_to_type(col_idx) == info_type.view)
+                        // View(s) only visible in Full Log
+                        visible = false;
+                    lv.list.AllColumns[col_idx].IsVisible = visible;
+                    if ( visible)
+                        display_indexes.Add(display_index, col_idx);
                 }
 
             // need to convert display indexes into what can be displayed - you can't have a display index bigger than
@@ -196,6 +216,12 @@ namespace lw_common.ui {
             for (int col_idx = 0; col_idx < lv.list.AllColumns.Count; ++col_idx) {
                 var col = lv.list.AllColumns[col_idx];
                 int display_index = col.DisplayIndex >= 0 ? col.DisplayIndex : col.LastDisplayIndex;
+                /* FIXME I need to redo this - what I want is this: unless a user manually hides a column, 
+                         that column should always be visible if it has values.
+
+                         right now this is not happening - if I switch from a log where only time + ctx1 is shown and I manually edit anything
+                         related to positions, and then switch to another log where ctx2 is present, I will end up hiding ctx2.
+                */
                 if (col.Width > 0)
                     positions += "" + col_idx + "," + display_index + "," + col.Width + "," + (col.IsVisible ? "1" : "0") + ";";
             }

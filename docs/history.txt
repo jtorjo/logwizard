@@ -1,10 +1,7 @@
-- refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
-  otherwise, i could end up ignoring a column if the first 10 values are empty
-   --- so basically have a way to force some columns to be visible
-       - perhaps if i just use what the parser is giving me, i would simply never need this "guessing"
-	   - also, care about aliases?
-	   - if a column does not show up in aliases, no point in showing it????( probably for line-by-line i need to manually compute aliases from syntax)
-	   -********* when the log file is changed, i need to update the visible columns based on what info the file has
+
+
+---------- > show "Invisible columns are: " (if any)
+             so that user will know if there are any invisible columns
 
 
 d3
@@ -21,6 +18,12 @@ d3
 	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
 	 -- see when i can resolve these names (as soon as aliases is loaded???)
+
+
+
+1.5.4d
+- showing columns - now works correctly
+  - when right clicking to hide/show columns -> only the columns that actually have values will be shown
 
 
 1.5.4c

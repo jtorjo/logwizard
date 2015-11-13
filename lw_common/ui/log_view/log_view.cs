@@ -111,6 +111,9 @@ namespace lw_common.ui
 
         private bool needs_scroll_ = false;
 
+        // this is set while refreshing visible columns (log_view_show_columns)
+        internal List<info_type> visible_columns = new List<info_type>(); 
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -175,23 +178,21 @@ namespace lw_common.ui
 
             // show the Filter actions first (the rest will be shown in their respective categories)
             ContextMenuStrip menu = new ContextMenuStrip();
-            foreach (var col in list.AllColumns)
+            for (int cur_col_idx = 0; cur_col_idx < list.AllColumns.Count; cur_col_idx++) {
+                var col = list.AllColumns[cur_col_idx];
                 if (col.Width > 0) {
-                    var idx = log_view_cell.column_to_type(this, col);
-                    bool must_show = col.Index == lineCol.Index || (col.Index == viewCol.Index && is_full_log);
-                    if (!must_show && idx == info_type.max)
-                        continue;
-                    bool has_values = must_show || log_view_show_columns.has_value_at_column(this, idx);
-                    if (!has_values)
+                    bool is_visible = visible_columns.Contains(log_view_cell.cell_idx_to_type(cur_col_idx));
+                    if (!is_visible)
                         continue;
                     ToolStripMenuItem sub = new ToolStripMenuItem(col.Text);
                     sub.Checked = col.IsVisible;
                     if (col.Index == 0)
                         sub.Enabled = false;
                     var c = col;
-                    sub.Click += (a,ee) => toggle_column_visible(c,sub);
+                    sub.Click += (a, ee) => toggle_column_visible(c, sub);
                     menu.Items.Add(sub);
                 }
+            }
 
             string cur_col_text = cur_col == msgCol ? "Message" : cur_col.Text;
             menu.Items.Add(new ToolStripSeparator());
@@ -233,7 +234,7 @@ namespace lw_common.ui
 
             foreach (info_type i in Enum.GetValues(typeof (info_type))) {
                 // for msg column - we use the default name
-                if (i == info_type.max || i == info_type.msg)
+                if (i == info_type.max || i == info_type.msg || i == info_type.line || i == info_type.view)
                     continue;
                 var col = log_view_cell.column(this, i);
                 col.Text = filter_.log.aliases.friendly_name(i);
@@ -280,11 +281,9 @@ namespace lw_common.ui
         public string column_positions {
             get { return column_positions_; }
             set {
-                if (column_positions_ == value)
-                    return;
-                column_positions_ = value; 
-                if ( column_positions_ != "")
-                    log_view_show_columns.load_column_positions(this, column_positions_);
+                column_positions_ = value;
+                if (column_positions_ != "")
+                    log_view_show_columns.apply_column_positions(this);
             }
         }
 
@@ -307,7 +306,7 @@ namespace lw_common.ui
         }
 
         public void force_refresh_visible_columns(List<log_view> all_views) {
-            visible_columns_refreshed_ = 0;
+            visible_columns_refreshed_ = -1;
             log_view_show_columns.refresh_visible_columns(all_views, this);
         }
 
@@ -709,7 +708,8 @@ namespace lw_common.ui
                 log_.on_new_lines += filter_.on_new_reader_lines;
 
                 last_item_count_while_current_view_ = 0;
-                visible_columns_refreshed_ = 0;
+                visible_columns_refreshed_ = -1;
+                clear();
                 logger.Debug("[view] new log for " + name + " - " + log.log_name);
                 update_x_of_y();
             }
@@ -878,15 +878,6 @@ namespace lw_common.ui
 
         string cell_value(match_item i, int column_idx) {
             return log_view_cell.cell_value(i, column_idx);
-        }
-
-        OLVColumn column(info_type type) {
-            return log_view_cell.column(this, type);
-        }
-
-        // FIXME I should not need this, since I'm now saving full column positions!
-        private void show_column(OLVColumn col, int width, bool show) {
-            log_view_show_columns.show_column(col, width, show);
         }
 
         private void compute_title_fonts() {
