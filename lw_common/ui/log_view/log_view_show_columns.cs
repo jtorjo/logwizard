@@ -159,7 +159,7 @@ namespace lw_common.ui {
                     int col_idx = int.Parse(infos[0]);
                     int display_index = int.Parse(infos[1]);
                     int width = int.Parse(infos[2]);
-                    bool visible = infos[3] == "1";
+                    bool visible = infos[3] != "0";
 
                     // this means this column is visible - so we can apply column positioning
                     // (othwerise, this column doesn't even exist for this specific file - nothing to do)
@@ -171,8 +171,12 @@ namespace lw_common.ui {
                         // View(s) only visible in Full Log
                         visible = false;
                     lv.list.AllColumns[col_idx].IsVisible = visible;
-                    if ( visible)
+                    if (visible) {
+                        while (display_indexes.ContainsKey(display_index))
+                            // this can happen when moving from one log to another, and they have very different columns
+                            ++display_index;
                         display_indexes.Add(display_index, col_idx);
+                    }
                 }
 
             // need to convert display indexes into what can be displayed - you can't have a display index bigger than
@@ -216,14 +220,13 @@ namespace lw_common.ui {
             for (int col_idx = 0; col_idx < lv.list.AllColumns.Count; ++col_idx) {
                 var col = lv.list.AllColumns[col_idx];
                 int display_index = col.DisplayIndex >= 0 ? col.DisplayIndex : col.LastDisplayIndex;
-                /* FIXME I need to redo this - what I want is this: unless a user manually hides a column, 
-                         that column should always be visible if it has values.
-
-                         right now this is not happening - if I switch from a log where only time + ctx1 is shown and I manually edit anything
-                         related to positions, and then switch to another log where ctx2 is present, I will end up hiding ctx2.
-                */
-                if (col.Width > 0)
-                    positions += "" + col_idx + "," + display_index + "," + col.Width + "," + (col.IsVisible ? "1" : "0") + ";";
+                if (col.Width > 0) {
+                    // "2" - I don't have this column in my current log - so I don't show it, but, when another log might have this column, do show it
+                    // "1" - column is to be shown
+                    // "0" - user manually chose to hide this column
+                    string visible = lv.visible_columns.Contains(log_view_cell.cell_idx_to_type(col_idx)) ? (col.IsVisible ? "1" : "0") : "2";
+                    positions += "" + col_idx + "," + display_index + "," + col.Width + "," + visible + ";";
+                }
             }
 
             if (positions == default_column_positions_string(lv))

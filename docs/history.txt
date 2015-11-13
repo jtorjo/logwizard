@@ -1,10 +1,7 @@
 
 
----------- > show "Invisible columns are: " (if any)
-             so that user will know if there are any invisible columns
 
 
-d3
 ---------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
  ***- this needs to exist for each type of log - even files (specify type: line-by-line, log line, xml, csv etc.)
  - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))
@@ -19,6 +16,10 @@ d3
 	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
 	 -- see when i can resolve these names (as soon as aliases is loaded???)
 
+
+1.5.4e
+- showing columns: when changing from one log to another (with very different columns),
+  make sure we show columns that were otherwise not available to the former log
 
 
 1.5.4d
