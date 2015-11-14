@@ -51,6 +51,7 @@ namespace lw_common.ui {
             fileType.SelectedIndex = file_type_to_index( settings_.get("file_type") );
 
             syntax.Text = settings_.get("syntax");
+            syntax.ForeColor = syntax.Text == find_log_syntax.UNKNOWN_SYNTAX ? Color.Red : Color.Black;
             ifLine.Checked = settings_.get("line.if_line", "0") != "0";
             
             partSeparator.Text = settings_.get("part.separator");
@@ -163,6 +164,7 @@ namespace lw_common.ui {
             if (test.ShowDialog() == DialogResult.OK) {
                 settings_.set("syntax", test.found_syntax);
                 syntax.Text = test.found_syntax;
+                syntax.ForeColor = syntax.Text == find_log_syntax.UNKNOWN_SYNTAX ? Color.Red : Color.Black;
             }
 
         }

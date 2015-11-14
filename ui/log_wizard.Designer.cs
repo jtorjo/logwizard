@@ -36,10 +36,6 @@
             this.newViewMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.createACopyOfTheExistingViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createANewViewFromScratchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label7 = new System.Windows.Forms.Label();
-            this.friendlyNameCtrl = new System.Windows.Forms.TextBox();
-            this.logSyntaxCtrl = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.delFilteredView = new System.Windows.Forms.Button();
             this.curContextCtrl = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -77,11 +73,7 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.notes = new lw_common.ui.note_ctrl();
             this.sourceUp = new System.Windows.Forms.SplitContainer();
-            this.testSyntax = new System.Windows.Forms.Button();
-            this.helpSyntax = new System.Windows.Forms.LinkLabel();
-            this.sourceNameCtrl = new System.Windows.Forms.TextBox();
-            this.sourceTypeCtrl = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.editSettings = new System.Windows.Forms.Button();
             this.filteredLeft = new System.Windows.Forms.SplitContainer();
             this.viewsTab = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -110,7 +102,6 @@
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.whatupMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshAddViewButtons = new System.Windows.Forms.Timer(this.components);
-            this.editSettings = new System.Windows.Forms.Button();
             this.newViewMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.toggleTopmost)).BeginInit();
             this.toggleMenu.SuspendLayout();
@@ -163,7 +154,7 @@
             this.newFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.newFilteredView.ContextMenuStrip = this.newViewMenu;
             this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.newFilteredView.Location = new System.Drawing.Point(337, 29);
+            this.newFilteredView.Location = new System.Drawing.Point(331, 29);
             this.newFilteredView.Name = "newFilteredView";
             this.newFilteredView.Size = new System.Drawing.Size(18, 20);
             this.newFilteredView.TabIndex = 1;
@@ -194,57 +185,11 @@
             this.createANewViewFromScratchToolStripMenuItem.Text = "Create A New View From Scratch";
             this.createANewViewFromScratchToolStripMenuItem.Click += new System.EventHandler(this.createANewViewFromScratchToolStripMenuItem_Click);
             // 
-            // label7
-            // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(741, 11);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(113, 15);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "Friendly Name (opt)";
-            this.tip.SetToolTip(this.label7, "You can assign a friendlier name to this log_parser, so you can easier locate it " +
-        "in history");
-            // 
-            // friendlyNameCtrl
-            // 
-            this.friendlyNameCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.friendlyNameCtrl.Location = new System.Drawing.Point(858, 9);
-            this.friendlyNameCtrl.Name = "friendlyNameCtrl";
-            this.friendlyNameCtrl.Size = new System.Drawing.Size(111, 23);
-            this.friendlyNameCtrl.TabIndex = 8;
-            this.tip.SetToolTip(this.friendlyNameCtrl, "You can assign a friendlier name to this log_parser, so you can easier locate it " +
-        "in history");
-            this.friendlyNameCtrl.TextChanged += new System.EventHandler(this.friendlyName_TextChanged);
-            // 
-            // logSyntaxCtrl
-            // 
-            this.logSyntaxCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.logSyntaxCtrl.BackColor = System.Drawing.Color.White;
-            this.logSyntaxCtrl.Location = new System.Drawing.Point(100, 35);
-            this.logSyntaxCtrl.Name = "logSyntaxCtrl";
-            this.logSyntaxCtrl.ReadOnly = true;
-            this.logSyntaxCtrl.Size = new System.Drawing.Size(779, 23);
-            this.logSyntaxCtrl.TabIndex = 10;
-            this.tip.SetToolTip(this.logSyntaxCtrl, "The syntax of each line");
-            this.logSyntaxCtrl.TextChanged += new System.EventHandler(this.logSyntax_TextChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(5, 39);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(89, 15);
-            this.label8.TabIndex = 9;
-            this.label8.Text = "Log Line Syntax";
-            this.tip.SetToolTip(this.label8, "The syntax of each line");
-            // 
             // delFilteredView
             // 
             this.delFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.delFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.delFilteredView.Location = new System.Drawing.Point(355, 29);
+            this.delFilteredView.Location = new System.Drawing.Point(349, 29);
             this.delFilteredView.Name = "delFilteredView";
             this.delFilteredView.Size = new System.Drawing.Size(18, 20);
             this.delFilteredView.TabIndex = 2;
@@ -257,9 +202,9 @@
             // 
             this.curContextCtrl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.curContextCtrl.FormattingEnabled = true;
-            this.curContextCtrl.Location = new System.Drawing.Point(66, 6);
+            this.curContextCtrl.Location = new System.Drawing.Point(75, 9);
             this.curContextCtrl.Name = "curContextCtrl";
-            this.curContextCtrl.Size = new System.Drawing.Size(134, 23);
+            this.curContextCtrl.Size = new System.Drawing.Size(190, 23);
             this.curContextCtrl.TabIndex = 4;
             this.tip.SetToolTip(this.curContextCtrl, "The template saves the current Filters and the current Views (tabs)");
             this.curContextCtrl.DropDown += new System.EventHandler(this.curContextCtrl_DropDown);
@@ -268,16 +213,17 @@
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(5, 12);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(57, 15);
+            this.label5.Size = new System.Drawing.Size(65, 19);
             this.label5.TabIndex = 3;
             this.label5.Text = "Template";
             this.tip.SetToolTip(this.label5, "\r\n");
             // 
             // addContext
             // 
-            this.addContext.Location = new System.Drawing.Point(200, 7);
+            this.addContext.Location = new System.Drawing.Point(271, 10);
             this.addContext.Name = "addContext";
             this.addContext.Size = new System.Drawing.Size(23, 22);
             this.addContext.TabIndex = 11;
@@ -288,7 +234,7 @@
             // 
             // delContext
             // 
-            this.delContext.Location = new System.Drawing.Point(221, 7);
+            this.delContext.Location = new System.Drawing.Point(292, 10);
             this.delContext.Name = "delContext";
             this.delContext.Size = new System.Drawing.Size(25, 22);
             this.delContext.TabIndex = 12;
@@ -304,7 +250,7 @@
             this.synchronizedWithFullLog.Checked = true;
             this.synchronizedWithFullLog.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizedWithFullLog.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizedWithFullLog.Location = new System.Drawing.Point(424, 29);
+            this.synchronizedWithFullLog.Location = new System.Drawing.Point(418, 29);
             this.synchronizedWithFullLog.Name = "synchronizedWithFullLog";
             this.synchronizedWithFullLog.Size = new System.Drawing.Size(46, 20);
             this.synchronizedWithFullLog.TabIndex = 1;
@@ -320,7 +266,7 @@
             this.synchronizeWithExistingLogs.Checked = true;
             this.synchronizeWithExistingLogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizeWithExistingLogs.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(378, 29);
+            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(372, 29);
             this.synchronizeWithExistingLogs.Name = "synchronizeWithExistingLogs";
             this.synchronizeWithExistingLogs.Size = new System.Drawing.Size(46, 20);
             this.synchronizeWithExistingLogs.TabIndex = 3;
@@ -332,7 +278,7 @@
             // 
             // contextFromClipboard
             // 
-            this.contextFromClipboard.Location = new System.Drawing.Point(282, 8);
+            this.contextFromClipboard.Location = new System.Drawing.Point(353, 11);
             this.contextFromClipboard.Name = "contextFromClipboard";
             this.contextFromClipboard.Size = new System.Drawing.Size(53, 22);
             this.contextFromClipboard.TabIndex = 14;
@@ -343,7 +289,7 @@
             // 
             // contextToClipboard
             // 
-            this.contextToClipboard.Location = new System.Drawing.Point(247, 8);
+            this.contextToClipboard.Location = new System.Drawing.Point(318, 11);
             this.contextToClipboard.Name = "contextToClipboard";
             this.contextToClipboard.Size = new System.Drawing.Size(38, 22);
             this.contextToClipboard.TabIndex = 13;
@@ -622,85 +568,30 @@
             // sourceUp.Panel1
             // 
             this.sourceUp.Panel1.Controls.Add(this.editSettings);
-            this.sourceUp.Panel1.Controls.Add(this.testSyntax);
-            this.sourceUp.Panel1.Controls.Add(this.helpSyntax);
             this.sourceUp.Panel1.Controls.Add(this.contextFromClipboard);
             this.sourceUp.Panel1.Controls.Add(this.contextToClipboard);
             this.sourceUp.Panel1.Controls.Add(this.delContext);
             this.sourceUp.Panel1.Controls.Add(this.addContext);
-            this.sourceUp.Panel1.Controls.Add(this.logSyntaxCtrl);
-            this.sourceUp.Panel1.Controls.Add(this.label8);
-            this.sourceUp.Panel1.Controls.Add(this.friendlyNameCtrl);
-            this.sourceUp.Panel1.Controls.Add(this.label7);
             this.sourceUp.Panel1.Controls.Add(this.curContextCtrl);
             this.sourceUp.Panel1.Controls.Add(this.label5);
-            this.sourceUp.Panel1.Controls.Add(this.sourceNameCtrl);
-            this.sourceUp.Panel1.Controls.Add(this.sourceTypeCtrl);
-            this.sourceUp.Panel1.Controls.Add(this.label3);
             // 
             // sourceUp.Panel2
             // 
             this.sourceUp.Panel2.Controls.Add(this.filteredLeft);
             this.sourceUp.Size = new System.Drawing.Size(979, 540);
-            this.sourceUp.SplitterDistance = 65;
+            this.sourceUp.SplitterDistance = 40;
             this.sourceUp.TabIndex = 0;
             // 
-            // testSyntax
+            // editSettings
             // 
-            this.testSyntax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.testSyntax.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.testSyntax.Location = new System.Drawing.Point(924, 34);
-            this.testSyntax.Name = "testSyntax";
-            this.testSyntax.Size = new System.Drawing.Size(46, 23);
-            this.testSyntax.TabIndex = 16;
-            this.testSyntax.Text = "Test";
-            this.testSyntax.UseVisualStyleBackColor = true;
-            this.testSyntax.Click += new System.EventHandler(this.testSyntax_Click);
-            // 
-            // helpSyntax
-            // 
-            this.helpSyntax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.helpSyntax.AutoSize = true;
-            this.helpSyntax.Location = new System.Drawing.Point(885, 39);
-            this.helpSyntax.Name = "helpSyntax";
-            this.helpSyntax.Size = new System.Drawing.Size(32, 15);
-            this.helpSyntax.TabIndex = 15;
-            this.helpSyntax.TabStop = true;
-            this.helpSyntax.Text = "Help";
-            this.helpSyntax.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.helpSyntax_LinkClicked);
-            // 
-            // sourceNameCtrl
-            // 
-            this.sourceNameCtrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.sourceNameCtrl.Location = new System.Drawing.Point(666, 6);
-            this.sourceNameCtrl.Name = "sourceNameCtrl";
-            this.sourceNameCtrl.Size = new System.Drawing.Size(73, 23);
-            this.sourceNameCtrl.TabIndex = 2;
-            this.sourceNameCtrl.TextChanged += new System.EventHandler(this.sourceName_TextChanged);
-            // 
-            // sourceTypeCtrl
-            // 
-            this.sourceTypeCtrl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.sourceTypeCtrl.FormattingEnabled = true;
-            this.sourceTypeCtrl.Items.AddRange(new object[] {
-            "File",
-            "Shared Memory",
-            "Debug Window"});
-            this.sourceTypeCtrl.Location = new System.Drawing.Point(572, 4);
-            this.sourceTypeCtrl.Name = "sourceTypeCtrl";
-            this.sourceTypeCtrl.Size = new System.Drawing.Size(87, 23);
-            this.sourceTypeCtrl.TabIndex = 1;
-            this.sourceTypeCtrl.SelectedIndexChanged += new System.EventHandler(this.sourceType_SelectedIndexChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(526, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(43, 15);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Source";
+            this.editSettings.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.editSettings.Location = new System.Drawing.Point(426, 8);
+            this.editSettings.Name = "editSettings";
+            this.editSettings.Size = new System.Drawing.Size(125, 25);
+            this.editSettings.TabIndex = 17;
+            this.editSettings.Text = "Edit Log Settings";
+            this.editSettings.UseVisualStyleBackColor = true;
+            this.editSettings.Click += new System.EventHandler(this.editSettings_Click);
             // 
             // filteredLeft
             // 
@@ -716,8 +607,8 @@
             this.filteredLeft.Panel1.Controls.Add(this.delFilteredView);
             this.filteredLeft.Panel1.Controls.Add(this.newFilteredView);
             this.filteredLeft.Panel1.Controls.Add(this.viewsTab);
-            this.filteredLeft.Size = new System.Drawing.Size(979, 471);
-            this.filteredLeft.SplitterDistance = 508;
+            this.filteredLeft.Size = new System.Drawing.Size(979, 496);
+            this.filteredLeft.SplitterDistance = 502;
             this.filteredLeft.SplitterWidth = 6;
             this.filteredLeft.TabIndex = 0;
             this.filteredLeft.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.filteredLeft_SplitterMoved);
@@ -733,7 +624,7 @@
             this.viewsTab.Location = new System.Drawing.Point(0, 3);
             this.viewsTab.Name = "viewsTab";
             this.viewsTab.SelectedIndex = 0;
-            this.viewsTab.Size = new System.Drawing.Size(503, 469);
+            this.viewsTab.Size = new System.Drawing.Size(497, 494);
             this.viewsTab.TabIndex = 0;
             this.viewsTab.SelectedIndexChanged += new System.EventHandler(this.viewsTab_SelectedIndexChanged);
             this.viewsTab.DragDrop += new System.Windows.Forms.DragEventHandler(this.filteredViews_DragDrop);
@@ -745,7 +636,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(495, 441);
+            this.tabPage1.Size = new System.Drawing.Size(489, 466);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -760,7 +651,7 @@
             this.dropHere.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.dropHere.Location = new System.Drawing.Point(3, 3);
             this.dropHere.Name = "dropHere";
-            this.dropHere.Size = new System.Drawing.Size(484, 441);
+            this.dropHere.Size = new System.Drawing.Size(478, 466);
             this.dropHere.TabIndex = 0;
             this.dropHere.Text = "Drop it Like it\'s Hot!\r\nJust drop a file here, and get to work!\r\n";
             this.dropHere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -959,18 +850,6 @@
             this.refreshAddViewButtons.Interval = 250;
             this.refreshAddViewButtons.Tick += new System.EventHandler(this.refreshAddViewButtons_Tick);
             // 
-            // editSettings
-            // 
-            this.editSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.editSettings.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.editSettings.Location = new System.Drawing.Point(355, 7);
-            this.editSettings.Name = "editSettings";
-            this.editSettings.Size = new System.Drawing.Size(115, 23);
-            this.editSettings.TabIndex = 17;
-            this.editSettings.Text = "Edit Settings";
-            this.editSettings.UseVisualStyleBackColor = true;
-            this.editSettings.Click += new System.EventHandler(this.editSettings_Click);
-            // 
             // log_wizard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1025,20 +904,13 @@
         private System.Windows.Forms.ToolTip tip;
         private System.Windows.Forms.SplitContainer main;
         private System.Windows.Forms.SplitContainer sourceUp;
-        private System.Windows.Forms.TextBox sourceNameCtrl;
-        private System.Windows.Forms.ComboBox sourceTypeCtrl;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox curContextCtrl;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox logHistory;
         private System.Windows.Forms.SplitContainer filteredLeft;
-        private System.Windows.Forms.TextBox friendlyNameCtrl;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button newFilteredView;
         private System.Windows.Forms.TabControl viewsTab;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TextBox logSyntaxCtrl;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label dropHere;
         private System.Windows.Forms.Timer refresh;
         private System.Windows.Forms.Button delFilteredView;
@@ -1080,8 +952,6 @@
         private System.Windows.Forms.ContextMenuStrip newViewMenu;
         private System.Windows.Forms.ToolStripMenuItem createACopyOfTheExistingViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createANewViewFromScratchToolStripMenuItem;
-        private System.Windows.Forms.Button testSyntax;
-        private System.Windows.Forms.LinkLabel helpSyntax;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolStripShowAllLines;
         private System.Windows.Forms.ToolStripMenuItem toolStripExtraFilter;

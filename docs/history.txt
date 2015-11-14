@@ -11,6 +11,10 @@
 	 -- see when i can resolve these names (as soon as aliases is loaded???)
 
 
+1.5.4h
+- edit settings -> removed not needed controls from source pane
+
+
 1.5.4g
 - edit settings works like a charm!
 done:

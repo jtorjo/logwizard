@@ -150,7 +150,6 @@ namespace LogWizard
             toggled_to_custom_ui_ = first_available_toggle_custom_ui();
             forms_.Add(this);
             Text += " " + version();
-            sourceTypeCtrl.SelectedIndex = 0;
             bool first_time = contexts_.Count == 0;
             if (first_time) {
                 load_contexts(sett);
@@ -693,12 +692,6 @@ namespace LogWizard
                 util.postpone(() => import_notes(file), 1);
                 return;
             }
-
-            ++ignore_change_;
-            sourceNameCtrl.Text = file;
-            sourceTypeCtrl.SelectedIndex = 0;
-            friendlyNameCtrl.Text = "";
-            --ignore_change_;
 
             history_select(file, friendly_name);
             on_new_file_log(file);
@@ -1590,23 +1583,6 @@ namespace LogWizard
                 keep_logs_in_sync(from);
         }
 
-        private void sourceName_TextChanged(object sender, EventArgs e) {
-            if (ignore_change_ > 0)
-                return;
-            if (logHistory.DroppedDown)
-                // user is going through the history, hasn't made up his mind yet
-                return;
-
-            if (sourceTypeCtrl.SelectedIndex == 0 && File.Exists(sourceNameCtrl.Text))
-                on_new_file_log(sourceNameCtrl.Text);
-            else if (sourceTypeCtrl.SelectedIndex == 1)
-                on_new_shared_log(sourceNameCtrl.Text);
-        }
-
-        private void sourceType_SelectedIndexChanged(object sender, EventArgs e) {
-            if (sourceTypeCtrl.SelectedIndex == 2)
-                on_new_debug_log();
-        }
 
         /* 1.1.25+
             - on new file (that does not match any context)
@@ -1649,16 +1625,17 @@ namespace LogWizard
             if (file_ctx != cur_context())
                 // update context based on file name
                 curContextCtrl.SelectedIndex = contexts_.IndexOf(file_ctx);
-
-            if (logSyntaxCtrl.Text == find_log_syntax.UNKNOWN_SYNTAX) {
-                if (log_parser_.needs_text_syntax) {
-                    set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Test' button on the top-right.",
+                
+            if (log_parser_.needs_text_syntax) {
+                var file_settings = new settings_as_string( log_parser_.settings);
+                if ( file_settings.get("syntax") == find_log_syntax.UNKNOWN_SYNTAX) {
+                    set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Edit Log Settings' button on the top-right.",
                         status_type.err);
                     show_source(true);
                 }
-            } else if (!cur_context().has_not_empty_views)
-                set_status("Don't the columns look ok? Perpaps LogWizard did not correctly parse them... If so, Toggle the Source Pane ON (Alt-O), anc click on 'Test'.", status_type.warn, 15000);
-
+                else if (!cur_context().has_not_empty_views)
+                    set_status("Don't the columns look ok? Perpaps LogWizard did not correctly parse them... If so, Toggle the Source Pane ON (Alt-O), anc click on 'Test'.", status_type.warn, 15000);
+            } 
             force_initial_refresh_of_all_views();
         }
 
@@ -1833,9 +1810,6 @@ namespace LogWizard
             //string settings = factory.merge_settings(context_settings, log_settings);
             var settings = context_settings.merge(log_settings);
 
-            logSyntaxCtrl.Text = settings.get("syntax");
-            logSyntaxCtrl.ForeColor = logSyntaxCtrl.Text != find_log_syntax.UNKNOWN_SYNTAX ? Color.Black : Color.Red;
-
             // note: we recreate the log, so that cached filters know to rebuild
             log_parser_ = new log_parser(text_, settings.ToString());
             on_new_log_parser();
@@ -1895,11 +1869,7 @@ namespace LogWizard
                 history_.Add(new_);
                 history_idx = history_.Count - 1;
                 logHistory.Items.Add(new_.ui_friendly_name);
-            } else {
-                ++ignore_change_;
-                friendlyNameCtrl.Text = history_[history_idx].friendly_name;
-                --ignore_change_;
-            }
+            } 
 
             ++ignore_change_;
             logHistory.SelectedIndex = history_idx;
@@ -1921,7 +1891,6 @@ namespace LogWizard
             if (logHistory.Items.Count < 1)
                 return; // nothing is in history
 
-            //sourceName_TextChanged(null,null);
             on_log_listory_changed();
             logHistory.Visible = false;
 
@@ -1959,24 +1928,7 @@ namespace LogWizard
                 history_select(history_[logHistory.SelectedIndex].name);
                 app.inst.set_log_file(selected_file_name());
             }
-
-            sourceTypeCtrl.SelectedIndex = (int) history_[logHistory.SelectedIndex].type;
-            sourceNameCtrl.Text = history_[logHistory.SelectedIndex].name;
-            friendlyNameCtrl.Text = history_[logHistory.SelectedIndex].friendly_name;
-            sourceName_TextChanged(null, null);
-        }
-
-        private void friendlyName_TextChanged(object sender, EventArgs e) {
-            if (ignore_change_ > 0)
-                return;
-            history_[logHistory.SelectedIndex].friendly_name = friendlyNameCtrl.Text;
-            update_history();
-            save();
-        }
-
-        private void logSyntax_TextChanged(object sender, EventArgs e) {
-            if (ignore_change_ > 0)
-                return;
+            on_new_file_log(history_[logHistory.SelectedIndex].name);
         }
 
         private void LogWizard_FormClosing(object sender, FormClosingEventArgs e) {
@@ -3668,7 +3620,11 @@ namespace LogWizard
 
             var edit = new edit_log_settings_form(log_parser_.settings, selected_file_name(), history_[logHistory.SelectedIndex].friendly_name);
             if (edit.ShowDialog(this) == DialogResult.OK) {
-                history_[logHistory.SelectedIndex].friendly_name = edit.friendly_name;
+                if (history_[logHistory.SelectedIndex].friendly_name != edit.friendly_name) {
+                    history_[logHistory.SelectedIndex].friendly_name = edit.friendly_name;
+                    update_history();
+                }
+
                 var new_settings = new settings_as_string(edit.settings);
                 bool will_restart = false;
                 if ( edit.needs_restart)

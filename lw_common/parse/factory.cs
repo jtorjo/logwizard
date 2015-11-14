@@ -73,6 +73,23 @@ namespace lw_common.parse {
             return "line-by-line";
         }
 
+        public static bool is_file_line_by_line(string file_name, string sett) {
+            file_name = file_name.ToLower();
+            var all = new settings_as_string(sett);
+            var file_type = all.get("file_type");
+
+            switch (file_type) {
+            case "line-by-line":
+                return true;
+            case "":
+                // best guess
+                return guess_file_type(file_name) == "line-by-line";
+            default:
+                return false;
+            }
+            
+        }
+
         private static log_parser_base create_file_parser(file_text_reader reader, string sett) {
             string file_name = reader.name.ToLower();
             var all = new settings_as_string(sett);

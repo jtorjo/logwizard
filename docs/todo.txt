@@ -5,56 +5,9 @@ W2/nov 2015
 
 
 
-d2/3
-- refresh_visible_columns - if from the syntax, i can find a column and it's empty, mark it as ' ' or something - so that it's different than "" -> so that i show that column
-  otherwise, i could end up ignoring a column if the first 10 values are empty
-   --- so basically have a way to force some columns to be visible
-       - perhaps if i just use what the parser is giving me, i would simply never need this "guessing"
-	   - also, care about aliases?
-	   - if a column does not show up in aliases, no point in showing it????( probably for line-by-line i need to manually compute aliases from syntax)
-	   -********* when the log file is changed, i need to update the visible columns based on what info the file has
-
-d3
----------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
- ***- this needs to exist for each type of log - even files (specify type: line-by-line, log line, xml, csv etc.)
- - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))
- ------------ note: i do have them now, in string_as_settings
- - after showing dialog, need to find out if settings change require restart!
-
-- bug:	I opened a file, A.txt, in LW. Then I copied that to A-copy.txt.  So I have A.txt and A-copy.txt. Then deleted A.txt. So, LW now clears the display for A.txt.
-		So far so good. Next, I renamed A-copy.txt to A.txt. This rename is a kind of file update. So, I expected LW to update the display, but it does not. Even Refresh doesn't work.
-
--aliases should be able to use in filters (***lo-case-no-space probably)
-	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
-	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
-	 -- see when i can resolve these names (as soon as aliases is loaded???)
-	 - Did you know - you can rename your columns
-	 - you can move, show/hide your columns
-
 d4
 - set associations (.txt, .log, .zip? .xml .csv etc) -> don't automatically associate with LW -> have an option to do so
   - note: i need to start another app to do this (with admin credentials)
-
-- tips, like "got a question? ask here, here, here"
-  - 2 types of tips: those for beginners (less than 20 runs of LW) and the others
-    - like, "Drag and drop a file to view it"
-	-  allo turning tips off.
-	- Why so dull? Common, lets use some colors (when opening a file for the first time (no views, in other words))
-	- Have a suggestion? Let me know!
-
-
-- tip cp: allow only a class to access some functions
-  - q: can i make this available on several classes?
-  - explain why : normally, you have a class just be private, or the class be inside another class
-  - have lock class derive from lock_base<> so that i can just say some_class.lock ??
-  - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
-  - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
-  - in my bio - update it with link to my above aritcle?
-
-- (if time available) find: have a "To Filter" button (good when doing regex search)
-  - two possibilities -> Apply to existing Lines, Apply to Full Log
-    + select Color/Match Color/default color?
-	-- make this rather generic, so that later i can add more attributes if needed (this is also used in right-click)
 
 
 
@@ -84,6 +37,29 @@ W3/nov 2015
      - allow several details in there
 	 - allow specifying which columns to be in details, and which in list (they can overlap)
 	 - save column widths / positions in global_ui
+
+
+- tips, like "got a question? ask here, here, here"
+  - 2 types of tips: those for beginners (less than 20 runs of LW) and the others
+    - like, "Drag and drop a file to view it"
+	-  allo turning tips off.
+	- Why so dull? Common, lets use some colors (when opening a file for the first time (no views, in other words))
+	- Have a suggestion? Let me know!
+
+
+- tip cp: allow only a class to access some functions
+  - q: can i make this available on several classes?
+  - explain why : normally, you have a class just be private, or the class be inside another class
+  - have lock class derive from lock_base<> so that i can just say some_class.lock ??
+  - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
+  - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
+  - in my bio - update it with link to my above aritcle?
+
+- (if time available) find: have a "To Filter" button (good when doing regex search)
+  - two possibilities -> Apply to existing Lines, Apply to Full Log
+    + select Color/Match Color/default color?
+	-- make this rather generic, so that later i can add more attributes if needed (this is also used in right-click)
+
 
 
 -- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
