@@ -212,13 +212,13 @@ namespace LogWizard
             try {
                 if (file_encoding_ == null) {
                     var encoding = util.file_encoding(file_);
-                    if ( encoding != null)
+                    if (encoding != null)
                         lock (this)
                             file_encoding_ = encoding;
                 }
 
-                lock(this)
-                    if (last_part_.Length >= (long)MAX_STRING_SIZE)
+                lock (this)
+                    if (last_part_.Length >= (long) MAX_STRING_SIZE)
                         return;
 
                 long len = new FileInfo(file_).Length;
@@ -233,27 +233,26 @@ namespace LogWizard
                 using (var fs = new FileStream(file_, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     if (len > offset) {
                         update_buffer();
-                        long read_now = Math.Min( (long)max_read_in_one_go, len - offset);
-                        logger.Debug("[file] reading file " + file_ + " at " + offset + ", " + read_now  + " bytes.");
+                        long read_now = Math.Min((long) max_read_in_one_go, len - offset);
+                        logger.Debug("[file] reading file " + file_ + " at " + offset + ", " + read_now + " bytes.");
                         fs.Seek(offset, SeekOrigin.Begin);
-                        int read_bytes = fs.Read(buffer_, 0, (int)read_now);
+                        int read_bytes = fs.Read(buffer_, 0, (int) read_now);
                         if (read_bytes >= 0) {
                             string now = file_encoding_.GetString(buffer_, 0, read_bytes);
                             lock (this) {
                                 read_byte_count_ += (ulong) read_bytes;
-                                last_part_.Append(now) ;
+                                last_part_.Append(now);
                                 genenerate_new_lines_event = fully_read_once_ && parser_ != null;
                             }
                         }
-                    }
-                    else if (len == offset) {
+                    } else if (len == offset) {
                         // file not changed - nothing to do
                         bool fully_read_now;
                         lock (this) {
                             fully_read_now = !fully_read_once_;
                             fully_read_once_ = true;
                         }
-                        if ( fully_read_now)
+                        if (fully_read_now)
                             update_buffer();
                     } else
                         file_rewritten = true;
@@ -265,7 +264,15 @@ namespace LogWizard
 
                 if (genenerate_new_lines_event)
                     parser_.on_log_has_new_lines(file_rewritten);
-            } catch(Exception e) {
+            } catch (FileNotFoundException) {
+                // file may have been erased
+                if (read_byte_count_ > 0) {
+                    on_rewritten_file();
+                    lock(this)
+                        fully_read_once_ = true;
+                    parser_.on_log_has_new_lines(true);
+                }
+            } catch (Exception e) {
                 logger.Error("[file] can't read file - " + file_ + " : " + e.Message);
             }
         }
