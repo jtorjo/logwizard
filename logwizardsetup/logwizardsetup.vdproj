@@ -112,31 +112,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_70135191B71EE9820831F349BF8A823E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2819FF1B498DBEECB1683E5459B44DAB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_187FEA7CF0B3BD29BEB9725EAA603ED5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_264ACE8638B5C7A7BA9DDD169AFBE2E3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_69F744972D2505679D513EB2818224FF"
+        "OwnerKey" = "8:_D4EFFC738C161384F5CED85A88E3E6B9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -148,7 +124,31 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D4EFFC738C161384F5CED85A88E3E6B9"
+        "OwnerKey" = "8:_69F744972D2505679D513EB2818224FF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_264ACE8638B5C7A7BA9DDD169AFBE2E3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_187FEA7CF0B3BD29BEB9725EAA603ED5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_2819FF1B498DBEECB1683E5459B44DAB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_70135191B71EE9820831F349BF8A823E"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -331,11 +331,6 @@
             "AssemblyAsmDisplayName" = "8:EncodingTools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_187FEA7CF0B3BD29BEB9725EAA603ED5"
-                    {
-                    "Name" = "8:EncodingTools.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:EncodingTools.dll"
             "TargetName" = "8:"
@@ -362,11 +357,6 @@
             "AssemblyAsmDisplayName" = "8:ObjectListView_lw, Version=2.8.1.5781, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_264ACE8638B5C7A7BA9DDD169AFBE2E3"
-                    {
-                    "Name" = "8:ObjectListView_lw.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ObjectListView_lw.dll"
             "TargetName" = "8:"
@@ -393,11 +383,6 @@
             "AssemblyAsmDisplayName" = "8:ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2819FF1B498DBEECB1683E5459B44DAB"
-                    {
-                    "Name" = "8:ICSharpCode.SharpZipLib.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ICSharpCode.SharpZipLib.dll"
             "TargetName" = "8:"
@@ -424,11 +409,6 @@
             "AssemblyAsmDisplayName" = "8:ColorPicker, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_52B4C67E9B47794E8460A7675BC50CCC"
-                    {
-                    "Name" = "8:ColorPicker.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ColorPicker.dll"
             "TargetName" = "8:"
@@ -475,11 +455,6 @@
             "AssemblyAsmDisplayName" = "8:log4net_1_2_11, Version=1.2.12.2, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_69F744972D2505679D513EB2818224FF"
-                    {
-                    "Name" = "8:log4net_1_2_11.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:log4net_1_2_11.dll"
             "TargetName" = "8:"
@@ -506,11 +481,6 @@
             "AssemblyAsmDisplayName" = "8:lw_common, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_70135191B71EE9820831F349BF8A823E"
-                    {
-                    "Name" = "8:lw_common.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:lw_common.dll"
             "TargetName" = "8:"
@@ -537,11 +507,6 @@
             "AssemblyAsmDisplayName" = "8:fastJSON, Version=2.1.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_D4EFFC738C161384F5CED85A88E3E6B9"
-                    {
-                    "Name" = "8:fastJSON.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:fastJSON.dll"
             "TargetName" = "8:"
@@ -672,15 +637,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
-        "ProductCode" = "8:{A3A88F43-C50D-46D7-B1E1-97AB9177E676}"
-        "PackageCode" = "8:{513D23CE-A762-4565-9CE5-A8CB0D928948}"
+        "ProductCode" = "8:{CA66F7B3-E692-4C7F-BD2B-A1A44F29A4DA}"
+        "PackageCode" = "8:{99DF094C-2352-4A03-BE07-CD5E3F24FAA5}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.5.3"
+        "ProductVersion" = "8:1.5.4"
         "Manufacturer" = "8:John Torjo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1250,7 +1215,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_900BA54346A2479085BF08862BE89061"
             {
-            "SourcePath" = "8:..\\obj\\x64\\Release64\\LogWizard.exe"
+            "SourcePath" = "8:..\\obj\\x64\\Dbg64\\LogWizard.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E297CB39A550491681319D6F014A659B"

@@ -5,10 +5,16 @@
 - bug:	I opened a file, A.txt, in LW. Then I copied that to A-copy.txt.  So I have A.txt and A-copy.txt. Then deleted A.txt. So, LW now clears the display for A.txt.
 		So far so good. Next, I renamed A-copy.txt to A.txt. This rename is a kind of file update. So, I expected LW to update the display, but it does not. Even Refresh doesn't work.
 
--aliases should be able to use in filters (***lo-case-no-space probably)
-	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
-	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
-	 -- see when i can resolve these names (as soon as aliases is loaded???)
+- tips, like "got a question? ask here, here, here"
+  - 2 types of tips: those for beginners (less than 20 runs of LW) and the others
+    - like, "Drag and drop a file to view it"
+	-  allo turning tips off.
+	- Why so dull? Common, lets use some colors (when opening a file for the first time (no views, in other words))
+	- Have a suggestion? Let me know!
+
+
+1.5.4 (final)
+- settings: edit from right click
 
 
 1.5.4h

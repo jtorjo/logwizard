@@ -79,5 +79,6 @@ namespace lw_common.ui {
 
         void after_column_positions_modified(log_view lv);
 
+        void edit_log_settings();
     }
 }

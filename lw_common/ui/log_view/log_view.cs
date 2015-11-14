@@ -218,6 +218,10 @@ namespace lw_common.ui
             menu.Items.Add(edit_aliases);
             edit_aliases.Click += (a,ee) => this.edit_aliases();
 
+            var edit_log_settings = new ToolStripMenuItem("Edit Log Settings...");
+            menu.Items.Add(edit_log_settings);
+            edit_log_settings.Click += (a,ee) => lv_parent.edit_log_settings();
+
             menu.Closing += menu_Closing;
             edit.Visible = false;
             menu.Show(list, list.PointToClient(Cursor.Position));

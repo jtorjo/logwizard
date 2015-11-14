@@ -2083,6 +2083,10 @@ namespace LogWizard
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        public void edit_log_settings() {
+            editSettings_Click(null,null);
+        }
+
         private bool any_moving_key_still_down() {
             return win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || win32.IsKeyPushedDown(Keys.PageUp) || win32.IsKeyPushedDown(Keys.PageDown) || win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
         }
