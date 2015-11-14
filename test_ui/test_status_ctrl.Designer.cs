@@ -24,7 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.animated = new lw_common.ui.animated_button();
-            this.status = new lw_common.ui.status_ctrl();
+            this.status = new lw_common.ui.rich_label_ctrl();
             this.SuspendLayout();
             // 
             // animated
@@ -66,7 +66,7 @@
 
         #endregion
 
-        private lw_common.ui.status_ctrl status;
+        private lw_common.ui.rich_label_ctrl status;
         private lw_common.ui.animated_button animated;
     }
 }

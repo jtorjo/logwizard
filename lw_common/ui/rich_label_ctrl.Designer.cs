@@ -1,5 +1,5 @@
 ﻿namespace lw_common.ui {
-    partial class status_ctrl {
+    public partial class rich_label_ctrl {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
@@ -24,26 +24,29 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.refresh = new System.Windows.Forms.Timer(this.components);
+            this.goToNextLine = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
-            // refresh
+            // goToNextLine
             // 
-            this.refresh.Enabled = true;
-            this.refresh.Interval = 500;
-            this.refresh.Tick += new System.EventHandler(this.refresh_Tick);
+            this.goToNextLine.Enabled = true;
+            this.goToNextLine.Interval = 2500;
+            this.goToNextLine.Tick += new System.EventHandler(this.goToNextLine_Tick);
             // 
             // status_ctrl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "status_ctrl";
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.Name = "rich_label_ctrl";
+            this.Size = new System.Drawing.Size(613, 24);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.status_ctrl_Paint);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.status_ctrl_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.status_ctrl_MouseUp);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Timer refresh;
+        private System.Windows.Forms.Timer goToNextLine;
     }
 }

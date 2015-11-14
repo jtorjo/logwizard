@@ -110,13 +110,6 @@ namespace LogWizard
         private msg_details_ctrl msg_details_ = null;
 
 
-        // the status(es) to be shown
-        private enum status_type {
-            msg, warn, err
-        }
-        private List< Tuple<string, status_type, DateTime>> statuses_ = new List<Tuple<string, status_type, DateTime>>();
-        // what to be shown behind ALL statuses
-        private string status_prefix_ = "";
 
         private int toggled_to_custom_ui_ = -1;
         private static ui_info default_ui_ = new ui_info();
@@ -247,7 +240,7 @@ namespace LogWizard
                 this.async_call(() =>
                     util.postpone(() =>                    
                         set_status(version_prefix + last.version + " - " + last.short_description + "\r\n" 
-                            + util.concatenate(last.features.Select(x => version_prefix + "* " + x), "\r\n"), status_type.msg, 
+                            + util.concatenate(last.features.Select(x => version_prefix + "* " + x), "\r\n"), status_ctrl.status_type.msg, 
                             30000), util.is_debug ? 1 : 15000));
             }
         }
@@ -1374,7 +1367,6 @@ namespace LogWizard
 
             try {
                 refresh_cur_log_view();
-                update_status_text();
             } catch (Exception e) {
                 logger.Error("Refresh error" + e.Message);
             }
@@ -1630,11 +1622,11 @@ namespace LogWizard
                 var file_settings = new settings_as_string( log_parser_.settings);
                 if ( file_settings.get("syntax") == find_log_syntax.UNKNOWN_SYNTAX) {
                     set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Edit Log Settings' button on the top-right.",
-                        status_type.err);
+                        status_ctrl.status_type.err);
                     show_source(true);
                 }
                 else if (!cur_context().has_not_empty_views)
-                    set_status("Don't the columns look ok? Perpaps LogWizard did not correctly parse them... If so, Toggle the Source Pane ON (Alt-O), anc click on 'Test'.", status_type.warn, 15000);
+                    set_status("Don't the columns look ok? Perpaps LogWizard did not correctly parse them... If so, Toggle the Source Pane ON (Alt-O), anc click on 'Test'.", status_ctrl.status_type.warn, 15000);
             } 
             force_initial_refresh_of_all_views();
         }
@@ -2365,7 +2357,7 @@ namespace LogWizard
             switch (action) {
             case action_type.search:
                 if (lv.item_count < 1) {
-                    set_status("Can't search - nothing to search", status_type.err);
+                    set_status("Can't search - nothing to search", status_ctrl.status_type.err);
                     break;
                 }
                 var searcher = new search_form(this, lv, lv.smart_edit_sel_text);
@@ -2671,8 +2663,7 @@ namespace LogWizard
         }
 
         private void update_status_prefix() {
-            status_prefix_ = toggled_to_custom_ui_ < 0 ? "" : "[Position " + (toggled_to_custom_ui_ + 1) + "]";
-            force_udpate_status_text();            
+            status.set_prefix( toggled_to_custom_ui_ < 0 ? "" : "[Position " + (toggled_to_custom_ui_ + 1) + "]");
         }
 
         private List<Control> panes() {
@@ -2943,69 +2934,26 @@ namespace LogWizard
 
         // sets the status for a given period - after that ends, the previous status is shown
         // if < 0, it's forever
-        private void set_status(string msg, status_type type = status_type.msg, int set_status_for_ms = 7500) {
-            if (set_status_for_ms <= 0)
-                statuses_.Clear();
+        private void set_status(string msg, status_ctrl.status_type type = status_ctrl.status_type.msg, int set_status_for_ms = 7500) {
+            status.set_status(msg, type, set_status_for_ms);
 
-            if (type == status_type.err)
-                // show errors longer
-                set_status_for_ms = Math.Max(set_status_for_ms, 15000);
-            statuses_.Add(new Tuple<string, status_type, DateTime>(msg, type, set_status_for_ms > 0 ? DateTime.Now.AddMilliseconds(set_status_for_ms) : DateTime.MaxValue));
-            show_last_status();
-
-            if (type == status_type.err && !global_ui.show_status) {
+            if (type == status_ctrl.status_type.err && !global_ui.show_status) {
                 global_ui.temporarily_show_status = true;
                 show_status(global_ui.temporarily_show_status);
             }
-
-            if (type == status_type.err)
-                util.beep(util.beep_type.err);
-        }
-
-        private void show_last_status() {
-            if (statuses_.Count < 1) 
-                return;
-            var last = statuses_.Last();
-            var type = last.Item2;
-            var msg = last.Item1;
-
-            string color_prefix = "";
-            if (status_color(type) != util.transparent)
-                color_prefix += "<fg " + util.color_to_str(status_color(type)) + ">";
-            if (status_bg_color(type) != util.transparent)
-                color_prefix += "<bg " + util.color_to_str(status_bg_color(type)) + ">";
-            status.set_text( color_prefix + status_prefix_ + msg);
-        }
-
-        private Color status_color(status_type type) {
-            return type == status_type.err ? Color.DarkRed : util.transparent;
-        }
-
-        private Color status_bg_color(status_type type) {
-            return type == status_type.err ? Color.Yellow : util.transparent;
         }
 
         private void set_status_forever(string msg) {
-            set_status(msg, status_type.msg, -1);
+            status.set_status_forever(msg);
         }
 
         private void update_status_text(bool force = false) {
-            bool needs_update = false;
-            while (statuses_.Count > 0 && statuses_.Last().Item3 < DateTime.Now) {
-                statuses_.RemoveAt(statuses_.Count - 1);
-                needs_update = true;
-            }
-
-            if (needs_update || force) {
-                show_last_status();
-
-                bool is_err = statuses_.Count > 0 && statuses_.Last().Item2 == status_type.err;
-                if (!is_err)
-                    if (global_ui.temporarily_show_status && !global_ui.show_status) {
-                        global_ui.temporarily_show_status = false;
-                        show_status(false);
-                    }
-            }
+            bool is_err = status.update_status_text(force) == status_ctrl.status_type.err;
+            if (!is_err)
+                if (global_ui.temporarily_show_status && !global_ui.show_status) {
+                    global_ui.temporarily_show_status = false;
+                    show_status(false);
+                }
         }
 
         private void force_udpate_status_text() {
@@ -3134,7 +3082,7 @@ namespace LogWizard
                 import_notes_impl(file);
             } catch (Exception e) {
                 logger.Fatal("could not import file " + file + " : " + e.Message);
-                set_status("An internal error occured. Please contact the author.", status_type.err);
+                set_status("An internal error occured. Please contact the author.", status_ctrl. status_type.err);
             }
         }
 
@@ -3143,7 +3091,7 @@ namespace LogWizard
             var files = zip_util.enum_file_names_in_zip(file);
             bool valid = files.Contains(log_wizard_zip_file_prefix + "md5.txt") && files.Contains(log_wizard_zip_file_prefix + "context.txt") && files.Contains(log_wizard_zip_file_prefix + "notes.txt");
             if (!valid) {
-                set_status("Invalid .LogWizard file: " + file, status_type.err);
+                set_status("Invalid .LogWizard file: " + file, status_ctrl.status_type.err);
                 return;
             }
             string import_dir = Program.local_dir() + "import";
@@ -3166,11 +3114,11 @@ namespace LogWizard
                 // at this point, try to load the file from the .zip
                 int log_file_count = files.Count(x => !x.StartsWith(log_wizard_zip_file_prefix));
                 if (log_file_count > 1) {
-                    set_status("Invalid .LogWizard file: " + file, status_type.err);
+                    set_status("Invalid .LogWizard file: " + file, status_ctrl.status_type.err);
                     return;
                 }
                 if (log_file_count == 0) {
-                    set_status("Please ask your colleague to send you the LONG .LogWizard File - so we can auto-import and show you the Log together with the notes.", status_type.err);
+                    set_status("Please ask your colleague to send you the LONG .LogWizard File - so we can auto-import and show you the Log together with the notes.", status_ctrl.status_type.err);
                     return;
                 }
                 // at this point - we know we have the log file as well

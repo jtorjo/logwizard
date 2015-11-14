@@ -11,11 +11,17 @@
 	- Have a suggestion? Let me know!
 
 
+
+
+1.5.5b
+- refactored status control
+  - statuses kept in status_ctrl (so that it's easier for me to show tips)
+
+
 1.5.5a
 fix
 - bug:	I opened a file, A.txt, in LW. Then I copied that to A-copy.txt.  So I have A.txt and A-copy.txt. Then deleted A.txt. So, LW now clears the display for A.txt.
 		So far so good. Next, I renamed A-copy.txt to A.txt. This rename is a kind of file update. So, I expected LW to update the display, but it does not. Even Refresh doesn't work.
-
 
 
 1.5.4 (final)
