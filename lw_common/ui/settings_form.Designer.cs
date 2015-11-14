@@ -53,20 +53,23 @@
             this.label9 = new System.Windows.Forms.Label();
             this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.browseFont = new System.Windows.Forms.Button();
+            this.showBetaUpdates = new System.Windows.Forms.CheckBox();
+            this.showVariableFontsAsWell = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.editMode = new System.Windows.Forms.ComboBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.editSearchAllColumns = new System.Windows.Forms.RadioButton();
+            this.editSearchAfter = new System.Windows.Forms.CheckBox();
+            this.editSearchCurColumnOnly = new System.Windows.Forms.RadioButton();
+            this.editSearchBelow = new System.Windows.Forms.CheckBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.useFileMonitoringApi = new System.Windows.Forms.CheckBox();
             this.label30 = new System.Windows.Forms.Label();
-            this.editSearchAllColumns = new System.Windows.Forms.RadioButton();
-            this.editSearchCurColumnOnly = new System.Windows.Forms.RadioButton();
-            this.editSearchBelow = new System.Windows.Forms.CheckBox();
-            this.editSearchAfter = new System.Windows.Forms.CheckBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.editMode = new System.Windows.Forms.ComboBox();
-            this.label18 = new System.Windows.Forms.Label();
             this.hotkeyslink = new System.Windows.Forms.LinkLabel();
             this.useHotkeys = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -119,15 +122,14 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.showBetaUpdates = new System.Windows.Forms.CheckBox();
-            this.showVariableFontsAsWell = new System.Windows.Forms.CheckBox();
+            this.showTips = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox8.SuspendLayout();
@@ -140,7 +142,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.fileToContext)).BeginInit();
             this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).BeginInit();
-            this.groupBox9.SuspendLayout();
             this.SuspendLayout();
             // 
             // fontLabel
@@ -438,6 +439,31 @@
             this.browseFont.UseVisualStyleBackColor = true;
             this.browseFont.Click += new System.EventHandler(this.browseFont_Click);
             // 
+            // showBetaUpdates
+            // 
+            this.showBetaUpdates.AutoSize = true;
+            this.showBetaUpdates.Location = new System.Drawing.Point(236, 15);
+            this.showBetaUpdates.Name = "showBetaUpdates";
+            this.showBetaUpdates.Size = new System.Drawing.Size(192, 21);
+            this.showBetaUpdates.TabIndex = 16;
+            this.showBetaUpdates.Text = "Notify me of Beta Updates";
+            this.tip.SetToolTip(this.showBetaUpdates, "If selected, when there are Beta Updates, you are notified (in the Status bar)\r\nI" +
+        "f not selected, you are notified only of Stable Updates");
+            this.showBetaUpdates.UseVisualStyleBackColor = true;
+            // 
+            // showVariableFontsAsWell
+            // 
+            this.showVariableFontsAsWell.AutoSize = true;
+            this.showVariableFontsAsWell.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showVariableFontsAsWell.Location = new System.Drawing.Point(236, 77);
+            this.showVariableFontsAsWell.Name = "showVariableFontsAsWell";
+            this.showVariableFontsAsWell.Size = new System.Drawing.Size(257, 17);
+            this.showVariableFontsAsWell.TabIndex = 17;
+            this.showVariableFontsAsWell.Text = "Show Variable fonts as well (NOT recommended)";
+            this.tip.SetToolTip(this.showVariableFontsAsWell, "If selected, when there are Beta Updates, you are notified (in the Status bar)\r\nI" +
+        "f not selected, you are notified only of Stable Updates");
+            this.showVariableFontsAsWell.UseVisualStyleBackColor = true;
+            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
@@ -467,8 +493,109 @@
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.editMode);
+            this.groupBox9.Controls.Add(this.label18);
+            this.groupBox9.Controls.Add(this.label19);
+            this.groupBox9.Controls.Add(this.label20);
+            this.groupBox9.Controls.Add(this.editSearchAllColumns);
+            this.groupBox9.Controls.Add(this.editSearchAfter);
+            this.groupBox9.Controls.Add(this.editSearchCurColumnOnly);
+            this.groupBox9.Controls.Add(this.editSearchBelow);
+            this.groupBox9.Location = new System.Drawing.Point(6, 155);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(654, 172);
+            this.groupBox9.TabIndex = 6;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Smart Edit";
+            // 
+            // editMode
+            // 
+            this.editMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.editMode.FormattingEnabled = true;
+            this.editMode.Items.AddRange(new object[] {
+            "Always",
+            "With SPACE key",
+            "With RightArrow key"});
+            this.editMode.Location = new System.Drawing.Point(94, 22);
+            this.editMode.Name = "editMode";
+            this.editMode.Size = new System.Drawing.Size(275, 24);
+            this.editMode.TabIndex = 5;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(0, 25);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(71, 17);
+            this.label18.TabIndex = 4;
+            this.label18.Text = "Edit Mode";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(91, 50);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(513, 39);
+            this.label19.TabIndex = 6;
+            this.label19.Text = resources.GetString("label19.Text");
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(0, 113);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(119, 17);
+            this.label20.TabIndex = 7;
+            this.label20.Text = "Smart Completion";
+            // 
+            // editSearchAllColumns
+            // 
+            this.editSearchAllColumns.AutoSize = true;
+            this.editSearchAllColumns.Location = new System.Drawing.Point(369, 134);
+            this.editSearchAllColumns.Name = "editSearchAllColumns";
+            this.editSearchAllColumns.Size = new System.Drawing.Size(147, 21);
+            this.editSearchAllColumns.TabIndex = 11;
+            this.editSearchAllColumns.TabStop = true;
+            this.editSearchAllColumns.Text = "Look at all columns";
+            this.editSearchAllColumns.UseVisualStyleBackColor = true;
+            // 
+            // editSearchAfter
+            // 
+            this.editSearchAfter.AutoSize = true;
+            this.editSearchAfter.Location = new System.Drawing.Point(139, 112);
+            this.editSearchAfter.Name = "editSearchAfter";
+            this.editSearchAfter.Size = new System.Drawing.Size(103, 21);
+            this.editSearchAfter.TabIndex = 8;
+            this.editSearchAfter.Text = "Look Ahead";
+            this.editSearchAfter.UseVisualStyleBackColor = true;
+            // 
+            // editSearchCurColumnOnly
+            // 
+            this.editSearchCurColumnOnly.AutoSize = true;
+            this.editSearchCurColumnOnly.Location = new System.Drawing.Point(139, 134);
+            this.editSearchCurColumnOnly.Name = "editSearchCurColumnOnly";
+            this.editSearchCurColumnOnly.Size = new System.Drawing.Size(224, 21);
+            this.editSearchCurColumnOnly.TabIndex = 10;
+            this.editSearchCurColumnOnly.TabStop = true;
+            this.editSearchCurColumnOnly.Text = "Look only in the current column";
+            this.editSearchCurColumnOnly.UseVisualStyleBackColor = true;
+            // 
+            // editSearchBelow
+            // 
+            this.editSearchBelow.AutoSize = true;
+            this.editSearchBelow.Location = new System.Drawing.Point(255, 112);
+            this.editSearchBelow.Name = "editSearchBelow";
+            this.editSearchBelow.Size = new System.Drawing.Size(99, 21);
+            this.editSearchBelow.TabIndex = 9;
+            this.editSearchBelow.Text = "Look Below";
+            this.editSearchBelow.UseVisualStyleBackColor = true;
+            // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.showTips);
             this.groupBox7.Controls.Add(this.showVariableFontsAsWell);
             this.groupBox7.Controls.Add(this.showBetaUpdates);
             this.groupBox7.Controls.Add(this.label2);
@@ -517,89 +644,6 @@
             this.label30.Size = new System.Drawing.Size(106, 13);
             this.label30.TabIndex = 13;
             this.label30.Text = "Requires Restart!";
-            // 
-            // editSearchAllColumns
-            // 
-            this.editSearchAllColumns.AutoSize = true;
-            this.editSearchAllColumns.Location = new System.Drawing.Point(369, 134);
-            this.editSearchAllColumns.Name = "editSearchAllColumns";
-            this.editSearchAllColumns.Size = new System.Drawing.Size(147, 21);
-            this.editSearchAllColumns.TabIndex = 11;
-            this.editSearchAllColumns.TabStop = true;
-            this.editSearchAllColumns.Text = "Look at all columns";
-            this.editSearchAllColumns.UseVisualStyleBackColor = true;
-            // 
-            // editSearchCurColumnOnly
-            // 
-            this.editSearchCurColumnOnly.AutoSize = true;
-            this.editSearchCurColumnOnly.Location = new System.Drawing.Point(139, 134);
-            this.editSearchCurColumnOnly.Name = "editSearchCurColumnOnly";
-            this.editSearchCurColumnOnly.Size = new System.Drawing.Size(224, 21);
-            this.editSearchCurColumnOnly.TabIndex = 10;
-            this.editSearchCurColumnOnly.TabStop = true;
-            this.editSearchCurColumnOnly.Text = "Look only in the current column";
-            this.editSearchCurColumnOnly.UseVisualStyleBackColor = true;
-            // 
-            // editSearchBelow
-            // 
-            this.editSearchBelow.AutoSize = true;
-            this.editSearchBelow.Location = new System.Drawing.Point(255, 112);
-            this.editSearchBelow.Name = "editSearchBelow";
-            this.editSearchBelow.Size = new System.Drawing.Size(99, 21);
-            this.editSearchBelow.TabIndex = 9;
-            this.editSearchBelow.Text = "Look Below";
-            this.editSearchBelow.UseVisualStyleBackColor = true;
-            // 
-            // editSearchAfter
-            // 
-            this.editSearchAfter.AutoSize = true;
-            this.editSearchAfter.Location = new System.Drawing.Point(139, 112);
-            this.editSearchAfter.Name = "editSearchAfter";
-            this.editSearchAfter.Size = new System.Drawing.Size(103, 21);
-            this.editSearchAfter.TabIndex = 8;
-            this.editSearchAfter.Text = "Look Ahead";
-            this.editSearchAfter.UseVisualStyleBackColor = true;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(0, 113);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(119, 17);
-            this.label20.TabIndex = 7;
-            this.label20.Text = "Smart Completion";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(91, 50);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(513, 39);
-            this.label19.TabIndex = 6;
-            this.label19.Text = resources.GetString("label19.Text");
-            // 
-            // editMode
-            // 
-            this.editMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.editMode.FormattingEnabled = true;
-            this.editMode.Items.AddRange(new object[] {
-            "Always",
-            "With SPACE key",
-            "With RightArrow key"});
-            this.editMode.Location = new System.Drawing.Point(94, 22);
-            this.editMode.Name = "editMode";
-            this.editMode.Size = new System.Drawing.Size(275, 24);
-            this.editMode.TabIndex = 5;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(0, 25);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(71, 17);
-            this.label18.TabIndex = 4;
-            this.label18.Text = "Edit Mode";
             // 
             // hotkeyslink
             // 
@@ -1153,47 +1197,17 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // groupBox9
+            // showTips
             // 
-            this.groupBox9.Controls.Add(this.editMode);
-            this.groupBox9.Controls.Add(this.label18);
-            this.groupBox9.Controls.Add(this.label19);
-            this.groupBox9.Controls.Add(this.label20);
-            this.groupBox9.Controls.Add(this.editSearchAllColumns);
-            this.groupBox9.Controls.Add(this.editSearchAfter);
-            this.groupBox9.Controls.Add(this.editSearchCurColumnOnly);
-            this.groupBox9.Controls.Add(this.editSearchBelow);
-            this.groupBox9.Location = new System.Drawing.Point(6, 155);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(654, 172);
-            this.groupBox9.TabIndex = 6;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "Smart Edit";
-            // 
-            // showBetaUpdates
-            // 
-            this.showBetaUpdates.AutoSize = true;
-            this.showBetaUpdates.Location = new System.Drawing.Point(236, 15);
-            this.showBetaUpdates.Name = "showBetaUpdates";
-            this.showBetaUpdates.Size = new System.Drawing.Size(192, 21);
-            this.showBetaUpdates.TabIndex = 16;
-            this.showBetaUpdates.Text = "Notify me of Beta Updates";
-            this.tip.SetToolTip(this.showBetaUpdates, "If selected, when there are Beta Updates, you are notified (in the Status bar)\r\nI" +
+            this.showTips.AutoSize = true;
+            this.showTips.Location = new System.Drawing.Point(507, 15);
+            this.showTips.Name = "showTips";
+            this.showTips.Size = new System.Drawing.Size(92, 21);
+            this.showTips.TabIndex = 18;
+            this.showTips.Text = "Show Tips";
+            this.tip.SetToolTip(this.showTips, "If selected, when there are Beta Updates, you are notified (in the Status bar)\r\nI" +
         "f not selected, you are notified only of Stable Updates");
-            this.showBetaUpdates.UseVisualStyleBackColor = true;
-            // 
-            // showVariableFontsAsWell
-            // 
-            this.showVariableFontsAsWell.AutoSize = true;
-            this.showVariableFontsAsWell.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.showVariableFontsAsWell.Location = new System.Drawing.Point(236, 77);
-            this.showVariableFontsAsWell.Name = "showVariableFontsAsWell";
-            this.showVariableFontsAsWell.Size = new System.Drawing.Size(257, 17);
-            this.showVariableFontsAsWell.TabIndex = 17;
-            this.showVariableFontsAsWell.Text = "Show Variable fonts as well (NOT recommended)";
-            this.tip.SetToolTip(this.showVariableFontsAsWell, "If selected, when there are Beta Updates, you are notified (in the Status bar)\r\nI" +
-        "f not selected, you are notified only of Stable Updates");
-            this.showVariableFontsAsWell.UseVisualStyleBackColor = true;
+            this.showTips.UseVisualStyleBackColor = true;
             // 
             // settings_form
             // 
@@ -1218,6 +1232,8 @@
             this.groupBox4.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.tabPage2.ResumeLayout(false);
@@ -1238,8 +1254,6 @@
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).EndInit();
-            this.groupBox9.ResumeLayout(false);
-            this.groupBox9.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1343,6 +1357,7 @@
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.CheckBox showBetaUpdates;
         private System.Windows.Forms.CheckBox showVariableFontsAsWell;
+        private System.Windows.Forms.CheckBox showTips;
 
     }
 }

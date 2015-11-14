@@ -172,7 +172,9 @@ namespace lw_common {
         public bool show_beta_releases = true;
         public bool show_variable_fonts_as_well = false;
 
+        public bool show_tips = true;
 
+        public int run_count = 0;
 
         // file-by-file
         public bool bring_to_top_on_restart = false;
@@ -217,6 +219,7 @@ namespace lw_common {
             Debug.Assert(sett_ == null);
             sett_ = sett_file;
             load();
+            ++run_count;
         }
 
         internal static void load_save(bool load, ref bool prop, string name, bool default_ = false) {
@@ -363,6 +366,8 @@ namespace lw_common {
             load_save(load, ref use_file_monitoring_api, "use_file_monitoring_api", false);
             load_save(load, ref show_beta_releases, "show_beta_releases", true);
             load_save(load, ref show_variable_fonts_as_well, "show_variable_fonts_as_well", false);
+            load_save(load, ref show_tips, "show_tips", true);
+            load_save(load, ref run_count, "run_count", 0);
         }
 
         private string initials(string name) {

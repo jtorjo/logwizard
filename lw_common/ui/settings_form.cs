@@ -150,6 +150,7 @@ namespace lw_common.ui {
             useFileMonitoringApi.Checked = app.inst.use_file_monitoring_api;
             showBetaUpdates.Checked = app.inst.show_beta_releases;
             showVariableFontsAsWell.Checked = app.inst.show_variable_fonts_as_well;
+            showTips.Checked = app.inst.show_tips;
         }
 
         private void save() {
@@ -229,6 +230,7 @@ namespace lw_common.ui {
             app.inst.use_file_monitoring_api = useFileMonitoringApi.Checked;
             app.inst.show_beta_releases = showBetaUpdates.Checked;
             app.inst.show_variable_fonts_as_well = showVariableFontsAsWell.Checked;
+            app.inst.show_tips = showTips.Checked;
 
             app.inst.save();
         }

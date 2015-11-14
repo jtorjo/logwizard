@@ -134,11 +134,14 @@ namespace LogWizard
 
         private bool can_edit_context_ = true;
 
-        private static List<read_github_release.release_info> new_releases_, cur_release_; 
+        private static List<read_github_release.release_info> new_releases_, cur_release_;
+
+        private show_tips show_tips_;
 
         public log_wizard()
         {
             InitializeComponent();
+            show_tips_ = new show_tips(status);
             whatsup.animate = false;
             toggled_to_custom_ui_ = first_available_toggle_custom_ui();
             forms_.Add(this);
@@ -1367,6 +1370,7 @@ namespace LogWizard
 
             try {
                 refresh_cur_log_view();
+                show_tips_.handle_tips();
             } catch (Exception e) {
                 logger.Error("Refresh error" + e.Message);
             }
@@ -1627,6 +1631,8 @@ namespace LogWizard
                 }
                 else if (!cur_context().has_not_empty_views)
                     set_status("Don't the columns look ok? Perpaps LogWizard did not correctly parse them... If so, Toggle the Source Pane ON (Alt-O), anc click on 'Test'.", status_ctrl.status_type.warn, 15000);
+                else if ( !cur_context().has_views)
+                    set_status("Why so dull? <a http://www.codeproject.com/Articles/1045528/LogWizard-Filter-your-Logs-Inside-out>Add some colors!</a>");
             } 
             force_initial_refresh_of_all_views();
         }

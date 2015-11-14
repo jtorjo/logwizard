@@ -50,9 +50,9 @@ namespace lw_common.ui {
 
             string color_prefix = "";
             if (status_color(type) != util.transparent)
-                color_prefix += "<fg " + util.color_to_str(status_color(type)) + ">";
+                color_prefix += " <fg " + util.color_to_str(status_color(type)) + "> ";
             if (status_bg_color(type) != util.transparent)
-                color_prefix += "<bg " + util.color_to_str(status_bg_color(type)) + ">";
+                color_prefix += " <bg " + util.color_to_str(status_bg_color(type)) + "> ";
             set_text( color_prefix + status_prefix_ + msg);
         }
 

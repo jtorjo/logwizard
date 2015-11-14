@@ -194,6 +194,7 @@
     <Compile Include="ui\settings_form.Designer.cs">
       <DependentUpon>settings_form.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\show_tips.cs" />
     <Compile Include="ui\solid_brush_list.cs" />
     <Compile Include="ui\rich_label_ctrl.cs">
       <SubType>UserControl</SubType>

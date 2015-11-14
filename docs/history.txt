@@ -1,16 +1,8 @@
 
 
 
-
-
-- show_random_tip(begginner/interm) -> tips, like "got a question? ask here, here, here"
-  - 2 types of tips: those for beginners (less than 20 runs of LW) and the others
-    - like, "Drag and drop a file to view it"
-	-  allo turning tips off.
-	- Why so dull? Common, lets use some colors (when opening a file for the first time (no views, in other words))
-	- Have a suggestion? Let me know!
-
-
+1.5.5 (final)
+- status : can now show tips
 
 
 1.5.5b
