@@ -56,8 +56,8 @@ namespace LogWizard.context {
         }
 
         public static string log_to_settings(string name) {
-            if (app.inst.file_to_settings.ContainsKey(name))
-                return app.inst.file_to_settings[name];
+            if (app.inst.log_to_settings.ContainsKey(name))
+                return app.inst.log_to_settings[name];
             return "";
         }
     }

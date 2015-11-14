@@ -36,7 +36,9 @@ namespace LogWizard
 
         protected log_parser parser_ = null;
 
-
+        // 1.5.4g+ - IMPORTANT: this needs to UNIQUELY identify a reader -  since settings are kept relative to this!
+        //
+        //           also, it can't contain = in its name, because we use = in the settings file
         public virtual string name {
             get { return ""; }
         }

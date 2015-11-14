@@ -1,13 +1,6 @@
-            // test it out + all "Edit syntax"
 
 
 
-
----------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
- ***- this needs to exist for each type of log - even files (specify type: line-by-line, log line, xml, csv etc.)
- - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))
- ------------ note: i do have them now, in string_as_settings
- - after showing dialog, need to find out if settings change require restart!
 
 - bug:	I opened a file, A.txt, in LW. Then I copied that to A-copy.txt.  So I have A.txt and A-copy.txt. Then deleted A.txt. So, LW now clears the display for A.txt.
 		So far so good. Next, I renamed A-copy.txt to A.txt. This rename is a kind of file update. So, I expected LW to update the display, but it does not. Even Refresh doesn't work.
@@ -16,6 +9,16 @@
 	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
 	 -- see when i can resolve these names (as soon as aliases is loaded???)
+
+
+1.5.4g
+- edit settings works like a charm!
+done:
+---------- for non-file logs (like, event log, db, sockets?, outputdebugstring)
+ ***- this needs to exist for each type of log - even files (specify type: line-by-line, log line, xml, csv etc.)
+ - i need to have extra options for each (like, outputdebugstring -> filter by application name(s))
+ ------------ note: i do have them now, in string_as_settings
+ - after showing dialog, need to find out if settings change require restart!
 
 
 1.5.4f

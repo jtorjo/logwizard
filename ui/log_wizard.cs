@@ -502,27 +502,6 @@ namespace LogWizard
             sett.set("context_count", "" + contexts_.Count);
             for ( int i = 0; i < contexts_.Count; ++i) {
                 contexts_[i].save("context." + i);
-
-                /*
-                int view_count = contexts_[i].views.Count;
-                if ( view_count == 1)
-                    if (contexts_[i].views[0].filters.Count < 1)
-                        // in this case, the user has not set any filters at all
-                        view_count = 0;
-                sett.set("context." + i + ".view_count", "" + view_count);
-                for ( int v = 0; v < contexts_[i].views.Count; ++v) {
-                    ui_view lv = contexts_[i].views[v];
-                    sett.set("context." + i + ".view" + v + ".name", lv.name);
-                    sett.set("context." + i  + ".view" + v + ".filter_count", "" + lv.filters.Count);
-                    for ( int f = 0; f < lv.filters.Count; ++f) {
-                        string prefix = "context." + i + ".view" + v + ".filt" + f + ".";
-                        sett.set(prefix + "enabled", lv.filters[f].enabled ? "1" : "0");
-                        sett.set(prefix + "dimmed", lv.filters[f].dimmed ? "1" : "0");
-                        sett.set(prefix + "apply_to_existing_lines", lv.filters[f].apply_to_existing_lines ? "1" : "0");
-                        sett.set(prefix + "text", lv.filters[f].text);
-                    }
-                }
-                */
             }
         }
 
@@ -1381,13 +1360,11 @@ namespace LogWizard
             if (text_ == null)
                 return;
 
-            if (log_parser_ != null) {
-                string sett = factory.get_context_dependent_settings(text_, log_parser_.settings);
-                cur_context().default_settings = sett;
-            }
-            if ( !app.inst.file_to_settings.ContainsKey(text_.name))
-                app.inst.file_to_settings.Add(text_.name, "");
-            app.inst.file_to_settings[text_.name] = factory.get_log_dependent_settings(text_, log_parser_.settings);
+            if (log_parser_ != null) 
+                cur_context().default_settings = factory.get_context_dependent_settings(text_, log_parser_.settings);
+            if ( !app.inst.log_to_settings.ContainsKey(text_.name))
+                app.inst.log_to_settings.Add(text_.name, "");
+            app.inst.log_to_settings[text_.name] = factory.get_log_dependent_settings(text_, log_parser_.settings).ToString();
             save_contexts();
 
             default_ui_.save("ui.default");
@@ -1649,7 +1626,7 @@ namespace LogWizard
             contexts_.Add(new_ctx);
             var syntax = new find_log_syntax().try_find_log_syntax_file(name);
             if (syntax != find_log_syntax.UNKNOWN_SYNTAX)
-                new_ctx.default_settings = syntax;
+                new_ctx.default_settings.set("syntax",syntax);
 
             update_contexts_combos_in_all_forms();
         }
@@ -1844,23 +1821,23 @@ namespace LogWizard
                 history_select(name);
 
             // 1.1.25+ if I can't find the syntax from file-to-syntax, or by parsing the log, see if the context associated with this file has log-syntax
-            string context_settings = file_to_context(name).default_settings;
-            string file_default_syntax = "syntax=" + text_.try_to_find_log_syntax();
+            var context_settings = file_to_context(name).default_settings;
+            string file_default_syntax = text_.try_to_find_log_syntax();
             // if user specifically overrides settings for a log, use that
-            string log_settings = log_to.log_to_settings(name);
-            if (file_to_syntax != "")
-                log_settings = factory.merge_settings(log_settings, "syntax=" + file_to_syntax); // this overrides file settings
-            else if (log_settings == "")
-                if ( factory.get_single_setting(context_settings,"syntax") == "")
-                    log_settings = file_default_syntax;
+            var log_settings = new settings_as_string(  log_to.log_to_settings(name));
+            if (log_settings.get("syntax") == "" && file_to_syntax != "")
+                log_settings.set("syntax", file_to_syntax);
+            else if (log_settings.get("syntax") == "" && context_settings.get("syntax") == "")
+                log_settings.set("syntax", file_default_syntax);
 
-            string settings = factory.merge_settings(context_settings, log_settings);
+            //string settings = factory.merge_settings(context_settings, log_settings);
+            var settings = context_settings.merge(log_settings);
 
-            logSyntaxCtrl.Text = factory.get_single_setting(settings, "syntax");
+            logSyntaxCtrl.Text = settings.get("syntax");
             logSyntaxCtrl.ForeColor = logSyntaxCtrl.Text != find_log_syntax.UNKNOWN_SYNTAX ? Color.Black : Color.Red;
 
             // note: we recreate the log, so that cached filters know to rebuild
-            log_parser_ = new log_parser(text_, settings);
+            log_parser_ = new log_parser(text_, settings.ToString());
             on_new_log_parser();
 
             full_log_ctrl_.set_filter(new List<raw_filter_row>());
@@ -3595,38 +3572,6 @@ namespace LogWizard
         }
 
         private void testSyntax_Click(object sender, EventArgs e) {
-            string file = selected_file_name();
-
-            string guess = "";
-            try {
-                using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
-                    // read a few lines from the beginning
-                    byte[] readBuffer = new byte[find_log_syntax.READ_TO_GUESS_SYNTAX];
-                    int bytes = fs.Read(readBuffer, 0, find_log_syntax.READ_TO_GUESS_SYNTAX);
-                    var encoding = util.file_encoding(file);
-                    if (encoding == null)
-                        encoding = Encoding.Default;
-                    guess = encoding.GetString(readBuffer, 0, bytes);
-                }
-            } catch {
-            }
-
-            // 1.3.24+ - use the old syntax when we're modifying
-            var test = new test_syntax_form(guess, logSyntaxCtrl.Text);
-            if (test.ShowDialog() == DialogResult.OK) {
-                // use the syntax
-                cur_context().default_settings = test.found_syntax;
-                save();
-
-                // force complete refresh
-                text_.Dispose();
-                text_ = null;
-                remove_all_log_views();
-                load();
-                on_file_drop(selected_file_name());
-                // we want to refresh it only after it's been loaded, so that it visually shows that
-                util.postpone(() => full_log_ctrl_.force_refresh_visible_columns( all_log_views() ), 2000);
-            }
         }
 
 
@@ -3727,16 +3672,27 @@ namespace LogWizard
                 var new_settings = new settings_as_string(edit.settings);
                 bool will_restart = false;
                 if ( edit.needs_restart)
-                    if (MessageBox.Show("Changes will take effect only after restart.\r\n" +
-                                        "Would you like to restart LogWizard now?", "LogWizard", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("Changes will take effect only after restart.\r\nWould you like to restart LogWizard now?", "LogWizard", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         will_restart = true;
 
                 var old_syntax = new settings_as_string( log_parser_.settings).get("syntax");
                 var new_syntax = new_settings.get("syntax");
+                log_parser_.settings = edit.settings;
                 if ( new_settings.get("type") == "file")
                     if (old_syntax != new_syntax && !will_restart) {
                         // in this case, the user has changed the syntax - need to reload everything
+                        save();
+
+                        // force complete refresh
+                        text_.Dispose();
+                        text_ = null;
+                        remove_all_log_views();
+                        load();
+                        on_file_drop(selected_file_name());
+                        // we want to refresh it only after it's been loaded, so that it visually shows that
+                        util.postpone(() => full_log_ctrl_.force_refresh_visible_columns( all_log_views() ), 2000);
                     }
+                save();
 
                 if ( will_restart)
                     restart_app();

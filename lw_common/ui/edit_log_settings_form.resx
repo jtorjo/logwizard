@@ -120,4 +120,15 @@
   <metadata name="tip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <metadata name="tip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="checkRequiresRestart.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>83, 17</value>
+  </metadata>
+  <data name="label6.Text" xml:space="preserve">
+    <value>These are your usual logs, where each log entry is written on a single line.
+LogWizard may need help recognizing the information (syntax) correctly. 
+You can Edit the Syntax here using a WYSIWYG editor, or click on the Syntax link for more information</value>
+  </data>
 </root>

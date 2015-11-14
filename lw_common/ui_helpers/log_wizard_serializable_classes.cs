@@ -95,7 +95,7 @@ namespace lw_common {
     [Serializable]
     public class ui_context {
         public string name  = "";
-        public string default_settings = "";
+        public settings_as_string default_settings = new settings_as_string("");
 
         public List<ui_view> views = new List<ui_view>();
 
@@ -116,7 +116,7 @@ namespace lw_common {
 
         public bool has_not_empty_views {
             get {
-                if (default_settings != "" && default_settings != find_log_syntax.UNKNOWN_SYNTAX)
+                if (default_settings.get("syntax") != "" && default_settings.get("syntax") != find_log_syntax.UNKNOWN_SYNTAX)
                     // user just set the syntax - very likely he'll use this file in the future
                     return true;
 
@@ -139,17 +139,20 @@ namespace lw_common {
         private void load_save(bool load, string prefix) {
             app.load_save(load, ref name, prefix + ".name", "Default" );
 
+            string settings_str = default_settings.ToString();
             if (load) {
-                app.load_save(load, ref default_settings, prefix + ".default_settings");
-                if (default_settings == "") {
+                app.load_save(load, ref settings_str, prefix + ".default_settings");
+                default_settings = new settings_as_string(settings_str);
+
+                if (settings_str == "") {
                     // ... 1.4.8- kept the old name for persistenting
-                    app.load_save(load, ref default_settings, prefix + ".default_syntax");
-                    if (default_settings != "")
-                        default_settings = "syntax=" + default_settings;
+                    app.load_save(load, ref settings_str, prefix + ".default_syntax");
+                    if (settings_str != "")
+                        default_settings.set("syntax", settings_str);
                 }
             }
             else
-                app.load_save(load, ref default_settings, prefix + ".default_settings");
+                app.load_save(load, ref settings_str, prefix + ".default_settings");
 
             int view_count = views.Count;
             app.load_save(load, ref view_count, prefix + ".view_count", 0);

@@ -93,11 +93,15 @@ namespace lw_common {
             return other;
         }
 
-        // other overrides all we have
-        public void merge(settings_as_string other) {
+        // 'other' overrides all we have
+        public settings_as_string merge(settings_as_string other) {
+            settings_as_string merged = new settings_as_string(ToString());
+
             var other_names = other.names();
             foreach ( string name in other_names)
-                set(name, other.get(name));
+                merged.set(name, other.get(name));
+
+            return merged;
         }
     }
 }
