@@ -26,6 +26,8 @@ namespace lw_common.ui {
             "Want to know more about the features implemented in the latest versions? Check out 'What's up' >> About page.",
             "You can toggle the Status pane on/off - just use Alt-S. However, at the beginning, I recommend you leave it on :P",
             "You can add notes to lines, and share them with your colleagues. <a http://www.codeproject.com/Articles/1039389/LogWizard-Talk-About-your-Logs>Here's how</a>.",
+
+            "Creating filters is a bliss. Select some text, and right click! More details <a http://www.codeproject.com/Articles/1045528/LogWizard-Filter-your-Logs-Inside-out>here</a>",
         };
 
         private const int MAX_BEGINNER_TIPS = 20;
@@ -54,7 +56,7 @@ namespace lw_common.ui {
 
             var source = app.inst.run_count <= MAX_BEGINNER_TIPS ? tips_beginner_ : tips_;
             string tip = source[random_.Next(source.Length)];
-            status_.set_status("Tip: " + tip.Replace("\r\n", "\r\nTip: "), status_ctrl.status_type.msg, SHOW_TIP_SECS * 1000);
+            status_.set_status(" <b>Tip:</b> " + tip.Replace("\r\n", "\r\n <b>Tip:</b> "), status_ctrl.status_type.msg, SHOW_TIP_SECS * 1000);
         }
     }
 }

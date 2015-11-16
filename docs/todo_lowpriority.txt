@@ -89,3 +89,10 @@
   allow previewing a log file: that is, showing what each tab would look like; perhaps a set of files as well?
   this would allow me to look at several tn2 logs at the same time and show how many items each view has (they should all have the same context!)
   -- also, this should only work if the files have a file-to-context or forced-file-to-context set
+
+
+- keep backups of files
+  - of files up to X KB (or X.Y MB)
+  - for up to Z MB
+    example: keep backup of files up to 2.2MB, up to 100MB
+  - note: backups for other types of logs is different!

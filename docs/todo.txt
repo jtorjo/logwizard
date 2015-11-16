@@ -12,20 +12,13 @@ W2/nov 2015
 
 
 W3/nov 2015
-  - view the event log + article -- 
-  http://www.aspheute.com/english/20000811.asp
-  http://www.codeproject.com/Articles/14455/Eventlog-Viewer
-  http://www.codeproject.com/Articles/91/WindowsNT-Event-Log-Viewer
-		- debug viewer (OutputDebugString)
-		  https://technet.microsoft.com/en-us/library/bb896647.aspx
-		  https://github.com/djeedjay/DebugViewPP (Dbgviewreader.cpp, dblogreader.cpp)
-		  -------> to make this really useful, from process-id -> get the process name. Thus, you can make a filter based on process name, that will always be meaningful
-  -- implement toggle details 
-     - allow several details in there
-	 - allow specifying which columns to be in details, and which in list (they can overlap)
-	 - save column widths / positions in global_ui
 
+- richlabel -> rename as richlabel single line -> multiple lines - simulate scrolling
 
+- (if time available) find: have a "To Filter" button (good when doing regex search)
+  - two possibilities -> Apply to existing Lines, Apply to Full Log
+    + select Color/Match Color/default color?
+	-- make this rather generic, so that later i can add more attributes if needed (this is also used in right-click)
 
 
 - tip cp: allow only a class to access some functions
@@ -34,12 +27,7 @@ W3/nov 2015
   - have lock class derive from lock_base<> so that i can just say some_class.lock ??
   - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
   - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
-  - in my bio - update it with link to my above aritcle?
 
-- (if time available) find: have a "To Filter" button (good when doing regex search)
-  - two possibilities -> Apply to existing Lines, Apply to Full Log
-    + select Color/Match Color/default color?
-	-- make this rather generic, so that later i can add more attributes if needed (this is also used in right-click)
 
 
 
@@ -89,8 +77,16 @@ W4/nov 2015
 
 - bug: sync colors - when sync with all logs -> then when showing all lines -> they will shown with the colors from the other views
 
+- bug: C:\Users\meeee\AppData\Local\PokerStars.EU\PokerStars.log.0 : The process cannot access the file 'C:\Users\meeee\AppData\Local\PokerStars.EU\PokerStars.log.0' because it is being used by another process.
+  - basically if i try to open this log while PS is running, i will constantly get this, and the LW log will fill up needlessly
 
+- bug: after user makes a color filter -> clear selection, so that his new color filter takes place instantly
 
+- bug: if at the last last visible down + arrow down -> it does not show the edit control correctly
+
+- color: remember the last used colors
+  - allow giving names to colors? is that actually useful?
+  - allow easily selecting the colors - 0 - 9 should select them, allow using arrows?
 
 - option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?; probably - yes)
 

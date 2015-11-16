@@ -4,6 +4,11 @@
 
 I created **LogWizard** to help anyone that really needs to deal with logs, in order to _hunt down bugs and/or issues that happen somewhere else_ (read = at customer site).
 
+Read about **LogWizard** on [CodeProject](http://www.codeproject.com):
+* [General (Introduction)](http://www.codeproject.com/Articles/1023815/LogWizard-a-Log-Viewer-that-is-easy-and-fun-to-use)
+* [Easy creation of Filters/Views](http://www.codeproject.com/Articles/1045528/LogWizard-Filter-your-Logs-Inside-out)
+* [Create/Share Notes on Logs](http://www.codeproject.com/Articles/1039389/LogWizard-Talk-About-your-Logs)
+
 My team and I have created a rather large piece of software that is running on thousands of machines every day. Our customers, when they encounter an issue, send us their logs. The software is pretty big, we run 10+ threads, we log a lot of information, and parsing through it is pretty complex. Focusing on a certain issue (the customer's) has always been rather complicated. And yes, we tried other Log Viewers, but lets just say they were not up to the task.
 
 So, in the last year or so, whenever I had some spare time, I would work on this. What I wanted was more or less this:

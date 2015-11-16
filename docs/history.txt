@@ -1,4 +1,28 @@
 
+  - view the event log + article -- 
+  http://www.aspheute.com/english/20000811.asp
+  http://www.codeproject.com/Articles/14455/Eventlog-Viewer
+  http://www.codeproject.com/Articles/91/WindowsNT-Event-Log-Viewer
+		- debug viewer (OutputDebugString)
+		  https://technet.microsoft.com/en-us/library/bb896647.aspx
+		  https://github.com/djeedjay/DebugViewPP (Dbgviewreader.cpp, dblogreader.cpp)
+		  -------> to make this really useful, from process-id -> get the process name. Thus, you can make a filter based on process name, that will always be meaningful
+  -- implement toggle details 
+     - allow several details in there
+	 - allow specifying which columns to be in details, and which in list (they can overlap)
+	 - save column widths / positions in global_ui
+	   - message column is considered the biggest (one that resizes as multi-line)
+	   - however, i should be able to mark other ones as multiline as well? maybe later
+	   - if this is visible, msg_details will be hidden
+
+
+- update gasipromo
+
+- bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
+
+1.5.6a
+- updated Logwizard intro on github
+- show "Tip" in bold
 
 
 1.5.5 (final)
