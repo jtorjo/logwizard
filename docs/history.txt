@@ -20,6 +20,11 @@
 
 - bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
 
+
+1.5.6b
+- updated Logwizard intro on github again :)
+
+
 1.5.6a
 - updated Logwizard intro on github
 - show "Tip" in bold
