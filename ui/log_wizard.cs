@@ -1437,10 +1437,6 @@ namespace LogWizard
         }
 
         private void on_rewritten_log() {
-            // 1.4.7+ i have on_change evet
-            //foreach ( var lv in all_log_views_and_full_log())
-              //  lv.clear();
-            
             if (app.inst.bring_to_top_on_restart) {
                 if (app.inst.make_topmost_on_restart) {
                     bring_to_topmost(this);
@@ -1797,7 +1793,8 @@ namespace LogWizard
 
             // 1.1.25+ if I can't find the syntax from file-to-syntax, or by parsing the log, see if the context associated with this file has log-syntax
             var context_settings = file_to_context(name).default_settings;
-            string file_default_syntax = text_.try_to_find_log_syntax();
+            var file_text = text_ as file_text_reader;
+            string file_default_syntax =  file_text != null ? file_text.try_to_find_log_syntax() : "";
             // if user specifically overrides settings for a log, use that
             var log_settings = new settings_as_string(  log_to.log_to_settings(name));
             if (log_settings.get("syntax") == "" && file_to_syntax != "")

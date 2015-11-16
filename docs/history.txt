@@ -20,6 +20,13 @@
 
 - bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
 
+- event_log_reader.force_reload - needs reload
+
+- rich label -> tooltip -> show everything (in case it's multiple lines)
+
+1.5.6c
+- refactoring, to allow reading from event viewer
+
 
 1.5.6b
 - updated Logwizard intro on github again :)

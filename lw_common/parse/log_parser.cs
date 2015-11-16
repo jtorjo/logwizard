@@ -63,9 +63,10 @@ namespace lw_common
             Debug.Assert(reader != null);
             reader_ = reader;
             settings_ = settings;
-            reader_.set_parser(this);
+            reader_.on_set_parser(this);
 
             forward_to_parser_ = factory.create(reader, settings);
+            reader_.on_settings_changed();
 
             force_reload();
             new Thread(refresh_thread) {IsBackground = true}.Start();

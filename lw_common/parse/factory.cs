@@ -51,7 +51,7 @@ namespace lw_common.parse {
 
             if ( reader is inmem_text_reader)
                 // for testing syntax
-                return new text_file_line_by_line(reader, new settings_as_string( settings));
+                return new text_file_line_by_line(reader as inmem_text_reader, new settings_as_string( settings));
 
             Debug.Assert(false);
             return null;

@@ -25,16 +25,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using lw_common;
 
-namespace LogWizard
+namespace lw_common
 {
     public abstract class text_reader : IDisposable
     {
         public const string UNKNOWN_SYNTAX = find_log_syntax.UNKNOWN_SYNTAX;
         private bool disposed_ = false;
 
-        protected log_parser parser_ = null;
+        private log_parser parser_ = null;
+
+        private settings_as_string settings_ = new settings_as_string("");
 
         // 1.5.4g+ - IMPORTANT: this needs to UNIQUELY identify a reader -  since settings are kept relative to this!
         //
@@ -46,42 +47,18 @@ namespace LogWizard
 
 
 
-
-        internal void set_parser(log_parser parser) {
+        internal void on_set_parser(log_parser parser) {
             // call this only once!
             Debug.Assert(parser_ == null);
-            parser_ = parser;
+            parser_ = parser;                
         }
 
-        // reads text at position - and updates position
-        public abstract string read_next_text() ;
-
-        public virtual bool has_more_cached_text() {
-            return false;
+        // 1.5.6c+ - if you want to be notified when parser's settings are changed
+        //
+        // it's also called the first time the parser is initialized
+        internal virtual void on_settings_changed() {
+            settings_ = new settings_as_string( parser_.settings);
         }
-
-
-
-
-
-
-        // 1.0.14+ - this computes the full length of the reader - until we call it again
-        //           (since this can be costly CPU-wise)
-        //           after this call, we can rely on full_len being constant until this is called again
-        public abstract void compute_full_length();
-
-        // 1.0.14+ - returns the length computed in compute_full_length()
-        public abstract ulong full_len { get; }
-
-        // 1.0.76+ - if != maxvalue, we try to guess the length of the log to read (so we can optimize our internal memory consumption)
-        public virtual ulong try_guess_full_len {
-            get { return ulong.MaxValue;  }
-        }
-
-        // the position in the log_parser (in bytes)
-        // 1.0.72+ - made readonly
-        public abstract ulong pos { get; }
-
 
 
 
@@ -90,7 +67,7 @@ namespace LogWizard
         // 1.3.5+ - know when the log has been fully read at least once - useful to know whether to send "new_lines" events
         public abstract bool fully_read_once { get; }
 
-        // 1.0.57+ - if true, the file has been rewritten from scratch
+        // 1.0.57+ - if true, the log has been rewritten from scratch
         public virtual bool has_it_been_rewritten {
             get { return false; }
         }
@@ -100,9 +77,6 @@ namespace LogWizard
             return true;
         }
 
-        public virtual string try_to_find_log_syntax() {
-            return "$msg[0]";
-        }
 
         public virtual void force_reload() {            
         }
@@ -115,6 +89,16 @@ namespace LogWizard
         protected bool disposed {
             get { return disposed_; }
         }
+
+        protected log_parser parser {
+            get { return parser_; }
+        }
+
+        protected settings_as_string settings {
+            get { return settings_; }
+            set { settings_ = value; }
+        }
+
         public virtual void on_dispose() {
         }
 

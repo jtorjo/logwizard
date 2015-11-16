@@ -26,26 +26,9 @@ using System.Linq;
 using System.Text;
 
 namespace lw_common.parse.parsers.system {
-    class debug_print : log_parser_base {
-        public override void read_to_end() {
-        }
+    class debug_print : generic_entry_log_parser {
 
-        public override int line_count {
-            get { return 0; }
-        }
-
-        public override line line_at(int idx) {
-            return null;
-        }
-
-        public override void force_reload() {
-        }
-
-        public override bool up_to_date {
-            get { return false; }
-        }
-
-        public debug_print(settings_as_string sett) : base(sett) {
+        public debug_print(entry_text_reader_base reader, settings_as_string sett) : base(reader, sett) {
         }
     }
 }

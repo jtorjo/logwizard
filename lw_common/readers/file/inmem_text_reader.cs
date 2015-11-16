@@ -30,7 +30,7 @@ using LogWizard;
 namespace lw_common {
     // in-memory text - mainly for guessing the log syntax
     //
-    public class inmem_text_reader : text_reader {
+    public class inmem_text_reader : file_text_reader_base {
         private string lines_;
         private ulong len_;
 

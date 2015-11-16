@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LogWizard
+namespace lw_common
 {
     public class shared_memory_text_reader : text_reader
     {
@@ -43,22 +43,6 @@ namespace LogWizard
             name_ = name;
         }
 
-
-        public override string read_next_text() {
-            return "";
-        }
-
-        public override void compute_full_length() {
-        }
-
-        public override ulong full_len {
-            get { return 0; }
-        }
-
-        public override ulong pos { 
-            get { return 0; } 
-            
-        }
 
         public override bool fully_read_once {
             get { return false; }

@@ -85,7 +85,7 @@ namespace lw_common.parse.parsers {
         // FIXME not a good idea
         private const int CACHE_LAST_INCOMPLETE_LINE_MS = 50000;
 
-        private readonly text_reader reader_ = null;
+        private readonly file_text_reader_base reader_ = null;
 
         // this is probably far from truth (probably the avg line is much smaller), but it's good to have a good starting capacity, to minimizes resizes
         private const int CHARS_PER_AVG_LINE = 384;
@@ -105,7 +105,7 @@ namespace lw_common.parse.parsers {
         // 1.4.8+ - not used yet
         private bool if_line_does_not_match_assume_from_prev_line = false;
 
-        public text_file_line_by_line(text_reader reader, settings_as_string sett) : base(sett) {
+        public text_file_line_by_line(file_text_reader_base reader, settings_as_string sett) : base(sett) {
             string syntax_str = sett.get("syntax");
             if_line_does_not_match_assume_from_prev_line = sett.get("line.if_line", "0") == "1";
 

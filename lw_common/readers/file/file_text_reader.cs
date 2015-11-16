@@ -27,9 +27,8 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
-using lw_common;
 
-namespace LogWizard
+namespace lw_common
 {
     /*
     1.0.14+ now, the file_text_reader can handle logs that are being appended to, and that are re-written
@@ -41,7 +40,7 @@ namespace LogWizard
     - very important assumption: we always assume that when the file is "encoding-complete" - in other words,
       we never end up in the scenario where a character (that can occupy several bytes) is not fully written into the file
     */
-    public class file_text_reader : text_reader
+    public class file_text_reader : file_text_reader_base
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -242,7 +241,7 @@ namespace LogWizard
                             lock (this) {
                                 read_byte_count_ += (ulong) read_bytes;
                                 last_part_.Append(now);
-                                genenerate_new_lines_event = fully_read_once_ && parser_ != null;
+                                genenerate_new_lines_event = fully_read_once_ && parser != null;
                             }
                         }
                     } else if (len == offset) {
@@ -263,14 +262,14 @@ namespace LogWizard
                 }
 
                 if (genenerate_new_lines_event)
-                    parser_.on_log_has_new_lines(file_rewritten);
+                    parser.on_log_has_new_lines(file_rewritten);
             } catch (FileNotFoundException) {
                 // file may have been erased
                 if (read_byte_count_ > 0) {
                     on_rewritten_file();
                     lock(this)
                         fully_read_once_ = true;
-                    parser_.on_log_has_new_lines(true);
+                    parser.on_log_has_new_lines(true);
                 }
             } catch (Exception e) {
                 logger.Error("[file] can't read file - " + file_ + " : " + e.Message);
