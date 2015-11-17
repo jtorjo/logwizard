@@ -26,6 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms.VisualStyles;
 using lw_common.parse.parsers;
+using lw_common.parse.parsers.system;
 using LogWizard;
 
 namespace lw_common.parse {
@@ -52,6 +53,9 @@ namespace lw_common.parse {
             if ( reader is inmem_text_reader)
                 // for testing syntax
                 return new text_file_line_by_line(reader as inmem_text_reader, new settings_as_string( settings));
+
+            if ( reader is event_log_reader)
+                return new event_viewer(reader as event_log_reader, new settings_as_string( settings));
 
             Debug.Assert(false);
             return null;

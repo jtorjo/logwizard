@@ -223,6 +223,7 @@
     <Compile Include="util\clipboard_util.cs" />
     <Compile Include="util\double_dictionary.cs" />
     <Compile Include="util\easy_mutex.cs" />
+    <Compile Include="util\error_list_keeper.cs" />
     <Compile Include="util\export_text.cs" />
     <Compile Include="util\list_extensions.cs" />
     <Compile Include="util\memory_optimized_list.cs" />

@@ -52,7 +52,7 @@ namespace LogWizard
 
         private class history {
             public enum entry_type {
-                file = 0, shmem = 1
+                file = 0, shmem = 1, event_log = 2
             }
 
             // 0->file, 1->shmem
@@ -82,6 +82,8 @@ namespace LogWizard
                             return ui;
 
                         case entry_type.shmem: return "Shared Memory: " + name;
+
+                        case entry_type.event_log: return "Event Log: " + name;
                         default: Debug.Assert(false); break;
                     }
 
@@ -1610,7 +1612,9 @@ namespace LogWizard
 
             create_context_for_file(name);
 
-            text_ = new file_text_reader(name);
+            // FIXME
+            text_ = new event_log_reader();
+            //text_ = new file_text_reader(name);
             on_new_log();
 
             ui_context file_ctx = file_to_context(name);
@@ -1847,13 +1851,15 @@ namespace LogWizard
             if (text_ is debug_text_reader)
                 return;
             history new_ = new history();
+            new_.name = text_.name;
             if (text_ is file_text_reader) {
-                new_.name = ((file_text_reader) text_).name;
                 new_.type = history.entry_type.file;
             } else if (text_ is shared_memory_text_reader) {
-                new_.name = ((shared_memory_text_reader) text_).name;
                 new_.type = history.entry_type.shmem;
-            } else
+            } else if (text_ is event_log_reader) {
+                new_.type = history.entry_type.event_log;
+            }
+            else 
                 Debug.Assert(false);
 
             int history_idx = -1;

@@ -37,6 +37,8 @@ namespace lw_common
 
         private settings_as_string settings_ = new settings_as_string("");
 
+        protected error_list_keeper errors_ = new error_list_keeper();
+
         // 1.5.4g+ - IMPORTANT: this needs to UNIQUELY identify a reader -  since settings are kept relative to this!
         //
         //           also, it can't contain = in its name, because we use = in the settings file
@@ -44,7 +46,10 @@ namespace lw_common
             get { return ""; }
         }
 
-
+        // 1.5.6+ - returns encountered errors, if any (to be able to show them visually)
+        public List<string> errors {
+            get { return errors_.errors; }
+        } 
 
 
         internal void on_set_parser(log_parser parser) {

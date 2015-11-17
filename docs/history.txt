@@ -1,3 +1,5 @@
+- update gasipromo
+
 
   - view the event log + article -- 
   http://www.aspheute.com/english/20000811.asp
@@ -16,13 +18,27 @@
 	   - if this is visible, msg_details will be hidden
 
 
-- update gasipromo
+- event log - subscribe to next events
 
 - bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
 
 - event_log_reader.force_reload - needs reload
 
 - rich label -> tooltip -> show everything (in case it's multiple lines)
+
+- event log - need to show something - while loading - at least progress?
+
+- event log reader/debug print -> need to have the right defaults (column names, etc)
+
+- event log -- https://msdn.microsoft.com/en-us/library/74e2ybbs%28v=vs.110%29.aspx - allow as many as the user wants...
+               http://stackoverflow.com/questions/8567368/eventlogquery-time-format-expected/8575390#8575390
+			   http://michal.is/blog/query-the-event-log-with-c-net/
+			   https://msdn.microsoft.com/en-us/library/bb671200%28v=vs.90%29.aspx#Y0
+
+
+1.5.6d
+- event log roughly works
+
 
 1.5.6c
 - refactoring, to allow reading from event viewer
