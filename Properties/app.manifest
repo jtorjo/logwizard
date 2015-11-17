@@ -21,7 +21,6 @@
         <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
         <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
         
-        nov 05, 2013: used to be "asInvoker"
         -->
         <!-- <requestedExecutionLevel level="requireAdministrator" uiAccess="false" /> -->
         <requestedExecutionLevel  level="asInvoker" uiAccess="false" />

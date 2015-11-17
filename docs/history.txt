@@ -16,6 +16,7 @@
 	   - message column is considered the biggest (one that resizes as multi-line)
 	   - however, i should be able to mark other ones as multiline as well? maybe later
 	   - if this is visible, msg_details will be hidden
+	   -TOTHINK how do i type-search when the msg contains multiple lines
 
 
 - event log - subscribe to next events
@@ -34,6 +35,10 @@
                http://stackoverflow.com/questions/8567368/eventlogquery-time-format-expected/8575390#8575390
 			   http://michal.is/blog/query-the-event-log-with-c-net/
 			   https://msdn.microsoft.com/en-us/library/bb671200%28v=vs.90%29.aspx#Y0
+
+
+1.5.6e
+- debug string logger works!!!
 
 
 1.5.6d

@@ -70,7 +70,8 @@
     <Compile Include="parse\parsers\file\text_file_line_by_line.cs" />
     <Compile Include="parse\log_reader.cs" />
     <Compile Include="parse\parsers\log_parser_base.cs" />
-    <Compile Include="readers\debug_text_reader.cs" />
+    <Compile Include="readers\entry\capture_all_debug_events.cs" />
+    <Compile Include="readers\entry\debug_text_reader.cs" />
     <Compile Include="readers\entry\entry_text_reader_base.cs" />
     <Compile Include="readers\entry\event_log_reader.cs" />
     <Compile Include="readers\file\file_text_reader.cs" />

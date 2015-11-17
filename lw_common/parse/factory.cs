@@ -56,6 +56,8 @@ namespace lw_common.parse {
 
             if ( reader is event_log_reader)
                 return new event_viewer(reader as event_log_reader, new settings_as_string( settings));
+            if ( reader is debug_text_reader)
+                return new debug_print(reader as debug_text_reader, new settings_as_string( settings));
 
             Debug.Assert(false);
             return null;

@@ -52,7 +52,7 @@ namespace LogWizard
 
         private class history {
             public enum entry_type {
-                file = 0, shmem = 1, event_log = 2
+                file = 0, shmem = 1, event_log = 2, debug = 3
             }
 
             // 0->file, 1->shmem
@@ -84,6 +84,7 @@ namespace LogWizard
                         case entry_type.shmem: return "Shared Memory: " + name;
 
                         case entry_type.event_log: return "Event Log: " + name;
+                        case entry_type.debug: return "Debug: " + name;
                         default: Debug.Assert(false); break;
                     }
 
@@ -1586,6 +1587,8 @@ namespace LogWizard
                 (since he would want new filters). thus, just create a new context where he can do anything
         */
         private void create_context_for_file(string name) {
+            if (name == "")
+                return;
             ui_context file_ctx = file_to_context(name);
             if (file_ctx.name != "Default")
                 // we already have a context
@@ -1613,7 +1616,7 @@ namespace LogWizard
             create_context_for_file(name);
 
             // FIXME
-            text_ = new event_log_reader();
+            text_ = new debug_text_reader();
             //text_ = new file_text_reader(name);
             on_new_log();
 
@@ -1848,17 +1851,16 @@ namespace LogWizard
         }
 
         private void add_reader_to_history() {
-            if (text_ is debug_text_reader)
-                return;
             history new_ = new history();
             new_.name = text_.name;
-            if (text_ is file_text_reader) {
+            if (text_ is file_text_reader) 
                 new_.type = history.entry_type.file;
-            } else if (text_ is shared_memory_text_reader) {
+            else if (text_ is shared_memory_text_reader) 
                 new_.type = history.entry_type.shmem;
-            } else if (text_ is event_log_reader) {
+            else if (text_ is event_log_reader) 
                 new_.type = history.entry_type.event_log;
-            }
+            else if (text_ is debug_text_reader)
+                new_.type = history.entry_type.debug;
             else 
                 Debug.Assert(false);
 

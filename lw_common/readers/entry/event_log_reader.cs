@@ -25,13 +25,13 @@ namespace lw_common {
                     // for testing - very few entries
                     return new [] { "Windows PowerShell" };
 
-                return settings.get("log_type", "Application|System").Split('|');
+                return settings.get("event.log_type", "Application|System").Split('|');
             }
         }
 
         public string machine_name {
             get {
-                return settings.get("machine_name", ".");                 
+                return settings.get("event.machine_name", ".");                 
             }
         }
 
@@ -48,6 +48,11 @@ namespace lw_common {
             logs_created_ = false;
             up_to_date_ = false;
             errors_.clear();
+        }
+
+        internal override void on_settings_changed() {
+            base.on_settings_changed();
+            force_reload();
         }
 
         private void create_logs() {
