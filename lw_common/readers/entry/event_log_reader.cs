@@ -8,6 +8,30 @@ using lw_common.parse;
 using MultiLanguage;
 
 namespace lw_common {
+    /* inspiration
+
+- event log -- https://msdn.microsoft.com/en-us/library/74e2ybbs%28v=vs.110%29.aspx - allow as many as the user wants...
+
+            https://msdn.microsoft.com/en-us/library/bb671200(v=vs.90).aspx#Y0
+
+
+            http://michal.is/blog/query-the-event-log-with-c-net/
+            http://stackoverflow.com/questions/8567368/eventlogquery-time-format-expected/8575390#8575390
+            http://stackoverflow.com/questions/7966993/eventlogquery-reader-for-remote-computer
+            http://stackoverflow.com/questions/12380189/eventlogquery-how-to-form-query-string
+
+            http://codewala.net/2013/10/04/reading-event-logs-efficiently-using-c/
+            http://codewala.net/2013/08/16/working-with-eventviewer-using-c/
+            https://msdn.microsoft.com/en-us/library/74e2ybbs(v=vs.110).aspx
+
+
+
+
+            http://www.aspheute.com/english/20000811.asp
+            http://www.codeproject.com/Articles/14455/Eventlog-Viewer
+            http://www.codeproject.com/Articles/91/WindowsNT-Event-Log-Viewer
+
+    */
     public class event_log_reader : entry_text_reader_base {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

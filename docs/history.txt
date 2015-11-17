@@ -1,27 +1,13 @@
 - update gasipromo
 
 
-  - view the event log + article -- 
-  http://www.aspheute.com/english/20000811.asp
-  http://www.codeproject.com/Articles/14455/Eventlog-Viewer
-  http://www.codeproject.com/Articles/91/WindowsNT-Event-Log-Viewer
-		- debug viewer (OutputDebugString)
-		  https://technet.microsoft.com/en-us/library/bb896647.aspx
-		  https://github.com/djeedjay/DebugViewPP (Dbgviewreader.cpp, dblogreader.cpp)
-		  -------> to make this really useful, from process-id -> get the process name. Thus, you can make a filter based on process name, that will always be meaningful
-  -- implement toggle details 
-     - allow several details in there
-	 - allow specifying which columns to be in details, and which in list (they can overlap)
-	 - save column widths / positions in global_ui
-	   - message column is considered the biggest (one that resizes as multi-line)
-	   - however, i should be able to mark other ones as multiline as well? maybe later
-	   - if this is visible, msg_details will be hidden
-	   -TOTHINK how do i type-search when the msg contains multiple lines
+- event log -- https://msdn.microsoft.com/en-us/library/74e2ybbs%28v=vs.110%29.aspx - allow as many as the user wants...
+  - allow selecting several logs
 
+- event log - allow subscribing to more events
 
 - event log - subscribe to next events
 
-- bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
 
 - event_log_reader.force_reload - needs reload
 
@@ -31,10 +17,22 @@
 
 - event log reader/debug print -> need to have the right defaults (column names, etc)
 
-- event log -- https://msdn.microsoft.com/en-us/library/74e2ybbs%28v=vs.110%29.aspx - allow as many as the user wants...
-               http://stackoverflow.com/questions/8567368/eventlogquery-time-format-expected/8575390#8575390
-			   http://michal.is/blog/query-the-event-log-with-c-net/
-			   https://msdn.microsoft.com/en-us/library/bb671200%28v=vs.90%29.aspx#Y0
+
+- bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
+
+
+
+  -- implement toggle details 
+     - allow several details in there
+	 - allow specifying which columns to be in details, and which in list (they can overlap)
+	 - save column widths / positions in global_ui
+	   - message column is considered the biggest (one that resizes as multi-line)
+	   - however, i should be able to mark other ones as multiline as well? maybe later
+	   - if this is visible, msg_details will be hidden
+	   -TOTHINK how do i type-search when the msg contains multiple lines
+
+1.5.6f
+- updated history.txt
 
 
 1.5.6e
