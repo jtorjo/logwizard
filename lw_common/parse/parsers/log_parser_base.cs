@@ -65,6 +65,10 @@ namespace lw_common.parse.parsers {
             aliases_ = new aliases(sett_.get("aliases"));
         }
 
+        internal settings_as_string settings {
+            get { return sett_; }
+        }
+
         public void Dispose() {
             disposed_ = true;
         }

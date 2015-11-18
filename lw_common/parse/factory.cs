@@ -45,19 +45,30 @@ namespace lw_common.parse {
             return new settings_as_string( settings);
         }
 
-        static internal log_parser_base create(text_reader reader, string settings) {
-            
-            if (reader is file_text_reader)
-                return create_file_parser(reader as file_text_reader, settings);
+        static internal log_parser_base create(text_reader reader, string settings_str) {
+            var sett = new settings_as_string(settings_str);
 
-            if ( reader is inmem_text_reader)
+            if (reader is file_text_reader) {
+                sett.set("type", "file");
+                return create_file_parser(reader as file_text_reader, sett);
+            }
+
+            if (reader is inmem_text_reader) {
                 // for testing syntax
-                return new text_file_line_by_line(reader as inmem_text_reader, new settings_as_string( settings));
+                sett.set("type", "file");
+                return new text_file_line_by_line(reader as inmem_text_reader, sett);
+            }
 
-            if ( reader is event_log_reader)
-                return new event_viewer(reader as event_log_reader, new settings_as_string( settings));
-            if ( reader is debug_text_reader)
-                return new debug_print(reader as debug_text_reader, new settings_as_string( settings));
+            if (reader is event_log_reader) {
+                sett.set("type", "event_log");
+                if ( sett.get("event.log_type") == "")
+                    sett.set("event.log_type", "Application|System");
+                return new event_viewer(reader as event_log_reader, sett);
+            }
+            if (reader is debug_text_reader) {
+                sett.set("type", "debug_print");
+                return new debug_print(reader as debug_text_reader, sett);
+            }
 
             Debug.Assert(false);
             return null;
@@ -96,9 +107,8 @@ namespace lw_common.parse {
             
         }
 
-        private static log_parser_base create_file_parser(file_text_reader reader, string sett) {
+        private static log_parser_base create_file_parser(file_text_reader reader, settings_as_string all) {
             string file_name = reader.name.ToLower();
-            var all = new settings_as_string(sett);
 
             var file_type = all.get("file_type");
             switch (file_type) {

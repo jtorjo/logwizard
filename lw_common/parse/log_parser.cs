@@ -57,12 +57,9 @@ namespace lw_common
 
         private bool file_rewritten_ = false;
 
-        private string settings_ = "";
-
         public log_parser(text_reader reader, string settings) {
             Debug.Assert(reader != null);
             reader_ = reader;
-            settings_ = settings;
             reader_.on_set_parser(this);
 
             forward_to_parser_ = factory.create(reader, settings);
@@ -81,10 +78,9 @@ namespace lw_common
         }
 
         public string settings {
-            get { return settings_; }
+            get { return forward_to_parser_.settings.ToString(); }
             set {
-                settings_ = value;
-                forward_to_parser_.on_settings_changed(settings_);
+                forward_to_parser_.on_settings_changed(value);
             }
         }
 

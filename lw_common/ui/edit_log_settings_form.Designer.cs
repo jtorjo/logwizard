@@ -33,20 +33,25 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.fileTypeTab = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
+            this.syntaxLink = new System.Windows.Forms.LinkLabel();
             this.syntax = new System.Windows.Forms.Label();
             this.editSyntax = new System.Windows.Forms.Button();
             this.ifLine = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label18 = new System.Windows.Forms.Label();
             this.partSeparator = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.label19 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.xmlDelimeter = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.label20 = new System.Windows.Forms.Label();
             this.csvHasHeader = new System.Windows.Forms.CheckBox();
             this.csvSeparator = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -71,11 +76,22 @@
             this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.needsRestart = new System.Windows.Forms.Label();
             this.checkRequiresRestart = new System.Windows.Forms.Timer(this.components);
-            this.syntaxLink = new System.Windows.Forms.LinkLabel();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
+            this.selectedEventLogs = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.remoteMachineName = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.testRemote = new System.Windows.Forms.Button();
+            this.remoteUserName = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.remotePassword = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.remoteDomain = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.eventLogs = new System.Windows.Forms.CheckedListBox();
+            this.status = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.typeTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -89,6 +105,7 @@
             this.tabPage7.SuspendLayout();
             this.tabPage8.SuspendLayout();
             this.tabPage9.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -99,7 +116,7 @@
             this.panel1.Controls.Add(this.typeTab);
             this.panel1.Location = new System.Drawing.Point(-3, 34);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(598, 386);
+            this.panel1.Size = new System.Drawing.Size(628, 396);
             this.panel1.TabIndex = 0;
             // 
             // typeTab
@@ -115,7 +132,7 @@
             this.typeTab.Location = new System.Drawing.Point(1, 3);
             this.typeTab.Name = "typeTab";
             this.typeTab.SelectedIndex = 0;
-            this.typeTab.Size = new System.Drawing.Size(603, 387);
+            this.typeTab.Size = new System.Drawing.Size(633, 397);
             this.typeTab.TabIndex = 0;
             // 
             // tabPage1
@@ -164,7 +181,7 @@
             this.panel2.Controls.Add(this.fileTypeTab);
             this.panel2.Location = new System.Drawing.Point(2, 41);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(595, 309);
+            this.panel2.Size = new System.Drawing.Size(595, 306);
             this.panel2.TabIndex = 0;
             // 
             // fileTypeTab
@@ -179,7 +196,7 @@
             this.fileTypeTab.Location = new System.Drawing.Point(-5, 0);
             this.fileTypeTab.Name = "fileTypeTab";
             this.fileTypeTab.SelectedIndex = 0;
-            this.fileTypeTab.Size = new System.Drawing.Size(617, 306);
+            this.fileTypeTab.Size = new System.Drawing.Size(617, 303);
             this.fileTypeTab.TabIndex = 0;
             // 
             // tabPage3
@@ -193,10 +210,32 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(609, 277);
+            this.tabPage3.Size = new System.Drawing.Size(609, 274);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(0, 27);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(542, 45);
+            this.label6.TabIndex = 7;
+            this.label6.Text = resources.GetString("label6.Text");
+            // 
+            // syntaxLink
+            // 
+            this.syntaxLink.AutoSize = true;
+            this.syntaxLink.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.syntaxLink.Location = new System.Drawing.Point(0, 81);
+            this.syntaxLink.Name = "syntaxLink";
+            this.syntaxLink.Size = new System.Drawing.Size(50, 17);
+            this.syntaxLink.TabIndex = 6;
+            this.syntaxLink.TabStop = true;
+            this.syntaxLink.Text = "Syntax";
+            this.syntaxLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.syntaxLink_LinkClicked);
             // 
             // syntax
             // 
@@ -245,13 +284,25 @@
             this.tabPage4.Controls.Add(this.partSeparator);
             this.tabPage4.Controls.Add(this.label8);
             this.tabPage4.Controls.Add(this.label7);
-            this.tabPage4.Location = new System.Drawing.Point(4, 25);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(609, 277);
+            this.tabPage4.Size = new System.Drawing.Size(609, 280);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(0, 31);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(469, 45);
+            this.label18.TabIndex = 8;
+            this.label18.Text = "On these logs, a log entry spans multiple lines. Each line contains a part of the" +
+    " log entry.\r\nEach line contains a \"NAME separator VALUE\" part. \r\nAn empty line s" +
+    "ignals the end of the log entry.";
             // 
             // partSeparator
             // 
@@ -285,13 +336,23 @@
             this.tabPage5.Controls.Add(this.xmlDelimeter);
             this.tabPage5.Controls.Add(this.label12);
             this.tabPage5.Controls.Add(this.label9);
-            this.tabPage5.Location = new System.Drawing.Point(4, 25);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(609, 277);
+            this.tabPage5.Size = new System.Drawing.Size(609, 280);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(0, 31);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(162, 30);
+            this.label19.TabIndex = 9;
+            this.label19.Text = "This is your usual XML log.\r\nEach XML entry is a log entry.";
             // 
             // label13
             // 
@@ -336,13 +397,25 @@
             this.tabPage6.Controls.Add(this.csvSeparator);
             this.tabPage6.Controls.Add(this.label11);
             this.tabPage6.Controls.Add(this.label10);
-            this.tabPage6.Location = new System.Drawing.Point(4, 25);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(609, 277);
+            this.tabPage6.Size = new System.Drawing.Size(609, 280);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "tabPage6";
             this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(0, 32);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(532, 45);
+            this.label20.TabIndex = 10;
+            this.label20.Text = "This is a Comma-Separated-Values log.\r\nEach line contains a long entry, each part" +
+    " is separated by the separator character (usually a comma).\r\nBy default, the fir" +
+    "st line contains the Column Names.";
             // 
             // csvHasHeader
             // 
@@ -381,11 +454,15 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label27);
+            this.tabPage2.Controls.Add(this.eventLogs);
+            this.tabPage2.Controls.Add(this.groupBox1);
+            this.tabPage2.Controls.Add(this.selectedEventLogs);
             this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(594, 361);
+            this.tabPage2.Size = new System.Drawing.Size(625, 368);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -393,19 +470,19 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(7, 7);
+            this.label14.Location = new System.Drawing.Point(10, 14);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(127, 17);
+            this.label14.Size = new System.Drawing.Size(89, 17);
             this.label14.TabIndex = 0;
-            this.label14.Text = "Event Log Settings";
+            this.label14.Text = "Event Log(s)";
             // 
             // tabPage7
             // 
             this.tabPage7.Controls.Add(this.label15);
-            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Location = new System.Drawing.Point(4, 25);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(594, 361);
+            this.tabPage7.Size = new System.Drawing.Size(595, 358);
             this.tabPage7.TabIndex = 2;
             this.tabPage7.Text = "tabPage7";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -415,9 +492,9 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(16, 15);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(83, 17);
+            this.label15.Size = new System.Drawing.Size(219, 17);
             this.label15.TabIndex = 0;
-            this.label15.Text = "Debug Print";
+            this.label15.Text = "Debug Print (OutputDebugString)";
             // 
             // tabPage8
             // 
@@ -425,7 +502,7 @@
             this.tabPage8.Location = new System.Drawing.Point(4, 22);
             this.tabPage8.Name = "tabPage8";
             this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(594, 361);
+            this.tabPage8.Size = new System.Drawing.Size(595, 361);
             this.tabPage8.TabIndex = 3;
             this.tabPage8.Text = "tabPage8";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -445,7 +522,7 @@
             this.tabPage9.Location = new System.Drawing.Point(4, 22);
             this.tabPage9.Name = "tabPage9";
             this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage9.Size = new System.Drawing.Size(594, 361);
+            this.tabPage9.Size = new System.Drawing.Size(595, 361);
             this.tabPage9.TabIndex = 4;
             this.tabPage9.Text = "tabPage9";
             this.tabPage9.UseVisualStyleBackColor = true;
@@ -464,7 +541,7 @@
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox1.AutoSize = true;
             this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(7, 427);
+            this.checkBox1.Location = new System.Drawing.Point(7, 437);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(94, 21);
             this.checkBox1.TabIndex = 1;
@@ -475,7 +552,7 @@
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(107, 425);
+            this.textBox1.Location = new System.Drawing.Point(107, 435);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 23);
             this.textBox1.TabIndex = 2;
@@ -485,7 +562,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
             this.label1.Enabled = false;
-            this.label1.Location = new System.Drawing.Point(213, 428);
+            this.label1.Location = new System.Drawing.Point(213, 438);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(63, 17);
             this.label1.TabIndex = 3;
@@ -520,7 +597,7 @@
             // ok
             // 
             this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ok.Location = new System.Drawing.Point(534, 423);
+            this.ok.Location = new System.Drawing.Point(564, 433);
             this.ok.Name = "ok";
             this.ok.Size = new System.Drawing.Size(58, 26);
             this.ok.TabIndex = 6;
@@ -555,7 +632,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.friendlyName.Location = new System.Drawing.Point(412, 5);
             this.friendlyName.Name = "friendlyName";
-            this.friendlyName.Size = new System.Drawing.Size(176, 23);
+            this.friendlyName.Size = new System.Drawing.Size(206, 23);
             this.friendlyName.TabIndex = 9;
             // 
             // needsRestart
@@ -564,7 +641,7 @@
             this.needsRestart.AutoSize = true;
             this.needsRestart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.needsRestart.ForeColor = System.Drawing.Color.Red;
-            this.needsRestart.Location = new System.Drawing.Point(401, 428);
+            this.needsRestart.Location = new System.Drawing.Point(431, 438);
             this.needsRestart.Name = "needsRestart";
             this.needsRestart.Size = new System.Drawing.Size(131, 17);
             this.needsRestart.TabIndex = 10;
@@ -577,61 +654,166 @@
             this.checkRequiresRestart.Interval = 250;
             this.checkRequiresRestart.Tick += new System.EventHandler(this.checkRequiresRestart_Tick);
             // 
-            // syntaxLink
+            // selectedEventLogs
             // 
-            this.syntaxLink.AutoSize = true;
-            this.syntaxLink.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.syntaxLink.Location = new System.Drawing.Point(0, 81);
-            this.syntaxLink.Name = "syntaxLink";
-            this.syntaxLink.Size = new System.Drawing.Size(50, 17);
-            this.syntaxLink.TabIndex = 6;
-            this.syntaxLink.TabStop = true;
-            this.syntaxLink.Text = "Syntax";
-            this.syntaxLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.syntaxLink_LinkClicked);
+            this.selectedEventLogs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.selectedEventLogs.Location = new System.Drawing.Point(121, 14);
+            this.selectedEventLogs.Multiline = true;
+            this.selectedEventLogs.Name = "selectedEventLogs";
+            this.selectedEventLogs.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.selectedEventLogs.Size = new System.Drawing.Size(491, 53);
+            this.selectedEventLogs.TabIndex = 1;
             // 
-            // label6
+            // groupBox1
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(0, 27);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(542, 45);
-            this.label6.TabIndex = 7;
-            this.label6.Text = resources.GetString("label6.Text");
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.status);
+            this.groupBox1.Controls.Add(this.remoteDomain);
+            this.groupBox1.Controls.Add(this.label26);
+            this.groupBox1.Controls.Add(this.label25);
+            this.groupBox1.Controls.Add(this.remotePassword);
+            this.groupBox1.Controls.Add(this.label24);
+            this.groupBox1.Controls.Add(this.remoteUserName);
+            this.groupBox1.Controls.Add(this.label23);
+            this.groupBox1.Controls.Add(this.testRemote);
+            this.groupBox1.Controls.Add(this.label22);
+            this.groupBox1.Controls.Add(this.remoteMachineName);
+            this.groupBox1.Controls.Add(this.label21);
+            this.groupBox1.Location = new System.Drawing.Point(13, 198);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(423, 152);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Remote Computer";
             // 
-            // label18
+            // label21
             // 
-            this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(0, 31);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(469, 45);
-            this.label18.TabIndex = 8;
-            this.label18.Text = "On these logs, a log entry spans multiple lines. Each line contains a part of the" +
-    " log entry.\r\nEach line contains a \"NAME separator VALUE\" part. \r\nAn empty line s" +
-    "ignals the end of the log entry.";
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(15, 31);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(102, 17);
+            this.label21.TabIndex = 0;
+            this.label21.Text = "Machine Name";
             // 
-            // label19
+            // remoteMachineName
             // 
-            this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(0, 31);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(162, 30);
-            this.label19.TabIndex = 9;
-            this.label19.Text = "This is your usual XML log.\r\nEach XML entry is a log entry.";
+            this.remoteMachineName.Location = new System.Drawing.Point(120, 28);
+            this.remoteMachineName.Name = "remoteMachineName";
+            this.remoteMachineName.Size = new System.Drawing.Size(100, 23);
+            this.remoteMachineName.TabIndex = 1;
+            this.remoteMachineName.TextChanged += new System.EventHandler(this.remoteMachineName_TextChanged);
             // 
-            // label20
+            // label22
             // 
-            this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(0, 32);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(532, 45);
-            this.label20.TabIndex = 10;
-            this.label20.Text = "This is a Comma-Separated-Values log.\r\nEach line contains a long entry, each part" +
-    " is separated by the separator character (usually a comma).\r\nBy default, the fir" +
-    "st line contains the Column Names.";
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(117, 54);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(183, 13);
+            this.label22.TabIndex = 2;
+            this.label22.Text = "Leave Empty if it\'s the Local Machine";
+            // 
+            // testRemote
+            // 
+            this.testRemote.Location = new System.Drawing.Point(353, 118);
+            this.testRemote.Name = "testRemote";
+            this.testRemote.Size = new System.Drawing.Size(58, 26);
+            this.testRemote.TabIndex = 7;
+            this.testRemote.Text = "Test";
+            this.testRemote.UseVisualStyleBackColor = true;
+            // 
+            // remoteUserName
+            // 
+            this.remoteUserName.Location = new System.Drawing.Point(120, 72);
+            this.remoteUserName.Name = "remoteUserName";
+            this.remoteUserName.Size = new System.Drawing.Size(100, 23);
+            this.remoteUserName.TabIndex = 9;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(15, 75);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(79, 17);
+            this.label23.TabIndex = 8;
+            this.label23.Text = "User Name";
+            // 
+            // remotePassword
+            // 
+            this.remotePassword.Location = new System.Drawing.Point(306, 72);
+            this.remotePassword.Name = "remotePassword";
+            this.remotePassword.PasswordChar = '*';
+            this.remotePassword.Size = new System.Drawing.Size(100, 23);
+            this.remotePassword.TabIndex = 11;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(231, 75);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(69, 17);
+            this.label24.TabIndex = 10;
+            this.label24.Text = "Password";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label25.Location = new System.Drawing.Point(307, 98);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(96, 13);
+            this.label25.TabIndex = 12;
+            this.label25.Text = "NOT saved to disk";
+            // 
+            // remoteDomain
+            // 
+            this.remoteDomain.Location = new System.Drawing.Point(306, 31);
+            this.remoteDomain.Name = "remoteDomain";
+            this.remoteDomain.Size = new System.Drawing.Size(100, 23);
+            this.remoteDomain.TabIndex = 14;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(227, 34);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(56, 17);
+            this.label26.TabIndex = 13;
+            this.label26.Text = "Domain";
+            // 
+            // eventLogs
+            // 
+            this.eventLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.eventLogs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.eventLogs.FormattingEnabled = true;
+            this.eventLogs.Location = new System.Drawing.Point(124, 91);
+            this.eventLogs.Name = "eventLogs";
+            this.eventLogs.Size = new System.Drawing.Size(488, 100);
+            this.eventLogs.TabIndex = 3;
+            // 
+            // status
+            // 
+            this.status.AutoSize = true;
+            this.status.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.status.ForeColor = System.Drawing.Color.Red;
+            this.status.Location = new System.Drawing.Point(6, 122);
+            this.status.Name = "status";
+            this.status.Size = new System.Drawing.Size(206, 17);
+            this.status.TabIndex = 15;
+            this.status.Text = "NOT connected at this time";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Location = new System.Drawing.Point(123, 70);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(331, 13);
+            this.label27.TabIndex = 4;
+            this.label27.Text = "One entry per line. Edit it manually only if you know what you\'re doing";
             // 
             // edit_log_settings_form
             // 
@@ -639,7 +821,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.cancel;
-            this.ClientSize = new System.Drawing.Size(596, 451);
+            this.ClientSize = new System.Drawing.Size(626, 461);
             this.Controls.Add(this.needsRestart);
             this.Controls.Add(this.cancel);
             this.Controls.Add(this.friendlyName);
@@ -677,6 +859,8 @@
             this.tabPage8.PerformLayout();
             this.tabPage9.ResumeLayout(false);
             this.tabPage9.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -735,5 +919,21 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox selectedEventLogs;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox remotePassword;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox remoteUserName;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Button testRemote;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox remoteMachineName;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.CheckedListBox eventLogs;
+        private System.Windows.Forms.TextBox remoteDomain;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label status;
+        private System.Windows.Forms.Label label27;
     }
 }

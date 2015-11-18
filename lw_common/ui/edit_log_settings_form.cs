@@ -12,6 +12,8 @@ using lw_common.parse;
 
 namespace lw_common.ui {
     public partial class edit_log_settings_form : Form {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private settings_as_string old_settings_;
         private settings_as_string settings_;
         private string file_name_;
@@ -33,6 +35,8 @@ namespace lw_common.ui {
 
         private edit_type edit_;
 
+        private List<string> available_event_logs_ = new List<string>(); 
+
         // file name is set only if it's a file
         public edit_log_settings_form(string settings, string file_name, string friendly_name, edit_type edit = edit_type.edit) {
             old_settings_ = new settings_as_string(settings);
@@ -47,7 +51,6 @@ namespace lw_common.ui {
             cancel.Left = -100;
             friendlyName.Text = friendly_name;
 
-            type.SelectedIndex = type_to_index();
             fileType.SelectedIndex = file_type_to_index( settings_.get("file_type") );
 
             syntax.Text = settings_.get("syntax");
@@ -60,6 +63,14 @@ namespace lw_common.ui {
 
             csvHasHeader.Checked = settings_.get("csv.has_header", "1") != "0";
             csvSeparator.Text = settings_.get("csv.separator", ",");
+
+            remoteMachineName.Text = settings_.get("event.remote_machine_name");
+            remoteDomain.Text = settings_.get("event.remote_domain");
+            remoteUserName.Text = settings_.get("event.remote_user_name");
+            remotePassword.Text = settings_.get("event.remote_password");
+            selectedEventLogs.Text = settings_.get("event.log_type").Replace("|", "\r\n");
+
+            type.SelectedIndex = type_to_index();
         }
 
         private int type_to_index() {
@@ -117,6 +128,12 @@ namespace lw_common.ui {
             settings_.set("xml.delimeter", xmlDelimeter.Text);
             settings_.set("csv.has_header", csvHasHeader.Checked ? "1" : "0");
             settings_.set("csv.separator", csvSeparator.Text);            
+
+            settings_.set("event.remote_machine_name", remoteMachineName.Text);
+            settings_.set("event.remote_domain", remoteDomain.Text);
+            settings_.set("event.remote_user_name", remoteUserName.Text);
+            settings_.set("event.remote_password", remotePassword.Text);
+            settings_.set("event.log_type", selectedEventLogs.Text.Replace("\r\n", "|"));
         }
 
         private bool change_needs_restart() {
@@ -134,7 +151,11 @@ namespace lw_common.ui {
 
         private void type_SelectedIndexChanged(object sender, EventArgs e) {
             typeTab.SelectedIndex = type.SelectedIndex;
+
+            if (index_to_type() == "event_log")
+                update_event_log_list();
         }
+
 
         private void fileType_SelectedIndexChanged(object sender, EventArgs e) {
             if (fileType.SelectedIndex > 0)
@@ -176,6 +197,35 @@ namespace lw_common.ui {
 
         private void syntaxLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
             Process.Start("https://github.com/jtorjo/logwizard/wiki/Syntax");
+        }
+
+        private void update_event_log_list() {
+            available_event_logs_.Clear();
+            eventLogs.Items.Clear();
+
+            try {
+                string machine_name = remoteMachineName.Text;
+                var logs = machine_name == "" ? EventLog.GetEventLogs() : EventLog.GetEventLogs(machine_name);
+                foreach (var log in logs) {
+                    available_event_logs_.Add(log.Log);
+                    bool is_checked = selectedEventLogs.Text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries).Contains(log.Log);
+                    eventLogs.Items.Add(friendly_event_log_name(log), is_checked);
+                }
+
+            } catch (Exception e) {
+                logger.Error("update event log list: " + e.Message);
+            }
+        }
+
+        private string friendly_event_log_name(EventLog log) {
+            if (remoteMachineName.Text != "")
+                return log.LogDisplayName;
+
+            return log.LogDisplayName;
+        }
+
+        private void remoteMachineName_TextChanged(object sender, EventArgs e) {
+
         }
     }
 }
