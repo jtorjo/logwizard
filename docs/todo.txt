@@ -32,8 +32,14 @@ W3/nov 2015
 
 
 
-
-
+- article about event viewer - title: view Event Logs like a boss?
+  - note: i will briefly mention outputdebugstring
+  the other article:
+  -> the outputdebug string will be shown on "alerts" (perhaps two articles: one about break into debug, one about alerts - perhaps tips?)
+     i will create a function similar to what outputdebugstring does (just have a way to name the "wait" mutex in any way so that several apps can use it)
+	 --> so, if something is set at the end of the function -> we will break into debug mode
+	 --> create a wrapper for it for log4net
+	 -------- alerts: should i allow sending an email? probably later, when ran unattended
 
 
 

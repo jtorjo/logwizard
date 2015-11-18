@@ -1616,7 +1616,7 @@ namespace LogWizard
             create_context_for_file(name);
 
             // FIXME
-            text_ = new debug_text_reader();
+            text_ = new event_log_reader();
             //text_ = new file_text_reader(name);
             on_new_log();
 

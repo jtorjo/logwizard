@@ -7,6 +7,32 @@
 - event log - allow subscribing to more events
 
 - event log - subscribe to next events
+					using System.Diagnostics.Eventing.Reader;
+					...
+					// Change ACME to whatever Source you want to monitor, or change the entire query string
+					// to "*" to show all Application events.
+					var query = new EventLogQuery("Application", PathType.LogName, "*[System/Provider/@Name=\"ACME\"]");
+
+					using (var watcher = new EventLogWatcher(query))
+					{
+						watcher.EventRecordWritten += (o, e) =>
+						{
+							var r = e.EventRecord;
+							Console.WriteLine("{0}\t{1}\t{2}", r.TimeCreated, r.LevelDisplayName, r.FormatDescription());
+						};
+						watcher.Enabled = true;
+
+						// Keep the process alive; the event handler will fire and display output as new event log entries are added.
+						for (;;)
+							Thread.Sleep(10000);
+					}
+
+
+
+
+
+
+
 
 
 - event_log_reader.force_reload - needs reload
@@ -20,7 +46,7 @@
 
 - bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
 
-
+- event log - see about remove vieweing of logs???
 
   -- implement toggle details 
      - allow several details in there
@@ -30,6 +56,12 @@
 	   - however, i should be able to mark other ones as multiline as well? maybe later
 	   - if this is visible, msg_details will be hidden
 	   -TOTHINK how do i type-search when the msg contains multiple lines
+	   - i have to see how i can show visually if the message spans on several lines
+	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
+
+1.5.6g
+- log wizard from several event logs in parallel works
+
 
 1.5.6f
 - updated history.txt
