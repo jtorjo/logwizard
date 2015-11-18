@@ -247,6 +247,17 @@ namespace lw_common {
                     log.listening_for_new_events_ = true;
 
                 // at this point, listen for new events
+				using (var watcher = new EventLogWatcher(query))
+				{
+					watcher.EventRecordWritten += (o, e) => {
+                        lock(this)
+                            log.new_events_.Add(e.EventRecord);
+					};
+					watcher.Enabled = true;
+
+                    while ( !log.disposed_)
+                        Thread.Sleep(100);
+				}
 
             } catch (Exception e) {
                 logger.Error("can't create event log " + log.log_type + "/" + remote_machine_name + " : " + e.Message);
@@ -258,26 +269,30 @@ namespace lw_common {
         private log_entry_line to_log_entry(EventRecord rec) {
             log_entry_line entry = new log_entry_line();
             try {
-                entry.add("Category", rec.TaskDisplayName);
-            } catch {
-                entry.add("Category", "");
-            }
-            try {
-                entry.add("msg", rec.FormatDescription());
-            } catch {
-                entry.add("msg", "");
-            }
-            entry.add("Machine Name", rec.MachineName);
-            entry.add("level", event_level( (StandardEventLevel)rec.Level));
-            entry.add("EventID", "" + rec.Id);
-            entry.add("Source", "" + rec.ProviderName);
-            entry.add("date", rec.TimeCreated.Value.ToString("DD-MM-YYYY"));
-            entry.add("time", rec.TimeCreated.Value.ToString("hh:mm:ss.fff"));
-            entry.add("User Name", rec.UserId != null ? rec.UserId.Value : "");
-            try {
-                entry.add("Keywords", util.concatenate(rec.KeywordsDisplayNames, ","));
-            } catch {
-                entry.add("Keywords", "");
+                try {
+                    entry.add("Category", rec.TaskDisplayName);
+                } catch {
+                    entry.add("Category", "");
+                }
+                try {
+                    entry.add("msg", rec.FormatDescription());
+                } catch {
+                    entry.add("msg", "");
+                }
+                entry.add("Machine Name", rec.MachineName);
+                entry.add("level", event_level((StandardEventLevel) rec.Level));
+                entry.add("EventID", "" + rec.Id);
+                entry.add("Source", "" + rec.ProviderName);
+                entry.add("date", rec.TimeCreated.Value.ToString("DD-MM-YYYY"));
+                entry.add("time", rec.TimeCreated.Value.ToString("hh:mm:ss.fff"));
+                entry.add("User Name", rec.UserId != null ? rec.UserId.Value : "");
+                try {
+                    entry.add("Keywords", util.concatenate(rec.KeywordsDisplayNames, ","));
+                } catch {
+                    entry.add("Keywords", "");
+                }
+            } catch (Exception e) {
+                logger.Fatal("can't convert EventRectord to entry " + e.Message);
             }
             return entry;
         }
