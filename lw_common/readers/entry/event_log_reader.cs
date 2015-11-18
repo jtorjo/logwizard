@@ -79,6 +79,9 @@ namespace lw_common {
             }
         }
 
+        public string provider_name {
+            get { return settings.get("event.provider_name"); }
+        } 
         public string remote_machine_name {
             get {
                 return settings.get("event.remote_machine_name"); 
@@ -220,6 +223,9 @@ namespace lw_common {
 
         private void read_single_log_thread(log_info log) {
             string query_string = "*";
+            if (provider_name != "")
+                query_string = "*[System/Provider/@Name=\"" + provider_name + "\"]";
+
             try {
                 SecureString pwd = new SecureString();
                 foreach ( char c in remote_password_name)
