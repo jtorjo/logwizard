@@ -13,6 +13,9 @@ namespace lw_common {
             return false;
         }
 
+        protected file_text_reader_base(settings_as_string sett) : base(sett) {
+            
+        }
 
         // 1.0.14+ - this computes the full length of the reader - until we call it again
         //           (since this can be costly CPU-wise)

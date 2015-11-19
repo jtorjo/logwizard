@@ -35,9 +35,13 @@ namespace lw_common
 
         private log_parser parser_ = null;
 
-        private readonly settings_as_string settings_ = new settings_as_string("");
+        private readonly settings_as_string settings_ ;
 
         protected error_list_keeper errors_ = new error_list_keeper();
+
+        protected text_reader(settings_as_string sett) {
+            settings_ = sett;
+        }
 
         public string name {
             get { return settings.get("name"); }

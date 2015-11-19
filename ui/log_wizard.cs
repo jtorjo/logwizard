@@ -133,7 +133,7 @@ namespace LogWizard
             }
         }
         
-        private settings_file sett = app.inst.sett;
+        private settings_file sett_ = app.inst.sett;
 
         private static List<ui_context> contexts_ = new List<ui_context>();
         private static List<history> history_ = new List<history>();
@@ -190,7 +190,7 @@ namespace LogWizard
             Text += " " + version();
             bool first_time = contexts_.Count == 0;
             if (first_time) {
-                load_contexts(sett);
+                load_contexts(sett_);
                 notes_keeper.inst.init( util.is_debug ? "notes" : Program.local_dir() + "\\notes", app.inst.identify_notes_files);
 
                 new Thread(load_release_info_thread) {IsBackground = true}.Start();
@@ -216,8 +216,8 @@ namespace LogWizard
             };
             filtCtrl.mark_match = (filter_idx) => {
                 var lv = log_view_for_tab(viewsTab.SelectedIndex);
-                Color fg = util.str_to_color(sett.get("filter_fg", "transparent"));
-                Color bg = util.str_to_color(sett.get("filter_bg", "#faebd7"));
+                Color fg = util.str_to_color(sett_.get("filter_fg", "transparent"));
+                Color bg = util.str_to_color(sett_.get("filter_bg", "#faebd7"));
                 lv.mark_match(filter_idx, fg, bg);
             };
 
@@ -260,10 +260,10 @@ namespace LogWizard
         }
 
         private void animate_whatsup() {
-            if (sett.get("animate_whatsup", "1") != "1")
+            if (sett_.get("animate_whatsup", "1") != "1")
                 return;
-            sett.set("animate_whatsup", "0");
-            sett.save();
+            sett_.set("animate_whatsup", "0");
+            sett_.save();
             whatsup.animate = true;
             whatsup.animate_interval_ms = 30000;
         }
@@ -502,10 +502,13 @@ namespace LogWizard
             int history_count = int.Parse( sett.get("history_count", "0"));
             for (int idx = 0; idx < history_count; ++idx) {
                 history hist = new history();
-                string settings = sett.get("history." + idx + ".settings");
-                if (settings != "")
-                    hist.from_string( settings);
-                else {
+                string guid = sett.get("history." + idx + ".guid");
+                if (guid != "") {
+                    // 1.5.6+ - guid points to the whole settings
+                    string settings = sett.get("guid." + guid);
+                    Debug.Assert(settings.Contains(guid));
+                    hist.from_string(settings);
+                } else {
                     // old code (pre 1.5.6)
                     string type_str = sett.get("history." + idx + "type", "file");
                     if (type_str == "0")
@@ -517,6 +520,8 @@ namespace LogWizard
                     history_sett.set("type", type_str);
                     history_sett.set("name", name);
                     history_sett.set("friendly_name", friendly_name);
+                    // create a guid now
+                    history_sett.set("guid", Guid.NewGuid().ToString());
                     hist.from_string(history_sett.ToString());
                 }
 
@@ -544,14 +549,20 @@ namespace LogWizard
         }
 
         private void save_contexts() {
-            sett.set( "history_count", "" + history_.Count);
+            sett_.set( "history_count", "" + history_.Count);
             for ( int idx = 0; idx < history_.Count; ++idx) {
-                sett.set("history." + idx + "type", "" + (int)history_[idx].type);
-                sett.set("history." + idx + "name", history_[idx].name);
-                sett.set("history." + idx + "friendly_name", history_[idx].friendly_name);
+                // 1.5.6+ - save settings-per-log
+                var settings = history_[idx].settings.ToString();
+                var guid = history_[idx].settings.get("guid");
+                Debug.Assert(guid != "");
+
+                // note : the way I have settings point to guid is this: I may actually allow user to delete history
+                //        however, if after deleting history, user opens a file he opened before, we want those settings to still take effect.
+                sett_.set("history." + idx + "guid", guid);
+                sett_.set("guid." + guid, settings);
             }
 
-            sett.set("context_count", "" + contexts_.Count);
+            sett_.set("context_count", "" + contexts_.Count);
             for ( int i = 0; i < contexts_.Count; ++i) {
                 contexts_[i].save("context." + i);
             }
@@ -1659,6 +1670,9 @@ namespace LogWizard
         }
 
         private void on_new_file_log(string name) {
+            // should call create_text_reader
+            Debug.Assert(false);
+
             if (text_ != null && text_.name == name) {
                 merge_notes();
                 return;
@@ -1691,6 +1705,42 @@ namespace LogWizard
             } 
             force_initial_refresh_of_all_views();
         }
+
+        private void create_text_reader(settings_as_string_readonly settings) {
+            bool is_file = settings.get("type") == "file";
+            if (text_ != null && is_file && text_.name == settings.get("name")) {
+                merge_notes();
+                return;
+            }
+
+            if (text_ != null)
+                text_.Dispose();
+
+            if ( is_file)
+                create_context_for_file( settings.get("name"));
+
+            text_ = factory.create_text_reader(settings as settings_as_string);
+            on_new_log();
+            ui_context file_ctx = file_to_context( settings.get("name") );
+            if (file_ctx != cur_context())
+                // update context based on file name
+                curContextCtrl.SelectedIndex = contexts_.IndexOf(file_ctx);
+                
+            if (log_parser_.needs_text_syntax) {
+                var file_settings = log_parser_.settings;
+                if ( file_settings.get("syntax") == find_log_syntax.UNKNOWN_SYNTAX) {
+                    set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Edit Log Settings' button on the top-right.",
+                        status_ctrl.status_type.err);
+                    show_source(true);
+                }
+                else if (!cur_context().has_not_empty_views)
+                    set_status("Don't the columns look ok? Perpaps LogWizard did not correctly parse them... If so, Toggle the Source Pane ON (Alt-O), anc click on 'Test'.", status_ctrl.status_type.warn, 15000);
+                else if ( !cur_context().has_views)
+                    set_status("Why so dull? <a http://www.codeproject.com/Articles/1045528/LogWizard-Filter-your-Logs-Inside-out>Add some colors!</a>");
+            } 
+            force_initial_refresh_of_all_views();
+        }
+
 
         private void refresh_all_views() {
             if (ignore_change_ > 0)
@@ -1751,23 +1801,6 @@ namespace LogWizard
             }, 500);
         }
 
-        private void on_new_shared_log(string name) {
-            if (text_ != null)
-                text_.Dispose();
-
-            if (text_ != null && !(text_ is shared_memory_text_reader))
-                text_ = new shared_memory_text_reader();
-            ((shared_memory_text_reader) text_).set_memory_name(name);
-            on_new_log();
-        }
-
-        private void on_new_debug_log() {
-            if (text_ != null)
-                text_.Dispose();
-
-            text_ = new debug_text_reader();
-            on_new_log();
-        }
 
         private string reader_title() {
             int sel = logHistory.SelectedIndex;
@@ -1983,7 +2016,7 @@ namespace LogWizard
                 history_select(history_[logHistory.SelectedIndex].unique_name);
                 app.inst.set_log_file(selected_file_name());
             }
-            on_new_file_log(history_[logHistory.SelectedIndex].name);
+            create_text_reader( history_[logHistory.SelectedIndex].settings );
         }
 
         private void LogWizard_FormClosing(object sender, FormClosingEventArgs e) {
@@ -2874,7 +2907,7 @@ namespace LogWizard
         private void load_bookmarks() {
             bookmarks_.Clear();
             string bookmarks_key = text_.name.Replace("=", "_").Replace("\\", "_");
-            string[] bookmarks = sett.get("bookmarks." + bookmarks_key).Split(',');
+            string[] bookmarks = sett_.get("bookmarks." + bookmarks_key).Split(',');
             foreach (var b in bookmarks) {
                 int line_idx;
                 if (int.TryParse(b, out line_idx))
@@ -2894,8 +2927,8 @@ namespace LogWizard
             string str = bookmarks_.Aggregate("", (current, mark) => current + "," + mark);
 
             string bookmarks_key = text_.name.Replace("=", "_").Replace("\\", "_");
-            sett.set("bookmarks." + bookmarks_key, str);
-            sett.save();
+            sett_.set("bookmarks." + bookmarks_key, str);
+            sett_.save();
         }
 
 

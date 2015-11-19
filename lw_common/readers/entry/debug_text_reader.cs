@@ -34,7 +34,7 @@ namespace lw_common
     public class debug_text_reader : entry_text_reader_base {
         private int last_event_id_ = -1;
 
-        public debug_text_reader() {
+        public debug_text_reader(settings_as_string sett) : base(sett) {
             settings.on_changed += (a) => force_reload();
         }
 

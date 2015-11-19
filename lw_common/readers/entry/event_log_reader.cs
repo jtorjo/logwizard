@@ -69,7 +69,7 @@ namespace lw_common {
 
         private List<log_info> event_logs_ = new List<log_info>();
 
-        public event_log_reader() {
+        public event_log_reader(settings_as_string sett) : base(sett) {
             settings.on_changed += (a) => force_reload();
         }
 

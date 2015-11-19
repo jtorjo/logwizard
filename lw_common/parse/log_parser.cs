@@ -62,7 +62,7 @@ namespace lw_common
             reader_ = reader;
             reader_.on_set_parser(this);
 
-            forward_to_parser_ = factory.create(reader);
+            forward_to_parser_ = factory.create_parser(reader);
 
             force_reload();
             new Thread(refresh_thread) {IsBackground = true}.Start();

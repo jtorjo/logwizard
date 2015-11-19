@@ -33,7 +33,7 @@ namespace lw_common
         StringBuilder full_log = new StringBuilder();
         private string name_ = "";
 
-        public shared_memory_text_reader() {
+        public shared_memory_text_reader() :base(new settings_as_string("")) {
         }
 
         public void set_memory_name(string name) {

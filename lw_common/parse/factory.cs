@@ -46,7 +46,22 @@ namespace lw_common.parse {
             return new settings_as_string( settings.ToString());
         }
 
-        static internal log_parser_base create(text_reader reader) {
+        static public text_reader create_text_reader(settings_as_string settings) {
+            Debug.Assert(settings.get("guid") != "");
+
+            switch (settings.get("type", "file")) {
+            case "file":        return new file_text_reader(settings);
+            case "event_log":   return new event_log_reader(settings);
+            case "debug_print": return new debug_text_reader(settings);
+            default:
+                Debug.Assert(false);
+                return null;
+                break;
+            }
+
+        }
+
+        static internal log_parser_base create_parser(text_reader reader) {
             reader.set_setting("type", text_reader.type(reader));
             if ( reader.settings.get("guid") == "")
                 reader.set_setting("guid", Guid.NewGuid().ToString());

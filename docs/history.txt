@@ -2,9 +2,10 @@
 
 
 saving settings (per each log) - so that even if clearing history, we'll still have the file settings
-- guid -> settings ALL THE TIME
-- history -> keep guid
+ (factory.create_reader????)
 - log file -> guid (so that even if i delete from history, it will still point correctly)
+  on_new_file_log -> createtextreader
+
 
 - event log/debug -> when they are created 
   -> need to have GUID or something - in order to know where they are saved.
@@ -13,7 +14,7 @@ saving settings (per each log) - so that even if clearing history, we'll still h
   -> need to see how I choose template (context) for them, and persist that
   - new ones -> have a new template by default - but have a friendly name
 
-
+- history_select -> does it work for new files?
 
 
 
@@ -27,7 +28,7 @@ saving settings (per each log) - so that even if clearing history, we'll still h
 
 - event log -> for passw -> do NOT save it
 
-- event log - need to show something - while loading - at least progress?
+- event log - need to show something - while loading - at least progress? (i should know up-front how many items are in total)
 
 - event log reader/debug print -> need to have the right defaults (column names, etc)
 
@@ -35,8 +36,7 @@ saving settings (per each log) - so that even if clearing history, we'll still h
 
 - bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
 
-- event log - see about remove vieweing of logs???
-  namely, i need to select a context (template) for the event log
+- event log - see about remote vieweing of logs???
 
   -- implement toggle details 
      - allow several details in there
@@ -48,6 +48,12 @@ saving settings (per each log) - so that even if clearing history, we'll still h
 	   -TOTHINK how do i type-search when the msg contains multiple lines
 	   - i have to see how i can show visually if the message spans on several lines
 	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
+
+
+1.5.6l
+settings:
+- guid -> settings ALL THE TIME 
+- history -> keep guid
 
 
 1.5.6k
