@@ -154,7 +154,7 @@
             this.newFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.newFilteredView.ContextMenuStrip = this.newViewMenu;
             this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.newFilteredView.Location = new System.Drawing.Point(329, 29);
+            this.newFilteredView.Location = new System.Drawing.Point(327, 29);
             this.newFilteredView.Name = "newFilteredView";
             this.newFilteredView.Size = new System.Drawing.Size(18, 20);
             this.newFilteredView.TabIndex = 1;
@@ -189,7 +189,7 @@
             // 
             this.delFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.delFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.delFilteredView.Location = new System.Drawing.Point(347, 29);
+            this.delFilteredView.Location = new System.Drawing.Point(345, 29);
             this.delFilteredView.Name = "delFilteredView";
             this.delFilteredView.Size = new System.Drawing.Size(18, 20);
             this.delFilteredView.TabIndex = 2;
@@ -250,7 +250,7 @@
             this.synchronizedWithFullLog.Checked = true;
             this.synchronizedWithFullLog.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizedWithFullLog.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizedWithFullLog.Location = new System.Drawing.Point(416, 29);
+            this.synchronizedWithFullLog.Location = new System.Drawing.Point(414, 29);
             this.synchronizedWithFullLog.Name = "synchronizedWithFullLog";
             this.synchronizedWithFullLog.Size = new System.Drawing.Size(46, 20);
             this.synchronizedWithFullLog.TabIndex = 1;
@@ -266,7 +266,7 @@
             this.synchronizeWithExistingLogs.Checked = true;
             this.synchronizeWithExistingLogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizeWithExistingLogs.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(370, 29);
+            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(368, 29);
             this.synchronizeWithExistingLogs.Name = "synchronizeWithExistingLogs";
             this.synchronizeWithExistingLogs.Size = new System.Drawing.Size(46, 20);
             this.synchronizeWithExistingLogs.TabIndex = 3;
@@ -608,7 +608,7 @@
             this.filteredLeft.Panel1.Controls.Add(this.newFilteredView);
             this.filteredLeft.Panel1.Controls.Add(this.viewsTab);
             this.filteredLeft.Size = new System.Drawing.Size(979, 496);
-            this.filteredLeft.SplitterDistance = 500;
+            this.filteredLeft.SplitterDistance = 498;
             this.filteredLeft.SplitterWidth = 6;
             this.filteredLeft.TabIndex = 0;
             this.filteredLeft.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.filteredLeft_SplitterMoved);
@@ -624,7 +624,7 @@
             this.viewsTab.Location = new System.Drawing.Point(0, 3);
             this.viewsTab.Name = "viewsTab";
             this.viewsTab.SelectedIndex = 0;
-            this.viewsTab.Size = new System.Drawing.Size(495, 494);
+            this.viewsTab.Size = new System.Drawing.Size(493, 494);
             this.viewsTab.TabIndex = 0;
             this.viewsTab.SelectedIndexChanged += new System.EventHandler(this.viewsTab_SelectedIndexChanged);
             this.viewsTab.DragDrop += new System.Windows.Forms.DragEventHandler(this.filteredViews_DragDrop);
@@ -636,7 +636,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(487, 466);
+            this.tabPage1.Size = new System.Drawing.Size(485, 466);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -651,7 +651,7 @@
             this.dropHere.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.dropHere.Location = new System.Drawing.Point(3, 3);
             this.dropHere.Name = "dropHere";
-            this.dropHere.Size = new System.Drawing.Size(476, 466);
+            this.dropHere.Size = new System.Drawing.Size(474, 466);
             this.dropHere.TabIndex = 0;
             this.dropHere.Text = "Drop it Like it\'s Hot!\r\nJust drop a file here, and get to work!\r\n";
             this.dropHere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -742,85 +742,85 @@
             // whatsupOpen
             // 
             this.whatsupOpen.Name = "whatsupOpen";
-            this.whatsupOpen.Size = new System.Drawing.Size(166, 22);
-            this.whatsupOpen.Text = "Open";
+            this.whatsupOpen.Size = new System.Drawing.Size(204, 22);
+            this.whatsupOpen.Text = "Open Log";
             this.whatsupOpen.Click += new System.EventHandler(this.whatsupOpen_Click);
             // 
             // whatsupNew
             // 
             this.whatsupNew.Name = "whatsupNew";
-            this.whatsupNew.Size = new System.Drawing.Size(166, 22);
-            this.whatsupNew.Text = "New";
+            this.whatsupNew.Size = new System.Drawing.Size(204, 22);
+            this.whatsupNew.Text = "New LogWizard Window";
             this.whatsupNew.Click += new System.EventHandler(this.whatsupNew_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(163, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(201, 6);
             // 
             // whatsupToggles
             // 
             this.whatsupToggles.Name = "whatsupToggles";
-            this.whatsupToggles.Size = new System.Drawing.Size(166, 22);
+            this.whatsupToggles.Size = new System.Drawing.Size(204, 22);
             this.whatsupToggles.Text = "Edit Toggles";
             this.whatsupToggles.Click += new System.EventHandler(this.whatsupToggles_Click);
             // 
             // whatsupPreferences
             // 
             this.whatsupPreferences.Name = "whatsupPreferences";
-            this.whatsupPreferences.Size = new System.Drawing.Size(166, 22);
+            this.whatsupPreferences.Size = new System.Drawing.Size(204, 22);
             this.whatsupPreferences.Text = "Preferences";
             this.whatsupPreferences.Click += new System.EventHandler(this.whatsupPreferences_Click);
             // 
             // historyToolStripMenuItem
             // 
             this.historyToolStripMenuItem.Name = "historyToolStripMenuItem";
-            this.historyToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.historyToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.historyToolStripMenuItem.Text = "History";
             this.historyToolStripMenuItem.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
             // 
             // hotkeysHelpToolStripMenuItem
             // 
             this.hotkeysHelpToolStripMenuItem.Name = "hotkeysHelpToolStripMenuItem";
-            this.hotkeysHelpToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.hotkeysHelpToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.hotkeysHelpToolStripMenuItem.Text = "Hotkeys Help";
             this.hotkeysHelpToolStripMenuItem.Click += new System.EventHandler(this.hotkeysHelpToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(163, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(201, 6);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.exportToolStripMenuItem.Text = "Export";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
             // monitorToolStripMenuItem
             // 
             this.monitorToolStripMenuItem.Name = "monitorToolStripMenuItem";
-            this.monitorToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.monitorToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.monitorToolStripMenuItem.Text = "Monitor";
             this.monitorToolStripMenuItem.Click += new System.EventHandler(this.monitorToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(163, 6);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(201, 6);
             // 
             // aboutToolStripMenuItem1
             // 
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(166, 22);
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(204, 22);
             this.aboutToolStripMenuItem1.Text = "About LogWizard";
             this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
             // 
@@ -841,7 +841,7 @@
             this.aboutToolStripMenuItem,
             this.aboutToolStripMenuItem1});
             this.whatupMenu.Name = "whatupMenu";
-            this.whatupMenu.Size = new System.Drawing.Size(167, 264);
+            this.whatupMenu.Size = new System.Drawing.Size(205, 264);
             // 
             // refreshAddViewButtons
             // 

@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Security;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using lw_common.parse;
 
@@ -34,8 +38,10 @@ namespace lw_common.ui {
         };
 
         private edit_type edit_;
+        private bool closed_ = false;
+        private List<string> available_event_logs_ = new List<string>();
 
-        private List<string> available_event_logs_ = new List<string>(); 
+        private string successful_machine_ = "";
 
         // file name is set only if it's a file
         public edit_log_settings_form(string settings, edit_type edit = edit_type.edit) {
@@ -46,7 +52,11 @@ namespace lw_common.ui {
             edit_ = edit;
             InitializeComponent();
             type.Enabled = edit == edit_type.add;
-            
+
+            if (edit == edit_type.add) {
+                settings_.set("event.log_type", "Application|System");
+            }
+
             hide_tabs(typeTab);
             hide_tabs(fileTypeTab);
             cancel.Left = -100;
@@ -73,9 +83,88 @@ namespace lw_common.ui {
 
             type.SelectedIndex = type_to_index();
             if (edit == edit_type.add) {
+                Text = "Open Log";
                 settings_.set("guid", Guid.NewGuid().ToString());
-                util.postpone(() => type.DroppedDown = true, 1);
+                util.postpone(() => type.Focus(), 1);
+                util.postpone(() => type.DroppedDown = true, 200);
             }
+
+            new Thread(check_event_log_thread) {IsBackground = true}.Start();
+        }
+
+        private void check_event_log_thread() {
+            /* Examples of valid names on my machine:
+
+                Microsoft-Windows-TWinUI/Operational
+                Microsoft-Windows-AppxPackaging/Operational
+                Microsoft-Windows-AppModel-Runtime/admin
+
+            */
+            while (!closed_) {
+                Thread.Sleep(250);
+                bool needs_check = false;
+                string[] event_logs = null;
+                string remote_machine_name = null, remote_domain_name = null, remote_user_name = null, remote_password_name = null;
+                this.async_call_and_wait(() => {
+                    needs_check = typeTab.SelectedIndex == 1;
+                    event_logs = selectedEventLogs.Text.Split(new[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+                    remote_machine_name = remoteMachineName.Text;
+                    remote_domain_name = remoteDomain.Text;
+                    remote_user_name = remoteUserName.Text;
+                    remote_password_name = remotePassword.Text;
+                    if (!eventLogs.Enabled)
+                        // user hasn't connected to remote machine yet
+                        needs_check = false;
+                });
+                if (!needs_check)
+                    continue;
+                // check all names typed by user
+                List<string> dont_exist = new List<string>();
+                foreach ( string log in event_logs)
+                    try {
+                        bool exists = remote_machine_name != "" ? EventLog.Exists(log, remote_machine_name) : EventLog.Exists(log);
+                        if (!exists) 
+                            // take the harder path
+                            exists = remote_event_log_exists(log, remote_machine_name, remote_domain_name, remote_user_name, remote_password_name);
+                        
+                        if ( !exists)
+                            dont_exist.Add(log);
+                    } catch {
+                        dont_exist.Add(log);
+                    }
+
+                this.async_call_and_wait(() => {
+                    if (dont_exist.Count < 1) {
+                        eventLogCheckStatus.Text = "OK";
+                        eventLogCheckStatus.ForeColor = Color.ForestGreen;
+                    } else {
+                        eventLogCheckStatus.Text = "Logs [" + util.concatenate(dont_exist, ", ") + "] don't exist.";
+                        eventLogCheckStatus.ForeColor = Color.Red;
+                    }
+                });
+            }
+        }
+
+        private static bool remote_event_log_exists(string log, string remote_machine_name, string remote_domain_name, string remote_user_name, string remote_password_name) {
+            try {
+                SecureString pwd = new SecureString();
+                foreach (char c in remote_password_name)
+                    pwd.AppendChar(c);
+                EventLogSession session = remote_machine_name.Trim() != ""
+                    ? new EventLogSession(remote_machine_name, remote_domain_name, remote_user_name, pwd, SessionAuthentication.Default)
+                    : null;
+                pwd.Dispose();
+                EventLogQuery query = new EventLogQuery(log, PathType.LogName);
+                if (session != null)
+                    query.Session = session;
+
+                EventLogReader reader = new EventLogReader(query);
+                if (reader.ReadEvent(TimeSpan.FromMilliseconds(500)) != null)
+                    return true;
+            } catch(Exception e) {
+                logger.Error("can't login " + e.Message);
+            }
+            return false;
         }
 
         private int type_to_index() {
@@ -138,7 +227,10 @@ namespace lw_common.ui {
             settings_.set("event.remote_domain", remoteDomain.Text);
             settings_.set("event.remote_user_name", remoteUserName.Text);
             settings_.set("event.remote_password", remotePassword.Text);
-            settings_.set("event.log_type", selectedEventLogs.Text.Replace("\r\n", "|"));
+            settings_.set("event.log_type", selectedEventLogs.Text.Trim().Replace("\r\n", "|"));
+
+            settings_.set("debug.global", debugGlobal.Checked ? "1" : "0");
+            settings_.set("debug.process_name", debugProcessName.Text);
 
             // syntax_type is used internally, to know if the user has changed the syntax
             settings_.set("syntax_type", settings_.get("syntax") != old_settings_.get("syntax") ? "edited_now" : "");
@@ -158,10 +250,16 @@ namespace lw_common.ui {
         }
 
         private void type_SelectedIndexChanged(object sender, EventArgs e) {
+            if (type.DroppedDown)
+                return;
+
             typeTab.SelectedIndex = type.SelectedIndex;
 
             if (index_to_type() == "event_log")
                 update_event_log_list();
+        }
+        private void type_DropDownClosed(object sender, EventArgs e) {
+            type_SelectedIndexChanged(null,null);
         }
 
 
@@ -208,6 +306,20 @@ namespace lw_common.ui {
         }
 
         private void update_event_log_list() {
+            load_available_event_logs();
+
+            try {
+                if (remoteUserName.Text == "")
+                    remoteUserName.Text = Environment.UserName;
+                if (remoteDomain.Text == "")
+                    remoteDomain.Text = Environment.UserDomainName;
+            } catch {
+            }
+
+            remoteMachineName_TextChanged(null,null);
+        }
+
+        private void load_available_event_logs() {
             available_event_logs_.Clear();
             eventLogs.Items.Clear();
 
@@ -222,18 +334,55 @@ namespace lw_common.ui {
 
             } catch (Exception e) {
                 logger.Error("update event log list: " + e.Message);
-            }
+            }            
         }
 
         private string friendly_event_log_name(EventLog log) {
-            if (remoteMachineName.Text != "")
-                return log.LogDisplayName;
-
-            return log.LogDisplayName;
+            return log.LogDisplayName + " (" + log.Entries.Count + " events, max size:" + log.MaximumKilobytes + " KB)";
         }
 
         private void remoteMachineName_TextChanged(object sender, EventArgs e) {
+            bool is_remote = remoteMachineName.Text.Trim() != "";
+            remoteDomain.Enabled = is_remote;
+            remoteUserName.Enabled = is_remote;
+            remotePassword.Enabled = is_remote;
+            testRemote.Visible = is_remote;
+            eventLogRemoteSstatus.Visible = is_remote;
 
+            successful_machine_ = "";
+            eventLogRemoteSstatus.Text = "NOT connected at this time";
+            eventLogRemoteSstatus.ForeColor = Color.Red;
+
+            selectedEventLogs.Enabled = !is_remote;
+            eventLogs.Enabled = !is_remote;
+            ok.Enabled = !is_remote;
         }
+
+        private void edit_log_settings_form_FormClosing(object sender, FormClosingEventArgs e) {
+            closed_ = true;
+        }
+
+        private void selectedEventLogs_Enter(object sender, EventArgs e) {
+            AcceptButton = null;
+        }
+
+        private void selectedEventLogs_Leave(object sender, EventArgs e) {
+            AcceptButton = ok;
+        }
+
+        private void testRemote_Click(object sender, EventArgs e) {
+            Cursor = Cursors.WaitCursor;
+            bool ok = remote_event_log_exists("Application", remoteMachineName.Text, remoteDomain.Text != "" ? remoteDomain.Text : null, remoteUserName.Text, remotePassword.Text);
+            successful_machine_ = ok ? remoteMachineName.Text : "";
+            eventLogRemoteSstatus.Text = ok ? "Success!" : "NOT connected at this time";
+            eventLogRemoteSstatus.ForeColor =  ok ? Color.ForestGreen : Color.Red;
+            this.ok.Enabled = ok;
+            if (ok)
+                load_available_event_logs();
+            selectedEventLogs.Enabled = ok;
+            eventLogs.Enabled = ok;
+            Cursor = Cursors.Default;
+        }
+
     }
 }

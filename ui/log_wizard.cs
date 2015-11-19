@@ -3687,7 +3687,6 @@ namespace LogWizard
                 --ignore_change_;
 
                 create_text_reader(new_.settings);
-                update_history();
                 save();
             }
         }

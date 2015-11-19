@@ -1,27 +1,10 @@
 - update gasipromo
 
 
+- event log - see about remote vieweing of logs???
+  - doesn't work yet?
 
 
-
-
-- event log/debug -> when they are created 
-  -> need to have GUID or something - in order to know where they are saved.
-    - has to be unique, but also can't be a file name (in order to distinguish from the two)
-  - see how to handle everything in logwizard history
-  -> need to see how I choose template (context) for them, and persist that
-  - new ones -> have a new template by default - but have a friendly name
-
-- history_select -> does it work for new files?
-
-
-
-- event log -- https://msdn.microsoft.com/en-us/library/74e2ybbs%28v=vs.110%29.aspx - allow as many as the user wants...
-  - allow selecting several logs
-
-
-- event log - when user types something -> checks if it exists on another thread (only checks new ones)
-  (....Exists() -> even for another machine)
 
 
 - event log -> for passw -> do NOT save it
@@ -30,11 +13,13 @@
 
 - event log reader/debug print -> need to have the right defaults (column names, etc)
 
+- open log -> allow browsing for file (after browse, adjust the filetype?)
+
 - rich label -> tooltip -> show everything (in case it's multiple lines)
 
-- bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
+- history_select -> does it work for new files?
 
-- event log - see about remote vieweing of logs???
+- bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
 
   -- implement toggle details 
      - allow several details in there
@@ -48,6 +33,10 @@
 	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
 
 1.5.6o
+- open log : debug -> saves settings correctly
+- open log : event log 
+  -> recognizes non-default logs correctly , such as "Microsoft-Windows-TWinUI/Operational"
+  -> made it possible to login to a remote pc - can't test right now'
 
 
 1.5.6n

@@ -54,7 +54,7 @@ namespace lw_common {
 
             public string log_type = "";
 
-            public string remove_machine_name = "";
+            public string remote_machine_name = "";
             public string remove_user_name = "";
             public string remote_domain = "";
             public string remote_password = "";
@@ -132,7 +132,7 @@ namespace lw_common {
             lock(this)
                 foreach (var type in log_types) {
                     try {
-                        var log = new log_info { log_type = type, remove_machine_name = remote_machine_name, remote_domain = remote_domain_name, remote_password = remote_password_name, remove_user_name = remote_user_name};
+                        var log = new log_info { log_type = type, remote_machine_name = remote_machine_name, remote_domain = remote_domain_name, remote_password = remote_password_name, remove_user_name = remote_user_name};
                         event_logs_.Add( log);
                         new Thread(() => read_single_log_thread(log)) {IsBackground = true }.Start();
                     } catch (Exception e) {
@@ -225,7 +225,7 @@ namespace lw_common {
                 SecureString pwd = new SecureString();
                 foreach ( char c in remote_password_name)
                     pwd.AppendChar(c);
-                EventLogSession session = remote_password_name != "" ? new EventLogSession(log.remove_machine_name, remote_domain_name, remote_user_name, pwd, SessionAuthentication.Default) : null;
+                EventLogSession session = log.remote_machine_name.Trim() != "" ? new EventLogSession(log.remote_machine_name, remote_domain_name, remote_user_name, pwd, SessionAuthentication.Default) : null;
                 pwd.Dispose();
 
                 EventLogQuery query = new EventLogQuery(log.log_type, PathType.LogName, query_string);

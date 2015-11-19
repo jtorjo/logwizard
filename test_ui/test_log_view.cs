@@ -104,6 +104,9 @@ namespace test_ui {
         public void after_column_positions_modified(log_view lv) {
         }
 
+        public void edit_log_settings() {
+        }
+
         private void refresh_Tick(object sender, EventArgs e) {
             //refresh.Enabled = false;
             //new settings_form(this).ShowDialog();
