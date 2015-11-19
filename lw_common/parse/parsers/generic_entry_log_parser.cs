@@ -14,7 +14,7 @@ namespace lw_common.parse.parsers {
 
         protected  List<string> column_names_ = new List<string>(); 
 
-        public generic_entry_log_parser(entry_text_reader_base reader, settings_as_string sett) : base(sett) {
+        public generic_entry_log_parser(entry_text_reader_base reader) : base(reader.settings) {
             reader_ = reader;
         }
 

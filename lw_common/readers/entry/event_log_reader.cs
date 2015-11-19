@@ -69,6 +69,10 @@ namespace lw_common {
 
         private List<log_info> event_logs_ = new List<log_info>();
 
+        public event_log_reader() {
+            settings.on_changed += (a) => force_reload();
+        }
+
         public string[] log_types {
             get {
                 //if (util.is_debug)
@@ -107,20 +111,11 @@ namespace lw_common {
             get { return fully_read_once_; }
         }
 
-        public override string name {
-            get { return "_event_log_"; }
-        }
-
         public override void force_reload() {
             fully_read_once_ = false;
             logs_created_ = false;
             up_to_date_ = false;
             errors_.clear();
-        }
-
-        internal override void on_settings_changed() {
-            base.on_settings_changed();
-            force_reload();
         }
 
         private void create_logs() {
@@ -135,16 +130,16 @@ namespace lw_common {
             }
 
             lock(this)
-            foreach (var type in log_types) {
-                try {
-                    var log = new log_info { log_type = type, remove_machine_name = remote_machine_name, remote_domain = remote_domain_name, remote_password = remote_password_name, remove_user_name = remote_user_name};
-                    event_logs_.Add( log);
-                    new Thread(() => read_single_log_thread(log)) {IsBackground = true }.Start();
-                } catch (Exception e) {
-                    logger.Error("can't create event log " + type + "/" + remote_machine_name + " : " + e.Message);
-                    errors_.add("Can't create Log " + type + " on machine " + remote_machine_name + ", Reason=" + e.Message);
+                foreach (var type in log_types) {
+                    try {
+                        var log = new log_info { log_type = type, remove_machine_name = remote_machine_name, remote_domain = remote_domain_name, remote_password = remote_password_name, remove_user_name = remote_user_name};
+                        event_logs_.Add( log);
+                        new Thread(() => read_single_log_thread(log)) {IsBackground = true }.Start();
+                    } catch (Exception e) {
+                        logger.Error("can't create event log " + type + "/" + remote_machine_name + " : " + e.Message);
+                        errors_.add("Can't create Log " + type + " on machine " + remote_machine_name + ", Reason=" + e.Message);
+                    }
                 }
-            }
         }
 
         internal override List<log_entry_line> read_next_lines() {

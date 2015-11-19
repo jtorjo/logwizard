@@ -33,42 +33,40 @@ namespace lw_common.parse {
     public class factory {
 
         // these are the settings that are to be saved in the context
-        static public settings_as_string get_context_dependent_settings(text_reader reader, string settings) {
+        static public settings_as_string get_context_dependent_settings(text_reader reader, settings_as_string_readonly settings) {
             if (reader is file_text_reader) {
-                return new settings_as_string(settings).sub(new []{ "syntax", "aliases" });
+                return settings.sub(new []{ "syntax", "aliases" });
             }
 
-            return new settings_as_string( settings);
+            return new settings_as_string( settings.ToString());
         }
+
         // these are the settings that are to be saved per-log
-        static public settings_as_string get_log_dependent_settings(text_reader reader, string settings) {
-            return new settings_as_string( settings);
+        static public settings_as_string get_log_dependent_settings(text_reader reader, settings_as_string_readonly settings) {
+            return new settings_as_string( settings.ToString());
         }
 
-        static internal log_parser_base create(text_reader reader, string settings_str) {
-            var sett = new settings_as_string(settings_str);
+        static internal log_parser_base create(text_reader reader) {
+            reader.set_setting("type", text_reader.type(reader));
+            if ( reader.settings.get("guid") == "")
+                reader.set_setting("guid", Guid.NewGuid().ToString());
 
-            if (reader is file_text_reader) {
-                sett.set("type", "file");
-                return create_file_parser(reader as file_text_reader, sett);
-            }
-
-            if (reader is inmem_text_reader) {
+            if (reader is file_text_reader) 
+                return create_file_parser(reader as file_text_reader);
+            
+            if (reader is inmem_text_reader) 
                 // for testing syntax
-                sett.set("type", "file");
-                return new text_file_line_by_line(reader as inmem_text_reader, sett);
-            }
+                return new text_file_line_by_line(reader as inmem_text_reader);
 
             if (reader is event_log_reader) {
-                sett.set("type", "event_log");
-                if ( sett.get("event.log_type") == "")
-                    sett.set("event.log_type", "Application|System");
-                return new event_viewer(reader as event_log_reader, sett);
+                if ( reader.settings.get("event.log_type") == "")
+                    reader.set_setting("event.log_type", "Application|System");
+                return new event_viewer(reader as event_log_reader);
             }
-            if (reader is debug_text_reader) {
-                sett.set("type", "debug_print");
-                return new debug_print(reader as debug_text_reader, sett);
-            }
+
+            if (reader is debug_text_reader) 
+                return new debug_print(reader as debug_text_reader);
+            
 
             Debug.Assert(false);
             return null;
@@ -107,19 +105,19 @@ namespace lw_common.parse {
             
         }
 
-        private static log_parser_base create_file_parser(file_text_reader reader, settings_as_string all) {
+        private static log_parser_base create_file_parser(file_text_reader reader) {
             string file_name = reader.name.ToLower();
 
-            var file_type = all.get("file_type");
+            var file_type = reader.settings.get("file_type");
             switch (file_type) {
             case "line-by-line":
-                return new text_file_line_by_line(reader, all);
+                return new text_file_line_by_line(reader);
             case "part-by-line":
-                return new text_file_part_on_single_line(reader, all);
+                return new text_file_part_on_single_line(reader);
             case "xml":
-                return new xml_file(reader, all);
+                return new xml_file(reader);
             case "csv":
-                return new csv_file(reader, all);
+                return new csv_file(reader);
             case "":
                 // best guess
                 break;
@@ -129,16 +127,16 @@ namespace lw_common.parse {
             }
 
             if ( file_name.EndsWith(".xml"))
-                return new xml_file(reader, all);
+                return new xml_file(reader);
             if ( file_name.EndsWith(".csv"))
-                return new csv_file(reader, all);
+                return new csv_file(reader);
 
-            string syntax = all.get("syntax");
+            string syntax = reader.settings.get("syntax");
             if ( syntax == "" || syntax == find_log_syntax.UNKNOWN_SYNTAX)
-                if ( text_file_part_on_single_line.is_single_line(reader.name, all))
-                    return new text_file_part_on_single_line(reader, all);
+                if ( text_file_part_on_single_line.is_single_line(reader.name, reader.settings))
+                    return new text_file_part_on_single_line(reader);
 
-            return new text_file_line_by_line(reader, all);
+            return new text_file_line_by_line(reader);
         }
     }
 }

@@ -52,22 +52,50 @@ namespace LogWizard
 
         private class history {
             public enum entry_type {
-                file = 0, shmem = 1, event_log = 2, debug = 3
+                file, shmem, event_log, debug
             }
 
-            // 0->file, 1->shmem
-            public entry_type type;
-            public string name = "";
-            public string friendly_name = "";
-            //public string log_syntax  = "";
+            private settings_as_string settings_ = new settings_as_string("");
 
-            // returns the file name, or empty if it's not a file
-            public string file_name {
-                get { return type == entry_type.file ? name : ""; }
+            public entry_type type {
+                get {
+                    string type_str = settings.get("type", "file");
+                    if (type_str == "0")
+                        // old (pre 1.5.6)
+                        return entry_type.file;
+
+                    switch (type_str) {
+                    case "file":
+                        return entry_type.file;
+                    case "event_log":
+                        return entry_type.event_log;
+                    case "debug_print":
+                        return entry_type.debug;
+                    default:
+                        Debug.Assert(false);
+                        return entry_type.file;
+                    }
+                }
             }
 
-            public bool is_file {
-                get { return type == entry_type.file; }
+            public string name {
+                get { return settings.get("name"); }
+            }
+
+            // uniquely identifies this entry (across all history)
+            // for files, it's the file name itself
+            public string unique_name {
+                get {
+                    if (type == entry_type.file)
+                        return name;
+                    string guid = settings.get("guid");
+                    Debug.Assert(guid != "");
+                    return guid;
+                }
+            }
+
+            public string friendly_name {
+                get { return settings.get("friendly_name"); }
             }
 
             public string ui_friendly_name {
@@ -92,6 +120,17 @@ namespace LogWizard
                 }
             }
 
+            public settings_as_string_readonly settings {
+                get { return settings_; }
+            }
+
+            public void from_text_reader(text_reader reader) {
+                settings_ = reader.settings as settings_as_string;
+            }
+
+            public void from_string(string str) {
+                settings_.merge(str);
+            }
         }
         
         private settings_file sett = app.inst.sett;
@@ -463,9 +502,24 @@ namespace LogWizard
             int history_count = int.Parse( sett.get("history_count", "0"));
             for (int idx = 0; idx < history_count; ++idx) {
                 history hist = new history();
-                hist.type = (history.entry_type) int.Parse( sett.get("history." + idx + "type", "0"));
-                hist.name = sett.get("history." + idx + "name");
-                hist.friendly_name = sett.get("history." + idx + "friendly_name");
+                string settings = sett.get("history." + idx + ".settings");
+                if (settings != "")
+                    hist.from_string( settings);
+                else {
+                    // old code (pre 1.5.6)
+                    string type_str = sett.get("history." + idx + "type", "file");
+                    if (type_str == "0")
+                        type_str = "file";
+                    string name = sett.get("history." + idx + "name");
+                    string friendly_name = sett.get("history." + idx + "friendly_name");
+
+                    settings_as_string history_sett = new settings_as_string("");
+                    history_sett.set("type", type_str);
+                    history_sett.set("name", name);
+                    history_sett.set("friendly_name", friendly_name);
+                    hist.from_string(history_sett.ToString());
+                }
+
                 history_.Add( hist );
             }
             history_ = history_.Where(h => {
@@ -1615,9 +1669,7 @@ namespace LogWizard
 
             create_context_for_file(name);
 
-            // FIXME
-            text_ = new event_log_reader();
-            //text_ = new file_text_reader(name);
+            text_ = new file_text_reader(name);
             on_new_log();
 
             ui_context file_ctx = file_to_context(name);
@@ -1626,7 +1678,7 @@ namespace LogWizard
                 curContextCtrl.SelectedIndex = contexts_.IndexOf(file_ctx);
                 
             if (log_parser_.needs_text_syntax) {
-                var file_settings = new settings_as_string( log_parser_.settings);
+                var file_settings = log_parser_.settings;
                 if ( file_settings.get("syntax") == find_log_syntax.UNKNOWN_SYNTAX) {
                     set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Edit Log Settings' button on the top-right.",
                         status_ctrl.status_type.err);
@@ -1744,16 +1796,16 @@ namespace LogWizard
             }
         }
 
-        private int history_select(string name, string friendly_name = "") {
+        private int history_select(string unique_name, string friendly_name = "") {
             ++ignore_change_;
             bool needs_save = false;
             logHistory.SelectedIndex = -1;
 
             bool found = false;
             for (int i = 0; i < history_.Count && !found; ++i)
-                if (history_[i].name == name) {
+                if (history_[i].name == unique_name) {
                     found = true;
-                    bool is_sample = name.ToLower().EndsWith("logwizardsetupsample.log");
+                    bool is_sample = unique_name.ToLower().EndsWith("logwizardsetupsample.log");
                     // if not default form - don't move the selection to the end
                     bool is_default_form = toggled_to_custom_ui_ < 0;
                     if (is_sample || !is_default_form)
@@ -1771,8 +1823,16 @@ namespace LogWizard
                 }
 
             if (logHistory.SelectedIndex < 0) {
+                // if we end up here, it can only be a file! - we don't allow selecting anything else that we don't already have in history
+                Debug.Assert(File.Exists(unique_name));
                 // FIXME (minor) if not on the default form -> i should not put it last (since that will be automatically loaded at restart)
-                history_.Add(new history {name = name, type = 0, friendly_name = friendly_name});
+                history new_ = new history();
+                settings_as_string hist_sett = new settings_as_string("");
+                hist_sett.set("type", "file");
+                hist_sett.set("name", unique_name);
+                hist_sett.set("friendly_name", friendly_name);
+                new_.from_string(hist_sett.ToString());
+                history_.Add(new_);
                 logHistory.Items.Add(history_.Last().ui_friendly_name);
                 logHistory.SelectedIndex = logHistory.Items.Count - 1;
             }
@@ -1796,7 +1856,7 @@ namespace LogWizard
 
             string name = text_.name;
             if (history_.Count < 1)
-                history_select(name);
+                history_select(text_.unique_id);
 
             // 1.1.25+ if I can't find the syntax from file-to-syntax, or by parsing the log, see if the context associated with this file has log-syntax
             var context_settings = file_to_context(name).default_settings;
@@ -1809,11 +1869,11 @@ namespace LogWizard
             else if (log_settings.get("syntax") == "" && context_settings.get("syntax") == "")
                 log_settings.set("syntax", file_default_syntax);
 
-            //string settings = factory.merge_settings(context_settings, log_settings);
-            var settings = context_settings.merge(log_settings);
+            var settings = context_settings.merge_copy(log_settings);
+            text_.merge_setings( settings.ToString());
 
             // note: we recreate the log, so that cached filters know to rebuild
-            log_parser_ = new log_parser(text_, settings.ToString());
+            log_parser_ = new log_parser(text_);
             on_new_log_parser();
 
             full_log_ctrl_.set_filter(new List<raw_filter_row>());
@@ -1852,17 +1912,9 @@ namespace LogWizard
 
         private void add_reader_to_history() {
             history new_ = new history();
-            new_.name = text_.name;
-            if (text_ is file_text_reader) 
-                new_.type = history.entry_type.file;
-            else if (text_ is shared_memory_text_reader) 
-                new_.type = history.entry_type.shmem;
-            else if (text_ is event_log_reader) 
-                new_.type = history.entry_type.event_log;
-            else if (text_ is debug_text_reader)
-                new_.type = history.entry_type.debug;
-            else 
-                Debug.Assert(false);
+            // i need to share this -> between text_reader, parser and history
+            // parser needs to point to text_reader => everything needs to be readonly (the settings)
+            new_.from_text_reader( text_);
 
             int history_idx = -1;
             for (int i = 0; i < history_.Count && history_idx < 0; ++i)
@@ -1928,7 +1980,7 @@ namespace LogWizard
 
         private void on_log_listory_changed() {
             if (logHistory.SelectedIndex >= 0) {
-                history_select(history_[logHistory.SelectedIndex].name);
+                history_select(history_[logHistory.SelectedIndex].unique_name);
                 app.inst.set_log_file(selected_file_name());
             }
             on_new_file_log(history_[logHistory.SelectedIndex].name);
@@ -1980,8 +2032,8 @@ namespace LogWizard
         }
 
         private string selected_file_name() {
-            if (logHistory.SelectedIndex >= 0)
-                return history_[logHistory.SelectedIndex].file_name;
+            if (logHistory.SelectedIndex >= 0 && history_[logHistory.SelectedIndex].type == history.entry_type.file)
+                return history_[logHistory.SelectedIndex].name;
             else
                 return "";
         }
@@ -3425,7 +3477,7 @@ namespace LogWizard
             // I want to visually show to the user that we're dealing with views
             ui_context cur = cur_context();
             string name = name = "View_" + (cur.views.Count + 1);
-            if (history_[logHistory.SelectedIndex].is_file) {
+            if (history_[logHistory.SelectedIndex].type == history.entry_type.file) {
                 name = Path.GetFileNameWithoutExtension(new FileInfo(selected_file_name()).Name) + "_View" + (cur.views.Count + 1);
             }
 
@@ -3581,22 +3633,24 @@ namespace LogWizard
             if (logHistory.SelectedIndex < 0)
                 return;
 
-            var edit = new edit_log_settings_form(log_parser_.settings, selected_file_name(), history_[logHistory.SelectedIndex].friendly_name);
+            var cur_history = history_[logHistory.SelectedIndex];
+            var old_syntax = cur_history.settings.get("syntax");
+            var edit = new edit_log_settings_form(cur_history.settings.ToString());
             if (edit.ShowDialog(this) == DialogResult.OK) {
-                if (history_[logHistory.SelectedIndex].friendly_name != edit.friendly_name) {
-                    history_[logHistory.SelectedIndex].friendly_name = edit.friendly_name;
-                    update_history();
-                }
+                bool friendly_name_changed = cur_history.friendly_name != edit.friendly_name;
+                // at this point, we've updated all settings
+                cur_history.from_string(edit.settings);
 
-                var new_settings = new settings_as_string(edit.settings);
+                if (friendly_name_changed) 
+                    update_history();
+
                 bool will_restart = false;
                 if ( edit.needs_restart)
                     if (MessageBox.Show("Changes will take effect only after restart.\r\nWould you like to restart LogWizard now?", "LogWizard", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         will_restart = true;
 
-                var old_syntax = new settings_as_string( log_parser_.settings).get("syntax");
+                var new_settings = cur_history.settings; 
                 var new_syntax = new_settings.get("syntax");
-                log_parser_.settings = edit.settings;
                 if ( new_settings.get("type") == "file")
                     if (old_syntax != new_syntax && !will_restart) {
                         // in this case, the user has changed the syntax - need to reload everything

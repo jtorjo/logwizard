@@ -34,6 +34,10 @@ namespace lw_common
     public class debug_text_reader : entry_text_reader_base {
         private int last_event_id_ = -1;
 
+        public debug_text_reader() {
+            settings.on_changed += (a) => force_reload();
+        }
+
         // Global Win32 Messages vs Win32 Messages
         private bool use_global {
             get { return settings.get("debug.global", "0") != "0"; }
@@ -48,10 +52,6 @@ namespace lw_common
             get { return last_event_id_ >= 0; }
         }
 
-        internal override void on_settings_changed() {
-            base.on_settings_changed();
-            last_event_id_ = -1;
-        }
 
         public override void force_reload() {
             lock (this) {

@@ -28,7 +28,7 @@ using System.Text;
 namespace lw_common.parse.parsers.system {
     class debug_print : generic_entry_log_parser {
 
-        public debug_print(entry_text_reader_base reader, settings_as_string sett) : base(reader, sett) {
+        public debug_print(entry_text_reader_base reader) : base(reader) {
         }
     }
 }

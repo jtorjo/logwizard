@@ -73,6 +73,8 @@ namespace lw_common
         private Encoding file_encoding_ = null;
         
         public file_text_reader(string file) {
+            set_setting("name", file);
+
             buffer_ = new byte[max_read_in_one_go];
             try {
                 // get absolute path - normally, this should be the absolute path, but just to be sure
@@ -120,10 +122,6 @@ namespace lw_common
                     win32.FindNextChangeNotification(monitor);
                 }
             }
-        }
-
-        public override string name {
-            get { return file_; }
         }
 
         // this should read all text, returns it, and reset our buffer - len is not needed

@@ -14,10 +14,6 @@ namespace lw_common {
         }
 
 
-
-
-
-
         // 1.0.14+ - this computes the full length of the reader - until we call it again
         //           (since this can be costly CPU-wise)
         //           after this call, we can rely on full_len being constant until this is called again

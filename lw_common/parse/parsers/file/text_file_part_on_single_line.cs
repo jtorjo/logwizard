@@ -44,7 +44,7 @@ namespace lw_common.parse.parsers {
         // used ONLY in read_to_end
         private large_string last_lines_string_ = new large_string();
 
-        public text_file_part_on_single_line(file_text_reader reader, settings_as_string sett) : base(reader,sett) {
+        public text_file_part_on_single_line(file_text_reader reader) : base(reader) {
         }
 
         protected override void on_updated_settings() {
@@ -55,7 +55,7 @@ namespace lw_common.parse.parsers {
               //  aliases_ = new aliases("_0=file|@#@|first=ctx1{Firsty}");
         }
 
-        public static bool is_single_line(string file, settings_as_string sett) {
+        public static bool is_single_line(string file, settings_as_string_readonly sett) {
             string[] lines = util.read_beginning_of_file(file, 16834).Split( '\n' );
             for (int index = 0; index < lines.Length; index++) 
                 lines[index] = lines[index].Replace("\r", "");

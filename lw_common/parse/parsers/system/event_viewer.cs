@@ -27,7 +27,7 @@ using System.Text;
 
 namespace lw_common.parse.parsers.system {
     class event_viewer : generic_entry_log_parser {
-        public event_viewer(event_log_reader reader, settings_as_string sett) : base(reader, sett) {
+        public event_viewer(event_log_reader reader) : base(reader) {
         }
     }
 }

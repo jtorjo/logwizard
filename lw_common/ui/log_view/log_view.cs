@@ -707,13 +707,15 @@ namespace lw_common.ui
                 if (log_ != null)
                     log_.Dispose();
 
+                bool was_null = log_ == null;
                 log_ = log;
                 log_.tab_name = name;
                 log_.on_new_lines += filter_.on_new_reader_lines;
 
                 last_item_count_while_current_view_ = 0;
                 visible_columns_refreshed_ = -1;
-                clear();
+                if ( !was_null)
+                    clear();
                 logger.Debug("[view] new log for " + name + " - " + log.log_name);
                 update_x_of_y();
             }

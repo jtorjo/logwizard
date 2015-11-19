@@ -42,7 +42,7 @@ namespace lw_common.parse.parsers.file {
 
         protected  List<string> column_names_ = new List<string>(); 
 
-        public file_parser_base(file_text_reader reader, settings_as_string sett) : base(sett) {
+        public file_parser_base(file_text_reader reader) : base(reader.settings) {
             reader_ = reader;
         }
 

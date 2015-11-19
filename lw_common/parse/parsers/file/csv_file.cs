@@ -40,7 +40,7 @@ namespace lw_common.parse.parsers {
         private bool has_header_line_ = true;
         private string separator_ = ",";
 
-        public csv_file(file_text_reader reader, settings_as_string sett) : base(reader,sett) {
+        public csv_file(file_text_reader reader) : base(reader) {
         }
 
         protected override void on_updated_settings() {

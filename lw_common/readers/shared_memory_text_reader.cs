@@ -35,9 +35,6 @@ namespace lw_common
 
         public shared_memory_text_reader() {
         }
-        public override string name {
-            get { return name_; }
-        }
 
         public void set_memory_name(string name) {
             name_ = name;

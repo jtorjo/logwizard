@@ -57,13 +57,12 @@ namespace lw_common
 
         private bool file_rewritten_ = false;
 
-        public log_parser(text_reader reader, string settings) {
+        public log_parser(text_reader reader) {
             Debug.Assert(reader != null);
             reader_ = reader;
             reader_.on_set_parser(this);
 
-            forward_to_parser_ = factory.create(reader, settings);
-            reader_.on_settings_changed();
+            forward_to_parser_ = factory.create(reader);
 
             force_reload();
             new Thread(refresh_thread) {IsBackground = true}.Start();
@@ -77,11 +76,8 @@ namespace lw_common
             get { return forward_to_parser_.column_names; }
         }
 
-        public string settings {
-            get { return forward_to_parser_.settings.ToString(); }
-            set {
-                forward_to_parser_.on_settings_changed(value);
-            }
+        public settings_as_string_readonly settings {
+            get { return reader_.settings; }
         }
 
         public aliases aliases {
@@ -89,9 +85,7 @@ namespace lw_common
                 return forward_to_parser_.aliases;
             }
             set {
-                var sett = new settings_as_string(settings);
-                sett.set("aliases", value.ToString());
-                settings = sett.ToString();
+                reader_.set_setting("aliases", value.ToString());
             }
         }
 

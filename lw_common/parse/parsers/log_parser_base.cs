@@ -29,11 +29,12 @@ namespace lw_common.parse.parsers {
     internal abstract class log_parser_base : IDisposable {
         protected bool disposed_ = false;
 
-        protected settings_as_string sett_;
+        protected readonly settings_as_string_readonly sett_;
         private aliases aliases_;
 
-        public log_parser_base(settings_as_string sett) {
+        protected log_parser_base(settings_as_string_readonly sett) {
             sett_ = sett;
+            sett_.on_changed = (a) => on_updated_settings();
             on_updated_settings();            
         }
 
@@ -56,16 +57,11 @@ namespace lw_common.parse.parsers {
             get { return aliases_; }
         }
 
-        public void on_settings_changed(string settings) {
-            sett_ = new settings_as_string(settings);
-            on_updated_settings();            
-        }
-
         protected virtual void on_updated_settings() {            
             aliases_ = new aliases(sett_.get("aliases"));
         }
 
-        internal settings_as_string settings {
+        internal settings_as_string_readonly settings {
             get { return sett_; }
         }
 

@@ -1,25 +1,42 @@
 - update gasipromo
 
 
+saving settings (per each log) - so that even if clearing history, we'll still have the file settings
+- guid -> settings ALL THE TIME
+- history -> keep guid
+- log file -> guid (so that even if i delete from history, it will still point correctly)
+
+- event log/debug -> when they are created 
+  -> need to have GUID or something - in order to know where they are saved.
+    - has to be unique, but also can't be a file name (in order to distinguish from the two)
+  - see how to handle everything in logwizard history
+  -> need to see how I choose template (context) for them, and persist that
+  - new ones -> have a new template by default - but have a friendly name
+
+
+
+
+
 - event log -- https://msdn.microsoft.com/en-us/library/74e2ybbs%28v=vs.110%29.aspx - allow as many as the user wants...
   - allow selecting several logs
 
 
+- event log - when user types something -> checks if it exists on another thread (only checks new ones)
+  (....Exists() -> even for another machine)
+
 
 - event log -> for passw -> do NOT save it
-
-- event_log_reader.force_reload - needs reload
-
-- rich label -> tooltip -> show everything (in case it's multiple lines)
 
 - event log - need to show something - while loading - at least progress?
 
 - event log reader/debug print -> need to have the right defaults (column names, etc)
 
+- rich label -> tooltip -> show everything (in case it's multiple lines)
 
 - bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
 
 - event log - see about remove vieweing of logs???
+  namely, i need to select a context (template) for the event log
 
   -- implement toggle details 
      - allow several details in there
@@ -31,6 +48,10 @@
 	   -TOTHINK how do i type-search when the msg contains multiple lines
 	   - i have to see how i can show visually if the message spans on several lines
 	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
+
+
+1.5.6k
+- HUGE CHANGE: refactoring: sharing settings between text_reader, log_parser and history
 
 
 1.5.6j

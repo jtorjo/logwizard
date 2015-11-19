@@ -34,9 +34,10 @@ namespace lw_common {
         private string lines_;
         private ulong len_;
 
-        public inmem_text_reader(string lines) {
+        public inmem_text_reader(string lines, string syntax) {
             lines_ = lines;
             len_ = (ulong)lines.Length;
+            set_setting("syntax", syntax);
         }
 
         public override bool has_more_cached_text() {
@@ -45,10 +46,6 @@ namespace lw_common {
 
         public override ulong try_guess_full_len {
             get { return len_; }
-        }
-
-        public override string name {
-            get { return base.name; }
         }
 
         public override bool fully_read_once {

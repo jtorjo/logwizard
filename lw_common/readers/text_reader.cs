@@ -35,22 +35,18 @@ namespace lw_common
 
         private log_parser parser_ = null;
 
-        private settings_as_string settings_ = new settings_as_string("");
+        private readonly settings_as_string settings_ = new settings_as_string("");
 
         protected error_list_keeper errors_ = new error_list_keeper();
 
-        // 1.5.4g+ - IMPORTANT: this needs to UNIQUELY identify a reader -  since settings are kept relative to this!
-        //
-        //           also, it can't contain = in its name, because we use = in the settings file
-        public virtual string name {
-            get { return ""; }
+        public string name {
+            get { return settings.get("name"); }
         }
 
         // 1.5.6+ - returns encountered errors, if any (to be able to show them visually)
         public List<string> errors {
             get { return errors_.errors; }
-        } 
-
+        }
 
         internal void on_set_parser(log_parser parser) {
             // call this only once!
@@ -58,14 +54,13 @@ namespace lw_common
             parser_ = parser;                
         }
 
-        // 1.5.6c+ - if you want to be notified when parser's settings are changed
-        //
-        // it's also called the first time the parser is initialized
-        internal virtual void on_settings_changed() {
-            settings_ = new settings_as_string( parser_.settings);
+        public string unique_id {
+            get {
+                string guid = settings_.get("guid");
+                Debug.Assert(guid != "");
+                return guid;
+            }
         }
-
-
 
 
 
@@ -99,9 +94,16 @@ namespace lw_common
             get { return parser_; }
         }
 
-        protected settings_as_string settings {
+        public settings_as_string_readonly settings {
             get { return settings_; }
-            set { settings_ = value; }
+        }
+
+        internal void set_setting(string name, string value) {
+            settings_.set(name, value);
+        }
+
+        public void merge_setings(string settings_str) {
+            settings_.merge(settings_str);
         }
 
         public virtual void on_dispose() {
@@ -113,5 +115,24 @@ namespace lw_common
             if ( parser_ != null)
                 parser_.on_text_reader_dispose();
         }
+
+
+        public static string type(text_reader reader) {
+            if (reader is file_text_reader)
+                return "file";
+
+            if (reader is inmem_text_reader)
+                return "file";
+
+            if (reader is event_log_reader)
+                return "event_log";
+            if (reader is debug_text_reader)
+                return "debug_print";
+
+            Debug.Assert(false);
+            return "file";
+        }
+
+
     }
 }

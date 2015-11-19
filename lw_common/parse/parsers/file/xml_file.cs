@@ -50,7 +50,7 @@ namespace lw_common.parse.parsers {
         private string delimeter_name_ = "";
         private string last_ = "";
 
-        public xml_file(file_text_reader reader, settings_as_string sett) : base(reader, sett) {
+        public xml_file(file_text_reader reader) : base(reader) {
             XmlNamespaceManager mngr = new XmlNamespaceManager( new NameTable() );
             mngr.AddNamespace( "xsi", "http://www.w3.org/2001/XMLSchema-instance" );
             mngr.AddNamespace( "xsd", "http://www.w3.org/2001/XMLSchema" );

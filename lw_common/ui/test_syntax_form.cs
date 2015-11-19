@@ -174,7 +174,7 @@ namespace lw_common.ui {
             result.ClearObjects();
 
             // parse each line
-            log_parser parse = new log_parser(new inmem_text_reader(lines.Text), "syntax=" + syntax.Text );
+            log_parser parse = new log_parser(new inmem_text_reader(lines.Text, syntax.Text));
             while (!parse.up_to_date)
                 Thread.Sleep(10);
 

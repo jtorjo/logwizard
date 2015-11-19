@@ -29,11 +29,15 @@ using System.Text;
 namespace lw_common {
 
     // thread-safe
-    public class settings_as_string {
+    public class settings_as_string_readonly {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private Dictionary<string,string> sett_ = new Dictionary<string, string>();
+        protected Dictionary<string,string> sett_ = new Dictionary<string, string>();
 
-        public settings_as_string(string str) {
+        public delegate void on_changed_func(string name);
+        // 1.5.6+ get notified of changes
+        public on_changed_func on_changed;
+
+        public settings_as_string_readonly(string str) {
             var lines = str.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines) {
                 if (line.Trim() == "")
@@ -45,7 +49,7 @@ namespace lw_common {
                     string value = line.Substring(idx + 1);
                     sett_.Add(name, value);
                 } else {
-                    logger.Warn("invalid settings_as_string line, ignoring " + line);
+                    logger.Warn("invalid settings_as_string_readonly line, ignoring " + line);
                 }
             }
         }
@@ -53,19 +57,6 @@ namespace lw_common {
         public string get(string name, string default_ = "") {
             lock(this)
                 return sett_.ContainsKey(name) ? sett_[name] : default_;
-        }
-
-        public void set(string name, string val) {
-            lock (this) {
-                if (sett_.ContainsKey(name))
-                    sett_[name] = val;
-                else
-                    sett_.Add(name, val);
-
-                if (val == "")
-                    sett_.Remove(name);
-            }
-
         }
 
         public string[] names() {
@@ -94,7 +85,7 @@ namespace lw_common {
         }
 
         // 'other' overrides all we have
-        public settings_as_string merge(settings_as_string other) {
+        public settings_as_string merge_copy(settings_as_string_readonly other) {
             settings_as_string merged = new settings_as_string(ToString());
 
             var other_names = other.names();
@@ -103,5 +94,39 @@ namespace lw_common {
 
             return merged;
         }
+    }
+
+    // thread-safe
+    public class settings_as_string : settings_as_string_readonly {
+        public settings_as_string(string str) : base(str) {
+        }
+
+        public void set(string name, string val) {
+            lock (this) {
+                bool exists = sett_.ContainsKey(name);
+                if (exists && sett_[name] == val)
+                    return; // nothing changed
+                if (!exists && val == "")
+                    return; // nothing changed
+
+                if (exists)
+                    sett_[name] = val;
+                else
+                    sett_.Add(name, val);
+
+                if (val == "")
+                    sett_.Remove(name);
+            }
+            if (on_changed != null)
+                on_changed(name);
+        }
+
+        public void merge(string other) {
+            settings_as_string_readonly other_sett = new settings_as_string_readonly(other);
+            // note: i set it like this, so that in case of any change, I call the delegate
+            foreach ( var name in other_sett.names())
+                set( name, other_sett.get(name));
+        }
+
     }
 }

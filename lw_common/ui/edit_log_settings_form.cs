@@ -38,10 +38,11 @@ namespace lw_common.ui {
         private List<string> available_event_logs_ = new List<string>(); 
 
         // file name is set only if it's a file
-        public edit_log_settings_form(string settings, string file_name, string friendly_name, edit_type edit = edit_type.edit) {
+        public edit_log_settings_form(string settings, edit_type edit = edit_type.edit) {
             old_settings_ = new settings_as_string(settings);
             settings_ = new settings_as_string(settings);
-            file_name_ = file_name;
+            file_name_ =  settings_.get("type") == "file" ? settings_.get("name") : "" ;
+
             edit_ = edit;
             InitializeComponent();
             type.Enabled = edit == edit_type.add;
@@ -49,7 +50,7 @@ namespace lw_common.ui {
             hide_tabs(typeTab);
             hide_tabs(fileTypeTab);
             cancel.Left = -100;
-            friendlyName.Text = friendly_name;
+            friendlyName.Text = settings_.get("friendly_name");
 
             fileType.SelectedIndex = file_type_to_index( settings_.get("file_type") );
 
