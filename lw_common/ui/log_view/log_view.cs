@@ -1225,6 +1225,8 @@ namespace lw_common.ui
 
 
         private bool ensure_row_visible(int row_idx) {
+            if (row_idx < 0)
+                return false;
             if (is_row_visible(row_idx))
                 return true;
             var visible = visible_row_indexes();
@@ -1244,6 +1246,8 @@ namespace lw_common.ui
         }
 
         public void go_to_row(int row_idx, select_type notify) {
+            if (row_idx < 0)
+                return;
             if (row_idx >= item_count)
                 return;
 

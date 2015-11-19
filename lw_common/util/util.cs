@@ -968,6 +968,41 @@ namespace lw_common {
             }
         }
 
+        public static void create_backup(string prefix, string suffix, int count) {
+            prefix += suffix;
+
+            try {
+                string last = prefix + "." + (count+1) + suffix;
+                if ( File.Exists(last))
+                    File.Delete(last);
+            }
+            catch (Exception e) {
+                logger.Error("Error while backing up last file :" + e.Message); 
+            }
+            for ( int i = count; i >= 0; --i)
+                try {
+                    string now = prefix + (i > 0 ? "." + i + suffix : "") ;
+                    string next = prefix + "." + (i+1) + suffix;
+                    if ( File.Exists(now))
+                        if ( i > 0)
+                            File.Move(now, next);
+                        else 
+                            File.Copy(now, next);
+                }
+                catch(Exception e) {
+                    logger.Error("Error while backin file " + i + ":" + e.Message); 
+                }
+            try {
+                string last = prefix + "." + (count+1);
+                if ( File.Exists(last))
+                    File.Delete(last);
+            }
+            catch (Exception e) {
+                logger.Error("Error while erasing last file :" + e.Message); 
+            }
+        }
+
+
         public static string appdata_dir() {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\";
             return path;

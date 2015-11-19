@@ -1692,10 +1692,10 @@ namespace LogWizard
                 new_ctx.name = Path.GetFileNameWithoutExtension(new FileInfo(file).Name);
                 break;
             case "event_log":
-                // FIXME
+                new_ctx.name = least_unused_context_name("Event Log");
                 break;
             case "debug_print":
-                // FIXME
+                new_ctx.name = least_unused_context_name("Debug");
                 break;
             default:
                 Debug.Assert(false);
@@ -1706,6 +1706,16 @@ namespace LogWizard
             log_settings.set("context", new_ctx.name);
 
             update_contexts_combos_in_all_forms();
+        }
+
+        private string least_unused_context_name(string prefix) {
+            int suffix = 0;
+            while (true) {
+                string full = prefix + (suffix > 0 ? " (" + (suffix + 1) + ")" : "");
+                if (contexts_.FirstOrDefault(x => x.name == full) == null)
+                    return full;
+                ++suffix;
+            }
         }
 
         private void on_new_file_log(string name) {
@@ -1849,7 +1859,7 @@ namespace LogWizard
 
             bool found = false;
             for (int i = 0; i < history_.Count && !found; ++i)
-                if (history_[i].name == unique_name) {
+                if (history_[i].unique_name == unique_name) {
                     found = true;
                     bool is_sample = unique_name.ToLower().EndsWith("logwizardsetupsample.log");
                     // if not default form - don't move the selection to the end
@@ -3578,12 +3588,6 @@ namespace LogWizard
                 Debug.Assert(false);
         }
 
-        private void helpSyntax_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-            Process.Start("https://github.com/jtorjo/logwizard/wiki/Syntax");
-        }
-
-        private void testSyntax_Click(object sender, EventArgs e) {
-        }
 
 
 
@@ -3594,9 +3598,6 @@ namespace LogWizard
             whatupMenu.Show(Cursor.Position);
         }
 
-        private void whatsupOpen_Click(object sender, EventArgs e) {
-            // not impleemented yet
-        }
 
         private void whatsupNew_Click(object sender, EventArgs e) {
             new log_wizard( ).Show();
@@ -3671,6 +3672,24 @@ namespace LogWizard
             delFilteredView.Visible = visible;
             synchronizeWithExistingLogs.Visible = visible;
             synchronizedWithFullLog.Visible = visible;
+        }
+
+        private void whatsupOpen_Click(object sender, EventArgs e) {
+            var add = new edit_log_settings_form("", edit_log_settings_form.edit_type.add);
+            if (add.ShowDialog(this) == DialogResult.OK) {
+                var new_ = new history();
+                new_.from_string(add.settings);
+
+                history_.Add(new_);
+                ++ignore_change_;
+                logHistory.Items.Add(history_.Last().ui_friendly_name);
+                logHistory.SelectedIndex = logHistory.Items.Count - 1;
+                --ignore_change_;
+
+                create_text_reader(new_.settings);
+                update_history();
+                save();
+            }
         }
 
         private void editSettings_Click(object sender, EventArgs e) {

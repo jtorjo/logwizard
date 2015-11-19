@@ -3,7 +3,6 @@
 
 
 
--- create backup of original settings file -> just in case we mess it up
 
 
 - event log/debug -> when they are created 
@@ -47,6 +46,14 @@
 	   -TOTHINK how do i type-search when the msg contains multiple lines
 	   - i have to see how i can show visually if the message spans on several lines
 	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
+
+1.5.6o
+
+
+1.5.6n
+- create backup of original settings file -> just in case we mess it up
+- at this time, I can select a new type of log (like, Debug)
+  - however, it's not saved into settings
 
 
 1.5.6m

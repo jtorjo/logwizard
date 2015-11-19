@@ -69,7 +69,9 @@ namespace LogWizard
 
             util.set_current_dir();
             util.init_log();
-            app.inst.init( new settings_file(util.is_debug ? "logwizard_debug.txt" : "logwizard_user.txt") );
+            string sett_file = util.is_debug ? "logwizard_debug" : "logwizard_user";
+            util.create_backup(sett_file, ".txt", 15);
+            app.inst.init( new settings_file(sett_file + ".txt") );
 
             util.force_break_into_debugger();
             util.init_exceptions();

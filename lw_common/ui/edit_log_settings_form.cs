@@ -72,6 +72,10 @@ namespace lw_common.ui {
             selectedEventLogs.Text = settings_.get("event.log_type").Replace("|", "\r\n");
 
             type.SelectedIndex = type_to_index();
+            if (edit == edit_type.add) {
+                settings_.set("guid", Guid.NewGuid().ToString());
+                util.postpone(() => type.DroppedDown = true, 1);
+            }
         }
 
         private int type_to_index() {
