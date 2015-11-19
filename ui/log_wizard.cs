@@ -555,11 +555,15 @@ namespace LogWizard
                 var settings = history_[idx].settings.ToString();
                 var guid = history_[idx].settings.get("guid");
                 Debug.Assert(guid != "");
+                var file = history_[idx].settings.get("type") == "file" ? history_[idx].settings.get("name") : "";
 
                 // note : the way I have settings point to guid is this: I may actually allow user to delete history
                 //        however, if after deleting history, user opens a file he opened before, we want those settings to still take effect.
                 sett_.set("history." + idx + "guid", guid);
                 sett_.set("guid." + guid, settings);
+                // this way, even if we clear the history, and later on we add the same file, we have its settings
+                if ( file != "")
+                    sett_.set("file_to_guid." + file, guid);
             }
 
             sett_.set("context_count", "" + contexts_.Count);
@@ -714,35 +718,55 @@ namespace LogWizard
             }
         }
 
-        private ui_context file_to_context(string name) {
-            var default_ = contexts_.FirstOrDefault(x => x.name == "Default");
-            if (!File.Exists(name))
-                return default_;
+        private ui_context settings_to_context(settings_as_string_readonly log_settings) {
+            string context_name = log_settings.get("context");
+            if (context_name != "") {
+                var existing = contexts_.FirstOrDefault(x => x.name == context_name);
+                if (existing != null)
+                    // 1.5.6+ - we now keep the context in the settings 
+                    return existing;                
+            }
 
-            if ( app.inst.forced_file_to_context.ContainsKey(name)) {
-                string forced = app.inst.forced_file_to_context[name];
+            // old way of forcing file to have a context (pre 1.5.6)
+            string file = log_settings.get("type") == "file" ? log_settings.get("name") : "";
+            if ( file != "" && app.inst.forced_file_to_context.ContainsKey(file)) {
+                string forced = app.inst.forced_file_to_context[file];
                 var context_from_forced = contexts_.FirstOrDefault(x => x.name == forced);
                 if (context_from_forced != null)
                     // return it, only if we have a specific Template for it
                     return context_from_forced;
             }
 
-            string from_header = log_to.file_to_context(name);
-            if (from_header != null) {
-                // ... case-insensitive search (easier for user)
-                var context_from_header = contexts_.FirstOrDefault(x => x.name.ToLower() == from_header.ToLower());
-                if (context_from_header != null)
-                    // return it, only if we have a specific Template for it
-                    return context_from_header;
+            if (file != "") {
+                string from_header = log_to.file_to_context(file);
+                if (from_header != null) {
+                    // ... case-insensitive search (easier for user)
+                    var context_from_header = contexts_.FirstOrDefault(x => x.name.ToLower() == from_header.ToLower());
+                    if (context_from_header != null)
+                        // return it, only if we have a specific Template for it
+                        return context_from_header;
+                }
+                // 1.1.25+ - match the context that matches the name completely
+                string name_no_ext = Path.GetFileNameWithoutExtension(new FileInfo(file).Name);
+                var found = contexts_.FirstOrDefault(x => x.name == name_no_ext);
+                if (found != null)
+                    return found;
             }
 
-            // 1.1.25+ - match the context that matches the name completely
-            string name_no_ext = Path.GetFileNameWithoutExtension( new FileInfo(name).Name);
-            var found = contexts_.FirstOrDefault(x => x.name == name_no_ext);
-            if (found != null)
-                return found;
-
+            var default_ = contexts_.FirstOrDefault(x => x.name == "Default");
             return default_ ?? contexts_[0];
+        }
+
+
+        private ui_context new_file_to_context(string name) {
+            var default_ = contexts_.FirstOrDefault(x => x.name == "Default");
+            if (!File.Exists(name))
+                return default_;
+
+            settings_as_string sett = new settings_as_string("");
+            sett.set("type", "file");
+            sett.set("name", name);
+            return settings_to_context(sett);
         }
 
         private void on_file_drop(string file, string friendly_name = "") {
@@ -1417,11 +1441,7 @@ namespace LogWizard
             if (text_ == null)
                 return;
 
-            if (log_parser_ != null) 
-                cur_context().default_settings = factory.get_context_dependent_settings(text_, log_parser_.settings);
-            if ( !app.inst.log_to_settings.ContainsKey(text_.name))
-                app.inst.log_to_settings.Add(text_.name, "");
-            app.inst.log_to_settings[text_.name] = factory.get_log_dependent_settings(text_, log_parser_.settings).ToString();
+            cur_context().merge_settings( factory.get_context_dependent_settings(text_, text_.settings));
             save_contexts();
 
             default_ui_.save("ui.default");
@@ -1651,59 +1671,54 @@ namespace LogWizard
               - the idea is for the uesr not to have to mistakenly delete a context when he's selecting a different type of file,
                 (since he would want new filters). thus, just create a new context where he can do anything
         */
-        private void create_context_for_file(string name) {
-            if (name == "")
+        private void create_context_for_log(settings_as_string log_settings) {
+            string context_name = log_settings.get("context");
+            if (contexts_.FirstOrDefault(x => x.name == context_name) != null)
+                // in this case, I already have a context, and the context exists
                 return;
-            ui_context file_ctx = file_to_context(name);
-            if (file_ctx.name != "Default")
+
+            ui_context log_ctx = settings_to_context(log_settings);
+            if (log_ctx.name != "Default")
                 // we already have a context
                 return;
 
             ui_context new_ctx = new ui_context();
-            new_ctx.name = Path.GetFileNameWithoutExtension(new FileInfo(name).Name);
             contexts_.Add(new_ctx);
-            var syntax = new find_log_syntax().try_find_log_syntax_file(name);
-            if (syntax != find_log_syntax.UNKNOWN_SYNTAX)
-                new_ctx.default_settings.set("syntax",syntax);
+
+            switch (log_settings.get("type")) {
+            case "file":
+                string file = log_settings.get("name");
+                Debug.Assert(file != "");
+                new_ctx.name = Path.GetFileNameWithoutExtension(new FileInfo(file).Name);
+                break;
+            case "event_log":
+                // FIXME
+                break;
+            case "debug_print":
+                // FIXME
+                break;
+            default:
+                Debug.Assert(false);
+                return;
+            }
+
+            Debug.Assert(new_ctx.name != "");
+            log_settings.set("context", new_ctx.name);
 
             update_contexts_combos_in_all_forms();
         }
 
         private void on_new_file_log(string name) {
-            // should call create_text_reader
-            Debug.Assert(false);
-
-            if (text_ != null && text_.name == name) {
-                merge_notes();
-                return;
+            string guid = sett_.get("file_to_guid." + name);
+            if (guid != "") 
+                create_text_reader(new settings_as_string(sett_.get("guid." + guid)));
+            else {
+                // at this point, we know it's a ***new*** file
+                settings_as_string file_settings = new settings_as_string("");
+                file_settings.set("type", "file");
+                file_settings.set("name", name);
+                create_text_reader(file_settings);
             }
-
-            if (text_ != null)
-                text_.Dispose();
-
-            create_context_for_file(name);
-
-            text_ = new file_text_reader(name);
-            on_new_log();
-
-            ui_context file_ctx = file_to_context(name);
-            if (file_ctx != cur_context())
-                // update context based on file name
-                curContextCtrl.SelectedIndex = contexts_.IndexOf(file_ctx);
-                
-            if (log_parser_.needs_text_syntax) {
-                var file_settings = log_parser_.settings;
-                if ( file_settings.get("syntax") == find_log_syntax.UNKNOWN_SYNTAX) {
-                    set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Edit Log Settings' button on the top-right.",
-                        status_ctrl.status_type.err);
-                    show_source(true);
-                }
-                else if (!cur_context().has_not_empty_views)
-                    set_status("Don't the columns look ok? Perpaps LogWizard did not correctly parse them... If so, Toggle the Source Pane ON (Alt-O), anc click on 'Test'.", status_ctrl.status_type.warn, 15000);
-                else if ( !cur_context().has_views)
-                    set_status("Why so dull? <a http://www.codeproject.com/Articles/1045528/LogWizard-Filter-your-Logs-Inside-out>Add some colors!</a>");
-            } 
-            force_initial_refresh_of_all_views();
         }
 
         private void create_text_reader(settings_as_string_readonly settings) {
@@ -1716,15 +1731,13 @@ namespace LogWizard
             if (text_ != null)
                 text_.Dispose();
 
-            if ( is_file)
-                create_context_for_file( settings.get("name"));
-
+            create_context_for_log( settings as settings_as_string);
             text_ = factory.create_text_reader(settings as settings_as_string);
             on_new_log();
-            ui_context file_ctx = file_to_context( settings.get("name") );
-            if (file_ctx != cur_context())
+            ui_context log_ctx = settings_to_context( settings );
+            if (log_ctx != cur_context())
                 // update context based on file name
-                curContextCtrl.SelectedIndex = contexts_.IndexOf(file_ctx);
+                curContextCtrl.SelectedIndex = contexts_.IndexOf(log_ctx);
                 
             if (log_parser_.needs_text_syntax) {
                 var file_settings = log_parser_.settings;
@@ -1881,29 +1894,35 @@ namespace LogWizard
             set_status_forever("Log: " + text_.name + size);
             dropHere.Visible = false;
 
-            // by default - try to find the syntax by reading the header info
-            //              otherwise, try to parse it
-            string file_to_syntax = text_ is file_text_reader ? log_to.file_to_syntax(text_.name) : null;
-            if (file_to_syntax == null)
-                file_to_syntax = "";
-
-            string name = text_.name;
             if (history_.Count < 1)
                 history_select(text_.unique_id);
 
-            // 1.1.25+ if I can't find the syntax from file-to-syntax, or by parsing the log, see if the context associated with this file has log-syntax
-            var context_settings = file_to_context(name).default_settings;
+            var reader_settings_copy = new settings_as_string( text_.settings.ToString() );
+            var context_settings_copy = new settings_as_string( settings_to_context(reader_settings_copy).default_settings.ToString());
+            context_settings_copy.merge(reader_settings_copy.ToString());
             var file_text = text_ as file_text_reader;
-            string file_default_syntax =  file_text != null ? file_text.try_to_find_log_syntax() : "";
-            // if user specifically overrides settings for a log, use that
-            var log_settings = new settings_as_string(  log_to.log_to_settings(name));
-            if (log_settings.get("syntax") == "" && file_to_syntax != "")
-                log_settings.set("syntax", file_to_syntax);
-            else if (log_settings.get("syntax") == "" && context_settings.get("syntax") == "")
-                log_settings.set("syntax", file_default_syntax);
+            if (file_text != null) 
+                if ( factory.guess_file_type(file_text.name) == "line-by-line")
+                    if (reader_settings_copy.get("syntax") == "") {
+                        // file reader doesn't know syntax
+                        // by default - try to find the syntax by reading the header info; otherwise, try to parse it
+                        string file_to_syntax = log_to.file_to_syntax(text_.name);
+                        if (file_to_syntax != "") {
+                            // note: file-to-syntax overrides the context syntax
+                            context_settings_copy.set("syntax", file_to_syntax);
+                            context_settings_copy.set("syntax_type", "file_to_syntax");
+                        }
+                        // note: if the context already knows syntax, use that
+                        else if (context_settings_copy.get("syntax") == "") {
+                            string found_syntax = file_text.try_to_find_log_syntax();
+                            if (found_syntax != "" && found_syntax != file_text_reader.UNKNOWN_SYNTAX) {
+                                context_settings_copy.set("syntax", found_syntax);
+                                context_settings_copy.set("syntax_type", "try_to_find_syntax");
+                            }
+                        }
+                    }            
 
-            var settings = context_settings.merge_copy(log_settings);
-            text_.merge_setings( settings.ToString());
+            text_.merge_setings( context_settings_copy.ToString());
 
             // note: we recreate the log, so that cached filters know to rebuild
             log_parser_ = new log_parser(text_);
@@ -2079,14 +2098,6 @@ namespace LogWizard
 
             // first, remove all log views, so that the new filters (from the new context) are loaded
             remove_all_log_views();
-
-            string name = selected_file_name();
-            int default_context = contexts_.IndexOf(file_to_context(name));
-            if (name != "" && default_context != curContextCtrl.SelectedIndex) {
-                if (!app.inst.forced_file_to_context.ContainsKey(name))
-                    app.inst.forced_file_to_context.Add(name, "");
-                app.inst.forced_file_to_context[name] = contexts_[curContextCtrl.SelectedIndex].name;
-            }
 
             load();
 
@@ -3232,7 +3243,7 @@ namespace LogWizard
                 imported_context_lines.RemoveAt(0);
                 var imported_context = str_to_ui_context(util.concatenate(imported_context_lines, "\r\n"));
 
-                var can_we_find_context = file_to_context(import_dir + "\\" + unique_name);
+                var can_we_find_context = new_file_to_context(import_dir + "\\" + unique_name);
                 if (can_we_find_context.name == "Default") {
                     // at this point - we have to force the imported context for this file
                     var exists = contexts_.Find(x => x.name == imported_context_name);

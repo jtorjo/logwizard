@@ -123,7 +123,7 @@ namespace lw_common {
 
         public void merge(string other) {
             settings_as_string_readonly other_sett = new settings_as_string_readonly(other);
-            // note: i set it like this, so that in case of any change, I call the delegate
+            // note: i set it like this, so that in case of any change, I call the on_change delegate
             foreach ( var name in other_sett.names())
                 set( name, other_sett.get(name));
         }

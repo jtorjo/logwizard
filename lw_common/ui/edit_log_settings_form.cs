@@ -135,6 +135,9 @@ namespace lw_common.ui {
             settings_.set("event.remote_user_name", remoteUserName.Text);
             settings_.set("event.remote_password", remotePassword.Text);
             settings_.set("event.log_type", selectedEventLogs.Text.Replace("\r\n", "|"));
+
+            // syntax_type is used internally, to know if the user has changed the syntax
+            settings_.set("syntax_type", settings_.get("syntax") != old_settings_.get("syntax") ? "edited_now" : "");
         }
 
         private bool change_needs_restart() {

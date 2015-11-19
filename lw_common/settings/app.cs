@@ -139,9 +139,8 @@ namespace lw_common {
 
         public Dictionary<string, string> file_to_context = new Dictionary<string, string>();
         public Dictionary<string, string> file_to_syntax = new Dictionary<string, string>();
-        // 1.4.8+
-        public Dictionary<string, string> log_to_settings = new Dictionary<string, string>();
         
+        // 1.5.6+ - obsolete - it's used only to match files-to-context in the old history combo
         // 1.1.5+ - forced contexts (for instance, when imported from .logwizard files)
         public Dictionary<string,string> forced_file_to_context = new Dictionary<string, string>();
 
@@ -341,8 +340,6 @@ namespace lw_common {
             load_save(load, ref file_to_context, "file_to_context");
             load_save(load, ref file_to_syntax, "file_to_syntax");
             load_save(load, ref forced_file_to_context, "forced_file_to_context");
-            // we keep the "file_to_setting" name for compatibility
-            load_save(load, ref log_to_settings, "file_to_settings");
 
             load_save(load, ref edit_mode, "edit_mode", edit_mode_type.always);
 

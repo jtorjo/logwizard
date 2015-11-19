@@ -1,10 +1,9 @@
 - update gasipromo
 
 
-saving settings (per each log) - so that even if clearing history, we'll still have the file settings
- (factory.create_reader????)
-- log file -> guid (so that even if i delete from history, it will still point correctly)
-  on_new_file_log -> createtextreader
+
+
+-- create backup of original settings file -> just in case we mess it up
 
 
 - event log/debug -> when they are created 
@@ -48,6 +47,14 @@ saving settings (per each log) - so that even if clearing history, we'll still h
 	   -TOTHINK how do i type-search when the msg contains multiple lines
 	   - i have to see how i can show visually if the message spans on several lines
 	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
+
+
+1.5.6m
+- refactoring so that I can create new types of logs easily (event log/debug), and have settings saved correctly
+- saving settings (per each log) - so that even if clearing history, we'll still have the file settings
+	- log file -> guid (so that even if i delete from history, it will still point correctly)
+	  on_new_file_log -> createtextreader
+	- context syntax + aliases -> i should not take them from the current text reader's settings - since they can be overridden when the text_reader is created
 
 
 1.5.6l

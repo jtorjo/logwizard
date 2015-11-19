@@ -43,7 +43,7 @@ namespace LogWizard.context {
                     return fts.Value;
             }
 
-            return null;
+            return "";
         }
 
         public static string file_to_context(string name) {
@@ -55,10 +55,5 @@ namespace LogWizard.context {
             return null;
         }
 
-        public static string log_to_settings(string name) {
-            if (app.inst.log_to_settings.ContainsKey(name))
-                return app.inst.log_to_settings[name];
-            return "";
-        }
     }
 }

@@ -95,9 +95,16 @@ namespace lw_common {
     [Serializable]
     public class ui_context {
         public string name  = "";
-        public settings_as_string default_settings = new settings_as_string("");
+        private settings_as_string default_settings_ = new settings_as_string("");
 
         public List<ui_view> views = new List<ui_view>();
+
+        public void merge_settings(settings_as_string_readonly other_sett) {
+            if ( other_sett.get("syntax_type") == "edited_now")
+                if ( default_settings_.get("syntax") == "")
+                    default_settings_.set("syntax", other_sett.get("syntax"));
+            default_settings_.set( "aliases", other_sett.get("aliases"));
+        }
 
         public bool has_views {
             get {
@@ -116,7 +123,7 @@ namespace lw_common {
 
         public bool has_not_empty_views {
             get {
-                if (default_settings.get("syntax") != "" && default_settings.get("syntax") != find_log_syntax.UNKNOWN_SYNTAX)
+                if (default_settings_.get("syntax") != "" && default_settings_.get("syntax") != find_log_syntax.UNKNOWN_SYNTAX)
                     // user just set the syntax - very likely he'll use this file in the future
                     return true;
 
@@ -130,8 +137,12 @@ namespace lw_common {
             }
         }
 
+        public settings_as_string_readonly default_settings {
+            get { return default_settings_; }
+        }
+
         public void copy_from(ui_context other) {
-            default_settings = other.default_settings;
+            default_settings_ = other.default_settings_;
             name = other.name;
             views = other.views.ToList();
         }
@@ -139,16 +150,16 @@ namespace lw_common {
         private void load_save(bool load, string prefix) {
             app.load_save(load, ref name, prefix + ".name", "Default" );
 
-            string settings_str = default_settings.ToString();
+            string settings_str = default_settings_.ToString();
             if (load) {
                 app.load_save(load, ref settings_str, prefix + ".default_settings");
-                default_settings = new settings_as_string(settings_str);
+                default_settings_ = new settings_as_string(settings_str);
 
                 if (settings_str == "") {
                     // ... 1.4.8- kept the old name for persistenting
                     app.load_save(load, ref settings_str, prefix + ".default_syntax");
                     if (settings_str != "")
-                        default_settings.set("syntax", settings_str);
+                        default_settings_.set("syntax", settings_str);
                 }
             }
             else
