@@ -32,6 +32,11 @@
 	   - i have to see how i can show visually if the message spans on several lines
 	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
 
+1.5.6r
+- open log: event log on a remote pc - works, and also validates the selected event logs
+  - note: enumerating the logs from the remote machine does not work, no matter what i do.
+
+
 1.5.6o
 - open log : debug -> saves settings correctly
 - open log : event log 

@@ -185,7 +185,7 @@
             this.panel2.Controls.Add(this.fileTypeTab);
             this.panel2.Location = new System.Drawing.Point(2, 41);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(595, 294);
+            this.panel2.Size = new System.Drawing.Size(595, 291);
             this.panel2.TabIndex = 0;
             // 
             // fileTypeTab
@@ -200,7 +200,7 @@
             this.fileTypeTab.Location = new System.Drawing.Point(-5, 0);
             this.fileTypeTab.Name = "fileTypeTab";
             this.fileTypeTab.SelectedIndex = 0;
-            this.fileTypeTab.Size = new System.Drawing.Size(617, 291);
+            this.fileTypeTab.Size = new System.Drawing.Size(617, 288);
             this.fileTypeTab.TabIndex = 0;
             // 
             // tabPage3
@@ -214,7 +214,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(609, 262);
+            this.tabPage3.Size = new System.Drawing.Size(609, 259);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -291,7 +291,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(609, 268);
+            this.tabPage4.Size = new System.Drawing.Size(609, 265);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -343,7 +343,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(609, 268);
+            this.tabPage5.Size = new System.Drawing.Size(609, 265);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -404,7 +404,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(609, 268);
+            this.tabPage6.Size = new System.Drawing.Size(609, 265);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "tabPage6";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -490,7 +490,7 @@
             this.eventLogs.FormattingEnabled = true;
             this.eventLogs.Location = new System.Drawing.Point(124, 91);
             this.eventLogs.Name = "eventLogs";
-            this.eventLogs.Size = new System.Drawing.Size(488, 52);
+            this.eventLogs.Size = new System.Drawing.Size(488, 36);
             this.eventLogs.TabIndex = 3;
             // 
             // groupBox1
@@ -508,7 +508,7 @@
             this.groupBox1.Controls.Add(this.label22);
             this.groupBox1.Controls.Add(this.remoteMachineName);
             this.groupBox1.Controls.Add(this.label21);
-            this.groupBox1.Location = new System.Drawing.Point(13, 189);
+            this.groupBox1.Location = new System.Drawing.Point(13, 186);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(423, 152);
             this.groupBox1.TabIndex = 2;
@@ -531,7 +531,7 @@
             this.remoteDomain.Location = new System.Drawing.Point(306, 31);
             this.remoteDomain.Name = "remoteDomain";
             this.remoteDomain.Size = new System.Drawing.Size(100, 23);
-            this.remoteDomain.TabIndex = 14;
+            this.remoteDomain.TabIndex = 2;
             // 
             // label26
             // 
@@ -558,7 +558,7 @@
             this.remotePassword.Name = "remotePassword";
             this.remotePassword.PasswordChar = '*';
             this.remotePassword.Size = new System.Drawing.Size(100, 23);
-            this.remotePassword.TabIndex = 11;
+            this.remotePassword.TabIndex = 4;
             // 
             // label24
             // 
@@ -574,7 +574,7 @@
             this.remoteUserName.Location = new System.Drawing.Point(120, 72);
             this.remoteUserName.Name = "remoteUserName";
             this.remoteUserName.Size = new System.Drawing.Size(100, 23);
-            this.remoteUserName.TabIndex = 9;
+            this.remoteUserName.TabIndex = 3;
             // 
             // label23
             // 

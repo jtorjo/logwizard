@@ -99,6 +99,12 @@ namespace lw_common.ui {
                 Microsoft-Windows-AppxPackaging/Operational
                 Microsoft-Windows-AppModel-Runtime/admin
 
+
+            The remote machine:
+            - It must be discoverable
+            - Account you use must belong to "Event Log Readers"
+            - You must enable the Remote Event Log Management exception in the Windows Firewall Settings on the remote computer to which you want to connect.
+            - "Remote Registry" must be running on the remote computer
             */
             while (!closed_) {
                 Thread.Sleep(250);
@@ -122,11 +128,7 @@ namespace lw_common.ui {
                 List<string> dont_exist = new List<string>();
                 foreach ( string log in event_logs)
                     try {
-                        bool exists = remote_machine_name != "" ? EventLog.Exists(log, remote_machine_name) : EventLog.Exists(log);
-                        if (!exists) 
-                            // take the harder path
-                            exists = remote_event_log_exists(log, remote_machine_name, remote_domain_name, remote_user_name, remote_password_name);
-                        
+                        bool exists = remote_machine_name != "" ? remote_event_log_exists(log, remote_machine_name, remote_domain_name, remote_user_name, remote_password_name) : EventLog.Exists(log);
                         if ( !exists)
                             dont_exist.Add(log);
                     } catch {
