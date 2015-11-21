@@ -34,7 +34,7 @@ namespace lw_common.parse.parsers {
 
         protected log_parser_base(settings_as_string_readonly sett) {
             sett_ = sett;
-            sett_.on_changed = (a) => on_updated_settings();
+            sett_.on_changed += (a) => on_updated_settings();
             on_updated_settings();            
         }
 

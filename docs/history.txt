@@ -1,5 +1,4 @@
 
-- event log - test with Microsoft-Windows-TWinUI/Operational -> see if i can get correctly number of items
 
 - event log reader/debug print -> need to have the right defaults (column names, etc)
 
@@ -11,8 +10,6 @@
 
 - history_select -> does it work for new files?
 
-- event log -> for passw -> do NOT save it
-  - if user needs to set password -> need to show settings
 
 - debug log: when the full log is empty, we get lots of refreshes and stuff
 
@@ -33,6 +30,15 @@
 	   -TOTHINK how do i type-search when the msg contains multiple lines
 	   - i have to see how i can show visually if the message spans on several lines
 	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
+
+1.5.7a
+- event log - test with Microsoft-Windows-TWinUI/Operational -> see if i can get correctly number of items
+  - works now
+- event log - shows the log name as well
+- event log -> for passw -> do NOT save it
+  - if user needs to set password -> need to show settings
+- event log: tested getting logs from another machine - works
+ 
 
 1.5.6x
 - fix: the full log does not update correctly for event log

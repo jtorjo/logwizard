@@ -55,9 +55,8 @@ namespace lw_common {
             public string log_type = "";
 
             public string remote_machine_name = "";
-            public string remove_user_name = "";
+            public string remote_user_name = "";
             public string remote_domain = "";
-            public string remote_password = "";
 
             public List<EventRecord> last_events_ = new List<EventRecord>();
             public List<EventRecord> new_events_ = new List<EventRecord>();
@@ -74,8 +73,10 @@ namespace lw_common {
 
         private List<log_info> event_logs_ = new List<log_info>();
 
+        private string remote_password_ = "";
+
         public event_log_reader(settings_as_string sett) : base(sett) {
-            settings.on_changed += (a) => force_reload();
+            settings.on_changed += on_settings_changed;
         }
 
         public string[] log_types {
@@ -103,12 +104,7 @@ namespace lw_common {
         }
         public string remote_domain_name {
             get {
-                return settings.get("event.remote_domain_name", ""); 
-            }
-        }
-        public string remote_password_name {
-            get {
-                return settings.get("event.remote_password_name", ""); 
+                return settings.get("event.remote_domain", ""); 
             }
         }
 
@@ -126,6 +122,26 @@ namespace lw_common {
                     }
                 }
                 return "Reading " + util.concatenate(so_far, "; ");
+            }
+        }
+
+        private void on_settings_changed(string name) {
+            if (name == "event.remote_password") {
+                if (settings.get("event.remote_password") != "") {
+                    remote_password_ = settings.get("event.remote_password");
+                    set_setting("event.remote_password", "");
+                }
+                return;
+            }
+
+            force_reload();
+        }
+
+        public override bool are_settings_complete {
+            get {
+                if (remote_machine_name != "")
+                    return remote_password_ != "" || settings.get("event.remote_password") != "";
+                return true;
             }
         }
 
@@ -154,7 +170,7 @@ namespace lw_common {
             lock(this)
                 foreach (var type in log_types) {
                     try {
-                        var log = new log_info { log_type = type, remote_machine_name = remote_machine_name, remote_domain = remote_domain_name, remote_password = remote_password_name, remove_user_name = remote_user_name};
+                        var log = new log_info { log_type = type, remote_machine_name = remote_machine_name, remote_domain = remote_domain_name, remote_user_name = remote_user_name};
                         event_logs_.Add( log);
                         new Thread(() => read_single_log_thread(log)) {IsBackground = true }.Start();
                     } catch (Exception e) {
@@ -171,12 +187,13 @@ namespace lw_common {
                 fully_read_once_ = event_logs_.Count(x => x.listening_for_new_events_ && x.last_events_.Count == 0) == event_logs_.Count;
 
             // http://www.codeproject.com/Messages/5162204/sorting-information-from-several-threads-is-my-alg.aspx
-            List<EventRecord> next = new List<EventRecord>();
+            List< Tuple<EventRecord,string>>  next = new List<Tuple<EventRecord, string>>();
             bool needs_more_processing = true;
             lock (this) {
                 // special case - a single log
                 if (event_logs_.Count == 1) {
-                    next = event_logs_[0].last_events_.Count > 0 ? event_logs_[0].last_events_.ToList() : event_logs_[0].new_events_.ToList();
+                    next = (event_logs_[0].last_events_.Count > 0 ? event_logs_[0].last_events_ : event_logs_[0].new_events_)
+                        .Select(x => new Tuple<EventRecord,string>(x, event_logs_[0].log_type)).ToList() ;
                     event_logs_[0].last_events_.Clear();
                     event_logs_[0].new_events_.Clear();
                     needs_more_processing = false;
@@ -187,16 +204,16 @@ namespace lw_common {
                     // note: if we're listing for new events, first process all the last ones
                     if (listen_for_new_events == event_logs_.Count && event_logs_.Count(x => x.last_events_.Count == 0) == event_logs_.Count) {
                         // we're listening for NEW EVENTS on all threads
-                        List<EventRecord> all = new List<EventRecord>();
+                        List< Tuple<EventRecord,string> > all = new List<Tuple<EventRecord,string>>();
                         var now = DateTime.Now;
                         foreach (var log in event_logs_)
                             // we're waiting a bit before returning new events - just in case different threads might come up with earlier entries 
                             // (because we can't really count on any speed at all)
-                            all.AddRange(log.new_events_.Where(x => x.TimeCreated.Value.AddMilliseconds(MAX_DIFF_NEW_EVENT_MS) <= now));
-                        all = all.OrderBy(x => x.TimeCreated).ToList();
+                            all.AddRange(log.new_events_.Where(x => x.TimeCreated.Value.AddMilliseconds(MAX_DIFF_NEW_EVENT_MS) <= now).Select(x => new Tuple<EventRecord, string>(x,log.log_type)) );
+                        all = all.OrderBy(x => x.Item1.TimeCreated).ToList();
                         foreach (var log in event_logs_)
                             foreach (var entry in all)
-                                log.new_events_.Remove(entry);
+                                log.new_events_.Remove(entry.Item1);
                         next = all;
                         needs_more_processing = false;
                     }
@@ -210,20 +227,20 @@ namespace lw_common {
                         break;
 
                     // ... the last bool -> if true, the item can be added right now ; if false, we can't add this item now
-                    List < Tuple<EventRecord,int, bool> > last = new List<Tuple<EventRecord, int, bool>>();
+                    List < Tuple<EventRecord,string,int, bool> > last = new List<Tuple<EventRecord,string, int, bool>>();
                     for (int log_idx = 0; log_idx < event_logs_.Count; log_idx++) {
                         var log = event_logs_[log_idx];
                         if ( log.last_events_.Count > 0)
                             // if I'm listening for new events, this is ok - return this entry
-                            last.Add(new Tuple<EventRecord, int, bool>( log.last_events_[0], log_idx, log.last_events_.Count > 1 || log.listening_for_new_events_));
+                            last.Add(new Tuple<EventRecord, string,int, bool>( log.last_events_[0], log.log_type, log_idx, log.last_events_.Count > 1 || log.listening_for_new_events_));
                         else if (log.new_events_.Count > 0) 
-                            last.Add(new Tuple<EventRecord, int, bool>( log.new_events_[0], log_idx, true));
+                            last.Add(new Tuple<EventRecord, string,int, bool>( log.new_events_[0], log.log_type, log_idx, true));
                     }
                     if (last.Count < 1)
                         break;
                     var min = last.Min(x => x.Item1.TimeCreated);
                     var item = last.Find(x => x.Item1.TimeCreated == min);
-                    if (!item.Item3)
+                    if (!item.Item4)
                         break;
 
                     foreach (var log in event_logs_)
@@ -231,14 +248,14 @@ namespace lw_common {
                             log.last_events_.Remove(item.Item1);
                         else
                             log.new_events_.Remove(item.Item1);
-                    next.Add( item.Item1);
+                    next.Add( new Tuple<EventRecord, string>(item.Item1, item.Item2) );
                     if (next.Count >= MAX_ITEMS_PER_BLOCK)
                         needs_more_processing = false;
                 }
             }
 
             // 1.5.6t - to_log_entry can throw a lot of errors, we don't want that while being lock()ed
-            return next.Select(to_log_entry).ToList();
+            return next.Select( (x) => to_log_entry(x.Item1, x.Item2) ).ToList();
         }
 
         private void read_single_log_thread(log_info log) {
@@ -248,15 +265,20 @@ namespace lw_common {
 
             try {
                 // we can read the number of entres only for local logs
-                if (provider_name == "" && log.remote_machine_name != "") {
+                if (provider_name == "" && log.remote_machine_name == "") {
                     var dummy_log = new EventLog(log.log_type);
                     lock(this)
                         log.full_log_count_ = dummy_log.Entries.Count;
                     dummy_log.Dispose();
                 }
 
+                // waiting for user to set the password
+                if ( log.remote_machine_name != "")
+                    while ( remote_password_ == "")
+                        Thread.Sleep(100);
+
                 SecureString pwd = new SecureString();
-                foreach ( char c in remote_password_name)
+                foreach ( char c in remote_password_)
                     pwd.AppendChar(c);
                 EventLogSession session = log.remote_machine_name != "" ? new EventLogSession(log.remote_machine_name, remote_domain_name, remote_user_name, pwd, SessionAuthentication.Default) : null;
                 pwd.Dispose();
@@ -295,7 +317,7 @@ namespace lw_common {
             
         }
 
-        private log_entry_line to_log_entry(EventRecord rec) {
+        private log_entry_line to_log_entry(EventRecord rec, string log_name) {
             log_entry_line entry = new log_entry_line();
             try {
                 try {
@@ -310,6 +332,7 @@ namespace lw_common {
                 } catch {
                     entry.add("msg", "");
                 }
+                entry.add("Log", log_name);
                 entry.add("Machine Name", rec.MachineName);
                 entry.add("level", event_level((StandardEventLevel) rec.Level));
                 entry.add("EventID", "" + rec.Id);

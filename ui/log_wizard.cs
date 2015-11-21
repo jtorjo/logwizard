@@ -1959,6 +1959,12 @@ namespace LogWizard
             }
 
             util.postpone(update_list_view_edit, 250);
+            util.postpone(check_are_settings_complete, 1500);
+        }
+
+        private void check_are_settings_complete() {
+            if ( !text_.are_settings_complete)
+                edit_log_settings();
         }
 
         private void merge_notes() {
@@ -1976,20 +1982,16 @@ namespace LogWizard
         }
 
         private void add_reader_to_history() {
-            history new_ = new history();
-            // i need to share this -> between text_reader, parser and history
-            // parser needs to point to text_reader => everything needs to be readonly (the settings)
-            new_.from_text_reader( text_);
 
-            int history_idx = -1;
-            for (int i = 0; i < history_.Count && history_idx < 0; ++i)
-                if (new_.name == history_[i].name && new_.type == history_[i].type)
-                    history_idx = i;
+            int history_idx = history_.FindIndex(x => x.settings.get("guid") == text_.unique_id);
             if (history_idx < 0) {
+                history new_ = new history();
+                new_.from_text_reader( text_);
+
                 history_.Add(new_);
                 history_idx = history_.Count - 1;
-                logHistory.Items.Add(new_.ui_friendly_name);
-            } 
+                logHistory.Items.Add(new_.ui_friendly_name);                
+            }
 
             ++ignore_change_;
             logHistory.SelectedIndex = history_idx;
@@ -3722,7 +3724,7 @@ namespace LogWizard
             if (edit.ShowDialog(this) == DialogResult.OK) {
                 bool friendly_name_changed = cur_history.friendly_name != edit.friendly_name;
                 // at this point, we've updated all settings
-                cur_history.from_string(edit.settings);
+                text_.merge_setings(edit.settings);
 
                 if (friendly_name_changed) 
                     update_history();

@@ -88,6 +88,8 @@ namespace lw_common.ui {
                 util.postpone(() => type.Focus(), 1);
                 util.postpone(() => type.DroppedDown = true, 200);
             }
+            if (edit == edit_type.edit && typeTab.SelectedIndex == 1 && remoteMachineName.Text.Trim() != "")
+                util.postpone(() => remotePassword.Focus(), 1);
 
             new Thread(check_event_log_thread) {IsBackground = true}.Start();
         }
@@ -128,7 +130,10 @@ namespace lw_common.ui {
                 List<string> dont_exist = new List<string>();
                 foreach ( string log in event_logs)
                     try {
-                        bool exists = remote_machine_name != "" ? remote_event_log_exists(log, remote_machine_name, remote_domain_name, remote_user_name, remote_password_name) : EventLog.Exists(log);
+                        // note: for non standard logs, such as "Microsoft-Windows-TWinUI/Operational", Exists() returns false
+                        bool exists = remote_machine_name != "" ? false : EventLog.Exists(log);
+                        if ( !exists)
+                            exists = remote_event_log_exists(log, remote_machine_name, remote_domain_name, remote_user_name, remote_password_name);
                         if ( !exists)
                             dont_exist.Add(log);
                     } catch {

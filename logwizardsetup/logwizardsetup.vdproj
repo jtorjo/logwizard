@@ -87,20 +87,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7E6AE51773D00E7F2E56311DB80D6136"
+        "MsmKey" = "8:_900BA54346A2479085BF08862BE89061"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D4EFFC738C161384F5CED85A88E3E6B9"
         "OwnerKey" = "8:_900BA54346A2479085BF08862BE89061"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7E6AE51773D00E7F2E56311DB80D6136"
+        "MsmKey" = "8:_D4EFFC738C161384F5CED85A88E3E6B9"
         "OwnerKey" = "8:_70135191B71EE9820831F349BF8A823E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_900BA54346A2479085BF08862BE89061"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -119,12 +119,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_2819FF1B498DBEECB1683E5459B44DAB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7E6AE51773D00E7F2E56311DB80D6136"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -149,6 +143,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_52B4C67E9B47794E8460A7675BC50CCC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_D4EFFC738C161384F5CED85A88E3E6B9"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -359,7 +359,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ObjectListView_lw, Version=2.8.1.31709, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ObjectListView_lw, Version=2.8.1.22648, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_264ACE8638B5C7A7BA9DDD169AFBE2E3"
@@ -503,7 +503,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.5.5.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.5.6.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_70135191B71EE9820831F349BF8A823E"
@@ -530,14 +530,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7E6AE51773D00E7F2E56311DB80D6136"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D4EFFC738C161384F5CED85A88E3E6B9"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:fastJSON, Version=2.1.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_7E6AE51773D00E7F2E56311DB80D6136"
+                    "_D4EFFC738C161384F5CED85A88E3E6B9"
                     {
                     "Name" = "8:fastJSON.dll"
                     "Attributes" = "3:512"
@@ -672,15 +672,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
-        "ProductCode" = "8:{960FACBB-7A09-4E1D-A042-BEFF423B2B47}"
-        "PackageCode" = "8:{6F5D74CD-302F-4E61-A615-1A632A458983}"
+        "ProductCode" = "8:{B813D11B-2648-4AA5-9154-B04D61375724}"
+        "PackageCode" = "8:{6F91EBEC-DA10-4A67-8C08-33683B7AF1FA}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.5.6"
+        "ProductVersion" = "8:1.5.7"
         "Manufacturer" = "8:John Torjo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
