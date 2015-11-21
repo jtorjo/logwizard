@@ -48,7 +48,7 @@ namespace lw_common {
         private bool logs_created_ = false;
 
         private const int MAX_DIFF_NEW_EVENT_MS = 2000;
-        private const int MAX_ITEMS_PER_BLOCK = 100;
+        private readonly int MAX_ITEMS_PER_BLOCK = util.is_debug ? 200 : 5000;
 
         private class log_info {
             public bool disposed_ = false;
@@ -170,43 +170,46 @@ namespace lw_common {
 
             up_to_date_ = true;
             lock (this) 
-                fully_read_once_ = event_logs_.Count(x => x.listening_for_new_events_) == event_logs_.Count;
+                fully_read_once_ = event_logs_.Count(x => x.listening_for_new_events_ && x.last_events_.Count == 0) == event_logs_.Count;
 
             // http://www.codeproject.com/Messages/5162204/sorting-information-from-several-threads-is-my-alg.aspx
-            List<log_entry_line> next = new memory_optimized_list<log_entry_line>();
+            List<EventRecord> next = new List<EventRecord>();
+            bool needs_more_processing = true;
             lock (this) {
                 // special case - a single log
                 if (event_logs_.Count == 1) {
-                    var events = event_logs_[0].last_events_.Count > 0
-                        ? event_logs_[0].last_events_.Select(to_log_entry).ToList() : event_logs_[0].new_events_.Select(to_log_entry).ToList();
+                    next = event_logs_[0].last_events_.Count > 0 ? event_logs_[0].last_events_.ToList() : event_logs_[0].new_events_.ToList();
                     event_logs_[0].last_events_.Clear();
                     event_logs_[0].new_events_.Clear();
-                    return events;
-                }
-                int listen_for_new_events = event_logs_.Count(x => x.listening_for_new_events_);
-                // note: if we're listing for new events, first process all the last ones
-                if (listen_for_new_events == event_logs_.Count && event_logs_.Count(x => x.last_events_.Count == 0) == event_logs_.Count) {
-                    // we're listening for NEW EVENTS on all threads
-                    List<EventRecord> all = new List<EventRecord>();
-                    var now = DateTime.Now;
-                    foreach ( var log in event_logs_)
-                        // we're waiting a bit before returning new events - just in case different threads might come up with earlier entries 
-                        // (because we can't really count on any speed at all)
-                        all.AddRange( log.new_events_.Where(x => x.TimeCreated.Value.AddMilliseconds(MAX_DIFF_NEW_EVENT_MS) <= now));
-                    all = all.OrderBy(x => x.TimeCreated).ToList();
-                    foreach ( var log in event_logs_)
-                        foreach (var entry in all)
-                            log.new_events_.Remove(entry);
-                    next = all.Select(to_log_entry).ToList();
-                    return next;
+                    needs_more_processing = false;
                 }
 
-                while (true) {
+                if (needs_more_processing) {
+                    int listen_for_new_events = event_logs_.Count(x => x.listening_for_new_events_);
+                    // note: if we're listing for new events, first process all the last ones
+                    if (listen_for_new_events == event_logs_.Count && event_logs_.Count(x => x.last_events_.Count == 0) == event_logs_.Count) {
+                        // we're listening for NEW EVENTS on all threads
+                        List<EventRecord> all = new List<EventRecord>();
+                        var now = DateTime.Now;
+                        foreach (var log in event_logs_)
+                            // we're waiting a bit before returning new events - just in case different threads might come up with earlier entries 
+                            // (because we can't really count on any speed at all)
+                            all.AddRange(log.new_events_.Where(x => x.TimeCreated.Value.AddMilliseconds(MAX_DIFF_NEW_EVENT_MS) <= now));
+                        all = all.OrderBy(x => x.TimeCreated).ToList();
+                        foreach (var log in event_logs_)
+                            foreach (var entry in all)
+                                log.new_events_.Remove(entry);
+                        next = all;
+                        needs_more_processing = false;
+                    }
+                }
+
+                while (needs_more_processing) {
                     // If there is one or more threads that doesn't have at least one element, return an empty list
                     int listen_for_last_events_and_have_no_events = event_logs_.Count(x => !x.listening_for_new_events_ && x.last_events_.Count == 0);
                     if (listen_for_last_events_and_have_no_events > 0)
                         // at least one thread listening for old events and got nothing
-                        return next;
+                        break;
 
                     // ... the last bool -> if true, the item can be added right now ; if false, we can't add this item now
                     List < Tuple<EventRecord,int, bool> > last = new List<Tuple<EventRecord, int, bool>>();
@@ -219,24 +222,25 @@ namespace lw_common {
                             last.Add(new Tuple<EventRecord, int, bool>( log.new_events_[0], log_idx, true));
                     }
                     if (last.Count < 1)
-                        return next;
+                        break;
                     var min = last.Min(x => x.Item1.TimeCreated);
                     var item = last.Find(x => x.Item1.TimeCreated == min);
                     if (!item.Item3)
-                        return next;
+                        break;
 
                     foreach (var log in event_logs_)
                         if (log.last_events_.Count > 0)
                             log.last_events_.Remove(item.Item1);
                         else
                             log.new_events_.Remove(item.Item1);
-                    next.Add( to_log_entry(item.Item1));
+                    next.Add( item.Item1);
                     if (next.Count >= MAX_ITEMS_PER_BLOCK)
-                        return next;
+                        needs_more_processing = false;
                 }
             }
 
-            return next;
+            // 1.5.6t - to_log_entry can throw a lot of errors, we don't want that while being lock()ed
+            return next.Select(to_log_entry).ToList();
         }
 
         private void read_single_log_thread(log_info log) {
@@ -297,12 +301,14 @@ namespace lw_common {
             log_entry_line entry = new log_entry_line();
             try {
                 try {
-                    entry.add("Category", rec.TaskDisplayName);
+                    var task = rec.TaskDisplayName;
+                    entry.add("Category", task ?? "");
                 } catch {
                     entry.add("Category", "");
                 }
                 try {
-                    entry.add("msg", rec.FormatDescription());
+                    var desc = rec.FormatDescription();
+                    entry.add("msg", desc ?? "");
                 } catch {
                     entry.add("msg", "");
                 }
@@ -314,7 +320,8 @@ namespace lw_common {
                 entry.add("time", rec.TimeCreated.Value.ToString("hh:mm:ss.fff"));
                 entry.add("User Name", rec.UserId != null ? rec.UserId.Value : "");
                 try {
-                    entry.add("Keywords", util.concatenate(rec.KeywordsDisplayNames, ","));
+                    var keywords = rec.KeywordsDisplayNames;
+                    entry.add("Keywords", keywords != null ? util.concatenate(keywords, ",") : "");
                 } catch {
                     entry.add("Keywords", "");
                 }

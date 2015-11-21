@@ -21,6 +21,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -50,6 +51,7 @@ namespace lw_common.parse {
         }
 
         public void add(string name, string value) {
+            Debug.Assert(value != null);
             infos_.Add(name, entry_.Length);
             names_.Add(name);
             entry_ += value;
