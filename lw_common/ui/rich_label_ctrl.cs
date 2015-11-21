@@ -152,6 +152,12 @@ namespace lw_common.ui {
             cur_line_idx_ = 0;
             Invalidate();
             Update();
+            update_tip();
+        }
+
+        private void update_tip() {
+            string tooltip = util.concatenate(parts_.Select(x => x.text + (x.ends_line ? "\r\n" : "")), "");
+            tip.SetToolTip(this, tooltip);
         }
 
         private void parse_format(string format, ref print_info print, ref string link) {

@@ -108,6 +108,13 @@ namespace lw_common {
             }
         }
 
+        public override string friendly_name {
+            get {
+                string suffix = remote_machine_name != "" ? " From [" + remote_machine_name + "]" : "";
+                return util.concatenate(log_types, ", ") + suffix ;
+            }
+        }
+
         public override string progress {
             get {
                 List<string> so_far = new List<string>();
@@ -117,7 +124,7 @@ namespace lw_common {
                         int len = log.full_log_count_ > 0 ? log.full_log_count_ : log.listening_for_new_events_ ? log.cur_log_count_ : -1;
                         int cur = log.cur_log_count_;
                         int processed = cur - log.last_events_.Count;
-                        string now = name + " (" + processed + ", read = " + cur + " of = " + len + ")";
+                        string now = name + " (" + processed + ", read = " + cur + (len >= 0 ? " of = " + len : "") + ")";
                         so_far.Add(now);
                     }
                 }
@@ -321,16 +328,10 @@ namespace lw_common {
             log_entry_line entry = new log_entry_line();
             try {
                 try {
-                    var task = rec.TaskDisplayName;
+                    var task = rec.Task != 0 ? rec.TaskDisplayName : "";
                     entry.add("Category", task ?? "");
                 } catch {
                     entry.add("Category", "");
-                }
-                try {
-                    var desc = rec.FormatDescription();
-                    entry.add("msg", desc ?? "");
-                } catch {
-                    entry.add("msg", "");
                 }
                 entry.add("Log", log_name);
                 entry.add("Machine Name", rec.MachineName);
@@ -346,6 +347,24 @@ namespace lw_common {
                 } catch {
                     entry.add("Keywords", "");
                 }
+
+                /*
+                try {
+                    var desc = rec.FormatDescription();
+                    entry.add("msg", desc ?? "");
+                } catch {
+                    entry.add("msg", "");
+                }*/
+                // 1.5.7+ seems FormatDescription() throws a lot of exceptions, prety sure there's a bug in .net 
+                //        just make it easy
+                try {
+                    string desc = util.concatenate( rec.Properties.Select(x => x.Value.ToString()), "\r\n");
+                    entry.add("msg", desc);
+                } catch {
+                    entry.add("msg", "");
+                }
+
+
             } catch (Exception e) {
                 logger.Fatal("can't convert EventRectord to entry " + e.Message);
             }

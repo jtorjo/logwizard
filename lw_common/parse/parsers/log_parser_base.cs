@@ -34,7 +34,7 @@ namespace lw_common.parse.parsers {
 
         protected log_parser_base(settings_as_string_readonly sett) {
             sett_ = sett;
-            sett_.on_changed += (a) => on_updated_settings();
+            sett_.on_changed += on_settings_changed;
             on_updated_settings();            
         }
 
@@ -57,7 +57,14 @@ namespace lw_common.parse.parsers {
             get { return aliases_; }
         }
 
-        protected virtual void on_updated_settings() {            
+        private void on_settings_changed(string name) {
+            if (name == "name")
+                // this is the friendly name assigned to this reader
+                return;
+            on_updated_settings();
+        }
+
+        protected virtual void on_updated_settings() {
             aliases_ = new aliases(sett_.get("aliases"));
         }
 

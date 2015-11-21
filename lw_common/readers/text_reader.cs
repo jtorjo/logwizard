@@ -41,6 +41,7 @@ namespace lw_common
 
         protected text_reader(settings_as_string sett) {
             settings_ = sett;
+            settings_.on_changed += on_settings_changed;
         }
 
 
@@ -67,6 +68,10 @@ namespace lw_common
         public virtual void on_dispose() {
         }
 
+        public virtual string friendly_name {
+            get { return name; }
+        }
+
         // 1.5.6+ if this returns true, the settings are incomplete and the user needs to fill something
         //
         // case in point - when the user wants to view event logs from another machine, he needs to enter his password (we don't save it)
@@ -74,10 +79,15 @@ namespace lw_common
             get { return true; }
         }
 
+        private void on_settings_changed(string name) {
+            if ( name != "name")
+                settings_.set("name", friendly_name);
+        }
 
 
         /////////////////////////////////////////////////////////////////////////////////////
         // non-overridables
+
 
         public string name {
             get { return settings.get("name"); }

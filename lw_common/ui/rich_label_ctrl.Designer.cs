@@ -25,6 +25,7 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.goToNextLine = new System.Windows.Forms.Timer(this.components);
+            this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // goToNextLine
@@ -33,7 +34,7 @@
             this.goToNextLine.Interval = 2500;
             this.goToNextLine.Tick += new System.EventHandler(this.goToNextLine_Tick);
             // 
-            // status_ctrl
+            // rich_label_ctrl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Name = "rich_label_ctrl";
@@ -48,5 +49,6 @@
         #endregion
 
         private System.Windows.Forms.Timer goToNextLine;
+        private System.Windows.Forms.ToolTip tip;
     }
 }

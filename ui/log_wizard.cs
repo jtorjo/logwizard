@@ -111,7 +111,7 @@ namespace LogWizard
 
                         case entry_type.shmem: return "Shared Memory: " + name;
 
-                        case entry_type.event_log: return "Event Log: " + name;
+                        case entry_type.event_log: return "Event Log(s): " + name;
                         case entry_type.debug: return "Debug: " + name;
                         default: Debug.Assert(false); break;
                     }
@@ -1890,6 +1890,7 @@ namespace LogWizard
                 hist_sett.set("type", "file");
                 hist_sett.set("name", unique_name);
                 hist_sett.set("friendly_name", friendly_name);
+                // FIXME perhaps GUID as well?
                 new_.from_string(hist_sett.ToString());
                 history_.Add(new_);
                 logHistory.Items.Add(history_.Last().ui_friendly_name);
@@ -3709,6 +3710,7 @@ namespace LogWizard
                 logHistory.SelectedIndex = logHistory.Items.Count - 1;
                 --ignore_change_;
 
+                Text = reader_title() + " - Log Wizard " + version();
                 create_text_reader(new_.settings);
                 save();
             }
@@ -3725,6 +3727,7 @@ namespace LogWizard
                 bool friendly_name_changed = cur_history.friendly_name != edit.friendly_name;
                 // at this point, we've updated all settings
                 text_.merge_setings(edit.settings);
+                Text = reader_title() + " - Log Wizard " + version();
 
                 if (friendly_name_changed) 
                     update_history();

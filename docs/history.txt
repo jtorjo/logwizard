@@ -1,22 +1,18 @@
-
-
-- event log reader/debug print -> need to have the right defaults (column names, etc)
-
-- history : friendly names for event log + debug_print
+- history_select -> does it work for **new** files?
 
 - open log -> allow browsing for file (after browse, adjust the filetype?)
-
-- rich label -> tooltip -> show everything (in case it's multiple lines)
-
-- history_select -> does it work for new files?
-
+  - only for open, not for edit
 
 - debug log: when the full log is empty, we get lots of refreshes and stuff
-
+  - note: test on another type of log -> debug really messes up with VS
 
 - bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
 
 - update gasipromo
+
+- todo: the active view: update_x_of_y() header title should only contain the name - so taht when i update real time i don't cause lots of refresh
+
+
 
 
 
@@ -30,6 +26,15 @@
 	   -TOTHINK how do i type-search when the msg contains multiple lines
 	   - i have to see how i can show visually if the message spans on several lines
 	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
+
+
+
+1.5.7b
+- event log: get the correct message
+- event log reader/debug print -> need to have the right defaults (column names, etc)
+- history : friendly names for event log + debug_print
+- rich label -> tooltip -> show everything (in case it's multiple lines)
+
 
 1.5.7a
 - event log - test with Microsoft-Windows-TWinUI/Operational -> see if i can get correctly number of items

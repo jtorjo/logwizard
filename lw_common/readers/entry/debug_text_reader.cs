@@ -52,6 +52,10 @@ namespace lw_common
             get { return last_event_id_ >= 0; }
         }
 
+        public override string friendly_name {
+            get { return lo_process_name != "" ? "[" + settings.get("debug.process_name") + "]" : "From All Processes" ; }
+        }
+
 
         public override void force_reload() {
             lock (this) {
@@ -79,8 +83,8 @@ namespace lw_common
             log_entry_line entry = new log_entry_line();
             entry.add("date", evt.date.ToString("dd-MM-yyyy"));
             entry.add("time", evt.date.ToString("hh:mm:ss.fff"));
-            entry.add("process_id", "" + evt.process_id);
-            entry.add("process_name", evt.lo_process_name);
+            entry.add("Pid", "" + evt.process_id);
+            entry.add("Process Name", evt.lo_process_name);
             entry.add("msg", evt.msg);
             return entry;
         }

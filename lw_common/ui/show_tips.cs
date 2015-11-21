@@ -28,6 +28,7 @@ namespace lw_common.ui {
             "You can add notes to lines, and share them with your colleagues. <a http://www.codeproject.com/Articles/1039389/LogWizard-Talk-About-your-Logs>Here's how</a>.",
 
             "Creating filters is a bliss. Select some text, and right click! More details <a http://www.codeproject.com/Articles/1045528/LogWizard-Filter-your-Logs-Inside-out>here</a>",
+            "You can easily view Windows Event Log(s)! Just hit Ctrl-O, and select 'Windows Event Log'...",
         };
 
         private const int MAX_BEGINNER_TIPS = 20;

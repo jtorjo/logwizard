@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -53,6 +54,9 @@ namespace lw_common {
         }
 
         private void read_entries_thread() {
+            // http://stackoverflow.com/questions/7531557/why-does-eventrecord-formatdescription-return-null
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
             while (!disposed) {
                 Thread.Sleep( app.inst.check_new_lines_interval_ms);
                 bool reloaded;

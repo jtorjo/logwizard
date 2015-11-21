@@ -1,19 +1,8 @@
 
 - https://github.com/NLog/NLog/wiki/Tools
 
-W2/nov 2015
-
 -- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
 
-
-
-
-
-
-
-W3/nov 2015
-
-- richlabel -> rename as richlabel single line -> multiple lines - simulate scrolling
 
 - (if time available) find: have a "To Filter" button (good when doing regex search)
   - two possibilities -> Apply to existing Lines, Apply to Full Log
@@ -42,7 +31,6 @@ W3/nov 2015
 	 --> create a wrapper for it for log4net
 	 -------- alerts: should i allow sending an email? probably later, when ran unattended
 
-- todo: the active view: update_x_of_y() header title should only contain the name - so taht when i update real time i don't cause lots of refresh
 
 
 -- bug - if i'm on the last char, and want to select starting from there to the left, it does not work
@@ -53,14 +41,37 @@ W3/nov 2015
 	  - i believe here the issue is: if i show history then escape -> focus will remain on the hidden history combo - i just need to reset focus to active pane
 	  - it's weird - sometimes works sometimes not -> seems ot always work only on the view that originally had focus, but not on the others
 	  -- "hotkeys" tab always seems to be marked as "has new items" even if i traverse it
-- bug: ctrl-9 doesn't work
-
-W4/nov 2015
 
 -aliases should be able to use in filters (***lo-case-no-space probably)
 	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
 	 -- see when i can resolve these names (as soon as aliases is loaded???)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - threads - allow showing threads in parallel - based message id - if too many threads, allow choosing which threads to show - sorted by absolute time
   - this should basically be by assigning a color to each thread's BACKGROUND. Then update the background for each line accordingly
@@ -91,6 +102,10 @@ W4/nov 2015
 
 
 
+
+
+
+
 - bug: sync colors - when sync with all logs -> then when showing all lines -> they will shown with the colors from the other views
 
 - bug: C:\Users\meeee\AppData\Local\PokerStars.EU\PokerStars.log.0 : The process cannot access the file 'C:\Users\meeee\AppData\Local\PokerStars.EU\PokerStars.log.0' because it is being used by another process.
@@ -105,6 +120,8 @@ W4/nov 2015
   - allow easily selecting the colors - 0 - 9 should select them, allow using arrows?
 
 - option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?; probably - yes)
+
+- richlabel -> rename as richlabel single line -> multiple lines - simulate scrolling
 
 - alert -> allow showing a msg, beep, etc. when a certain msg is found
   for instance "same scrape" -> show a message when that happens
