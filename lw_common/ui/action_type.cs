@@ -112,6 +112,9 @@ namespace lw_common {
         // 1.3.26+ - toggle showing full log on/off
         toggle_show_full_log,
 
+        // 1.5.6+
+        open_log,
+
         none,
     }
 

@@ -96,6 +96,7 @@
             this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.needsRestart = new System.Windows.Forms.Label();
             this.checkRequiresRestart = new System.Windows.Forms.Timer(this.components);
+            this.label27 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.typeTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -185,7 +186,7 @@
             this.panel2.Controls.Add(this.fileTypeTab);
             this.panel2.Location = new System.Drawing.Point(2, 41);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(595, 291);
+            this.panel2.Size = new System.Drawing.Size(595, 288);
             this.panel2.TabIndex = 0;
             // 
             // fileTypeTab
@@ -200,7 +201,7 @@
             this.fileTypeTab.Location = new System.Drawing.Point(-5, 0);
             this.fileTypeTab.Name = "fileTypeTab";
             this.fileTypeTab.SelectedIndex = 0;
-            this.fileTypeTab.Size = new System.Drawing.Size(617, 288);
+            this.fileTypeTab.Size = new System.Drawing.Size(617, 285);
             this.fileTypeTab.TabIndex = 0;
             // 
             // tabPage3
@@ -214,7 +215,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(609, 259);
+            this.tabPage3.Size = new System.Drawing.Size(609, 256);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -288,10 +289,10 @@
             this.tabPage4.Controls.Add(this.partSeparator);
             this.tabPage4.Controls.Add(this.label8);
             this.tabPage4.Controls.Add(this.label7);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(609, 265);
+            this.tabPage4.Size = new System.Drawing.Size(609, 256);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -343,7 +344,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(609, 265);
+            this.tabPage5.Size = new System.Drawing.Size(609, 262);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -404,7 +405,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(609, 265);
+            this.tabPage6.Size = new System.Drawing.Size(609, 262);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "tabPage6";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -458,6 +459,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label27);
             this.tabPage2.Controls.Add(this.eventLogCheckStatus);
             this.tabPage2.Controls.Add(this.eventLogs);
             this.tabPage2.Controls.Add(this.groupBox1);
@@ -490,7 +492,7 @@
             this.eventLogs.FormattingEnabled = true;
             this.eventLogs.Location = new System.Drawing.Point(124, 91);
             this.eventLogs.Name = "eventLogs";
-            this.eventLogs.Size = new System.Drawing.Size(488, 36);
+            this.eventLogs.Size = new System.Drawing.Size(488, 84);
             this.eventLogs.TabIndex = 3;
             // 
             // groupBox1
@@ -508,19 +510,19 @@
             this.groupBox1.Controls.Add(this.label22);
             this.groupBox1.Controls.Add(this.remoteMachineName);
             this.groupBox1.Controls.Add(this.label21);
-            this.groupBox1.Location = new System.Drawing.Point(13, 186);
+            this.groupBox1.Location = new System.Drawing.Point(8, 183);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(423, 152);
+            this.groupBox1.Size = new System.Drawing.Size(346, 152);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Remote Computer";
+            this.groupBox1.Text = "Connect to Remote Computer ";
             // 
             // eventLogRemoteSstatus
             // 
             this.eventLogRemoteSstatus.AutoSize = true;
             this.eventLogRemoteSstatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.eventLogRemoteSstatus.ForeColor = System.Drawing.Color.Red;
-            this.eventLogRemoteSstatus.Location = new System.Drawing.Point(6, 122);
+            this.eventLogRemoteSstatus.Location = new System.Drawing.Point(8, 122);
             this.eventLogRemoteSstatus.Name = "eventLogRemoteSstatus";
             this.eventLogRemoteSstatus.Size = new System.Drawing.Size(206, 17);
             this.eventLogRemoteSstatus.TabIndex = 15;
@@ -528,15 +530,15 @@
             // 
             // remoteDomain
             // 
-            this.remoteDomain.Location = new System.Drawing.Point(306, 31);
+            this.remoteDomain.Location = new System.Drawing.Point(256, 31);
             this.remoteDomain.Name = "remoteDomain";
-            this.remoteDomain.Size = new System.Drawing.Size(100, 23);
+            this.remoteDomain.Size = new System.Drawing.Size(84, 23);
             this.remoteDomain.TabIndex = 2;
             // 
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(227, 34);
+            this.label26.Location = new System.Drawing.Point(177, 34);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(56, 17);
             this.label26.TabIndex = 13;
@@ -546,7 +548,7 @@
             // 
             this.label25.AutoSize = true;
             this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.Location = new System.Drawing.Point(307, 98);
+            this.label25.Location = new System.Drawing.Point(248, 98);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(96, 13);
             this.label25.TabIndex = 12;
@@ -554,16 +556,16 @@
             // 
             // remotePassword
             // 
-            this.remotePassword.Location = new System.Drawing.Point(306, 72);
+            this.remotePassword.Location = new System.Drawing.Point(256, 72);
             this.remotePassword.Name = "remotePassword";
             this.remotePassword.PasswordChar = '*';
-            this.remotePassword.Size = new System.Drawing.Size(100, 23);
+            this.remotePassword.Size = new System.Drawing.Size(84, 23);
             this.remotePassword.TabIndex = 4;
             // 
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(231, 75);
+            this.label24.Location = new System.Drawing.Point(179, 75);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(69, 17);
             this.label24.TabIndex = 10;
@@ -571,23 +573,23 @@
             // 
             // remoteUserName
             // 
-            this.remoteUserName.Location = new System.Drawing.Point(120, 72);
+            this.remoteUserName.Location = new System.Drawing.Point(70, 72);
             this.remoteUserName.Name = "remoteUserName";
-            this.remoteUserName.Size = new System.Drawing.Size(100, 23);
+            this.remoteUserName.Size = new System.Drawing.Size(86, 23);
             this.remoteUserName.TabIndex = 3;
             // 
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(15, 75);
+            this.label23.Location = new System.Drawing.Point(7, 75);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(79, 17);
+            this.label23.Size = new System.Drawing.Size(38, 17);
             this.label23.TabIndex = 8;
-            this.label23.Text = "User Name";
+            this.label23.Text = "User";
             // 
             // testRemote
             // 
-            this.testRemote.Location = new System.Drawing.Point(353, 118);
+            this.testRemote.Location = new System.Drawing.Point(282, 118);
             this.testRemote.Name = "testRemote";
             this.testRemote.Size = new System.Drawing.Size(58, 26);
             this.testRemote.TabIndex = 7;
@@ -599,7 +601,7 @@
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(117, 54);
+            this.label22.Location = new System.Drawing.Point(67, 54);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(183, 13);
             this.label22.TabIndex = 2;
@@ -607,20 +609,20 @@
             // 
             // remoteMachineName
             // 
-            this.remoteMachineName.Location = new System.Drawing.Point(120, 28);
+            this.remoteMachineName.Location = new System.Drawing.Point(70, 28);
             this.remoteMachineName.Name = "remoteMachineName";
-            this.remoteMachineName.Size = new System.Drawing.Size(100, 23);
+            this.remoteMachineName.Size = new System.Drawing.Size(86, 23);
             this.remoteMachineName.TabIndex = 1;
             this.remoteMachineName.TextChanged += new System.EventHandler(this.remoteMachineName_TextChanged);
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(15, 31);
+            this.label21.Location = new System.Drawing.Point(7, 31);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(102, 17);
+            this.label21.Size = new System.Drawing.Size(61, 17);
             this.label21.TabIndex = 0;
-            this.label21.Text = "Machine Name";
+            this.label21.Text = "Machine";
             // 
             // selectedEventLogs
             // 
@@ -867,6 +869,17 @@
             this.checkRequiresRestart.Interval = 250;
             this.checkRequiresRestart.Tick += new System.EventHandler(this.checkRequiresRestart_Tick);
             // 
+            // label27
+            // 
+            this.label27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Location = new System.Drawing.Point(358, 193);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(270, 156);
+            this.label27.TabIndex = 5;
+            this.label27.Text = resources.GetString("label27.Text");
+            // 
             // edit_log_settings_form
             // 
             this.AcceptButton = this.ok;
@@ -992,5 +1005,6 @@
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.TextBox debugProcessName;
         private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label label27;
     }
 }

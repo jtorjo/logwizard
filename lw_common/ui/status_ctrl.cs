@@ -34,7 +34,19 @@ namespace lw_common.ui {
             if (type == status_type.err)
                 // show errors longer
                 set_status_for_ms = Math.Max(set_status_for_ms, 15000);
+
+            // 1.5.6+ special case - if the status is the same
+            bool same_status = false;
+            if ( statuses_.Count > 0)
+                if (statuses_.Last().Item1 == msg && statuses_.Last().Item2 == type) {
+                    // same message
+                    statuses_.RemoveAt( statuses_.Count - 1);
+                    same_status = true;
+                }
+
             statuses_.Add(new Tuple<string, status_type, DateTime>(msg, type, set_status_for_ms > 0 ? DateTime.Now.AddMilliseconds(set_status_for_ms) : DateTime.MaxValue));
+            if (same_status)
+                return;
             show_last_status();
 
             if (type == status_type.err)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -64,8 +65,13 @@ namespace lw_common {
 
             // if true, we've read all existing events and now we're listening for new ones
             public bool listening_for_new_events_ = false;
-        }
 
+            // if >= 0, it's the number of total entries (we may not be able to compute this)
+            public int full_log_count_ = -1;
+
+            // how many log entries we've read so far
+            public int cur_log_count_ = 0;
+        }
 
         private List<log_info> event_logs_ = new List<log_info>();
 
@@ -88,7 +94,7 @@ namespace lw_common {
         } 
         public string remote_machine_name {
             get {
-                return settings.get("event.remote_machine_name"); 
+                return settings.get("event.remote_machine_name").Trim(); 
             }
         }
         public string remote_user_name {
@@ -104,6 +110,23 @@ namespace lw_common {
         public string remote_password_name {
             get {
                 return settings.get("event.remote_password_name", ""); 
+            }
+        }
+
+        public override string progress {
+            get {
+                List<string> so_far = new List<string>();
+                lock (this) {
+                    foreach (var log in event_logs_) {
+                        string name = log.log_type;
+                        int len = log.full_log_count_ > 0 ? log.full_log_count_ : log.listening_for_new_events_ ? log.cur_log_count_ : -1;
+                        int cur = log.cur_log_count_;
+                        int processed = cur - log.last_events_.Count;
+                        string now = name + " (" + processed + ", read = " + cur + " of = " + len + ")";
+                        so_far.Add(now);
+                    }
+                }
+                return "Reading " + util.concatenate(so_far, "; ");
             }
         }
 
@@ -222,10 +245,18 @@ namespace lw_common {
                 query_string = "*[System/Provider/@Name=\"" + provider_name + "\"]";
 
             try {
+                // we can read the number of entres only for local logs
+                if (provider_name == "" && log.remote_machine_name != "") {
+                    var dummy_log = new EventLog(log.log_type);
+                    lock(this)
+                        log.full_log_count_ = dummy_log.Entries.Count;
+                    dummy_log.Dispose();
+                }
+
                 SecureString pwd = new SecureString();
                 foreach ( char c in remote_password_name)
                     pwd.AppendChar(c);
-                EventLogSession session = log.remote_machine_name.Trim() != "" ? new EventLogSession(log.remote_machine_name, remote_domain_name, remote_user_name, pwd, SessionAuthentication.Default) : null;
+                EventLogSession session = log.remote_machine_name != "" ? new EventLogSession(log.remote_machine_name, remote_domain_name, remote_user_name, pwd, SessionAuthentication.Default) : null;
                 pwd.Dispose();
 
                 EventLogQuery query = new EventLogQuery(log.log_type, PathType.LogName, query_string);
@@ -233,10 +264,11 @@ namespace lw_common {
                     query.Session = session;
 
                 EventLogReader reader = new EventLogReader(query);
-
-                for (EventRecord rec = reader.ReadEvent(); rec != null && !log.disposed_; rec = reader.ReadEvent()) 
-                    lock(this)
-                        log.last_events_.Add( rec);
+                for (EventRecord rec = reader.ReadEvent(); rec != null && !log.disposed_; rec = reader.ReadEvent())
+                    lock (this) {
+                        log.last_events_.Add(rec);
+                        ++log.cur_log_count_;
+                    }
 
                 lock (this)
                     log.listening_for_new_events_ = true;
@@ -278,7 +310,7 @@ namespace lw_common {
                 entry.add("level", event_level((StandardEventLevel) rec.Level));
                 entry.add("EventID", "" + rec.Id);
                 entry.add("Source", "" + rec.ProviderName);
-                entry.add("date", rec.TimeCreated.Value.ToString("DD-MM-YYYY"));
+                entry.add("date", rec.TimeCreated.Value.ToString("dd-MM-yyyy"));
                 entry.add("time", rec.TimeCreated.Value.ToString("hh:mm:ss.fff"));
                 entry.add("User Name", rec.UserId != null ? rec.UserId.Value : "");
                 try {

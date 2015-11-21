@@ -559,7 +559,7 @@ namespace LogWizard
 
                 // note : the way I have settings point to guid is this: I may actually allow user to delete history
                 //        however, if after deleting history, user opens a file he opened before, we want those settings to still take effect.
-                sett_.set("history." + idx + "guid", guid);
+                sett_.set("history." + idx + ".guid", guid);
                 sett_.set("guid." + guid, settings);
                 // this way, even if we clear the history, and later on we add the same file, we have its settings
                 if ( file != "")
@@ -1507,6 +1507,9 @@ namespace LogWizard
 
             if (text_.has_it_been_rewritten)
                 on_rewritten_log();
+
+            if (!text_.fully_read_once && text_.progress != "")
+                set_status(text_.progress);
         }
 
         // ... just setting .TopMost sometimes does not work
@@ -2416,7 +2419,10 @@ namespace LogWizard
                 return action_type.go_to_line;
             case "f5":
                 return action_type.refresh;
+
             case "ctrl-o":
+                return action_type.open_log;
+            case "ctrl-shift-o":
                 return action_type.open_in_explorer;
 
             case "ctrl-1":
@@ -2429,6 +2435,17 @@ namespace LogWizard
                 return action_type.goto_position_4;
             case "ctrl-5":
                 return action_type.goto_position_5;
+
+            case "ctrl-6":
+                return action_type.goto_position_6;
+            case "ctrl-7":
+                return action_type.goto_position_7;
+            case "ctrl-8":
+                return action_type.goto_position_8;
+            case "ctrl-9":
+                return action_type.goto_position_9;
+
+
             case "ctrl-e":
                 return action_type.export_notes;
             case "ctrl-z":
@@ -2735,6 +2752,10 @@ namespace LogWizard
                 var old = global_ui.view(lv.name);
                 global_ui.view(lv.name, new ui_info.view_info(old.column_positions, !old.show_full_log) );
             }
+                break;
+
+            case action_type.open_log:
+                whatsupOpen_Click(null, null);
                 break;
 
             default:

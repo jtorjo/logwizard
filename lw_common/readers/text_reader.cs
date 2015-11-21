@@ -43,6 +43,42 @@ namespace lw_common
             settings_ = sett;
         }
 
+
+        // 1.3.5+ - know when the log has been fully read at least once - useful to know whether to send "new_lines" events
+        public abstract bool fully_read_once { get; }
+
+        // 1.0.57+ - if true, the log has been rewritten from scratch
+        public virtual bool has_it_been_rewritten {
+            get { return false; }
+        }
+
+        // returns true when the log is fully read at this point
+        public virtual bool is_up_to_date() {
+            return true;
+        }
+
+        public virtual string progress {
+            get { return ""; }
+        }
+
+        public virtual void force_reload() {            
+        }
+
+        public virtual void on_dispose() {
+        }
+
+        // 1.5.6+ if this returns true, the settings are incomplete and the user needs to fill something
+        //
+        // case in point - when the user wants to view event logs from another machine, he needs to enter his password (we don't save it)
+        public virtual bool are_settings_complete {
+            get { return true; }
+        }
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////
+        // non-overridables
+
         public string name {
             get { return settings.get("name"); }
         }
@@ -67,29 +103,6 @@ namespace lw_common
         }
 
 
-
-        // 1.3.5+ - know when the log has been fully read at least once - useful to know whether to send "new_lines" events
-        public abstract bool fully_read_once { get; }
-
-        // 1.0.57+ - if true, the log has been rewritten from scratch
-        public virtual bool has_it_been_rewritten {
-            get { return false; }
-        }
-
-        // returns true when the read is fully read
-        public virtual bool is_up_to_date() {
-            return true;
-        }
-
-
-        public virtual void force_reload() {            
-        }
-
-
-
-
-
-
         protected bool disposed {
             get { return disposed_; }
         }
@@ -110,16 +123,12 @@ namespace lw_common
             settings_.merge(settings_str);
         }
 
-        public virtual void on_dispose() {
-        }
-
         public void Dispose() {
             disposed_ = true;
             on_dispose();
             if ( parser_ != null)
                 parser_.on_text_reader_dispose();
         }
-
 
         public static string type(text_reader reader) {
             if (reader is file_text_reader)

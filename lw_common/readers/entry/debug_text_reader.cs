@@ -77,7 +77,7 @@ namespace lw_common
 
         private log_entry_line debug_entry(capture_all_debug_events.debug_event evt) {
             log_entry_line entry = new log_entry_line();
-            entry.add("date", evt.date.ToString("DD-MM-YYYY"));
+            entry.add("date", evt.date.ToString("dd-MM-yyyy"));
             entry.add("time", evt.date.ToString("hh:mm:ss.fff"));
             entry.add("process_id", "" + evt.process_id);
             entry.add("process_name", evt.lo_process_name);

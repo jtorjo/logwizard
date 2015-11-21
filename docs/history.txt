@@ -1,23 +1,32 @@
 - update gasipromo
 
 
-- event log - see about remote vieweing of logs???
-  - doesn't work yet?
 
 
 
 
-- event log -> for passw -> do NOT save it
 
 - event log - need to show something - while loading - at least progress? (i should know up-front how many items are in total)
+  - make it general
+
+
+- event log - test with Microsoft-Windows-TWinUI/Operational -> see if i can get correctly number of items
 
 - event log reader/debug print -> need to have the right defaults (column names, etc)
+
+- history : friendly names for event log + debug_print
 
 - open log -> allow browsing for file (after browse, adjust the filetype?)
 
 - rich label -> tooltip -> show everything (in case it's multiple lines)
 
 - history_select -> does it work for new files?
+
+- event log -> for passw -> do NOT save it
+  - if user needs to set password -> need to show settings
+
+- debug log: when the full log is empty, we get lots of refreshes and stuff
+
 
 - bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
 
@@ -31,6 +40,14 @@
 	   -TOTHINK how do i type-search when the msg contains multiple lines
 	   - i have to see how i can show visually if the message spans on several lines
 	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
+
+
+1.5.6s
+- allow ctrl-6 to ctrl-9 hotkeys
+- CHANGE Hotkey: ctrl-shift-o -> Open in Explorer; ctrl-o - open log
+- fix: open log -> doesn't remember that i opened a debug_print log next time it's run
+  - same for event log
+
 
 1.5.6r
 - open log: event log on a remote pc - works, and also validates the selected event logs

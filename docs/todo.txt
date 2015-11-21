@@ -23,6 +23,7 @@ W3/nov 2015
 
 - tip cp: allow only a class to access some functions
   - q: can i make this available on several classes?
+     -- does it really work? can another class misuse it?
   - explain why : normally, you have a class just be private, or the class be inside another class
   - have lock class derive from lock_base<> so that i can just say some_class.lock ??
   - example: parser, text_reader -> there should be at most one parser per text_reader - text_reader created first TOTHINK is this a good example?
@@ -41,9 +42,18 @@ W3/nov 2015
 	 --> create a wrapper for it for log4net
 	 -------- alerts: should i allow sending an email? probably later, when ran unattended
 
+- todo: the active view: update_x_of_y() header title should only contain the name - so taht when i update real time i don't cause lots of refresh
 
 
-            
+-- bug - if i'm on the last char, and want to select starting from there to the left, it does not work
+
+-- bug : C:\john\code\buff\344\TNLogs-DESKTOP-6JGLCS9-damie-635833594984576357 -> hotkeys shows 0 and is hidden
+   -- this seems to be related to this tab? i don't see the edit here, and i simply can't make it work (on a different file -C:\john\code\buff\348\T175745-Reports 2015.11.19)
+      - after restart, it works
+	  - i believe here the issue is: if i show history then escape -> focus will remain on the hidden history combo - i just need to reset focus to active pane
+	  - it's weird - sometimes works sometimes not -> seems ot always work only on the view that originally had focus, but not on the others
+	  -- "hotkeys" tab always seems to be marked as "has new items" even if i traverse it
+- bug: ctrl-9 doesn't work
 
 W4/nov 2015
 
