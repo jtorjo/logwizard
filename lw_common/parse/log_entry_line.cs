@@ -28,7 +28,7 @@ using System.Text;
 namespace lw_common.parse {
     // represents a "conceptual" line - contains a log entry, but it could be on several lines
     // however, we will compact it on a single line
-    class log_entry_line {
+    public class log_entry_line {
         private string entry_ = "";
         private readonly Dictionary<string ,int> infos_ = new Dictionary<string, int>();
         // .. so i know the order they were added

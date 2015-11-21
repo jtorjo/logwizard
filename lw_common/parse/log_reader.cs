@@ -96,7 +96,7 @@ namespace lw_common {
                     return false;
                 int parser_lines = parser_.line_count;
                 lock(this)
-                return line_count_ == parser_lines;
+                    return line_count_ == parser_lines;
             }
         }
 

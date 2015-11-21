@@ -43,7 +43,6 @@ namespace lw_common {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private bool fully_read_once_ = false;
-        private bool up_to_date_ = false;
 
         private bool logs_created_ = false;
 
@@ -135,9 +134,9 @@ namespace lw_common {
         }
 
         public override void force_reload() {
+            base.force_reload();
             fully_read_once_ = false;
             logs_created_ = false;
-            up_to_date_ = false;
             errors_.clear();
         }
 
@@ -165,10 +164,9 @@ namespace lw_common {
                 }
         }
 
-        internal override List<log_entry_line> read_next_lines() {
+        protected override List<log_entry_line> read_next_lines() {
             create_logs();
 
-            up_to_date_ = true;
             lock (this) 
                 fully_read_once_ = event_logs_.Count(x => x.listening_for_new_events_ && x.last_events_.Count == 0) == event_logs_.Count;
 
@@ -351,12 +349,5 @@ namespace lw_common {
             }
         }
 
-        public override bool has_it_been_rewritten {
-            get { return false; }
-        }
-
-        public override bool is_up_to_date() {
-            return fully_read_once_ && up_to_date_;
-        }
     }
 }

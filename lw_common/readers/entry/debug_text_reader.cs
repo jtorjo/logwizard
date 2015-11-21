@@ -64,7 +64,7 @@ namespace lw_common
             return true;
         }
 
-        internal override List<log_entry_line> read_next_lines() {
+        protected override List<log_entry_line> read_next_lines() {
             var reader = use_global ? capture_all_debug_events.capture_global : capture_all_debug_events.capture_local;
             var last = reader.get_events(last_event_id_ + 1);
             if (last.Count > 0) {

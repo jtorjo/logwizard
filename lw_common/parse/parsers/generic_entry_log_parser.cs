@@ -19,7 +19,9 @@ namespace lw_common.parse.parsers {
         }
 
         public override void read_to_end() {
-            var entries_now = reader_.read_next_lines();
+            var entries_now = reader_.read_available_lines();
+            if (entries_now == null)
+                return;
             lock (this) {
                 foreach ( var entry in entries_now)
                     string_.add_preparsed_line(entry.ToString());
