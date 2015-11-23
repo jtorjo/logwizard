@@ -99,8 +99,8 @@ namespace lw_common {
 
         public List<ui_view> views = new List<ui_view>();
 
-        public void merge_settings(settings_as_string_readonly other_sett) {
-            if ( other_sett.get("syntax_type") == "edited_now")
+        public void merge_settings(settings_as_string_readonly other_sett, bool edited_syntax_now) {
+            if ( edited_syntax_now)
                 if ( default_settings_.get("syntax") == "")
                     default_settings_.set("syntax", other_sett.get("syntax"));
             default_settings_.set( "aliases", other_sett.get("aliases"));

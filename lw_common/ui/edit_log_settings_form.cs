@@ -42,6 +42,7 @@ namespace lw_common.ui {
         private List<string> available_event_logs_ = new List<string>();
 
         private string successful_machine_ = "";
+        private bool edited_syntax_now_ = false;
 
         // file name is set only if it's a file
         public edit_log_settings_form(string settings, edit_type edit = edit_type.edit) {
@@ -201,6 +202,10 @@ namespace lw_common.ui {
             get { return needs_restart_; }
         }
 
+        public bool edited_syntax_now {
+            get { return edited_syntax_now_; }
+        }
+
         private void hide_tabs(TabControl tab) {
             int page_height = tab.SelectedTab != null ? tab.SelectedTab.Height : tab.TabPages[0].Height;
             int extra = tab.Height - page_height;
@@ -243,8 +248,7 @@ namespace lw_common.ui {
             settings_.set("debug.global", debugGlobal.Checked ? "1" : "0");
             settings_.set("debug.process_name", debugProcessName.Text);
 
-            // syntax_type is used internally, to know if the user has changed the syntax
-            settings_.set("syntax_type", settings_.get("syntax") != old_settings_.get("syntax") ? "edited_now" : "");
+            edited_syntax_now_ = settings_.get("syntax") != old_settings_.get("syntax");
         }
 
         private bool change_needs_restart() {

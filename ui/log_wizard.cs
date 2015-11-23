@@ -1444,7 +1444,6 @@ namespace LogWizard
             if (text_ == null)
                 return;
 
-            cur_context().merge_settings( factory.get_context_dependent_settings(text_, text_.settings));
             save_contexts();
 
             default_ui_.save("ui.default");
@@ -1786,22 +1785,18 @@ namespace LogWizard
                         // file reader doesn't know syntax
                         // by default - try to find the syntax by reading the header info; otherwise, try to parse it
                         string file_to_syntax = log_to.file_to_syntax(text_.name);
-                        if (file_to_syntax != "") {
+                        if (file_to_syntax != "") 
                             // note: file-to-syntax overrides the context syntax
-                            context_settings_copy.set("syntax", file_to_syntax);
-                            context_settings_copy.set("syntax_type", "file_to_syntax");
-                        }
+                            context_settings_copy.set("syntax", file_to_syntax);                        
                         // note: if the context already knows syntax, use that
                         else if (context_settings_copy.get("syntax") == "") {
                             string found_syntax = file_text.try_to_find_log_syntax();
-                            if (found_syntax != "" && found_syntax != file_text_reader.UNKNOWN_SYNTAX) {
+                            if (found_syntax != "" && found_syntax != file_text_reader.UNKNOWN_SYNTAX) 
                                 context_settings_copy.set("syntax", found_syntax);
-                                context_settings_copy.set("syntax_type", "try_to_find_syntax");
-                            }
                         }
                     }            
 
-            text_.merge_setings( context_settings_copy.ToString());
+            text_.merge_setings( context_settings_copy);
 
             // note: we recreate the log, so that cached filters know to rebuild
             log_parser_ = new log_parser(text_);
@@ -2005,21 +2000,26 @@ namespace LogWizard
         }
 
         private void add_reader_to_history() {
-
             int history_idx = history_.FindIndex(x => x.settings.get("guid") == text_.unique_id);
-            if (history_idx < 0) {
-                history new_ = new history();
-                new_.from_text_reader( text_);
-
-                history_.Add(new_);
-                history_idx = history_.Count - 1;
-                logHistory.Items.Add(new_.ui_friendly_name);                
-            }
 
             ++ignore_change_;
-            logHistory.SelectedIndex = history_idx;
+            if (history_idx < 0) {
+                history new_ = new history();
+                new_.from_text_reader(text_);
+
+                history_.Add(new_);
+                logHistory.Items.Add(new_.ui_friendly_name);
+            } else {
+                // move to the end
+                var existing = history_[history_idx];
+                history_.RemoveAt(history_idx);
+                logHistory.Items.RemoveAt(history_idx);
+
+                history_.Add(existing);
+                logHistory.Items.Add(existing.ui_friendly_name);
+            }            
+            logHistory.SelectedIndex = history_.Count - 1;
             --ignore_change_;
-            update_history();
         }
 
         private void update_history() {
@@ -3725,13 +3725,13 @@ namespace LogWizard
         private void whatsupOpen_Click(object sender, EventArgs e) {
             var add = new edit_log_settings_form("", edit_log_settings_form.edit_type.add);
             if (add.ShowDialog(this) == DialogResult.OK) {
-                var new_ = new history();
                 settings_as_string_readonly settings = new settings_as_string(add.settings);
                 if (is_log_in_history(ref settings)) {
                     // we already have this in history
                     create_text_reader(settings);
                     return;
                 }
+                var new_ = new history();
                 new_.from_settings(settings);
 
                 history_.Add(new_);
@@ -3756,7 +3756,9 @@ namespace LogWizard
             if (edit.ShowDialog(this) == DialogResult.OK) {
                 bool friendly_name_changed = cur_history.friendly_name != edit.friendly_name;
                 // at this point, we've updated all settings
-                text_.merge_setings(edit.settings);
+                text_.merge_setings(new settings_as_string(edit.settings));
+                cur_context().merge_settings( factory.get_context_dependent_settings(text_, text_.settings), edit.edited_syntax_now);
+
                 Text = reader_title() + " - Log Wizard " + version();
 
                 if (friendly_name_changed) 

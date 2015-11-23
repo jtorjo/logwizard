@@ -129,8 +129,9 @@ namespace lw_common
             settings_.set(name, value);
         }
 
-        public void merge_setings(string settings_str) {
-            settings_.merge(settings_str);
+
+        public void merge_setings(settings_as_string_readonly other) {
+            settings_.merge(other);
         }
 
         public void Dispose() {
