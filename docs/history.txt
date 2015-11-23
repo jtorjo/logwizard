@@ -1,7 +1,4 @@
 
-- bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
-
-- update gasipromo
 
 
 
@@ -19,6 +16,13 @@
 
 
 
+
+
+- update gasipromo
+
+
+1.5.8g
+- fix: bug: in find preview - i don't show the columns correctly (don't compute correctly which columns to show/hide)
 
 
 1.5.8f
