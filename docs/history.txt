@@ -1,5 +1,4 @@
 
-- bug: sometimes when switching between files in history, syntax is not used correctly
 
 
 - debug log: when the full log is empty, we get lots of refreshes and stuff
@@ -9,7 +8,6 @@
 
 - update gasipromo
 
-- todo: the active view: update_x_of_y() header title should only contain the name - so taht when i update real time i don't cause lots of refresh
 
 
 
@@ -23,6 +21,12 @@
 	   -TOTHINK how do i type-search when the msg contains multiple lines
 	   - i have to see how i can show visually if the message spans on several lines
 	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
+
+
+1.5.8c
+- sometimes when switching between files in history, syntax is not updated correctly
+  - there was no bug
+- done: the active view: update_x_of_y() header title should only contain the name - so taht when i update real time i don't cause lots of refresh
 
 
 1.5.8b

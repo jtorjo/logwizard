@@ -53,6 +53,7 @@ namespace lw_common {
             Debug.Assert(parser != null);
             parser_ = parser;
             parser_.on_new_lines += on_parser_new_lines;
+            logger.Info("[parse] new reader for " + parser_.name);
         }
 
         private void on_parser_new_lines(bool file_rewritten) {
@@ -104,7 +105,7 @@ namespace lw_common {
             get { return parser_.up_to_date; }
         }
         public int line_count {
-            get { lock(this) return line_count_;  }
+            get { lock(this) return !disposed_? line_count_ : 0;  }
         }
 
 

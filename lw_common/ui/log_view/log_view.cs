@@ -918,7 +918,12 @@ namespace lw_common.ui
                 x_of_y_title = " [" + x_line + "] " + x_of_y_title;
             x_of_y_title = x_of_y_title.TrimEnd();
 
-            string tab_text = name + x_of_y_title;
+            // 1.5.8+ the main reason for not updating the title header is when monitoring live and new records arrive:
+            //        this would end up causing quite a bit of flicker, due to the fact that I'd always be updating the title
+            //
+            //        also, another good reason not to show it is that when i navigate, this would again cause some flickering
+            bool title_needs_x_of_y = !show_header || !is_current_view;
+            string tab_text = title_needs_x_of_y ? name + x_of_y_title : name;
             tab_text += "  ";
             if (pad_name_on_left_)
                 // this is so that the "Toggle topmost" does not obscure the first tab's name
