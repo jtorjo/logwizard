@@ -56,6 +56,10 @@ namespace lw_common {
             logger.Info("[parse] new reader for " + parser_.name);
         }
 
+        public bool disposed {
+            get { return disposed_; }
+        }
+
         private void on_parser_new_lines(bool file_rewritten) {
             Debug.Assert(!disposed_);
             if (disposed_)

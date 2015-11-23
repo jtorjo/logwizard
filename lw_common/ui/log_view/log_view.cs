@@ -695,6 +695,7 @@ namespace lw_common.ui
                 log_ = null;
             }
             model_.Dispose();
+            filter_.Dispose();
         }
 
         internal bool has_bookmark(int line_idx) {

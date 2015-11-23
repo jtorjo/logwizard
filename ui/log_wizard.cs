@@ -987,7 +987,9 @@ namespace LogWizard
             List<log_view> other_logs = new List<log_view>();
             for (int idx = 0; idx < viewsTab.TabCount; ++idx) {
                 var other = log_view_for_tab(idx);
-                other_logs.Add(other);
+                // 1.5.8+ it can be null when switching from one log to another
+                if ( other != null)
+                    other_logs.Add(other);
             }
             return other_logs;
         }
@@ -1429,6 +1431,7 @@ namespace LogWizard
             load_global_settings();
             load_ui();
             load_filters();
+            load_bookmarks();
         }
 
         public void stop_saving() {
@@ -1749,10 +1752,6 @@ namespace LogWizard
             create_context_for_log( settings as settings_as_string);
             text_ = factory.create_text_reader(settings as settings_as_string);
             on_new_log();
-            ui_context log_ctx = settings_to_context( settings );
-            if (log_ctx != cur_context())
-                // update context based on file name
-                curContextCtrl.SelectedIndex = contexts_.IndexOf(log_ctx);
                 
             if (log_parser_.needs_text_syntax) {
                 var file_settings = log_parser_.settings;
@@ -1806,15 +1805,26 @@ namespace LogWizard
 
             // note: we recreate the log, so that cached filters know to rebuild
             log_parser_ = new log_parser(text_);
-            on_new_log_parser();
+            ui_context log_ctx = settings_to_context( text_.settings );
+            bool same_context = log_ctx == cur_context();
+            if (!same_context) {
+                ++ignore_change_;
+                // update context based on log
+                curContextCtrl.SelectedIndex = contexts_.IndexOf(log_ctx);
+                --ignore_change_;
+
+                remove_all_log_views();
+                on_context_changed();
+            }
 
             full_log_ctrl_.set_filter(new List<raw_filter_row>());
+            on_new_log_parser();
+            load();
 
             add_reader_to_history();
             app.inst.set_log_file(selected_file_name());
             Text = reader_title() + " - Log Wizard " + version();
 
-            load_bookmarks();
             logger.Info("new reader " + history_[logHistory.SelectedIndex].name);
 
             // at this point, some file has been dropped
@@ -2119,7 +2129,6 @@ namespace LogWizard
                 return;
 
             on_context_changed();
-
             // first, remove all log views, so that the new filters (from the new context) are loaded
             remove_all_log_views();
 
@@ -2937,12 +2946,17 @@ namespace LogWizard
         }
 
         public string matched_logs(int line_idx) {
+            var sel = log_view_for_tab(viewsTab.SelectedIndex);
+            if (sel == null)
+                // this can happen while switching logs
+                return "";
+
             List<string> matched = new List<string>();
             foreach (var lv in all_log_views())
                 if (lv.filter_matches_line(line_idx))
                     matched.Add(lv.name);
 
-            string selected = log_view_for_tab(viewsTab.SelectedIndex).name;
+            string selected = sel.name;
             bool removed = matched.Remove(selected);
             if (removed)
                 matched.Insert(0, selected);
@@ -2959,6 +2973,8 @@ namespace LogWizard
 
         private void load_bookmarks() {
             bookmarks_.Clear();
+            if (text_ == null)
+                return;
             string bookmarks_key = text_.name.Replace("=", "_").Replace("\\", "_");
             string[] bookmarks = sett_.get("bookmarks." + bookmarks_key).Split(',');
             foreach (var b in bookmarks) {

@@ -81,10 +81,6 @@ namespace lw_common {
 
         public string[] log_types {
             get {
-                //if (util.is_debug)
-                    // for testing - very few entries
-                  //  return new [] { "Windows PowerShell" };
-
                 return settings.get("event.log_type", "Application|System").Split('|');
             }
         }
@@ -284,6 +280,10 @@ namespace lw_common {
                     while ( remote_password_ == "")
                         Thread.Sleep(100);
 
+                // FIXME to erase
+                if ( util.is_debug)
+                    Thread.Sleep(1000000);
+
                 SecureString pwd = new SecureString();
                 foreach ( char c in remote_password_)
                     pwd.AppendChar(c);
@@ -327,19 +327,22 @@ namespace lw_common {
         private log_entry_line to_log_entry(EventRecord rec, string log_name) {
             log_entry_line entry = new log_entry_line();
             try {
+                entry.add("Log", log_name);
+                entry.add("EventID", "" + rec.Id);
+
+                entry.add("level", event_level((StandardEventLevel) rec.Level));
+                entry.add("date", rec.TimeCreated.Value.ToString("dd-MM-yyyy"));
+                entry.add("time", rec.TimeCreated.Value.ToString("hh:mm:ss.fff"));
+
                 try {
                     var task = rec.Task != 0 ? rec.TaskDisplayName : "";
                     entry.add("Category", task ?? "");
                 } catch {
                     entry.add("Category", "");
                 }
-                entry.add("Log", log_name);
+
                 entry.add("Machine Name", rec.MachineName);
-                entry.add("level", event_level((StandardEventLevel) rec.Level));
-                entry.add("EventID", "" + rec.Id);
                 entry.add("Source", "" + rec.ProviderName);
-                entry.add("date", rec.TimeCreated.Value.ToString("dd-MM-yyyy"));
-                entry.add("time", rec.TimeCreated.Value.ToString("hh:mm:ss.fff"));
                 entry.add("User Name", rec.UserId != null ? rec.UserId.Value : "");
                 try {
                     var keywords = rec.KeywordsDisplayNames;

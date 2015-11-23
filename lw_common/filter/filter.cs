@@ -459,7 +459,8 @@ namespace LogWizard {
                 if (needs_recompute)
                     old = null;
                 try {
-                    compute_matches_impl(new_, old);
+                    if ( !new_.disposed)
+                        compute_matches_impl(new_, old);
                 } catch(Exception e) {
                     // very likely the log got re-written
                     logger.Error("[filter] refresh error " + e.Message);
@@ -473,7 +474,7 @@ namespace LogWizard {
                 lock (this)
                     old_log_ = new_;
 
-                if (on_change != null) {
+                if (!new_.disposed && on_change != null) {
                     int new_count = match_count;
                     if (old_count != new_count)
                         // this can happen if we compute matches while also being notified (in the other thread)
@@ -487,6 +488,7 @@ namespace LogWizard {
                         on_change(change_type.changed_filter);
                 }
             }
+            logger.Debug("[filter] disposed " + name_);
         }
 
         private void start_compute_matches_thread() {
