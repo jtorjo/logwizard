@@ -125,10 +125,6 @@ namespace LogWizard
                 settings_ = reader.settings as settings_as_string;
             }
 
-            public void from_string(string str) {
-                settings_.merge(str);
-            }
-
             public void from_settings(settings_as_string_readonly sett) {
                 settings_ = sett as settings_as_string;
             }
@@ -512,7 +508,7 @@ namespace LogWizard
                         continue; // entry removed
                     }
                     Debug.Assert(settings.Contains(guid));
-                    hist.from_string(settings);
+                    hist.from_settings(new settings_as_string(settings));  
                 } else {
                     // old code (pre 1.5.6)
                     string type_str = sett.get("history." + idx + "type", "file");
@@ -1773,6 +1769,71 @@ namespace LogWizard
             force_initial_refresh_of_all_views();
         }
 
+        private void on_new_log() {
+            string size = text_ is file_text_reader ? " (" + new FileInfo(text_.name).Length + " bytes)" : "";
+            set_status_forever("Log: " + text_.name + size);
+            dropHere.Visible = false;
+
+            if (history_.Count < 1)
+                history_select(text_.settings);
+
+            var reader_settings_copy = new settings_as_string( text_.settings.ToString() );
+            var context_settings_copy = new settings_as_string( settings_to_context(reader_settings_copy).default_settings.ToString());
+            context_settings_copy.merge(reader_settings_copy.ToString());
+            var file_text = text_ as file_text_reader;
+            if (file_text != null) 
+                if ( factory.guess_file_type(file_text.name) == "line-by-line")
+                    if (reader_settings_copy.get("syntax") == "") {
+                        // file reader doesn't know syntax
+                        // by default - try to find the syntax by reading the header info; otherwise, try to parse it
+                        string file_to_syntax = log_to.file_to_syntax(text_.name);
+                        if (file_to_syntax != "") {
+                            // note: file-to-syntax overrides the context syntax
+                            context_settings_copy.set("syntax", file_to_syntax);
+                            context_settings_copy.set("syntax_type", "file_to_syntax");
+                        }
+                        // note: if the context already knows syntax, use that
+                        else if (context_settings_copy.get("syntax") == "") {
+                            string found_syntax = file_text.try_to_find_log_syntax();
+                            if (found_syntax != "" && found_syntax != file_text_reader.UNKNOWN_SYNTAX) {
+                                context_settings_copy.set("syntax", found_syntax);
+                                context_settings_copy.set("syntax_type", "try_to_find_syntax");
+                            }
+                        }
+                    }            
+
+            text_.merge_setings( context_settings_copy.ToString());
+
+            // note: we recreate the log, so that cached filters know to rebuild
+            log_parser_ = new log_parser(text_);
+            on_new_log_parser();
+
+            full_log_ctrl_.set_filter(new List<raw_filter_row>());
+
+            add_reader_to_history();
+            app.inst.set_log_file(selected_file_name());
+            Text = reader_title() + " - Log Wizard " + version();
+
+            load_bookmarks();
+            logger.Info("new reader " + history_[logHistory.SelectedIndex].name);
+
+            // at this point, some file has been dropped
+            log_view_for_tab(0).Visible = true;
+
+            notes.Enabled = text_ is file_text_reader;
+            if (notes.Enabled) {
+                notes.load(notes_keeper.inst.notes_file_for_file(text_.name));
+                merge_notes();
+            }
+
+            util.postpone(update_list_view_edit, 250);
+            util.postpone(check_are_settings_complete, 1500);
+        }
+
+        private void check_are_settings_complete() {
+            if ( !text_.are_settings_complete)
+                edit_log_settings();
+        }
 
         private void refresh_all_views() {
             if (ignore_change_ > 0)
@@ -1861,7 +1922,21 @@ namespace LogWizard
             }
         }
 
-        private int history_select(settings_as_string_readonly settings) {
+        // checks if log is already in history - if so, updates its guid and returns true
+        private bool is_log_in_history(ref settings_as_string_readonly settings) {
+            if (settings.get("type") == "file") {
+                string name = settings.get("name");
+                var found = history_.FirstOrDefault(x => x.name == name);
+                if (found != null) {
+                    settings = found.settings;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void history_select(settings_as_string_readonly settings) {
             ++ignore_change_;
             bool needs_save = false;
             logHistory.SelectedIndex = -1;
@@ -1901,73 +1976,9 @@ namespace LogWizard
 
             if (needs_save)
                 save();
-            return logHistory.SelectedIndex;
+            return;
         }
 
-        private void on_new_log() {
-            string size = text_ is file_text_reader ? " (" + new FileInfo(text_.name).Length + " bytes)" : "";
-            set_status_forever("Log: " + text_.name + size);
-            dropHere.Visible = false;
-
-            if (history_.Count < 1)
-                history_select(text_.settings);
-
-            var reader_settings_copy = new settings_as_string( text_.settings.ToString() );
-            var context_settings_copy = new settings_as_string( settings_to_context(reader_settings_copy).default_settings.ToString());
-            context_settings_copy.merge(reader_settings_copy.ToString());
-            var file_text = text_ as file_text_reader;
-            if (file_text != null) 
-                if ( factory.guess_file_type(file_text.name) == "line-by-line")
-                    if (reader_settings_copy.get("syntax") == "") {
-                        // file reader doesn't know syntax
-                        // by default - try to find the syntax by reading the header info; otherwise, try to parse it
-                        string file_to_syntax = log_to.file_to_syntax(text_.name);
-                        if (file_to_syntax != "") {
-                            // note: file-to-syntax overrides the context syntax
-                            context_settings_copy.set("syntax", file_to_syntax);
-                            context_settings_copy.set("syntax_type", "file_to_syntax");
-                        }
-                        // note: if the context already knows syntax, use that
-                        else if (context_settings_copy.get("syntax") == "") {
-                            string found_syntax = file_text.try_to_find_log_syntax();
-                            if (found_syntax != "" && found_syntax != file_text_reader.UNKNOWN_SYNTAX) {
-                                context_settings_copy.set("syntax", found_syntax);
-                                context_settings_copy.set("syntax_type", "try_to_find_syntax");
-                            }
-                        }
-                    }            
-
-            text_.merge_setings( context_settings_copy.ToString());
-
-            // note: we recreate the log, so that cached filters know to rebuild
-            log_parser_ = new log_parser(text_);
-            on_new_log_parser();
-
-            full_log_ctrl_.set_filter(new List<raw_filter_row>());
-
-            add_reader_to_history();
-            Text = reader_title() + " - Log Wizard " + version();
-
-            load_bookmarks();
-            logger.Info("new reader " + history_[logHistory.SelectedIndex].name);
-
-            // at this point, some file has been dropped
-            log_view_for_tab(0).Visible = true;
-
-            notes.Enabled = text_ is file_text_reader;
-            if (notes.Enabled) {
-                notes.load(notes_keeper.inst.notes_file_for_file(text_.name));
-                merge_notes();
-            }
-
-            util.postpone(update_list_view_edit, 250);
-            util.postpone(check_are_settings_complete, 1500);
-        }
-
-        private void check_are_settings_complete() {
-            if ( !text_.are_settings_complete)
-                edit_log_settings();
-        }
 
         private void merge_notes() {
             if (post_merge_file_ != "" && File.Exists(post_merge_file_)) {
@@ -2048,10 +2059,6 @@ namespace LogWizard
         }
 
         private void on_log_listory_changed() {
-            if (logHistory.SelectedIndex >= 0) {
-                history_select(history_[logHistory.SelectedIndex].settings);
-                app.inst.set_log_file(selected_file_name());
-            }
             create_text_reader( history_[logHistory.SelectedIndex].settings );
         }
 
@@ -3703,7 +3710,13 @@ namespace LogWizard
             var add = new edit_log_settings_form("", edit_log_settings_form.edit_type.add);
             if (add.ShowDialog(this) == DialogResult.OK) {
                 var new_ = new history();
-                new_.from_string(add.settings);
+                settings_as_string_readonly settings = new settings_as_string(add.settings);
+                if (is_log_in_history(ref settings)) {
+                    // we already have this in history
+                    create_text_reader(settings);
+                    return;
+                }
+                new_.from_settings(settings);
 
                 history_.Add(new_);
                 ++ignore_change_;

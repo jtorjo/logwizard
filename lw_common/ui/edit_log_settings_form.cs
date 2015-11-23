@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using lw_common.parse;
+using LogWizard.context;
 
 namespace lw_common.ui {
     public partial class edit_log_settings_form : Form {
@@ -20,7 +21,6 @@ namespace lw_common.ui {
 
         private settings_as_string old_settings_;
         private settings_as_string settings_;
-        private string file_name_;
 
         private bool needs_restart_ = false;
 
@@ -47,11 +47,11 @@ namespace lw_common.ui {
         public edit_log_settings_form(string settings, edit_type edit = edit_type.edit) {
             old_settings_ = new settings_as_string(settings);
             settings_ = new settings_as_string(settings);
-            file_name_ =  settings_.get("type") == "file" ? settings_.get("name") : "" ;
-
             edit_ = edit;
             InitializeComponent();
+            fileName.Text =  settings_.get("type") == "file" ? settings_.get("name") : "" ;
             type.Enabled = edit == edit_type.add;
+            browserFile.Enabled = edit == edit_type.add;
 
             if (edit == edit_type.add) {
                 settings_.set("event.log_type", "Application|System");
@@ -64,8 +64,7 @@ namespace lw_common.ui {
 
             fileType.SelectedIndex = file_type_to_index( settings_.get("file_type") );
 
-            syntax.Text = settings_.get("syntax");
-            syntax.ForeColor = syntax.Text == find_log_syntax.UNKNOWN_SYNTAX ? Color.Red : Color.Black;
+            update_syntax();
             ifLine.Checked = settings_.get("line.if_line", "0") != "0";
             
             partSeparator.Text = settings_.get("part.separator");
@@ -280,17 +279,17 @@ namespace lw_common.ui {
                 fileTypeTab.SelectedIndex = fileType.SelectedIndex - 1;
             else 
                 // best guess
-                fileTypeTab.SelectedIndex = file_type_to_index(factory.guess_file_type(file_name_)) - 1;            
+                fileTypeTab.SelectedIndex = file_type_to_index(factory.guess_file_type(fileName.Text)) - 1;            
         }
 
         private void editSyntax_Click(object sender, EventArgs e) {
             string guess = "";
             try {
-                using (var fs = new FileStream(file_name_, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+                using (var fs = new FileStream(fileName.Text, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
                     // read a few lines from the beginning
                     byte[] readBuffer = new byte[find_log_syntax.READ_TO_GUESS_SYNTAX];
                     int bytes = fs.Read(readBuffer, 0, find_log_syntax.READ_TO_GUESS_SYNTAX);
-                    var encoding = util.file_encoding(file_name_);
+                    var encoding = util.file_encoding(fileName.Text);
                     if (encoding == null)
                         encoding = Encoding.Default;
                     guess = encoding.GetString(readBuffer, 0, bytes);
@@ -302,8 +301,7 @@ namespace lw_common.ui {
             var test = new test_syntax_form(guess, settings_.get("syntax"));
             if (test.ShowDialog() == DialogResult.OK) {
                 settings_.set("syntax", test.found_syntax);
-                syntax.Text = test.found_syntax;
-                syntax.ForeColor = syntax.Text == find_log_syntax.UNKNOWN_SYNTAX ? Color.Red : Color.Black;
+                update_syntax();
             }
 
         }
@@ -394,6 +392,28 @@ namespace lw_common.ui {
             selectedEventLogs.Enabled = ok;
             eventLogs.Enabled = ok;
             Cursor = Cursors.Default;
+        }
+
+        private void browserFile_Click(object sender, EventArgs e) {
+            if (ofd.ShowDialog(this) == DialogResult.OK) {
+                fileName.Text = ofd.FileName;
+                save_settings();
+                // best guess
+                fileType.SelectedIndex = 0;
+                if (fileTypeTab.SelectedIndex == 0) {
+                    // line-by-line , try to find syntax
+                    string file_syntax = log_to.file_to_syntax(fileName.Text);
+                    if ( file_syntax == "")
+                        file_syntax = new find_log_syntax().try_find_log_syntax_file(fileName.Text);
+                    settings_.set("syntax", file_syntax);
+                }
+                update_syntax();
+            }
+        }
+
+        private void update_syntax() {            
+            syntax.Text = settings_.get("syntax");
+            syntax.ForeColor = syntax.Text == find_log_syntax.UNKNOWN_SYNTAX ? Color.Red : Color.Black;
         }
 
     }

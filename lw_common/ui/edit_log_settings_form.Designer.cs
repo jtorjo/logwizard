@@ -99,6 +99,7 @@
             this.checkRequiresRestart = new System.Windows.Forms.Timer(this.components);
             this.fileName = new System.Windows.Forms.TextBox();
             this.browserFile = new System.Windows.Forms.Button();
+            this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
             this.typeTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -906,6 +907,11 @@
             this.browserFile.Text = "...";
             this.tip.SetToolTip(this.browserFile, "Browse For File");
             this.browserFile.UseVisualStyleBackColor = true;
+            this.browserFile.Click += new System.EventHandler(this.browserFile_Click);
+            // 
+            // ofd
+            // 
+            this.ofd.Filter = "Text Files|*.txt|Log Files|*.log|All Files|*.*";
             // 
             // edit_log_settings_form
             // 
@@ -1035,5 +1041,6 @@
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Button browserFile;
         private System.Windows.Forms.TextBox fileName;
+        private System.Windows.Forms.OpenFileDialog ofd;
     }
 }
