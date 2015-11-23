@@ -223,6 +223,11 @@ namespace lw_common.ui {
             settings_.set("type", index_to_type());
             settings_.set("file_type", index_to_file_type());
 
+            if ( index_to_type() == "file" && edit_ == edit_type.add)
+                settings_.set("name", fileName.Text);
+
+            settings_.set("friendly_name", friendlyName.Text);
+
             settings_.set("syntax", syntax.Text);
             settings_.set("line.if_line", ifLine.Checked ? "1" : "0");
             settings_.set("part.separator", partSeparator.Text);

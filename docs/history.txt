@@ -1,4 +1,3 @@
-- history_select -> does it work for **new** files?
 
 - open log -> allow browsing for file (after browse, adjust the filetype?)
   - only for open, not for edit
@@ -14,8 +13,6 @@
 
 
 
-
-
   -- implement toggle details 
      - allow several details in there
 	 - allow specifying which columns to be in details, and which in list (they can overlap)
@@ -27,6 +24,10 @@
 	   - i have to see how i can show visually if the message spans on several lines
 	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
 
+
+
+1.5.8a
+- history_select -> does it work for **new** files?
 
 
 1.5.7b

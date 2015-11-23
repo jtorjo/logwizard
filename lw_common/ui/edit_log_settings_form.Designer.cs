@@ -57,6 +57,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label27 = new System.Windows.Forms.Label();
             this.eventLogCheckStatus = new System.Windows.Forms.Label();
             this.eventLogs = new System.Windows.Forms.CheckedListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -96,7 +97,8 @@
             this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.needsRestart = new System.Windows.Forms.Label();
             this.checkRequiresRestart = new System.Windows.Forms.Timer(this.components);
-            this.label27 = new System.Windows.Forms.Label();
+            this.fileName = new System.Windows.Forms.TextBox();
+            this.browserFile = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.typeTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -142,6 +144,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.browserFile);
+            this.tabPage1.Controls.Add(this.fileName);
             this.tabPage1.Controls.Add(this.fileType);
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.panel2);
@@ -155,6 +159,7 @@
             // 
             // fileType
             // 
+            this.fileType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.fileType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.fileType.FormattingEnabled = true;
             this.fileType.Items.AddRange(new object[] {
@@ -163,20 +168,21 @@
             "Part-Per-Line",
             "XML",
             "CSV"});
-            this.fileType.Location = new System.Drawing.Point(73, 7);
+            this.fileType.Location = new System.Drawing.Point(510, 9);
             this.fileType.Name = "fileType";
-            this.fileType.Size = new System.Drawing.Size(211, 24);
+            this.fileType.Size = new System.Drawing.Size(109, 24);
             this.fileType.TabIndex = 7;
             this.fileType.SelectedIndexChanged += new System.EventHandler(this.fileType_SelectedIndexChanged);
             // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1, 10);
+            this.label3.Location = new System.Drawing.Point(471, 13);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 17);
+            this.label3.Size = new System.Drawing.Size(40, 17);
             this.label3.TabIndex = 6;
-            this.label3.Text = "File Type";
+            this.label3.Text = "Type";
             // 
             // panel2
             // 
@@ -186,7 +192,7 @@
             this.panel2.Controls.Add(this.fileTypeTab);
             this.panel2.Location = new System.Drawing.Point(2, 41);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(595, 288);
+            this.panel2.Size = new System.Drawing.Size(595, 285);
             this.panel2.TabIndex = 0;
             // 
             // fileTypeTab
@@ -201,7 +207,7 @@
             this.fileTypeTab.Location = new System.Drawing.Point(-5, 0);
             this.fileTypeTab.Name = "fileTypeTab";
             this.fileTypeTab.SelectedIndex = 0;
-            this.fileTypeTab.Size = new System.Drawing.Size(617, 285);
+            this.fileTypeTab.Size = new System.Drawing.Size(617, 282);
             this.fileTypeTab.TabIndex = 0;
             // 
             // tabPage3
@@ -215,7 +221,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(609, 256);
+            this.tabPage3.Size = new System.Drawing.Size(609, 253);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -289,10 +295,10 @@
             this.tabPage4.Controls.Add(this.partSeparator);
             this.tabPage4.Controls.Add(this.label8);
             this.tabPage4.Controls.Add(this.label7);
-            this.tabPage4.Location = new System.Drawing.Point(4, 25);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(609, 256);
+            this.tabPage4.Size = new System.Drawing.Size(609, 259);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -344,7 +350,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(609, 262);
+            this.tabPage5.Size = new System.Drawing.Size(609, 259);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -405,7 +411,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(609, 262);
+            this.tabPage6.Size = new System.Drawing.Size(609, 259);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "tabPage6";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -465,13 +471,24 @@
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.selectedEventLogs);
             this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(625, 368);
+            this.tabPage2.Size = new System.Drawing.Size(625, 371);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label27
+            // 
+            this.label27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Location = new System.Drawing.Point(358, 193);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(270, 156);
+            this.label27.TabIndex = 5;
+            this.label27.Text = resources.GetString("label27.Text");
             // 
             // eventLogCheckStatus
             // 
@@ -869,16 +886,26 @@
             this.checkRequiresRestart.Interval = 250;
             this.checkRequiresRestart.Tick += new System.EventHandler(this.checkRequiresRestart_Tick);
             // 
-            // label27
+            // fileName
             // 
-            this.label27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(358, 193);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(270, 156);
-            this.label27.TabIndex = 5;
-            this.label27.Text = resources.GetString("label27.Text");
+            this.fileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.fileName.Location = new System.Drawing.Point(6, 11);
+            this.fileName.Name = "fileName";
+            this.fileName.ReadOnly = true;
+            this.fileName.Size = new System.Drawing.Size(431, 23);
+            this.fileName.TabIndex = 10;
+            // 
+            // browserFile
+            // 
+            this.browserFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.browserFile.Location = new System.Drawing.Point(442, 8);
+            this.browserFile.Name = "browserFile";
+            this.browserFile.Size = new System.Drawing.Size(29, 27);
+            this.browserFile.TabIndex = 11;
+            this.browserFile.Text = "...";
+            this.tip.SetToolTip(this.browserFile, "Browse For File");
+            this.browserFile.UseVisualStyleBackColor = true;
             // 
             // edit_log_settings_form
             // 
@@ -1006,5 +1033,7 @@
         private System.Windows.Forms.TextBox debugProcessName;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Button browserFile;
+        private System.Windows.Forms.TextBox fileName;
     }
 }

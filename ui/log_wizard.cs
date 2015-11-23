@@ -83,11 +83,8 @@ namespace LogWizard
             }
 
             // uniquely identifies this entry (across all history)
-            // for files, it's the file name itself
-            public string unique_name {
+            public string unique_id {
                 get {
-                    if (type == entry_type.file)
-                        return name;
                     string guid = settings.get("guid");
                     Debug.Assert(guid != "");
                     return guid;
@@ -130,6 +127,10 @@ namespace LogWizard
 
             public void from_string(string str) {
                 settings_.merge(str);
+            }
+
+            public void from_settings(settings_as_string_readonly sett) {
+                settings_ = sett as settings_as_string;
             }
         }
         
@@ -506,6 +507,10 @@ namespace LogWizard
                 if (guid != "") {
                     // 1.5.6+ - guid points to the whole settings
                     string settings = sett.get("guid." + guid);
+                    if (settings == "") {
+                        logger.Debug("history guid removed " + guid);
+                        continue; // entry removed
+                    }
                     Debug.Assert(settings.Contains(guid));
                     hist.from_string(settings);
                 } else {
@@ -522,7 +527,7 @@ namespace LogWizard
                     history_sett.set("friendly_name", friendly_name);
                     // create a guid now
                     history_sett.set("guid", Guid.NewGuid().ToString());
-                    hist.from_string(history_sett.ToString());
+                    hist.from_settings(history_sett);
                 }
 
                 history_.Add( hist );
@@ -781,8 +786,7 @@ namespace LogWizard
                 return;
             }
 
-            history_select(file, friendly_name);
-            on_new_file_log(file);
+            on_new_file_log(file, friendly_name);
             util.bring_to_top(this);
         }
 
@@ -1721,7 +1725,7 @@ namespace LogWizard
             }
         }
 
-        private void on_new_file_log(string name) {
+        private void on_new_file_log(string name, string friendly_name) {
             string guid = sett_.get("file_to_guid." + name);
             if (guid != "") 
                 create_text_reader(new settings_as_string(sett_.get("guid." + guid)));
@@ -1730,6 +1734,8 @@ namespace LogWizard
                 settings_as_string file_settings = new settings_as_string("");
                 file_settings.set("type", "file");
                 file_settings.set("name", name);
+                file_settings.set("friendly_name", friendly_name);
+                file_settings.set("guid", Guid.NewGuid().ToString());
                 create_text_reader(file_settings);
             }
         }
@@ -1855,16 +1861,17 @@ namespace LogWizard
             }
         }
 
-        private int history_select(string unique_name, string friendly_name = "") {
+        private int history_select(settings_as_string_readonly settings) {
             ++ignore_change_;
             bool needs_save = false;
             logHistory.SelectedIndex = -1;
+            string unique_id = settings.get("guid");
 
             bool found = false;
             for (int i = 0; i < history_.Count && !found; ++i)
-                if (history_[i].unique_name == unique_name) {
+                if (history_[i].unique_id == unique_id) {
                     found = true;
-                    bool is_sample = unique_name.ToLower().EndsWith("logwizardsetupsample.log");
+                    bool is_sample = settings.get("name").ToLower().EndsWith("logwizardsetupsample.log");
                     // if not default form - don't move the selection to the end
                     bool is_default_form = toggled_to_custom_ui_ < 0;
                     if (is_sample || !is_default_form)
@@ -1882,16 +1889,10 @@ namespace LogWizard
                 }
 
             if (logHistory.SelectedIndex < 0) {
-                // if we end up here, it can only be a file! - we don't allow selecting anything else that we don't already have in history
-                Debug.Assert(File.Exists(unique_name));
+                Debug.Assert(File.Exists(unique_id));
                 // FIXME (minor) if not on the default form -> i should not put it last (since that will be automatically loaded at restart)
                 history new_ = new history();
-                settings_as_string hist_sett = new settings_as_string("");
-                hist_sett.set("type", "file");
-                hist_sett.set("name", unique_name);
-                hist_sett.set("friendly_name", friendly_name);
-                // FIXME perhaps GUID as well?
-                new_.from_string(hist_sett.ToString());
+                new_.from_settings(settings);
                 history_.Add(new_);
                 logHistory.Items.Add(history_.Last().ui_friendly_name);
                 logHistory.SelectedIndex = logHistory.Items.Count - 1;
@@ -1909,7 +1910,7 @@ namespace LogWizard
             dropHere.Visible = false;
 
             if (history_.Count < 1)
-                history_select(text_.unique_id);
+                history_select(text_.settings);
 
             var reader_settings_copy = new settings_as_string( text_.settings.ToString() );
             var context_settings_copy = new settings_as_string( settings_to_context(reader_settings_copy).default_settings.ToString());
@@ -1944,8 +1945,8 @@ namespace LogWizard
 
             full_log_ctrl_.set_filter(new List<raw_filter_row>());
 
-            Text = reader_title() + " - Log Wizard " + version();
             add_reader_to_history();
+            Text = reader_title() + " - Log Wizard " + version();
 
             load_bookmarks();
             logger.Info("new reader " + history_[logHistory.SelectedIndex].name);
@@ -2048,7 +2049,7 @@ namespace LogWizard
 
         private void on_log_listory_changed() {
             if (logHistory.SelectedIndex >= 0) {
-                history_select(history_[logHistory.SelectedIndex].unique_name);
+                history_select(history_[logHistory.SelectedIndex].settings);
                 app.inst.set_log_file(selected_file_name());
             }
             create_text_reader( history_[logHistory.SelectedIndex].settings );
