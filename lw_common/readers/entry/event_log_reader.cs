@@ -280,10 +280,6 @@ namespace lw_common {
                     while ( remote_password_ == "")
                         Thread.Sleep(100);
 
-                // FIXME to erase
-                if ( util.is_debug)
-                    Thread.Sleep(1000000);
-
                 SecureString pwd = new SecureString();
                 foreach ( char c in remote_password_)
                     pwd.AppendChar(c);

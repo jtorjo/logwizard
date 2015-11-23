@@ -484,7 +484,7 @@ namespace LogWizard {
                         bool raise_event = file_rewritten || (old_count != new_count);
                         if ( raise_event)
                             on_change(file_rewritten ? change_type.file_rewritten : change_type.new_lines);
-                    } else if (needs_recompute)
+                    } else if (needs_recompute && (old_count != 0 || new_count != 0))
                         on_change(change_type.changed_filter);
                 }
             }
@@ -520,8 +520,10 @@ namespace LogWizard {
 
             int old_line_count = new_log.line_count;
             new_log.refresh();
-            if (new_log != old_log || new_log.forced_reload) {                
-                logger.Info((new_log != old_log ? "[filter] new log " : "[filter] forced refresh of " ) + new_log.tab_name + " / " + new_log.log_name);
+            if (new_log != old_log || new_log.forced_reload) {
+                bool changed_log = new_log != old_log && old_log_ == null;
+                if ( changed_log || old_log == new_log)
+                    logger.Info((new_log != old_log ? "[filter] new log " : "[filter] forced refresh of " ) + new_log.tab_name + " / " + new_log.log_name);
                 lock (this)
                     force_recompute_matches_ = true;
             }
