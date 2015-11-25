@@ -22,6 +22,11 @@
 - bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
 
 
+1.5.9f
+- description control
+  - up/down/left/right buttons work
+
+
 1.5.9e
 - description control
   - can change no of rows

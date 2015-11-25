@@ -520,9 +520,11 @@ namespace lw_common.ui {
         private void editingColumn_Click(object sender, EventArgs e) {
             var visible = get_visible_parts();
             ContextMenuStrip menu = new ContextMenuStrip();
-            foreach (var part in visible) {
-                ToolStripMenuItem item = new ToolStripMenuItem( names_[part.type] );
+            foreach (part col in visible) {
+                var part = col;
+                ToolStripMenuItem item = new ToolStripMenuItem(names_[part.type]);
                 item.Click += (o, ee) => edit_column(part.type);
+                item.Checked = col.type == edit_column_;
                 menu.Items.Add(item);
             }
             menu.Show(Cursor.Position, util.menu_direction(menu, Cursor.Position));        
@@ -537,19 +539,68 @@ namespace lw_common.ui {
 
 
         private void moveLeft_Click(object sender, EventArgs e) {
-
+            var layout = layouts_[cur_layout_idx_];
+            var cur = get_visible_parts().FirstOrDefault(x => x.type == edit_column_);
+            int idx = layout.rows_.FindIndex(x => x.parts_.Contains(cur));
+            if (idx > 0) {
+                layout.rows_[idx].parts_.Remove(cur);
+                var parts = layout.rows_[idx - 1].parts_;
+                // the auto resize column is always last
+                if (parts.Count > 0 && parts.Last().auto_resize) {
+                    parts.Insert(parts.Count - 1, cur);
+                    cur.auto_resize = false;
+                } else
+                    parts.Add(cur);
+                update_ui();
+            }
         }
 
         private void moveRight_Click(object sender, EventArgs e) {
-
+            var layout = layouts_[cur_layout_idx_];
+            var cur = get_visible_parts().FirstOrDefault(x => x.type == edit_column_);
+            int idx = layout.rows_.FindIndex(x => x.parts_.Contains(cur));
+            if (idx < layout.rows_.Count - 1) {
+                layout.rows_[idx].parts_.Remove(cur);
+                var parts = layout.rows_[idx + 1].parts_;
+                // the auto resize column is always last
+                if (parts.Count > 0 && parts.Last().auto_resize) {
+                    parts.Insert(parts.Count - 1, cur);
+                    cur.auto_resize = false;
+                } else
+                    parts.Add(cur);
+                update_ui();
+            }
         }
 
         private void moveUp_Click(object sender, EventArgs e) {
-
+            var layout = layouts_[cur_layout_idx_];
+            var cur = get_visible_parts().FirstOrDefault(x => x.type == edit_column_);
+            int row_idx = layout.rows_.FindIndex(x => x.parts_.Contains(cur));
+            var parts = layout.rows_[row_idx].parts_;
+            var visible_parts = parts.Where(x => visible_columns_.Contains(x.type) && x.visible).ToList();
+            var idx = visible_parts.IndexOf(cur);
+            if (idx > 0) {
+                cur.auto_resize = false;
+                var prev_visible_idx = parts.IndexOf( visible_parts[idx - 1]);
+                parts.Remove(cur);
+                parts.Insert(prev_visible_idx, cur);
+                update_ui();
+            }
         }
 
         private void moveDown_Click(object sender, EventArgs e) {
-
+            var layout = layouts_[cur_layout_idx_];
+            var cur = get_visible_parts().FirstOrDefault(x => x.type == edit_column_);
+            int row_idx = layout.rows_.FindIndex(x => x.parts_.Contains(cur));
+            var parts = layout.rows_[row_idx].parts_;
+            var visible_parts = parts.Where(x => visible_columns_.Contains(x.type) && x.visible).ToList();
+            var idx = visible_parts.IndexOf(cur);
+            if (idx < visible_parts.Count- 1) {
+                var next_visible_idx = parts.IndexOf( visible_parts[idx + 1]);
+                parts.Remove(cur);
+                parts.Insert(next_visible_idx, cur);
+                update_ui();
+            }
         }
 
         private void saveLayout_Click(object sender, EventArgs e) {
@@ -574,10 +625,17 @@ namespace lw_common.ui {
             if (lineCount.SelectedIndex < 0)
                 return;
 
+            var layout = layouts_[cur_layout_idx_];
             var cur = get_visible_parts().FirstOrDefault(x => x.type == edit_column_);
-            if (lineCount.SelectedIndex == 0)
+            if (lineCount.SelectedIndex == 0) {
+                // there can only be one auto-resize column - that is the last column
                 cur.auto_resize = true;
-            else {
+                int idx = layout.rows_.FindIndex(x => x.parts_.Contains(cur));
+                layout.rows_[idx].parts_.Remove(cur);
+                foreach (var part in layout.rows_[idx].parts_)
+                    cur.auto_resize = false;
+                layout.rows_[idx].parts_.Add(cur);
+            } else {
                 cur.auto_resize = false;
                 cur.line_count = lineCount.SelectedIndex + 1;
             }
