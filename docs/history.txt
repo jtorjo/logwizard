@@ -1,9 +1,6 @@
 
-
-
-
-
   -- implement toggle details 
+
      - allow several details in there
 	 - allow specifying which columns to be in details, and which in list (they can overlap)
 	 - save column widths / positions in global_ui
@@ -12,13 +9,27 @@
 	   - if this is visible, msg_details will be hidden
 	   -TOTHINK how do i type-search when the msg contains multiple lines
 	   - i have to see how i can show visually if the message spans on several lines
-	   - also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
+	   -**** also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
+    ---------> once i change the description template -> save it and use it for log/context.
+	-- type-as-you-go search -> it should only care about visible columns in teh list (not description) -> just double check it happens
+
+- post on https://www.reddit.com/r/dotnet/
+          https://news.ycombinator.com/news
+		  quora
 
 
 
+- bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
 
 
-- update gasipromo
+1.5.9c
+- description control : set_aliases works
+
+
+1.5.9a
+- partially implemented description control
+- refactored aliases - so that the column names are set as soon as we know them (within aliases)
+  - thus, when i want to know a friendly name from aliases, I don't need to know the column names
 
 
 1.5.8g
