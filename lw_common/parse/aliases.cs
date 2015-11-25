@@ -141,6 +141,10 @@ namespace lw_common.parse {
         public string friendly_name(info_type info) {
             string as_string = info.ToString();
             var found = sett_.get(as_string);
+
+            if (found == as_string)
+                return info_type_io.to_friendly_str(info);
+
             if (found != "")
                 // "ctx3 = City"
                 return found.Trim();
@@ -161,11 +165,13 @@ namespace lw_common.parse {
                     // ctx1=Some Awesome Title
                     if ( found != get_friendly_name_part(found))
                         return get_friendly_name_part(found);
-                } 
+                }
+                if ( name == as_string)
+                    return info_type_io.to_friendly_str(info);
                 return name;
             }
 
-            return as_string;
+            return info_type_io.to_friendly_str(info);
         }
 
         // parses "value{Friendly Name}" strings

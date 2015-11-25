@@ -37,8 +37,10 @@ namespace lw_common.ui {
         // this contains everything needed to show all layout
         private class parts_layout_template {
             public List<row> rows_ = new List<row>();
-            public string name_ = "Description";
+            public string name_ = "Layout";
         }
+
+        private const int MAX_LABEL_WIDTH = 100;
 
         private static List<parts_layout_template> layouts_ = new List<parts_layout_template>();
         private int cur_layout_idx_ = 0;
@@ -77,6 +79,8 @@ namespace lw_common.ui {
             string parts = "";
             for (int i = 0; i < layout.rows_.Count; ++i) {
                 var r = layout.rows_[i];
+                if (parts != "")
+                    parts += ";";
                 parts += util.concatenate(r.parts_.Select(x => "" + i + "," + (int)x.type + "," + (x.multi_line ? "1" : "0") + "," + (x.auto_resize ? "1" : "0") + "," + x.line_count), ";");
             }
             settings_as_string sett = new settings_as_string("");
@@ -190,7 +194,7 @@ namespace lw_common.ui {
         private void remove_all_controls(Control parent) {
             var to_remove = new List<Control>();
             foreach (Control c in parent.Controls)
-                if ( c is Label || c is TextBox)
+                if ( c is Label || c is TextBoxBase)
                     to_remove.Add(c);
             to_remove.ForEach((c) => parent.Controls.Remove(c));
         }
@@ -254,10 +258,37 @@ namespace lw_common.ui {
                     visible_columns_.Add(type);
                     names_.Add(type, name);
                 }
+            update_label_widths();
             update_ui();
         }
 
+        private void update_label_widths() {
+            // we should have loaded layouts by now
+            Debug.Assert(layouts_.Count >= 1);
+            if (layouts_.Count < 1 || cur_layout_idx_ < 0)
+                return;
+
+            var layout = layouts_[cur_layout_idx_];
+            for (int row_idx = 0; row_idx < layout.rows_.Count; ++row_idx) {
+                var visible_parts = layout.rows_[row_idx].parts_.Where(x => visible_columns_.Contains(x.type)).ToList();
+                if (visible_parts.Count < 1)
+                    continue;
+                List<int> widths = new List<int>();
+                using (var g = CreateGraphics()) {
+                    foreach (var part in visible_parts)
+                        widths.Add((int) g.MeasureString(names_[part.type], Font).Width + 1);
+                }
+                // when showing the label, it does pad a few pixels to left/right
+                const int LABEL_PAD = 7;
+                int max_width = Math.Min( widths.Max() + LABEL_PAD, MAX_LABEL_WIDTH);
+                layout.rows_[row_idx].label_width_ = max_width;
+            }
+        }
+
         private void update_ui() {
+            if (layouts_.Count < 1 || cur_layout_idx_ < 0)
+                return;
+
             SuspendLayout();
 
             remove_all_controls();
@@ -334,7 +365,8 @@ namespace lw_common.ui {
             editPanel.Top = is_editing_ ? 0 : -editPanel.Height;
             split1.Top = is_editing_ ? editPanel.Height : 0;
             split1.Height += is_editing_ ? -editPanel.Height : editPanel.Height;
-            editToolStripMenuItem.Text = is_editing_ ? "Stop Edit" : "Edit";
+            editToolStripMenuItem.Text = is_editing_ ? "Finish Editing Description Layout" : "Edit Description Layout";
+            update_ui();
         }
 
         private void split6_SplitterMoved(object sender, SplitterEventArgs e) {
@@ -371,6 +403,38 @@ namespace lw_common.ui {
             if (ignore_change_ > 0)
                 return;
             splitter_widths_to_row_widths();
+        }
+
+        private void visibleColumns_Click(object sender, EventArgs e) {
+
+        }
+
+        private void editingColumn_Click(object sender, EventArgs e) {
+
+        }
+
+        private void moveLeft_Click(object sender, EventArgs e) {
+
+        }
+
+        private void moveRight_Click(object sender, EventArgs e) {
+
+        }
+
+        private void moveUp_Click(object sender, EventArgs e) {
+
+        }
+
+        private void moveDown_Click(object sender, EventArgs e) {
+
+        }
+
+        private void saveLayout_Click(object sender, EventArgs e) {
+
+        }
+
+        private void loadLayout_Click(object sender, EventArgs e) {
+
         }
 
     }

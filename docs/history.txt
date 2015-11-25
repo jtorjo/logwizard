@@ -21,6 +21,12 @@
 
 - bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
 
+1.5.9d
+- description control: 
+  friendly names for default aliases
+  solved minor bugs
+  label width computed based on aliases
+
 
 1.5.9c
 - description control : set_aliases works

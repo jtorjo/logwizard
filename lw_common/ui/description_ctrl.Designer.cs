@@ -39,13 +39,13 @@
             this.isMultiline = new System.Windows.Forms.CheckBox();
             this.lineCount = new System.Windows.Forms.ComboBox();
             this.saveLayout = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.description = new System.Windows.Forms.TextBox();
             this.loadLayout = new System.Windows.Forms.Button();
             this.rowCount = new System.Windows.Forms.ComboBox();
             this.editPanel = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.moveDown = new System.Windows.Forms.Button();
+            this.moveUp = new System.Windows.Forms.Button();
             this.rightClickEdit = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.split1)).BeginInit();
@@ -165,6 +165,7 @@
             this.visibleColumns.TabIndex = 1;
             this.visibleColumns.Text = "Visible Columns...";
             this.visibleColumns.UseVisualStyleBackColor = true;
+            this.visibleColumns.Click += new System.EventHandler(this.visibleColumns_Click);
             // 
             // editingColumn
             // 
@@ -174,6 +175,7 @@
             this.editingColumn.TabIndex = 2;
             this.editingColumn.Text = "Editing Column...";
             this.editingColumn.UseVisualStyleBackColor = true;
+            this.editingColumn.Click += new System.EventHandler(this.editingColumn_Click);
             // 
             // editColumnName
             // 
@@ -193,6 +195,7 @@
             this.moveLeft.Text = "<";
             this.tip.SetToolTip(this.moveLeft, "Move Edited Column to the Left");
             this.moveLeft.UseVisualStyleBackColor = true;
+            this.moveLeft.Click += new System.EventHandler(this.moveLeft_Click);
             // 
             // moveRight
             // 
@@ -203,6 +206,7 @@
             this.moveRight.Text = ">";
             this.tip.SetToolTip(this.moveRight, "Move Edited Column to the Right");
             this.moveRight.UseVisualStyleBackColor = true;
+            this.moveRight.Click += new System.EventHandler(this.moveRight_Click);
             // 
             // isMultiline
             // 
@@ -246,14 +250,15 @@
             this.saveLayout.Text = "Save as";
             this.tip.SetToolTip(this.saveLayout, "Save This Layout...");
             this.saveLayout.UseVisualStyleBackColor = true;
+            this.saveLayout.Click += new System.EventHandler(this.saveLayout_Click);
             // 
-            // textBox1
+            // description
             // 
-            this.textBox1.Location = new System.Drawing.Point(841, 5);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 25);
-            this.textBox1.TabIndex = 9;
-            this.tip.SetToolTip(this.textBox1, "You can give a meaningful name to this layout...");
+            this.description.Location = new System.Drawing.Point(841, 5);
+            this.description.Name = "description";
+            this.description.Size = new System.Drawing.Size(100, 25);
+            this.description.TabIndex = 9;
+            this.tip.SetToolTip(this.description, "You can give a meaningful name to this layout...");
             // 
             // loadLayout
             // 
@@ -264,6 +269,7 @@
             this.loadLayout.Text = "Load";
             this.tip.SetToolTip(this.loadLayout, "Load Another Layout...");
             this.loadLayout.UseVisualStyleBackColor = true;
+            this.loadLayout.Click += new System.EventHandler(this.loadLayout_Click);
             // 
             // rowCount
             // 
@@ -287,12 +293,12 @@
             // 
             this.editPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.editPanel.Controls.Add(this.button1);
-            this.editPanel.Controls.Add(this.button2);
+            this.editPanel.Controls.Add(this.moveDown);
+            this.editPanel.Controls.Add(this.moveUp);
             this.editPanel.Controls.Add(this.label1);
             this.editPanel.Controls.Add(this.rowCount);
             this.editPanel.Controls.Add(this.loadLayout);
-            this.editPanel.Controls.Add(this.textBox1);
+            this.editPanel.Controls.Add(this.description);
             this.editPanel.Controls.Add(this.saveLayout);
             this.editPanel.Controls.Add(this.lineCount);
             this.editPanel.Controls.Add(this.isMultiline);
@@ -315,25 +321,27 @@
             this.label1.TabIndex = 12;
             this.label1.Text = "Rows";
             // 
-            // button1
+            // moveDown
             // 
-            this.button1.Location = new System.Drawing.Point(559, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(35, 28);
-            this.button1.TabIndex = 14;
-            this.button1.Text = "Dn";
-            this.tip.SetToolTip(this.button1, "Move Edited Column Downwards");
-            this.button1.UseVisualStyleBackColor = true;
+            this.moveDown.Location = new System.Drawing.Point(559, 3);
+            this.moveDown.Name = "moveDown";
+            this.moveDown.Size = new System.Drawing.Size(35, 28);
+            this.moveDown.TabIndex = 14;
+            this.moveDown.Text = "Dn";
+            this.tip.SetToolTip(this.moveDown, "Move Edited Column Downwards");
+            this.moveDown.UseVisualStyleBackColor = true;
+            this.moveDown.Click += new System.EventHandler(this.moveDown_Click);
             // 
-            // button2
+            // moveUp
             // 
-            this.button2.Location = new System.Drawing.Point(523, 3);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(36, 28);
-            this.button2.TabIndex = 13;
-            this.button2.Text = "Up";
-            this.tip.SetToolTip(this.button2, "Move Edited Column Upwards");
-            this.button2.UseVisualStyleBackColor = true;
+            this.moveUp.Location = new System.Drawing.Point(523, 3);
+            this.moveUp.Name = "moveUp";
+            this.moveUp.Size = new System.Drawing.Size(36, 28);
+            this.moveUp.TabIndex = 13;
+            this.moveUp.Text = "Up";
+            this.tip.SetToolTip(this.moveUp, "Move Edited Column Upwards");
+            this.moveUp.UseVisualStyleBackColor = true;
+            this.moveUp.Click += new System.EventHandler(this.moveUp_Click);
             // 
             // rightClickEdit
             // 
@@ -345,7 +353,7 @@
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(94, 22);
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
             // 
@@ -400,13 +408,13 @@
         private System.Windows.Forms.Panel editPanel;
         private System.Windows.Forms.ComboBox lineCount;
         private System.Windows.Forms.CheckBox isMultiline;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox description;
         private System.Windows.Forms.Button saveLayout;
         private System.Windows.Forms.Button loadLayout;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox rowCount;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button moveDown;
+        private System.Windows.Forms.Button moveUp;
         private System.Windows.Forms.ContextMenuStrip rightClickEdit;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
     }

@@ -29,11 +29,14 @@
             // 
             // description_ctrl1
             // 
+            this.description_ctrl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.description_ctrl1.BackColor = System.Drawing.SystemColors.Control;
             this.description_ctrl1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.description_ctrl1.Location = new System.Drawing.Point(32, 42);
+            this.description_ctrl1.Location = new System.Drawing.Point(12, 12);
             this.description_ctrl1.Name = "description_ctrl1";
-            this.description_ctrl1.Size = new System.Drawing.Size(609, 352);
+            this.description_ctrl1.Size = new System.Drawing.Size(673, 431);
             this.description_ctrl1.TabIndex = 0;
             // 
             // test_description_ctrl
