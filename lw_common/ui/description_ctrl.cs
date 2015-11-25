@@ -17,12 +17,15 @@ namespace lw_common.ui {
         private List<Panel> panels_ = new List<Panel>();
 
         private class part {
+
             public info_type type = info_type.max;
+
+            public bool visible = true;
 
             public bool multi_line = false;
             // if multi line, do I auto resize this as the control resizes itself?
             // on a column, you can have at most one part that auto-resizes
-            public bool auto_resize = true;
+            public bool auto_resize = false;
             // if it's multi-line, and we don't auto resize, how many lines should we have?
             public int line_count = 3;
         }
@@ -51,6 +54,12 @@ namespace lw_common.ui {
         private bool is_editing_ = false;
 
         private int ignore_change_ = 0;
+
+        private info_type edit_column_ = info_type.max;
+
+        private Dictionary<info_type, Tuple<Label,RichTextBox> > column_to_controls_ = new Dictionary<info_type, Tuple<Label, RichTextBox>>();
+
+        private font_list fonts_ = new font_list();
 
         public description_ctrl() {
             InitializeComponent();
@@ -81,7 +90,8 @@ namespace lw_common.ui {
                 var r = layout.rows_[i];
                 if (parts != "")
                     parts += ";";
-                parts += util.concatenate(r.parts_.Select(x => "" + i + "," + (int)x.type + "," + (x.multi_line ? "1" : "0") + "," + (x.auto_resize ? "1" : "0") + "," + x.line_count), ";");
+                parts += util.concatenate(r.parts_.Select(x => "" + i + "," + (int)x.type 
+                    + "," + (x.visible ? "1" : "0") + "," + (x.multi_line ? "1" : "0") + "," + (x.auto_resize ? "1" : "0") + "," + x.line_count), ";");
             }
             settings_as_string sett = new settings_as_string("");
             sett.set("rows", rows);
@@ -106,13 +116,14 @@ namespace lw_common.ui {
 
             foreach (var part_data in parts.Split(';')) {
                 var cur_part = part_data.Split(',');
-                Debug.Assert(cur_part.Length == 5);
+                Debug.Assert(cur_part.Length == 6);
                 row r = layout.rows_[int.Parse(cur_part[0]) ];
                 part p = new part();
                 p.type = (info_type) int.Parse(cur_part[1]);
-                p.multi_line = cur_part[2] == "1";
-                p.auto_resize = cur_part[3] == "1";
-                p.line_count = int.Parse(cur_part[4]);
+                p.visible = cur_part[2] == "1";
+                p.multi_line = cur_part[3] == "1";
+                p.auto_resize = cur_part[4] == "1";
+                p.line_count = int.Parse(cur_part[5]);
                 r.parts_.Add(p);
             }
             layout.name_ = sett.get("name");
@@ -183,6 +194,10 @@ namespace lw_common.ui {
                     panels_.Add(splits_[idx].Panel1);
             panels_.Add(splits_.Last().Panel2);
             Debug.Assert(panels_.Count == cols);
+
+            ++ignore_change_;
+            rowCount.SelectedIndex = cols - 1;
+            --ignore_change_;
         }
 
         private void remove_all_controls() {
@@ -207,20 +222,19 @@ namespace lw_common.ui {
             int fixed_width = layout.rows_.Sum(x => x.row_width_ >= 0 ? x.row_width_ : 0);
             int splitter_width = (panels_.Count - 1) * split1.SplitterWidth;
             int remaining_width = Width - fixed_width - splitter_width;
-            int non_fixed_count = layout.rows_.Count(x => x.row_width_ >= 0);
+            int non_fixed_count = layout.rows_.Count(x => x.row_width_ < 0);
             int width_per_row = non_fixed_count > 0 ? remaining_width / non_fixed_count : 0;
 
             int split_idx = 0;
-            while (splits_[split_idx].Panel1Collapsed && split_idx < splits_.Count)
+            while (split_idx < splits_.Count && splits_[split_idx].Panel1Collapsed)
                 ++split_idx;
 
             ++ignore_change_;
             for (int row_idx = 0; row_idx < panels_.Count; ++row_idx) {
                 int width = layout.rows_[row_idx].row_width_ >= 0 ? layout.rows_[row_idx].row_width_ : width_per_row;;
-                if (split_idx < splits_.Count) {
+                if (split_idx < splits_.Count)
                     splits_[split_idx].SplitterDistance = width;
-                    ++split_idx;
-                }
+                ++split_idx;
             }
             --ignore_change_;
         }
@@ -230,7 +244,7 @@ namespace lw_common.ui {
                 return;
             
             int split_idx = 0;
-            while (splits_[split_idx].Panel1Collapsed && split_idx < splits_.Count)
+            while (split_idx < splits_.Count && splits_[split_idx].Panel1Collapsed )
                 ++split_idx;
 
             var layout = layouts_[cur_layout_idx_];
@@ -270,7 +284,7 @@ namespace lw_common.ui {
 
             var layout = layouts_[cur_layout_idx_];
             for (int row_idx = 0; row_idx < layout.rows_.Count; ++row_idx) {
-                var visible_parts = layout.rows_[row_idx].parts_.Where(x => visible_columns_.Contains(x.type)).ToList();
+                var visible_parts = layout.rows_[row_idx].parts_.Where(x => visible_columns_.Contains(x.type) && x.visible).ToList();
                 if (visible_parts.Count < 1)
                     continue;
                 List<int> widths = new List<int>();
@@ -291,16 +305,18 @@ namespace lw_common.ui {
 
             SuspendLayout();
 
+            ++ignore_change_;
             remove_all_controls();
             var layout = layouts_[cur_layout_idx_];
             set_rows( layout.rows_.Count );
             row_widths_to_splitter_widths();
+            column_to_controls_.Clear();
 
             const int COLUMN_HEIGHT = 19, COLUMN_PAD = 4;
 
             for (int row_idx = 0; row_idx < layout.rows_.Count; ++row_idx) {
                 int top = COLUMN_PAD;
-                var visible_parts = layout.rows_[row_idx].parts_.Where(x => visible_columns_.Contains(x.type) );
+                var visible_parts = layout.rows_[row_idx].parts_.Where(x => visible_columns_.Contains(x.type) && x.visible );
                 foreach (var part in visible_parts) {
                     var label = new Label();
                     label.Text = names_[part.type];
@@ -320,7 +336,8 @@ namespace lw_common.ui {
                     text.BorderStyle = is_editing_ ? BorderStyle.FixedSingle : BorderStyle.None;
                     text.ReadOnly = true;
                     text.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right ;
-                    text.Width = panels_[row_idx].Width - layout.rows_[row_idx].label_width_ - COLUMN_PAD * 2;
+                    // ... have a min width as well, just in case the rows become too small
+                    text.Width = Math.Max( panels_[row_idx].Width - layout.rows_[row_idx].label_width_ - COLUMN_PAD * 2, 50);
                     if (part.multi_line) {
                         text.ScrollBars = RichTextBoxScrollBars.ForcedVertical;
                         if (part.auto_resize) {
@@ -333,9 +350,16 @@ namespace lw_common.ui {
                         text.Height = COLUMN_HEIGHT;
                     panels_[row_idx].Controls.Add(text);
                     top += text.Height + COLUMN_PAD;
+
+                    column_to_controls_.Add( part.type, new Tuple<Label, RichTextBox>(label, text));
                 }
             }
-            
+
+            foreach (var panel in panels_)
+                panel.BackColor = is_editing_ ? Color.WhiteSmoke : Color.Transparent;
+
+            update_edit_column();
+            --ignore_change_;
             ResumeLayout(true);
         }
 
@@ -405,13 +429,112 @@ namespace lw_common.ui {
             splitter_widths_to_row_widths();
         }
 
-        private void visibleColumns_Click(object sender, EventArgs e) {
+        private List<part> get_visible_parts() {
+            Debug.Assert(layouts_.Count > 0);
+            var layout = layouts_[cur_layout_idx_];
 
+            List<part> visible = new List<part>();
+            foreach (var row in layout.rows_) {
+                var cur_visible = row.parts_.Where(x => visible_columns_.Contains(x.type) && x.visible);
+                visible.AddRange(cur_visible);
+            }
+            // should always have at least something visible
+            Debug.Assert(visible.Count >= 1);
+            return visible;
+        }
+
+        private part column_name_to_part(string column_name) {
+            Debug.Assert(layouts_.Count > 0);
+            var layout = layouts_[cur_layout_idx_];
+            foreach (var row in layout.rows_)
+                foreach ( var part in row.parts_)
+                    if (names_[part.type] == column_name)
+                        return part;
+            Debug.Assert(false);
+            return null;
+        }
+
+        private void update_edit_column() {
+            if (visible_columns_.Count < 1)
+                // did not set aliases yet
+                return;
+
+            var visible = get_visible_parts().Select(x => x.type).ToList();
+            if (edit_column_ == info_type.max || !visible.Contains(edit_column_)) 
+                edit_column_ = visible[0];
+
+            if (!is_editing_)
+                return;
+
+            editColumnName.Text = names_[edit_column_];
+            foreach (var column in column_to_controls_) {
+                bool edited = column.Key == edit_column_;
+                column.Value.Item1.Font = fonts_.get_font(Font, edited, false, false);
+                column.Value.Item2.Font = fonts_.get_font(Font, edited, false, false);
+            }
+            ++ignore_change_;
+            var cur = get_visible_parts().FirstOrDefault(x => x.type == edit_column_);
+            isMultiline.Checked = cur.multi_line;
+            lineCount.Visible = cur.multi_line;
+            if (cur.multi_line) {
+                if (cur.auto_resize)
+                    lineCount.SelectedIndex = 0;
+                else
+                    lineCount.SelectedIndex = cur.line_count - 1;
+            }
+            --ignore_change_;
+        }
+
+        private void visibleColumns_Click(object sender, EventArgs e) {
+            Debug.Assert(layouts_.Count > 0);
+            var layout = layouts_[cur_layout_idx_];
+            List<string> names = new List<string>();
+            HashSet<string> visible = new HashSet<string>();
+            foreach (var row in layout.rows_) {
+                var cur_visible = row.parts_.Where(x => visible_columns_.Contains(x.type));
+                names.AddRange(cur_visible.Select(x => names_[x.type]));
+                foreach ( var part in cur_visible)
+                    if (part.visible)
+                        visible.Add(names_[part.type]);
+            }
+            ContextMenuStrip menu = new ContextMenuStrip();
+            foreach (string name in names) {
+                ToolStripMenuItem item = new ToolStripMenuItem(name);
+                item.Checked = visible.Contains(name);
+                item.Click += (o, ee) => toggle_visible_column(name);
+                menu.Items.Add(item);
+            }
+            menu.Show(Cursor.Position, util.menu_direction(menu, Cursor.Position));
+        }
+
+        private void toggle_visible_column(string column_name) {
+            var part = column_name_to_part(column_name);
+            if (part.visible && get_visible_parts().Count == 1)
+                // don't allow toggling off the last visible column
+                return;
+
+            part.visible = !part.visible;
+            update_ui();            
         }
 
         private void editingColumn_Click(object sender, EventArgs e) {
-
+            var visible = get_visible_parts();
+            ContextMenuStrip menu = new ContextMenuStrip();
+            foreach (var part in visible) {
+                ToolStripMenuItem item = new ToolStripMenuItem( names_[part.type] );
+                item.Click += (o, ee) => edit_column(part.type);
+                menu.Items.Add(item);
+            }
+            menu.Show(Cursor.Position, util.menu_direction(menu, Cursor.Position));        
         }
+
+        private void edit_column(info_type column) {
+            var visible = get_visible_parts();
+            Debug.Assert(visible.Select(x => x.type).Contains(column));
+            edit_column_ = column;
+            update_edit_column();
+        }
+
 
         private void moveLeft_Click(object sender, EventArgs e) {
 
@@ -430,11 +553,57 @@ namespace lw_common.ui {
         }
 
         private void saveLayout_Click(object sender, EventArgs e) {
-
+            // make sure each name is unique
         }
 
         private void loadLayout_Click(object sender, EventArgs e) {
 
+        }
+
+        private void isMultiline_CheckedChanged(object sender, EventArgs e) {
+            if (ignore_change_ > 0)
+                return;
+            var cur = get_visible_parts().FirstOrDefault(x => x.type == edit_column_);
+            cur.multi_line = !cur.multi_line;
+            update_ui();
+        }
+
+        private void lineCount_SelectedIndexChanged(object sender, EventArgs e) {
+            if (ignore_change_ > 0)
+                return;
+            if (lineCount.SelectedIndex < 0)
+                return;
+
+            var cur = get_visible_parts().FirstOrDefault(x => x.type == edit_column_);
+            if (lineCount.SelectedIndex == 0)
+                cur.auto_resize = true;
+            else {
+                cur.auto_resize = false;
+                cur.line_count = lineCount.SelectedIndex + 1;
+            }
+
+            update_ui();
+        }
+
+        private void rowCount_SelectedIndexChanged(object sender, EventArgs e) {
+            if (ignore_change_ > 0)
+                return;
+
+            Debug.Assert(layouts_.Count > 0);
+            var layout = layouts_[cur_layout_idx_];
+
+            int new_count = rowCount.SelectedIndex + 1;
+            while (new_count < layout.rows_.Count) {
+                // just move everything to first row
+                var last = layout.rows_.Last();
+                layout.rows_[0].parts_.AddRange(last.parts_);
+                layout.rows_.RemoveAt( layout.rows_.Count - 1);
+            }
+
+            while (new_count > layout.rows_.Count) 
+                layout.rows_.Add( new row());
+
+            update_ui();
         }
 
     }

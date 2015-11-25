@@ -14,7 +14,7 @@ namespace test_ui {
             InitializeComponent();
 
             aliases a = new aliases("");
-            a.on_column_names(new List<string>() { "date", "time", "msg", "ctx1", "ctx2", "ctx3" });
+            a.on_column_names(new List<string>() { "thread", "time", "msg", "ctx1", "ctx2", "ctx3" });
             description_ctrl1.set_aliases(a);
         }
     }

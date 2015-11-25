@@ -21,6 +21,15 @@
 
 - bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
 
+
+1.5.9e
+- description control
+  - can change no of rows
+  - can edit whether multi-line, line count
+  - can hide/show columns
+  - can edit a certain column
+
+
 1.5.9d
 - description control: 
   friendly names for default aliases

@@ -42,10 +42,10 @@
             this.description = new System.Windows.Forms.TextBox();
             this.loadLayout = new System.Windows.Forms.Button();
             this.rowCount = new System.Windows.Forms.ComboBox();
-            this.editPanel = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.moveDown = new System.Windows.Forms.Button();
             this.moveUp = new System.Windows.Forms.Button();
+            this.editPanel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.rightClickEdit = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.split1)).BeginInit();
@@ -180,15 +180,16 @@
             // editColumnName
             // 
             this.editColumnName.AutoSize = true;
-            this.editColumnName.Location = new System.Drawing.Point(354, 8);
+            this.editColumnName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.editColumnName.Location = new System.Drawing.Point(351, 10);
             this.editColumnName.Name = "editColumnName";
-            this.editColumnName.Size = new System.Drawing.Size(62, 19);
+            this.editColumnName.Size = new System.Drawing.Size(56, 15);
             this.editColumnName.TabIndex = 3;
             this.editColumnName.Text = "[column]";
             // 
             // moveLeft
             // 
-            this.moveLeft.Location = new System.Drawing.Point(469, 3);
+            this.moveLeft.Location = new System.Drawing.Point(626, 4);
             this.moveLeft.Name = "moveLeft";
             this.moveLeft.Size = new System.Drawing.Size(26, 28);
             this.moveLeft.TabIndex = 4;
@@ -199,7 +200,7 @@
             // 
             // moveRight
             // 
-            this.moveRight.Location = new System.Drawing.Point(495, 3);
+            this.moveRight.Location = new System.Drawing.Point(652, 4);
             this.moveRight.Name = "moveRight";
             this.moveRight.Size = new System.Drawing.Size(26, 28);
             this.moveRight.TabIndex = 5;
@@ -211,13 +212,14 @@
             // isMultiline
             // 
             this.isMultiline.AutoSize = true;
-            this.isMultiline.Location = new System.Drawing.Point(604, 7);
+            this.isMultiline.Location = new System.Drawing.Point(463, 8);
             this.isMultiline.Name = "isMultiline";
             this.isMultiline.Size = new System.Drawing.Size(91, 23);
             this.isMultiline.TabIndex = 6;
             this.isMultiline.Text = "Multi-Line";
             this.tip.SetToolTip(this.isMultiline, "If Checked, it will treat this column as Multi-Line\r\n(Show vertical scroll bar)");
             this.isMultiline.UseVisualStyleBackColor = true;
+            this.isMultiline.CheckedChanged += new System.EventHandler(this.isMultiline_CheckedChanged);
             // 
             // lineCount
             // 
@@ -234,12 +236,13 @@
             "8",
             "9",
             "10"});
-            this.lineCount.Location = new System.Drawing.Point(695, 5);
+            this.lineCount.Location = new System.Drawing.Point(554, 6);
             this.lineCount.Name = "lineCount";
             this.lineCount.Size = new System.Drawing.Size(61, 25);
             this.lineCount.TabIndex = 7;
             this.tip.SetToolTip(this.lineCount, "In case this column is multi-line, how many Lines to Show?\r\nIf Auto, it will auto" +
         "-resize this column to show as much as possible.");
+            this.lineCount.SelectedIndexChanged += new System.EventHandler(this.lineCount_SelectedIndexChanged);
             // 
             // saveLayout
             // 
@@ -286,8 +289,31 @@
             this.rowCount.Name = "rowCount";
             this.rowCount.Size = new System.Drawing.Size(36, 25);
             this.rowCount.TabIndex = 11;
-            this.tip.SetToolTip(this.rowCount, "In case this column is multi-line, how many Lines to Show?\r\nIf Auto, it will auto" +
-        "-resize this column to show as much as possible.");
+            this.tip.SetToolTip(this.rowCount, "How many rows to have in this Layout?\r\nYou can also resize each row to make sure " +
+        "it fits your needs...");
+            this.rowCount.SelectedIndexChanged += new System.EventHandler(this.rowCount_SelectedIndexChanged);
+            // 
+            // moveDown
+            // 
+            this.moveDown.Location = new System.Drawing.Point(716, 4);
+            this.moveDown.Name = "moveDown";
+            this.moveDown.Size = new System.Drawing.Size(35, 28);
+            this.moveDown.TabIndex = 14;
+            this.moveDown.Text = "Dn";
+            this.tip.SetToolTip(this.moveDown, "Move Edited Column Downwards");
+            this.moveDown.UseVisualStyleBackColor = true;
+            this.moveDown.Click += new System.EventHandler(this.moveDown_Click);
+            // 
+            // moveUp
+            // 
+            this.moveUp.Location = new System.Drawing.Point(680, 4);
+            this.moveUp.Name = "moveUp";
+            this.moveUp.Size = new System.Drawing.Size(36, 28);
+            this.moveUp.TabIndex = 13;
+            this.moveUp.Text = "Up";
+            this.tip.SetToolTip(this.moveUp, "Move Edited Column Upwards");
+            this.moveUp.UseVisualStyleBackColor = true;
+            this.moveUp.Click += new System.EventHandler(this.moveUp_Click);
             // 
             // editPanel
             // 
@@ -320,28 +346,6 @@
             this.label1.Size = new System.Drawing.Size(41, 19);
             this.label1.TabIndex = 12;
             this.label1.Text = "Rows";
-            // 
-            // moveDown
-            // 
-            this.moveDown.Location = new System.Drawing.Point(559, 3);
-            this.moveDown.Name = "moveDown";
-            this.moveDown.Size = new System.Drawing.Size(35, 28);
-            this.moveDown.TabIndex = 14;
-            this.moveDown.Text = "Dn";
-            this.tip.SetToolTip(this.moveDown, "Move Edited Column Downwards");
-            this.moveDown.UseVisualStyleBackColor = true;
-            this.moveDown.Click += new System.EventHandler(this.moveDown_Click);
-            // 
-            // moveUp
-            // 
-            this.moveUp.Location = new System.Drawing.Point(523, 3);
-            this.moveUp.Name = "moveUp";
-            this.moveUp.Size = new System.Drawing.Size(36, 28);
-            this.moveUp.TabIndex = 13;
-            this.moveUp.Text = "Up";
-            this.tip.SetToolTip(this.moveUp, "Move Edited Column Upwards");
-            this.moveUp.UseVisualStyleBackColor = true;
-            this.moveUp.Click += new System.EventHandler(this.moveUp_Click);
             // 
             // rightClickEdit
             // 
