@@ -487,7 +487,7 @@ namespace lw_common {
             t.Enabled = true;
         }
 
-        // update_ms = how long to update the control visually
+        // update_ms = how long to set_aliases the control visually
         public static void add_timer(update_control_func updater, int update_ms, int refresh_ms = 100) {
             DateTime end = DateTime.Now.AddMilliseconds(update_ms);
             add_timer( updater, () => (DateTime.Now > end), refresh_ms );

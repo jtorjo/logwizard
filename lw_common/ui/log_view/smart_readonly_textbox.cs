@@ -755,7 +755,7 @@ namespace lw_common.ui {
             if (win32.focused_ctrl() == parent_.list && parent_.is_editing && Visible)
                 Focus();
             else 
-                // note: we need to update background when I lose focus, or the parent loses focus
+                // note: we need to set_aliases background when I lose focus, or the parent loses focus
                 //       however, dealing with those cases would still involve create a timer to check when focus is going to another control, etc.
                 //
                 //       doing it here is the simple solution

@@ -1594,7 +1594,7 @@ namespace LogWizard
             return;
             /* 1.0.91+ - we get notified of filter changes
 
-            // as long as we're editing the filter, don't update anything
+            // as long as we're editing the filter, don't set_aliases anything
             if (filtCtrl.is_editing_any_filter)
                 return;
 
@@ -1804,7 +1804,7 @@ namespace LogWizard
             bool same_context = log_ctx == cur_context();
             if (!same_context) {
                 ++ignore_change_;
-                // update context based on log
+                // set_aliases context based on log
                 curContextCtrl.SelectedIndex = contexts_.IndexOf(log_ctx);
                 --ignore_change_;
 

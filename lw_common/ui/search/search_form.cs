@@ -470,7 +470,7 @@ namespace lw_common.ui {
                 markAsNewEntry.Checked = false;
                 markAsNewEntry.Enabled = true;
                 load_from_search(history_[sel]);
-                // at this point, properly update the combo text
+                // at this point, properly set_aliases the combo text
                 util.postpone(() => combo.Text = history_[sel].text, 1);
             } else {
                 markAsNewEntry.Checked = true;

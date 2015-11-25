@@ -499,7 +499,7 @@ namespace lw_common.ui {
             author_name_ = author_name;
             author_initials_ = author_initials;
             author_color_ = notes_color;
-            // update anything that was added by me before the changes were made
+            // set_aliases anything that was added by me before the changes were made
             foreach (note_item n in notes_sorted_by_line_index_)
                 if (n.the_note != null && n.the_note.made_by_current_user) {
                     n.the_note.author_name = author_name;
@@ -667,7 +667,7 @@ namespace lw_common.ui {
             }
             Debug.Assert(inserted);
 
-            // update the UI
+            // set_aliases the UI
             if (inserted)
                 add_note_to_ui(new_);
 
@@ -699,7 +699,7 @@ namespace lw_common.ui {
                             insert_idx = note_idx + 1;
                             bool insert_at_the_end = i.line_id == cur_line_id_;
                             if (insert_at_the_end) {
-                                // we need to update the line, so that it does not point to current-line anymore
+                                // we need to set_aliases the line, so that it does not point to current-line anymore
                                 i.line_id = line_id;
                             }
                         }
@@ -1084,7 +1084,7 @@ namespace lw_common.ui {
                     add_note_header(n.line_id, n.note_id, n.deleted, n.utc_last_edited);
             }
         
-            // update last_note_id and last_line_id
+            // set_aliases last_note_id and last_line_id
             dirty_ = false;
             --ignore_change_;
 
@@ -1116,7 +1116,7 @@ namespace lw_common.ui {
             // create a backup, just in case something could go wrong
             save_to(file_name_ + ".backup." + DateTime.Now.Ticks);
 
-            // update is_merged!
+            // set_aliases is_merged!
             ++ignore_change_;
             
             var merge_from = adjust_guids_before_merge( load_settings_file(this, other_file));

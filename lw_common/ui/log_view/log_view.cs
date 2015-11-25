@@ -1825,7 +1825,7 @@ namespace lw_common.ui
         }
 
         private void list_Leave(object sender, EventArgs e) {
-            // note: we might actually lose focus to the edit box - in this case, we don't really need to update anything
+            // note: we might actually lose focus to the edit box - in this case, we don't really need to set_aliases anything
             util.postpone(update_background, 10);
         }
 

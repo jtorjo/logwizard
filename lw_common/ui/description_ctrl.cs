@@ -127,7 +127,7 @@ namespace lw_common.ui {
         }
 
         private void save() {
-            // update teh strings in app.
+            // set_aliases teh strings in app.
             app.inst.description_layout_idx_ = cur_layout_idx_;
             app.inst.description_layouts_ = layouts_.Select(to_string).ToList();
         }
@@ -244,8 +244,16 @@ namespace lw_common.ui {
         }
 
         // the aliases tell us which columns are visible
-        public void update(aliases aliases) {
-            // update names as well
+        public void set_aliases(aliases aliases) {
+            // set_aliases names as well
+            visible_columns_.Clear();
+            names_.Clear();
+            foreach ( info_type type in Enum.GetValues(typeof(info_type)))
+                if (aliases.has_column(type)) {
+                    string name = aliases.friendly_name(type);
+                    visible_columns_.Add(type);
+                    names_.Add(type, name);
+                }
             update_ui();
         }
 
@@ -260,7 +268,7 @@ namespace lw_common.ui {
             const int COLUMN_HEIGHT = 19, COLUMN_PAD = 4;
 
             for (int row_idx = 0; row_idx < layout.rows_.Count; ++row_idx) {
-                int top = 0;
+                int top = COLUMN_PAD;
                 var visible_parts = layout.rows_[row_idx].parts_.Where(x => visible_columns_.Contains(x.type) );
                 foreach (var part in visible_parts) {
                     var label = new Label();
@@ -277,7 +285,9 @@ namespace lw_common.ui {
                     text.Left = layout.rows_[row_idx].label_width_ + COLUMN_PAD;
                     text.Top = top;
                     text.Multiline = part.multi_line;
-                    text.BorderStyle = BorderStyle.FixedSingle;
+                    // note: rich text treats fixedsingle as 3d
+                    text.BorderStyle = is_editing_ ? BorderStyle.FixedSingle : BorderStyle.None;
+                    text.ReadOnly = true;
                     text.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right ;
                     text.Width = panels_[row_idx].Width - layout.rows_[row_idx].label_width_ - COLUMN_PAD * 2;
                     if (part.multi_line) {
@@ -291,6 +301,7 @@ namespace lw_common.ui {
                     } else
                         text.Height = COLUMN_HEIGHT;
                     panels_[row_idx].Controls.Add(text);
+                    top += text.Height + COLUMN_PAD;
                 }
             }
             

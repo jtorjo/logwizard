@@ -56,7 +56,7 @@ namespace lw_common.ui {
         private bool filter_view_now_ = false;
         private bool show_full_log_now_ = false;
 
-        // when this is set to true, the UI needs update
+        // when this is set to true, the UI needs set_aliases
         private bool needs_ui_update_ = false;
 
         private easy_mutex change_event_ = new easy_mutex("log_view_data_source");

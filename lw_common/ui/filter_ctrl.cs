@@ -765,7 +765,7 @@ namespace lw_common.ui {
                 --ignore_change_;
             }
 
-            // if editing, need to update that as well
+            // if editing, need to set_aliases that as well
             if (was_selected) {
                 ++ignore_change_;
                 curFilterCtrl.Text = filter_str;
@@ -804,7 +804,7 @@ namespace lw_common.ui {
             filterCtrl.SelectedIndex = filter_row_idx;
             --ignore_change_;
 
-            // wait a bit for the UI to update
+            // wait a bit for the UI to set_aliases
             util.postpone(() => {                
                 curFilterCtrl.SelectionStart = curFilterCtrl.TextLength;
                 curFilterCtrl.Focus();
