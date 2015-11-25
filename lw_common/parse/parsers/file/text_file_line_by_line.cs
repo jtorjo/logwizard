@@ -126,6 +126,11 @@ namespace lw_common.parse.parsers {
             }
         }
 
+        protected override void on_updated_settings() {
+            base.on_updated_settings();
+            column_names = syntax_to_column_names();
+        }
+
         private void update_log_lines_capacity() {
             if (lines_min_capacity_updated_)
                 return;
@@ -576,26 +581,24 @@ namespace lw_common.parse.parsers {
             return new line(l, syntax_info.line_contains_msg_only_);
         }
 
-        public override List<string> column_names {
-            get {
-                // syntax is like $name1[...] $name2[...] ...
-                string syntax = sett_.get("syntax");
+        private  List<string> syntax_to_column_names() {
+            // syntax is like $name1[...] $name2[...] ...
+            string syntax = sett_.get("syntax");
 
-                var names = syntax.Split('$');
-                List<string> result = new List<string>();
-                foreach (var name in names) {
-                    int type = name.IndexOf('[');
-                    string column;
-                    if (type >= 0) 
-                        column = name.Substring(0,type).Trim();
-                    else 
-                        column = name.Trim();
-                    if ( column != "")
-                        result.Add(column);
-                }
-
-                return result;
+            var names = syntax.Split('$');
+            List<string> result = new List<string>();
+            foreach (var name in names) {
+                int type = name.IndexOf('[');
+                string column;
+                if (type >= 0) 
+                    column = name.Substring(0,type).Trim();
+                else 
+                    column = name.Trim();
+                if ( column != "")
+                    result.Add(column);
             }
+
+            return result;
         }
     }
 

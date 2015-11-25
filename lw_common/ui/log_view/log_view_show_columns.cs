@@ -45,9 +45,8 @@ namespace lw_common.ui {
                 return false;
 
             var aliases = lv.filter.log.aliases;
-            var columns = lv.filter.log.column_names;
             // 1.5.4+ if the user has already specified clearly that we have this column, we consider it true
-            if (aliases.has_column(type, columns))
+            if (aliases.has_column(type))
                 return true;
 
             int value_count = 0;

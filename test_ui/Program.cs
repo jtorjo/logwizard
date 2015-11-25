@@ -53,8 +53,9 @@ namespace test_ui {
 
             app.inst.init(new settings_file( @"C:\john\code\logwiz\logwizard\bin\x64\Dbg64\logwizard_debug.txt"));
 
-            new edit_log_settings_form("", edit_log_settings_form.edit_type.add).ShowDialog();
+//            new edit_log_settings_form("", edit_log_settings_form.edit_type.add).ShowDialog();
 
+            Application.Run(new test_description_ctrl());
 //            Application.Run(new test_status_ctrl());
 //            Application.Run(new test_olv());
 //            Application.Run(new test_edit_ctrl());

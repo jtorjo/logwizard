@@ -65,8 +65,8 @@ namespace lw_common.parse.parsers {
             if (has_header_line_) 
                 lock (this) 
                     // if at least one entry - can't read column names
-                    if (column_names_.Count < 1 && entries_.Count == 0) {
-                        column_names_ = split.to_list(last_lines_string_.line_at(0), separator_);
+                    if (this.column_names.Count < 1 && entries_.Count == 0) {
+                        this.column_names = split.to_list(last_lines_string_.line_at(0), separator_);
                         start_idx = 1;
                     }
 

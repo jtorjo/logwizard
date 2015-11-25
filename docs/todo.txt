@@ -19,20 +19,6 @@
   - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
 
 
-
-
-
-- article about event viewer - title: view Event Logs like a boss?
-  - note: i will briefly mention outputdebugstring
-  the other article:
-  -> the outputdebug string will be shown on "alerts" (perhaps two articles: one about break into debug, one about alerts - perhaps tips?)
-     i will create a function similar to what outputdebugstring does (just have a way to name the "wait" mutex in any way so that several apps can use it)
-	 --> so, if something is set at the end of the function -> we will break into debug mode
-	 --> create a wrapper for it for log4net
-	 -------- alerts: should i allow sending an email? probably later, when ran unattended
-
-
-
 -- bug - if i'm on the last char, and want to select starting from there to the left, it does not work
 
 -- bug : C:\john\code\buff\344\TNLogs-DESKTOP-6JGLCS9-damie-635833594984576357 -> hotkeys shows 0 and is hidden
@@ -46,6 +32,23 @@
 	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
 	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
 	 -- see when i can resolve these names (as soon as aliases is loaded???)
+
+
+
+
+- article about event viewer - title: view Event Logs like a boss?
+  - note: i will briefly mention outputdebugstring
+  -- tidbits : about finding, about Description control, about copying records from event viewer
+
+  the other article:
+  -> the outputdebug string will be shown on "alerts" (perhaps two articles: one about break into debug, one about alerts - perhaps tips?)
+     i will create a function similar to what outputdebugstring does (just have a way to name the "wait" mutex in any way so that several apps can use it)
+	 --> so, if something is set at the end of the function -> we will break into debug mode
+	 --> create a wrapper for it for log4net
+	 -------- alerts: should i allow sending an email? probably later, when ran unattended
+     
+
+
 
 
 

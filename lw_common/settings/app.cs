@@ -175,6 +175,10 @@ namespace lw_common {
 
         public int run_count = 0;
 
+        // 1.5.9+
+        public List<string> description_layouts_ = new List<string>();
+        public int description_layout_idx_ = 0;
+
         // file-by-file
         public bool bring_to_top_on_restart = false;
         public bool make_topmost_on_restart = false;
@@ -282,6 +286,20 @@ namespace lw_common {
             }
         }
 
+        internal static void load_save(bool load, ref List<string> prop, string name) {
+            var sett = inst.sett;
+            if (load) {
+                prop.Clear();
+                int count = int.Parse( sett.get(name + ".count", "0"));
+                for (int i = 0; i < count; ++i) 
+                    prop.Add( sett.get(name + "." + i));
+            } else {
+                sett.set(name + ".count", "" + prop.Count);
+                for ( int i = 0 ; i < prop.Count; ++i)
+                    sett.set(name + "." + i, prop[i]);
+            }
+        }
+
         public Font font {
             get {
                 if ( font_name != "")
@@ -365,6 +383,9 @@ namespace lw_common {
             load_save(load, ref show_variable_fonts_as_well, "show_variable_fonts_as_well", false);
             load_save(load, ref show_tips, "show_tips", true);
             load_save(load, ref run_count, "run_count", 0);
+
+            load_save(load, ref description_layouts_, "description_layouts");
+            load_save(load, ref description_layout_idx_, "description_layout_idx", 0);
         }
 
         private string initials(string name) {

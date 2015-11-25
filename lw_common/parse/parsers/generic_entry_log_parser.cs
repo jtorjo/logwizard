@@ -12,8 +12,6 @@ namespace lw_common.parse.parsers {
 
         protected memory_optimized_list<log_entry_line> entries_ = new memory_optimized_list<log_entry_line>() { name = "parser-entries-gp"};
 
-        protected  List<string> column_names_ = new List<string>(); 
-
         public generic_entry_log_parser(entry_text_reader_base reader) : base(reader.settings) {
             reader_ = reader;
         }
@@ -27,8 +25,8 @@ namespace lw_common.parse.parsers {
                     string_.add_preparsed_line(entry.ToString());
                 entries_.AddRange(entries_now);
 
-                if (column_names_.Count < 1 && entries_now.Count > 0)
-                    column_names_ = entries_now[0].names;
+                if (column_names.Count < 1 && entries_now.Count > 0)
+                    column_names = entries_now[0].names;
             }
         }
 
@@ -48,15 +46,11 @@ namespace lw_common.parse.parsers {
                 }
             }
         }
-        public override List<string> column_names {
-            get { lock(this) return column_names_.ToList(); }
-        }
 
         public override void force_reload() {
             lock (this) {
                 entries_.Clear();
                 string_.clear();
-                column_names_.Clear();
             }
         }
 

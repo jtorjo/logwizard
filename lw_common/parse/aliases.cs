@@ -230,12 +230,8 @@ namespace lw_common.parse {
             return string_to_info_type( get_value_part(sett_.get(column_name, column_name)));
         }
 
-        public bool has_column(info_type type, List<string> column_names ) {
-            if (column_names.Contains(type.ToString()))
-                return true;
-            if (name_to_column_.has_value(type))
-                return true;
-            return false;
+        public bool has_column(info_type type) {
+            return name_to_column_.has_value(type);
         }
 
         public string dump_resolve_names() {
@@ -246,8 +242,23 @@ namespace lw_common.parse {
             return info_type_io.from_str(str);
         }
 
+        // the idea is to be able to match each column to an info-type 
+        public void on_column_names(List<string> column_names) {
+            name_to_column_.clear();
+            foreach (string col in column_names) {
+                info_type type;
+                if (Enum.TryParse(col, true, out type)) {
+                    // in this case, it's the column itself
+                    // we want to know this, so that has_column(this-type) will return true
+                    name_to_column_.set(col, type);
+                    continue;
+                }
+                to_info_type(col, column_names);
+            }
+        }
+
         // if it returns max, the alias was invalid
-        public info_type to_info_type(string alias, List<string> column_names ) {
+        private info_type to_info_type(string alias, List<string> column_names ) {
             try {
                 // it's an index, like, _7
                 if (alias.StartsWith("_")) {

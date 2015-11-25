@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms.VisualStyles;
 
 namespace lw_common.parse.parsers {
     internal abstract class log_parser_base : IDisposable {
@@ -31,6 +32,8 @@ namespace lw_common.parse.parsers {
 
         protected readonly settings_as_string_readonly sett_;
         private aliases aliases_;
+
+        private List<string> column_names_ = new List<string>(); 
 
         protected log_parser_base(settings_as_string_readonly sett) {
             sett_ = sett;
@@ -49,8 +52,14 @@ namespace lw_common.parse.parsers {
         public abstract bool up_to_date { get; }
 
         // column names - parsed from the log (if any)
-        public virtual  List<string> column_names {
-            get { return new List<string>(); }
+        public List<string> column_names {
+            get { lock(this) return column_names_; }
+            internal set {
+                lock(this)
+                    column_names_ = value;
+                if ( column_names_.Count > 0)
+                    aliases_.on_column_names(column_names_);
+            }
         }
 
         public aliases aliases {
@@ -66,6 +75,8 @@ namespace lw_common.parse.parsers {
 
         protected virtual void on_updated_settings() {
             aliases_ = new aliases(sett_.get("aliases"));
+            if ( column_names_.Count > 0)
+                aliases_.on_column_names(column_names_);
         }
 
         internal settings_as_string_readonly settings {

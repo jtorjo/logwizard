@@ -18,6 +18,11 @@ namespace lw_common {
                 set( kv.Key, kv.Value);            
         }
 
+        public void clear() {
+            keys_.Clear();
+            values_.Clear();
+        }
+
         public void set(K key, V value) {
 
             if (keys_.ContainsKey(key)) {

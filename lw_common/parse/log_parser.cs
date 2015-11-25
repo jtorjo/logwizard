@@ -162,8 +162,9 @@ namespace lw_common
                 forced_reload_.Clear();
                 logger.Info("[log] forced reload: " + reader_.name);
             }
-
             forward_to_parser_.force_reload();
+            // force reloading them
+            forward_to_parser_.column_names = new List<string>();
             reader_.force_reload();
         }
 

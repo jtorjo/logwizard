@@ -103,7 +103,7 @@ namespace lw_common.parse.parsers {
                     // there's not enought text to parse a single log entry
                     return;
                 delimeter = delimeter_name_;
-                needs_set_column_names = column_names_.Count < 1;
+                needs_set_column_names = column_names.Count < 1;
             }
             
             XmlTextReader reader = new XmlTextReader(now, XmlNodeType.Element, xml_parse_context_) { Namespaces = false };
@@ -149,8 +149,7 @@ namespace lw_common.parse.parsers {
                 }
 
                 if ( column_names_now != null)
-                    lock (this)
-                        column_names_ = column_names_now;
+                    column_names = column_names_now;
             } catch (Exception e) {
                 logger.Fatal("[parse] could not parse xml: " + e);
             }

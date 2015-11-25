@@ -130,8 +130,8 @@ namespace lw_common.parse.parsers {
             }
 
             lock (this) {
-                if (entries_now.Count > 0 && column_names_.Count == 0)
-                    column_names_ = entries_now[0].names;
+                if (entries_now.Count > 0 && column_names.Count == 0)
+                    column_names = entries_now[0].names;
                 last_entry_ = last_entry;
                 foreach ( var entry in entries_now)
                     string_.add_preparsed_line( entry.ToString());

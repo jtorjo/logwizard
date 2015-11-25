@@ -86,7 +86,7 @@ namespace lw_common.parse {
             for (int i = 0; i < idx.Length; ++i)
                 idx[i] = new Tuple<int, int>(-1, -1);
 
-            var sorted = infos_.OrderBy(x => x.Value).Select(x => new Tuple<int, int>((int) aliases.to_info_type(x.Key, names_) , x.Value)).ToList();
+            var sorted = infos_.OrderBy(x => x.Value).Select(x => new Tuple<int, int>((int) aliases.to_info_type(x.Key) , x.Value)).ToList();
 
             for (int i = 0; i < sorted.Count; ++i) {
                 int len = i < sorted.Count - 1 ? sorted[i + 1].Item2 - sorted[i].Item2 : -1;

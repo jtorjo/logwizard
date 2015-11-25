@@ -40,8 +40,6 @@ namespace lw_common.parse.parsers.file {
         //         eventually, after a few mins, if no modifications of aliases, erase it (and keep another list with the pre-parsed lines)
         protected memory_optimized_list<log_entry_line> entries_ = new memory_optimized_list<log_entry_line>() { name = "parser-entries-fpb"};
 
-        protected  List<string> column_names_ = new List<string>(); 
-
         public file_parser_base(file_text_reader reader) : base(reader.settings) {
             reader_ = reader;
         }
@@ -89,15 +87,10 @@ namespace lw_common.parse.parsers.file {
             }
         }
 
-        public override List<string> column_names {
-            get { lock(this) return column_names_.ToList(); }
-        }
-
         public override void force_reload() {
             lock (this) {
                 entries_.Clear();
                 string_.clear();
-                column_names_.Clear();
             }
         }
 
