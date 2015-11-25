@@ -48,6 +48,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.rightClickEdit = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copy = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.split1)).BeginInit();
             this.split1.Panel2.SuspendLayout();
             this.split1.SuspendLayout();
@@ -81,7 +82,7 @@
             // split1.Panel2
             // 
             this.split1.Panel2.Controls.Add(this.split2);
-            this.split1.Size = new System.Drawing.Size(1079, 463);
+            this.split1.Size = new System.Drawing.Size(1133, 463);
             this.split1.SplitterDistance = 100;
             this.split1.TabIndex = 0;
             this.split1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split1_SplitterMoved);
@@ -96,7 +97,7 @@
             // split2.Panel2
             // 
             this.split2.Panel2.Controls.Add(this.split3);
-            this.split2.Size = new System.Drawing.Size(975, 463);
+            this.split2.Size = new System.Drawing.Size(1029, 463);
             this.split2.SplitterDistance = 100;
             this.split2.TabIndex = 0;
             this.split2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split2_SplitterMoved);
@@ -111,7 +112,7 @@
             // split3.Panel2
             // 
             this.split3.Panel2.Controls.Add(this.split4);
-            this.split3.Size = new System.Drawing.Size(871, 463);
+            this.split3.Size = new System.Drawing.Size(925, 463);
             this.split3.SplitterDistance = 100;
             this.split3.TabIndex = 0;
             this.split3.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split3_SplitterMoved);
@@ -126,7 +127,7 @@
             // split4.Panel2
             // 
             this.split4.Panel2.Controls.Add(this.split5);
-            this.split4.Size = new System.Drawing.Size(767, 463);
+            this.split4.Size = new System.Drawing.Size(821, 463);
             this.split4.SplitterDistance = 100;
             this.split4.TabIndex = 0;
             this.split4.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split4_SplitterMoved);
@@ -141,7 +142,7 @@
             // split5.Panel2
             // 
             this.split5.Panel2.Controls.Add(this.split6);
-            this.split5.Size = new System.Drawing.Size(663, 463);
+            this.split5.Size = new System.Drawing.Size(717, 463);
             this.split5.SplitterDistance = 100;
             this.split5.TabIndex = 0;
             this.split5.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split5_SplitterMoved);
@@ -152,7 +153,7 @@
             this.split6.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.split6.Location = new System.Drawing.Point(0, 0);
             this.split6.Name = "split6";
-            this.split6.Size = new System.Drawing.Size(559, 463);
+            this.split6.Size = new System.Drawing.Size(613, 463);
             this.split6.SplitterDistance = 100;
             this.split6.TabIndex = 0;
             this.split6.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split6_SplitterMoved);
@@ -251,21 +252,22 @@
             this.saveLayout.Size = new System.Drawing.Size(75, 28);
             this.saveLayout.TabIndex = 8;
             this.saveLayout.Text = "Save as";
-            this.tip.SetToolTip(this.saveLayout, "Save This Layout...");
+            this.tip.SetToolTip(this.saveLayout, "Finishes Editing and Save This Layout ");
             this.saveLayout.UseVisualStyleBackColor = true;
             this.saveLayout.Click += new System.EventHandler(this.saveLayout_Click);
             // 
             // description
             // 
-            this.description.Location = new System.Drawing.Point(841, 5);
+            this.description.Location = new System.Drawing.Point(839, 5);
             this.description.Name = "description";
             this.description.Size = new System.Drawing.Size(100, 25);
             this.description.TabIndex = 9;
             this.tip.SetToolTip(this.description, "You can give a meaningful name to this layout...");
+            this.description.TextChanged += new System.EventHandler(this.description_TextChanged);
             // 
             // loadLayout
             // 
-            this.loadLayout.Location = new System.Drawing.Point(947, 3);
+            this.loadLayout.Location = new System.Drawing.Point(1004, 3);
             this.loadLayout.Name = "loadLayout";
             this.loadLayout.Size = new System.Drawing.Size(75, 28);
             this.loadLayout.TabIndex = 10;
@@ -319,6 +321,7 @@
             // 
             this.editPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.editPanel.Controls.Add(this.copy);
             this.editPanel.Controls.Add(this.moveDown);
             this.editPanel.Controls.Add(this.moveUp);
             this.editPanel.Controls.Add(this.label1);
@@ -335,7 +338,7 @@
             this.editPanel.Controls.Add(this.editColumnName);
             this.editPanel.Location = new System.Drawing.Point(0, 0);
             this.editPanel.Name = "editPanel";
-            this.editPanel.Size = new System.Drawing.Size(1079, 39);
+            this.editPanel.Size = new System.Drawing.Size(1133, 39);
             this.editPanel.TabIndex = 6;
             // 
             // label1
@@ -361,6 +364,17 @@
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
             // 
+            // copy
+            // 
+            this.copy.Location = new System.Drawing.Point(943, 3);
+            this.copy.Name = "copy";
+            this.copy.Size = new System.Drawing.Size(56, 28);
+            this.copy.TabIndex = 15;
+            this.copy.Text = "Copy";
+            this.tip.SetToolTip(this.copy, "Create a Copy of This Layout, and start Editing it");
+            this.copy.UseVisualStyleBackColor = true;
+            this.copy.Click += new System.EventHandler(this.copy_Click);
+            // 
             // description_ctrl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -369,7 +383,7 @@
             this.Controls.Add(this.split1);
             this.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "description_ctrl";
-            this.Size = new System.Drawing.Size(1079, 505);
+            this.Size = new System.Drawing.Size(1133, 505);
             this.SizeChanged += new System.EventHandler(this.description_ctrl_SizeChanged);
             this.split1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.split1)).EndInit();
@@ -421,5 +435,6 @@
         private System.Windows.Forms.Button moveUp;
         private System.Windows.Forms.ContextMenuStrip rightClickEdit;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.Button copy;
     }
 }

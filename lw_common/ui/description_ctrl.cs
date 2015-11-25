@@ -40,6 +40,7 @@ namespace lw_common.ui {
         // this contains everything needed to show all layout
         private class parts_layout_template {
             public List<row> rows_ = new List<row>();
+            // this needs to be unique - we can bind a specific layout template to a log and/or context
             public string name_ = "Layout";
         }
 
@@ -115,6 +116,8 @@ namespace lw_common.ui {
             }
 
             foreach (var part_data in parts.Split(';')) {
+                if (part_data == "")
+                    continue;
                 var cur_part = part_data.Split(',');
                 Debug.Assert(cur_part.Length == 6);
                 row r = layout.rows_[int.Parse(cur_part[0]) ];
@@ -272,8 +275,11 @@ namespace lw_common.ui {
                     visible_columns_.Add(type);
                     names_.Add(type, name);
                 }
-            update_label_widths();
             update_ui();
+        }
+
+        public void set_layout(string name) {
+            load_layout_by_name(name);
         }
 
         private void update_label_widths() {
@@ -310,6 +316,7 @@ namespace lw_common.ui {
             var layout = layouts_[cur_layout_idx_];
             set_rows( layout.rows_.Count );
             row_widths_to_splitter_widths();
+            update_label_widths();
             column_to_controls_.Clear();
 
             const int COLUMN_HEIGHT = 19, COLUMN_PAD = 4;
@@ -358,6 +365,7 @@ namespace lw_common.ui {
             foreach (var panel in panels_)
                 panel.BackColor = is_editing_ ? Color.WhiteSmoke : Color.Transparent;
 
+            description.Text = layouts_[cur_layout_idx_].name_;
             update_edit_column();
             --ignore_change_;
             ResumeLayout(true);
@@ -378,10 +386,26 @@ namespace lw_common.ui {
         private void editToolStripMenuItem_Click(object sender, EventArgs e) {
             is_editing_ = !is_editing_;
             update_is_editing_ui();
+            make_sure_description_is_unique();
             if (!is_editing_) {
                 // save - after user edit
                 save();
                 app.inst.save();
+            }
+        }
+
+        private void make_sure_description_is_unique() {
+            Debug.Assert(layouts_.Count > 0);
+            var layout = layouts_[cur_layout_idx_];
+            string prefix = layout.name_;
+            int suffix_idx = 0;
+            string name = "";
+            while (true) {
+                name = prefix + (suffix_idx > 0 ? "" + (suffix_idx + 1) : "");
+                layout.name_ = name;
+                if (layouts_.Count(x => x.name_ == name) <= 1)
+                    break;
+                ++suffix_idx;
             }
         }
 
@@ -448,7 +472,7 @@ namespace lw_common.ui {
             var layout = layouts_[cur_layout_idx_];
             foreach (var row in layout.rows_)
                 foreach ( var part in row.parts_)
-                    if (names_[part.type] == column_name)
+                    if (names_.ContainsKey(part.type) && names_[part.type] == column_name)
                         return part;
             Debug.Assert(false);
             return null;
@@ -604,11 +628,43 @@ namespace lw_common.ui {
         }
 
         private void saveLayout_Click(object sender, EventArgs e) {
-            // make sure each name is unique
+            Debug.Assert(is_editing_);
+            editToolStripMenuItem_Click(null, null);
+        }
+
+        private void copy_Click(object sender, EventArgs e) {
+            Debug.Assert(layouts_.Count > 0);
+            var layout = layouts_[cur_layout_idx_];
+            var copy = new parts_layout_template { name_ = layout.name_ + "_Copy" };
+            foreach (var r in layout.rows_) {
+                copy.rows_.Add(new row { label_width_ = r.label_width_, row_width_ = r.row_width_ });
+                foreach ( var p in r.parts_)
+                    copy.rows_.Last().parts_.Add( new part { auto_resize = p.auto_resize, type = p.type, visible = p.visible, multi_line = p.multi_line, line_count = p.line_count } );
+            } 
+            layouts_.Add(copy);
+            cur_layout_idx_ = layouts_.Count - 1;
+            update_ui();
         }
 
         private void loadLayout_Click(object sender, EventArgs e) {
+            ContextMenuStrip menu = new ContextMenuStrip();
+            for (int idx = 0; idx < layouts_.Count; idx++) {
+                var layout = layouts_[idx];
+                ToolStripMenuItem item = new ToolStripMenuItem(layout.name_);
+                item.Checked = idx == cur_layout_idx_;
+                item.Click += (a, ee) => load_layout_by_name(layout.name_);
+                menu.Items.Add(item);
+            }
+            menu.Show(Cursor.Position, util.menu_direction(menu, Cursor.Position));
+        }
 
+        private void load_layout_by_name(string name) {
+            var layout_idx = layouts_.FindIndex(x => x.name_ == name);
+            if (layout_idx < 0)
+                return; // not found
+
+            cur_layout_idx_ = layout_idx;
+            update_ui();
         }
 
         private void isMultiline_CheckedChanged(object sender, EventArgs e) {
@@ -663,6 +719,16 @@ namespace lw_common.ui {
 
             update_ui();
         }
+
+        private void description_TextChanged(object sender, EventArgs e) {
+            if (ignore_change_ > 0)
+                return;
+
+            Debug.Assert(layouts_.Count > 0);
+            var layout = layouts_[cur_layout_idx_];
+            layout.name_ = description.Text;
+        }
+
 
     }
 }

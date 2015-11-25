@@ -29,6 +29,8 @@ namespace lw_common.ui {
 
             "Creating filters is a bliss. Select some text, and right click! More details <a http://www.codeproject.com/Articles/1045528/LogWizard-Filter-your-Logs-Inside-out>here</a>",
             "You can easily view Windows Event Log(s)! Just hit Ctrl-O, and select 'Windows Event Log'...",
+
+            "You can tweak your Description Pane to show <b>just what you want, the way you want it</b>. Right click on top-left, and select 'Edit Description Layout'.",
         };
 
         private const int MAX_BEGINNER_TIPS = 20;

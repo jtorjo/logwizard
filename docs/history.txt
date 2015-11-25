@@ -21,6 +21,9 @@
 
 - bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
 
+1.5.9g
+- description control - ALL WORKS LIKE A CHARM
+
 
 1.5.9f
 - description control
