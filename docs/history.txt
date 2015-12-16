@@ -1,17 +1,15 @@
 
-  -- implement toggle details 
+- on an item: need to update description control + the text should be multi-colored
 
-     - allow several details in there
-	 - allow specifying which columns to be in details, and which in list (they can overlap)
 	 - save column widths / positions in global_ui
 	   - message column is considered the biggest (one that resizes as multi-line)
-	   - however, i should be able to mark other ones as multiline as well? maybe later
-	   - if this is visible, msg_details will be hidden
 	   -TOTHINK how do i type-search when the msg contains multiple lines
 	   - i have to see how i can show visually if the message spans on several lines
 	   -**** also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
     ---------> once i change the description template -> save it and use it for log/context.
 	-- type-as-you-go search -> it should only care about visible columns in teh list (not description) -> just double check it happens
+
+- description: watch for resize of splitDescription splitter, and save it
 
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
@@ -20,6 +18,20 @@
 
 
 - bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
+- bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
+
+
+1.5.10a
+- implement toggle details 
+  - added it to logwizard form
+  - when turned on, the other msg_details need to be hidden
+- IMPORTANT:
+  adding the details control on the Logwizard form slowed down resizing/moving a LOT on debug mode
+  my take is that it's because of the many splitter-container-inside-splitter-container, and perhaps it's combined with the fact
+  that they are all using Dock=Fill.
+  also, description_ctrl has 6-embedded-into-one-another splitter controls. 
+  I'm hoping that this won't matter in release (about to test now)
+
 
 1.5.9g
 - description control - ALL WORKS LIKE A CHARM

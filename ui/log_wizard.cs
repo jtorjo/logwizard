@@ -231,6 +231,7 @@ namespace LogWizard
 
             msg_details_ = new msg_details_ctrl(this);
             Controls.Add(msg_details_);
+            msg_details_.force_hide = global_ui.show_details;
             handle_subcontrol_keys(this);
 
             viewsTab.DrawMode = TabDrawMode.OwnerDrawFixed;
@@ -788,7 +789,22 @@ namespace LogWizard
 
         // to show/hide the "details" view - the details view contains all information in the message (that is not usually shown in the list)
         private void show_details(bool show) {
-            // not implmented yet
+            bool shown = !splitDescription.Panel2Collapsed;
+            if (show == shown)
+                return;
+
+            ++ignore_change_;
+            if ( show) {
+                splitDescription.Panel2Collapsed = false;
+                splitDescription.Panel2.Show();
+            }
+            else {
+                splitDescription.Panel2Collapsed = true;
+                splitDescription.Panel2.Hide();
+            }
+            if ( msg_details_ != null)
+                msg_details_.force_hide = show;
+            --ignore_change_;
         }
 
         private void toggle_details() {
@@ -1767,6 +1783,11 @@ namespace LogWizard
             force_initial_refresh_of_all_views();
         }
 
+        private void on_settings_changed(string sett_name) {
+            if ( sett_name == "aliases")
+                util.postpone(() => description.set_aliases(log_parser_.aliases), 1);            
+        }
+
         private void on_new_log() {
             string size = text_ is file_text_reader ? " (" + new FileInfo(text_.name).Length + " bytes)" : "";
             set_status_forever("Log: " + text_.name + size);
@@ -1800,6 +1821,8 @@ namespace LogWizard
 
             // note: we recreate the log, so that cached filters know to rebuild
             log_parser_ = new log_parser(text_);
+            description.set_aliases(log_parser_.aliases);
+            log_parser_.settings.on_changed += on_settings_changed;
             ui_context log_ctx = settings_to_context( text_.settings );
             bool same_context = log_ctx == cur_context();
             if (!same_context) {

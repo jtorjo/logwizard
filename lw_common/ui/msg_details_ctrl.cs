@@ -42,6 +42,8 @@ namespace lw_common {
         private log_view force_hide_for_view_ = null;
         private int force_hide_for_row_ = -1;
 
+        private bool force_hide_ = false;
+
         public msg_details_ctrl(Form wizard_parent) {
             wizard_parent_ = wizard_parent;
             Debug.Assert(wizard_parent is log_view_parent);
@@ -50,6 +52,14 @@ namespace lw_common {
             SetStyle(ControlStyles.Selectable, false);
             Visible = true;
             show(false);
+        }
+
+        public bool force_hide {
+            get { return force_hide_; }
+            set {
+                force_hide_ = value; 
+                show( visible());
+            }
         }
 
         private int text_height(string txt, int width) {
@@ -117,7 +127,7 @@ namespace lw_common {
             show(true, new_location);
         }
 
-        public void force_hide(log_view lv) {
+        public void force_temporary_hide(log_view lv) {
             force_hide_for_view_ = lv;
             force_hide_for_row_ = lv.sel_row_idx;
             show(false);
@@ -167,10 +177,13 @@ namespace lw_common {
         }
 
         public bool visible() {
-            return Location.X > -10000;
+            return Location.X > -10000 && !force_hide_;
         }
 
         private void show(bool do_show, Point p = default(Point) ) {
+            // 1.5.10 - when Description control is shown, we never show this
+            do_show = do_show && !force_hide_;
+            
             if (do_show) {
                 force_hide_for_row_ = -1;
                 force_hide_for_view_ = null;

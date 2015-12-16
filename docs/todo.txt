@@ -363,6 +363,8 @@
 	   maybe show with different colors as well, based on distance - also, allow showing them graphically?
 	   also, have a setting like "show exact times" - if off, we'll round to seconds/minutes/etc. BUT
 	     if "show exact times on selection" is on, when selecting a row, we'll show the exact times
+ -- should be able to put "marks" -> so that I can see delta compared to a given line - i should be able to put several marks and be able to switch between them
+   - perhaps use teh bookmarks for this?
 
 
 

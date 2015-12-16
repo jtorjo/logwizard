@@ -1472,7 +1472,7 @@ namespace lw_common.ui
         public void escape() {
             var msg_details = this.msg_details;
             if (msg_details != null && msg_details.visible()) {
-                msg_details.force_hide(this);
+                msg_details.force_temporary_hide(this);
             }
             else if (edit.sel_text != "") {
                 edit.escape();
