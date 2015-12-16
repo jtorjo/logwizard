@@ -152,7 +152,7 @@ namespace lw_common.ui {
 
         private parts_layout_template set_defaults() {
             // default: 2 rows 
-            // - on first row, I have everything but level, time, date, line, msg
+            // - on first row, I have everything but level, time, date, line, thread, msg
             // - on second row I have msg, multi-line, auto-resize
             parts_layout_template def_ = new parts_layout_template();
             def_.rows_.Add( new row { row_width_ = 250});
@@ -165,6 +165,7 @@ namespace lw_common.ui {
                 case info_type.time:
                 case info_type.view:
                 case info_type.line:
+                case info_type.thread:
                     break;
 
                 case info_type.msg:

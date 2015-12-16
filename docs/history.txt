@@ -1,6 +1,7 @@
 
 - on an item: need to update description control + the text should be multi-colored
 
+
 	 - save column widths / positions in global_ui
 	   - message column is considered the biggest (one that resizes as multi-line)
 	   -TOTHINK how do i type-search when the msg contains multiple lines
@@ -19,6 +20,12 @@
 
 - bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
 - bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
+
+
+
+1.5.10b
+- description: tested on release mode: good news, resizing/moving is not CPU-consuming
+- fix: when used first time, description control shows thread + msg. should show only msg
 
 
 1.5.10a
