@@ -62,6 +62,9 @@ namespace lw_common.ui {
 
         private font_list fonts_ = new font_list();
 
+        private log_view_item_draw_ui drawer_ = null;
+        print_info default_print_ = new print_info();
+
         public description_ctrl() {
             InitializeComponent();
             splits_.Add(split1);
@@ -728,6 +731,55 @@ namespace lw_common.ui {
             Debug.Assert(layouts_.Count > 0);
             var layout = layouts_[cur_layout_idx_];
             layout.name_ = description.Text;
+        }
+
+        private void show_sub_item(log_view lv, info_type type, RichTextBox text_ctrl) {
+            match_item item = lv.sel;
+            int row = lv.sel_row_idx;
+
+            string txt = (item as filter.match).line.part(type);
+            int col = log_view_cell.info_type_to_cell_idx(type);
+
+            text_ctrl.Clear();
+            text_ctrl.AppendText(txt);
+             
+            var prints = lv.sel.override_print(lv, txt, col);
+            var full_row = lv.list.GetItem(row);
+
+            text_ctrl.BackColor = drawer_.bg_color(full_row, col);
+
+            int last_idx = 0;
+            for (int print_idx = 0; print_idx < prints.Count; ++print_idx) {
+                int cur_idx = prints[print_idx].Item1, cur_len = prints[print_idx].Item2;
+                string before = txt.Substring(last_idx, cur_idx - last_idx);
+                if (before != "") {
+                    text_ctrl.Select(last_idx, cur_idx - last_idx);
+                    text_ctrl.SelectionColor = drawer_.print_fg_color(full_row, default_print_);
+                    text_ctrl.SelectionBackColor = drawer_.bg_color(full_row, col);
+                }
+                text_ctrl.Select(cur_idx, cur_len);
+                text_ctrl.SelectionColor = drawer_.print_fg_color(full_row, prints[print_idx].Item3);
+                text_ctrl.SelectionBackColor = drawer_.print_bg_color(full_row, prints[print_idx].Item3);
+                last_idx = cur_idx + cur_len;
+            }
+            last_idx = prints.Count > 0 ? prints.Last().Item1 + prints.Last().Item2 : 0;
+            if (last_idx < txt.Length) {
+                text_ctrl.Select(last_idx, txt.Length - last_idx);
+                text_ctrl.SelectionColor = drawer_.print_fg_color(full_row, default_print_);
+                text_ctrl.SelectionBackColor = drawer_.bg_color(full_row, col);
+            }
+            
+        }
+
+        public void show_cur_item(log_view lv) {
+            if ( drawer_ == null)
+                drawer_ = new log_view_item_draw_ui(lv) { ignore_selection = true };
+            drawer_.set_parent(lv);
+
+            if (lv.sel != null) {
+                foreach (var col in column_to_controls_) 
+                    show_sub_item(lv, col.Key, col.Value.Item2);
+            }
         }
 
 

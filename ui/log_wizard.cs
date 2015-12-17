@@ -1566,7 +1566,7 @@ namespace LogWizard
                         top_offset += any_lv.list.HeaderControl.ClientRectangle.Height;
                 }
                 int bottom_offset = ClientRectangle.Height - lower.Top;
-                msg_details_.update(selected_view(), top_offset, bottom_offset, force_update);
+                msg_details_.update(selected_view(), top_offset, bottom_offset, force_update);                
             }
         }
 
@@ -1682,6 +1682,8 @@ namespace LogWizard
                                     (from == full_log_ctrl_ && app.inst.sync_all_views && app.inst.sync_full_log_view);
             if (keep_all_in_sync)
                 keep_logs_in_sync(from);
+
+            description.show_cur_item(selected_view());
         }
 
 
@@ -2111,6 +2113,7 @@ namespace LogWizard
             // in this case - even if in a custom UI, we still want to remember the last selected view
             global_ui.selected_view = global_ui.selected_view = name;
             update_notes_current_line();
+            util.postpone(() => description.show_cur_item(selected_view()), 150);
         }
 
 

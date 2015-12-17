@@ -1,6 +1,13 @@
 
-- on an item: need to update description control + the text should be multi-colored
 
+
+- log_view control: when showing any multi-line text, ignore any trailing lines (start + end)
+  - testing (debug) -> split each line at 15 chars
+  + if there's any custom-color text:
+    - if we have something from type-as-you-go, select that specific line
+	- if we have something from any running filters, just select the first line that has something and show it
+	- if lines before/after need to show visually (like, show the "Paragraph" sign)
+	  - there should be a way to turn this off
 
 	 - save column widths / positions in global_ui
 	   - message column is considered the biggest (one that resizes as multi-line)
@@ -21,6 +28,11 @@
 - bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
 - bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
 
+
+
+1.5.10c
+- description control
+  - on an item: need to update description control + the text should be multi-colored
 
 
 1.5.10b

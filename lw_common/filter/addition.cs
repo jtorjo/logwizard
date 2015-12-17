@@ -22,7 +22,7 @@
 */
 using System;
 
-namespace LogWizard {
+namespace lw_common {
     public class addition {
         protected bool Equals(addition other) {
             return add == other.add && type == other.type && number == other.number;

@@ -163,6 +163,10 @@ namespace lw_common.ui {
             return print;
         }
 
+        public List<Tuple<int, int, print_info>> override_print(log_view parent, string text, info_type type) {
+            return override_print(parent, text, log_view_cell.info_type_to_cell_idx(type));
+        }
+
         // returns the overrides, sorted by index in the string to print
         public List<Tuple<int, int, print_info>> override_print(log_view parent, string text, int col_idx) {
             var print = override_print_from_all_places(parent, text, col_idx);
