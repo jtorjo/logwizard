@@ -36,7 +36,6 @@
             // smart_readonly_textbox
             // 
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Multiline = false;
             this.ReadOnly = true;
             this.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.Size = new System.Drawing.Size(493, 20);

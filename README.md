@@ -1,4 +1,4 @@
-# LogWizard - Meet the Log Viewer that makes monitoring log files a joy!
+# LogWizard - a Log Viewer that is easy and fun to use!
 
 ![LogWizard](https://github.com/jtorjo/logwizard/blob/master/images/00shot_first.png)
 

@@ -127,6 +127,9 @@ namespace lw_common.ui {
             var col_idx = Column.fixed_index();
             string text = GetText();
             override_print_ = i.override_print(parent_, text, col_idx);
+            var type = log_view_cell.cell_idx_to_type(col_idx);
+            if ( info_type_io.can_be_multi_line(type))
+                print_info.get_most_important_single_line(ref text, ref override_print_);
 
             Brush brush = drawer_.bg_brush(ListItem, col_idx);
             g.FillRectangle(brush, r);

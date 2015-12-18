@@ -83,6 +83,8 @@ namespace lw_common {
         // we really want everything - by default, we'll send much less logs.
         private const int MAX_OLD_LOGS = 25;
 
+        public readonly static char[] any_enter_char = new[] {'\r', '\n'};
+
         // this way I can emulate "release" behavior in debug mode - I want to avoid using #ifs as much as possible
 #if DEBUG
         private static bool is_debug_ = true;
@@ -1047,6 +1049,41 @@ namespace lw_common {
                     return copy;
                 ++idx;
             }
+        }
+
+        public enum split_into_lines_type {
+            include_enter_chars_in_returned_lines, exclude_enter_chars_in_returned_lines
+        }
+
+        public static string[] split_into_lines(string text, split_into_lines_type split_type) {
+            List<string> lines = new List<string>();
+
+            while (text.Length > 0) {
+                int found = text.IndexOfAny(any_enter_char);
+                if (found < 0) {
+                    lines.Add(text);
+                    break;
+                }
+                // we have a line
+                int next = text.IndexOfAny(any_enter_char, found + 1);
+                bool double_char_enter = next == found + 1 && text[found] != text[next];
+                string cur = text.Substring(0, split_type == split_into_lines_type.include_enter_chars_in_returned_lines ? found + (double_char_enter ? 2 : 1) : found);
+                lines.Add(cur);
+
+                text = text.Substring(found + (double_char_enter ? 2 : 1));
+            }
+
+            return lines.ToArray();
+        }
+
+        // forces a text into multiple lines, each line having line_char_count characters
+        public static string split_into_multiple_fixed_lines(string txt, int line_char_count) {
+            string result = "";
+            for (int i = 0; i < txt.Length; i += line_char_count) {
+                int len = i + line_char_count <= txt.Length ? line_char_count : txt.Length - i;
+                result += txt.Substring(i, len) + ( i + line_char_count < txt.Length ? "\r\n" : "");
+            }
+            return result;
         }
 
     }

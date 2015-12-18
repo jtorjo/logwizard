@@ -739,11 +739,12 @@ namespace lw_common.ui {
 
             string txt = (item as filter.match).line.part(type);
             int col = log_view_cell.info_type_to_cell_idx(type);
+            var prints = lv.sel.override_print(lv, txt, col);
+            print_info.to_single_enter_char(ref txt, ref prints);
 
             text_ctrl.Clear();
             text_ctrl.AppendText(txt);
              
-            var prints = lv.sel.override_print(lv, txt, col);
             var full_row = lv.list.GetItem(row);
 
             text_ctrl.BackColor = drawer_.bg_color(full_row, col);

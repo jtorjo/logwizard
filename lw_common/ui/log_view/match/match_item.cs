@@ -138,7 +138,7 @@ namespace lw_common.ui {
                 // look for the text typed by the user
                 var matches = util.find_all_matches(text.ToLower(), sel);
                 if (matches.Count > 0) {
-                    print_info print_sel = new print_info { bold = true, text = sel };
+                    print_info print_sel = new print_info { bold = true, text = sel, is_typed_search = true };
                     foreach ( var match in matches)
                         print.Add( new Tuple<int, int, print_info>(match, sel.Length, print_sel));
                 }
@@ -150,7 +150,7 @@ namespace lw_common.ui {
                 if (matches.Count > 0) {
                     // if we're showing both selected text and the results of a find, differentiate them visually
                     bool italic = sel != "";
-                    print_info print_sel = new print_info { text = find, bg = parent.cur_search.bg, fg = parent.cur_search.fg, bold = true, italic = italic };
+                    print_info print_sel = new print_info { text = find, bg = parent.cur_search.bg, fg = parent.cur_search.fg, bold = true, italic = italic, is_typed_search = italic };
                     foreach ( var match in matches)
                         print.Add( new Tuple<int, int, print_info>(match.Item1, match.Item2, print_sel));
                 }                    

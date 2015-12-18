@@ -216,10 +216,13 @@ namespace lw_common.ui {
             string txt = parent_.sel_subitem_text;
 
             ++ignore_change_;
-            Clear();
-
-            AppendText(txt);
+            Multiline = txt.IndexOfAny(util.any_enter_char) >= 0;
             var prints = parent_.sel.override_print(parent_, txt, sel_col_);
+            print_info.to_single_enter_char(ref txt, ref prints);
+
+            Clear();
+            AppendText(txt);
+
             var full_row = parent_.list.GetItem(sel_row_);
             int last_idx = 0;
             for (int print_idx = 0; print_idx < prints.Count; ++print_idx) {

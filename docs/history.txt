@@ -1,19 +1,9 @@
 
 
 
-- log_view control: when showing any multi-line text, ignore any trailing lines (start + end)
-  - testing (debug) -> split each line at 15 chars
-  + if there's any custom-color text:
-    - if we have something from type-as-you-go, select that specific line
-	- if we have something from any running filters, just select the first line that has something and show it
-	- if lines before/after need to show visually (like, show the "Paragraph" sign)
-	  - there should be a way to turn this off
 
 	 - save column widths / positions in global_ui
 	   - message column is considered the biggest (one that resizes as multi-line)
-	   -TOTHINK how do i type-search when the msg contains multiple lines
-	   - i have to see how i can show visually if the message spans on several lines
-	   -**** also, if msg spans on several lines, and i have something that is colored (match_color) -> i need to show that part!!! (since we need to emphasis on that)
     ---------> once i change the description template -> save it and use it for log/context.
 	-- type-as-you-go search -> it should only care about visible columns in teh list (not description) -> just double check it happens
 
@@ -28,6 +18,16 @@
 - bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
 - bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
 
+
+1.5.10d
+- log_view control: when showing any multi-line text, ignore any trailing lines (start + end)
+  - testing (debug) -> split each line at 15 chars
+  + if there's any custom-color text:
+    - if we have something from type-as-you-go, select that specific line
+	- if we have something from any running filters, just select the first line that has something and show it
+	- if lines before/after need to show visually (like, show the "Paragraph" sign)
+	  - there should be a way to turn this off
+- allow description control to be resizable
 
 
 1.5.10c

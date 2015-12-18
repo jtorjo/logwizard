@@ -3478,8 +3478,6 @@ namespace LogWizard
             sourcePanetopmostToolStripMenuItem.Checked = global_ui.show_source;
             topmostToolStripMenuItem.Checked = global_ui.topmost;
             detailsToolStripMenuItem.Checked = global_ui.show_details;
-            // we don't have this pane yet
-            detailsToolStripMenuItem.Enabled = false;
 
             var lv = selected_view();
             bool on_full_log = is_focus_on_full_log();

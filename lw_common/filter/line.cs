@@ -54,39 +54,130 @@ namespace lw_common {
 
     public static class info_type_io {
 
+        public static bool can_be_multi_line(info_type type) {
+            if (app.inst.force_text_as_multi_line)
+                return true;
+
+            switch (type) {
+            case info_type.date:
+            case info_type.time:
+            case info_type.level:
+            case info_type.thread:
+            case info_type.file:
+            case info_type.func:
+            case info_type.class_:
+            case info_type.view:
+            case info_type.line:
+                return false;
+
+            case info_type.ctx1:
+            case info_type.ctx2:
+            case info_type.ctx3:
+            case info_type.ctx4:
+            case info_type.ctx5:
+            case info_type.ctx6:
+            case info_type.ctx7:
+            case info_type.ctx8:
+            case info_type.ctx9:
+            case info_type.ctx10:
+            case info_type.ctx11:
+            case info_type.ctx12:
+            case info_type.ctx13:
+            case info_type.ctx14:
+            case info_type.ctx15:
+            case info_type.msg:
+                return true;
+
+            case info_type.max:
+            default:
+                Debug.Assert(false);
+                return false;
+            }
+        }
+
         public static info_type from_str(string type_str) {
             info_type type = info_type.max;
             switch (type_str) {
-            case "msg":     type = info_type.msg; break;
+            case "msg":
+                type = info_type.msg;
+                break;
 
-            case "time":    type = info_type.time; break;
-            case "date":    type = info_type.date; break;
-            case "level":   type = info_type.level; break;
-            case "class":   type = info_type.class_; break;
-            case "file":    type = info_type.file; break;
-            case "func":    type = info_type.func; break;
-            case "thread":  type = info_type.thread; break;
+            case "time":
+                type = info_type.time;
+                break;
+            case "date":
+                type = info_type.date;
+                break;
+            case "level":
+                type = info_type.level;
+                break;
+            case "class":
+                type = info_type.class_;
+                break;
+            case "file":
+                type = info_type.file;
+                break;
+            case "func":
+                type = info_type.func;
+                break;
+            case "thread":
+                type = info_type.thread;
+                break;
 
-            case "ctx1":    type = info_type.ctx1; break;
-            case "ctx2":    type = info_type.ctx2; break;
-            case "ctx3":    type = info_type.ctx3; break;
+            case "ctx1":
+                type = info_type.ctx1;
+                break;
+            case "ctx2":
+                type = info_type.ctx2;
+                break;
+            case "ctx3":
+                type = info_type.ctx3;
+                break;
 
-            case "ctx4":    type = info_type.ctx4; break;
-            case "ctx5":    type = info_type.ctx5; break;
-            case "ctx6":    type = info_type.ctx6; break;
-            case "ctx7":    type = info_type.ctx7; break;
-            case "ctx8":    type = info_type.ctx8; break;
-            case "ctx9":    type = info_type.ctx9; break;
-            case "ctx10":    type = info_type.ctx10; break;
+            case "ctx4":
+                type = info_type.ctx4;
+                break;
+            case "ctx5":
+                type = info_type.ctx5;
+                break;
+            case "ctx6":
+                type = info_type.ctx6;
+                break;
+            case "ctx7":
+                type = info_type.ctx7;
+                break;
+            case "ctx8":
+                type = info_type.ctx8;
+                break;
+            case "ctx9":
+                type = info_type.ctx9;
+                break;
+            case "ctx10":
+                type = info_type.ctx10;
+                break;
 
-            case "ctx11":    type = info_type.ctx11; break;
-            case "ctx12":    type = info_type.ctx12; break;
-            case "ctx13":    type = info_type.ctx13; break;
-            case "ctx14":    type = info_type.ctx14; break;
-            case "ctx15":    type = info_type.ctx15; break;
+            case "ctx11":
+                type = info_type.ctx11;
+                break;
+            case "ctx12":
+                type = info_type.ctx12;
+                break;
+            case "ctx13":
+                type = info_type.ctx13;
+                break;
+            case "ctx14":
+                type = info_type.ctx14;
+                break;
+            case "ctx15":
+                type = info_type.ctx15;
+                break;
 
-            case "view":     type = info_type.view; break;
-            case "line":     type = info_type.line; break;
+            case "view":
+                type = info_type.view;
+                break;
+            case "line":
+                type = info_type.line;
+                break;
             default:
                 break;
             }
@@ -95,32 +186,57 @@ namespace lw_common {
 
         public static string to_friendly_str(info_type i) {
             switch (i) {
-            case info_type.time:                return "Time";
-            case info_type.date:                return "Date";
-            case info_type.level:               return "Level";
-            case info_type.thread:              return "Thread";
-            case info_type.class_:              return "Class";
-            case info_type.file:                return "File";
-            case info_type.func:                return "Func";
-            case info_type.ctx1:                return "Ctx1";
-            case info_type.ctx2:                return "Ctx2";
-            case info_type.ctx3:                return "Ctx3";
-            case info_type.ctx4:                return "Ctx4";
-            case info_type.ctx5:                return "Ctx5";
-            case info_type.ctx6:                return "Ctx6";
-            case info_type.ctx7:                return "Ctx7";
-            case info_type.ctx8:                return "Ctx8";
-            case info_type.ctx9:                return "Ctx9";
-            case info_type.ctx10:               return "Ctx10";
-            case info_type.ctx11:               return "Ctx11";
-            case info_type.ctx12:               return "Ctx12";
-            case info_type.ctx13:               return "Ctx13";
-            case info_type.ctx14:               return "Ctx14";
-            case info_type.ctx15:               return "Ctx15";
-            case info_type.msg:                 return "Message";
+            case info_type.time:
+                return "Time";
+            case info_type.date:
+                return "Date";
+            case info_type.level:
+                return "Level";
+            case info_type.thread:
+                return "Thread";
+            case info_type.class_:
+                return "Class";
+            case info_type.file:
+                return "File";
+            case info_type.func:
+                return "Func";
+            case info_type.ctx1:
+                return "Ctx1";
+            case info_type.ctx2:
+                return "Ctx2";
+            case info_type.ctx3:
+                return "Ctx3";
+            case info_type.ctx4:
+                return "Ctx4";
+            case info_type.ctx5:
+                return "Ctx5";
+            case info_type.ctx6:
+                return "Ctx6";
+            case info_type.ctx7:
+                return "Ctx7";
+            case info_type.ctx8:
+                return "Ctx8";
+            case info_type.ctx9:
+                return "Ctx9";
+            case info_type.ctx10:
+                return "Ctx10";
+            case info_type.ctx11:
+                return "Ctx11";
+            case info_type.ctx12:
+                return "Ctx12";
+            case info_type.ctx13:
+                return "Ctx13";
+            case info_type.ctx14:
+                return "Ctx14";
+            case info_type.ctx15:
+                return "Ctx15";
+            case info_type.msg:
+                return "Message";
 
-            case info_type.view:                return "View(s)";
-            case info_type.line:                return "Line";
+            case info_type.view:
+                return "View(s)";
+            case info_type.line:
+                return "Line";
             default:
             case info_type.max:
                 Debug.Assert(false);
@@ -224,15 +340,20 @@ namespace lw_common {
             if (parts[(int) i * 2] < 0 || parts[(int) i * 2 + 1] <= 0)
                 return "";
 
+            string result = "";
             string msg = sub_.msg;
             try {
                 short start = parts[(int) i * 2], len = parts[(int) i * 2 + 1];
-                if ( start < msg.Length && start + len <= msg.Length)
-                    return msg.Substring(parts[(int) i * 2], parts[(int) i * 2 + 1]);
+                if (start < msg.Length && start + len <= msg.Length)
+                    result = msg.Substring(parts[(int) i * 2], parts[(int) i * 2 + 1]);
             } catch {
+                // this can happen when the log has changed or has been re-written, thus, the sub_ has become suddenly empty
             }
-            // this can happen when the log has changed or has been re-written, thus, the sub_ has become suddenly empty
-            return "";
+
+            if (app.inst.force_text_as_multi_line)
+                result = util.split_into_multiple_fixed_lines(result, 15);
+
+            return result;
         }
     }
 }
