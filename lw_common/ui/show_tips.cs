@@ -31,6 +31,12 @@ namespace lw_common.ui {
             "You can easily view Windows Event Log(s)! Just hit Ctrl-O, and select 'Windows Event Log'...",
 
             "You can tweak your Description Pane to show <b>just what you want, the way you want it</b>. Right click on top-left, and select 'Edit Description Layout'.",
+
+            "Want to filter in/out? Easy peasy! Select some text, and right click! More details <a http://www.codeproject.com/Articles/1045528/LogWizard-Filter-your-Logs-Inside-out>here</a>",
+            "Want to add a new view? Hover the top header - where 'Message X of Y' is written, and you'll see the '+' and '-' buttons, to add/remove views.",
+
+            "Do you have columns that are multi-line? Just toggle the 'Details' pane on! <b>(Ctrl-D)</b>.\r\n." +
+            "You can also edit which columns you want in the 'Details' pane - just right click it.",
         };
 
         private const int MAX_BEGINNER_TIPS = 20;

@@ -163,7 +163,7 @@ namespace lw_common {
 
         public string font_name = "";
         // note: we can keep several font names, just in case one is not present on the user's machine (read-only)
-        private string[] default_font_names;
+        private string[] default_font_names_;
         public int font_size = 9;
 
         public bool use_file_monitoring_api = false;
@@ -315,7 +315,7 @@ namespace lw_common {
                         return new Font(font_name, font_size); 
                     } catch {
                     }
-                foreach ( var name in default_font_names)
+                foreach ( var name in default_font_names_)
                     try {
                         return new Font(name, font_size); 
                     } catch {
@@ -377,14 +377,16 @@ namespace lw_common {
 
             load_save(load, ref font_name, "font_name");
             load_save(load, ref font_size, "font_size", 9);
-            string default_font_names = "";
-            load_save(load, ref font_name, "font_name");
-            load_save(load, ref default_font_names, "default_font_names");
-            if ( default_font_names == "" && load)
-                // older version used this name
-                load_save(load, ref default_font_names, "font_names");
-            if (load)
-                this.default_font_names = default_font_names.Split(',');
+
+            // note: default font names are read-only
+            if (load) {
+                string default_font_names = "";
+                load_save(load, ref default_font_names, "default_font_names");
+                if (default_font_names == "")
+                    // older version used this name
+                    load_save(load, ref default_font_names, "font_names");
+                default_font_names_ = default_font_names.Split(',');
+            }
 
             load_save(load, ref use_file_monitoring_api, "use_file_monitoring_api", false);
             load_save(load, ref show_beta_releases, "show_beta_releases", true);

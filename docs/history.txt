@@ -1,9 +1,4 @@
 
-	
-
-- bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
-  - test so that after run first time (empty lw_user.txt) , when run second time, it should be totally empty! (that is, see "Drop it like it's hot'")
-  - perhaps when loading history entries -> ignore the Logwizardsetup ???
 - bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
 
 
@@ -11,6 +6,12 @@
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
+
+1.5.11
+- fix: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
+  - test so that after run first time (empty lw_user.txt) , when run second time, it should be totally empty! (that is, see "Drop it like it's hot'")
+  - perhaps when loading history entries -> ignore the Logwizardsetup ???
+
 
 1.5.10h
 - type-as-you-go - care about columns that are only in description pane as well

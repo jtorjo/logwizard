@@ -1031,19 +1031,5 @@ sync_full_log_view=1
 synchronize_colors=1
 synchronize_colors_gray_non_active=0
 
-ui.default.show_current_view=1
-ui.default.show_details=0
-ui.default.show_filter=0
-ui.default.show_fulllog=0
-ui.default.show_header=1
-ui.default.show_left_pane=0
-ui.default.show_source=0
-ui.default.show_status=1
-ui.default.show_tabs=1
-ui.default.show_title=1
-ui.defaultmaximized=0
-ui.defaultshow_notes=0
-ui.defaultshow_row=
-
 use_bg_gradient=0
 use_hotkeys=1

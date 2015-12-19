@@ -532,12 +532,18 @@ namespace LogWizard
                 history_.Add( hist );
             }
             history_ = history_.Where(h => {
-                if (h.type == history.entry_type.file)
-                    if( File.Exists(h.name))
+                if (h.type == history.entry_type.file) {
+                    // 1.5.11 - don't include this into the list next time the user opens the app
+                    //          (so that he'll see the "Drop me like it's hot" huge message)
+                    if (h.name.EndsWith("LogWizardSetupSample.log"))
+                        return false;
+
+                    if (File.Exists(h.name))
                         // 1.1.5+ - compute md5s for this
                         md5_log_keeper.inst.compute_default_md5s_for_file(h.name);
                     else
                         return false;
+                }
                 return true;
             }).ToList();
 
@@ -1247,7 +1253,6 @@ namespace LogWizard
             ui_context cur = cur_context();
 
             // never allow "no view" whatsoever
-            bool has_views = cur.views.Count > 0 || cur.name != "Default";
             if (cur.views.Count < 1)
                 cur.views.Add(new ui_view() {name = "View_1", is_default_name = true});
 
@@ -1263,7 +1268,7 @@ namespace LogWizard
             while (viewsTab.TabCount > cur.views.Count) 
                 remove_log_view_tab(cur.views.Count);
 
-            if (!has_views) {
+            if (!cur.has_views) {
                 log_view_for_tab(0).Visible = false;
                 dropHere.Visible = true;
             }
@@ -1285,10 +1290,6 @@ namespace LogWizard
         }
 
         private void load_ui() {
-            var cur = cur_context();
-            if (!cur.has_views)
-                return;
-
             ++ignore_change_;
             util.suspend_layout(this, true);
 
@@ -2005,7 +2006,6 @@ namespace LogWizard
                 }
 
             if (logHistory.SelectedIndex < 0) {
-                Debug.Assert(File.Exists(unique_id));
                 // FIXME (minor) if not on the default form -> i should not put it last (since that will be automatically loaded at restart)
                 history new_ = new history();
                 new_.from_settings(settings);
@@ -2069,11 +2069,11 @@ namespace LogWizard
         }
 
         private void logHistory_DropDownClosed(object sender, EventArgs e) {
+            logHistory.Visible = false;
             if (logHistory.Items.Count < 1)
                 return; // nothing is in history
 
             on_log_listory_changed();
-            logHistory.Visible = false;
 
             util.postpone(() => {
                 if (global_ui.show_current_view)

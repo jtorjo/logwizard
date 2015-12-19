@@ -71,7 +71,7 @@ namespace lw_common {
         public bool temporarily_show_status = false;
 
         // show/hide toggles
-        public bool show_source = true;
+        public bool show_source = false;
         public bool show_fulllog = false;
 
         public bool show_current_view = true;
@@ -81,7 +81,6 @@ namespace lw_common {
         public bool topmost = false;
         public bool show_status = true;
 
-        // not implemented yet
         public bool show_details = false;
 
         public string selected_view = "";
@@ -90,8 +89,8 @@ namespace lw_common {
         public int full_log_splitter_pos = -1;
         public int left_pane_pos = -1;
 
-        private bool show_filter_ = true;
-        private bool show_left_pane_ = true;
+        private bool show_filter_ = false;
+        private bool show_left_pane_ = false;
         private bool show_notes_ = false;
 
         // 1.3.34+ - column positions - they apply to all views
@@ -215,8 +214,8 @@ namespace lw_common {
             app.load_save(load, ref height, prefix + ".height", -1);
             app.load_save(load, ref maximized, prefix + ".maximized", false);
 
-            app.load_save(load, ref show_filter_, prefix + ".show_filter", true);
-            app.load_save(load, ref show_source, prefix + ".show_source", true);
+            app.load_save(load, ref show_filter_, prefix + ".show_filter", false);
+            app.load_save(load, ref show_source, prefix + ".show_source", false);
             app.load_save(load, ref show_fulllog, prefix + ".show_fulllog", false);
 
             app.load_save(load, ref show_current_view, prefix + ".show_current_view", true);
@@ -233,7 +232,7 @@ namespace lw_common {
             app.load_save(load, ref full_log_splitter_pos, prefix + ".full_log_splitter_pos", -1);
             app.load_save(load, ref left_pane_pos, prefix + ".left_pane_pos", -1);
 
-            app.load_save(load, ref show_left_pane_, prefix + ".show_left_pane", true);
+            app.load_save(load, ref show_left_pane_, prefix + ".show_left_pane", false);
             app.load_save(load, ref show_notes_, prefix + ".show_notes", false);
 
             app.load_save(load, ref global_column_positions, prefix + ".global_column_positions");

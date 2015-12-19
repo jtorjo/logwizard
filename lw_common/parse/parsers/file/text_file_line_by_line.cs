@@ -430,6 +430,9 @@ namespace lw_common.parse.parsers {
         }
 
         private bool parse_time(string line, Tuple<int,int> idx) {
+            if (idx == null)
+                return false;
+
             if (idx.Item1 < 0)
                 return true;
             if (line.Length < idx.Item1 + idx.Item2)
