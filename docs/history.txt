@@ -3,7 +3,7 @@
 -- type-as-you-go search -> it should only care about visible columns in teh list (not description) -> just double check it happens
 	   - should i care about description????? 
 	     maybe only if shown -> or something -> care only about the fields that are visible: the ones from log-view + the ones from description (if description is visible)
-
+		 - update description also
 
 - bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
   - test so that after run first time (empty lw_user.txt) , when run second time, it should be totally empty! (that is, see "Drop it like it's hot'")
@@ -15,6 +15,10 @@
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
+
+1.5.10g
+- fixed bug: doing "arrow left" (edit mode) to go through all fields would generate an assertion failure
+  (because we would actually show the "View(s)" column with size 0 on the current view)
 
 
 1.5.10f

@@ -5,6 +5,20 @@
 
 - add gitter
 
+- redo the HOME page - perhaps more screenshots, etc?
+  - think about features etc.
+  - explain that stuff should be self-explanatory, if not, i've done something wrong
+
+- github - delete "intro" page? not sure
+- codeproject - redo the "intro" article - update it
+
+- article about event viewer - title: view Windows Event Logs can be fun
+  - note: i will briefly mention outputdebugstring
+  - explain about editing Description pane , etc.
+  -- tidbits : about finding, about Description control, about copying records from event viewer
+
+- add my todo issues into git
+
 - (if time available) find: have a "To Filter" button (good when doing regex search)
   - two possibilities -> Apply to existing Lines, Apply to Full Log
     + select Color/Match Color/default color?
@@ -37,9 +51,6 @@
 
 
 
-- article about event viewer - title: view Event Logs like a boss?
-  - note: i will briefly mention outputdebugstring
-  -- tidbits : about finding, about Description control, about copying records from event viewer
 
   the other article:
   -> the outputdebug string will be shown on "alerts" (perhaps two articles: one about break into debug, one about alerts - perhaps tips?)

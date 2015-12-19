@@ -91,42 +91,46 @@ namespace lw_common.ui {
                 load_column_positions(lv, lv.column_positions);
         }
 
-        static private bool refresh_visible_columns_any_change(log_view lv) {
-            Debug.Assert(lv.is_full_log);
-            if (lv.visible_columns_refreshed_ >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
+        static private bool refresh_visible_columns_any_change(log_view full_log) {
+            Debug.Assert(full_log.is_full_log);
+            if (full_log.visible_columns_refreshed_ >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
                 return false;
 
-            int count = lv.item_count;
-            bool needs_refresh = count != lv.visible_columns_refreshed_;
+            int count = full_log.item_count;
+            bool needs_refresh = count != full_log.visible_columns_refreshed_;
             if (needs_refresh) {
                 List<info_type> visible_columns = new List<info_type>();
                 int row_count = Math.Min(count, MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);
                 foreach (info_type type in Enum.GetValues(typeof (info_type))) {
                     if (type == info_type.max)
                         continue;
-                    bool is_visible = has_value_at_column(lv, type, row_count);
-                    show_column(lv, log_view_cell.column(lv,type), DEFAULT_COL_WIDTH, is_visible);
+                    bool is_visible = has_value_at_column(full_log, type, row_count);
+                    show_column(full_log, log_view_cell.column(full_log,type), DEFAULT_COL_WIDTH, is_visible);
                     if ( is_visible)
                         visible_columns.Add(type);                    
                 }
 
-                lv.visible_columns_refreshed_ = count;
-                lv.visible_columns = visible_columns;
+                full_log.visible_columns_refreshed_ = count;
+                full_log.visible_columns = visible_columns;
                 logger.Debug("visible columns (" + row_count + ") - " + util.concatenate(visible_columns, ", "));
                 
-                lv.list.RebuildColumns();
+                full_log.list.RebuildColumns();
             }
 
             if (count >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS) 
-                lv.visible_columns_refreshed_ = MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS;
+                full_log.visible_columns_refreshed_ = MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS;
             return needs_refresh;
         }
 
         static private void refresh_visible_columns(log_view lv, log_view full_log) {
+            Debug.Assert(!lv.is_full_log);
+
             for (int idx = 0; idx < lv.list.AllColumns.Count; ++idx) {
                 var col = lv.list.AllColumns[idx];
                 if (col != lv.viewCol) 
                     show_column(lv, col, full_log.list.AllColumns[idx].Width, full_log.list.AllColumns[idx].IsVisible);
+                else 
+                    show_column(lv, col, DEFAULT_COL_WIDTH, false);
             }
             lv.list.RebuildColumns();
         }
