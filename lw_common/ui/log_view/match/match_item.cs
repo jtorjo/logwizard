@@ -134,7 +134,7 @@ namespace lw_common.ui {
             }
 
             string sel = parent.edit.sel_text.ToLower();
-            if (col_idx == parent.sel_col_idx && sel != "") {
+            if ((col_idx == parent.sel_col_idx || col_idx == parent.search_found_col_idx) && sel != "") {
                 // look for the text typed by the user
                 var matches = util.find_all_matches(text.ToLower(), sel);
                 if (matches.Count > 0) {

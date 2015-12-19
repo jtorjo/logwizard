@@ -1171,6 +1171,7 @@ namespace LogWizard
 
         public void sel_changed(log_view_sel_change_type type) {
             on_log_changed_line();
+            description.show_cur_item(selected_view());
         }
 
         public void select_filter_rows(List<int> filter_row_indexes) {
@@ -3681,9 +3682,9 @@ namespace LogWizard
                 Debug.Assert(false);
         }
 
-
-
-
+        public List<info_type> description_columns() {            
+            return global_ui.show_details ? description.shown_columns : new List<info_type>();
+        }
 
 
         private void whatsup_Click(object sender, EventArgs e) {

@@ -40,6 +40,11 @@ namespace lw_common.ui {
 
         private const int TRY_GAIN_FOCUS_AFTER_FORCE_INVISIBLE = 500;
 
+        // 1.5.10+
+        // for how many millis do we consider a text-selection as "editable" (like, allow further adding/deleting of selected text)?
+        // for now, we care about this only for text that is only found in the description pane
+        private const int CUR_SEL_FORCED_MS = 750;
+
         private log_view parent_;
 
         private int sel_row_ = -1;
@@ -48,6 +53,8 @@ namespace lw_common.ui {
         private int after_click_sel_start_ = -1, after_click_sel_row_ = -1, after_click_sel_col_ = -1;
 
         private string cached_sel_text_ = "";
+        // this is used when we force a selected text that is only available in the description pane
+        private DateTime cur_sel_is_forced_ = DateTime.MinValue;
 
         private bool changed_sel_background_ = false;
 
@@ -103,6 +110,10 @@ namespace lw_common.ui {
             // ... easier testing
 //            if ( util.is_debug)
   //              BorderStyle = BorderStyle.FixedSingle;
+        }
+
+        private bool cur_sel_is_forced {
+            get { return cur_sel_is_forced_.AddMilliseconds(CUR_SEL_FORCED_MS) > DateTime.Now; }
         }
 
         public int caret_left_pos {
@@ -363,6 +374,7 @@ namespace lw_common.ui {
             Debug.Assert( sel_col_ == parent_.sel_col_idx);
             sel_start_ = SelectionStart;
             sel_len_ = SelectionLength;
+            cur_sel_is_forced_ = DateTime.MinValue;
         }
 
         public void clear_sel() {
@@ -548,6 +560,9 @@ namespace lw_common.ui {
 
 
         private string raw_sel_text() {
+            if (cur_sel_is_forced)
+                return cached_sel_text_;
+
             if (sel_len_ < 1)
                 return "";
             else if (sel_start_ + sel_len_ <= TextLength)
@@ -562,11 +577,23 @@ namespace lw_common.ui {
         private void update_cached_sel_text() {
             var old_sel = sel_text;
 
+            cur_sel_is_forced_ = DateTime.MinValue;
             cached_sel_text_ = raw_sel_text();
             add_cur_text_to_positions();
 
             if (old_sel != sel_text)
                 on_sel_changed();
+        }
+
+
+        // this text is not contained in the textbox - it's in Description pane only
+        public void force_sel_text(string txt) {
+            cached_sel_text_ = txt;
+            cur_sel_is_forced_ = DateTime.Now;
+            sel_start_ = 0;
+            sel_len_ = 0;
+            add_cur_text_to_positions();
+            logger.Debug("forced sel text=" + txt);
         }
 
         private void update_selected_text() {

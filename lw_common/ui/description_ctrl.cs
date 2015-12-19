@@ -90,6 +90,10 @@ namespace lw_common.ui {
             return Params;
         }}
 
+        public List<info_type> shown_columns {
+            get { return column_to_controls_.Select(x => x.Key).ToList(); }
+        } 
+
         private static string to_string(parts_layout_template layout) {
             string rows = util.concatenate( layout.rows_.Select(x => "" + x.label_width_ + "," + x.row_width_ + "," + x.parts_.Count), ";");
             string parts = "";

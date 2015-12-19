@@ -87,6 +87,9 @@ namespace lw_common.ui
         // it's the subitem column that is currently selected (for smart readonly editing)
         private int cur_col_ = 0;
 
+        // in case the search yielded a column that is visible only on the description pane
+        private int search_found_col_ = -1;
+
         private bool is_editing_ = false;
         private int editing_row_ = -1;
 
@@ -419,6 +422,9 @@ namespace lw_common.ui
 
         internal int sel_col_idx {
             get { return cur_col_; }
+        }
+        internal int search_found_col_idx {
+            get { return search_found_col_; }
         }
 
         internal string sel_subitem_text {
@@ -2075,10 +2081,36 @@ namespace lw_common.ui
 
         // returns the row, or -1 on failure
         private bool can_find_text_at_row(string txt, int row, int col) {
-            string col_text = list.GetItem(row).GetSubItem( visible_column(col)).Text.ToLower();
+            string col_text = log_view_cell.cell_value(list.GetItem(row).RowObject as match_item, col).ToLower();
             int pos = col_text.IndexOf(txt);
             return pos >= 0;
         }
+
+        // returns all visible column types - including those from the description control
+        private List<info_type> all_visible_column_types() {
+            List<info_type> visible = lv_parent.description_columns();
+
+            for (int col_idx = 0; col_idx < list.AllColumns.Count; ++col_idx)
+                if (list.AllColumns[col_idx].IsVisible) {
+                    info_type type = log_view_cell.cell_idx_to_type(col_idx);
+                    if ( !visible.Contains(type))
+                        visible.Add(type);
+                }
+
+            return visible;
+        } 
+        private List<info_type> view_visible_column_types() {
+            List<info_type> visible = new List<info_type>();
+
+            for (int col_idx = 0; col_idx < list.AllColumns.Count; ++col_idx)
+                if (list.AllColumns[col_idx].IsVisible) {
+                    info_type type = log_view_cell.cell_idx_to_type(col_idx);
+                    if ( !visible.Contains(type))
+                        visible.Add(type);
+                }
+
+            return visible;
+        } 
 
         // note: searches in the current column
         private void search_ahead(string txt) {
@@ -2100,30 +2132,48 @@ namespace lw_common.ui
                     if (can_find_text_at_row(txt, cur_row, cur_col_))
                         found_row = cur_row;
 
+            var all_visible_column_indexes = all_visible_column_types().Select(log_view_cell.info_type_to_cell_idx).ToList();
+            // this contains the visible indexes within our view
+            var view_visible_column_indexes = view_visible_column_types().Select(log_view_cell.info_type_to_cell_idx).ToList();
+
+            search_found_col_ = -1;
             if (app.inst.edit_search_all_columns) {
                 if (app.inst.edit_search_after)
                     for (int cur_row = sel_row_idx + 1; cur_row < max && found_row < 0; ++cur_row)
                         for (int col_idx = 0; col_idx < list.AllColumns.Count && found_row < 0; ++col_idx)
-                            if (col_idx != cur_col_ && list.AllColumns[col_idx].IsVisible)
+                            if (col_idx != cur_col_ && all_visible_column_indexes.Contains(col_idx) )
                                 if (can_find_text_at_row(txt, cur_row, col_idx)) {
                                     found_row = cur_row;
-                                    cur_col_ = col_idx;
+                                    // note: where we find the result - might only be visible in the description pane
+                                    if (view_visible_column_indexes.Contains(col_idx))
+                                        cur_col_ = col_idx;
+                                    else
+                                        search_found_col_ = col_idx;
                                 }
 
                 if (app.inst.edit_search_before)
                     for (int cur_row = sel_row_idx - 1; cur_row >= min && found_row < 0; --cur_row)
                         for (int col_idx = 0; col_idx < list.AllColumns.Count && found_row < 0; ++col_idx)
-                            if (col_idx != cur_col_ && list.AllColumns[col_idx].Width > 0)
+                            if (col_idx != cur_col_ && all_visible_column_indexes.Contains(col_idx))
                                 if (can_find_text_at_row(txt, cur_row, col_idx)) {
                                     found_row = cur_row;
-                                    cur_col_ = col_idx;
+                                    // note: where we find the result - might only be visible in the description pane
+                                    if (view_visible_column_indexes.Contains(col_idx))
+                                        cur_col_ = col_idx;
+                                    else
+                                        search_found_col_ = col_idx;
                                 }
             }
 
             if (found_row >= 0) {
                 go_to_row(found_row, select_type.notify_parent);
-                edit.update_ui();
-                edit.go_to_text(txt);
+                if (search_found_col_ < 0) {
+                    edit.update_ui();
+                    edit.go_to_text(txt);
+                }
+                else 
+                    // the search result is visible only on the description pane
+                    edit.force_sel_text(txt);
                 lv_parent.sel_changed(log_view_sel_change_type.search);
             }
         }
