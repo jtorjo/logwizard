@@ -44,11 +44,11 @@
             this.rowCount = new System.Windows.Forms.ComboBox();
             this.moveDown = new System.Windows.Forms.Button();
             this.moveUp = new System.Windows.Forms.Button();
+            this.copy = new System.Windows.Forms.Button();
             this.editPanel = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.rightClickEdit = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copy = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.split1)).BeginInit();
             this.split1.Panel2.SuspendLayout();
             this.split1.SuspendLayout();
@@ -75,65 +75,82 @@
             this.split1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.split1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.split1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.split1.Location = new System.Drawing.Point(0, 39);
             this.split1.Name = "split1";
+            this.split1.Panel1MinSize = 100;
             // 
             // split1.Panel2
             // 
             this.split1.Panel2.Controls.Add(this.split2);
+            this.split1.Panel2MinSize = 100;
             this.split1.Size = new System.Drawing.Size(1133, 463);
             this.split1.SplitterDistance = 100;
+            this.split1.SplitterWidth = 10;
             this.split1.TabIndex = 0;
             this.split1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split1_SplitterMoved);
             // 
             // split2
             // 
+            this.split2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.split2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.split2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.split2.Location = new System.Drawing.Point(0, 0);
             this.split2.Name = "split2";
+            this.split2.Panel1MinSize = 100;
             // 
             // split2.Panel2
             // 
             this.split2.Panel2.Controls.Add(this.split3);
-            this.split2.Size = new System.Drawing.Size(1029, 463);
+            this.split2.Panel2MinSize = 100;
+            this.split2.Size = new System.Drawing.Size(1023, 463);
             this.split2.SplitterDistance = 100;
+            this.split2.SplitterWidth = 10;
             this.split2.TabIndex = 0;
             this.split2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split2_SplitterMoved);
             // 
             // split3
             // 
+            this.split3.BackColor = System.Drawing.Color.WhiteSmoke;
             this.split3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.split3.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.split3.Location = new System.Drawing.Point(0, 0);
             this.split3.Name = "split3";
+            this.split3.Panel1MinSize = 100;
             // 
             // split3.Panel2
             // 
             this.split3.Panel2.Controls.Add(this.split4);
-            this.split3.Size = new System.Drawing.Size(925, 463);
+            this.split3.Panel2MinSize = 100;
+            this.split3.Size = new System.Drawing.Size(913, 463);
             this.split3.SplitterDistance = 100;
+            this.split3.SplitterWidth = 10;
             this.split3.TabIndex = 0;
             this.split3.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split3_SplitterMoved);
             // 
             // split4
             // 
+            this.split4.BackColor = System.Drawing.Color.WhiteSmoke;
             this.split4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.split4.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.split4.Location = new System.Drawing.Point(0, 0);
             this.split4.Name = "split4";
+            this.split4.Panel1MinSize = 100;
             // 
             // split4.Panel2
             // 
             this.split4.Panel2.Controls.Add(this.split5);
-            this.split4.Size = new System.Drawing.Size(821, 463);
+            this.split4.Panel2MinSize = 100;
+            this.split4.Size = new System.Drawing.Size(803, 463);
             this.split4.SplitterDistance = 100;
+            this.split4.SplitterWidth = 10;
             this.split4.TabIndex = 0;
             this.split4.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split4_SplitterMoved);
             // 
             // split5
             // 
+            this.split5.BackColor = System.Drawing.Color.WhiteSmoke;
             this.split5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.split5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.split5.Location = new System.Drawing.Point(0, 0);
@@ -142,19 +159,24 @@
             // split5.Panel2
             // 
             this.split5.Panel2.Controls.Add(this.split6);
-            this.split5.Size = new System.Drawing.Size(717, 463);
+            this.split5.Size = new System.Drawing.Size(693, 463);
             this.split5.SplitterDistance = 100;
+            this.split5.SplitterWidth = 10;
             this.split5.TabIndex = 0;
             this.split5.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split5_SplitterMoved);
             // 
             // split6
             // 
+            this.split6.BackColor = System.Drawing.Color.WhiteSmoke;
             this.split6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.split6.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.split6.Location = new System.Drawing.Point(0, 0);
             this.split6.Name = "split6";
-            this.split6.Size = new System.Drawing.Size(613, 463);
-            this.split6.SplitterDistance = 100;
+            this.split6.Panel1MinSize = 100;
+            this.split6.Panel2MinSize = 100;
+            this.split6.Size = new System.Drawing.Size(583, 463);
+            this.split6.SplitterDistance = 101;
+            this.split6.SplitterWidth = 10;
             this.split6.TabIndex = 0;
             this.split6.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.split6_SplitterMoved);
             // 
@@ -317,6 +339,17 @@
             this.moveUp.UseVisualStyleBackColor = true;
             this.moveUp.Click += new System.EventHandler(this.moveUp_Click);
             // 
+            // copy
+            // 
+            this.copy.Location = new System.Drawing.Point(943, 3);
+            this.copy.Name = "copy";
+            this.copy.Size = new System.Drawing.Size(56, 28);
+            this.copy.TabIndex = 15;
+            this.copy.Text = "Copy";
+            this.tip.SetToolTip(this.copy, "Create a Copy of This Layout, and start Editing it");
+            this.copy.UseVisualStyleBackColor = true;
+            this.copy.Click += new System.EventHandler(this.copy_Click);
+            // 
             // editPanel
             // 
             this.editPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -363,17 +396,6 @@
             this.editToolStripMenuItem.Size = new System.Drawing.Size(94, 22);
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
-            // 
-            // copy
-            // 
-            this.copy.Location = new System.Drawing.Point(943, 3);
-            this.copy.Name = "copy";
-            this.copy.Size = new System.Drawing.Size(56, 28);
-            this.copy.TabIndex = 15;
-            this.copy.Text = "Copy";
-            this.tip.SetToolTip(this.copy, "Create a Copy of This Layout, and start Editing it");
-            this.copy.UseVisualStyleBackColor = true;
-            this.copy.Click += new System.EventHandler(this.copy_Click);
             // 
             // description_ctrl
             // 

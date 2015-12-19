@@ -25,6 +25,9 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.description_ctrl1 = new lw_common.ui.description_ctrl();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // description_ctrl1
@@ -36,8 +39,26 @@
             this.description_ctrl1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.description_ctrl1.Location = new System.Drawing.Point(12, 12);
             this.description_ctrl1.Name = "description_ctrl1";
-            this.description_ctrl1.Size = new System.Drawing.Size(673, 431);
+            this.description_ctrl1.Size = new System.Drawing.Size(673, 151);
             this.description_ctrl1.TabIndex = 0;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.splitContainer1.Location = new System.Drawing.Point(103, 237);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.splitContainer1.Size = new System.Drawing.Size(502, 100);
+            this.splitContainer1.SplitterDistance = 167;
+            this.splitContainer1.SplitterWidth = 20;
+            this.splitContainer1.TabIndex = 1;
             // 
             // test_description_ctrl
             // 
@@ -45,9 +66,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.ClientSize = new System.Drawing.Size(697, 455);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.description_ctrl1);
             this.Name = "test_description_ctrl";
             this.Text = "test_description_ctrl";
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -55,5 +79,6 @@
         #endregion
 
         private lw_common.ui.description_ctrl description_ctrl1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }

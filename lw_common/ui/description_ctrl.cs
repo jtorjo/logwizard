@@ -246,7 +246,7 @@ namespace lw_common.ui {
             --ignore_change_;
         }
 
-        private void splitter_widths_to_row_widths() {
+        private void splitter_widths_to_row_widths(int moved_splitter_idx) {
             if (layouts_.Count < 1 || cur_layout_idx_ < 0)
                 return;
             
@@ -260,10 +260,10 @@ namespace lw_common.ui {
                     // last one - doesn't count
                     break;
                 int width = splits_[split_idx].SplitterDistance;
-                ++split_idx;
-
-                if (layout.rows_[row_idx].row_width_ >= 0)
+                if (layout.rows_[row_idx].row_width_ >= 0 || split_idx == moved_splitter_idx)
                     layout.rows_[row_idx].row_width_ = width;
+
+                ++split_idx;
             }
             save();
         }
@@ -367,7 +367,7 @@ namespace lw_common.ui {
             }
 
             foreach (var panel in panels_)
-                panel.BackColor = is_editing_ ? Color.WhiteSmoke : Color.Transparent;
+                panel.BackColor = Color.White;
 
             description.Text = layouts_[cur_layout_idx_].name_;
             update_edit_column();
@@ -424,37 +424,37 @@ namespace lw_common.ui {
         private void split6_SplitterMoved(object sender, SplitterEventArgs e) {
             if (ignore_change_ > 0)
                 return;
-            splitter_widths_to_row_widths();
+            splitter_widths_to_row_widths(5);
         }
 
         private void split5_SplitterMoved(object sender, SplitterEventArgs e) {
             if (ignore_change_ > 0)
                 return;
-            splitter_widths_to_row_widths();
+            splitter_widths_to_row_widths(4);
         }
 
         private void split4_SplitterMoved(object sender, SplitterEventArgs e) {
             if (ignore_change_ > 0)
                 return;
-            splitter_widths_to_row_widths();
+            splitter_widths_to_row_widths(3);
         }
 
         private void split3_SplitterMoved(object sender, SplitterEventArgs e) {
             if (ignore_change_ > 0)
                 return;
-            splitter_widths_to_row_widths();
+            splitter_widths_to_row_widths(2);
         }
 
         private void split2_SplitterMoved(object sender, SplitterEventArgs e) {
             if (ignore_change_ > 0)
                 return;
-            splitter_widths_to_row_widths();
+            splitter_widths_to_row_widths(1);
         }
 
         private void split1_SplitterMoved(object sender, SplitterEventArgs e) {
             if (ignore_change_ > 0)
                 return;
-            splitter_widths_to_row_widths();
+            splitter_widths_to_row_widths(0);
         }
 
         private List<part> get_visible_parts() {

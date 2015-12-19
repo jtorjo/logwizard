@@ -3,6 +3,7 @@
 
 -- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
 
+- add gitter
 
 - (if time available) find: have a "To Filter" button (good when doing regex search)
   - two possibilities -> Apply to existing Lines, Apply to Full Log

@@ -1,22 +1,28 @@
-
-
-
-
-	 - save column widths / positions in global_ui
-	   - message column is considered the biggest (one that resizes as multi-line)
-    ---------> once i change the description template -> save it and use it for log/context.
-	-- type-as-you-go search -> it should only care about visible columns in teh list (not description) -> just double check it happens
+- once i change the description template -> save it and use it for log/context.
 
 - description: watch for resize of splitDescription splitter, and save it
+	
+-- type-as-you-go search -> it should only care about visible columns in teh list (not description) -> just double check it happens
+	   - should i care about description????? 
+	     maybe only if shown -> or something -> care only about the fields that are visible: the ones from log-view + the ones from description (if description is visible)
+
+
+- bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
+  - test so that after run first time (empty lw_user.txt) , when run second time, it should be totally empty! (that is, see "Drop it like it's hot'")
+  - perhaps when loading history entries -> ignore the Logwizardsetup ???
+- bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
+
+
 
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
 
 
-
-- bug: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
-- bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
+1.5.10e
+- save column widths / positions in app.inst.description_layouts_ -> i only need the splitter distance
+  - have a min splitter distance of 100 for each
+  - monitor for changes, and see about ignore_change
 
 
 1.5.10d
