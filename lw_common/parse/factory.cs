@@ -34,10 +34,9 @@ namespace lw_common.parse {
 
         // these are the settings that are to be saved in the context
         static public settings_as_string get_context_dependent_settings(text_reader reader, settings_as_string_readonly settings) {
-            if (reader is file_text_reader) {
-                return settings.sub(new []{ "syntax", "aliases" });
-            }
-
+            if (reader is file_text_reader) 
+                return settings.sub(new []{ "syntax", "aliases", "description" });
+            
             return new settings_as_string( settings.ToString());
         }
 

@@ -97,6 +97,8 @@ namespace lw_common {
         // 1.3.34+ - column positions - they apply to all views
         public string global_column_positions = "";
 
+        public int description_splitter_pos = -1;
+
         // IMPORTANT: Update Toggles UI when adding stuff here!
 
         // contains per-view settings
@@ -173,6 +175,7 @@ namespace lw_common {
             selected_view = other.selected_view;
             selected_row_idx = other.selected_row_idx;
             full_log_splitter_pos = other.full_log_splitter_pos;
+            description_splitter_pos = other.description_splitter_pos;
             left_pane_pos = other.left_pane_pos;
 
             show_left_pane_ = other.show_left_pane_;
@@ -234,6 +237,7 @@ namespace lw_common {
             app.load_save(load, ref show_notes_, prefix + ".show_notes", false);
 
             app.load_save(load, ref global_column_positions, prefix + ".global_column_positions");
+            app.load_save(load, ref description_splitter_pos, prefix + "description_splitter_pos", -1);
 
             load_save_view_info(load, prefix + ".view_info");
         }

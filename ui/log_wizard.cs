@@ -195,6 +195,8 @@ namespace LogWizard
             notes.set_author( app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
             notes.on_note_selected = on_note_selected;
 
+            description.on_description_changed += on_description_template_changed;
+
             ++ignore_change_;
 
             full_log_ctrl_ = new log_view( this, log_view.FULLLOG_NAME);
@@ -1286,9 +1288,9 @@ namespace LogWizard
             if (!cur.has_views)
                 return;
 
+            ++ignore_change_;
             util.suspend_layout(this, true);
 
-            ++ignore_change_;
             show_left_pane(global_ui.show_left_pane);
             show_source(global_ui.show_source);
 
@@ -1320,15 +1322,14 @@ namespace LogWizard
             if (!view_name_found)
                 viewsTab.SelectedIndex = 0;
 
-            --ignore_change_;
-
             util.suspend_layout(this, false);
 
-            ++ignore_change_;
             if (global_ui.left_pane_pos >= 0)
                 main.SplitterDistance = global_ui.left_pane_pos;
             if (global_ui.full_log_splitter_pos >= 0)
                 filteredLeft.SplitterDistance = global_ui.full_log_splitter_pos;
+            if (global_ui.description_splitter_pos >= 0)
+                splitDescription.SplitterDistance = global_ui.description_splitter_pos;
             --ignore_change_;
 
             util.postpone(() => show_row_based_on_global_ui(), 100);
@@ -1790,6 +1791,12 @@ namespace LogWizard
                 util.postpone(() => description.set_aliases(log_parser_.aliases), 1);            
         }
 
+        private void on_description_template_changed(string name) {
+            (text_.settings as settings_as_string).set("description", name);
+            cur_context().merge_settings( factory.get_context_dependent_settings(text_, text_.settings), false);
+            save();
+        }
+
         private void on_new_log() {
             string size = text_ is file_text_reader ? " (" + new FileInfo(text_.name).Length + " bytes)" : "";
             set_status_forever("Log: " + text_.name + size);
@@ -1825,6 +1832,9 @@ namespace LogWizard
             log_parser_ = new log_parser(text_);
             description.set_aliases(log_parser_.aliases);
             log_parser_.settings.on_changed += on_settings_changed;
+            if ( text_.settings.get("description") != "")
+                description.set_layout( text_.settings.get("description"));
+
             ui_context log_ctx = settings_to_context( text_.settings );
             bool same_context = log_ctx == cur_context();
             if (!same_context) {
@@ -3660,6 +3670,16 @@ namespace LogWizard
                 Debug.Assert(false);
         }
 
+        private void splitDescription_SplitterMoved(object sender, SplitterEventArgs e) {
+            if (ignore_change_ > 0)
+                return;
+
+            if (splitDescription.SplitterDistance >= 0) {
+                global_ui.description_splitter_pos = splitDescription.SplitterDistance;
+                save();
+            } else
+                Debug.Assert(false);
+        }
 
 
 
@@ -3815,6 +3835,7 @@ namespace LogWizard
                     restart_app();
             }
         }
+
 
     }
 }

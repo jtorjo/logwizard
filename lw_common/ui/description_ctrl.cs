@@ -65,6 +65,9 @@ namespace lw_common.ui {
         private log_view_item_draw_ui drawer_ = null;
         print_info default_print_ = new print_info();
 
+        public delegate void on_description_template_changed_func(string description);
+        public on_description_template_changed_func on_description_changed;
+
         public description_ctrl() {
             InitializeComponent();
             splits_.Add(split1);
@@ -656,10 +659,16 @@ namespace lw_common.ui {
                 var layout = layouts_[idx];
                 ToolStripMenuItem item = new ToolStripMenuItem(layout.name_);
                 item.Checked = idx == cur_layout_idx_;
-                item.Click += (a, ee) => load_layout_by_name(layout.name_);
+                item.Click += (a, ee) => load_layout_right_click(layout.name_);
                 menu.Items.Add(item);
             }
             menu.Show(Cursor.Position, util.menu_direction(menu, Cursor.Position));
+        }
+
+        private void load_layout_right_click(string name) {
+            load_layout_by_name(name);
+            if ( on_description_changed != null)
+                on_description_changed(name);
         }
 
         private void load_layout_by_name(string name) {

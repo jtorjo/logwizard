@@ -104,6 +104,7 @@ namespace lw_common {
                 if ( default_settings_.get("syntax") == "")
                     default_settings_.set("syntax", other_sett.get("syntax"));
             default_settings_.set( "aliases", other_sett.get("aliases"));
+            default_settings_.set("description", other_sett.get("description"));
         }
 
         public bool has_views {

@@ -1,6 +1,4 @@
-- once i change the description template -> save it and use it for log/context.
 
-- description: watch for resize of splitDescription splitter, and save it
 	
 -- type-as-you-go search -> it should only care about visible columns in teh list (not description) -> just double check it happens
 	   - should i care about description????? 
@@ -17,6 +15,11 @@
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
+
+
+1.5.10f
+- once i change the description template -> save it and use it for log/context.
+- description: watch for resize of splitDescription splitter, and save it
 
 
 1.5.10e
