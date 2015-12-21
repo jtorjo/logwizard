@@ -3,7 +3,7 @@
 [![Join the chat at https://gitter.im/jtorjo/logwizard](https://badges.gitter.im/jtorjo/logwizard.svg)](https://gitter.im/jtorjo/logwizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  [![Build status](https://ci.appveyor.com/api/projects/status/566ksg8oh95bj0o0?svg=true)](https://ci.appveyor.com/project/jtorjo/logwizard) [![GitHub issues](https://img.shields.io/github/issues/jtorjo/logwizard.svg)](https://github.com/jtorjo/logwizard/issues)
 
 
-![LogWizard](https://github.com/jtorjo/logwizard/blob/master/images/00shot_first.png)
+![LogWizard](https://github.com/jtorjo/logwizard/blob/master/src/images/00shot_first.png)
 
 I created **LogWizard** to help anyone that really needs to deal with logs, in order to _hunt down bugs and/or issues that happen somewhere else_ (read = at customer site).
 
