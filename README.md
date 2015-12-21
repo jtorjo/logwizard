@@ -1,4 +1,4 @@
-# LogWizard - a Log Viewer that is easy and fun to use!
+## LogWizard - a Log Viewer that is easy and fun to use!
 
 [![Join the chat at https://gitter.im/jtorjo/logwizard](https://badges.gitter.im/jtorjo/logwizard.svg)](https://gitter.im/jtorjo/logwizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 

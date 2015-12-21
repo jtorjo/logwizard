@@ -1,7 +1,6 @@
 
-- https://github.com/NLog/NLog/wiki/Tools
 
--- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
+
 
 - add gitter
 
@@ -10,7 +9,14 @@
   - explain that stuff should be self-explanatory, if not, i've done something wrong
 
 - github - delete "intro" page? not sure
-- codeproject - redo the "intro" article - update it
+- codeproject 
+  - redo the "intro" article - update it
+    extra features 
+	- copy/paste (html)
+	- any new shortcut?
+	- details pane
+
+
 
 - article about event viewer - title: view Windows Event Logs can be fun
   - note: i will briefly mention outputdebugstring
@@ -18,6 +24,11 @@
   -- tidbits : about finding, about Description control, about copying records from event viewer
 
 - add my todo issues into git
+
+-- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
+
+
+
 
 - (if time available) find: have a "To Filter" button (good when doing regex search)
   - two possibilities -> Apply to existing Lines, Apply to Full Log

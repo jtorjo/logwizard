@@ -180,7 +180,7 @@ namespace lw_common {
         public int description_layout_idx_ = 0;
 
         // (for testing only) if true, we simulate that text is multi-line (to test selection of relevant line)
-        public readonly bool force_text_as_multi_line = util.is_debug;
+        public readonly bool force_text_as_multi_line = false; // util.is_debug;
 
         // 1.5.10+ - if true, and text is multi-line, in log-view: depending on what line is shown, I will show wether there are lines before and after
         // note: at this time, there's no UI setting for this

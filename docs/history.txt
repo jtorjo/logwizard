@@ -7,6 +7,11 @@
           https://news.ycombinator.com/news
 		  quora
 
+
+
+1.5.12
+
+
 1.5.11
 - fix: when showing the sample (after the setup kit) -> after running second time, it still shows the setup sample
   - test so that after run first time (empty lw_user.txt) , when run second time, it should be totally empty! (that is, see "Drop it like it's hot'")
