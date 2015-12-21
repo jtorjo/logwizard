@@ -1,5 +1,7 @@
 # LogWizard - a Log Viewer that is easy and fun to use!
 
+[![Join the chat at https://gitter.im/jtorjo/logwizard](https://badges.gitter.im/jtorjo/logwizard.svg)](https://gitter.im/jtorjo/logwizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ![LogWizard](https://github.com/jtorjo/logwizard/blob/master/images/00shot_first.png)
 
 I created **LogWizard** to help anyone that really needs to deal with logs, in order to _hunt down bugs and/or issues that happen somewhere else_ (read = at customer site).
