@@ -2,7 +2,6 @@
 
 
 
-- add gitter
 
 - redo the HOME page - perhaps more screenshots, etc?
   - think about features etc.
