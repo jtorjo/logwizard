@@ -108,7 +108,7 @@ namespace LogWizard
 
                         case entry_type.shmem: return "Shared Memory: " + name;
 
-                        case entry_type.event_log: return "Event Log(s): " + name;
+                        case entry_type.event_log: return name;
                         case entry_type.debug: return "Debug: " + name;
                         default: Debug.Assert(false); break;
                     }

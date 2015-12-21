@@ -187,7 +187,6 @@
     <Content Include="samples\LogWizard.sample.log">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="docs\history.txt" />

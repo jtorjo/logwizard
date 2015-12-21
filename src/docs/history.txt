@@ -1,15 +1,55 @@
 
+
+
+
+- msg_details -> show it if the message spans over more than one line
+
+- event log: going to history then pressing Esc -> will somehow force a refresh which forces everything to reload -> not cool
+
+- event log : 
+  details pane : shoud show message
+  should have a way to for the parser to say which columns should be visible in the details pane (by default) and which columns should be visible in the view (by default)
+  should see if i should open the "details" pane by default (perhaps only first time? after that, the user should know about it)
+
+
+- first_available_toggle_custom_ui -> if at position 0 nothing, return that
+  like, i can open event viewer, move it to position 1, and then when i open "New" -> it should automatically go to "Default"
+  -> when opened via "New", perhaps by default I should not load any log?
+     -> eventually show tip "Use Ctrl-h to show Log History or Ctrl-O to Open Log"
+
+  some tip about "Open Log" or "Show History".... (or two tips maybe?)
+
+- if not full log -> show in brackets in the header -> number of entries
+  also - check if number of filtered entries = entries -> in that case, no need to show "entries" (we already have it)
+
+
+
+
+
+
+
 - bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
 
-
+- bug: clean install -> when logwizardsetupsample is shown, if i go to second view, the "msg" column is shown after line ,instead of being shown all the way to the right
 
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
 
+1.5.14
+- fix:event log: "Log" column is not filled
+- event log: fix: takes too long to load
+- fix: event log: 
+  the title is not correctly
+  at status - log name is wrong (should be "Local Windows Event Log - Sytem, Application")
+  while loading - show progress in bold + each type of log's progress in bold
+- event log:
+  dump progress, as we're loading the items (like, how many entries we have)
+  --> this actually happns, double check it's generic
 
 
-1.5.12
+1.5.13
+- moved everything in src/ directory, so that the https://github.com/jtorjo/logwizard looks cleaner
 
 
 1.5.11

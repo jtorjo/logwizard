@@ -233,6 +233,9 @@ namespace lw_common.parse {
         }
         // converts a "log" column name into what we use internally - info_type.time, info_type.file, etc.
         public info_type to_info_type(string column_name) {
+            if (name_to_column_.has_key(column_name))
+                return name_to_column_.key_to_value(column_name);
+
             return string_to_info_type( get_value_part(sett_.get(column_name, column_name)));
         }
 

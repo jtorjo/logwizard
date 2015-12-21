@@ -77,6 +77,7 @@ namespace lw_common {
 
         public event_log_reader(settings_as_string sett) : base(sett) {
             settings.on_changed += on_settings_changed;
+            sett.set("name", friendly_name);
         }
 
         public string[] log_types {
@@ -106,8 +107,8 @@ namespace lw_common {
 
         public override string friendly_name {
             get {
-                string suffix = remote_machine_name != "" ? " From [" + remote_machine_name + "]" : "";
-                return util.concatenate(log_types, ", ") + suffix ;
+                string prefix = (remote_machine_name != "" ? "" : "Local ") + "Event Log(s) " + (remote_machine_name != "" ? " on machine [" + remote_machine_name + "]" : "") + ": ";
+                return prefix + util.concatenate(log_types, ", ")  ;
             }
         }
 
@@ -120,7 +121,8 @@ namespace lw_common {
                         int len = log.full_log_count_ > 0 ? log.full_log_count_ : log.listening_for_new_events_ ? log.cur_log_count_ : -1;
                         int cur = log.cur_log_count_;
                         int processed = cur - log.last_events_.Count;
-                        string now = name + " (" + processed + ", read = " + cur + (len >= 0 ? " of = " + len : "") + ")";
+                        string percent = len > 0 ? string.Format(" ({0:0}%)", processed * 100 / len) : "";
+                        string now = "<b>" + name + percent + "</b>" + " (" + processed + ", read = " + cur + (len >= 0 ? " of = " + len : "") + ")";
                         so_far.Add(now);
                     }
                 }
@@ -266,6 +268,11 @@ namespace lw_common {
             if (provider_name != "")
                 query_string = "*[System/Provider/@Name=\"" + provider_name + "\"]";
 
+            int max_event_count = int.MaxValue;
+            // debugging - load much less, faster testing
+            if (util.is_debug)
+                max_event_count = 250;
+
             try {
                 // we can read the number of entres only for local logs
                 if (provider_name == "" && log.remote_machine_name == "") {
@@ -291,7 +298,8 @@ namespace lw_common {
                     query.Session = session;
 
                 EventLogReader reader = new EventLogReader(query);
-                for (EventRecord rec = reader.ReadEvent(); rec != null && !log.disposed_; rec = reader.ReadEvent())
+                int read_idx = 0;
+                for (EventRecord rec = reader.ReadEvent(); rec != null && !log.disposed_ && read_idx++ < max_event_count ; rec = reader.ReadEvent())
                     lock (this) {
                         log.last_events_.Add(rec);
                         ++log.cur_log_count_;
@@ -340,12 +348,13 @@ namespace lw_common {
                 entry.add("Machine Name", rec.MachineName);
                 entry.add("Source", "" + rec.ProviderName);
                 entry.add("User Name", rec.UserId != null ? rec.UserId.Value : "");
+                /* 1.5.14+ this generates waaaay too many errors - just ignore for now
                 try {
                     var keywords = rec.KeywordsDisplayNames;
                     entry.add("Keywords", keywords != null ? util.concatenate(keywords, ",") : "");
                 } catch {
                     entry.add("Keywords", "");
-                }
+                }*/
 
                 /*
                 try {

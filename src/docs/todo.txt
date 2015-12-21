@@ -1,8 +1,4 @@
 
-
-
-
-
 - redo the HOME page - perhaps more screenshots, etc?
   - think about features etc.
   - explain that stuff should be self-explanatory, if not, i've done something wrong
@@ -15,7 +11,7 @@
 	- any new shortcut?
 	- details pane
 
-
+- github sidebar -> can add links to codeproject
 
 - article about event viewer - title: view Windows Event Logs can be fun
   - note: i will briefly mention outputdebugstring
@@ -25,6 +21,17 @@
 - add my todo issues into git
 
 -- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
+
+
+- (later) allow column formatters 
+  - this should basically work for both the view and the details pane
+   (for instance, an xml msg could be shown in a friendly manner)
+   but for now, I may want to print several lines into one?
+   column formatters should be allowed to have context (and eventually have settings based on which they do the formatting)
+   -- for instance, i could specify, in settings -> what colors to apply to the text
+   -- they need to be applied in such a way that they can add/modify colors of the text itself (or bold/italic etc.)
+   -- Tuple<int,int,print_info> -> needs to become a class, so that i can deal with it in an easier fashion
+      -- need to be able to easily iterate through all "prints" -> like in description_ctrl.show_sub_item (to make generic)
 
 
 
