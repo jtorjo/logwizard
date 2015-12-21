@@ -16,12 +16,12 @@ build/
 [Bb]in/
 [Oo]bj/
 
-packages/log4net.2.0.3/*
-packages/ObjectListView.Official.2.8.1/*
-logwizardsetup/Release/*
-logwizardsetup/Dbg64/*
-logwizardsetup/Release64/*
-output/*
+src/packages/log4net.2.0.3/*
+src/packages/ObjectListView.Official.2.8.1/*
+src/logwizardsetup/Release/*
+src/logwizardsetup/Dbg64/*
+src/logwizardsetup/Release64/*
+src/output/*
 
 *.exe
 *.sample
