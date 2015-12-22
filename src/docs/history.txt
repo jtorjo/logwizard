@@ -1,6 +1,4 @@
 
-- if not full log -> show in brackets in the header -> number of entries
-  also - check if number of filtered entries = entries -> in that case, no need to show "entries" (we already have it)
 
 
 
@@ -25,6 +23,8 @@
      -> eventually show tip "Use Ctrl-h to show Log History or Ctrl-O to Open Log"
 --done: ctrl-1 should take me to position 1 if it's already there -> just double check
    --> to think of an equivalent for ctrl-tab / ctrl-shift=tab for windows - maybe ctrl-0?
+- if not full log -> show in brackets in the header -> number of entries
+  also - check if number of filtered entries = entries -> in that case, no need to show "entries" (we already have it)
 
 
 1.5.19

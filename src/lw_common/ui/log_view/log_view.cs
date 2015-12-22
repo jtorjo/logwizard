@@ -911,6 +911,11 @@ namespace lw_common.ui
             string x_line =  sel_line_idx >= 0 ? "" + (sel_line_idx + 1) : "";
             string y = "" + item_count;
             string header = (app.inst.show_view_line_count || app.inst.show_view_selected_line || app.inst.show_view_selected_index ? (x_idx != "" ? x_idx + " of " + y : "(" + y + ")") : "");
+            if (app.inst.show_view_line_count || app.inst.show_view_selected_line || app.inst.show_view_selected_index) {
+                bool show_full_count = !is_full_log && item_count < filter_.full_count;
+                if (show_full_count)
+                    header += " (" + filter_.full_count +  ")";
+            }
             string x_of_y_msg = (show_name_in_header ? "[" + name + "] " : "") + "Message " + header;
             string x_of_y_title = "";
             if (app.inst.show_view_line_count && app.inst.show_view_selected_index)

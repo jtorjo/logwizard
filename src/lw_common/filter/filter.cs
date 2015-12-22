@@ -295,6 +295,14 @@ namespace lw_common {
             get { return matches_.count; }
         }
 
+        public int full_count {
+            get {
+                lock (this) {
+                    return new_log_ != null ? new_log_.line_count : 0;
+                }
+            }
+        }
+
         public bool is_up_to_date {
             get { lock (this) return is_up_to_date_;  }
         }
