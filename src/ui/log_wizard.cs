@@ -1761,10 +1761,17 @@ namespace LogWizard
 
         private void create_text_reader(settings_as_string_readonly settings) {
             bool is_file = settings.get("type") == "file";
+            if (text_ != null && text_.settings.get("guid") == settings.get("guid")) {
+                if (is_file)
+                    merge_notes();
+                return;
+            }
+#if old_code
             if (text_ != null && is_file && text_.name == settings.get("name")) {
                 merge_notes();
                 return;
             }
+#endif
 
             if (text_ != null)
                 text_.Dispose();
@@ -1788,9 +1795,8 @@ namespace LogWizard
             force_initial_refresh_of_all_views();
         }
 
-        private void on_settings_changed(string sett_name) {
-            if ( sett_name == "aliases")
-                util.postpone(() => description.set_aliases(log_parser_.aliases), 1);            
+        private void on_aliases_changed() {
+            this.async_call( () => description.set_aliases(log_parser_.aliases) );
         }
 
         private void on_description_template_changed(string name) {
@@ -1832,8 +1838,7 @@ namespace LogWizard
 
             // note: we recreate the log, so that cached filters know to rebuild
             log_parser_ = new log_parser(text_);
-            description.set_aliases(log_parser_.aliases);
-            log_parser_.settings.on_changed += on_settings_changed;
+            log_parser_.on_aliases_changed = on_aliases_changed;
             if ( text_.settings.get("description") != "")
                 description.set_layout( text_.settings.get("description"));
 

@@ -22,6 +22,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -50,7 +51,7 @@ namespace lw_common.parse {
 
         If nothing is set, everything matches to ctx1, ctx2, ... and the last one matches to msg.
     */
-    public class aliases {
+    public class aliases : IDisposable {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // each line is like "x=y"
@@ -76,6 +77,8 @@ namespace lw_common.parse {
 
         private double_dictionary<string, info_type> name_to_column_ = new double_dictionary<string, info_type>();
 
+        public util.void_func on_column_names_changed;
+
         public aliases(string aliases_string) {
             sett_ = new settings_as_string(aliases_string.Replace(separator_, "\r\n"));
             init();
@@ -94,6 +97,26 @@ namespace lw_common.parse {
             }            
         }
 
+        // the idea is to be able to match each column to an info-type 
+        public void on_column_names(List<string> column_names) {
+            Debug.Assert(on_column_names_changed != null);
+
+            name_to_column_.clear();
+            foreach (string col in column_names) {
+                info_type type;
+                if (Enum.TryParse(col, true, out type)) {
+                    // in this case, it's the column itself
+                    // we want to know this, so that has_column(this-type) will return true
+                    name_to_column_.set(col, type);
+                    continue;
+                }
+                to_info_type(col, column_names);
+            }
+
+            if ( on_column_names_changed != null)
+                on_column_names_changed();
+        }
+
         public string get(string column) {
             return sett_.get(column, column);
         }
@@ -101,7 +124,11 @@ namespace lw_common.parse {
         public override string ToString() {
             return sett_.ToString().Replace("\r\n", separator_);
         }
-        
+
+        public void Dispose() {
+            on_column_names_changed = null;
+        }
+
         public string to_enter_separated_string() {
             return sett_.ToString();
         }
@@ -249,21 +276,6 @@ namespace lw_common.parse {
 
         private static info_type string_to_info_type(string str) {
             return info_type_io.from_str(str);
-        }
-
-        // the idea is to be able to match each column to an info-type 
-        public void on_column_names(List<string> column_names) {
-            name_to_column_.clear();
-            foreach (string col in column_names) {
-                info_type type;
-                if (Enum.TryParse(col, true, out type)) {
-                    // in this case, it's the column itself
-                    // we want to know this, so that has_column(this-type) will return true
-                    name_to_column_.set(col, type);
-                    continue;
-                }
-                to_info_type(col, column_names);
-            }
         }
 
         // if it returns max, the alias was invalid

@@ -74,6 +74,9 @@ namespace lw_common {
         }
 
         private bool can_text_fit_in_width(string txt, int width) {
+            if (txt.IndexOfAny(util.any_enter_char) >= 0)
+                return false;
+
             int PAD_WIDTH = 300;
             using (Graphics g = CreateGraphics()) {
                 const int ignore_height = 500;

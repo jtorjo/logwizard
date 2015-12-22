@@ -1,16 +1,12 @@
 
-
-
-
-- msg_details -> show it if the message spans over more than one line
-
-- event log: going to history then pressing Esc -> will somehow force a refresh which forces everything to reload -> not cool
+- event log : try using FormatDescription again? TOTHINK
 
 - event log : 
-  details pane : shoud show message
   should have a way to for the parser to say which columns should be visible in the details pane (by default) and which columns should be visible in the view (by default)
   should see if i should open the "details" pane by default (perhaps only first time? after that, the user should know about it)
 
+
+- event log: read in reverse
 
 - first_available_toggle_custom_ui -> if at position 0 nothing, return that
   like, i can open event viewer, move it to position 1, and then when i open "New" -> it should automatically go to "Default"
@@ -35,6 +31,12 @@
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
+
+1.5.15a
+- msg_details -> show it if the message spans over more than one line
+- fix: event log: going to history then pressing Esc -> will somehow force a refresh which forces everything to reload -> not cool
+- event log : details pane : should show message
+
 
 1.5.14
 - fix:event log: "Log" column is not filled

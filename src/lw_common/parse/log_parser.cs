@@ -150,6 +150,10 @@ namespace lw_common
             get { return forward_to_parser_.up_to_date;  }
         }
 
+        public util.void_func on_aliases_changed {
+            set { forward_to_parser_.on_aliases_changed = value; }
+        }
+
         public line line_at(int idx) {
             return forward_to_parser_.line_at(idx);
         }

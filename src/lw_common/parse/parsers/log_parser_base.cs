@@ -33,7 +33,9 @@ namespace lw_common.parse.parsers {
         protected readonly settings_as_string_readonly sett_;
         private aliases aliases_;
 
-        private List<string> column_names_ = new List<string>(); 
+        private List<string> column_names_ = new List<string>();
+
+        private util.void_func on_aliases_changed_;
 
         protected log_parser_base(settings_as_string_readonly sett) {
             sett_ = sett;
@@ -62,7 +64,7 @@ namespace lw_common.parse.parsers {
             }
         }
 
-        public aliases aliases {
+        internal aliases aliases {
             get { return aliases_; }
         }
 
@@ -74,13 +76,27 @@ namespace lw_common.parse.parsers {
         }
 
         protected virtual void on_updated_settings() {
-            aliases_ = new aliases(sett_.get("aliases"));
+            var new_aliases = new aliases(sett_.get("aliases"));
+            if (aliases_ != null && aliases_.to_enter_separated_string() == new_aliases.to_enter_separated_string())
+                // nothing changed
+                return;
+
+            aliases_ = new_aliases;
             if ( column_names_.Count > 0)
                 aliases_.on_column_names(column_names_);
         }
 
         internal settings_as_string_readonly settings {
             get { return sett_; }
+        }
+
+        internal util.void_func on_aliases_changed {
+            get { return on_aliases_changed_; }
+            set {
+                on_aliases_changed_ = value;
+                if (aliases_ != null)
+                    aliases_.on_column_names_changed += on_aliases_changed_;
+            }
         }
 
         public void Dispose() {
