@@ -28,6 +28,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.typeTab = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.browserFile = new System.Windows.Forms.Button();
+            this.fileName = new System.Windows.Forms.TextBox();
             this.fileType = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -97,9 +99,8 @@
             this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.needsRestart = new System.Windows.Forms.Label();
             this.checkRequiresRestart = new System.Windows.Forms.Timer(this.components);
-            this.fileName = new System.Windows.Forms.TextBox();
-            this.browserFile = new System.Windows.Forms.Button();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
+            this.eventsReversed = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.typeTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -158,6 +159,28 @@
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // browserFile
+            // 
+            this.browserFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.browserFile.Location = new System.Drawing.Point(442, 8);
+            this.browserFile.Name = "browserFile";
+            this.browserFile.Size = new System.Drawing.Size(29, 27);
+            this.browserFile.TabIndex = 11;
+            this.browserFile.Text = "...";
+            this.tip.SetToolTip(this.browserFile, "Browse For File");
+            this.browserFile.UseVisualStyleBackColor = true;
+            this.browserFile.Click += new System.EventHandler(this.browserFile_Click);
+            // 
+            // fileName
+            // 
+            this.fileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.fileName.Location = new System.Drawing.Point(6, 11);
+            this.fileName.Name = "fileName";
+            this.fileName.ReadOnly = true;
+            this.fileName.Size = new System.Drawing.Size(431, 23);
+            this.fileName.TabIndex = 10;
+            // 
             // fileType
             // 
             this.fileType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -193,7 +216,7 @@
             this.panel2.Controls.Add(this.fileTypeTab);
             this.panel2.Location = new System.Drawing.Point(2, 41);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(595, 285);
+            this.panel2.Size = new System.Drawing.Size(595, 282);
             this.panel2.TabIndex = 0;
             // 
             // fileTypeTab
@@ -208,7 +231,7 @@
             this.fileTypeTab.Location = new System.Drawing.Point(-5, 0);
             this.fileTypeTab.Name = "fileTypeTab";
             this.fileTypeTab.SelectedIndex = 0;
-            this.fileTypeTab.Size = new System.Drawing.Size(617, 282);
+            this.fileTypeTab.Size = new System.Drawing.Size(617, 279);
             this.fileTypeTab.TabIndex = 0;
             // 
             // tabPage3
@@ -222,7 +245,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(609, 253);
+            this.tabPage3.Size = new System.Drawing.Size(609, 250);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -299,7 +322,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(609, 259);
+            this.tabPage4.Size = new System.Drawing.Size(609, 256);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -351,7 +374,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(609, 259);
+            this.tabPage5.Size = new System.Drawing.Size(609, 256);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -412,7 +435,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(609, 259);
+            this.tabPage6.Size = new System.Drawing.Size(609, 256);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "tabPage6";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -466,16 +489,17 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.eventsReversed);
             this.tabPage2.Controls.Add(this.label27);
             this.tabPage2.Controls.Add(this.eventLogCheckStatus);
             this.tabPage2.Controls.Add(this.eventLogs);
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.selectedEventLogs);
             this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(625, 371);
+            this.tabPage2.Size = new System.Drawing.Size(625, 368);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -485,7 +509,7 @@
             this.label27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(358, 193);
+            this.label27.Location = new System.Drawing.Point(358, 190);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(270, 156);
             this.label27.TabIndex = 5;
@@ -510,7 +534,7 @@
             this.eventLogs.FormattingEnabled = true;
             this.eventLogs.Location = new System.Drawing.Point(124, 91);
             this.eventLogs.Name = "eventLogs";
-            this.eventLogs.Size = new System.Drawing.Size(488, 84);
+            this.eventLogs.Size = new System.Drawing.Size(488, 52);
             this.eventLogs.TabIndex = 3;
             // 
             // groupBox1
@@ -528,7 +552,7 @@
             this.groupBox1.Controls.Add(this.label22);
             this.groupBox1.Controls.Add(this.remoteMachineName);
             this.groupBox1.Controls.Add(this.label21);
-            this.groupBox1.Location = new System.Drawing.Point(8, 183);
+            this.groupBox1.Location = new System.Drawing.Point(8, 180);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(346, 152);
             this.groupBox1.TabIndex = 2;
@@ -887,31 +911,22 @@
             this.checkRequiresRestart.Interval = 250;
             this.checkRequiresRestart.Tick += new System.EventHandler(this.checkRequiresRestart_Tick);
             // 
-            // fileName
-            // 
-            this.fileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.fileName.Location = new System.Drawing.Point(6, 11);
-            this.fileName.Name = "fileName";
-            this.fileName.ReadOnly = true;
-            this.fileName.Size = new System.Drawing.Size(431, 23);
-            this.fileName.TabIndex = 10;
-            // 
-            // browserFile
-            // 
-            this.browserFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.browserFile.Location = new System.Drawing.Point(442, 8);
-            this.browserFile.Name = "browserFile";
-            this.browserFile.Size = new System.Drawing.Size(29, 27);
-            this.browserFile.TabIndex = 11;
-            this.browserFile.Text = "...";
-            this.tip.SetToolTip(this.browserFile, "Browse For File");
-            this.browserFile.UseVisualStyleBackColor = true;
-            this.browserFile.Click += new System.EventHandler(this.browserFile_Click);
-            // 
             // ofd
             // 
             this.ofd.Filter = "Text Files|*.txt|Log Files|*.log|All Files|*.*";
+            // 
+            // eventsReversed
+            // 
+            this.eventsReversed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.eventsReversed.AutoSize = true;
+            this.eventsReversed.Location = new System.Drawing.Point(127, 149);
+            this.eventsReversed.Name = "eventsReversed";
+            this.eventsReversed.Size = new System.Drawing.Size(283, 21);
+            this.eventsReversed.TabIndex = 6;
+            this.eventsReversed.Text = "Reversed (Last Log Entry is shown First)";
+            this.tip.SetToolTip(this.eventsReversed, "Shows the Log entries in Reversed order\r\n\r\nThis can be useful if retrieving the l" +
+        "ogs is time-consuming,\r\nand you\'d like to see the last entries ASAP");
+            this.eventsReversed.UseVisualStyleBackColor = true;
             // 
             // edit_log_settings_form
             // 
@@ -1042,5 +1057,6 @@
         private System.Windows.Forms.Button browserFile;
         private System.Windows.Forms.TextBox fileName;
         private System.Windows.Forms.OpenFileDialog ofd;
+        private System.Windows.Forms.CheckBox eventsReversed;
     }
 }

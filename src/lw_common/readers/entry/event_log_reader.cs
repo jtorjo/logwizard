@@ -75,9 +75,13 @@ namespace lw_common {
 
         private string remote_password_ = "";
 
+        // if true, we're reading events in reverse order (latest event is first)
+        private bool reverse_ = false;
+
         public event_log_reader(settings_as_string sett) : base(sett) {
             settings.on_changed += on_settings_changed;
             sett.set("name", friendly_name);
+            reverse_ = settings.get("event.reversed", "0") != "0"; 
         }
 
         public string[] log_types {
@@ -103,6 +107,9 @@ namespace lw_common {
             get {
                 return settings.get("event.remote_domain", ""); 
             }
+        }
+        public bool reverse {
+            get { return reverse_; }
         }
 
         public override string friendly_name {
@@ -138,7 +145,7 @@ namespace lw_common {
                 }
                 return;
             }
-
+            reverse_ = settings.get("event.reversed", "0") != "0"; 
             force_reload();
         }
 
@@ -205,6 +212,7 @@ namespace lw_common {
                 }
 
                 if (needs_more_processing) {
+                    // FIXME in reverse order, these should be first!
                     int listen_for_new_events = event_logs_.Count(x => x.listening_for_new_events_);
                     // note: if we're listing for new events, first process all the last ones
                     if (listen_for_new_events == event_logs_.Count && event_logs_.Count(x => x.last_events_.Count == 0) == event_logs_.Count) {
@@ -236,14 +244,14 @@ namespace lw_common {
                     for (int log_idx = 0; log_idx < event_logs_.Count; log_idx++) {
                         var log = event_logs_[log_idx];
                         if ( log.last_events_.Count > 0)
-                            // if I'm listening for new events, this is ok - return this entry
                             last.Add(new Tuple<EventRecord, string,int, bool>( log.last_events_[0], log.log_type, log_idx, log.last_events_.Count > 1 || log.listening_for_new_events_));
                         else if (log.new_events_.Count > 0) 
+                            // if I'm listening for new events, this is ok - return this entry
                             last.Add(new Tuple<EventRecord, string,int, bool>( log.new_events_[0], log.log_type, log_idx, true));
                     }
                     if (last.Count < 1)
                         break;
-                    var min = last.Min(x => x.Item1.TimeCreated);
+                    var min = reverse_ ? last.Max(x => x.Item1.TimeCreated) :  last.Min(x => x.Item1.TimeCreated);
                     var item = last.Find(x => x.Item1.TimeCreated == min);
                     if (!item.Item4)
                         break;
@@ -294,6 +302,7 @@ namespace lw_common {
                 pwd.Dispose();
 
                 EventLogQuery query = new EventLogQuery(log.log_type, PathType.LogName, query_string);
+                query.ReverseDirection = reverse_;
                 if ( session != null)
                     query.Session = session;
 
@@ -309,6 +318,12 @@ namespace lw_common {
                     log.listening_for_new_events_ = true;
 
                 // at this point, listen for new events
+                if (reverse_) {
+                    // if reverse, I need to create another query, or it won't allow watching
+                    query = new EventLogQuery(log.log_type, PathType.LogName, query_string);                
+                    if ( session != null)
+                        query.Session = session;                    
+                }
 				using (var watcher = new EventLogWatcher(query))
 				{
 					watcher.EventRecordWritten += (o, e) => {
@@ -336,7 +351,7 @@ namespace lw_common {
 
                 entry.add("level", event_level((StandardEventLevel) rec.Level));
                 entry.add("date", rec.TimeCreated.Value.ToString("dd-MM-yyyy"));
-                entry.add("time", rec.TimeCreated.Value.ToString("hh:mm:ss.fff"));
+                entry.add("time", rec.TimeCreated.Value.ToString("HH:mm:ss.fff"));
 
                 try {
                     var task = rec.Task != 0 ? rec.TaskDisplayName : "";

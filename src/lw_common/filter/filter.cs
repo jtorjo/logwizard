@@ -178,8 +178,12 @@ namespace lw_common {
                     return matches_.binary_search_closest(x => x.line_idx, line_idx);
             }
             public Tuple<match, int> binary_search_closest(DateTime time) {
-                lock (this)
+                lock (this) {
+                    bool is_descending = matches_.Count > 1 && matches_[0].line.time > matches_[1].line.time;
+                    if ( is_descending)
+                        return matches_.binary_search_closest(x => -x.line.time.Ticks, -time.Ticks);
                     return matches_.binary_search_closest(x => x.line.time, time);
+                }
             }
         }
 

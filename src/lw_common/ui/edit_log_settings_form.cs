@@ -80,6 +80,7 @@ namespace lw_common.ui {
             remoteUserName.Text = settings_.get("event.remote_user_name");
             remotePassword.Text = settings_.get("event.remote_password");
             selectedEventLogs.Text = settings_.get("event.log_type").Replace("|", "\r\n");
+            eventsReversed.Checked = settings_.get("event.reversed", "0") != "0";
 
             type.SelectedIndex = type_to_index();
             if (edit == edit_type.add) {
@@ -244,6 +245,7 @@ namespace lw_common.ui {
             settings_.set("event.remote_user_name", remoteUserName.Text);
             settings_.set("event.remote_password", remotePassword.Text);
             settings_.set("event.log_type", selectedEventLogs.Text.Trim().Replace("\r\n", "|"));
+            settings_.set("event.reversed", eventsReversed.Checked ? "1" : "0");
 
             settings_.set("debug.global", debugGlobal.Checked ? "1" : "0");
             settings_.set("debug.process_name", debugProcessName.Text);
