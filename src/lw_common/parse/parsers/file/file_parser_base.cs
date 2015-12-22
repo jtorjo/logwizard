@@ -97,5 +97,9 @@ namespace lw_common.parse.parsers.file {
         public override bool up_to_date {
             get { return up_to_date_; }
         }
+
+        public override bool has_multi_line_columns {
+            get { return false; }
+        }
     }
 }

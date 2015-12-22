@@ -89,6 +89,10 @@ namespace lw_common
             }
         }
 
+        public bool has_multi_line_columns {
+            get { return forward_to_parser_.has_multi_line_columns; }
+        }
+
         internal void on_log_has_new_lines(bool file_rewritten) {
             if (disposed_)
                 return;

@@ -236,7 +236,7 @@ namespace lw_common {
             app.load_save(load, ref show_notes_, prefix + ".show_notes", false);
 
             app.load_save(load, ref global_column_positions, prefix + ".global_column_positions");
-            app.load_save(load, ref description_splitter_pos, prefix + "description_splitter_pos", -1);
+            app.load_save(load, ref description_splitter_pos, prefix + ".description_splitter_pos", -1);
 
             load_save_view_info(load, prefix + ".view_info");
         }

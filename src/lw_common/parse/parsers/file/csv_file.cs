@@ -55,6 +55,10 @@ namespace lw_common.parse.parsers {
             }
         }
 
+        public override bool has_multi_line_columns {
+            get { return false; }
+        }
+
         protected override void on_new_lines(string new_lines) {
             int line_count = 0;
             last_lines_string_.set_lines(new_lines, ref line_count);

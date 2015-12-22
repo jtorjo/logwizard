@@ -168,6 +168,10 @@ namespace lw_common.parse.parsers {
             get { return up_to_date_;  }
         }
 
+        public override bool has_multi_line_columns {
+            get { return false; }
+        }
+
         public override  line line_at(int idx) {
             lock (this) {
                 if (idx < lines_.Count)

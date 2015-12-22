@@ -57,5 +57,9 @@ namespace lw_common.parse.parsers {
         public override bool up_to_date {
             get { return reader_.is_up_to_date(); }
         }
+
+        public override bool has_multi_line_columns {
+            get { return false; }
+        }
     }
 }

@@ -37,6 +37,14 @@ namespace lw_common.ui {
 
             "Do you have columns that are multi-line? Just toggle the 'Details' pane on! <b>(Ctrl-D)</b>.\r\n." +
             "You can also edit which columns you want in the 'Details' pane - just right click it.",
+
+            "You can just drop a file in order to view it in LogWizard. Or, you can <i>Actions >> Open Log</i>, if you want to tweak the Log Settings...",
+            "You can at any time tweak the current Log Settings. Right click the top header (where Columns are shown), and select <i>Edit Log Settings</i>",
+            "Want to easily see/go to the Logs you opened before? Go to <i>Actions >> Show History</i> or use <b>Ctrl-H</b>.",
+
+            "Want to have several Logs open at the same time?\r\n" +
+            "You can open a new LogWizard window at any time by doing <i>Actions >> New LogWizard Window</i> or <b>Ctrl-N</b>.\r\n" +
+            "Just open any Log in the newly opened Window. You can even access the History (Ctrl-H), as you normally would.",
         };
 
         private const int MAX_BEGINNER_TIPS = 20;

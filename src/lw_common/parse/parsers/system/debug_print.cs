@@ -30,5 +30,9 @@ namespace lw_common.parse.parsers.system {
 
         public debug_print(entry_text_reader_base reader) : base(reader) {
         }
+
+        public override bool has_multi_line_columns {
+            get { return false; }
+        }
     }
 }

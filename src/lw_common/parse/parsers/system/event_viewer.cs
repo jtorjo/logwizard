@@ -29,5 +29,10 @@ namespace lw_common.parse.parsers.system {
     class event_viewer : generic_entry_log_parser {
         public event_viewer(event_log_reader reader) : base(reader) {
         }
+
+        // description is multi-line
+        public override bool has_multi_line_columns {
+            get { return true; }
+        }
     }
 }

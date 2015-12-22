@@ -186,6 +186,9 @@ namespace lw_common {
         // note: at this time, there's no UI setting for this
         public readonly bool show_paragraph_sign = true;
 
+        // 1.5.18+ - first time we have a multi-line column, we show the details pane
+        public bool has_shown_details_pane = false;
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // file-by-file
         public bool bring_to_top_on_restart = false;
@@ -396,6 +399,8 @@ namespace lw_common {
 
             load_save(load, ref description_layouts_, "description_layouts");
             load_save(load, ref description_layout_idx_, "description_layout_idx", 0);
+
+            load_save(load, ref has_shown_details_pane, "has_shown_details_pane", false);
         }
 
         private string initials(string name) {

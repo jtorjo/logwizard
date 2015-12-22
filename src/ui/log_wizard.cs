@@ -818,7 +818,7 @@ namespace LogWizard
         private void toggle_details() {
             bool show = !global_ui.show_details;
             show_details( show);
-            global_ui.show_details = global_ui.show_details = show;
+            global_ui.show_details = show;
             save();
         }
 
@@ -1800,7 +1800,7 @@ namespace LogWizard
         }
 
         private void on_description_template_changed(string name) {
-            (text_.settings as settings_as_string).set("description", name);
+            (text_.settings as settings_as_string).set("description_template", name);
             cur_context().merge_settings( factory.get_context_dependent_settings(text_, text_.settings), false);
             save();
         }
@@ -1839,8 +1839,8 @@ namespace LogWizard
             // note: we recreate the log, so that cached filters know to rebuild
             log_parser_ = new log_parser(text_);
             log_parser_.on_aliases_changed = on_aliases_changed;
-            if ( text_.settings.get("description") != "")
-                description.set_layout( text_.settings.get("description"));
+            if ( text_.settings.get("description_template") != "")
+                description.set_layout( text_.settings.get("description_template"));
 
             ui_context log_ctx = settings_to_context( text_.settings );
             bool same_context = log_ctx == cur_context();
@@ -1857,6 +1857,12 @@ namespace LogWizard
             full_log_ctrl_.set_filter(new List<raw_filter_row>());
             on_new_log_parser();
             load();
+
+            if (log_parser_.has_multi_line_columns) 
+                if (!app.inst.has_shown_details_pane) {
+                    app.inst.has_shown_details_pane = true;
+                    show_details(global_ui.show_details = true);
+                }
 
             add_reader_to_history();
             app.inst.set_log_file(selected_file_name());

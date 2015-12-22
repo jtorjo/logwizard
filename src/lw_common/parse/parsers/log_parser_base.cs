@@ -53,6 +53,9 @@ namespace lw_common.parse.parsers {
 
         public abstract bool up_to_date { get; }
 
+        // returns true if we know we have columns that are multi-line
+        public abstract bool has_multi_line_columns { get; }
+
         // column names - parsed from the log (if any)
         public List<string> column_names {
             get { lock(this) return column_names_; }
@@ -95,7 +98,7 @@ namespace lw_common.parse.parsers {
             set {
                 on_aliases_changed_ = value;
                 if (aliases_ != null)
-                    aliases_.on_column_names_changed += on_aliases_changed_;
+                    aliases_.on_column_names_changed = on_aliases_changed_;
             }
         }
 

@@ -66,6 +66,11 @@ namespace lw_common.parse.parsers {
                     delimeter_name_ = user_set_delimeter_name_;
         }
 
+        // for now, I assume an XML has multi-line columns
+        public override bool has_multi_line_columns {
+            get { return true; }
+        }
+
         protected override void on_new_lines(string next) {
             string now = "";
             string delimeter;

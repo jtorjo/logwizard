@@ -77,7 +77,9 @@ namespace lw_common.parse {
 
         private double_dictionary<string, info_type> name_to_column_ = new double_dictionary<string, info_type>();
 
-        public util.void_func on_column_names_changed;
+        private util.void_func on_column_names_changed_;
+
+        private bool needs_on_column_names_changed_call_ = false;
 
         public aliases(string aliases_string) {
             sett_ = new settings_as_string(aliases_string.Replace(separator_, "\r\n"));
@@ -86,6 +88,16 @@ namespace lw_common.parse {
 
         private aliases() {
             
+        }
+
+        public util.void_func on_column_names_changed {
+            set {
+                on_column_names_changed_ = value;
+                if (needs_on_column_names_changed_call_) {
+                    needs_on_column_names_changed_call_ = false;
+                    on_column_names_changed_();
+                }
+            }
         }
 
         private void init() {
@@ -99,8 +111,6 @@ namespace lw_common.parse {
 
         // the idea is to be able to match each column to an info-type 
         public void on_column_names(List<string> column_names) {
-            Debug.Assert(on_column_names_changed != null);
-
             name_to_column_.clear();
             foreach (string col in column_names) {
                 info_type type;
@@ -113,8 +123,9 @@ namespace lw_common.parse {
                 to_info_type(col, column_names);
             }
 
-            if ( on_column_names_changed != null)
-                on_column_names_changed();
+            if ( on_column_names_changed_ != null)
+                on_column_names_changed_();
+            needs_on_column_names_changed_call_ = on_column_names_changed_ == null;
         }
 
         public string get(string column) {
@@ -126,7 +137,7 @@ namespace lw_common.parse {
         }
 
         public void Dispose() {
-            on_column_names_changed = null;
+            on_column_names_changed_ = null;
         }
 
         public string to_enter_separated_string() {
