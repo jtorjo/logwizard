@@ -246,15 +246,20 @@ namespace LogWizard
             update_status_prefix();
             set_status_forever("");
 
-            // 1.0.80d+ - the reason we postpone this is so taht we don't set up all UI in the constructor - the splitters would get extra SplitterMove() events,
+            // 1.0.80d+ - the reason we postpone this is so that we don't set up all UI in the constructor - the splitters would get extra SplitterMove() events,
             //            and we would end up positioning them wrong
-            util.postpone(() => {
-                bool open_cmd_line_file = forms_.Count == 1 && Program.open_file_name != null;
-                if (history_.Count > 0 && !open_cmd_line_file)
-                    logHistory.SelectedIndex = history_.Count - 1;
-                if (open_cmd_line_file)
-                    on_file_drop(Program.open_file_name);
-            }, 10);
+            bool is_first_form = forms_.Count == 1;
+            // 1.5.20+ note: if more than one form -> for the new forms, don't select anything
+            if ( is_first_form)
+                util.postpone(() => {
+                    bool open_cmd_line_file = forms_.Count == 1 && Program.open_file_name != null;
+                    if (history_.Count > 0 && !open_cmd_line_file)
+                        logHistory.SelectedIndex = history_.Count - 1;
+                    if (open_cmd_line_file)
+                        on_file_drop(Program.open_file_name);
+                }, 10);
+            else 
+                set_status("Alternatively, you can <i>Actions >> Open Log</i>, or re-open an older log (<i>Actions >> Show History</i>)");
 
             util.postpone(animate_whatsup, util.is_debug ? 2500 : 10000);
         }
@@ -297,6 +302,9 @@ namespace LogWizard
                 return -1;
 
             List<int> used = forms.Select(x => x.toggled_to_custom_ui_).ToList();
+            if (!used.Contains(-1))
+                // we don't have the default position - just use it now
+                return -1;
 
             for ( int idx = 0; idx < custom_ui_.Length; ++idx)
                 if (!used.Contains(idx)) {
