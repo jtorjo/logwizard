@@ -1,5 +1,4 @@
 
-- event log : try using FormatDescription again? TOTHINK
 
 - event log : 
   should have a way to for the parser to say which columns should be visible in the details pane (by default) and which columns should be visible in the view (by default)
@@ -32,7 +31,11 @@
           https://news.ycombinator.com/news
 		  quora
 
-1.5.15a
+1.5.17
+- fix: event log : try using FormatDescription again
+
+
+1.5.15
 - msg_details -> show it if the message spans over more than one line
 - fix: event log: going to history then pressing Esc -> will somehow force a refresh which forces everything to reload -> not cool
 - event log : details pane : should show message

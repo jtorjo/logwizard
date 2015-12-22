@@ -343,6 +343,8 @@ namespace lw_common.ui {
                     label.Top = top;
                     label.Height = COLUMN_HEIGHT;
                     label.Width = layout.rows_[row_idx].label_width_;
+                    label.Font = fonts_.get_font(Font.Name, (int)Font.Size - 1, true, false, false);
+                    label.TextAlign = ContentAlignment.MiddleLeft;
 
                     panels_[row_idx].Controls.Add(label);
 

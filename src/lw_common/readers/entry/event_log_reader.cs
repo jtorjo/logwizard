@@ -356,22 +356,19 @@ namespace lw_common {
                     entry.add("Keywords", "");
                 }*/
 
-                /*
+
+                // note: this throws a lot of exceptions; however, we don't have much of a choice here - just showing the raw properties is rather useless
                 try {
                     var desc = rec.FormatDescription();
                     entry.add("msg", desc ?? "");
                 } catch {
-                    entry.add("msg", "");
-                }*/
-                // 1.5.7+ seems FormatDescription() throws a lot of exceptions, prety sure there's a bug in .net 
-                //        just make it easy
-                try {
-                    string desc = util.concatenate( rec.Properties.Select(x => x.Value.ToString()), "\r\n");
-                    entry.add("msg", desc);
-                } catch {
-                    entry.add("msg", "");
+                    try {
+                        string desc = util.concatenate( rec.Properties.Select(x => x.Value.ToString()), "\r\n");
+                        entry.add("msg", desc);
+                    } catch {
+                        entry.add("msg", "");
+                    }
                 }
-
 
             } catch (Exception e) {
                 logger.Fatal("can't convert EventRectord to entry " + e.Message);
