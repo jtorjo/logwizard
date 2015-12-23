@@ -12,6 +12,14 @@
           https://news.ycombinator.com/news
 		  quora
 
+1.6.1
+- to be released to public - with Event Viewwer and Debug Print
+
+
+1.5.21
+- redo the HOME page - perhaps more screenshots, etc?
+  - think about features etc.
+- github - delete "intro" page
 
 
 1.5.20

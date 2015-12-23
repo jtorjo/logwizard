@@ -147,7 +147,7 @@
             this.logHistory.FormattingEnabled = true;
             this.logHistory.Location = new System.Drawing.Point(285, 3);
             this.logHistory.Name = "logHistory";
-            this.logHistory.Size = new System.Drawing.Size(850, 23);
+            this.logHistory.Size = new System.Drawing.Size(892, 23);
             this.logHistory.TabIndex = 7;
             this.tip.SetToolTip(this.logHistory, "History - just select any of the previous logs, and they instantly load");
             this.logHistory.Visible = false;
@@ -160,7 +160,7 @@
             this.newFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.newFilteredView.ContextMenuStrip = this.newViewMenu;
             this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.newFilteredView.Location = new System.Drawing.Point(310, 29);
+            this.newFilteredView.Location = new System.Drawing.Point(308, 29);
             this.newFilteredView.Name = "newFilteredView";
             this.newFilteredView.Size = new System.Drawing.Size(18, 20);
             this.newFilteredView.TabIndex = 1;
@@ -195,7 +195,7 @@
             // 
             this.delFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.delFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.delFilteredView.Location = new System.Drawing.Point(328, 29);
+            this.delFilteredView.Location = new System.Drawing.Point(326, 29);
             this.delFilteredView.Name = "delFilteredView";
             this.delFilteredView.Size = new System.Drawing.Size(18, 20);
             this.delFilteredView.TabIndex = 2;
@@ -256,7 +256,7 @@
             this.synchronizedWithFullLog.Checked = true;
             this.synchronizedWithFullLog.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizedWithFullLog.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizedWithFullLog.Location = new System.Drawing.Point(397, 29);
+            this.synchronizedWithFullLog.Location = new System.Drawing.Point(395, 29);
             this.synchronizedWithFullLog.Name = "synchronizedWithFullLog";
             this.synchronizedWithFullLog.Size = new System.Drawing.Size(46, 20);
             this.synchronizedWithFullLog.TabIndex = 1;
@@ -272,7 +272,7 @@
             this.synchronizeWithExistingLogs.Checked = true;
             this.synchronizeWithExistingLogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizeWithExistingLogs.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(351, 29);
+            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(349, 29);
             this.synchronizeWithExistingLogs.Name = "synchronizeWithExistingLogs";
             this.synchronizeWithExistingLogs.Size = new System.Drawing.Size(46, 20);
             this.synchronizeWithExistingLogs.TabIndex = 3;
@@ -619,7 +619,7 @@
             this.splitDescription.Panel2.Controls.Add(this.description);
             this.splitDescription.Panel2MinSize = 100;
             this.splitDescription.Size = new System.Drawing.Size(974, 450);
-            this.splitDescription.SplitterDistance = 320;
+            this.splitDescription.SplitterDistance = 318;
             this.splitDescription.SplitterWidth = 6;
             this.splitDescription.TabIndex = 18;
             this.splitDescription.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitDescription_SplitterMoved);
@@ -640,8 +640,8 @@
             this.filteredLeft.Panel1.Controls.Add(this.viewsTab);
             this.filteredLeft.Panel1MinSize = 100;
             this.filteredLeft.Panel2MinSize = 100;
-            this.filteredLeft.Size = new System.Drawing.Size(974, 320);
-            this.filteredLeft.SplitterDistance = 481;
+            this.filteredLeft.Size = new System.Drawing.Size(974, 318);
+            this.filteredLeft.SplitterDistance = 479;
             this.filteredLeft.SplitterWidth = 6;
             this.filteredLeft.TabIndex = 0;
             this.filteredLeft.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.filteredLeft_SplitterMoved);
@@ -657,7 +657,7 @@
             this.viewsTab.Location = new System.Drawing.Point(0, 3);
             this.viewsTab.Name = "viewsTab";
             this.viewsTab.SelectedIndex = 0;
-            this.viewsTab.Size = new System.Drawing.Size(476, 318);
+            this.viewsTab.Size = new System.Drawing.Size(474, 316);
             this.viewsTab.TabIndex = 0;
             this.viewsTab.SelectedIndexChanged += new System.EventHandler(this.viewsTab_SelectedIndexChanged);
             this.viewsTab.DragDrop += new System.Windows.Forms.DragEventHandler(this.filteredViews_DragDrop);
@@ -669,7 +669,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(468, 290);
+            this.tabPage1.Size = new System.Drawing.Size(466, 288);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -684,7 +684,7 @@
             this.dropHere.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.dropHere.Location = new System.Drawing.Point(3, 3);
             this.dropHere.Name = "dropHere";
-            this.dropHere.Size = new System.Drawing.Size(457, 290);
+            this.dropHere.Size = new System.Drawing.Size(455, 288);
             this.dropHere.TabIndex = 0;
             this.dropHere.Text = "Drop it Like it\'s Hot!\r\nJust drop a file here, and get to work!\r\n";
             this.dropHere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -697,7 +697,7 @@
             this.description.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.description.Location = new System.Drawing.Point(0, 0);
             this.description.Name = "description";
-            this.description.Size = new System.Drawing.Size(974, 124);
+            this.description.Size = new System.Drawing.Size(974, 126);
             this.description.TabIndex = 0;
             // 
             // refresh
@@ -727,9 +727,9 @@
             this.whatsup.animate_speed_ms = 100;
             this.whatsup.BackColor = System.Drawing.Color.Transparent;
             this.whatsup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.whatsup.Location = new System.Drawing.Point(1142, 2);
+            this.whatsup.Location = new System.Drawing.Point(1183, 2);
             this.whatsup.Name = "whatsup";
-            this.whatsup.Size = new System.Drawing.Size(109, 24);
+            this.whatsup.Size = new System.Drawing.Size(68, 24);
             this.whatsup.TabIndex = 19;
             this.whatsup.Text = "Actions";
             this.whatsup.UseVisualStyleBackColor = false;
