@@ -8,8 +8,6 @@
 
 - bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
 
-- bug: clean install -> when logwizardsetupsample is shown, if i go to second view, the "msg" column is shown after line ,instead of being shown all the way to the right
-
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora

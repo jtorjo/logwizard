@@ -2,7 +2,6 @@
 
 [![Join the chat at https://gitter.im/jtorjo/logwizard](https://badges.gitter.im/jtorjo/logwizard.svg)](https://gitter.im/jtorjo/logwizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  [![Build status](https://ci.appveyor.com/api/projects/status/566ksg8oh95bj0o0?svg=true)](https://ci.appveyor.com/project/jtorjo/logwizard) [![GitHub issues](https://img.shields.io/github/issues/jtorjo/logwizard.svg)](https://github.com/jtorjo/logwizard/issues)
 
-
 ![LogWizard](https://github.com/jtorjo/logwizard/blob/master/src/images/00shot_first.png)
 
 I created **LogWizard** to help anyone that really needs to deal with logs, in order to _hunt down bugs and/or issues that happen somewhere else_ (read = at customer site).
@@ -16,24 +15,32 @@ Read about **LogWizard** on on <a href="http://www.codeproject.com" target="_bla
 
 ***
 
-My team and I have created a rather large piece of software that is running on thousands of machines every day. Our customers, when they encounter an issue, send us their logs. The software is pretty big, we run 10+ threads, we log a lot of information, and parsing through it is pretty complex. Focusing on a certain issue (the customer's) has always been rather complicated. And yes, we tried other Log Viewers, but lets just say they were not up to the task.
+My team and I have created a rather large piece of software that is running on thousands of machines every day. When our customers encounter an issue, they send us their logs. The software is pretty big, we run 10+ threads and log a lot of information. Focusing on a certain issue (the customer's) has always been rather complicated. And yes, we tried other Log Viewers, but lets just say they were not up to the task.
 
-So, in the last year or so, whenever I had some spare time, I would work on this. What I wanted was more or less this:
-- **Easy filters** - easy to create, specify colors, easy to turn on/off, easy to copy/paste/modify
-- **Line coloring** - allow a certain filter to have a certain color - allow you visually identify important lines
-- **Easy to switch** from "My filtered view" to the "Full log" and back
-- **Easy to switch** between views of a certain log
-- **Easy to switch** between logs (all opened logs are kept in History. Switching between them is bliss)
-- **Show me as much information as possible**. In other words, once I have defined my filters, I want to forget about them, and see the "View" that they produce, uncluttered by anything else
+Here are some of LogWizard's features:
+- **Easy to filter information** - easy to create filters, easy to turn on/off, easy to copy/paste/modify.
+- **Coloring** - allow a filter to have a certain color - allow you visually identify important information (color-the-full-line or color just-what-matches). You can already see coloring in action in the first image above.
+- **Easy to switch** from "My filtered view" to the "Full log" and back (**Alt-L**).
+- **Easy to switch** between views of a certain log.
+- **Easy to switch** between logs (all logs you open are kept in History. Switching between them is bliss - **Ctrl-H**).
+- **Show me as much information as possible**. In other words, once I have defined my filters, I want to forget about them, and see the _Views_ that they produce, uncluttered by anything else.
 - **Ease of use** - once you've set up your filters, getting to the information you care about should be a piece of cake!
-- **Hotkeys! Hotkeys! Hotkeys!** I'm a developer - mouse is too slow. I want to switch between view/logs/ toggle views on/off, whatever - just with hotkeys
+- **Hotkeys! Hotkeys! Hotkeys!** I'm a developer - mouse is too slow. I want to switch between views/logs/ toggle views on/off, whatever - just with [Hotkeys](Hotkeys).
 - **Real-time monitoring** - drag and drop a file, and monitor it live, as your program is writing to it
-- **View Summary** - show me how many lines a certain view has. For example, I have View that shows me notifications, errors, and fatal errors. When I open a log, the first thing I check is - how many lines are in that view? If too many, that's the first thing I check
+- **View Summary** - show me how many lines a certain view has. For example, I have View that shows me notifications, errors, and fatal errors. When I open a log, the first thing I check is - how many lines are in that view? If too many, that's the first View I look at.
 - **Remember my settings**. I don't want to have to specify the same thing twice. Once - then reuse it for as many logs as you want!
 - **Auto-saving** - you don't need to save anything. Everything you set is automatically saved by default
+- **Show/Hide/Move Columns** - just right click on the Columns header. You can edit them as easy as possible. And next time you open LogWizard, it remembers what you've done!
 
-The driving force for this project has been for me - _**allow you to do anything that is log-related FAST. Find out what you want from a log - as fast as humanly possible**_. Remove the burden of analyzing log files.
+There's more:
+- **Search-as-you-go** - start typing - LogWizard will take you to the first column that contains the given text, and also highlight the text you typed. And, just use F3/Shift-F3 (Find-Next/Find-Previous), and they will instantly take you to the next/previous occurrence of what you just typed!
+- **Smart Find, with Preview** - First off - Find (**Ctrl-F**) can handle regex-es. But more to the point, it will show you a preview of what you would find. This is extremely useful when you're typing a regex, which is so easy to get wrong the first few times...
+- **Go to Line/Time** - with a twist! It allows offsets, and understands lots of time formats! Just hit **Ctrl-G**, and enjoy!
+- **Clipboard-Friendly** - select several rows, press **Ctrl-C** or **Ctrl-Shift-C**, and they are copied to clipboard, preserving the _colors!_
+- **Details pane** - If you have lots of columns, or multi-line columns, or both, we have a Details pane (**Ctrl-D**). You can choose what gets shown there so that it doesn't clog your main View!
+- **Show me just what I want** - Yes, we have lots of [Toggles](Toggles)! You can toggle information on/off - so that you get the most of your screen! You can toggle on/off the Details pane - so that it's shown only when you need it. Same for the Filters pane (where you edit your filters) - which most of the time, you want it hidden. There are plenty more you can show/hide, so that you get as much information as possible!
 
-I hope I've achieved that - but of course, you'll be the judge. Having said that, LogWizard is BETA. I welcome any feedback you may have, and any suggestions are welcome as well. 
+I welcome any feedback you may have, and any suggestions are welcome as well. 
 
-When writing to me, if you've discovered an issue/problem/bug - please attach log files where you've encountered it (no more than 1Mb per email please). I'll do my best to answer ASAP. Thanks!
+If you discover an issue/problem/bug - please upload the problematic log file somewhere I can download it (probably the easiest place would be [dropbox](http://www.dropbox.com). Then drop me an email explaining the issue, with a link to the uploaded log. I'll do my best to answer ASAP. 
+Thanks!

@@ -11,6 +11,7 @@
 	- any new shortcut?
 	- details pane
 
+
 - github sidebar -> can add links to codeproject
 
 - article about event viewer - title: view Windows Event Logs can be fun
