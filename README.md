@@ -1,6 +1,6 @@
 ## LogWizard - a Log Viewer that is easy and fun to use!
 
-[![Join the chat at https://gitter.im/jtorjo/logwizard](https://badges.gitter.im/jtorjo/logwizard.svg)](https://gitter.im/jtorjo/logwizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  [![Build status](https://ci.appveyor.com/api/projects/status/566ksg8oh95bj0o0?svg=true)](https://ci.appveyor.com/project/jtorjo/logwizard) [![GitHub issues](https://img.shields.io/github/issues/jtorjo/logwizard.svg)](https://github.com/jtorjo/logwizard/issues)
+[![Join the chat at https://gitter.im/jtorjo/logwizard](https://badges.gitter.im/jtorjo/logwizard.svg)](https://gitter.im/jtorjo/logwizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  [![GitHub issues](https://img.shields.io/github/issues/jtorjo/logwizard.svg)](https://github.com/jtorjo/logwizard/issues)
 
 ![LogWizard](https://github.com/jtorjo/logwizard/blob/master/src/images/00shot_first.png)
 
@@ -21,12 +21,12 @@ Here are some of LogWizard's features:
 - **Easy to filter information** - easy to create filters, easy to turn on/off, easy to copy/paste/modify.
 - **Coloring** - allow a filter to have a certain color - allow you visually identify important information (color-the-full-line or color just-what-matches). You can already see coloring in action in the first image above.
 - **Easy to switch** from "My filtered view" to the "Full log" and back (**Alt-L**).
-- **Easy to switch** between views of a certain log.
-- **Easy to switch** between logs (all logs you open are kept in History. Switching between them is bliss - **Ctrl-H**).
-- **Show me as much information as possible**. In other words, once I have defined my filters, I want to forget about them, and see the _Views_ that they produce, uncluttered by anything else.
-- **Ease of use** - once you've set up your filters, getting to the information you care about should be a piece of cake!
+- **Easy to switch** between logs. All logs you open are kept in History. Switching between them is bliss - **Ctrl-H**.
+- **Ease of use** - once you've set up your filters, getting to the information you care about is a piece of cake!
 - **Hotkeys! Hotkeys! Hotkeys!** I'm a developer - mouse is too slow. I want to switch between views/logs/ toggle views on/off, whatever - just with [Hotkeys](Hotkeys).
 - **Real-time monitoring** - drag and drop a file, and monitor it live, as your program is writing to it
+- **Windows Event Logs** - as of version [1.6](https://github.com/jtorjo/logwizard/releases/tag/1.6.1), you can very easy view `Window Event Logs`. Just hit **Ctrl-O**, select `Windows Event Log` from the combo, and that's it! _It even works for viewing remote event logs!_
+- **Debug Viewer** - as of version [1.6](https://github.com/jtorjo/logwizard/releases/tag/1.6.1), you can view anything your program outputs via `OutputDebugString`. You can view the information from all programs, or filter it just by your program name. Hit **Ctrl-O**, and select `DebugPrint`.
 - **View Summary** - show me how many lines a certain view has. For example, I have View that shows me notifications, errors, and fatal errors. When I open a log, the first thing I check is - how many lines are in that view? If too many, that's the first View I look at.
 - **Remember my settings**. I don't want to have to specify the same thing twice. Once - then reuse it for as many logs as you want!
 - **Auto-saving** - you don't need to save anything. Everything you set is automatically saved by default
@@ -42,5 +42,5 @@ There's more:
 
 I welcome any feedback you may have, and any suggestions are welcome as well. 
 
-If you discover an issue/problem/bug - please upload the problematic log file somewhere I can download it (probably the easiest place would be [dropbox](http://www.dropbox.com). Then drop me an email explaining the issue, with a link to the uploaded log. I'll do my best to answer ASAP. 
+If you discover an issue/problem/bug - please upload the problematic log file somewhere I can download it; probably the easiest place would be [dropbox](http://www.dropbox.com). Then create a github issue, with a link to the uploaded log. I'll do my best to answer ASAP. 
 Thanks!
