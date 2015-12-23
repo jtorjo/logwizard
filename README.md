@@ -1,10 +1,12 @@
-## LogWizard - a Log Viewer that is easy and fun to use!
+### LogWizard - a Log Viewer that is easy and fun to use!
 
 [![Join the chat at https://gitter.im/jtorjo/logwizard](https://badges.gitter.im/jtorjo/logwizard.svg)](https://gitter.im/jtorjo/logwizard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  [![GitHub issues](https://img.shields.io/github/issues/jtorjo/logwizard.svg)](https://github.com/jtorjo/logwizard/issues)
 
-![LogWizard](https://github.com/jtorjo/logwizard/blob/master/src/images/00shot_first.png)
+![LogWizard](https://github.com/jtorjo/logwizard/blob/master/src/images/00_lw.png)
 
 I created **LogWizard** to help anyone that really needs to deal with logs, in order to _hunt down bugs and/or issues that happen somewhere else_ (read = at customer site).
+
+My focus has been on ease of use from the get go. When using LogWizard, most things should be easy. In case they're not - I've done something wrong :) Let me know!
 
 ***
 
