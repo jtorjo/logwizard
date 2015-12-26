@@ -106,7 +106,7 @@ namespace lw_common.parse.parsers {
         private bool if_line_does_not_match_assume_from_prev_line = false;
 
         public text_file_line_by_line(file_text_reader_base reader) : base(reader.settings) {
-            string syntax_str = reader.settings.get("syntax");
+            string syntax_str = reader.settings.get("syntax", "$msg[0]");
             if_line_does_not_match_assume_from_prev_line = reader.settings.get("line.if_line", "0") == "1";
             logger.Debug("[parse] parsing syntax " + syntax_str);
 

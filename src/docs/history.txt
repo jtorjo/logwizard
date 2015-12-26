@@ -12,6 +12,10 @@
           https://news.ycombinator.com/news
 		  quora
 
+1.6.3a
+- fix for loading AllProcesses.log crash
+
+
 1.6.1
 - to be released to public - with Event Viewwer and Debug Print
 
