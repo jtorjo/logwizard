@@ -147,7 +147,7 @@ namespace test_sharpzip {
                 CreateZip(file_name, temp);
 
                 Directory.Delete(temp, true);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return false;
             }
 

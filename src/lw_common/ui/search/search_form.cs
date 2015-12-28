@@ -376,7 +376,6 @@ namespace lw_common.ui {
 
             while (!closed_) {
                 Thread.Sleep(250);
-                bool needs_run = false;
                 search_for cur = null;
                 this.async_call_and_wait(() => {                    
                     if (combo.DroppedDown)

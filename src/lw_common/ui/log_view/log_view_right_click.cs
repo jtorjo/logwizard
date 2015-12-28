@@ -37,11 +37,7 @@ namespace lw_common.ui {
 
         private log_view parent_;
 
-        private bool via_apps_hotkey_ = false;
-
         private delegate bool bool_func();
-
-        private List<Tuple<string, int>> other_views_ = null; 
 
         public enum simple_action {
             none, 
@@ -475,7 +471,6 @@ namespace lw_common.ui {
 
 
         public void right_click() {
-            via_apps_hotkey_ = false;
             right_click_at_pos( parent_.PointToClient( Cursor.Position));
         }
 
@@ -492,7 +487,6 @@ namespace lw_common.ui {
         }
 
         public void right_click_at_caret() {
-            via_apps_hotkey_ = true;
             right_click_at_pos( carent_pos);
         }
 

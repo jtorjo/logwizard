@@ -81,6 +81,7 @@ namespace lw_common.ui {
 
         void edit_log_settings();
 
+        // these are the columns that are visible in the description pane (if it's shown)
         List<info_type> description_columns();
     }
 }

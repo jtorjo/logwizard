@@ -12,6 +12,11 @@
           https://news.ycombinator.com/news
 		  quora
 
+1.6.3b
+- made test_ui compile
+- removed compile warnings
+
+
 1.6.3a
 - fix for loading AllProcesses.log crash
 

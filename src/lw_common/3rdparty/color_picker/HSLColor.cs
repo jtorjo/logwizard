@@ -7,7 +7,45 @@ namespace ColorPicker
 {
 	public struct HSLColor 
 	{
-		double m_hue;
+        /*
+		public static bool operator != (HSLColor left, HSLColor right)
+		{
+			return !(left == right);
+		}
+		public static bool operator == (HSLColor left, HSLColor right)
+		{
+			return (left.Hue == right.Hue && 
+					left.Lightness == right.Lightness && 
+					left.Saturation == right.Saturation);
+		}*/
+
+	    public bool Equals(HSLColor other) {
+	        return m_hue.Equals(other.m_hue) && m_saturation.Equals(other.m_saturation) && m_lightness.Equals(other.m_lightness);
+	    }
+
+	    public override bool Equals(object obj) {
+	        if (ReferenceEquals(null, obj)) return false;
+	        return obj is HSLColor && Equals((HSLColor) obj);
+	    }
+
+	    public override int GetHashCode() {
+	        unchecked {
+	            var hashCode = m_hue.GetHashCode();
+	            hashCode = (hashCode * 397) ^ m_saturation.GetHashCode();
+	            hashCode = (hashCode * 397) ^ m_lightness.GetHashCode();
+	            return hashCode;
+	        }
+	    }
+
+	    public static bool operator ==(HSLColor left, HSLColor right) {
+	        return left.Equals(right);
+	    }
+
+	    public static bool operator !=(HSLColor left, HSLColor right) {
+	        return !left.Equals(right);
+	    }
+
+	    double m_hue;
 		double m_saturation;
 		double m_lightness;
 		// http://en.wikipedia.org/wiki/HSL_color_space
@@ -142,17 +180,6 @@ namespace ColorPicker
 				colors[color] *= 255; // convert to value expected by Color
 			}
 			return Color.FromArgb(255, (int)colors[0], (int)colors[1], (int)colors[2]);
-		}
-
-		public static bool operator != (HSLColor left, HSLColor right)
-		{
-			return !(left == right);
-		}
-		public static bool operator == (HSLColor left, HSLColor right)
-		{
-			return (left.Hue == right.Hue && 
-					left.Lightness == right.Lightness && 
-					left.Saturation == right.Saturation);
 		}
 		public override string ToString()
 		{

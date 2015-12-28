@@ -564,7 +564,7 @@ namespace lw_common.parse.parsers {
 
                 return normal_line ? new line(l, si.idx_in_line_) : null;
             } catch(Exception e) {
-                logger.Error("invalid line: " + l);
+                logger.Error("invalid line: " + l + " : " + e.Message);
                 //return new line(pos_in_log, l, line_contains_msg_only_);
                 return null;
             }

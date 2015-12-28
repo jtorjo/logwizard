@@ -55,7 +55,6 @@ namespace lw_common.parse {
             default:
                 Debug.Assert(false);
                 return null;
-                break;
             }
 
         }

@@ -21,12 +21,17 @@ namespace test_ui {
             string file = @"C:\john\code\buff\lw-tests\small.log";
             string syntax = "$time[0,12] $ctx1[13,10] $level[24,5] $class[' ','- '] $msg";
 
+            settings_as_string sett = new settings_as_string("");
+            sett.set("type", "file");
+            sett.set("name", file);
+            sett.set("syntax", syntax);
+
             lv_ = new log_view(this, "testing 123");
             lv_.Dock = DockStyle.Fill;
             this.Controls.Add(lv_);
             lv_.show_name = false;
 
-            lv_.set_log( new log_reader( new log_parser(new file_text_reader(file) /*, "syntax=" + syntax */)) );
+            lv_.set_log( new log_reader( new log_parser(new file_text_reader(sett))) );
             var filter = new List<raw_filter_row>();
             lv_.set_filter( filter  );
 
@@ -105,6 +110,10 @@ namespace test_ui {
         }
 
         public void edit_log_settings() {
+        }
+
+        public List<info_type> description_columns() {
+            return new List<info_type>();
         }
 
         private void refresh_Tick(object sender, EventArgs e) {

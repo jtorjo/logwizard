@@ -60,8 +60,6 @@ namespace lw_common.ui {
 
         private int ignore_change_ = 0;
 
-        private string all_text_ = "";
-
         // sometimes when the user is moving, we need to become invisible
         private DateTime last_force_invisible_ = DateTime.MinValue;
 

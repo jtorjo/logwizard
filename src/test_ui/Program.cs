@@ -55,11 +55,11 @@ namespace test_ui {
 
 //            new edit_log_settings_form("", edit_log_settings_form.edit_type.add).ShowDialog();
 
-            Application.Run(new test_description_ctrl());
+//            Application.Run(new test_description_ctrl());
 //            Application.Run(new test_status_ctrl());
 //            Application.Run(new test_olv());
 //            Application.Run(new test_edit_ctrl());
-//            Application.Run(new test_log_view());
+            Application.Run(new test_log_view());
 //            Application.Run(new test_notes_ctrl());
 //            Application.Run(new test_filter_ctrl());
         }

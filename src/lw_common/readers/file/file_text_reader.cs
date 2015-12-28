@@ -150,10 +150,10 @@ namespace lw_common
             ulong full;
             try {
                 full = (ulong)new FileInfo(file_).Length;
-            } catch (FileNotFoundException e) {
+            } catch (FileNotFoundException) {
                 full = 0;
             }
-            catch(Exception e) {
+            catch(Exception) {
                 // if we can't read the file length, something probably happened - either it got re-written, or locked
                 // wait until next time
                 return;
@@ -171,7 +171,7 @@ namespace lw_common
             get {
                 try {
                     return (ulong)new FileInfo(file_).Length;
-                } catch (FileNotFoundException e) {
+                } catch (FileNotFoundException) {
                     return ulong.MaxValue;
                 }                
             }
@@ -281,12 +281,12 @@ namespace lw_common
                 long len = new FileInfo(file_).Length;
                 lock (this)
                     return read_byte_count_ == (ulong) len;
-            } catch (FileNotFoundException fe) {
+            } catch (FileNotFoundException) {
                 // file may have been erased
                 lock (this)
                     return read_byte_count_ == 0;
             }             
-            catch (Exception e) {
+            catch (Exception) {
                 // in this case, maybe the file is locked - we'll try again next time
                 return true;
             }
