@@ -19,6 +19,13 @@
           https://news.ycombinator.com/news
 		  quora
 
+1.6.5
+- logwizardsetupsample -> into samples
+- samples -> into personal directory (...Documents)
+- settings kept in %appdata%\\..\\Local instead of Roaming (https://github.com/jtorjo/logwizard/issues/3)
+- double checked - nothing is written into Roaming (by setup kit or by LW)
+
+
 1.6.4c
 - readded build status
 

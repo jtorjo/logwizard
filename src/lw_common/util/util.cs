@@ -618,6 +618,7 @@ namespace lw_common {
         public static void create_shortcut(string name, string directory, string description, string iconLocation, string targetPath, string targetArgs)
         {
             try {
+                Directory.CreateDirectory(directory);
                 string shortcutLocation = System.IO.Path.Combine(directory, name + ".lnk");
                 IWshRuntimeLibrary.WshShell shell = new IWshRuntimeLibrary.WshShell();
                 IWshRuntimeLibrary.IWshShortcut shortcut = (IWshRuntimeLibrary.IWshShortcut) shell.CreateShortcut(shortcutLocation);
@@ -1004,13 +1005,26 @@ namespace lw_common {
             }
         }
 
-
-        public static string appdata_dir() {
+        public static string personal_dir() {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\";
+            return path;
+        }
+        public static string roaming_dir() {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\";
             return path;
         }
 
+        public static string appdata_dir() {
+            // 1.6.5+ use the Local dir, instead of Roaming - https://github.com/jtorjo/logwizard/issues/3
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) ;
+            return path;
+        }
+
         public static string local_dir() {
+            string path = appdata_dir() + "\\LogWizard\\";
+            return path;
+        }
+        private static string old_local_dir() {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LogWizard\\";
             return path;
         }
@@ -1018,7 +1032,17 @@ namespace lw_common {
 
         static public void set_current_dir() {
              if (!is_debug) {
-                Environment.CurrentDirectory = local_dir();
+                 // 1.6.5+ use the Local dir, instead of Roaming - https://github.com/jtorjo/logwizard/issues/3
+                 if (File.Exists(old_local_dir() + "logwizard_user.txt")) {
+                     File.Move( old_local_dir() + "logwizard_user.txt", local_dir() + "logwizard_user.txt");
+                 }
+
+                 try {
+                     Directory.CreateDirectory(local_dir());
+                 } catch {
+                 }
+
+                 Environment.CurrentDirectory = local_dir();
                 try {
                     if (!File.Exists("logwizard_user.txt"))
                         File.Copy("logwizard.txt", "logwizard_user.txt");

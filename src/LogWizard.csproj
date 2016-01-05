@@ -203,7 +203,7 @@
     <Content Include="logwizard_debug.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="LogWizardSetupSample.log">
+    <Content Include="samples\LogWizardSetup.sample.log">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

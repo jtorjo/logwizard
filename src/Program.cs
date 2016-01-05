@@ -42,15 +42,6 @@ namespace LogWizard
             get { return open_file_name_; }
         }
 
-        private static string appdata_dir() {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\";
-            return path;
-        }
-
-        public static string local_dir() {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LogWizard\\";
-            return path;
-        }
 
         private static string open_file_name_ = null;
 
@@ -102,7 +93,7 @@ namespace LogWizard
 
             if (args.Length > 0 && args[0] == "showsample") {
                 try {
-                    Process.Start( Assembly.GetExecutingAssembly().Location, new FileInfo("LogWizardSetupSample.log").FullName);
+                    Process.Start( Assembly.GetExecutingAssembly().Location, new FileInfo(util.personal_dir() + "LogWizard\\samples\\LogWizardSetup.sample.log").FullName);
                 } catch(Exception e) {
                     MessageBox.Show("Exception " + e.Message);
                 }
@@ -121,7 +112,7 @@ namespace LogWizard
                 // 1.1.5+
                 util.set_association(".zip", "Zip_file", Application.ExecutablePath, "Zip File");
                 util.set_association(".logwizard", "LogWizard_file", Application.ExecutablePath, "LogWizard File");
-                util.create_shortcut("LogWizard", appdata_dir() + @"Microsoft\Windows\SendTo", "Send To LogWizard", null, Application.ExecutablePath, null);
+                util.create_shortcut("LogWizard", util.roaming_dir() + @"Microsoft\Windows\SendTo", "Send To LogWizard", null, Application.ExecutablePath, null);
             }
 
             Application.Run(new Dummy());

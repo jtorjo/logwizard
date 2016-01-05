@@ -188,7 +188,7 @@ namespace LogWizard
             bool first_time = contexts_.Count == 0;
             if (first_time) {
                 load_contexts(sett_);
-                notes_keeper.inst.init( util.is_debug ? "notes" : Program.local_dir() + "\\notes", app.inst.identify_notes_files);
+                notes_keeper.inst.init( util.is_debug ? "notes" : util.local_dir() + "\\notes", app.inst.identify_notes_files);
 
                 new Thread(load_release_info_thread) {IsBackground = true}.Start();
             }
@@ -550,7 +550,10 @@ namespace LogWizard
                 if (h.type == history.entry_type.file) {
                     // 1.5.11 - don't include this into the list next time the user opens the app
                     //          (so that he'll see the "Drop me like it's hot" huge message)
-                    if (h.name.EndsWith("LogWizardSetupSample.log"))
+                    if (h.name.ToLower().EndsWith("logwizardsetup.sample.log"))
+                        return false;
+                    // old name of this sample file
+                    if (h.name.ToLower().EndsWith("logwizardsetupsample.log"))
                         return false;
 
                     if (File.Exists(h.name))
@@ -2014,7 +2017,8 @@ namespace LogWizard
             for (int i = 0; i < history_.Count && !found; ++i)
                 if (history_[i].unique_id == unique_id) {
                     found = true;
-                    bool is_sample = settings.get("name").ToLower().EndsWith("logwizardsetupsample.log");
+                    // 1.6.4+ we renamed the logwizard setup sample
+                    bool is_sample = settings.get("name").ToLower().EndsWith("logwizardsetup.sample.log") || settings.get("name").ToLower().EndsWith("logwizardsetupsample.log");
                     // if not default form - don't move the selection to the end
                     bool is_default_form = toggled_to_custom_ui_ < 0;
                     if (is_sample || !is_default_form)
@@ -2983,7 +2987,7 @@ namespace LogWizard
                 lw.Visible = false;
             }
 
-            string dir = Program.local_dir();
+            string dir = util.local_dir();
             try {
                 File.Copy(dir + "\\logwizard.txt", dir + "\\logwizard_user.txt", true);
             } catch {
@@ -3272,7 +3276,7 @@ namespace LogWizard
                 return;
             }
 
-            string dir = util.create_temp_dir(Program.local_dir());
+            string dir = util.create_temp_dir(util.local_dir());
             notes.save_to(dir + "\\notes.txt");
             string ctx_as_string = ui_context_to_str(cur_context());
             util.create_file(dir + "\\context.txt", cur_context().name + "\r\n" + ctx_as_string);
@@ -3288,7 +3292,7 @@ namespace LogWizard
             util.create_file(dir + "\\md5.txt", util.concatenate(md5s, "\r\n"));
 
             // here, we have all needed files
-            string zip_dir = Program.local_dir() + "export";
+            string zip_dir = util.local_dir() + "export";
             util.create_dir(zip_dir);
             string prefix = zip_dir + "\\" + file_name + "." + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss-fff") + ".";
 
@@ -3322,10 +3326,10 @@ namespace LogWizard
                 set_status("Invalid .LogWizard file: " + file, status_ctrl.status_type.err);
                 return;
             }
-            string import_dir = Program.local_dir() + "import";
+            string import_dir = util.local_dir() + "import";
             util.create_dir(import_dir);
 
-            string dir = util.create_temp_dir(Program.local_dir());
+            string dir = util.create_temp_dir(util.local_dir());
             // ... extract our files (md5 / context / notes)
             zip_util.try_extract_file_names_in_zip(file, dir, files.Where(x => x.StartsWith(log_wizard_zip_file_prefix)).ToDictionary(x => x, x => x));
 
@@ -3453,7 +3457,7 @@ namespace LogWizard
         }
 
         private void on_zip_file_drop(string zip_file, string sub_file_name) {
-            string zip_dir = Program.local_dir() + "zip";
+            string zip_dir = util.local_dir() + "zip";
             util.create_dir(zip_dir);
             Dictionary<string, string> single_zip = new Dictionary<string, string>();
             string unique = sub_file_name + "." + DateTime.Now.Ticks + ".txt";
@@ -3471,7 +3475,7 @@ namespace LogWizard
         private void exportCurrentViewtotxtAndhtmlFilesToolStripMenuItem_Click(object sender, EventArgs ea) {
             var lv = selected_view();
             try {
-                string prefix = Program.local_dir() + "exported_views";
+                string prefix = util.local_dir() + "exported_views";
                 util.create_dir(prefix);
                 prefix += "\\View " + util.remove_disallowed_filename_chars(lv.name) + " from " + new FileInfo(selected_file_name()).Name + " (" + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ")";
 
@@ -3488,7 +3492,7 @@ namespace LogWizard
 
         private void exportNotestotxtAndhtmlFilesToolStripMenuItem_Click(object sender, EventArgs ea) {
             try {
-                string prefix = Program.local_dir() + "exported_notes";
+                string prefix = util.local_dir() + "exported_notes";
                 util.create_dir(prefix);
                 prefix += "\\Notes on " + new FileInfo(selected_file_name()).Name + " (" + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ")";
                 var export = notes.export_notes();
