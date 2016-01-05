@@ -24,8 +24,6 @@ src/logwizardsetup/Release64/*
 src/output/*
 
 *.exe
-*.sample
-*.sample.log
 log4net.xml
 
 # MSTest test Results

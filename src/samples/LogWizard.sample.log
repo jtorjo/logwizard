@@ -1,0 +1,972 @@
+c:\john\code\logwiz\logwizard\ui\Dummy.cs(44): 11:35:38,307 9          INFO  - Started LogWizard v1.2.24.0
+c:\john\code\logwiz\logwizard\lw_common\ui\filter_ctrl.cs(678): 11:35:38,716 9          INFO  - filter pane =264 x485
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(2843): 11:35:38,751 9          INFO  - left pane = 278 x 513 [269 x 485]
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(2843): 11:35:38,752 9          INFO  - left pane = 277 x 513 [269 x 485]
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(307): 11:35:38,774 9          DEBUG - loading contexts
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,778 9          DEBUG - [md5] computed md5 for C:\john\code\buff\magnetic\TableNinja2.log.4 -> Name-TableNinja2.log.4
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,782 9          DEBUG - [md5] computed md5 for C:\john\code\buff\magnetic\TableNinja2.log.4 -> Fast-79c8b92305dfc0cbf2ef9d8f23d43439-589505
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,784 9          DEBUG - [md5] computed md5 for C:\john\code\buff\vlad-ftpwrong\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,785 9          DEBUG - [md5] computed md5 for C:\john\code\buff\vlad-ftpwrong\TableNinja2.log -> Fast-a45cbdb86e07ea8eabdec1b62975bcb2-92729
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,786 9          DEBUG - [md5] computed md5 for C:\john\code\buff\denise-win10-2\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,787 9          DEBUG - [md5] computed md5 for C:\john\code\buff\denise-win10-2\TableNinja2.log -> Fast-18c2828d94f8f3716c6f5ead3ccd868d-478921
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,788 9          DEBUG - [md5] computed md5 for C:\john\code\buff\hk-not-working\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,789 9          DEBUG - [md5] computed md5 for C:\john\code\buff\hk-not-working\TableNinja2.log -> Fast-66e11700dbcfd9edb22b25803edf210c-395095
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,790 9          DEBUG - [md5] computed md5 for C:\john\code\buff\denise-w10-lag\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,791 9          DEBUG - [md5] computed md5 for C:\john\code\buff\denise-w10-lag\TableNinja2.log -> Fast-44f249871ade80f7c9c8c086d468bae6-1271599
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,792 9          DEBUG - [md5] computed md5 for C:\john\code\buff\denise-tn2-hm2\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,793 9          DEBUG - [md5] computed md5 for C:\john\code\buff\denise-tn2-hm2\TableNinja2.log -> Fast-40948991be13468b8b422b4d983401fa-2557049
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,794 9          DEBUG - [md5] computed md5 for C:\john\code\buff\cannot-disable-hk\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,796 9          DEBUG - [md5] computed md5 for C:\john\code\buff\cannot-disable-hk\TableNinja2.log -> Fast-4600c67381f3584ebce8331fb49dc485-55530529
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,797 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\sample.log -> Name-sample.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,799 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\sample.log -> Fast-9e3f45cdd36a1c3d90c829be1c836acd-22101
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,799 9          DEBUG - [md5] computed md5 for C:\Users\meeee\Downloads\vlad.5.86.hyper.tableninja2.log.1 -> Name-vlad.5.86.hyper.tableninja2.log.1
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,800 9          DEBUG - [md5] computed md5 for C:\Users\meeee\Downloads\vlad.5.86.hyper.tableninja2.log.1 -> Fast-8fc50aa31f2d81356126c5059f7552f4-145625
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,801 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\TableNinja.v2\sample.log -> Name-sample.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,802 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\TableNinja.v2\sample.log -> Fast-9e3f45cdd36a1c3d90c829be1c836acd-22101
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,803 9          DEBUG - [md5] computed md5 for C:\john\code\buff\cannot-disable-hk2\TableNinja2.log.1 -> Name-TableNinja2.log.1
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,805 9          DEBUG - [md5] computed md5 for C:\john\code\buff\cannot-disable-hk2\TableNinja2.log.1 -> Fast-a556ef43cbe0ccf95331addddaea14d5-11051511
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,806 9          DEBUG - [md5] computed md5 for C:\Users\meeee\Downloads\vlad5.log -> Name-vlad5.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,807 9          DEBUG - [md5] computed md5 for C:\Users\meeee\Downloads\vlad5.log -> Fast-0322255bed30e5d750cadb86a8aa047e-145273
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,808 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lv\windowsinstallerlogs\deinstall.log -> Name-deinstall.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,809 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lv\windowsinstallerlogs\deinstall.log -> Fast-44c9456729adc2a9c78099e0c96c603b-161426
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,810 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\tnlogs-denise-system-635762748694917342\TableNinja2.log.1 -> Name-TableNinja2.log.1
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,811 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\tnlogs-denise-system-635762748694917342\TableNinja2.log.1 -> Fast-168a5bde957f2228c2b4168306295a1c-480298
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,812 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\tnlogs-denise-denisetiernan-635762835792355695\TableNinja2.log.1 -> Name-TableNinja2.log.1
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,813 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\tnlogs-denise-denisetiernan-635762835792355695\TableNinja2.log.1 -> Fast-cb358c2c1e835ccbd2ccad86971885ea-166700
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,814 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\tnlogs-denise-system-635762748694917342\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,815 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\tnlogs-denise-system-635762748694917342\TableNinja2.log -> Fast-bbe245714f1bf7cd1d5b81e4ee814a40-187041
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,816 9          DEBUG - [md5] computed md5 for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,816 9          DEBUG - [md5] computed md5 for C:\john\code\tableninja-v2\TableNinja2\TN2\bin\Debug\TableNinja2.log -> Fast-e1260fa6f38c6eaf74ed3d4d0b8dea00-11481
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,817 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\tnlogs-denise-denisetiernan-635762835792355695\vision_user.txt -> Name-vision_user.txt
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,818 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\tnlogs-denise-denisetiernan-635762835792355695\vision_user.txt -> Fast-fe91400975b14b53519d1b22b323f973-1815
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,819 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\tnlogs-denise-denisetiernan-635762835792355695\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,820 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\tnlogs-denise-denisetiernan-635762835792355695\TableNinja2.log -> Fast-d7fc222b60d64b3df148e9692fed368c-64869
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,821 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\TNLogs-DENISE-DeniseTiernan-635769097890509362\TableNinja2.log.1 -> Name-TableNinja2.log.1
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,823 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\TNLogs-DENISE-DeniseTiernan-635769097890509362\TableNinja2.log.1 -> Fast-d2d79b06af4d108df699c3e3123468e7-374254
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,824 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\TNLogs-DENISE-DeniseTiernan-635769097890509362\TableNinja2.log.2 -> Name-TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,825 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\TNLogs-DENISE-DeniseTiernan-635769097890509362\TableNinja2.log.2 -> Fast-0dda55952bfa22834d435c2762aa0cfd-52776
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,826 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\TNLogs-DENISE-DeniseTiernan-635769097890509362\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,827 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\TNLogs-DENISE-DeniseTiernan-635769097890509362\TableNinja2.log -> Fast-839c56288ce0c5791c981e9deaad5eff-251224
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,828 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\TNLogs-DENISE-DeniseTiernan-635778268429878146\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,829 9          DEBUG - [md5] computed md5 for C:\john\code\buff\ftp-win10\TNLogs-DENISE-DeniseTiernan-635778268429878146\TableNinja2.log -> Fast-d1db65fb7a039f7a02eda966eefb8ed4-459258
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,830 9          DEBUG - [md5] computed md5 for C:\john\code\buff\hk-not-working\TNLogs-DEAN-PC-Dean-635779653638944109\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,831 9          DEBUG - [md5] computed md5 for C:\john\code\buff\hk-not-working\TNLogs-DEAN-PC-Dean-635779653638944109\TableNinja2.log -> Fast-a91a578b1b661846688ef45f0aedc38c-160001
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,832 9          DEBUG - [md5] computed md5 for C:\john\code\buff\hk-not-working\TNLogs-DEAN-PC-Dean-635779653638944109\TableNinja2.log.3 -> Name-TableNinja2.log.3
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,833 9          DEBUG - [md5] computed md5 for C:\john\code\buff\hk-not-working\TNLogs-DEAN-PC-Dean-635779653638944109\TableNinja2.log.3 -> Fast-7bd4a42cf4902ffaa4518912b33b6fa3-7634206
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,835 9          DEBUG - [md5] computed md5 for C:\john\code\buff\201\TNLogs-TOSHIBA-Owner-showrects\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,835 9          DEBUG - [md5] computed md5 for C:\john\code\buff\201\TNLogs-TOSHIBA-Owner-showrects\TableNinja2.log -> Fast-5772e8c85f4158e286a7e7f0a2e5093b-104878
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,836 9          DEBUG - [md5] computed md5 for C:\john\code\buff\201\TNLogs-MAXIMUS-Felker-635554660321220542\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,838 9          DEBUG - [md5] computed md5 for C:\john\code\buff\201\TNLogs-MAXIMUS-Felker-635554660321220542\TableNinja2.log -> Fast-c93c6fa4de07e0c3d70589f9de261032-78320
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,839 9          DEBUG - [md5] computed md5 for C:\john\code\buff\300\TNLogs-DEAN-PC-Dean-635779653638944109\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,840 9          DEBUG - [md5] computed md5 for C:\john\code\buff\300\TNLogs-DEAN-PC-Dean-635779653638944109\TableNinja2.log -> Fast-a91a578b1b661846688ef45f0aedc38c-160001
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,842 9          DEBUG - [md5] computed md5 for C:\john\code\buff\300\TNLogs-ARIEL-Ariel-635755953171018511 (1)\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,843 9          DEBUG - [md5] computed md5 for C:\john\code\buff\300\TNLogs-ARIEL-Ariel-635755953171018511 (1)\TableNinja2.log -> Fast-64a320eeeeb3fd670a2bacd35b14abde-105764
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,843 9          DEBUG - [md5] computed md5 for C:\john\code\buff\314\TNLogs-LUKE-lush-635771821407294206\TableNinja2.log.1 -> Name-TableNinja2.log.1
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,844 9          DEBUG - [md5] computed md5 for C:\john\code\buff\314\TNLogs-LUKE-lush-635771821407294206\TableNinja2.log.1 -> Fast-fa8025c3f84045f13b5daac14599b0ac-7571757
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,845 9          DEBUG - [md5] computed md5 for C:\john\code\buff\314\TNLogs-LUKE-lush-635771821407294206\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,846 9          DEBUG - [md5] computed md5 for C:\john\code\buff\314\TNLogs-LUKE-lush-635771821407294206\TableNinja2.log -> Fast-17001c29e6b98f9b93b08d4af85c767e-333932
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,847 9          DEBUG - [md5] computed md5 for C:\john\code\buff\314\TNLogs-HP-PC-Mark-635768330018433013 (1)\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,848 9          DEBUG - [md5] computed md5 for C:\john\code\buff\314\TNLogs-HP-PC-Mark-635768330018433013 (1)\TableNinja2.log -> Fast-90a864352eaec19ea3962e95d7f9b3af-181535
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,849 9          DEBUG - [md5] computed md5 for C:\john\code\buff\314\TNLogs-HP-PC-Mark-635768330018433013 (1)\TableNinja2.log.1 -> Name-TableNinja2.log.1
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,850 9          DEBUG - [md5] computed md5 for C:\john\code\buff\314\TNLogs-HP-PC-Mark-635768330018433013 (1)\TableNinja2.log.1 -> Fast-405797741776bb0bbf02ffba16a81f78-1450557
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,851 9          DEBUG - [md5] computed md5 for C:\john\code\buff\316\TNLogs-RXPN-PC-rXpN-635760351860129488 (1)\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,852 9          DEBUG - [md5] computed md5 for C:\john\code\buff\316\TNLogs-RXPN-PC-rXpN-635760351860129488 (1)\TableNinja2.log -> Fast-e5458d248b72cf43bf81e1b40d778635-47482
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,853 9          DEBUG - [md5] computed md5 for C:\john\code\buff\316\TNLogs-RXPN-PC-rXpN-635760351860129488 (1)\TableNinja2.log.3 -> Name-TableNinja2.log.3
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,854 9          DEBUG - [md5] computed md5 for C:\john\code\buff\316\TNLogs-RXPN-PC-rXpN-635760351860129488 (1)\TableNinja2.log.3 -> Fast-af185084fbf7b9678698fd27efdcdc5c-7698598
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,855 9          DEBUG - [md5] computed md5 for C:\john\code\buff\316\TNLogs-RXPN-PC-rXpN-635760351860129488 (1)\TableNinja2.log.2 -> Name-TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,856 9          DEBUG - [md5] computed md5 for C:\john\code\buff\316\TNLogs-RXPN-PC-rXpN-635760351860129488 (1)\TableNinja2.log.2 -> Fast-58744401fdf7df28d0f97d60b9e400bc-862503
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,857 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\huge1.txt -> Name-huge1.txt
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,859 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\huge1.txt -> Fast-325327d274d3553722c1dd88365212bb-90598863
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,860 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\huge.log -> Name-huge.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,861 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\huge.log -> Fast-d49e3ab59b2dc2043a49c5db041fef2c-278852757
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,862 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\small.log -> Name-small.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,863 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\small.log -> Fast-b66195c3f8590f161b5ef3cf2e23ac67-37430
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,864 9          DEBUG - [md5] computed md5 for C:\john\code\buff\magnetic\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,865 9          DEBUG - [md5] computed md5 for C:\john\code\buff\magnetic\TableNinja2.log -> Fast-1b8e4e10777ebc4ce31bf73cc1b134aa-333318
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,866 9          DEBUG - [md5] computed md5 for C:\john\code\buff\magnetic\TableNinja2.log.1 -> Name-TableNinja2.log.1
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,867 9          DEBUG - [md5] computed md5 for C:\john\code\buff\magnetic\TableNinja2.log.1 -> Fast-5a96b606f72fdaad26d6a007fa232d32-148013
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,868 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\TableNinja.v2\tnscrapefindpot.log -> Name-tnscrapefindpot.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,869 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\TableNinja.v2\tnscrapefindpot.log -> Fast-78e444df68be9c6b74b89aa90dc0b6b5-827451
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,870 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\TableNinja.v2\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,871 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\TableNinja.v2\TableNinja2.log -> Fast-e27b839187eeeba7df6b42668574bb0b-16296
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,872 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\medium.log -> Name-medium.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,873 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\medium.log -> Fast-68f4bd175764993e7982e69985a2f5fa-9889859
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,874 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\m2.log -> Name-m2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,875 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\m2.log -> Fast-c1c03cb1327a2cc0ddbf723144a1c81f-19186469
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,876 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\small4.log -> Name-small4.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,877 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\small4.log -> Fast-f7e9d8b7173d81d55ea2cef272e1d392-36870
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,878 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\small.log -> Name-small.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,879 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\small.log -> Fast-b66195c3f8590f161b5ef3cf2e23ac67-37430
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,880 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\small.log -> Name-small.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,881 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\small.log -> Fast-b66195c3f8590f161b5ef3cf2e23ac67-37430
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,881 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\small.log -> Name-small.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,882 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\small.log -> Fast-b66195c3f8590f161b5ef3cf2e23ac67-37430
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,883 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\uk_small.log -> Name-uk_small.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,884 9          DEBUG - [md5] computed md5 for C:\john\code\buff\lw-tests\uk_small.log -> Fast-a7a5a745faaaf67d38bdee5833c65af4-5725641
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,885 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\LogWizard\LogWizardSetupSample.log -> Name-LogWizardSetupSample.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,886 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\LogWizard\LogWizardSetupSample.log -> Fast-930cd272bb71ed0eba01b3b126afce0f-262757
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,887 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\LogWizard\zip\TableNinja2.log.635793933129566799.txt -> Name-TableNinja2.log.635793933129566799.txt
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,888 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\LogWizard\zip\TableNinja2.log.635793933129566799.txt -> Fast-f56306286166c9c0afb938b58351fe75-27546
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,889 9          DEBUG - [md5] computed md5 for C:\john\code\buff\319\TNLogs-SONY-VAIO-sony-635793169428961765\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,890 9          DEBUG - [md5] computed md5 for C:\john\code\buff\319\TNLogs-SONY-VAIO-sony-635793169428961765\TableNinja2.log -> Fast-309068a75217f0cdc6396905c5591098-80304
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,891 9          DEBUG - [md5] computed md5 for C:\Users\meeee\Downloads\ipokerlog.txt -> Name-ipokerlog.txt
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,892 9          DEBUG - [md5] computed md5 for C:\Users\meeee\Downloads\ipokerlog.txt -> Fast-033cc42463818ce1a83f4f5a23910877-48620
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,893 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\LogWizard\zip\TableNinja2.log.635799095959119458.txt -> Name-TableNinja2.log.635799095959119458.txt
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,894 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\LogWizard\zip\TableNinja2.log.635799095959119458.txt -> Fast-a7a43fae9062dc303c526bd5b3d0f844-35110
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,895 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\LogWizard\zip\TableNinja2.log.1.635799096146826809.txt -> Name-TableNinja2.log.1.635799096146826809.txt
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,896 9          DEBUG - [md5] computed md5 for C:\Users\meeee\AppData\Roaming\LogWizard\zip\TableNinja2.log.1.635799096146826809.txt -> Fast-65ca8daabde27d7b2e0debb29573a9e8-29503
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,897 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-GRNDNG-STTN-Charles-635798363055523940 (1)\TableNinja2.log.1 -> Name-TableNinja2.log.1
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,898 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-GRNDNG-STTN-Charles-635798363055523940 (1)\TableNinja2.log.1 -> Fast-65ca8daabde27d7b2e0debb29573a9e8-29503
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,899 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-HELLO-PC-Sherry-635798571572177576\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,900 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-HELLO-PC-Sherry-635798571572177576\TableNinja2.log -> Fast-d7c82f6e3360b6b008a22f4a0714162d-25537
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,901 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-HELLO-PC-Sherry-635798571572177576\TableNinja2.log.1 -> Name-TableNinja2.log.1
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,902 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-HELLO-PC-Sherry-635798571572177576\TableNinja2.log.1 -> Fast-db2ab6607ff2469765012e7652e2fbce-23657
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,903 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-HELLO-PC-Sherry-635798571572177576\TableNinja2.log.2 -> Name-TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,904 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-HELLO-PC-Sherry-635798571572177576\TableNinja2.log.2 -> Fast-543d31b2e5f09deb87d6038f0b4c804b-29540
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,905 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-HELLO-PC-Sherry-635798571572177576\TableNinja2.log.3 -> Name-TableNinja2.log.3
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,906 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-HELLO-PC-Sherry-635798571572177576\TableNinja2.log.3 -> Fast-ebe75dabf8f44c9b01ed1722a0576fb6-1151
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,907 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-GRNDNG-STTN-Charles-635798363055523940 (1)\TableNinja2.log.2 -> Name-TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,908 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-GRNDNG-STTN-Charles-635798363055523940 (1)\TableNinja2.log.2 -> Fast-844c811907bcf2f792e71e6e4a9679d3-23816
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,909 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-HELLO-PC-Sherry-635798571572177576\TableNinja2.log.4 -> Name-TableNinja2.log.4
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,910 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-HELLO-PC-Sherry-635798571572177576\TableNinja2.log.4 -> Fast-9ebaecdac6954e13abbb5b16e41b58a2-30803
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,911 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.1 -> Name-TableNinja2.log.1
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,912 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.1 -> Fast-91a2aed2c13ffe1c21e87c5d2701f3b3-34276
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,913 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,914 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log -> Fast-bf74e546c4f33ee878c722ad37c1d01f-37285
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,915 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2 -> Name-TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,916 9          DEBUG - [md5] computed md5 for C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2 -> Fast-30075761137c457a1a69afb0ce3c62aa-4961354
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(137): 11:35:38,917 9          DEBUG - [md5] computed md5 for C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log -> Name-TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\notes\md5_log_keeper.cs(128): 11:35:38,918 9          DEBUG - [md5] computed md5 for C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log -> Fast-2fbb567ab276d39120df079eeaabfce9-7916554
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(2843): 11:35:39,008 9          INFO  - left pane = 376 x 513 [269 x 485]
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(300): 11:35:39,056 9          INFO  - [filter] preserving cache , misses = 1
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(2843): 11:35:39,217 9          INFO  - left pane = 376 x 541 [269 x 485]
+c:\john\code\logwiz\logwizard\lw_common\parse\log_line_parser.cs(373): 11:35:39,270 9          INFO  - [log] log reloaded: C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,276 9          DEBUG - [view] new log for __all_this_is_fulllog__ - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,279 9          DEBUG - [view] new log for times - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,281 9          DEBUG - [view] new log for pots - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,282 9          DEBUG - [view] new log for pot info - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,283 9          DEBUG - [view] new log for Errors - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1636): 11:35:39,314 9          INFO  - new reader_ C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\readers\file_text_reader.cs(196): 11:35:39,354 10         DEBUG - [file] reading file C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log at 0, 2097152 bytes.
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,374 9          DEBUG - [view] new log for Init/Exit - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,378 9          DEBUG - [view] new log for E+N - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\parse\log_line_parser.cs(373): 11:35:39,381 11         INFO  - [log] log reloaded: C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,385 9          DEBUG - [view] new log for mouse - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,413 9          DEBUG - [view] new log for set_bet - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,444 9          DEBUG - [view] new log for bet - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,447 9          DEBUG - [view] new log for actdd - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,452 9          DEBUG - [view] new log for hotkeys - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,456 9          DEBUG - [view] new log for time - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,459 9          DEBUG - [view] new log for Tables - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:35:39,463 9          DEBUG - [view] new log for zorder - C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\string\large_string.cs(66): 11:35:39,469 11         DEBUG - [line] we have read 17069 lines
+c:\john\code\logwiz\logwizard\lw_common\readers\file_text_reader.cs(196): 11:35:39,470 10         DEBUG - [file] reading file C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log at 2097152, 2097152 bytes.
+c:\john\code\logwiz\logwizard\lw_common\util\memory_optimized_list.cs(104): 11:35:39,471 11         DEBUG - [memory] (1) new capacity [large_string_indexes] - 64889
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(300): 11:35:39,479 9          INFO  - [filter] preserving cache , misses = 21
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(300): 11:35:39,517 9          INFO  - [filter] preserving cache , misses = 3
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(300): 11:35:39,519 9          INFO  - [filter] preserving cache , misses = 2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:39,524 22         INFO  - [filter] new log C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:39,524 20         INFO  - [filter] new log C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(300): 11:35:39,587 9          INFO  - [filter] preserving cache , misses = 3
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:39,524 21         INFO  - [filter] new log C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:39,567 23         INFO  - [filter] new log C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\readers\file_text_reader.cs(196): 11:35:39,628 10         DEBUG - [file] reading file C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log at 4194304, 2097152 bytes.
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:39,654 24         INFO  - [filter] new log C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(300): 11:35:39,654 9          INFO  - [filter] preserving cache , misses = 8
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(300): 11:35:39,700 9          INFO  - [filter] preserving cache , misses = 2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:39,723 25         INFO  - [filter] new log C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(300): 11:35:39,726 9          INFO  - [filter] preserving cache , misses = 2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:39,730 26         INFO  - [filter] new log C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(300): 11:35:39,732 9          INFO  - [filter] preserving cache , misses = 4
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:39,735 27         INFO  - [filter] new log C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(300): 11:35:39,758 9          INFO  - [filter] preserving cache , misses = 4
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:39,761 28         INFO  - [filter] new log C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(300): 11:35:39,786 9          INFO  - [filter] preserving cache , misses = 5
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:39,789 29         INFO  - [filter] new log C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:39,820 30         INFO  - [filter] new log C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\readers\file_text_reader.cs(196): 11:35:39,827 10         DEBUG - [file] reading file C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log at 6291456, 1625098 bytes.
+c:\john\code\logwiz\logwizard\lw_common\util\memory_optimized_list.cs(104): 11:35:39,891 11         DEBUG - [memory] (2) new capacity [parser TableNinja2.log] - 64889
+c:\john\code\logwiz\logwizard\lw_common\util\memory_optimized_list.cs(104): 11:35:40,076 11         DEBUG - [memory] (3) new capacity [large_string_indexes] - 77866
+c:\john\code\logwiz\logwizard\lw_common\string\large_string.cs(66): 11:35:40,078 11         DEBUG - [line] we have read 65229 lines
+c:\john\code\logwiz\logwizard\lw_common\parse\log_line_parser.cs(425): 11:35:40,210 11         DEBUG - [line] reparsed line 17068
+c:\john\code\logwiz\logwizard\lw_common\util\memory_optimized_list.cs(104): 11:35:40,211 11         DEBUG - [memory] (4) new capacity [parser TableNinja2.log] - 77866
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:40,326 30         INFO  - [filter] forced refresh of C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:40,330 25         INFO  - [filter] forced refresh of C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:40,337 26         INFO  - [filter] forced refresh of C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:40,371 20         INFO  - [filter] forced refresh of C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:40,371 27         INFO  - [filter] forced refresh of C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:40,371 21         INFO  - [filter] forced refresh of C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:40,418 29         INFO  - [filter] forced refresh of C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:40,392 23         INFO  - [filter] forced refresh of C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:40,393 28         INFO  - [filter] forced refresh of C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:40,418 24         INFO  - [filter] forced refresh of C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:35:40,371 22         INFO  - [filter] forced refresh of C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(527): 11:35:40,707 20         DEBUG - [memory] GC.collect - from filter __all_this_is_fulllog__
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:40,961 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 0 - 32
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:40,985 9          DEBUG - [view] __all_this_is_fulllog__ sel=65228
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:41,096 9          DEBUG - [view] visible indexes for actdd : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:41,116 9          DEBUG - [view] visible indexes for hotkeys : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\util\memory_optimized_list.cs(104): 11:35:41,153 24         DEBUG - [memory] (5) new capacity [temp_m set_bet] - 22176
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:41,227 9          DEBUG - [view] visible indexes for E+N : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:41,242 9          DEBUG - [view] visible indexes for set_bet : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:41,250 9          DEBUG - [view] visible indexes for time : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:41,266 9          DEBUG - [view] visible indexes for zorder : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:41,355 9          DEBUG - [view] visible indexes for Tables : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\util\memory_optimized_list.cs(104): 11:35:41,395 25         DEBUG - [memory] (6) new capacity [temp_m bet] - 22176
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:41,730 9          DEBUG - [view] visible indexes for bet : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:42,133 9          DEBUG - [view] Init/Exit sel=83
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,185 9          INFO  - [view] showing rows - Init/Exit = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,210 9          INFO  - [view] showing rows - E+N = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,213 9          INFO  - [view] showing rows - mouse = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,216 9          INFO  - [view] showing rows - set_bet = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,218 9          INFO  - [view] showing rows - bet = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,221 9          INFO  - [view] showing rows - actdd = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,224 9          INFO  - [view] showing rows - hotkeys = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,227 9          INFO  - [view] showing rows - time = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,230 9          INFO  - [view] showing rows - Tables = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,233 9          INFO  - [view] showing rows - zorder = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,236 9          INFO  - [view] showing rows - __all_this_is_fulllog__ = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,297 9          INFO  - [view] showing rows - Init/Exit = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,307 9          INFO  - [view] showing rows - E+N = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,309 9          INFO  - [view] showing rows - mouse = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,333 9          INFO  - [view] showing rows - set_bet = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,336 9          INFO  - [view] showing rows - bet = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,338 9          INFO  - [view] showing rows - actdd = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,340 9          INFO  - [view] showing rows - hotkeys = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,342 9          INFO  - [view] showing rows - time = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,344 9          INFO  - [view] showing rows - Tables = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,346 9          INFO  - [view] showing rows - zorder = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,348 9          INFO  - [view] showing rows - __all_this_is_fulllog__ = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,391 9          INFO  - [view] showing rows - Init/Exit = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,401 9          INFO  - [view] showing rows - E+N = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,403 9          INFO  - [view] showing rows - mouse = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,405 9          INFO  - [view] showing rows - set_bet = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,406 9          INFO  - [view] showing rows - bet = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,408 9          INFO  - [view] showing rows - actdd = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,411 9          INFO  - [view] showing rows - hotkeys = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,413 9          INFO  - [view] showing rows - time = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,415 9          INFO  - [view] showing rows - Tables = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,417 9          INFO  - [view] showing rows - zorder = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1874): 11:35:42,419 9          INFO  - [view] showing rows - __all_this_is_fulllog__ = full_row
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:42,530 9          DEBUG - [view] visible indexes for Init/Exit : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:42,533 9          DEBUG - [view] Init/Exit sel=94
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1501): 11:35:42,593 9          DEBUG - [view] initial refresh complete
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:43,496 9          DEBUG - [view] Init/Exit sel=93
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:43,756 9          DEBUG - [view] Init/Exit sel=92
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:43,796 9          DEBUG - [view] Init/Exit sel=91
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:43,802 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:43,814 9          DEBUG - [view] Init/Exit sel=90
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:43,837 9          DEBUG - [view] Init/Exit sel=89
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:43,840 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:43,892 9          DEBUG - [view] Init/Exit sel=88
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:43,917 9          DEBUG - [view] Init/Exit sel=87
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:43,948 9          DEBUG - [view] Init/Exit sel=86
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:43,970 9          DEBUG - [view] __all_this_is_fulllog__ sel=48237
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:43,972 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 65197 - 65229
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:43,974 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 48219 - 48251
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:44,549 9          DEBUG - [view] Init/Exit sel=55
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:44,606 9          DEBUG - [view] __all_this_is_fulllog__ sel=572
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:44,608 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 48223 - 48255
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:44,612 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 554 - 586
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:44,874 9          DEBUG - [view] Init/Exit sel=24
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:44,943 9          DEBUG - [view] __all_this_is_fulllog__ sel=189
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:44,945 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 558 - 590
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:44,948 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 171 - 203
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:45,192 9          DEBUG - [view] Init/Exit sel=21
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:45,253 9          DEBUG - [view] __all_this_is_fulllog__ sel=183
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:48,627 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:49,607 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:50,890 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:51,869 9          DEBUG - [view] set_bet sel=0
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:51,872 9          DEBUG - [view] visible indexes for set_bet : 16208 - 16238
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:51,876 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:52,319 9          DEBUG - [view] __all_this_is_fulllog__ sel=534
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:52,321 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 175 - 207
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:52,323 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 485 - 517
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:52,558 9          DEBUG - [view] set_bet sel=1
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:52,855 9          DEBUG - [view] set_bet sel=2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:52,891 9          DEBUG - [view] set_bet sel=3
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:52,898 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:52,912 9          DEBUG - [view] set_bet sel=4
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:52,917 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:52,936 9          DEBUG - [view] set_bet sel=5
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,014 9          DEBUG - [view] set_bet sel=6
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,039 9          DEBUG - [view] set_bet sel=7
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:53,043 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,070 9          DEBUG - [view] set_bet sel=8
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,099 9          DEBUG - [view] set_bet sel=9
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,150 9          DEBUG - [view] set_bet sel=10
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,181 9          DEBUG - [view] set_bet sel=11
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,216 9          DEBUG - [view] set_bet sel=12
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,236 9          DEBUG - [view] set_bet sel=13
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:53,240 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,286 9          DEBUG - [view] set_bet sel=14
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,325 9          DEBUG - [view] set_bet sel=15
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:53,330 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,342 9          DEBUG - [view] set_bet sel=16
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,367 9          DEBUG - [view] set_bet sel=17
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:53,370 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,421 9          DEBUG - [view] set_bet sel=18
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,449 9          DEBUG - [view] set_bet sel=19
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:53,452 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,481 9          DEBUG - [view] set_bet sel=20
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:53,509 9          DEBUG - [view] __all_this_is_fulllog__ sel=615
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:53,511 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 520 - 552
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:53,514 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 566 - 598
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:35:53,748 9          DEBUG - [sett] ui.defaultselected_view=set_bet
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:35:53,753 9          DEBUG - [sett] ui.defaultselected_row_idx=20
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:35:53,837 9          DEBUG - [sett] Saved settings to logwizard_debug.txt
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:54,786 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:56,140 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:57,493 9          DEBUG - [view] actdd sel=1
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:57,501 9          DEBUG - [view] visible indexes for actdd : 3892 - 3922
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:57,521 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:57,690 9          DEBUG - [view] __all_this_is_fulllog__ sel=541
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:57,698 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 601 - 633
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:57,703 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 523 - 555
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:58,482 9          DEBUG - [view] actdd sel=32
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:58,527 9          DEBUG - [view] __all_this_is_fulllog__ sel=927
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:58,530 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 527 - 559
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:58,532 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 878 - 910
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:58,730 9          DEBUG - [view] actdd sel=63
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:58,735 9          DEBUG - [view] __all_this_is_fulllog__ sel=1299
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:58,737 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 913 - 945
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:58,741 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 1250 - 1282
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:58,904 9          DEBUG - [view] actdd sel=94
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:58,907 9          INFO  - action by key - pagedown
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:58,984 9          DEBUG - [view] __all_this_is_fulllog__ sel=1745
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:58,987 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 1285 - 1317
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:58,989 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 1696 - 1728
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:59,159 9          DEBUG - [view] actdd sel=125
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:35:59,165 9          INFO  - action by key - pagedown
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:59,244 9          DEBUG - [view] __all_this_is_fulllog__ sel=2134
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:59,247 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 1731 - 1763
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:59,249 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 2085 - 2117
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:59,595 9          DEBUG - [view] actdd sel=156
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:35:59,693 9          DEBUG - [view] __all_this_is_fulllog__ sel=2588
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:59,703 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 2120 - 2152
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:35:59,715 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 2539 - 2571
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:00,216 9          DEBUG - [view] actdd sel=187
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:00,277 9          DEBUG - [view] __all_this_is_fulllog__ sel=3123
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:00,279 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 2574 - 2606
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:00,281 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 3074 - 3106
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:01,961 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:02,960 9          DEBUG - [view] hotkeys sel=0
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:02,968 9          DEBUG - [view] visible indexes for hotkeys : 2654 - 2684
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:02,987 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:03,510 9          DEBUG - [view] __all_this_is_fulllog__ sel=621
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:03,513 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 3109 - 3141
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:03,515 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 603 - 635
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:04,378 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:05,944 9          DEBUG - [view] time sel=1
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:05,948 9          DEBUG - [view] visible indexes for time : 3282 - 3312
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:05,956 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,243 9          DEBUG - [view] time sel=2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,274 9          DEBUG - [view] time sel=3
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,298 9          DEBUG - [view] time sel=4
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,354 9          DEBUG - [view] time sel=5
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,379 9          DEBUG - [view] time sel=6
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:06,384 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,408 9          DEBUG - [view] time sel=7
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,434 9          DEBUG - [view] time sel=8
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,489 9          DEBUG - [view] time sel=9
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,515 9          DEBUG - [view] time sel=10
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,539 9          DEBUG - [view] time sel=11
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,578 9          DEBUG - [view] time sel=12
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,601 9          DEBUG - [view] time sel=13
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:06,614 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,657 9          DEBUG - [view] time sel=14
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,681 9          DEBUG - [view] time sel=15
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,711 9          DEBUG - [view] time sel=16
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,738 9          DEBUG - [view] time sel=17
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,792 9          DEBUG - [view] time sel=18
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,819 9          DEBUG - [view] time sel=19
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:06,830 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,868 9          DEBUG - [view] time sel=20
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:06,877 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,881 9          DEBUG - [view] time sel=21
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:06,888 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,927 9          DEBUG - [view] time sel=22
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1366): 11:36:06,937 9          DEBUG - [log] new line time = 303
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:06,948 9          DEBUG - [view] __all_this_is_fulllog__ sel=303
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:06,952 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 607 - 639
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:06,958 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 285 - 317
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:36:08,750 9          DEBUG - [sett] ui.defaultselected_view=time
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:36:08,756 9          DEBUG - [sett] ui.defaultselected_row_idx=22
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:36:08,849 9          DEBUG - [sett] Saved settings to logwizard_debug.txt
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:09,655 9          INFO  - action by key - right_click_via_key
+c:\john\code\logwiz\logwizard\lw_common\ui\filter_ctrl.cs(678): 11:36:13,515 9          INFO  - filter pane =363 x513
+c:\john\code\logwiz\logwizard\lw_common\ui\filter_ctrl.cs(678): 11:36:13,553 9          INFO  - filter pane =363 x638
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(2843): 11:36:13,555 9          INFO  - left pane = 376 x 666 [368 x 638]
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:15,906 9          INFO  - action by key - pane_next
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:16,514 9          INFO  - action by key - pane_next
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:18,029 9          INFO  - action by key - pane_next
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:18,602 9          INFO  - action by key - pane_next
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:19,152 9          DEBUG - [view] time sel=21
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:19,157 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:19,237 9          DEBUG - [view] __all_this_is_fulllog__ sel=300
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:19,438 9          DEBUG - [view] time sel=20
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:19,440 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:19,630 9          DEBUG - [view] __all_this_is_fulllog__ sel=299
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:36:21,309 9          DEBUG - [sett] ui.defaultselected_row_idx=20
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:36:21,402 9          DEBUG - [sett] Saved settings to logwizard_debug.txt
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:21,405 9          INFO  - action by key - toggle_filters
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:21,952 9          DEBUG - [view] time sel=19
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:21,956 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:22,043 9          DEBUG - [view] __all_this_is_fulllog__ sel=298
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:22,203 9          DEBUG - [view] time sel=18
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:22,237 9          DEBUG - [view] __all_this_is_fulllog__ sel=288
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:22,240 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 289 - 321
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:22,273 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 270 - 302
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:23,736 9          INFO  - action by key - escape
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:36:23,755 9          DEBUG - [sett] ui.defaultselected_row_idx=18
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:36:23,845 9          DEBUG - [sett] Saved settings to logwizard_debug.txt
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:26,259 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:27,484 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:27,848 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:28,718 9          DEBUG - [view] Init/Exit sel=20
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:28,725 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:29,016 9          DEBUG - [view] Init/Exit sel=19
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:29,068 9          DEBUG - [view] Init/Exit sel=18
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:29,071 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:29,073 9          DEBUG - [view] Init/Exit sel=17
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:29,077 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:29,131 9          DEBUG - [view] Init/Exit sel=16
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:29,157 9          DEBUG - [view] Init/Exit sel=15
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:29,160 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:29,185 9          DEBUG - [view] Init/Exit sel=14
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:29,210 9          DEBUG - [view] Init/Exit sel=13
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:36:29,214 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:29,267 9          DEBUG - [view] Init/Exit sel=12
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:36:29,289 9          DEBUG - [view] __all_this_is_fulllog__ sel=30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:29,291 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 274 - 306
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:36:29,293 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 12 - 44
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:36:38,752 9          DEBUG - [sett] ui.defaultselected_view=Init/Exit
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:36:38,755 9          DEBUG - [sett] ui.defaultselected_row_idx=12
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:36:38,854 9          DEBUG - [sett] Saved settings to logwizard_debug.txt
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:35,870 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:36,814 9          DEBUG - [view] E+N sel=0
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:36,822 9          DEBUG - [view] visible indexes for E+N : 176 - 206
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:36,844 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:37,308 9          DEBUG - [view] __all_this_is_fulllog__ sel=23
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:37,519 9          DEBUG - [view] E+N sel=1
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:37,816 9          DEBUG - [view] E+N sel=2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:37,846 9          DEBUG - [view] E+N sel=3
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:37,871 9          DEBUG - [view] E+N sel=4
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:37,926 9          DEBUG - [view] E+N sel=5
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:37,951 9          DEBUG - [view] E+N sel=6
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:37,981 9          DEBUG - [view] E+N sel=7
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:38,006 9          DEBUG - [view] E+N sel=8
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:38,062 9          DEBUG - [view] E+N sel=9
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:38,108 9          DEBUG - [view] E+N sel=10
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:38,119 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:38,121 9          DEBUG - [view] E+N sel=11
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:38,125 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:38,154 9          DEBUG - [view] E+N sel=12
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:38,204 9          DEBUG - [view] E+N sel=13
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:38,234 9          DEBUG - [view] E+N sel=14
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:38,239 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:38,261 9          DEBUG - [view] E+N sel=15
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:38,285 9          DEBUG - [view] E+N sel=16
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:38,341 9          DEBUG - [view] E+N sel=17
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:38,367 9          DEBUG - [view] __all_this_is_fulllog__ sel=2591
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:38,369 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 16 - 48
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:38,371 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 2542 - 2574
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:37:38,749 9          DEBUG - [sett] ui.defaultselected_view=E+N
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:37:38,753 9          DEBUG - [sett] ui.defaultselected_row_idx=17
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:37:38,849 9          DEBUG - [sett] Saved settings to logwizard_debug.txt
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:39,192 9          DEBUG - [view] E+N sel=48
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:39,229 9          DEBUG - [view] __all_this_is_fulllog__ sel=2631
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:39,232 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 2577 - 2609
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:39,260 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 2582 - 2614
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:39,421 9          DEBUG - [view] E+N sel=79
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:39,425 9          INFO  - action by key - pagedown
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:39,515 9          DEBUG - [view] __all_this_is_fulllog__ sel=6275
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:39,518 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 2617 - 2649
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:39,521 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 6226 - 6258
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:39,871 9          DEBUG - [view] E+N sel=110
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1366): 11:37:39,876 9          DEBUG - [log] new line E+N = 25618
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:39,882 9          DEBUG - [view] __all_this_is_fulllog__ sel=25618
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:39,885 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 6261 - 6293
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:39,888 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 25569 - 25601
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:40,735 9          DEBUG - [view] E+N sel=79
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1366): 11:37:40,739 9          DEBUG - [log] new line E+N = 6275
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:40,744 9          DEBUG - [view] __all_this_is_fulllog__ sel=6275
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:40,747 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 25604 - 25636
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:40,750 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 6257 - 6289
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:42,602 9          DEBUG - [view] E+N sel=110
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:42,640 9          DEBUG - [view] __all_this_is_fulllog__ sel=25618
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:42,643 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 6261 - 6293
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:42,646 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 25569 - 25601
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:42,930 9          DEBUG - [view] E+N sel=141
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:42,981 9          DEBUG - [view] __all_this_is_fulllog__ sel=40958
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:42,982 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 25604 - 25636
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:42,984 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 40909 - 40941
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:43,368 9          DEBUG - [view] E+N sel=172
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1366): 11:37:43,374 9          DEBUG - [log] new line E+N = 47850
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:43,379 9          DEBUG - [view] __all_this_is_fulllog__ sel=47850
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:43,382 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 40944 - 40976
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:43,386 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 47801 - 47833
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:43,600 9          DEBUG - [view] E+N sel=193
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:43,604 9          INFO  - action by key - pagedown
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:43,658 9          DEBUG - [view] __all_this_is_fulllog__ sel=49629
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:43,660 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 47836 - 47868
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:43,662 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 49580 - 49612
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:44,306 9          DEBUG - [view] E+N sel=162
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:44,343 9          DEBUG - [view] __all_this_is_fulllog__ sel=47651
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:44,346 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 49615 - 49647
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:44,349 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 47633 - 47665
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:45,733 9          DEBUG - [view] E+N sel=163
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:45,798 9          DEBUG - [view] __all_this_is_fulllog__ sel=47813
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:45,801 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 47637 - 47669
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:45,804 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 47764 - 47796
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:45,928 9          DEBUG - [view] E+N sel=164
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:46,019 9          DEBUG - [view] __all_this_is_fulllog__ sel=47827
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:46,087 9          DEBUG - [view] E+N sel=165
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:46,179 9          DEBUG - [view] __all_this_is_fulllog__ sel=47830
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:46,453 9          DEBUG - [view] E+N sel=164
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:46,531 9          DEBUG - [view] __all_this_is_fulllog__ sel=47827
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:48,642 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:49,407 9          INFO  - action by key - next_view
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:50,372 9          INFO  - action by key - prev_view
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:50,510 9          INFO  - action by key - prev_view
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:52,635 9          INFO  - action by key - toggle_history_dropdown
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:37:53,742 9          DEBUG - [sett] ui.defaultlog_name=C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:37:53,743 9          DEBUG - [sett] ui.defaultselected_row_idx=164
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:37:53,826 9          DEBUG - [sett] Saved settings to logwizard_debug.txt
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:37:53,898 9          DEBUG - [sett] history.65name=C:\john\code\buff\=_UTF-8_B_VE5Mb2dzLTEt0J_Qmi0xLTYzNTc5MjE3MDQ5NjE2MzM4NS56aXA=_=\TableNinja2.log
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:37:53,900 9          DEBUG - [sett] history.66name=C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:37:53,986 9          DEBUG - [sett] Saved settings to logwizard_debug.txt
+c:\john\code\logwiz\logwizard\lw_common\parse\log_line_parser.cs(373): 11:37:53,994 9          INFO  - [log] log reloaded: C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:37:53,999 9          DEBUG - [view] new log for __all_this_is_fulllog__ - C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:37:54,004 9          DEBUG - [view] new log for Init/Exit - C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:37:54,005 9          DEBUG - [view] new log for E+N - C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:37:54,013 9          DEBUG - [view] new log for mouse - C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:37:54,018 9          DEBUG - [view] new log for set_bet - C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:37:54,019 9          DEBUG - [view] new log for bet - C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:37:54,021 9          DEBUG - [view] new log for actdd - C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:37:54,022 9          DEBUG - [view] new log for hotkeys - C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:37:54,024 9          DEBUG - [view] new log for time - C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:37:54,026 9          DEBUG - [view] new log for Tables - C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(653): 11:37:54,027 9          DEBUG - [view] new log for zorder - C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,047 20         INFO  - [filter] new log C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,050 22         INFO  - [filter] new log C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,065 21         INFO  - [filter] new log C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,073 23         INFO  - [filter] new log C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,073 24         INFO  - [filter] new log C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,093 30         INFO  - [filter] new log C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,093 28         INFO  - [filter] new log C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,093 27         INFO  - [filter] new log C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,093 29         INFO  - [filter] new log C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\readers\file_text_reader.cs(196): 11:37:54,094 6          DEBUG - [file] reading file C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2 at 0, 2097152 bytes.
+c:\john\code\logwiz\logwizard\lw_common\parse\log_line_parser.cs(373): 11:37:54,116 3          INFO  - [log] log reloaded: C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,093 26         INFO  - [filter] new log C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,269 25         INFO  - [filter] new log C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\parse\log_line_parser.cs(373): 11:37:54,370 3          INFO  - [log] log reloaded: C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\readers\file_text_reader.cs(196): 11:37:54,384 6          DEBUG - [file] reading file C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2 at 2097152, 2097152 bytes.
+c:\john\code\logwiz\logwizard\lw_common\string\large_string.cs(66): 11:37:54,428 3          DEBUG - [line] we have read 18214 lines
+c:\john\code\logwiz\logwizard\lw_common\util\memory_optimized_list.cs(104): 11:37:54,469 3          DEBUG - [memory] (7) new capacity [parser TableNinja2.log.2] - 18214
+c:\john\code\logwiz\logwizard\lw_common\util\memory_optimized_list.cs(104): 11:37:54,473 3          DEBUG - [memory] (8) new capacity [parser TableNinja2.log.2] - 43142
+c:\john\code\logwiz\logwizard\lw_common\readers\file_text_reader.cs(196): 11:37:54,518 6          DEBUG - [file] reading file C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2 at 4194304, 767050 bytes.
+c:\john\code\logwiz\logwizard\lw_common\string\large_string.cs(66): 11:37:54,673 3          DEBUG - [line] we have read 43546 lines
+c:\john\code\logwiz\logwizard\lw_common\parse\log_line_parser.cs(425): 11:37:54,733 3          DEBUG - [line] reparsed line 18213
+c:\john\code\logwiz\logwizard\lw_common\util\memory_optimized_list.cs(104): 11:37:54,735 3          DEBUG - [memory] (9) new capacity [parser TableNinja2.log.2] - 51770
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,871 20         INFO  - [filter] forced refresh of C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,871 22         INFO  - [filter] forced refresh of C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,894 21         INFO  - [filter] forced refresh of C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,891 28         INFO  - [filter] forced refresh of C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,892 27         INFO  - [filter] forced refresh of C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,891 25         INFO  - [filter] forced refresh of C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,891 29         INFO  - [filter] forced refresh of C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,891 26         INFO  - [filter] forced refresh of C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,891 30         INFO  - [filter] forced refresh of C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,891 24         INFO  - [filter] forced refresh of C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\filter\filter.cs(426): 11:37:54,927 23         INFO  - [filter] forced refresh of C:\john\code\buff\323\TNLogs-MEETY-LNV-MEETY-635799112608589107\TableNinja2.log.2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:55,284 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 0 - 32
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:55,307 9          DEBUG - [view] __all_this_is_fulllog__ sel=43545
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:55,555 9          DEBUG - [view] visible indexes for E+N : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\util\memory_optimized_list.cs(104): 11:37:55,557 25         DEBUG - [memory] (10) new capacity [temp_m bet] - 14805
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:55,558 9          DEBUG - [view] E+N sel=7670
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:55,563 9          DEBUG - [view] visible indexes for actdd : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:55,569 9          DEBUG - [view] visible indexes for time : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:55,573 9          DEBUG - [view] visible indexes for Tables : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:55,577 9          DEBUG - [view] visible indexes for zorder : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:55,724 9          DEBUG - [view] visible indexes for bet : 0 - 30
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1501): 11:37:56,019 9          DEBUG - [view] initial refresh complete
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:56,045 9          DEBUG - [view] visible indexes for Init/Exit : 0 - 30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,178 9          DEBUG - [view] E+N sel=7669
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,475 9          DEBUG - [view] E+N sel=7668
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,500 9          DEBUG - [view] E+N sel=7667
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:56,506 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,556 9          DEBUG - [view] E+N sel=7666
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,599 9          DEBUG - [view] E+N sel=7665
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:56,606 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,621 9          DEBUG - [view] E+N sel=7664
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:56,629 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,641 9          DEBUG - [view] E+N sel=7663
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,712 9          DEBUG - [view] E+N sel=7662
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,736 9          DEBUG - [view] E+N sel=7661
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,766 9          DEBUG - [view] E+N sel=7660
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,792 9          DEBUG - [view] E+N sel=7659
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:56,796 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,847 9          DEBUG - [view] E+N sel=7658
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,875 9          DEBUG - [view] E+N sel=7657
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,902 9          DEBUG - [view] E+N sel=7656
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:56,912 9          DEBUG - [view] __all_this_is_fulllog__ sel=43490
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:56,915 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 43514 - 43546
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:56,918 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 43472 - 43504
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:57,600 9          INFO  - action by key - prev_view
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,330 9          DEBUG - [view] Init/Exit sel=1
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:58,337 9          DEBUG - [view] visible indexes for Init/Exit : 85 - 115
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:58,342 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,628 9          DEBUG - [view] Init/Exit sel=2
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,682 9          DEBUG - [view] Init/Exit sel=3
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,709 9          DEBUG - [view] Init/Exit sel=4
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:58,716 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,737 9          DEBUG - [view] Init/Exit sel=5
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,762 9          DEBUG - [view] Init/Exit sel=6
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,818 9          DEBUG - [view] Init/Exit sel=7
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,842 9          DEBUG - [view] Init/Exit sel=8
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,873 9          DEBUG - [view] Init/Exit sel=9
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,898 9          DEBUG - [view] Init/Exit sel=10
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,954 9          DEBUG - [view] Init/Exit sel=11
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:58,978 9          DEBUG - [view] Init/Exit sel=12
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:59,008 9          DEBUG - [view] Init/Exit sel=13
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:59,033 9          DEBUG - [view] Init/Exit sel=14
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:59,037 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:59,089 9          DEBUG - [view] Init/Exit sel=15
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:59,115 9          DEBUG - [view] Init/Exit sel=16
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:59,144 9          DEBUG - [view] Init/Exit sel=17
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:59,175 9          DEBUG - [view] Init/Exit sel=18
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:59,231 9          DEBUG - [view] Init/Exit sel=19
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:59,255 9          DEBUG - [view] Init/Exit sel=20
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:59,286 9          DEBUG - [view] Init/Exit sel=21
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:59,310 9          DEBUG - [view] Init/Exit sel=22
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:37:59,315 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:37:59,318 9          DEBUG - [view] __all_this_is_fulllog__ sel=127
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:59,320 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 43476 - 43508
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:37:59,324 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 109 - 141
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:38:08,749 9          DEBUG - [sett] ui.defaultselected_view=Init/Exit
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:38:08,754 9          DEBUG - [sett] ui.defaultselected_row_idx=22
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:38:08,861 9          DEBUG - [sett] Saved settings to logwizard_debug.txt
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:13,670 9          DEBUG - [view] Init/Exit sel=23
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:13,804 9          DEBUG - [view] __all_this_is_fulllog__ sel=131
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:13,948 9          DEBUG - [view] Init/Exit sel=24
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1366): 11:38:13,952 9          DEBUG - [log] new line Init/Exit = 132
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:13,955 9          DEBUG - [view] __all_this_is_fulllog__ sel=132
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:23,571 9          DEBUG - [view] Init/Exit sel=23
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:23,624 9          DEBUG - [view] __all_this_is_fulllog__ sel=131
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:23,786 9          DEBUG - [view] Init/Exit sel=22
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1366): 11:38:23,791 9          DEBUG - [log] new line Init/Exit = 127
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:23,794 9          DEBUG - [view] __all_this_is_fulllog__ sel=127
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:23,862 9          DEBUG - [view] Init/Exit sel=21
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:23,867 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:23,910 9          DEBUG - [view] __all_this_is_fulllog__ sel=126
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:25,885 9          DEBUG - [view] Init/Exit sel=22
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:25,981 9          DEBUG - [view] __all_this_is_fulllog__ sel=127
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:26,117 9          DEBUG - [view] Init/Exit sel=23
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:26,128 9          DEBUG - [view] __all_this_is_fulllog__ sel=131
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:26,266 9          DEBUG - [view] Init/Exit sel=24
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:26,270 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:26,321 9          DEBUG - [view] __all_this_is_fulllog__ sel=132
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:26,466 9          DEBUG - [view] Init/Exit sel=25
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:26,479 9          DEBUG - [view] __all_this_is_fulllog__ sel=133
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:26,641 9          DEBUG - [view] Init/Exit sel=26
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:26,758 9          DEBUG - [view] __all_this_is_fulllog__ sel=134
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,046 9          DEBUG - [view] Init/Exit sel=27
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,343 9          DEBUG - [view] Init/Exit sel=28
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,399 9          DEBUG - [view] Init/Exit sel=29
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,424 9          DEBUG - [view] Init/Exit sel=30
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,454 9          DEBUG - [view] Init/Exit sel=31
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,459 9          DEBUG - [view] visible indexes for Init/Exit : 1 - 31
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,521 9          DEBUG - [view] Init/Exit sel=32
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,524 9          DEBUG - [view] visible indexes for Init/Exit : 2 - 32
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,533 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,536 9          DEBUG - [view] Init/Exit sel=33
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,539 9          DEBUG - [view] visible indexes for Init/Exit : 3 - 33
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,583 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,586 9          DEBUG - [view] Init/Exit sel=34
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,588 9          DEBUG - [view] visible indexes for Init/Exit : 4 - 34
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,620 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,622 9          DEBUG - [view] Init/Exit sel=35
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,624 9          DEBUG - [view] visible indexes for Init/Exit : 5 - 35
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,656 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,690 9          DEBUG - [view] Init/Exit sel=36
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,693 9          DEBUG - [view] visible indexes for Init/Exit : 6 - 36
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,699 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,701 9          DEBUG - [view] Init/Exit sel=37
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,704 9          DEBUG - [view] visible indexes for Init/Exit : 7 - 37
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,736 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,738 9          DEBUG - [view] Init/Exit sel=38
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,740 9          DEBUG - [view] visible indexes for Init/Exit : 8 - 38
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,771 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,774 9          DEBUG - [view] Init/Exit sel=39
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,775 9          DEBUG - [view] visible indexes for Init/Exit : 9 - 39
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,807 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,809 9          DEBUG - [view] Init/Exit sel=40
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,811 9          DEBUG - [view] visible indexes for Init/Exit : 10 - 40
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,843 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,845 9          DEBUG - [view] Init/Exit sel=41
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,847 9          DEBUG - [view] visible indexes for Init/Exit : 11 - 41
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,877 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,880 9          DEBUG - [view] Init/Exit sel=42
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,883 9          DEBUG - [view] visible indexes for Init/Exit : 12 - 42
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,914 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,916 9          DEBUG - [view] Init/Exit sel=43
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,918 9          DEBUG - [view] visible indexes for Init/Exit : 13 - 43
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,951 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:27,986 9          DEBUG - [view] Init/Exit sel=44
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:27,989 9          DEBUG - [view] visible indexes for Init/Exit : 14 - 44
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:27,997 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,032 9          DEBUG - [view] Init/Exit sel=45
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,034 9          DEBUG - [view] visible indexes for Init/Exit : 15 - 45
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,039 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,041 9          DEBUG - [view] Init/Exit sel=46
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,043 9          DEBUG - [view] visible indexes for Init/Exit : 16 - 46
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,075 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,077 9          DEBUG - [view] Init/Exit sel=47
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,080 9          DEBUG - [view] visible indexes for Init/Exit : 17 - 47
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,112 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,118 9          DEBUG - [view] Init/Exit sel=48
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,121 9          DEBUG - [view] visible indexes for Init/Exit : 18 - 48
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,155 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,156 9          DEBUG - [view] Init/Exit sel=49
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,158 9          DEBUG - [view] visible indexes for Init/Exit : 19 - 49
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,190 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,193 9          DEBUG - [view] Init/Exit sel=50
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,196 9          DEBUG - [view] visible indexes for Init/Exit : 20 - 50
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,227 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,230 9          DEBUG - [view] Init/Exit sel=51
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,232 9          DEBUG - [view] visible indexes for Init/Exit : 21 - 51
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,266 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,269 9          DEBUG - [view] Init/Exit sel=52
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,271 9          DEBUG - [view] visible indexes for Init/Exit : 22 - 52
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,303 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,305 9          DEBUG - [view] Init/Exit sel=53
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,307 9          DEBUG - [view] visible indexes for Init/Exit : 23 - 53
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,342 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,344 9          DEBUG - [view] Init/Exit sel=54
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,346 9          DEBUG - [view] visible indexes for Init/Exit : 24 - 54
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,378 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,414 9          DEBUG - [view] Init/Exit sel=55
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,416 9          DEBUG - [view] visible indexes for Init/Exit : 25 - 55
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,421 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,423 9          DEBUG - [view] Init/Exit sel=56
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,426 9          DEBUG - [view] visible indexes for Init/Exit : 26 - 56
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,457 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,460 9          DEBUG - [view] Init/Exit sel=57
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,462 9          DEBUG - [view] visible indexes for Init/Exit : 27 - 57
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,495 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,498 9          DEBUG - [view] Init/Exit sel=58
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,499 9          DEBUG - [view] visible indexes for Init/Exit : 28 - 58
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,533 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,538 9          DEBUG - [view] Init/Exit sel=59
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,542 9          DEBUG - [view] visible indexes for Init/Exit : 29 - 59
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,600 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,602 9          DEBUG - [view] Init/Exit sel=60
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,604 9          DEBUG - [view] visible indexes for Init/Exit : 30 - 60
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,636 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,638 9          DEBUG - [view] Init/Exit sel=61
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,640 9          DEBUG - [view] visible indexes for Init/Exit : 31 - 61
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,673 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,675 9          DEBUG - [view] Init/Exit sel=62
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1366): 11:38:28,677 9          DEBUG - [log] new line Init/Exit = 1225
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,680 9          DEBUG - [view] visible indexes for Init/Exit : 32 - 62
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,712 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,715 9          DEBUG - [view] __all_this_is_fulllog__ sel=1225
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,717 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 113 - 145
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:28,720 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 1176 - 1208
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:28,889 9          DEBUG - [view] Init/Exit sel=61
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:28,892 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,171 9          DEBUG - [view] Init/Exit sel=60
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,233 9          DEBUG - [view] Init/Exit sel=59
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,260 9          DEBUG - [view] Init/Exit sel=58
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:29,276 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,293 9          DEBUG - [view] Init/Exit sel=57
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:29,307 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,323 9          DEBUG - [view] Init/Exit sel=56
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:29,342 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,371 9          DEBUG - [view] Init/Exit sel=55
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:29,375 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,417 9          DEBUG - [view] Init/Exit sel=54
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,446 9          DEBUG - [view] Init/Exit sel=53
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,472 9          DEBUG - [view] Init/Exit sel=52
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:29,480 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,497 9          DEBUG - [view] Init/Exit sel=51
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,552 9          DEBUG - [view] Init/Exit sel=50
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,577 9          DEBUG - [view] Init/Exit sel=49
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:29,587 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:29,611 9          DEBUG - [view] __all_this_is_fulllog__ sel=188
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:29,616 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 1211 - 1243
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:29,620 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 170 - 202
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:31,413 9          DEBUG - [view] Init/Exit sel=50
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:31,449 9          DEBUG - [view] __all_this_is_fulllog__ sel=192
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:32,389 9          DEBUG - [view] Init/Exit sel=49
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:32,466 9          DEBUG - [view] __all_this_is_fulllog__ sel=188
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:36,417 9          DEBUG - [view] Init/Exit sel=48
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:36,524 9          DEBUG - [view] __all_this_is_fulllog__ sel=186
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:37,238 9          DEBUG - [view] Init/Exit sel=49
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:37,297 9          DEBUG - [view] __all_this_is_fulllog__ sel=188
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:37,450 9          DEBUG - [view] Init/Exit sel=50
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1366): 11:38:37,454 9          DEBUG - [log] new line Init/Exit = 192
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:37,457 9          DEBUG - [view] __all_this_is_fulllog__ sel=192
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:37,518 9          DEBUG - [view] Init/Exit sel=51
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:37,522 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:37,650 9          DEBUG - [view] __all_this_is_fulllog__ sel=217
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:37,654 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 174 - 206
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:38:38,749 9          DEBUG - [sett] ui.defaultselected_row_idx=51
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:38:38,885 9          DEBUG - [sett] Saved settings to logwizard_debug.txt
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:39,141 9          INFO  - action by key - escape
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:39,638 9          DEBUG - [view] Init/Exit sel=52
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:39,772 9          DEBUG - [view] __all_this_is_fulllog__ sel=232
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:40,761 9          DEBUG - [view] Init/Exit sel=53
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:40,825 9          DEBUG - [view] __all_this_is_fulllog__ sel=233
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:40,913 9          DEBUG - [view] Init/Exit sel=54
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:40,996 9          DEBUG - [view] __all_this_is_fulllog__ sel=234
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,162 9          DEBUG - [view] Init/Exit sel=55
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,193 9          DEBUG - [view] __all_this_is_fulllog__ sel=235
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:41,196 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 203 - 235
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,291 9          DEBUG - [view] Init/Exit sel=56
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,338 9          DEBUG - [view] __all_this_is_fulllog__ sel=236
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,406 9          DEBUG - [view] Init/Exit sel=57
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:41,410 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,474 9          DEBUG - [view] __all_this_is_fulllog__ sel=237
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,623 9          DEBUG - [view] Init/Exit sel=58
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1366): 11:38:41,627 9          DEBUG - [log] new line Init/Exit = 238
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,631 9          DEBUG - [view] __all_this_is_fulllog__ sel=238
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,697 9          DEBUG - [view] Init/Exit sel=59
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:41,701 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,794 9          DEBUG - [view] __all_this_is_fulllog__ sel=669
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:41,796 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 221 - 253
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:41,799 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 620 - 652
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,866 9          DEBUG - [view] Init/Exit sel=60
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:41,946 9          DEBUG - [view] __all_this_is_fulllog__ sel=822
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:41,948 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 655 - 687
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:41,950 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 773 - 805
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:43,050 9          DEBUG - [view] Init/Exit sel=61
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:43,133 9          DEBUG - [view] __all_this_is_fulllog__ sel=1002
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:43,137 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 808 - 840
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:43,143 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 953 - 985
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:43,459 9          DEBUG - [view] Init/Exit sel=62
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:43,780 9          DEBUG - [view] Init/Exit sel=63
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:43,788 9          DEBUG - [view] visible indexes for Init/Exit : 33 - 63
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:43,850 9          DEBUG - [view] Init/Exit sel=64
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:43,852 9          DEBUG - [view] visible indexes for Init/Exit : 34 - 64
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:43,886 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:43,891 9          DEBUG - [view] Init/Exit sel=65
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:43,893 9          DEBUG - [view] visible indexes for Init/Exit : 35 - 65
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:43,924 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:43,926 9          DEBUG - [view] Init/Exit sel=66
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:43,928 9          DEBUG - [view] visible indexes for Init/Exit : 36 - 66
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:43,959 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:43,962 9          DEBUG - [view] Init/Exit sel=67
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:43,964 9          DEBUG - [view] visible indexes for Init/Exit : 37 - 67
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:43,995 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:43,998 9          DEBUG - [view] Init/Exit sel=68
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:44,000 9          DEBUG - [view] visible indexes for Init/Exit : 38 - 68
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:44,032 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:44,067 9          DEBUG - [view] Init/Exit sel=69
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:44,069 9          DEBUG - [view] visible indexes for Init/Exit : 39 - 69
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:44,102 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:44,104 9          DEBUG - [view] Init/Exit sel=70
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:44,106 9          DEBUG - [view] visible indexes for Init/Exit : 40 - 70
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:44,139 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:44,141 9          DEBUG - [view] Init/Exit sel=71
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:44,143 9          DEBUG - [view] visible indexes for Init/Exit : 41 - 71
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:44,176 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:44,209 9          DEBUG - [view] Init/Exit sel=72
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:44,211 9          DEBUG - [view] visible indexes for Init/Exit : 42 - 72
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:44,241 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:44,243 9          DEBUG - [view] Init/Exit sel=73
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:44,245 9          DEBUG - [view] visible indexes for Init/Exit : 43 - 73
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:44,276 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:44,278 9          DEBUG - [view] Init/Exit sel=74
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:44,280 9          DEBUG - [view] visible indexes for Init/Exit : 44 - 74
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:44,310 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:44,345 9          DEBUG - [view] Init/Exit sel=75
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:44,349 9          DEBUG - [view] visible indexes for Init/Exit : 45 - 75
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:44,380 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:44,382 9          DEBUG - [view] Init/Exit sel=76
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1366): 11:38:44,384 9          DEBUG - [log] new line Init/Exit = 3889
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:44,387 9          DEBUG - [view] visible indexes for Init/Exit : 46 - 76
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:44,420 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:44,422 9          DEBUG - [view] __all_this_is_fulllog__ sel=3889
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:44,425 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 988 - 1020
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:44,427 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 3840 - 3872
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,196 9          DEBUG - [view] Init/Exit sel=77
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,202 9          DEBUG - [view] visible indexes for Init/Exit : 47 - 77
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,494 9          DEBUG - [view] Init/Exit sel=78
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,500 9          DEBUG - [view] visible indexes for Init/Exit : 48 - 78
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,524 9          DEBUG - [view] Init/Exit sel=79
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,534 9          DEBUG - [view] visible indexes for Init/Exit : 49 - 79
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:45,613 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,615 9          DEBUG - [view] Init/Exit sel=80
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,617 9          DEBUG - [view] visible indexes for Init/Exit : 50 - 80
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:45,648 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,650 9          DEBUG - [view] Init/Exit sel=81
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,652 9          DEBUG - [view] visible indexes for Init/Exit : 51 - 81
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:45,686 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,688 9          DEBUG - [view] Init/Exit sel=82
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,690 9          DEBUG - [view] visible indexes for Init/Exit : 52 - 82
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:45,724 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,759 9          DEBUG - [view] Init/Exit sel=83
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,762 9          DEBUG - [view] visible indexes for Init/Exit : 53 - 83
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:45,769 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,771 9          DEBUG - [view] Init/Exit sel=84
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,774 9          DEBUG - [view] visible indexes for Init/Exit : 54 - 84
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:45,809 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,811 9          DEBUG - [view] Init/Exit sel=85
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,814 9          DEBUG - [view] visible indexes for Init/Exit : 55 - 85
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:45,847 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,850 9          DEBUG - [view] Init/Exit sel=86
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,852 9          DEBUG - [view] visible indexes for Init/Exit : 56 - 86
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:45,886 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,888 9          DEBUG - [view] Init/Exit sel=87
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,891 9          DEBUG - [view] visible indexes for Init/Exit : 57 - 87
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:45,923 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,926 9          DEBUG - [view] Init/Exit sel=88
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,928 9          DEBUG - [view] visible indexes for Init/Exit : 58 - 88
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:45,961 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:45,964 9          DEBUG - [view] Init/Exit sel=89
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:45,966 9          DEBUG - [view] visible indexes for Init/Exit : 59 - 89
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:46,019 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:46,021 9          DEBUG - [view] Init/Exit sel=90
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:46,023 9          DEBUG - [view] visible indexes for Init/Exit : 60 - 90
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:46,075 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:46,078 9          DEBUG - [view] Init/Exit sel=91
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:46,080 9          DEBUG - [view] visible indexes for Init/Exit : 61 - 91
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:46,113 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:46,116 9          DEBUG - [view] Init/Exit sel=92
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:46,117 9          DEBUG - [view] visible indexes for Init/Exit : 62 - 92
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:46,162 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:46,166 9          DEBUG - [view] Init/Exit sel=93
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:46,170 9          DEBUG - [view] visible indexes for Init/Exit : 63 - 93
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:46,231 9          INFO  - action by key - arrow_down
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:46,235 9          DEBUG - [view] __all_this_is_fulllog__ sel=31230
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:46,237 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 3875 - 3907
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:46,240 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 31181 - 31213
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:46,920 9          DEBUG - [view] Init/Exit sel=92
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:47,223 9          DEBUG - [view] Init/Exit sel=91
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:47,252 9          DEBUG - [view] Init/Exit sel=90
+c:\john\code\logwiz\logwizard\ui\log_wizard.cs(1895): 11:38:47,262 9          INFO  - action by key - arrow_up
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:47,303 9          DEBUG - [view] Init/Exit sel=89
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:47,328 9          DEBUG - [view] Init/Exit sel=88
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:47,359 9          DEBUG - [view] Init/Exit sel=87
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:47,383 9          DEBUG - [view] Init/Exit sel=86
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:47,390 9          DEBUG - [view] __all_this_is_fulllog__ sel=30900
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:47,392 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 31216 - 31248
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:38:47,395 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 30882 - 30914
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:48,047 9          DEBUG - [view] Init/Exit sel=87
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:48,163 9          DEBUG - [view] __all_this_is_fulllog__ sel=30901
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:48,640 9          DEBUG - [view] Init/Exit sel=88
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:38:48,729 9          DEBUG - [view] __all_this_is_fulllog__ sel=30902
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:38:53,751 9          DEBUG - [sett] ui.defaultselected_row_idx=88
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:38:53,867 9          DEBUG - [sett] Saved settings to logwizard_debug.txt
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:40:18,593 9          DEBUG - [view] Init/Exit sel=89
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:40:18,744 9          DEBUG - [view] __all_this_is_fulllog__ sel=31200
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:40:18,748 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 30886 - 30918
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1289): 11:40:18,756 9          DEBUG - [view] visible indexes for __all_this_is_fulllog__ : 31151 - 31183
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:40:18,923 9          DEBUG - [view] Init/Exit sel=90
+c:\john\code\logwiz\logwizard\lw_common\ui\log_view.cs(1244): 11:40:18,969 9          DEBUG - [view] __all_this_is_fulllog__ sel=31201
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(146): 11:40:19,462 9          DEBUG - [sett] ui.defaultselected_row_idx=90
+c:\john\code\logwiz\logwizard\lw_common\settings\settings_file.cs(198): 11:40:19,556 9          DEBUG - [sett] Saved settings to logwizard_debug.txt

@@ -19,6 +19,9 @@
           https://news.ycombinator.com/news
 		  quora
 
+1.6.4b
+- readded .sample.log files into github
+
 
 1.6.4a
 - added gitattributes file
