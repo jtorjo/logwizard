@@ -35,7 +35,7 @@ namespace lw_common {
 
         public delegate bool is_good_version_func(Dictionary<string, object> ver);
 
-        private is_good_version_func is_stable, is_beta;
+        public is_good_version_func is_stable, is_beta;
 
         public class release_info {
             public string version = "";
@@ -143,7 +143,7 @@ namespace lw_common {
             get { return error_msg_; }
         }
 
-        private bool is_valid_version(Dictionary<string, object> release) {
+        public static bool is_valid_version(Dictionary<string, object> release) {
             try {
                 new Version(release["tag_name"].ToString());
                 return true;

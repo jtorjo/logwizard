@@ -273,11 +273,18 @@ namespace LogWizard
             whatsup.animate_interval_ms = 30000;
         }
 
+        // 1.6.3+ - "(interim)" - are interim versions - they are not stable ; they contain small fixes for beta or stable versions
+        private static bool is_stable(Dictionary<string, object> release) {
+            string short_desc = release.ContainsKey("name") ? release["name"].ToString() : "";
+            return !short_desc.EndsWith("(beta)") && !short_desc.EndsWith("(interim)");
+        }
+
         private void load_release_info_thread() {
             if (util.is_debug)
                 return;
 
             var info = new read_github_release("jtorjo", "logwizard");
+            info.is_stable = is_stable;
             new_releases_ = util.is_debug ? info.beta_releases("1.1") : info.beta_releases();
             cur_release_ = info.release_before();
             if ( info.error)

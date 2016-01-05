@@ -1,20 +1,39 @@
 
-
-- codeproject 
-  - redo the "intro" article - update it
-
-- as of version 1.6, i allow eventlogview/debugviewer
-
-- github sidebar -> can add links to codeproject
-
-- add my todo issues into git
+bug: roaming dir???
 
 
+bug: line numbers -> allow turning off
+
+- add a horizonal scrollbar (make Msg not "occupy remaining space") -> allow a checkbox
+
+- click to select a word -> allow turning this off
+
+.gitattributes -> mark .sample.log files as binary - https://git-scm.com/book/en/v2/Customizing-Git-Git-Attributes  -- https://github.com/jtorjo/logwizard/issues/2#issuecomment-168192288
 
 - article about event viewer - title: view Windows Event Logs can be fun
   - note: i will briefly mention outputdebugstring
   - explain about editing Description pane , etc.
   -- tidbits : about finding, about Description control, about copying records from event viewer
+
+-- bug - if i'm on the last char, and want to select starting from there to the left, it does not work
+
+-- bug : C:\john\code\buff\344\TNLogs-DESKTOP-6JGLCS9-damie-635833594984576357 -> hotkeys shows 0 and is hidden
+   -- this seems to be related to this tab? i don't see the edit here, and i simply can't make it work (on a different file -C:\john\code\buff\348\T175745-Reports 2015.11.19)
+      - after restart, it works
+	  - i believe here the issue is: if i show history then escape -> focus will remain on the hidden history combo - i just need to reset focus to active pane
+	  - it's weird - sometimes works sometimes not -> seems ot always work only on the view that originally had focus, but not on the others
+	  -- "hotkeys" tab always seems to be marked as "has new items" even if i traverse it
+
+-aliases should be able to use in filters (***lo-case-no-space probably)
+	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
+	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
+	 -- see when i can resolve these names (as soon as aliases is loaded???)
+
+
+- bug:
+  - if type-as-yo-go searching for something that is only in description pane -> when I type something only valid in description pane, the list view does nto update
+    such as, going from "o" to "oc" -> at this point, the list view should show nothing selected, as there is nothing with "oc" in the list (only in description pane)
+  - search next/prev -> does not work when something is only found in description pane
 
 
 -- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
@@ -48,25 +67,6 @@
   - explain : easiest way: to just pass a variable of your type as argument. however, what if i just pass null? can i just say it should be NonNull?
 
 
--- bug - if i'm on the last char, and want to select starting from there to the left, it does not work
-
--- bug : C:\john\code\buff\344\TNLogs-DESKTOP-6JGLCS9-damie-635833594984576357 -> hotkeys shows 0 and is hidden
-   -- this seems to be related to this tab? i don't see the edit here, and i simply can't make it work (on a different file -C:\john\code\buff\348\T175745-Reports 2015.11.19)
-      - after restart, it works
-	  - i believe here the issue is: if i show history then escape -> focus will remain on the hidden history combo - i just need to reset focus to active pane
-	  - it's weird - sometimes works sometimes not -> seems ot always work only on the view that originally had focus, but not on the others
-	  -- "hotkeys" tab always seems to be marked as "has new items" even if i traverse it
-
--aliases should be able to use in filters (***lo-case-no-space probably)
-	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
-	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
-	 -- see when i can resolve these names (as soon as aliases is loaded???)
-
-
-- bug:
-  - if type-as-yo-go searching for something that is only in description pane -> when I type something only valid in description pane, the list view does nto update
-    such as, going from "o" to "oc" -> at this point, the list view should show nothing selected, as there is nothing with "oc" in the list (only in description pane)
-  - search next/prev -> does not work when something is only found in description pane
 
 
   the other article:
