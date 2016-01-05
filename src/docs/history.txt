@@ -20,7 +20,9 @@
 		  quora
 
 
-1.6.4
+1.6.4a
+- added gitattributes file
+
 
 1.6.3c
 - github interim versions (not beta nor stable) -> those ending in (interim)
