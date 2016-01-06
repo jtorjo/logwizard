@@ -155,6 +155,8 @@ namespace lw_common {
         public bool edit_search_before = true;
         // if true, when searching something, search all columns (current column first!)
         public bool edit_search_all_columns = false;
+        // if true, clicking a word selects it
+        public bool edit_click_word_selects_it = true;
 
         public bool show_filter_row_in_filter_color = true;
 
@@ -405,6 +407,7 @@ namespace lw_common {
 
             load_save(load, ref has_shown_details_pane, "has_shown_details_pane", false);
             load_save(load, ref show_horizontal_scrollbar, "show_horizontal_scrollbar", false);
+            load_save(load, ref edit_click_word_selects_it, "edit_click_word_selects_it", true);
         }
 
         private string initials(string name) {

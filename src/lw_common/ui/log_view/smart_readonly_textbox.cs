@@ -316,7 +316,8 @@ namespace lw_common.ui {
 
             mouse_down_start_ = char_at_mouse(mouse_screen);
             go_to_char( mouse_down_start_);
-            after_click(row_idx);
+            if ( app.inst.edit_click_word_selects_it)
+                after_click(row_idx);
 
             Focus();
         }

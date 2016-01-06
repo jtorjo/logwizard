@@ -26,11 +26,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(settings_form));
             this.fontLabel = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.viewLine = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.viewIndex = new System.Windows.Forms.CheckBox();
-            this.viewLineCount = new System.Windows.Forms.CheckBox();
             this.close = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.makeTopmostOnRestart = new System.Windows.Forms.CheckBox();
@@ -58,7 +53,20 @@
             this.showTips = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.showHorizontalScrollbar = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.useFileMonitoringApi = new System.Windows.Forms.CheckBox();
+            this.hotkeyslink = new System.Windows.Forms.LinkLabel();
+            this.useHotkeys = new System.Windows.Forms.CheckBox();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.viewLine = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.viewIndex = new System.Windows.Forms.CheckBox();
+            this.viewLineCount = new System.Windows.Forms.CheckBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.clickWordAutoSelectsIt = new System.Windows.Forms.CheckBox();
             this.editMode = new System.Windows.Forms.ComboBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
@@ -67,11 +75,6 @@
             this.editSearchAfter = new System.Windows.Forms.CheckBox();
             this.editSearchCurColumnOnly = new System.Windows.Forms.RadioButton();
             this.editSearchBelow = new System.Windows.Forms.CheckBox();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.useFileMonitoringApi = new System.Windows.Forms.CheckBox();
-            this.hotkeyslink = new System.Windows.Forms.LinkLabel();
-            this.useHotkeys = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.label21 = new System.Windows.Forms.Label();
@@ -122,15 +125,15 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.showHorizontalScrollbar = new System.Windows.Forms.CheckBox();
-            this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.groupBox9.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            this.tabPage8.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -147,67 +150,18 @@
             // fontLabel
             // 
             this.fontLabel.AutoSize = true;
-            this.fontLabel.Location = new System.Drawing.Point(6, 44);
+            this.fontLabel.Location = new System.Drawing.Point(6, 51);
             this.fontLabel.Name = "fontLabel";
             this.fontLabel.Size = new System.Drawing.Size(44, 17);
             this.fontLabel.TabIndex = 1;
             this.fontLabel.Text = "Font: ";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.viewLine);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.viewIndex);
-            this.groupBox1.Controls.Add(this.viewLineCount);
-            this.groupBox1.Location = new System.Drawing.Point(6, 468);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(654, 63);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Views";
-            // 
-            // viewLine
-            // 
-            this.viewLine.AutoSize = true;
-            this.viewLine.Location = new System.Drawing.Point(396, 37);
-            this.viewLine.Name = "viewLine";
-            this.viewLine.Size = new System.Drawing.Size(226, 21);
-            this.viewLine.TabIndex = 3;
-            this.viewLine.Text = "Absolute Log Line Index in View";
-            this.viewLine.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(355, 17);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "To Each View\'s name, append the following information";
-            // 
-            // viewIndex
-            // 
-            this.viewIndex.AutoSize = true;
-            this.viewIndex.Location = new System.Drawing.Point(196, 37);
-            this.viewIndex.Name = "viewIndex";
-            this.viewIndex.Size = new System.Drawing.Size(194, 21);
-            this.viewIndex.TabIndex = 1;
-            this.viewIndex.Text = "Relative Line Index in View";
-            this.viewIndex.UseVisualStyleBackColor = true;
-            // 
-            // viewLineCount
-            // 
-            this.viewLineCount.AutoSize = true;
-            this.viewLineCount.Location = new System.Drawing.Point(16, 37);
-            this.viewLineCount.Name = "viewLineCount";
-            this.viewLineCount.Size = new System.Drawing.Size(174, 21);
-            this.viewLineCount.TabIndex = 0;
-            this.viewLineCount.Text = "Number of lines in View";
-            this.viewLineCount.UseVisualStyleBackColor = true;
-            // 
             // close
             // 
-            this.close.Location = new System.Drawing.Point(611, 583);
+            this.close.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.close.Location = new System.Drawing.Point(611, 483);
             this.close.Name = "close";
             this.close.Size = new System.Drawing.Size(75, 25);
             this.close.TabIndex = 3;
@@ -222,7 +176,7 @@
             this.groupBox2.Controls.Add(this.bringToTopOnRestart);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.toggleTopmost);
-            this.groupBox2.Location = new System.Drawing.Point(6, 332);
+            this.groupBox2.Location = new System.Drawing.Point(6, 208);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(654, 130);
             this.groupBox2.TabIndex = 4;
@@ -430,7 +384,7 @@
             // browseFont
             // 
             this.browseFont.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.browseFont.Location = new System.Drawing.Point(236, 42);
+            this.browseFont.Location = new System.Drawing.Point(236, 49);
             this.browseFont.Name = "browseFont";
             this.browseFont.Size = new System.Drawing.Size(29, 20);
             this.browseFont.TabIndex = 12;
@@ -455,7 +409,7 @@
             // 
             this.showVariableFontsAsWell.AutoSize = true;
             this.showVariableFontsAsWell.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.showVariableFontsAsWell.Location = new System.Drawing.Point(236, 68);
+            this.showVariableFontsAsWell.Location = new System.Drawing.Point(236, 75);
             this.showVariableFontsAsWell.Name = "showVariableFontsAsWell";
             this.showVariableFontsAsWell.Size = new System.Drawing.Size(257, 17);
             this.showVariableFontsAsWell.TabIndex = 17;
@@ -478,7 +432,11 @@
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage8);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
@@ -488,122 +446,20 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(674, 565);
+            this.tabControl1.Size = new System.Drawing.Size(674, 465);
             this.tabControl1.TabIndex = 7;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.groupBox9);
             this.tabPage1.Controls.Add(this.groupBox7);
             this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(666, 536);
+            this.tabPage1.Size = new System.Drawing.Size(666, 436);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // groupBox9
-            // 
-            this.groupBox9.Controls.Add(this.editMode);
-            this.groupBox9.Controls.Add(this.label18);
-            this.groupBox9.Controls.Add(this.label19);
-            this.groupBox9.Controls.Add(this.label20);
-            this.groupBox9.Controls.Add(this.editSearchAllColumns);
-            this.groupBox9.Controls.Add(this.editSearchAfter);
-            this.groupBox9.Controls.Add(this.editSearchCurColumnOnly);
-            this.groupBox9.Controls.Add(this.editSearchBelow);
-            this.groupBox9.Location = new System.Drawing.Point(6, 155);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(654, 172);
-            this.groupBox9.TabIndex = 6;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "Smart Edit";
-            // 
-            // editMode
-            // 
-            this.editMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.editMode.FormattingEnabled = true;
-            this.editMode.Items.AddRange(new object[] {
-            "Always",
-            "With SPACE key",
-            "With RightArrow key"});
-            this.editMode.Location = new System.Drawing.Point(94, 22);
-            this.editMode.Name = "editMode";
-            this.editMode.Size = new System.Drawing.Size(275, 24);
-            this.editMode.TabIndex = 5;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(0, 25);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(71, 17);
-            this.label18.TabIndex = 4;
-            this.label18.Text = "Edit Mode";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(91, 50);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(513, 39);
-            this.label19.TabIndex = 6;
-            this.label19.Text = resources.GetString("label19.Text");
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(0, 113);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(119, 17);
-            this.label20.TabIndex = 7;
-            this.label20.Text = "Smart Completion";
-            // 
-            // editSearchAllColumns
-            // 
-            this.editSearchAllColumns.AutoSize = true;
-            this.editSearchAllColumns.Location = new System.Drawing.Point(369, 134);
-            this.editSearchAllColumns.Name = "editSearchAllColumns";
-            this.editSearchAllColumns.Size = new System.Drawing.Size(147, 21);
-            this.editSearchAllColumns.TabIndex = 11;
-            this.editSearchAllColumns.TabStop = true;
-            this.editSearchAllColumns.Text = "Look at all columns";
-            this.editSearchAllColumns.UseVisualStyleBackColor = true;
-            // 
-            // editSearchAfter
-            // 
-            this.editSearchAfter.AutoSize = true;
-            this.editSearchAfter.Location = new System.Drawing.Point(139, 112);
-            this.editSearchAfter.Name = "editSearchAfter";
-            this.editSearchAfter.Size = new System.Drawing.Size(103, 21);
-            this.editSearchAfter.TabIndex = 8;
-            this.editSearchAfter.Text = "Look Ahead";
-            this.editSearchAfter.UseVisualStyleBackColor = true;
-            // 
-            // editSearchCurColumnOnly
-            // 
-            this.editSearchCurColumnOnly.AutoSize = true;
-            this.editSearchCurColumnOnly.Location = new System.Drawing.Point(139, 134);
-            this.editSearchCurColumnOnly.Name = "editSearchCurColumnOnly";
-            this.editSearchCurColumnOnly.Size = new System.Drawing.Size(224, 21);
-            this.editSearchCurColumnOnly.TabIndex = 10;
-            this.editSearchCurColumnOnly.TabStop = true;
-            this.editSearchCurColumnOnly.Text = "Look only in the current column";
-            this.editSearchCurColumnOnly.UseVisualStyleBackColor = true;
-            // 
-            // editSearchBelow
-            // 
-            this.editSearchBelow.AutoSize = true;
-            this.editSearchBelow.Location = new System.Drawing.Point(255, 112);
-            this.editSearchBelow.Name = "editSearchBelow";
-            this.editSearchBelow.Size = new System.Drawing.Size(99, 21);
-            this.editSearchBelow.TabIndex = 9;
-            this.editSearchBelow.Text = "Look Below";
-            this.editSearchBelow.UseVisualStyleBackColor = true;
             // 
             // groupBox7
             // 
@@ -619,17 +475,27 @@
             this.groupBox7.Controls.Add(this.fontLabel);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(654, 147);
+            this.groupBox7.Size = new System.Drawing.Size(654, 186);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General";
+            // 
+            // showHorizontalScrollbar
+            // 
+            this.showHorizontalScrollbar.AutoSize = true;
+            this.showHorizontalScrollbar.Location = new System.Drawing.Point(9, 153);
+            this.showHorizontalScrollbar.Name = "showHorizontalScrollbar";
+            this.showHorizontalScrollbar.Size = new System.Drawing.Size(189, 21);
+            this.showHorizontalScrollbar.TabIndex = 19;
+            this.showHorizontalScrollbar.Text = "Show Horizontal Scrollbar";
+            this.showHorizontalScrollbar.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(363, 125);
+            this.label2.Location = new System.Drawing.Point(363, 156);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(285, 13);
             this.label2.TabIndex = 15;
@@ -638,7 +504,7 @@
             // useFileMonitoringApi
             // 
             this.useFileMonitoringApi.AutoSize = true;
-            this.useFileMonitoringApi.Location = new System.Drawing.Point(9, 101);
+            this.useFileMonitoringApi.Location = new System.Drawing.Point(9, 112);
             this.useFileMonitoringApi.Name = "useFileMonitoringApi";
             this.useFileMonitoringApi.Size = new System.Drawing.Size(360, 21);
             this.useFileMonitoringApi.TabIndex = 14;
@@ -667,6 +533,181 @@
             this.useHotkeys.Text = "Use";
             this.useHotkeys.UseVisualStyleBackColor = true;
             // 
+            // tabPage8
+            // 
+            this.tabPage8.Controls.Add(this.groupBox1);
+            this.tabPage8.Controls.Add(this.groupBox9);
+            this.tabPage8.Location = new System.Drawing.Point(4, 25);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage8.Size = new System.Drawing.Size(666, 436);
+            this.tabPage8.TabIndex = 7;
+            this.tabPage8.Text = "User Interface";
+            this.tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.viewLine);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.viewIndex);
+            this.groupBox1.Controls.Add(this.viewLineCount);
+            this.groupBox1.Location = new System.Drawing.Point(6, 237);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(654, 141);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Views";
+            // 
+            // viewLine
+            // 
+            this.viewLine.AutoSize = true;
+            this.viewLine.Location = new System.Drawing.Point(16, 99);
+            this.viewLine.Name = "viewLine";
+            this.viewLine.Size = new System.Drawing.Size(226, 21);
+            this.viewLine.TabIndex = 3;
+            this.viewLine.Text = "Absolute Log Line Index in View";
+            this.viewLine.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(355, 17);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "To Each View\'s name, append the following information";
+            // 
+            // viewIndex
+            // 
+            this.viewIndex.AutoSize = true;
+            this.viewIndex.Location = new System.Drawing.Point(16, 72);
+            this.viewIndex.Name = "viewIndex";
+            this.viewIndex.Size = new System.Drawing.Size(194, 21);
+            this.viewIndex.TabIndex = 1;
+            this.viewIndex.Text = "Relative Line Index in View";
+            this.viewIndex.UseVisualStyleBackColor = true;
+            // 
+            // viewLineCount
+            // 
+            this.viewLineCount.AutoSize = true;
+            this.viewLineCount.Location = new System.Drawing.Point(16, 45);
+            this.viewLineCount.Name = "viewLineCount";
+            this.viewLineCount.Size = new System.Drawing.Size(174, 21);
+            this.viewLineCount.TabIndex = 0;
+            this.viewLineCount.Text = "Number of lines in View";
+            this.viewLineCount.UseVisualStyleBackColor = true;
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.clickWordAutoSelectsIt);
+            this.groupBox9.Controls.Add(this.editMode);
+            this.groupBox9.Controls.Add(this.label18);
+            this.groupBox9.Controls.Add(this.label19);
+            this.groupBox9.Controls.Add(this.label20);
+            this.groupBox9.Controls.Add(this.editSearchAllColumns);
+            this.groupBox9.Controls.Add(this.editSearchAfter);
+            this.groupBox9.Controls.Add(this.editSearchCurColumnOnly);
+            this.groupBox9.Controls.Add(this.editSearchBelow);
+            this.groupBox9.Location = new System.Drawing.Point(6, 6);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(654, 225);
+            this.groupBox9.TabIndex = 7;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Smart Edit";
+            // 
+            // clickWordAutoSelectsIt
+            // 
+            this.clickWordAutoSelectsIt.AutoSize = true;
+            this.clickWordAutoSelectsIt.Location = new System.Drawing.Point(139, 186);
+            this.clickWordAutoSelectsIt.Name = "clickWordAutoSelectsIt";
+            this.clickWordAutoSelectsIt.Size = new System.Drawing.Size(286, 21);
+            this.clickWordAutoSelectsIt.TabIndex = 12;
+            this.clickWordAutoSelectsIt.Text = "Clicking on a word automatically selects it";
+            this.clickWordAutoSelectsIt.UseVisualStyleBackColor = true;
+            // 
+            // editMode
+            // 
+            this.editMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.editMode.FormattingEnabled = true;
+            this.editMode.Items.AddRange(new object[] {
+            "Always",
+            "With SPACE key",
+            "With RightArrow key"});
+            this.editMode.Location = new System.Drawing.Point(94, 34);
+            this.editMode.Name = "editMode";
+            this.editMode.Size = new System.Drawing.Size(275, 24);
+            this.editMode.TabIndex = 5;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(0, 37);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(71, 17);
+            this.label18.TabIndex = 4;
+            this.label18.Text = "Edit Mode";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(91, 62);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(513, 39);
+            this.label19.TabIndex = 6;
+            this.label19.Text = resources.GetString("label19.Text");
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(0, 132);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(119, 17);
+            this.label20.TabIndex = 7;
+            this.label20.Text = "Smart Completion";
+            // 
+            // editSearchAllColumns
+            // 
+            this.editSearchAllColumns.AutoSize = true;
+            this.editSearchAllColumns.Location = new System.Drawing.Point(370, 157);
+            this.editSearchAllColumns.Name = "editSearchAllColumns";
+            this.editSearchAllColumns.Size = new System.Drawing.Size(147, 21);
+            this.editSearchAllColumns.TabIndex = 11;
+            this.editSearchAllColumns.TabStop = true;
+            this.editSearchAllColumns.Text = "Look at all columns";
+            this.editSearchAllColumns.UseVisualStyleBackColor = true;
+            // 
+            // editSearchAfter
+            // 
+            this.editSearchAfter.AutoSize = true;
+            this.editSearchAfter.Location = new System.Drawing.Point(139, 131);
+            this.editSearchAfter.Name = "editSearchAfter";
+            this.editSearchAfter.Size = new System.Drawing.Size(103, 21);
+            this.editSearchAfter.TabIndex = 8;
+            this.editSearchAfter.Text = "Look Ahead";
+            this.editSearchAfter.UseVisualStyleBackColor = true;
+            // 
+            // editSearchCurColumnOnly
+            // 
+            this.editSearchCurColumnOnly.AutoSize = true;
+            this.editSearchCurColumnOnly.Location = new System.Drawing.Point(140, 157);
+            this.editSearchCurColumnOnly.Name = "editSearchCurColumnOnly";
+            this.editSearchCurColumnOnly.Size = new System.Drawing.Size(224, 21);
+            this.editSearchCurColumnOnly.TabIndex = 10;
+            this.editSearchCurColumnOnly.TabStop = true;
+            this.editSearchCurColumnOnly.Text = "Look only in the current column";
+            this.editSearchCurColumnOnly.UseVisualStyleBackColor = true;
+            // 
+            // editSearchBelow
+            // 
+            this.editSearchBelow.AutoSize = true;
+            this.editSearchBelow.Location = new System.Drawing.Point(255, 131);
+            this.editSearchBelow.Name = "editSearchBelow";
+            this.editSearchBelow.Size = new System.Drawing.Size(99, 21);
+            this.editSearchBelow.TabIndex = 9;
+            this.editSearchBelow.Text = "Look Below";
+            this.editSearchBelow.UseVisualStyleBackColor = true;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.groupBox8);
@@ -675,7 +716,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(666, 536);
+            this.tabPage2.Size = new System.Drawing.Size(666, 436);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Colors";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -777,11 +818,12 @@
             // 
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.ForeColor = System.Drawing.Color.Red;
             this.label27.Location = new System.Drawing.Point(19, 159);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(421, 13);
+            this.label27.Size = new System.Drawing.Size(283, 13);
             this.label27.TabIndex = 18;
-            this.label27.Text = "If you change these, settings will take full effect after application Restart.";
+            this.label27.Text = "Changing any of these settings Requires Restart!";
             // 
             // label25
             // 
@@ -899,7 +941,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(666, 536);
+            this.tabPage3.Size = new System.Drawing.Size(666, 436);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Import/Export";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -937,7 +979,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(666, 536);
+            this.tabPage4.Size = new System.Drawing.Size(666, 436);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Notes";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1054,7 +1096,7 @@
             this.tabPage7.Location = new System.Drawing.Point(4, 25);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(666, 536);
+            this.tabPage7.Size = new System.Drawing.Size(666, 436);
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "Zip Files";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -1084,7 +1126,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(666, 536);
+            this.tabPage5.Size = new System.Drawing.Size(666, 436);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Auto Match Template";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1120,7 +1162,7 @@
             this.fileToContext.Name = "fileToContext";
             this.fileToContext.OwnerDraw = true;
             this.fileToContext.ShowGroups = false;
-            this.fileToContext.Size = new System.Drawing.Size(654, 405);
+            this.fileToContext.Size = new System.Drawing.Size(654, 385);
             this.fileToContext.TabIndex = 2;
             this.fileToContext.UseAlternatingBackColors = true;
             this.fileToContext.UseCompatibleStateImageBehavior = false;
@@ -1145,7 +1187,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 25);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(666, 536);
+            this.tabPage6.Size = new System.Drawing.Size(666, 436);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Auto Match Syntax";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -1180,7 +1222,7 @@
             this.fileToSyntax.Name = "fileToSyntax";
             this.fileToSyntax.OwnerDraw = true;
             this.fileToSyntax.ShowGroups = false;
-            this.fileToSyntax.Size = new System.Drawing.Size(654, 425);
+            this.fileToSyntax.Size = new System.Drawing.Size(654, 387);
             this.fileToSyntax.TabIndex = 0;
             this.fileToSyntax.UseAlternatingBackColors = true;
             this.fileToSyntax.UseCompatibleStateImageBehavior = false;
@@ -1198,31 +1240,20 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // showHorizontalScrollbar
-            // 
-            this.showHorizontalScrollbar.AutoSize = true;
-            this.showHorizontalScrollbar.Location = new System.Drawing.Point(9, 122);
-            this.showHorizontalScrollbar.Name = "showHorizontalScrollbar";
-            this.showHorizontalScrollbar.Size = new System.Drawing.Size(189, 21);
-            this.showHorizontalScrollbar.TabIndex = 19;
-            this.showHorizontalScrollbar.Text = "Show Horizontal Scrollbar";
-            this.showHorizontalScrollbar.UseVisualStyleBackColor = true;
-            // 
             // settings_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(694, 620);
+            this.ClientSize = new System.Drawing.Size(694, 514);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.close);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "settings_form";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Preferences";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.settings_form_FormClosed);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -1231,10 +1262,13 @@
             this.groupBox4.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.groupBox9.ResumeLayout(false);
-            this.groupBox9.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
+            this.tabPage8.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
@@ -1260,11 +1294,6 @@
         #endregion
 
         private System.Windows.Forms.Label fontLabel;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox viewLine;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox viewIndex;
-        private System.Windows.Forms.CheckBox viewLineCount;
         private System.Windows.Forms.Button close;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox bringToTopOnRestart;
@@ -1321,14 +1350,6 @@
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.LinkLabel hotkeyslink;
         private System.Windows.Forms.CheckBox useHotkeys;
-        private System.Windows.Forms.ComboBox editMode;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.RadioButton editSearchAllColumns;
-        private System.Windows.Forms.RadioButton editSearchCurColumnOnly;
-        private System.Windows.Forms.CheckBox editSearchBelow;
-        private System.Windows.Forms.CheckBox editSearchAfter;
-        private System.Windows.Forms.Label label20;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.CheckBox filterShowFilterRowInFilterColor;
@@ -1352,11 +1373,26 @@
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.CheckBox useFileMonitoringApi;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.CheckBox showBetaUpdates;
         private System.Windows.Forms.CheckBox showVariableFontsAsWell;
         private System.Windows.Forms.CheckBox showTips;
         private System.Windows.Forms.CheckBox showHorizontalScrollbar;
+        private System.Windows.Forms.TabPage tabPage8;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox viewLine;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox viewIndex;
+        private System.Windows.Forms.CheckBox viewLineCount;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.CheckBox clickWordAutoSelectsIt;
+        private System.Windows.Forms.ComboBox editMode;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.RadioButton editSearchAllColumns;
+        private System.Windows.Forms.CheckBox editSearchAfter;
+        private System.Windows.Forms.RadioButton editSearchCurColumnOnly;
+        private System.Windows.Forms.CheckBox editSearchBelow;
 
     }
 }

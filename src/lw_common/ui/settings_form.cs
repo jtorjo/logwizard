@@ -145,6 +145,7 @@ namespace lw_common.ui {
                 editSearchAllColumns.Checked = true;
             else
                 editSearchCurColumnOnly.Checked = true;
+            clickWordAutoSelectsIt.Checked = app.inst.edit_click_word_selects_it;
 
             filterShowFilterRowInFilterColor.Checked = app.inst.show_filter_row_in_filter_color;
             useFileMonitoringApi.Checked = app.inst.use_file_monitoring_api;
@@ -152,6 +153,7 @@ namespace lw_common.ui {
             showVariableFontsAsWell.Checked = app.inst.show_variable_fonts_as_well;
             showTips.Checked = app.inst.show_tips;
             showHorizontalScrollbar.Checked = app.inst.show_horizontal_scrollbar;
+
         }
 
         private void save() {
@@ -233,6 +235,7 @@ namespace lw_common.ui {
             app.inst.show_variable_fonts_as_well = showVariableFontsAsWell.Checked;
             app.inst.show_tips = showTips.Checked;
             app.inst.show_horizontal_scrollbar = showHorizontalScrollbar.Checked;
+            app.inst.edit_click_word_selects_it = clickWordAutoSelectsIt.Checked;
 
             app.inst.save();
         }

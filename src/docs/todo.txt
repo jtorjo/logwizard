@@ -10,7 +10,6 @@
 
 
 
-#6 - click to select a word -> allow turning this off
 
 #7 -- bug - if i'm on the last char, and want to select starting from there to the left, it does not work
 

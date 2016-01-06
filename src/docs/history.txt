@@ -17,6 +17,11 @@
 		  quora
 
 
+
+1.6.6c
+- #6 - click to select a word -> allow turning this off
+
+
 1.6.6b
 - #5: add a horizonal scrollbar (make Msg not "occupy remaining space") -> allow a checkbox
 
