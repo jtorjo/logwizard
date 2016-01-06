@@ -9,7 +9,6 @@
 
 
 
-#5 - add a horizonal scrollbar (make Msg not "occupy remaining space") -> allow a checkbox
 
 #6 - click to select a word -> allow turning this off
 

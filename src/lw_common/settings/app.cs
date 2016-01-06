@@ -189,6 +189,9 @@ namespace lw_common {
         // 1.5.18+ - first time we have a multi-line column, we show the details pane
         public bool has_shown_details_pane = false;
 
+        // 1.6.6+ - allow showing a horizontal scrollbar in log-view
+        public bool show_horizontal_scrollbar = false;
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // file-by-file
         public bool bring_to_top_on_restart = false;
@@ -401,6 +404,7 @@ namespace lw_common {
             load_save(load, ref description_layout_idx_, "description_layout_idx", 0);
 
             load_save(load, ref has_shown_details_pane, "has_shown_details_pane", false);
+            load_save(load, ref show_horizontal_scrollbar, "show_horizontal_scrollbar", false);
         }
 
         private string initials(string name) {

@@ -151,6 +151,7 @@ namespace lw_common.ui
             list.ColumnRightClick += list_ColumnRightClick;
             list.ColumnWidthChanged += List_on_column_width_changed;
             list.ColumnWidthChanging += List_on_column_width_changing;
+            msgCol.FillsFreeSpace = !app.inst.show_horizontal_scrollbar;
         }
 
         private void List_on_column_width_changing(object sender, ColumnWidthChangingEventArgs e) {

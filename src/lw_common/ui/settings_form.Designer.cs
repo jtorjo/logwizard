@@ -55,6 +55,7 @@
             this.browseFont = new System.Windows.Forms.Button();
             this.showBetaUpdates = new System.Windows.Forms.CheckBox();
             this.showVariableFontsAsWell = new System.Windows.Forms.CheckBox();
+            this.showTips = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
@@ -69,7 +70,6 @@
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.useFileMonitoringApi = new System.Windows.Forms.CheckBox();
-            this.label30 = new System.Windows.Forms.Label();
             this.hotkeyslink = new System.Windows.Forms.LinkLabel();
             this.useHotkeys = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -122,7 +122,7 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.showTips = new System.Windows.Forms.CheckBox();
+            this.showHorizontalScrollbar = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -147,7 +147,7 @@
             // fontLabel
             // 
             this.fontLabel.AutoSize = true;
-            this.fontLabel.Location = new System.Drawing.Point(6, 53);
+            this.fontLabel.Location = new System.Drawing.Point(6, 44);
             this.fontLabel.Name = "fontLabel";
             this.fontLabel.Size = new System.Drawing.Size(44, 17);
             this.fontLabel.TabIndex = 1;
@@ -430,7 +430,7 @@
             // browseFont
             // 
             this.browseFont.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.browseFont.Location = new System.Drawing.Point(236, 51);
+            this.browseFont.Location = new System.Drawing.Point(236, 42);
             this.browseFont.Name = "browseFont";
             this.browseFont.Size = new System.Drawing.Size(29, 20);
             this.browseFont.TabIndex = 12;
@@ -455,7 +455,7 @@
             // 
             this.showVariableFontsAsWell.AutoSize = true;
             this.showVariableFontsAsWell.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.showVariableFontsAsWell.Location = new System.Drawing.Point(236, 77);
+            this.showVariableFontsAsWell.Location = new System.Drawing.Point(236, 68);
             this.showVariableFontsAsWell.Name = "showVariableFontsAsWell";
             this.showVariableFontsAsWell.Size = new System.Drawing.Size(257, 17);
             this.showVariableFontsAsWell.TabIndex = 17;
@@ -463,6 +463,18 @@
             this.tip.SetToolTip(this.showVariableFontsAsWell, "If selected, when there are Beta Updates, you are notified (in the Status bar)\r\nI" +
         "f not selected, you are notified only of Stable Updates");
             this.showVariableFontsAsWell.UseVisualStyleBackColor = true;
+            // 
+            // showTips
+            // 
+            this.showTips.AutoSize = true;
+            this.showTips.Location = new System.Drawing.Point(507, 15);
+            this.showTips.Name = "showTips";
+            this.showTips.Size = new System.Drawing.Size(92, 21);
+            this.showTips.TabIndex = 18;
+            this.showTips.Text = "Show Tips";
+            this.tip.SetToolTip(this.showTips, "If selected, when there are Beta Updates, you are notified (in the Status bar)\r\nI" +
+        "f not selected, you are notified only of Stable Updates");
+            this.showTips.UseVisualStyleBackColor = true;
             // 
             // tabControl1
             // 
@@ -595,19 +607,19 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.showHorizontalScrollbar);
             this.groupBox7.Controls.Add(this.showTips);
             this.groupBox7.Controls.Add(this.showVariableFontsAsWell);
             this.groupBox7.Controls.Add(this.showBetaUpdates);
             this.groupBox7.Controls.Add(this.label2);
             this.groupBox7.Controls.Add(this.useFileMonitoringApi);
-            this.groupBox7.Controls.Add(this.label30);
             this.groupBox7.Controls.Add(this.browseFont);
             this.groupBox7.Controls.Add(this.hotkeyslink);
             this.groupBox7.Controls.Add(this.useHotkeys);
             this.groupBox7.Controls.Add(this.fontLabel);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(654, 143);
+            this.groupBox7.Size = new System.Drawing.Size(654, 147);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General";
@@ -617,33 +629,22 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(504, 113);
+            this.label2.Location = new System.Drawing.Point(363, 125);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 13);
+            this.label2.Size = new System.Drawing.Size(285, 13);
             this.label2.TabIndex = 15;
-            this.label2.Text = "Requires Restart!";
+            this.label2.Text = "Changing any of these settings Requires Restart!";
             // 
             // useFileMonitoringApi
             // 
             this.useFileMonitoringApi.AutoSize = true;
-            this.useFileMonitoringApi.Location = new System.Drawing.Point(9, 110);
+            this.useFileMonitoringApi.Location = new System.Drawing.Point(9, 101);
             this.useFileMonitoringApi.Name = "useFileMonitoringApi";
             this.useFileMonitoringApi.Size = new System.Drawing.Size(360, 21);
             this.useFileMonitoringApi.TabIndex = 14;
             this.useFileMonitoringApi.Text = "Use File Monitoring API (FindFirstChangeNotification)";
             this.useFileMonitoringApi.UseVisualStyleBackColor = true;
             this.useFileMonitoringApi.CheckedChanged += new System.EventHandler(this.useFileMonitoringApi_CheckedChanged);
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label30.ForeColor = System.Drawing.Color.Red;
-            this.label30.Location = new System.Drawing.Point(504, 55);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(106, 13);
-            this.label30.TabIndex = 13;
-            this.label30.Text = "Requires Restart!";
             // 
             // hotkeyslink
             // 
@@ -1197,17 +1198,15 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // showTips
+            // showHorizontalScrollbar
             // 
-            this.showTips.AutoSize = true;
-            this.showTips.Location = new System.Drawing.Point(507, 15);
-            this.showTips.Name = "showTips";
-            this.showTips.Size = new System.Drawing.Size(92, 21);
-            this.showTips.TabIndex = 18;
-            this.showTips.Text = "Show Tips";
-            this.tip.SetToolTip(this.showTips, "If selected, when there are Beta Updates, you are notified (in the Status bar)\r\nI" +
-        "f not selected, you are notified only of Stable Updates");
-            this.showTips.UseVisualStyleBackColor = true;
+            this.showHorizontalScrollbar.AutoSize = true;
+            this.showHorizontalScrollbar.Location = new System.Drawing.Point(9, 122);
+            this.showHorizontalScrollbar.Name = "showHorizontalScrollbar";
+            this.showHorizontalScrollbar.Size = new System.Drawing.Size(189, 21);
+            this.showHorizontalScrollbar.TabIndex = 19;
+            this.showHorizontalScrollbar.Text = "Show Horizontal Scrollbar";
+            this.showHorizontalScrollbar.UseVisualStyleBackColor = true;
             // 
             // settings_form
             // 
@@ -1350,7 +1349,6 @@
         private System.Windows.Forms.Label label29;
         private ColorPicker.ColorPickerCombobox bookmarkBg;
         private System.Windows.Forms.Button browseFont;
-        private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.CheckBox useFileMonitoringApi;
         private System.Windows.Forms.Label label2;
@@ -1358,6 +1356,7 @@
         private System.Windows.Forms.CheckBox showBetaUpdates;
         private System.Windows.Forms.CheckBox showVariableFontsAsWell;
         private System.Windows.Forms.CheckBox showTips;
+        private System.Windows.Forms.CheckBox showHorizontalScrollbar;
 
     }
 }
