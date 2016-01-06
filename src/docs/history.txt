@@ -44,6 +44,9 @@ slightly different background (so that the user sees his search is successful)
           https://news.ycombinator.com/news
 		  quora
 
+1.6.6f
+- if current col not visible, update the smart edit so that it points somewhere
+
 
 1.6.6e
 - moved is_visible/col_width inside olv_extensions

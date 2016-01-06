@@ -161,6 +161,27 @@ namespace lw_common.ui
             is_changing_column_width_ = true;
         }
 
+        // if the current column just got hidden, go to the closest to it
+        private void update_cur_col() {
+            int count = list.AllColumns.Count;
+            if (list.AllColumns[cur_col_].is_visible())
+                return;
+
+            for (int offset = 0; offset < count; ++offset) {
+                int before_idx = (cur_col_ + count - offset - 1) % count, after_idx = (cur_col_ + offset + 1) % count;
+                var before = list.AllColumns[before_idx];
+                var after = list.AllColumns[after_idx];
+                if (after.is_visible()) {
+                    cur_col_ = after_idx;
+                    break;
+                }
+                if (before.is_visible()) {
+                    cur_col_ = before_idx;
+                    break;
+                }
+            }
+        }
+
         private void List_on_column_width_changed(object sender, ColumnWidthChangedEventArgs e) {
             if (!is_changing_column_width_)
                 return;
@@ -267,6 +288,7 @@ namespace lw_common.ui
             col.is_visible(!col.is_visible());
             sub.Checked = col.is_visible();
             list.RebuildColumns();
+            update_cur_col();
         }
 
         private void move_column_to_left(OLVColumn col) {
@@ -288,8 +310,10 @@ namespace lw_common.ui
             get { return column_positions_; }
             set {
                 column_positions_ = value;
-                if (column_positions_ != "")
+                if (column_positions_ != "") {
                     log_view_show_columns.apply_column_positions(this);
+                    update_cur_col();
+                }
             }
         }
 
