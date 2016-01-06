@@ -597,6 +597,7 @@ namespace lw_common.ui {
             sel_len_ = 0;
             add_cur_text_to_positions();
             logger.Debug("forced sel text=" + txt);
+            on_sel_changed();
         }
 
         private void update_selected_text() {

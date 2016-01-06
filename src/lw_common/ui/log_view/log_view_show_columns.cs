@@ -136,66 +136,14 @@ namespace lw_common.ui {
         }
 
         static private void show_column(OLVColumn col, int width, bool show) {
-            Debug.Assert(col.Tag != null);
-
-            bool is_line_col = col.fixed_index() == 0;
-            bool visible = is_line_col ? col.Width > 1 : col.IsVisible;
-
             if (col.Width == 0)
                 col.Width = width;
-            if (visible == show)
+            if (col.is_visible() == show)
                 return;
 
-            // 1.6.6 for Line column - we can't hide it (due to some weird b_ug in ListView);  so we just set its width to 1
-            if (is_line_col) {
-                if (show) {
-                    col.MaximumWidth = -1;
-                    col.Width = width;
-                } else {
-                    col.lv_tag().line_width = width;
-                    // ... don't allow resizing
-                    col.MaximumWidth = col.Width = 1;
-                }
-                col.IsVisible = true;
-            } else {
-                col.Width = width;
-                col.IsVisible = show;
-            }
+            col.col_width(width);
+            col.is_visible(show);
         }
-
-        internal static bool is_column_visible(OLVColumn col) {
-            Debug.Assert(col.Tag != null);
-
-            bool is_line_col = col.fixed_index() == 0;
-            bool visible = is_line_col ? col.Width > 1 : col.IsVisible;
-            return visible;
-        }
-
-        // toggles whether column is visible or not, and returns the new state
-        static internal bool toggle_column_visible(OLVColumn col) {
-            Debug.Assert(col.Tag != null);
-
-            bool is_line_col = col.fixed_index() == 0;
-            bool visible = is_line_col ? col.Width > 1 : col.IsVisible;
-            visible = !visible;
-
-            // 1.6.6 for Line column - we can't hide it (due to some weird b_ug in ListView);  so we just set its width to 1
-            if (is_line_col) {
-                // for line column - simple trick - save the old width in "Tag" property
-                if (visible) {
-                    col.MaximumWidth = -1;
-                    col.Width = col.lv_tag().line_width > 0 ? col.lv_tag().line_width : DEFAULT_COL_WIDTH;
-                } else {
-                    col.lv_tag().line_width = col.Width;
-                    col.MaximumWidth = col.Width = 1;
-                }
-                col.IsVisible = true;
-            } else
-                col.IsVisible = visible;
-
-            return visible;
-        }
-
 
         static private void load_column_positions(log_view lv, string str) {
             if (str == "")
@@ -214,14 +162,14 @@ namespace lw_common.ui {
 
                     // this means this column is visible - so we can apply column positioning
                     // (othwerise, this column doesn't even exist for this specific file - nothing to do)
-                    lv.list.AllColumns[col_idx].Width = width;
+                    lv.list.AllColumns[col_idx].col_width( width);
                     // 1.5.4+ - if we don't have a value in the given column, don't show it
                     if (! lv.visible_columns.Contains( log_view_cell.cell_idx_to_type(col_idx)))
                         visible = false;
                     if (!lv.is_full_log && log_view_cell.cell_idx_to_type(col_idx) == info_type.view)
                         // View(s) only visible in Full Log
                         visible = false;
-                    lv.list.AllColumns[col_idx].IsVisible = visible;
+                    lv.list.AllColumns[col_idx].is_visible( visible);
                     if (visible) {
                         while (display_indexes.ContainsKey(display_index))
                             // this can happen when moving from one log to another, and they have very different columns
@@ -275,8 +223,8 @@ namespace lw_common.ui {
                     // "2" - I don't have this column in my current log - so I don't show it, but, when another log might have this column, do show it
                     // "1" - column is to be shown
                     // "0" - user manually chose to hide this column
-                    string visible = lv.visible_columns.Contains(log_view_cell.cell_idx_to_type(col_idx)) ? (col.IsVisible ? "1" : "0") : "2";
-                    positions += "" + col_idx + "," + display_index + "," + col.Width + "," + visible + ";";
+                    string visible = lv.visible_columns.Contains(log_view_cell.cell_idx_to_type(col_idx)) ? (col.is_visible() ? "1" : "0") : "2";
+                    positions += "" + col_idx + "," + display_index + "," + col.col_width() + "," + visible + ";";
                 }
             }
 

@@ -178,7 +178,7 @@ namespace lw_common.ui
 
         private void list_ColumnRightClick(object sender, ColumnClickEventArgs e) {
             int col_idx = e.Column; // ... index within the visible columns
-            var cur_col = list.GetColumn(col_idx);
+            var cur_col = col_idx >= 0 ? list.GetColumn(col_idx) : msgCol;
 
             // show the Filter actions first (the rest will be shown in their respective categories)
             ContextMenuStrip menu = new ContextMenuStrip();
@@ -189,7 +189,7 @@ namespace lw_common.ui
                     if (!is_visible)
                         continue;
                     ToolStripMenuItem sub = new ToolStripMenuItem(col.Text);
-                    sub.Checked = log_view_show_columns.is_column_visible(col);
+                    sub.Checked = col.is_visible();
                     var c = col;
                     sub.Click += (a, ee) => toggle_column_visible(c, sub);
                     menu.Items.Add(sub);
@@ -264,7 +264,8 @@ namespace lw_common.ui
         }
 
         private void toggle_column_visible(OLVColumn col, ToolStripMenuItem sub) {
-            sub.Checked = log_view_show_columns.toggle_column_visible(col);
+            col.is_visible(!col.is_visible());
+            sub.Checked = col.is_visible();
             list.RebuildColumns();
         }
 

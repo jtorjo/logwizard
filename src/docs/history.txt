@@ -1,7 +1,15 @@
 
-
-
 #9 - bug: type as you go
+If type-as-yo-go searching for something that is only in description pane -> when I type something only valid in description pane, the list view does not update.
+Such as, going from "o" to "oc" -> at this point, the list view should show nothing selected, as there is nothing with "oc" in the list (only in description pane)
+
+Search next/prev -> does not work when something is only found in description pane
+
+IMPORTANT: if searching works for something, but it's only visible in the description pane, i will show that by showing all line in the view in a 
+slightly different background (so that the user sees his search is successful)
+
+
+
 
 -- bug (old, just needs rechecking to see if it still happens) 
    : C:\john\code\buff\344\TNLogs-DESKTOP-6JGLCS9-damie-635833594984576357 -> hotkeys shows 0 and is hidden
@@ -15,7 +23,7 @@
 
 
 
-
+-********* what do i need in order to make 1.7 ???
 
 
 
@@ -25,12 +33,21 @@
 - bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
 
 - retest Event Viewer / DebugView
+  - on the Event viewer -> at some point, the whole app slowly freezes. this is not cool, should never happen.
+  - on DebugView - last time i checked, when LW was dumping to debug, it was really sluggish - i need to check again (have no filters whatsoever)
+  - run it on Resharper Profile - both times
+
 
 - debug print -> rename as Debug View
 
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
+
+
+1.6.6e
+- moved is_visible/col_width inside olv_extensions
+
 
 1.6.6d
 - #7 -- bug - if i'm on the last char, and want to select starting from there to the left, it does not work

@@ -2,7 +2,7 @@
   - note: i will briefly mention outputdebugstring
   - explain about editing Description pane , etc.
   -- tidbits : about finding (what gets selected), about Description control, about copying records from event viewer
- 
+   - ask about what people would want in such a logviewer
 
 
 	
@@ -245,7 +245,9 @@ i think the problem is that i'm reading a partial line and matching against that
 
 
 
-
+- column formatters
+  - this surely deservest its own article. have some simple script where i can have them
+  - also, have a way to script them and automatically save them so that they can be reused
 
 
 
