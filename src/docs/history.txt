@@ -21,19 +21,19 @@
 
 
 
-- bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
-
-- retest Event Viewer / DebugView
-  - on the Event viewer -> at some point, the whole app slowly freezes. this is not cool, should never happen.
-  - on DebugView - last time i checked, when LW was dumping to debug, it was really sluggish - i need to check again (have no filters whatsoever)
-  - run it on Resharper Profile - both times
 
 
-- debug print -> rename as Debug View
+
 
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
+
+
+1.6.6h
+- debug print -> rename as Debug View
+
+
 
 1.6.6g
 - #9 - bug: type as you go + if searching works for something, but it's only visible in the description pane, i will show that by showing all line in the view in a 
