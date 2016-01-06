@@ -394,6 +394,10 @@ namespace lw_common.ui
             }
         }
 
+        internal int cur_col_idx {
+            get { return cur_col_; }
+        }
+
         public List<int> multi_sel_idx {
             get {
                 List<int> sel = new List<int>();
@@ -1585,6 +1589,25 @@ namespace lw_common.ui
                 search_for_text_next();
         }
 
+        private bool row_contains_search_text(int row_idx, List<int> visible_indexes) {
+            string sel_text = edit.sel_text.ToLower();
+            Debug.Assert(sel_text != "");
+
+
+            if (app.inst.edit_search_all_columns) {
+                foreach (var col in visible_indexes)
+                    if (can_find_text_at_row(sel_text, row_idx, col))
+                        return true;
+            } else if (can_find_text_at_row(sel_text, row_idx, cur_col_))
+                return true;
+
+            return false;
+        }
+
+        internal bool is_searching() {
+            return (cur_search_ != null || edit.sel_text != "");
+        }
+
         private void search_for_text_next() {
             int count = item_count;
             if (count < 1)
@@ -1595,13 +1618,13 @@ namespace lw_common.ui
             if (cur_search_ == null && sel_text == "")
                 return;
 
+            var all_visible_column_indexes = all_visible_column_types().Select(log_view_cell.info_type_to_cell_idx).ToList();
             int found = -1;
             int next_row = sel_row_idx >= 0 ? sel_row_idx + 1 : 0;
             for (int idx = next_row; idx < count && found < 0; ++idx) {
                 // 1.2.7+ - if user has selected something, search for that
                 if (sel_text != "") {
-                    string cur = list.GetItem(idx).GetSubItem( visible_column(cur_col_)).Text;
-                    if (cur.ToLower().Contains(sel_text))
+                    if ( row_contains_search_text(idx, all_visible_column_indexes))
                         found = idx;
                     continue;
                 }
@@ -1627,13 +1650,13 @@ namespace lw_common.ui
             if (cur_search_ == null && sel_text == "")
                 return;
 
+            var all_visible_column_indexes = all_visible_column_types().Select(log_view_cell.info_type_to_cell_idx).ToList();
             int found = -1;
             int prev_row = sel_row_idx >= 0 ? sel_row_idx - 1 : count - 1;
             for (int idx = prev_row; idx >= 0 && found < 0; --idx) {
                 // 1.2.7+ - if user has selected something, search for that
                 if (sel_text != "") {
-                    string cur = list.GetItem(idx).GetSubItem( visible_column(cur_col_)).Text;
-                    if (cur.ToLower().Contains(sel_text))
+                    if ( row_contains_search_text(idx, all_visible_column_indexes))
                         found = idx;
                     continue;
                 }
@@ -2116,7 +2139,7 @@ namespace lw_common.ui
         }
 
         // returns all visible column types - including those from the description control
-        private List<info_type> all_visible_column_types() {
+        internal List<info_type> all_visible_column_types() {
             List<info_type> visible = lv_parent.description_columns();
 
             for (int col_idx = 0; col_idx < list.AllColumns.Count; ++col_idx)
@@ -2128,7 +2151,7 @@ namespace lw_common.ui
 
             return visible;
         } 
-        private List<info_type> view_visible_column_types() {
+        internal List<info_type> view_visible_column_types() {
             List<info_type> visible = new List<info_type>();
 
             for (int col_idx = 0; col_idx < list.AllColumns.Count; ++col_idx)

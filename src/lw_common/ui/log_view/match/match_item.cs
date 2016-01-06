@@ -116,9 +116,48 @@ namespace lw_common.ui {
             else 
                 result = font.bg;
 
+            // 1.6.6 - if user has searched for something only visible in description pane, show it a bit darker, so the user knows it's a match on this line
+            if (result == util.transparent) 
+                if (parent.is_searching()) {
+                    var view_visible = parent.view_visible_column_types();
+                    bool search_matches_view = search_matches_any_column(parent, view_visible);
+                    if (!search_matches_view) {
+                        var all_visible = parent.all_visible_column_types();
+                        var details_visible = all_visible.Where( x => !view_visible.Contains(x) ).ToList();
+                        if (search_matches_any_column(parent, details_visible))
+                            result = search_form_history.inst.default_search.bg;
+                    }
+                }
+            
+
             if (result == util.transparent)
                 result = app.inst.bg;
             return result;
+        }
+
+        private bool search_matches_any_column(log_view parent,  List<info_type> columns) {
+            string sel_text = parent.edit.sel_text.ToLower();
+            var cur_col = log_view_cell.cell_idx_to_type(parent.cur_col_idx);
+            if (sel_text != "") {
+                if (app.inst.edit_search_all_columns) {
+                    foreach (info_type col in columns) {
+                        string txt = log_view_cell.cell_value_by_type(this, col).ToLower();
+                        if (txt.Contains(sel_text))
+                            return true;
+                    }
+                } else if (columns.Contains(cur_col)) {
+                    string txt = log_view_cell.cell_value_by_type(this, cur_col).ToLower();
+                    if (txt.Contains(sel_text))
+                        return true;
+                }
+            } else {
+                // search for cur_search
+                if (columns.Contains(info_type.msg)) {
+                    if (string_search.matches(this.match.line.part(info_type.msg), parent.cur_search))
+                        return true;
+                }
+            }
+            return false;            
         }
 
         private List<Tuple<int, int, print_info>> override_print_from_all_places(log_view parent, string text, int col_idx) {

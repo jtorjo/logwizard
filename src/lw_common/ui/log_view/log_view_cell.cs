@@ -168,6 +168,9 @@ namespace lw_common.ui {
             case info_type.file: return i.file;
             case info_type.func: return i.func;
 
+            case info_type.line: return "" + i.line;
+            case info_type.view: return i.view;
+
             case info_type.ctx1: return i.ctx1;
             case info_type.ctx2: return i.ctx2;
             case info_type.ctx3: return i.ctx3;

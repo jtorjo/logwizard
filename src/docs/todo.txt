@@ -3,6 +3,8 @@
   - explain about editing Description pane , etc.
   -- tidbits : about finding (what gets selected), about Description control, about copying records from event viewer
    - ask about what people would want in such a logviewer
+   - find: about the fact that if searching for something, if not in the columns in View, is shown as slightly darker
+   - find: allow searching in all columns
 
 
 	

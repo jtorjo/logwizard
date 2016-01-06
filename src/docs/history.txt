@@ -1,13 +1,5 @@
 
-#9 - bug: type as you go
-If type-as-yo-go searching for something that is only in description pane -> when I type something only valid in description pane, the list view does not update.
-Such as, going from "o" to "oc" -> at this point, the list view should show nothing selected, as there is nothing with "oc" in the list (only in description pane)
-
-Search next/prev -> does not work when something is only found in description pane
-
-IMPORTANT: if searching works for something, but it's only visible in the description pane, i will show that by showing all line in the view in a 
-slightly different background (so that the user sees his search is successful)
-
+#13 - bug: if at the last last visible down + arrow down 
 
 
 
@@ -19,7 +11,6 @@ slightly different background (so that the user sees his search is successful)
 	  - it's weird - sometimes works sometimes not -> seems ot always work only on the view that originally had focus, but not on the others
 	  -- "hotkeys" tab always seems to be marked as "has new items" even if i traverse it
 
-#13 - bug: if at the last last visible down + arrow down 
 
 
 
@@ -43,6 +34,11 @@ slightly different background (so that the user sees his search is successful)
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
+
+1.6.6g
+- #9 - bug: type as you go + if searching works for something, but it's only visible in the description pane, i will show that by showing all line in the view in a 
+slightly different background (so that the user sees his search is successful)
+
 
 1.6.6f
 - if current col not visible, update the smart edit so that it points somewhere
