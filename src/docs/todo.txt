@@ -1,58 +1,48 @@
-
-bug: roaming dir???
-
-
-bug: line numbers -> allow turning off
-
-- add a horizonal scrollbar (make Msg not "occupy remaining space") -> allow a checkbox
-
-- click to select a word -> allow turning this off
-
-.gitattributes -> mark .sample.log files as binary - https://git-scm.com/book/en/v2/Customizing-Git-Git-Attributes  -- https://github.com/jtorjo/logwizard/issues/2#issuecomment-168192288
-
 - article about event viewer - title: view Windows Event Logs can be fun
   - note: i will briefly mention outputdebugstring
   - explain about editing Description pane , etc.
-  -- tidbits : about finding, about Description control, about copying records from event viewer
+  -- tidbits : about finding (what gets selected), about Description control, about copying records from event viewer
+ 
 
--- bug - if i'm on the last char, and want to select starting from there to the left, it does not work
 
--- bug : C:\john\code\buff\344\TNLogs-DESKTOP-6JGLCS9-damie-635833594984576357 -> hotkeys shows 0 and is hidden
+	
+
+#4 bug: line numbers -> allow turning off
+
+#5 - add a horizonal scrollbar (make Msg not "occupy remaining space") -> allow a checkbox
+
+#6 - click to select a word -> allow turning this off
+
+#7 -- bug - if i'm on the last char, and want to select starting from there to the left, it does not work
+
+#9 - bug: type as you go
+
+-- bug (old, just needs rechecking to see if it still happens) 
+   : C:\john\code\buff\344\TNLogs-DESKTOP-6JGLCS9-damie-635833594984576357 -> hotkeys shows 0 and is hidden
    -- this seems to be related to this tab? i don't see the edit here, and i simply can't make it work (on a different file -C:\john\code\buff\348\T175745-Reports 2015.11.19)
       - after restart, it works
 	  - i believe here the issue is: if i show history then escape -> focus will remain on the hidden history combo - i just need to reset focus to active pane
 	  - it's weird - sometimes works sometimes not -> seems ot always work only on the view that originally had focus, but not on the others
 	  -- "hotkeys" tab always seems to be marked as "has new items" even if i traverse it
 
--aliases should be able to use in filters (***lo-case-no-space probably)
-	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
-	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
-	 -- see when i can resolve these names (as soon as aliases is loaded???)
-
-
-- bug:
-  - if type-as-yo-go searching for something that is only in description pane -> when I type something only valid in description pane, the list view does nto update
-    such as, going from "o" to "oc" -> at this point, the list view should show nothing selected, as there is nothing with "oc" in the list (only in description pane)
-  - search next/prev -> does not work when something is only found in description pane
-
-
--- submit to http://www.codeproject.com/script/Awards/Conditions.aspx?cid=855 ?
-
-
-- (later) allow column formatters 
-  - this should basically work for both the view and the details pane
-   (for instance, an xml msg could be shown in a friendly manner)
-   but for now, I may want to print several lines into one?
-   column formatters should be allowed to have context (and eventually have settings based on which they do the formatting)
-   -- for instance, i could specify, in settings -> what colors to apply to the text
-   -- they need to be applied in such a way that they can add/modify colors of the text itself (or bold/italic etc.)
-   -- Tuple<int,int,print_info> -> needs to become a class, so that i can deal with it in an easier fashion
-      -- need to be able to easily iterate through all "prints" -> like in description_ctrl.show_sub_item (to make generic)
+#13 - bug: if at the last last visible down + arrow down 
 
 
 
 
-- (if time available) find: have a "To Filter" button (good when doing regex search)
+
+#10 - bug: sync colors - when sync with all logs -> then when showing all lines -> they will shown with the colors from the other views
+
+#11 - bug: C:\Users\meeee\AppData\Local\PokerStars.EU\PokerStars.log.0 : The process cannot access the file 'C:\Users\meeee\AppData\Local\PokerStars.EU\PokerStars.log.0' because it is being used by another process.
+  - basically if i try to open this log while PS is running, i will constantly get this, and the LW log will fill up needlessly
+
+#12 - bug: after user makes a color filter -> clear selection, so that his new color filter takes place instantly (********in the smart edit)
+
+
+
+
+
+#14 - find: have a "To Filter" button (good when doing regex search)
   - two possibilities -> Apply to existing Lines, Apply to Full Log
     + select Color/Match Color/default color?
 	-- make this rather generic, so that later i can add more attributes if needed (this is also used in right-click)
@@ -69,13 +59,110 @@ bug: line numbers -> allow turning off
 
 
 
-  the other article:
-  -> the outputdebug string will be shown on "alerts" (perhaps two articles: one about break into debug, one about alerts - perhaps tips?)
-     i will create a function similar to what outputdebugstring does (just have a way to name the "wait" mutex in any way so that several apps can use it)
-	 --> so, if something is set at the end of the function -> we will break into debug mode
-	 --> create a wrapper for it for log4net
-	 -------- alerts: should i allow sending an email? probably later, when ran unattended
      
+
+
+
+
+
+#15 - allow column formatters 
+This should basically work for both the view and the details pane (for instance, an xml msg could be shown in a friendly manner)
+But for now, I may want to print several lines into one?
+
+Column formatters should be allowed to have context (and eventually have settings based on which they do the formatting)
+- for instance, i could specify, in settings -> what colors to apply to the text
+- they need to be applied in such a way that they can add/modify colors of the text itself (or bold/italic etc.)
+- Tuple<int,int,print_info> -> needs to become a class, so that i can deal with it in an easier fashion
+    -- need to be able to easily iterate through all "prints" -> like in description_ctrl.show_sub_item (to make generic)
+
+
+
+
+
+#8-aliases should be able to use in filters (***lo-case-no-space probably)
+	- in filters - i should be able to use - the column name or the friendly-name-locase-no-space
+	--> i already have the function to convert alias -> lw-columnname (to_logwizard_column_name)
+	 -- see when i can resolve these names (as soon as aliases is loaded???)
+
+
+#16 - option: if a line doesn't match any logging syntax -> assume it's from previous line 
+  (keep it in the context?; probably - yes)
+  probably only for line-by-line files
+
+#17 - look around - when typing + or when ctrl-f -> this should be configurable (right now, 100 for typing, 1000 for ctrl-f)
+
+#18 - allow more complicated expressions 
+
+#19 allow to easily TAIL (so that for large files, really useful)
+- allow showing new lines with a different color (when monitoring real-time)
+  perhaps an image in the Line column - to think about when to stop showing it (like, perhaps after it's been seen once???)
+- allow turning off real-time (toggling it)
+
+#20 - allow "reverse" (so that I see the latest as first)
+
+
+
+
+
+
+
+
+
+#21 For non-line, non-time, not-msg columns (VERY COOL TO HAVE)
+- allow "snoop around", have something that looks like "show dropdown"
+- this is basically an extremely easy filter for that column - it shows the unique values surrounding maybe 1000 lines or so  (perhaps allowing selecting unique values from all lines? - probably 50K should be enough) 
+- allow snooping in all lines as well if the user wants to
+- for each unique value - show how many lines match it
+- this will be shown really nice and small exactly matching the [width] of the column
+- selecting any row will filter by that -> allow converting that to filter
+- show in status pane -> that we're filtering by that (allow ESC to toggle the filter off?)
+
+
+
+
+
+
+#22 - level column -> allow transforming it into pictures
+- this should work on any column - we should be able to transform any context into picts
+- there should be 2 ways: to picture, to text + picture (when to-picture only -> take a lot less space(width))
+
+
+
+
+
+
+
+#23 - bug: toggling enabled/dimmed will end up causing exceptions - seems it's because of all the forced reloads
+
+
+#24 - bug: When using rewritefile - using the C:\john\code\buff\win10-3\TableNinja2.log.7.rewritten.log -> writing 100 items at once, when they are added to a view that has no filters
+the line ending in 98 is sometimes not written fully (doing a refresh fixes the issue)
+i think the problem is that i'm reading a partial line and matching against that - very likely i should not include the last line until some time has passed or fully read
+
+
+
+
+
+#25 - smart edit (lo priority): 
+- allow synchronizing what i type-search with full log (that is, show in both current view and full log) 
+- both ways, from current view to full log and back
+- allow synchronizing full log - match color with current view
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -118,8 +205,6 @@ bug: line numbers -> allow turning off
 		- also perhaps, have a way to toggle the "thread colors" on/off - so that i can have these colors even if the threads pane is off.
 	- once i select a color (allow for common colors as well)
 	  - if another thread has the same color -> change the other thread's color
-	--> (pro_v) same with any context or anything that can be a "filter". In other words, categorize by something (like, a module or so) 
-	    i should allow by other contexts, with the following: at most 10 contexts (the, pro_v)
 	+ save everything the user selects (colors, how he categorizes) - TOTHINK how?
 	- article: LogWizard - Threading can be easy - Thread Filters
 	 ------- also, explain that you can toggle:
@@ -132,28 +217,6 @@ bug: line numbers -> allow turning off
 
 
 
-
-
-
-
-
-
-- bug: sync colors - when sync with all logs -> then when showing all lines -> they will shown with the colors from the other views
-
-- bug: C:\Users\meeee\AppData\Local\PokerStars.EU\PokerStars.log.0 : The process cannot access the file 'C:\Users\meeee\AppData\Local\PokerStars.EU\PokerStars.log.0' because it is being used by another process.
-  - basically if i try to open this log while PS is running, i will constantly get this, and the LW log will fill up needlessly
-
-- bug: after user makes a color filter -> clear selection, so that his new color filter takes place instantly
-
-- bug: if at the last last visible down + arrow down -> it does not show the edit control correctly
-
-- color: remember the last used colors
-  - allow giving names to colors? is that actually useful?
-  - allow easily selecting the colors - 0 - 9 should select them, allow using arrows?
-
-- option: if a line doesn't match any logging syntax -> assume it's from previous line (keep it in the context?; probably - yes)
-
-- richlabel -> rename as richlabel single line -> multiple lines - simulate scrolling
 
 - alert -> allow showing a msg, beep, etc. when a certain msg is found
   for instance "same scrape" -> show a message when that happens
@@ -183,6 +246,15 @@ bug: line numbers -> allow turning off
 	- TOTHINK when should we dump an email? by default, probably not. maybe only on the command line client?
 	- later: in time, allow for this to be very thin (memory-wise), since we don't need to remember the matches - we only need to dump alerts, if needed
 	- cmd line client should also be able to dump a certain view into another file (.txt or .html); this way, you might run it on Test results?
+- logging article??? c# - like, when to log, what to log, logging libs (log4net,nlog), performance, async logging
+  show that you can easily write to shmem (show example, in the way of OutputDebugString)
+  allow saving sessions
+  the other article:
+  -> the outputdebug string will be shown on "alerts" (perhaps two articles: one about break into debug, one about alerts - perhaps tips?)
+     i will create a function similar to what outputdebugstring does (just have a way to name the "wait" mutex in any way so that several apps can use it)
+	 --> so, if something is set at the end of the function -> we will break into debug mode
+	 --> create a wrapper for it for log4net
+	 -------- alerts: should i allow sending an email? probably later, when ran unattended
 
 
 
@@ -195,7 +267,7 @@ bug: line numbers -> allow turning off
 
 
 
-- preview mode (probably not pro_v)
+- preview mode 
   - in this mode, we only load part of the file, like, first 50K lines or so
   - also, we stop monitoring for new lines (so we don't interfere with the view/filter creation process)
   - when toggling ON/OFF - show in status (as WARNING), that we're in Preview or not
@@ -206,330 +278,7 @@ bug: line numbers -> allow turning off
   - first and last lines in PREVIEW mode should be something like "YOU ARE IN PREVIEW MODE"
     - so that the user is instantly aware of it
   - Preview mode is on a file-by-file basis (not context-dependent)
-  - *** if not pro_v -> article about it?
+  - *** article about it?
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- for non-line, non-time, not-msg columns
-  - allow "snoop around", have something that looks like "show dropdown"
-    - this is basically an extremely easy filter for that column - it shows the unique values surrounding maybe 1000 lines or so 
-	  (perhaps allowing selecting unique values from all lines? - probably 50K should be enough) 
-	    -> allow snooping in all lines as well if the user wants to
-	  - for each unique value - show how many lines match it
-	  - this will be shown really nice and small exactly matching the [width] of the column
-	  - selecting any row will filter by that -> allow converting that to filter
-	  - show in status pane -> that we're filtering by that (allow ESC to toggle the filter off?)
-
-
-
-
-
-- "start monitoring" have a list in settings of locations to monitor
-  - at the first sign of a file that was rewritten -> select that file
-  (stoppable with ESC)
-  - awesome when debugging several apps -> thus, you can have several custom locations - move there, then "start monitoring" and the file is selected
-   (care if the file is already open in another window)
-   useful even wehn debugging a single app at a time.
-
-- level column -> allow transforming it into pictures
-  - this should work on any column - we should be able to transform any context into picts
-  - there should be 2 ways: to picture, to text + picture (when to-picture only -> take a lot less space(width))
-  - (pro_v) - i should allow regexes for the categorizing a column into pictures (allow to-picture or to-picture + to-picture + space)
-
-
-
-
-
-
-
-- bug: toggling enabled/dimmed will end up causing exceptions - seems it's because of all the forced reloads
-
-- smart edit: 
-  - allow synchronizing what i type-search with full log (that is, show in both current view and full log) 
-    - both ways, from current view to full log and back
-  - allow synchronizing full log - match color with current view
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- logging article??? c# - like, when to log, what to log, logging libs (log4net,nlog), performance, async logging
-
-
-
-
-
-- (pro_v) allow chaining find filters
-  - like, we are type-searching for something in msg-column and filter by that
-  - then go to another column, and filter on top of our search by something else (snoop around)
-  - then do an extra snoop around, etc.
-  - ESC will go back one filter
-  - have friendly names of each filter, and show them in teh UI somehow like a "Find browse history", where the user can go back several searches
-   note: I think this may be complicated to implemnent - see if it's worth it
-   - note: i need to make this fast - in other words, each chained filter needs to run on top of the other ones (so that we don't run on ALL lines)
-
-
-
-
-
-- (pro_v) allow you to publish your specific data that the user can see, allow tweaking stuff (http://www.codeproject.com/Articles/986154/DNS-Server-is-the-best-tool-in-the-box)
-  - with your custom menus etc - special price?
-
-
-
-
-
-
-- 'alt-d' toggle details - this is the beginning of a larger feature -> allow showing details about the message (like, certain columns should show up in the list, and certain in the details - they can overlap)
-  if turned on, the msg details is automatically off
-  - i should also have a way to toggle msg_details on/off
-
-- allow files from http / ftp (+ allow settings for each type of text reader - in this case - by default, cache it)
-- parsing xml/csv?
-	allow .csv files, .xml, and merge files 
-		-- at this point, i need to have "details" pane + when smart searching -> allow including the non-visible columns (like, those shown in Details)
-		-- also, category -> picture should work for the event type
-		-- at this point 
-		   - xml/csv can contain LOTS of information - thus, our line class will probably not be enough
-		     - so, i will need to create an ext_line class allowing up to 50 columns or so
-			 - when creating filters - i should be able to filter by column names instead of things like $ctx5 
-			   - need to create a string-to-column-name correspondence (by default, all column names correspond to themselves, then we can add aliases)
-			     TOTHINK where should we keep the aliases (in context?) + what do we do when we have a filter line whose alias we can't find?
-  -- toggle details -> explain how you can set-up your own customized details.
-     - article (other types of files - xml, csv)
-	   - merge files - even if with different extensions - TOTHINK what the max size should be for when not pro_v (maybe up to 10K lines) TOTHINK
-	   ---> when something changes anywhere, i have to notify parent instantly (which probably can query all children first, then update everything )
-	        + avoid infinite loop (when child notifies parent, parent queries again, child notifies parent etc.)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- filtering right click - just like right now we only do filter on msg row, allow other rows as well (pro_v)
-
-
-
-- (pro_v) allow formatters for columns - like -> allow stripping or changing info based on the message
-  example:
-  [new] window popup 81E26/pid7740-v/#32770/Tournament Registration/{X=910,Y=328,Width=249,Height=268}/p11460/o11460
-  - i want to have something like 910,328, 249x268
-    - the idea is to strip info from long lines and allow seing it when hovering or something?
-
-- (pro_v) allow applying a transformation on a given filter
-  DEBUG [new] window table 1518A8/pid20664-v/PokerStarsTableFrameClass/1359422357 1 - $400/$800 Ante $50 USD - No Limit Hold'em/{X=90,Y=34,Width=774,Height=562}/p0/o0
-   that could become .... 774 x 562 ... - and have a way to see the full info
-
-
-- (pro_v) allow using the surrounding lines - if a $part ends in a number, it's the prev/next line. 
-  Example: $msg[2] (the second line from now), $time[-3] (the time 3 lines above), $thread[-12] (the thread 12 lines above)
-  allow concatenating of several messages - like: $msg[-1,2] = prev msg + enter + msg + enter + next msg + next+1 msg
-  This should be: 
-  if "apply to existing lines" is checked -> the lines are only taken from this view
-  if "apply to existing lines" is unchecked -> lines are taken from the log
-  ------ need to remove RegexOptions.Singleline
-
-
-
-- (pro_v) show delta - that is, how many millisecs from start? (maybe in secs or so?)
-  this should be possible to be shown also from selected line (like, above are with "-", below with "+")
-  -- 3 types of delta : compare to start, compare to previous line, compare to current selection
-     - also, i should have a "min delta show period", like, lets say, 10ms - for diffs that are not at least this much, don't show them
-	   this way, i don't clutter the user with too much useless data, since anyway, he can look at the time, if he wants to
-	   maybe show with different colors as well, based on distance - also, allow showing them graphically?
-	   also, have a setting like "show exact times" - if off, we'll round to seconds/minutes/etc. BUT
-	     if "show exact times on selection" is on, when selecting a row, we'll show the exact times
- -- should be able to put "marks" -> so that I can see delta compared to a given line - i should be able to put several marks and be able to switch between them
-   - perhaps use teh bookmarks for this?
-
-
-
-  - log syntax: should be grayed, so that you edit it in a different more user friendly manner.
-    basically, you would have a "..." button
-	if we can't figure out the syntax (msg[0] or just time+msg), say so in the Status (Err or Warn)
-	perhaps if we can't figure the syntax: auto show the Source pane, otherwise, hide it perhaps?
-
-
-
-
-- bug: when using rewritefile - using the C:\john\code\buff\win10-3\TableNinja2.log.7.rewritten.log -> writing 100 items at once, when they are added to a view that has no filters
-  the line ending in 98 is sometimes not written fully (doing a refresh fixes the issue)
-  i think the problem is that i'm reading a partial line and matching against that - very likely i should not include the last line until some time has passed or fully read
-
-
-- (pro_v) for non-file "non-persistent" logs (such as, Outputdebugstring, sockets?)
-   - i also need to allow caching
-     - like, remember the last "X" sessions, the user should be able to always bring back any former sessions, and also filter by date(s)
-	 - very likely: i should store them locally, but only allow access on pro_v
-
-- article: testing with logwizard (allow command line as well?) 
-
-
-- move file locally (toggle its location? - between current location/saved location)
-  the idea is to move the file to a logwizard location and store it there - in case you usually keep logs in a temp dir which is sometimes deleted
-  maybe i could have this automatically for logs having notes (only those not imported - those imported are already saved locally)?
-
-
-
----------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-- merging views into a given context (say two people are working on the same context) - you should be able to "import" the other guy's views without screwing your own
-  (by default, back the current settings - just in case something goes wrong)
-  - so in other words, say my collegue goes to Copy to clipboard a full context -> and sends it to me - I should be able to merge it with myown
-  - new views are extremely easy - (I just add them)
-  - existing views with different filters -> do i just add the new filters, erase existing ones? not really sure - perhaps a dialogue asking user what to do
-
-
-
-
-
-
-
-
-
-
-
-
-- allow showing/hiding views (pro_v)
-  this would be for when you don't want that view to be visible (when you have too many, or - some might be very complex, and take a lot of time to run)
-  when a view is hidden - we don't run its filters (unless any of them are "alerts")
-  - when shown back, run the filters
-
-
-
-
-
-- finding regex (pro_v) -> allow matching certain numbers etc. from the log lines, and then allow 
-  - having charts based on them
-  - or toggle on/off the results based on what was matched
-  - from the regex -> from each line, we can extract several numbers -> we should be able to name each such number, and create charts based on them.
-  - have a wizard that shows how to do this (for instance, on the wizard, take the 1000 first lines, and generate stuff, so that the user can create the chart;
-    then, be able to run it on all data.)
-
-- graphs/charts (pro_v?)
-  - by default -> on timeline (like, have timeline from start to end, then, show on timeline, when most messages are written)
-  - more: allow extracting the data from the lines themselves - like, [time] -> take off the ms from there, and allow showing graph data from there
-          (+ ignore the lines that don't match[yes/no] - if yes, we create the graph with only matched data; if no, we create the graph with empty lines where there are no matches)
-  - allow zooming on the chart? tothink
-  - switching from graph to log and vice versa needs to be ***seamless***
-  - while in the chart/graph - i should be able to move with hotkeys as well
-	- normally, you would keep the graph on top of the current view (belonging to it) - however, you should be able to "undock" it
-	- you should be able to "add" to it any data you want - from any view - and they would show on top of each other (on the timeline)
-	- you can even choose colors for each data (like time > 1000 -> red, time > 100 -> yellow, rest -> green)
-	- once again, you can choose data from any view - to add to the graph
-	- you can even consider your current view + the possible extra filters -> just add them on top of the current graph 
-	 (you should also be able to erase data from there)
-	 - you should be able to zoom in/out the timeline (by default -> from start to end)
-	 - you should be able to select if to ignore "empty" lines or not (that is, lines that don't produce any info)
-	 - you should be able to click anywhere in the graph and it would take you there (synchronized with the existing views)
-	   - switch to another view -> and it would sync automatically
-	   - allow "extra synchronizing" -> so that if i click on an exact dot that "belongs" to a certain view -> it would automatically take me there (to that tab, to that line)
-	     (if by any chance that is line is not visible, just go to the closest)
-	 - allow maching of colors 
-	   - if the user wants that -> when showing dots in the graph -> show them with the line/match color of the matching filter
-	   - you can also choose to have each filter shown differently (in the graph) - so that the user can visually see when each filter happens
-	 - i will have to think about threads/categories as well - probably we can fit them in there as well
-    - find "gaps"
-	  TOTHINK - how can we find (what will be useful?) - to show visually differences from messages of a given type 
-	  (like, all times > 1000 -> what are the gaps between them? -> perhaps find min, max, avg)
-
-  
-- timeline (pro_v)
-  - i need to be able to show each view (lines by color?) on timeline - for instance, be able to find where exactly (on the timeline) are most messages, errors, etc
-  - i need to account for several days in this case (care about date/time, not just time)
-
-- merge files - allow merging several files (we will allow up to some decent size, like 50M, then pro_v - proabbly just 10K lines)
-
-- probably 500Mb+ files (pro_v? optimize some stuff for such files)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-------------- talk with Vidi
-- allow copy-paste of full-log into a cloud
-
-- file:line (pro_v) -> allow showing the actual source code , eventually integrate with visual studio, 
-  eventually think about root folder / and allow overriding it to your own
-  integrate with github/bitbucket for open source projects? - look for api from github/bitbucket for retrieving files
-  
-- in visual studio -> if i'm at file:line -> go into logwizard and see what messages were written at this file:line -> create a view with those lines or something like that
-
----------------
 
 

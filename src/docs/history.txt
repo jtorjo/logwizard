@@ -8,9 +8,6 @@
 
 
 
-****- add my todo issues into git
--- add syntax document to github -> load header-to-syntax from this online doc (so that fixing someone's syntax is easy)
-   probably also add a "Reset" button for syntax (so that it auto-recalculates it)
 
 
 - bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
@@ -18,6 +15,15 @@
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
+
+
+
+
+1.6.6
+
+1.6.5b
+- moved bugs/features issues into github
+
 
 1.6.5
 - logwizardsetupsample -> into samples

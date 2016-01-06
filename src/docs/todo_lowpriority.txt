@@ -1,4 +1,23 @@
 
+- file:line -> allow showing the actual source code , eventually integrate with visual studio, 
+  eventually think about root folder / and allow overriding it to your own
+  integrate with github/bitbucket for open source projects? - look for api from github/bitbucket for retrieving files
+  
+- in visual studio -> if i'm at file:line -> go into logwizard and see what messages were written at this file:line -> create a view with those lines or something like that
+
+
+
+
+- TOTHINK "start monitoring" have a list in settings of locations to monitor
+  - at the first sign of a file that was rewritten -> select that file
+  (stoppable with ESC)
+  - awesome when debugging several apps -> thus, you can have several custom locations - move there, then "start monitoring" and the file is selected
+   (care if the file is already open in another window)
+   useful even wehn debugging a single app at a time.
+
+
+
+
 - note: i overode the hotkeys left/up/down/right/pgup/pgdn/home/end - so that they would work even if the control does not have focus
         this might not be the case now, so perhaps i don't really need to do it now? TOTHINK
 		note: the only reason i may want to use the defaults is probably because they would be a bit faster 
@@ -96,3 +115,26 @@
   - for up to Z MB
     example: keep backup of files up to 2.2MB, up to 100MB
   - note: backups for other types of logs is different!
+
+
+
+- merging views into a given context (say two people are working on the same context) - you should be able to "import" the other guy's views without screwing your own
+  (by default, back the current settings - just in case something goes wrong)
+  - so in other words, say my collegue goes to Copy to clipboard a full context -> and sends it to me - I should be able to merge it with myown
+  - new views are extremely easy - (I just add them)
+  - existing views with different filters -> do i just add the new filters, erase existing ones? not really sure - perhaps a dialogue asking user what to do
+
+
+- allow copy-paste of full-log into a cloud (pastebin)
+
+
+- richlabel -> rename as richlabel single line -> multiple lines - simulate scrolling
+
+- article: testing with logwizard (allow command line as well?) 
+
+- color: remember the last used colors
+  - allow giving names to colors? is that actually useful?
+  - allow easily selecting the colors - 0 - 9 should select them, allow using arrows?
+
+
+
