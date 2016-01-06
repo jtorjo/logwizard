@@ -19,7 +19,9 @@
 
 
 
-1.6.6
+1.6.6a
+- #4 fix: line numbers -> allow turning off
+
 
 1.6.5b
 - moved bugs/features issues into github

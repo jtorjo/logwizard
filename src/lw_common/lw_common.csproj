@@ -148,6 +148,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ui\log_view\log_view_right_click.cs" />
+    <Compile Include="ui\log_view\log_view_column_tag.cs" />
     <Compile Include="ui\log_view\match\log_view_data_source.cs" />
     <Compile Include="ui\log_view\match\match_full_item.cs" />
     <Compile Include="ui\log_view\match\match_item.cs" />

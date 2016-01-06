@@ -105,7 +105,7 @@ namespace lw_common.ui {
                     if (type == info_type.max)
                         continue;
                     bool is_visible = has_value_at_column(full_log, type, row_count);
-                    show_column(full_log, log_view_cell.column(full_log,type), DEFAULT_COL_WIDTH, is_visible);
+                    show_column(log_view_cell.column(full_log,type), DEFAULT_COL_WIDTH, is_visible);
                     if ( is_visible)
                         visible_columns.Add(type);                    
                 }
@@ -128,25 +128,73 @@ namespace lw_common.ui {
             for (int idx = 0; idx < lv.list.AllColumns.Count; ++idx) {
                 var col = lv.list.AllColumns[idx];
                 if (col != lv.viewCol) 
-                    show_column(lv, col, full_log.list.AllColumns[idx].Width, full_log.list.AllColumns[idx].IsVisible);
+                    show_column(col, full_log.list.AllColumns[idx].Width, full_log.list.AllColumns[idx].IsVisible);
                 else 
-                    show_column(lv, col, DEFAULT_COL_WIDTH, false);
+                    show_column(col, DEFAULT_COL_WIDTH, false);
             }
             lv.list.RebuildColumns();
         }
 
-        static private void show_column(log_view lv, OLVColumn col, int width, bool show) {
-            //if( lv.is_full_log)
-              //  logger.Debug("showing column " + col.Text + " w=" + width +" visible=" + show);
+        static private void show_column(OLVColumn col, int width, bool show) {
+            Debug.Assert(col.Tag != null);
+
+            bool is_line_col = col.fixed_index() == 0;
+            bool visible = is_line_col ? col.Width > 1 : col.IsVisible;
+
             if (col.Width == 0)
                 col.Width = width;
-            if (col.IsVisible == show)
+            if (visible == show)
                 return;
 
-            col.Width = width;
-            col.IsVisible = show;
+            // 1.6.6 for Line column - we can't hide it (due to some weird b_ug in ListView);  so we just set its width to 1
+            if (is_line_col) {
+                if (show) {
+                    col.MaximumWidth = -1;
+                    col.Width = width;
+                } else {
+                    col.lv_tag().line_width = width;
+                    // ... don't allow resizing
+                    col.MaximumWidth = col.Width = 1;
+                }
+                col.IsVisible = true;
+            } else {
+                col.Width = width;
+                col.IsVisible = show;
+            }
         }
 
+        internal static bool is_column_visible(OLVColumn col) {
+            Debug.Assert(col.Tag != null);
+
+            bool is_line_col = col.fixed_index() == 0;
+            bool visible = is_line_col ? col.Width > 1 : col.IsVisible;
+            return visible;
+        }
+
+        // toggles whether column is visible or not, and returns the new state
+        static internal bool toggle_column_visible(OLVColumn col) {
+            Debug.Assert(col.Tag != null);
+
+            bool is_line_col = col.fixed_index() == 0;
+            bool visible = is_line_col ? col.Width > 1 : col.IsVisible;
+            visible = !visible;
+
+            // 1.6.6 for Line column - we can't hide it (due to some weird b_ug in ListView);  so we just set its width to 1
+            if (is_line_col) {
+                // for line column - simple trick - save the old width in "Tag" property
+                if (visible) {
+                    col.MaximumWidth = -1;
+                    col.Width = col.lv_tag().line_width > 0 ? col.lv_tag().line_width : DEFAULT_COL_WIDTH;
+                } else {
+                    col.lv_tag().line_width = col.Width;
+                    col.MaximumWidth = col.Width = 1;
+                }
+                col.IsVisible = true;
+            } else
+                col.IsVisible = visible;
+
+            return visible;
+        }
 
 
         static private void load_column_positions(log_view lv, string str) {

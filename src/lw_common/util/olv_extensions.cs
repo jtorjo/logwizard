@@ -21,18 +21,32 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using BrightIdeasSoftware;
+using lw_common.ui;
 
 namespace lw_common {
-    public static class olv_extensions {
+    internal static class olv_extensions {
+
+        public static log_view_column_tag lv_tag(this OLVColumn c) {
+            var tag = c.Tag as log_view_column_tag;
+            Debug.Assert(tag != null);
+            return tag;
+        }
 
         public static int fixed_index(this OLVColumn c) {
-            if (c.ListView == null)
+            if (c.ListView == null) {
+                // 1.6.6
+                var tag = c.Tag as log_view_column_tag;
+                if (tag != null)
+                    return tag.parent.list.AllColumns.IndexOf(c);
+
                 // why would listview EVER become null? beats the hell out of me; first, I was extremely nervous at looking at this, but then, I realized:
                 // this can happpen if the column is not visible at all (like, for msg column, when it's completely invisible - I'm assuming OLV will completely remove it in this case)
                 return c.LastDisplayIndex;
+            }
 
             // theoretically, we should reference LastDisplayIndex
             // but by looking at the implementation, it looks really fishy...

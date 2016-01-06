@@ -7,7 +7,7 @@
 
 	
 
-#4 bug: line numbers -> allow turning off
+
 
 #5 - add a horizonal scrollbar (make Msg not "occupy remaining space") -> allow a checkbox
 

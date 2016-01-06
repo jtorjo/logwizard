@@ -136,12 +136,12 @@ namespace lw_common.ui
             lv_parent.handle_subcontrol_keys(this);
 
             render_ = new log_view_render(this);
-            foreach (var col in list.AllColumns)
-                (col as OLVColumn).Renderer = render_;
+            foreach (var col in list.AllColumns) {
+                col.Renderer = render_;
+                col.Tag = new log_view_column_tag(this);
+            }
             right_click_ = new log_view_right_click(this);
 
-            // just an example:
-            //render_.set_override("settings", new log_view_render.print_info { fg = Color.Blue, bold = true });
             cur_col_ = msgCol.fixed_index();
             edit.on_sel_changed = on_edit_sel_changed;
             edit.on_search_ahead = search_ahead;
@@ -188,9 +188,7 @@ namespace lw_common.ui
                     if (!is_visible)
                         continue;
                     ToolStripMenuItem sub = new ToolStripMenuItem(col.Text);
-                    sub.Checked = col.IsVisible;
-                    if (col.Index == 0)
-                        sub.Enabled = false;
+                    sub.Checked = log_view_show_columns.is_column_visible(col);
                     var c = col;
                     sub.Click += (a, ee) => toggle_column_visible(c, sub);
                     menu.Items.Add(sub);
@@ -265,8 +263,7 @@ namespace lw_common.ui
         }
 
         private void toggle_column_visible(OLVColumn col, ToolStripMenuItem sub) {
-            col.IsVisible = !col.IsVisible;
-            sub.Checked = col.IsVisible;
+            sub.Checked = log_view_show_columns.toggle_column_visible(col);
             list.RebuildColumns();
         }
 
@@ -1441,6 +1438,7 @@ namespace lw_common.ui
         private static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
 
         private void list_CellToolTipShowing(object sender, ToolTipShowingEventArgs e) {
+            // 1.6.6+ - I think this is wrong!
             if (e.ColumnIndex == msgCol.fixed_index())
                 ShowWindow(e.ToolTipControl.Handle, 0);
         }
