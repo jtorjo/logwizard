@@ -1,6 +1,18 @@
 
 
 
+#9 - bug: type as you go
+
+-- bug (old, just needs rechecking to see if it still happens) 
+   : C:\john\code\buff\344\TNLogs-DESKTOP-6JGLCS9-damie-635833594984576357 -> hotkeys shows 0 and is hidden
+   -- this seems to be related to this tab? i don't see the edit here, and i simply can't make it work (on a different file -C:\john\code\buff\348\T175745-Reports 2015.11.19)
+      - after restart, it works
+	  - i believe here the issue is: if i show history then escape -> focus will remain on the hidden history combo - i just need to reset focus to active pane
+	  - it's weird - sometimes works sometimes not -> seems ot always work only on the view that originally had focus, but not on the others
+	  -- "hotkeys" tab always seems to be marked as "has new items" even if i traverse it
+
+#13 - bug: if at the last last visible down + arrow down 
+
 
 
 
@@ -12,10 +24,16 @@
 
 - bug: make a bookmark, then toggle showing everything (alt-ctrl-l) -> go to the bookmark  -> it will go to the wrong location
 
+- retest Event Viewer / DebugView
+
+- debug print -> rename as Debug View
+
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
 
+1.6.6d
+- #7 -- bug - if i'm on the last char, and want to select starting from there to the left, it does not work
 
 
 1.6.6c

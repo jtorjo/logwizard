@@ -458,8 +458,12 @@ namespace lw_common.ui {
             if (moving_ == move_direction_type.left) {
                 if (sel_start_ <= 0)
                     return ;
-                if (sel_len_ + sel_start_ >= TextLength)
-                    return ;
+
+                // ... just in case we were passed the end
+                if (sel_start_ > TextLength) {
+                    sel_start_ = TextLength;
+                    sel_len_ = 0;
+                }
 
                 moved = true;
                 ++sel_len_;
