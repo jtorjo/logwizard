@@ -87,13 +87,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_ACC42FCA563B08AB5DBE4626477480B2"
+        "MsmKey" = "8:_C065ACDBA66E8B30899AECA33A5A051E"
         "OwnerKey" = "8:_900BA54346A2479085BF08862BE89061"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_ACC42FCA563B08AB5DBE4626477480B2"
+        "MsmKey" = "8:_C065ACDBA66E8B30899AECA33A5A051E"
         "OwnerKey" = "8:_C8B46DF279E1B4F613E1AB160AF480C8"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -124,6 +124,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C065ACDBA66E8B30899AECA33A5A051E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_22E505A97FF6358D681DFC3888FC73C8"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -143,12 +149,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_091F0B6BEDCDFF8BECF32823AB47EF09"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_ACC42FCA563B08AB5DBE4626477480B2"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -499,14 +499,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ACC42FCA563B08AB5DBE4626477480B2"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C065ACDBA66E8B30899AECA33A5A051E"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:fastJSON, Version=2.1.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_ACC42FCA563B08AB5DBE4626477480B2"
+                    "_C065ACDBA66E8B30899AECA33A5A051E"
                     {
                     "Name" = "8:fastJSON.dll"
                     "Attributes" = "3:512"
@@ -534,7 +534,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.6.5.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.6.7.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C8B46DF279E1B4F613E1AB160AF480C8"
@@ -639,15 +639,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
-        "ProductCode" = "8:{D8072193-058D-4B87-8F2E-5E308E5A21EF}"
-        "PackageCode" = "8:{313AB97F-5CF4-453B-B422-E8D5C023102C}"
+        "ProductCode" = "8:{94745EE8-FCE7-493F-98CC-F3586127794B}"
+        "PackageCode" = "8:{46569403-6412-45C3-B18E-72D0E24087E6}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.6.6"
+        "ProductVersion" = "8:1.6.7"
         "Manufacturer" = "8:John Torjo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1217,7 +1217,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_900BA54346A2479085BF08862BE89061"
             {
-            "SourcePath" = "8:..\\obj\\x64\\Release64\\LogWizard.exe"
+            "SourcePath" = "8:..\\obj\\x86\\Release\\LogWizard.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E297CB39A550491681319D6F014A659B"
