@@ -1,9 +1,12 @@
 
-#13 - bug: if at the last last visible down + arrow down 
 
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
+
+
+1.6.8
+- #13 - bug: if at the last last visible down + arrow down 
 
 
 1.6.7

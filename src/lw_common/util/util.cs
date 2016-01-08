@@ -470,21 +470,19 @@ namespace lw_common {
             test_normalize_time("2:3:5,123", "02:03:05.123");
         }*/
 
-        public delegate void update_control_func(bool has_terminated);
-        public delegate bool terminate_update_func();
+        public delegate bool update_control_func();
         public delegate void void_func();
 
-        public static void add_timer(update_control_func updater, terminate_update_func terminator, int refresh_ms = 100) {
-            updater(false);
+        public static void add_timer(update_control_func updater, int refresh_ms = 100) {
+            if (!updater())
+                return;
 
             Timer t = new Timer(){ Interval = refresh_ms };
             t.Tick += (sender, args) => {
-                bool has_terminated = terminator();
-                if (has_terminated) {
+                if ( !updater()) {
                     t.Enabled = false;
                     t.Dispose();
                 }
-                updater(has_terminated);
             };
             t.Enabled = true;
         }
@@ -492,7 +490,7 @@ namespace lw_common {
         // update_ms = how long to set_aliases the control visually
         public static void add_timer(update_control_func updater, int update_ms, int refresh_ms = 100) {
             DateTime end = DateTime.Now.AddMilliseconds(update_ms);
-            add_timer( updater, () => (DateTime.Now > end), refresh_ms );
+            add_timer( () => updater() || (DateTime.Now > end), refresh_ms );
         }
 
         // postpones executing this function

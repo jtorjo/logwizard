@@ -117,6 +117,9 @@ namespace lw_common.ui
         // this is set while refreshing visible columns (log_view_show_columns)
         internal List<info_type> visible_columns = new List<info_type>(); 
 
+        // last time we received the last scroll event
+        private DateTime scrolling_time_ = DateTime.MinValue;
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -1977,6 +1980,10 @@ namespace lw_common.ui
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
             bool is_renaming = win32.focused_ctrl() == viewName;
 
+            if (any_moving_key_down() && is_editing)
+                // while scrolling, don't show edit
+                hide_edit_while_scrolling();
+
             if (!is_editing) {
                 // see if the current key will start editing
                 if (keyData == Keys.Space && app.inst.edit_mode == app.edit_mode_type.with_space) {
@@ -2230,8 +2237,28 @@ namespace lw_common.ui
             }
         }
 
+        private bool any_moving_key_down() {
+            return  win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || 
+                    win32.IsKeyPushedDown(Keys.PageUp) || win32.IsKeyPushedDown(Keys.PageDown) || 
+                    win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
+        }
+
         private void list_Scroll(object sender, ScrollEventArgs e) {
-            util.postpone(edit.update_ui, 1);
+            scrolling_time_ = DateTime.Now;
+            hide_edit_while_scrolling();
+        }
+
+        public void hide_edit_while_scrolling() {
+            edit.force_hide = true;
+            util.add_timer(() => {
+                if (any_moving_key_down())
+                    return true;
+                if (scrolling_time_.AddMilliseconds(250) >= DateTime.Now)
+                    return true;
+
+                edit.force_hide = false;
+                return false;
+            });
         }
 
         private void list_CellClick(object sender, CellClickEventArgs e) {

@@ -1949,19 +1949,21 @@ namespace LogWizard
                 lv.turn_off_has_anying_changed = true;
             refresh_all_views();
 
-            util.add_timer((has_terminated) => {
+            util.add_timer(() => {
                 refresh_all_views();
-                if (has_terminated)
+
+                var all = all_log_views_and_full_log();
+                bool all_filters_up_to_date = all.Count(x => x.is_filter_up_to_date) == all.Count;
+
+                if (!all_filters_up_to_date)
                     foreach (log_view lv in all_log_views_and_full_log())
                         lv.turn_off_has_anying_changed = false;
-            }, () => {
-                foreach (log_view lv in all_log_views_and_full_log())
-                    if (!lv.is_filter_up_to_date)
-                        return false;
-                logger.Debug("[view] initial refresh complete");
-                // we allocated a lot of interim objects
-                GC.Collect();
-                return true;
+                else {
+                    logger.Debug("[view] initial refresh complete");
+                    // we allocated a lot of interim objects
+                    GC.Collect();
+                }
+                return all_filters_up_to_date;
             }, 500);
         }
 

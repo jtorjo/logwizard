@@ -89,7 +89,9 @@ namespace lw_common.ui {
             // the selection
             public int sel_start = 0, len = 0;
         }
-        private Dictionary<string, position> last_positions_ = new Dictionary<string, position>(); 
+        private Dictionary<string, position> last_positions_ = new Dictionary<string, position>();
+
+        private bool force_hide_ = false;
 
         public smart_readonly_textbox() {
             InitializeComponent();
@@ -125,6 +127,9 @@ namespace lw_common.ui {
         }
 
         private bool should_be_visible() {
+            if (force_hide_)
+                return false;
+
             int sel = parent_.sel_row_idx;
             var bounds = parent_.sel_subrect_bounds;
             bool is_multi_selection = parent_.list.SelectedIndices != null && parent_.list.SelectedIndices.Count > 1;
@@ -365,6 +370,17 @@ namespace lw_common.ui {
         public string sel_text {
             get {
                 return cached_sel_text_;
+            }
+        }
+
+        public bool force_hide {
+            get { return force_hide_; }
+            set {
+                if (force_hide_ == value)
+                    return;
+
+                force_hide_ = value;
+                update_ui();
             }
         }
 
