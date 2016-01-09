@@ -152,10 +152,8 @@ namespace lw_common.ui {
                 }
             } else {
                 // search for cur_search
-                if (columns.Contains(info_type.msg)) {
-                    if (string_search.matches(match, parent.cur_search))
-                        return true;
-                }
+                if (string_search.matches( match, columns.Where(info_type_io.is_searchable) , parent.cur_search))
+                    return true;
             }
             return false;            
         }
@@ -184,7 +182,8 @@ namespace lw_common.ui {
             }
 
             string find = parent.cur_search != null ? parent.cur_search.text : "";
-            if (col_idx == parent.msgCol.fixed_index() && find != "") {
+            var col_type = log_view_cell.cell_idx_to_type(col_idx);
+            if (parent.cur_search != null && parent.cur_search.is_column_searchable(col_type) && find != "") {
                 var matches = string_search.match_indexes(text, parent.cur_search);
                 if (matches.Count > 0) {
                     // if we're showing both selected text and the results of a find, differentiate them visually

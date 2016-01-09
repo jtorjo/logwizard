@@ -83,9 +83,13 @@ namespace lw_common {
 
         }
 
+        public static bool matches(filter.match item, IEnumerable<info_type> cols, search_for search) {
+            return cols.Any(x => matches_cell(item.line.part(x), search));
+        }
+
         public static bool matches(filter.match item, search_for search) {
             if (search.all_columns) 
-                return info_type_io.searchable.Any(x => matches_cell(item.line.part(x), search));
+                return matches(item, info_type_io.searchable, search);
             else
                 return matches_cell(item.line.part(info_type.msg), search);
         }

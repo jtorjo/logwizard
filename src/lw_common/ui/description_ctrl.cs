@@ -170,12 +170,16 @@ namespace lw_common.ui {
             foreach ( info_type type in Enum.GetValues(typeof(info_type)))
                 switch (type) {
                 case info_type.max:
+                    break;
+
+                    // 1.6.9+ by default, hide them - in other words, normally they are shown in the view. But the user can choose to show them here
                 case info_type.level:
                 case info_type.date:
                 case info_type.time:
                 case info_type.view:
                 case info_type.line:
                 case info_type.thread:
+                    def_.rows_[0].parts_.Add( new part { type = type, visible = false } );
                     break;
 
                 case info_type.msg:
@@ -754,7 +758,7 @@ namespace lw_common.ui {
 
             string txt = (item as filter.match).line.part(type);
             int col = log_view_cell.info_type_to_cell_idx(type);
-            var prints = lv.sel.override_print(lv, txt, col);
+            var prints = lv.sel.override_print(lv, txt, type);
             print_info.to_single_enter_char(ref txt, ref prints);
 
             text_ctrl.Clear();

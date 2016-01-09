@@ -4,6 +4,14 @@
           https://news.ycombinator.com/news
 		  quora
 
+
+
+- event viewer: convert computername/username to friendly?
+
+
+
+1.6.9b
+#30 completely fixed
 - highlight all search cells in view
 - highlight all search cells in details pane
 

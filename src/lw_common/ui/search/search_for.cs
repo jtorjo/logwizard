@@ -150,6 +150,13 @@ namespace lw_common.ui {
             return is_regex;
         }
 
+        public bool is_column_searchable(info_type col) {
+            if (all_columns)
+                return info_type_io.is_searchable(col);
+            else
+                return col == info_type.msg;
+        }
+
 
         public Color fg = util.transparent, bg = util.transparent;
 
