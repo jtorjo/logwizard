@@ -54,6 +54,61 @@ namespace lw_common {
 
     public static class info_type_io {
 
+        private static info_type[] searchable_ = searchable_types();
+
+        private static info_type[] searchable_types() {
+            List<info_type> types = new List<info_type>();
+            foreach (info_type type in Enum.GetValues(typeof(info_type)))
+                if ( is_searchable(type))
+                    types.Add(type);
+            return types.ToArray();
+        }
+
+        // returns the types that are searchable via Find (Ctrl-F)
+        public static info_type[] searchable {
+            get { return searchable_; }
+        }
+
+        public static bool is_searchable(info_type type) {
+            switch (type) {
+            case info_type.max:
+
+            case info_type.date:
+            case info_type.time:
+            case info_type.level:
+            case info_type.view:
+            case info_type.line:
+                return false;
+
+            case info_type.thread:
+            case info_type.file:
+            case info_type.func:
+            case info_type.class_:
+
+            case info_type.ctx1:
+            case info_type.ctx2:
+            case info_type.ctx3:
+            case info_type.ctx4:
+            case info_type.ctx5:
+            case info_type.ctx6:
+            case info_type.ctx7:
+            case info_type.ctx8:
+            case info_type.ctx9:
+            case info_type.ctx10:
+            case info_type.ctx11:
+            case info_type.ctx12:
+            case info_type.ctx13:
+            case info_type.ctx14:
+            case info_type.ctx15:
+            case info_type.msg:
+                return true;
+
+            default:
+                Debug.Assert(false);
+                return false;
+            }
+        }
+
         public static bool can_be_multi_line(info_type type) {
             if (app.inst.force_text_as_multi_line)
                 return true;

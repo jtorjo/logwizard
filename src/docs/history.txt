@@ -4,6 +4,15 @@
           https://news.ycombinator.com/news
 		  quora
 
+- highlight all search cells in view
+- highlight all search cells in details pane
+
+
+1.6.9a
+- search.allcolumns exists, is set/saved + used by default
+- searching for all columns works in Find dialog
+  - it does not yet highlight finds in all columns (it only highlights the msg one)
+
 
 1.6.8
 - #13 - bug: if at the last last visible down + arrow down 

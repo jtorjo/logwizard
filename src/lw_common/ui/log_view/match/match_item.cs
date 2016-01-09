@@ -153,7 +153,7 @@ namespace lw_common.ui {
             } else {
                 // search for cur_search
                 if (columns.Contains(info_type.msg)) {
-                    if (string_search.matches(this.match.line.part(info_type.msg), parent.cur_search))
+                    if (string_search.matches(match, parent.cur_search))
                         return true;
                 }
             }

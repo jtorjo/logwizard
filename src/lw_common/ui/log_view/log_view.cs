@@ -650,7 +650,7 @@ namespace lw_common.ui
             }
 
             // current search
-            return string_search.matches(item.match.line.part(info_type.msg), cur_search_);
+            return string_search.matches(item.match, cur_search_);
         }
 
         public int item_count {
@@ -1584,7 +1584,7 @@ namespace lw_common.ui
             select_row_idx(0, select_type.notify_parent);
             match_item i = item_at(0);
             bool include_row_zero = sel_row_idx == 0 || sel_row_idx == -1;
-            if (include_row_zero && string_search.matches(i.match.line.part(info_type.msg), cur_search_)) {
+            if (include_row_zero && string_search.matches(i.match, cur_search_)) {
                 // line zero contains the text already
                 ensure_row_visible(0);
                 lv_parent.sel_changed(log_view_sel_change_type.search);
@@ -1633,7 +1633,7 @@ namespace lw_common.ui
                 }
 
                 match_item i = item_at(idx);
-                if (string_search.matches(i.match.line.part(info_type.msg), cur_search_))
+                if (string_search.matches(i.match, cur_search_))
                     found = idx;
             }
 
@@ -1665,7 +1665,7 @@ namespace lw_common.ui
                 }
 
                 match_item i = item_at(idx);
-                if (string_search.matches(i.match.line.part(info_type.msg), cur_search_))
+                if (string_search.matches(i.match, cur_search_))
                     found = idx;
             }
             if (found >= 0) {

@@ -94,6 +94,7 @@
             this.preview = new System.Windows.Forms.Label();
             this.combo = new System.Windows.Forms.ComboBox();
             this.markAsNewEntry = new System.Windows.Forms.CheckBox();
+            this.allColumns = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.result)).BeginInit();
             this.SuspendLayout();
             // 
@@ -113,7 +114,7 @@
             this.mark.AutoSize = true;
             this.mark.Checked = true;
             this.mark.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mark.Location = new System.Drawing.Point(337, 86);
+            this.mark.Location = new System.Drawing.Point(277, 110);
             this.mark.Name = "mark";
             this.mark.Size = new System.Drawing.Size(202, 21);
             this.mark.TabIndex = 2;
@@ -125,7 +126,7 @@
             this.fg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.fg.BackColor = System.Drawing.SystemColors.Control;
             this.fg.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.fg.Location = new System.Drawing.Point(574, 86);
+            this.fg.Location = new System.Drawing.Point(514, 110);
             this.fg.Name = "fg";
             this.fg.Size = new System.Drawing.Size(28, 17);
             this.fg.TabIndex = 3;
@@ -135,7 +136,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(544, 85);
+            this.label3.Location = new System.Drawing.Point(484, 109);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(24, 17);
             this.label3.TabIndex = 4;
@@ -145,7 +146,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(608, 86);
+            this.label4.Location = new System.Drawing.Point(548, 110);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(25, 17);
             this.label4.TabIndex = 6;
@@ -155,7 +156,7 @@
             // 
             this.bg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.bg.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.bg.Location = new System.Drawing.Point(638, 86);
+            this.bg.Location = new System.Drawing.Point(578, 110);
             this.bg.Name = "bg";
             this.bg.Size = new System.Drawing.Size(28, 18);
             this.bg.TabIndex = 5;
@@ -164,7 +165,7 @@
             // ok
             // 
             this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ok.Location = new System.Drawing.Point(510, 110);
+            this.ok.Location = new System.Drawing.Point(450, 137);
             this.ok.Name = "ok";
             this.ok.Size = new System.Drawing.Size(75, 25);
             this.ok.TabIndex = 7;
@@ -176,7 +177,7 @@
             // 
             this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancel.Location = new System.Drawing.Point(591, 110);
+            this.cancel.Location = new System.Drawing.Point(531, 137);
             this.cancel.Name = "cancel";
             this.cancel.Size = new System.Drawing.Size(75, 25);
             this.cancel.TabIndex = 8;
@@ -225,7 +226,7 @@
             // caseSensitive
             // 
             this.caseSensitive.AutoSize = true;
-            this.caseSensitive.Location = new System.Drawing.Point(65, 86);
+            this.caseSensitive.Location = new System.Drawing.Point(241, 86);
             this.caseSensitive.Name = "caseSensitive";
             this.caseSensitive.Size = new System.Drawing.Size(121, 21);
             this.caseSensitive.TabIndex = 12;
@@ -235,7 +236,7 @@
             // fullWord
             // 
             this.fullWord.AutoSize = true;
-            this.fullWord.Location = new System.Drawing.Point(192, 86);
+            this.fullWord.Location = new System.Drawing.Point(368, 86);
             this.fullWord.Name = "fullWord";
             this.fullWord.Size = new System.Drawing.Size(87, 21);
             this.fullWord.TabIndex = 13;
@@ -351,12 +352,12 @@
             this.olvColumn50,
             this.olvColumn51});
             this.result.FullRowSelect = true;
-            this.result.Location = new System.Drawing.Point(12, 142);
+            this.result.Location = new System.Drawing.Point(12, 165);
             this.result.MultiSelect = false;
             this.result.Name = "result";
             this.result.OwnerDraw = true;
             this.result.ShowGroups = false;
-            this.result.Size = new System.Drawing.Size(654, 175);
+            this.result.Size = new System.Drawing.Size(594, 182);
             this.result.TabIndex = 14;
             this.result.UseCompatibleStateImageBehavior = false;
             this.result.View = System.Windows.Forms.View.Details;
@@ -572,7 +573,7 @@
             this.friendlyRegexName.Enabled = false;
             this.friendlyRegexName.Location = new System.Drawing.Point(483, 19);
             this.friendlyRegexName.Name = "friendlyRegexName";
-            this.friendlyRegexName.Size = new System.Drawing.Size(189, 23);
+            this.friendlyRegexName.Size = new System.Drawing.Size(129, 23);
             this.friendlyRegexName.TabIndex = 1;
             // 
             // label2
@@ -590,7 +591,7 @@
             // 
             this.preview.AutoSize = true;
             this.preview.ForeColor = System.Drawing.Color.Blue;
-            this.preview.Location = new System.Drawing.Point(13, 118);
+            this.preview.Location = new System.Drawing.Point(13, 145);
             this.preview.Name = "preview";
             this.preview.Size = new System.Drawing.Size(77, 17);
             this.preview.TabIndex = 17;
@@ -625,13 +626,24 @@
             this.markAsNewEntry.Text = "Mark this as a new Entry in the Search History";
             this.markAsNewEntry.UseVisualStyleBackColor = true;
             // 
+            // allColumns
+            // 
+            this.allColumns.AutoSize = true;
+            this.allColumns.Location = new System.Drawing.Point(68, 86);
+            this.allColumns.Name = "allColumns";
+            this.allColumns.Size = new System.Drawing.Size(144, 21);
+            this.allColumns.TabIndex = 18;
+            this.allColumns.Text = "Seach All Columns";
+            this.allColumns.UseVisualStyleBackColor = true;
+            // 
             // search_form
             // 
             this.AcceptButton = this.ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancel;
-            this.ClientSize = new System.Drawing.Size(678, 323);
+            this.ClientSize = new System.Drawing.Size(618, 353);
+            this.Controls.Add(this.allColumns);
             this.Controls.Add(this.markAsNewEntry);
             this.Controls.Add(this.combo);
             this.Controls.Add(this.preview);
@@ -736,5 +748,6 @@
         private System.Windows.Forms.Label preview;
         private System.Windows.Forms.ComboBox combo;
         private System.Windows.Forms.CheckBox markAsNewEntry;
+        private System.Windows.Forms.CheckBox allColumns;
     }
 }

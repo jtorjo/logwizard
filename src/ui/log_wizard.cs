@@ -1955,10 +1955,9 @@ namespace LogWizard
                 var all = all_log_views_and_full_log();
                 bool all_filters_up_to_date = all.Count(x => x.is_filter_up_to_date) == all.Count;
 
-                if (!all_filters_up_to_date)
+                if (all_filters_up_to_date) {
                     foreach (log_view lv in all_log_views_and_full_log())
                         lv.turn_off_has_anying_changed = false;
-                else {
                     logger.Debug("[view] initial refresh complete");
                     // we allocated a lot of interim objects
                     GC.Collect();

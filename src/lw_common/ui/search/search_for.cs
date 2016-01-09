@@ -36,7 +36,7 @@ namespace lw_common.ui {
             bool equals = case_sensitive == other.case_sensitive && 
                           full_word == other.full_word && 
                           String.Equals(text, other.text) && 
-                          type == other.type;
+                          type == other.type && all_columns == other.all_columns;
             return equals;
         }
 
@@ -118,6 +118,7 @@ namespace lw_common.ui {
             sett.set(prefix + ".type", "" + type);
             sett.set(prefix + ".friendly_regex_name", friendly_regex_name);
             sett.set(prefix + ".last_view_names", util.concatenate(last_view_names,"|"));
+            sett.set(prefix + ".all_columns", all_columns ? "1" : "0");
             // FIXME i need more testing on split class
             //sett.set(prefix + ".last_view_names", split.from_list(last_view_names, ",", split.type.use_any_quotes));
         }
@@ -138,7 +139,8 @@ namespace lw_common.ui {
                 friendly_regex_name = sett.get(prefix + ".friendly_regex_name"),
                 // FIXME i need more testing on split class
                 //last_view_names = split.to_list( sett.get(prefix + ".last_view_names"), ",", split.type.use_any_quotes ).ToArray()
-                last_view_names = sett.get(prefix + ".last_view_names").Split('|')
+                last_view_names = sett.get(prefix + ".last_view_names").Split('|'),
+                all_columns = sett.get(prefix + ".all_columns", "1") != "0"
             };
             return cur;
         }
@@ -168,5 +170,6 @@ namespace lw_common.ui {
         public string friendly_regex_name = "";
         public string[] last_view_names ;
 
+        public bool all_columns = true;
     }
 }

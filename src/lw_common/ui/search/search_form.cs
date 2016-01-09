@@ -27,6 +27,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -51,7 +52,8 @@ namespace lw_common.ui {
         private search_for prev_search_ = null;
         private search_renderer render_ = null;
 
-        private int line_col_ = 0;
+        private List<int> searchable_columns_ = new List<int>();
+        private List<int> searchable_columns_msg_only_ = new List<int>();
 
         public search_for running_search {
             get { return prev_search_; }
@@ -155,6 +157,7 @@ namespace lw_common.ui {
             // use the last ones...
             fg.BackColor = history_[0].fg;
             bg.BackColor = history_[0].bg;
+            allColumns.Checked = history_[0].all_columns;
             load_combo();
 
             load_surrounding_rows(lv);
@@ -211,6 +214,7 @@ namespace lw_common.ui {
             }
 
             combo.Text = search.text;
+            allColumns.Checked = search.all_columns;
             update_autorecognize_radio();
         }
 
@@ -252,15 +256,21 @@ namespace lw_common.ui {
                 preview_items_.Add(row);
             }
 
+            searchable_columns_.Clear();
+            searchable_columns_msg_only_.Clear();
             int preview_col_idx = 0;
             foreach (int col_idx in columns) {
                 result.AllColumns[preview_col_idx].Width = lv.list.AllColumns[col_idx].Width;
                 result.AllColumns[preview_col_idx].Text = lv.list.AllColumns[col_idx] != lv.msgCol ? lv.list.AllColumns[col_idx].Text : "Message";
                 result.AllColumns[preview_col_idx].FillsFreeSpace = lv.list.AllColumns[col_idx].FillsFreeSpace;
                 // note: the line column never enters the search
-                if (lv.lineCol == lv.list.AllColumns[col_idx])
-                    line_col_ = preview_col_idx;
-                else 
+                bool is_searchable = info_type_io.is_searchable(log_view_cell.cell_idx_to_type(col_idx));
+                if (is_searchable)
+                    searchable_columns_.Add(preview_col_idx);
+                if ( lv.msgCol == lv.list.AllColumns[col_idx])
+                    searchable_columns_msg_only_.Add(preview_col_idx);
+
+                if (lv.lineCol != lv.list.AllColumns[col_idx])
                     result.AllColumns[preview_col_idx].Renderer = render_;
                 ++preview_col_idx;
             }
@@ -327,7 +337,8 @@ namespace lw_common.ui {
                 text = combo.Text, 
                 type = type,
                 friendly_regex_name = friendlyRegexName.Text,
-                last_view_names = last_view_names.ToArray()
+                last_view_names = last_view_names.ToArray(),
+                all_columns = allColumns.Checked
             };
         }
 
@@ -437,21 +448,17 @@ namespace lw_common.ui {
 
             List<int> matches = new List<int>();
             for (int idx = 0; idx < preview_items_.Count; ++idx) {
-                bool matches_now = false;
-                for (int col_idx = 0; col_idx < preview_items_[idx].Count; col_idx++) {
-                    if (col_idx == line_col_)
-                        continue;
-                    string cell = preview_items_[idx][col_idx];
-                    if (string_search.matches(cell, prev_search_)) {
-                        matches_now = true;
-                        break;
-                    }
-                }
+                var to_search = searchable_columns().Select(col => preview_items_[idx][col]);
+                bool matches_now = string_search.matches(to_search, prev_search_);
                 if ( matches_now)
                     matches.Add(idx);
             }
             matches_ = matches;
         }
+
+        private List<int> searchable_columns() {
+            return prev_search_.all_columns ? searchable_columns_ : searchable_columns_msg_only_;
+        } 
 
         private void search_form_FormClosed(object sender, FormClosedEventArgs e) {
             closed_ = true;

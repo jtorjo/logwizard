@@ -30,7 +30,7 @@ using System.Threading.Tasks;
 using lw_common.ui;
 
 namespace lw_common {
-    public class string_search {
+    internal class string_search {
         public static bool is_delim_or_does_not_exist(string line, int idx) {
             if (idx >= 0 && idx < line.Length)
                 return !Char.IsLetterOrDigit(line[idx]);
@@ -83,11 +83,26 @@ namespace lw_common {
 
         }
 
+        public static bool matches(filter.match item, search_for search) {
+            if (search.all_columns) 
+                return info_type_io.searchable.Any(x => matches_cell(item.line.part(x), search));
+            else
+                return matches_cell(item.line.part(info_type.msg), search);
+        }
 
-        public static bool matches(string line, search_for search) {
+        public static bool matches(IEnumerable<string> cells, search_for search) {
+            return cells.Any(cell => matches_cell(cell, search));
+        }
+
+
+        private static bool matches_cell(string line, search_for search) {
             if (search.use_regex && search.regex == null)
                 // the regex is invalid
                 return true;
+
+            if (line == "")
+                // optimization
+                return false;
 
             if (search.use_regex) {
                 return search.regex.IsMatch(line);
