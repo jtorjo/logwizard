@@ -56,7 +56,7 @@ namespace LogWizard
             Application.SetCompatibleTextRenderingDefault(false);
 
             // uncomment this to test how we'd behave in release
-            // util.is_debug = false;
+            //util.is_debug = false;
 
             util.set_current_dir();
             util.init_log();

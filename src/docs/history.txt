@@ -5,15 +5,12 @@
 
 For now, the only reason I can think about this is for Event Logs (since that's what Event Viewer does).
 
-On Event viewer -> "reverse" should be selected by default.
-
 Once I do this, new entries are shown to the top (as opposed to at the bottom, as is now)
 
 IMPORTANT: basically, i need to be able to add records to the end and to the beginning. Need to figure out how to do it
 
 
 - event viewer: 
-  - line_idx shown in reverse
   - scroll to last: in reverse -> reverse it (go to top all the time)
 
 
@@ -26,8 +23,13 @@ IMPORTANT: basically, i need to be able to add records to the end and to the beg
 - event viewer: convert computername/username to friendly?
 
 
+1.6.10b
+- event viewer: adding events in reverse works (in event viewer/event view log classes)
+
+
 1.6.10a
 - event viewer events read in reverse : old items works
+- On Event viewer -> "reverse" should be selected by default.
 
 
 1.6.9b

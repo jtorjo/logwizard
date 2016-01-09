@@ -441,6 +441,10 @@ namespace lw_common {
 
         private void load() {
             load_save(true);
+            if (notes_author_name == "")
+                notes_author_name = Environment.UserName;
+            if (notes_initials == "")
+                notes_initials = initials(notes_author_name);
         }
 
         public void save() {

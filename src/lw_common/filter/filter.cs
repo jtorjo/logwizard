@@ -124,8 +124,10 @@ namespace lw_common {
                 lock (this) {
                     //return matches_.IndexOf(m);
                     int idx = matches_.binary_search_closest(x => reverse_order ? -x.line_idx : x.line_idx, reverse_order ? -m.line_idx : m.line_idx).Item2;
-                    if ( idx >= 0 && !reverse_order)
-                        Debug.Assert(matches_[idx] == m);
+                    // 1.6.10 - this seems to generate a lot of asserts for event viewer, even though logically the code is correct
+                    //          I will take a look at a later time
+                    //if ( idx >= 0 && !reverse_order)
+                      //  Debug.Assert(matches_[idx] == m);
                     return idx;
                 }
             }

@@ -76,6 +76,11 @@ namespace lw_common {
 
         private string remote_password_ = "";
 
+        // events received through "last_events" ; if < 0, not known yet
+        private int old_event_count_ = -1;
+
+        private int event_count_so_far_ = 0;
+
         public event_log_reader(settings_as_string sett) : base(sett) {
             settings.on_changed += on_settings_changed;
             sett.set("name", friendly_name);
@@ -154,6 +159,10 @@ namespace lw_common {
             get { return fully_read_once_; }
         }
 
+        public int old_event_count {
+            get { return old_event_count_; }
+        }
+
         public override void force_reload() {
             base.force_reload();
             fully_read_once_ = false;
@@ -205,11 +214,13 @@ namespace lw_common {
                 }
 
                 if (needs_more_processing) {
-                    // FIXME in reverse order, these should be first!
                     int listen_for_new_events = event_logs_.Count(x => x.listening_for_new_events_);
                     // note: if we're listing for new events, first process all the last ones
                     if (listen_for_new_events == event_logs_.Count && event_logs_.Count(x => x.last_events_.Count == 0) == event_logs_.Count) {
                         // we're listening for NEW EVENTS on all threads
+                        if (old_event_count_ < 0) 
+                            old_event_count_ = event_count_so_far_;
+                        
                         List< Tuple<EventRecord,string> > all = new List<Tuple<EventRecord,string>>();
                         var now = DateTime.Now;
                         foreach (var log in event_logs_)
@@ -265,7 +276,9 @@ namespace lw_common {
             }
 
             // 1.5.6t - to_log_entry can throw a lot of errors, we don't want that while being lock()ed
-            return next.Select( (x) => to_log_entry(x.Item1, x.Item2) ).ToList();
+            var next_lines = next.Select( (x) => to_log_entry(x.Item1, x.Item2) ).ToList();
+            event_count_so_far_ += next_lines.Count;
+            return next_lines;
         }
 
         private void read_single_log_thread(log_info log) {
