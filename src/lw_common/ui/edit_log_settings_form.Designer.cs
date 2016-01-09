@@ -59,7 +59,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.eventsReversed = new System.Windows.Forms.CheckBox();
+            this.reversed = new System.Windows.Forms.CheckBox();
             this.label27 = new System.Windows.Forms.Label();
             this.eventLogCheckStatus = new System.Windows.Forms.Label();
             this.eventLogs = new System.Windows.Forms.CheckedListBox();
@@ -125,7 +125,7 @@
             this.panel1.Controls.Add(this.typeTab);
             this.panel1.Location = new System.Drawing.Point(-3, 34);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(628, 396);
+            this.panel1.Size = new System.Drawing.Size(628, 406);
             this.panel1.TabIndex = 0;
             // 
             // typeTab
@@ -141,7 +141,7 @@
             this.typeTab.Location = new System.Drawing.Point(1, 3);
             this.typeTab.Name = "typeTab";
             this.typeTab.SelectedIndex = 0;
-            this.typeTab.Size = new System.Drawing.Size(633, 397);
+            this.typeTab.Size = new System.Drawing.Size(633, 403);
             this.typeTab.TabIndex = 0;
             // 
             // tabPage1
@@ -216,7 +216,7 @@
             this.panel2.Controls.Add(this.fileTypeTab);
             this.panel2.Location = new System.Drawing.Point(2, 41);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(595, 279);
+            this.panel2.Size = new System.Drawing.Size(595, 276);
             this.panel2.TabIndex = 0;
             // 
             // fileTypeTab
@@ -231,7 +231,7 @@
             this.fileTypeTab.Location = new System.Drawing.Point(-5, 0);
             this.fileTypeTab.Name = "fileTypeTab";
             this.fileTypeTab.SelectedIndex = 0;
-            this.fileTypeTab.Size = new System.Drawing.Size(617, 276);
+            this.fileTypeTab.Size = new System.Drawing.Size(617, 273);
             this.fileTypeTab.TabIndex = 0;
             // 
             // tabPage3
@@ -245,7 +245,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(609, 247);
+            this.tabPage3.Size = new System.Drawing.Size(609, 244);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -322,7 +322,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(609, 253);
+            this.tabPage4.Size = new System.Drawing.Size(609, 250);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -374,7 +374,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(609, 253);
+            this.tabPage5.Size = new System.Drawing.Size(609, 250);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -435,7 +435,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(609, 253);
+            this.tabPage6.Size = new System.Drawing.Size(609, 250);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "tabPage6";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -489,7 +489,6 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.eventsReversed);
             this.tabPage2.Controls.Add(this.label27);
             this.tabPage2.Controls.Add(this.eventLogCheckStatus);
             this.tabPage2.Controls.Add(this.eventLogs);
@@ -499,30 +498,30 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(625, 368);
+            this.tabPage2.Size = new System.Drawing.Size(625, 374);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // eventsReversed
+            // reversed
             // 
-            this.eventsReversed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.eventsReversed.AutoSize = true;
-            this.eventsReversed.Location = new System.Drawing.Point(127, 146);
-            this.eventsReversed.Name = "eventsReversed";
-            this.eventsReversed.Size = new System.Drawing.Size(283, 21);
-            this.eventsReversed.TabIndex = 6;
-            this.eventsReversed.Text = "Reversed (Last Log Entry is shown First)";
-            this.tip.SetToolTip(this.eventsReversed, "Shows the Log entries in Reversed order\r\n\r\nThis can be useful if retrieving the l" +
+            this.reversed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.reversed.AutoSize = true;
+            this.reversed.Location = new System.Drawing.Point(7, 446);
+            this.reversed.Name = "reversed";
+            this.reversed.Size = new System.Drawing.Size(255, 21);
+            this.reversed.TabIndex = 6;
+            this.reversed.Text = "Reversed (Last Entry is shown First)";
+            this.tip.SetToolTip(this.reversed, "Shows the Log entries in Reversed order\r\n\r\nThis can be useful if retrieving the l" +
         "ogs is time-consuming,\r\nand you\'d like to see the last entries ASAP");
-            this.eventsReversed.UseVisualStyleBackColor = true;
+            this.reversed.UseVisualStyleBackColor = true;
             // 
             // label27
             // 
             this.label27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(358, 187);
+            this.label27.Location = new System.Drawing.Point(358, 190);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(270, 156);
             this.label27.TabIndex = 5;
@@ -565,7 +564,7 @@
             this.groupBox1.Controls.Add(this.label22);
             this.groupBox1.Controls.Add(this.remoteMachineName);
             this.groupBox1.Controls.Add(this.label21);
-            this.groupBox1.Location = new System.Drawing.Point(8, 177);
+            this.groupBox1.Location = new System.Drawing.Point(8, 180);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(346, 152);
             this.groupBox1.TabIndex = 2;
@@ -810,7 +809,7 @@
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox1.AutoSize = true;
             this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(7, 437);
+            this.checkBox1.Location = new System.Drawing.Point(7, 469);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(94, 21);
             this.checkBox1.TabIndex = 1;
@@ -821,7 +820,7 @@
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(107, 435);
+            this.textBox1.Location = new System.Drawing.Point(107, 467);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 23);
             this.textBox1.TabIndex = 2;
@@ -831,7 +830,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
             this.label1.Enabled = false;
-            this.label1.Location = new System.Drawing.Point(213, 438);
+            this.label1.Location = new System.Drawing.Point(213, 470);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(63, 17);
             this.label1.TabIndex = 3;
@@ -867,7 +866,7 @@
             // ok
             // 
             this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ok.Location = new System.Drawing.Point(564, 433);
+            this.ok.Location = new System.Drawing.Point(564, 465);
             this.ok.Name = "ok";
             this.ok.Size = new System.Drawing.Size(58, 26);
             this.ok.TabIndex = 6;
@@ -878,7 +877,7 @@
             // cancel
             // 
             this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancel.Location = new System.Drawing.Point(291, 426);
+            this.cancel.Location = new System.Drawing.Point(310, 468);
             this.cancel.Name = "cancel";
             this.cancel.Size = new System.Drawing.Size(61, 26);
             this.cancel.TabIndex = 7;
@@ -911,7 +910,7 @@
             this.needsRestart.AutoSize = true;
             this.needsRestart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.needsRestart.ForeColor = System.Drawing.Color.Red;
-            this.needsRestart.Location = new System.Drawing.Point(431, 438);
+            this.needsRestart.Location = new System.Drawing.Point(431, 470);
             this.needsRestart.Name = "needsRestart";
             this.needsRestart.Size = new System.Drawing.Size(131, 17);
             this.needsRestart.TabIndex = 10;
@@ -934,7 +933,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.cancel;
-            this.ClientSize = new System.Drawing.Size(626, 461);
+            this.ClientSize = new System.Drawing.Size(626, 493);
+            this.Controls.Add(this.reversed);
             this.Controls.Add(this.needsRestart);
             this.Controls.Add(this.cancel);
             this.Controls.Add(this.friendlyName);
@@ -1057,6 +1057,6 @@
         private System.Windows.Forms.Button browserFile;
         private System.Windows.Forms.TextBox fileName;
         private System.Windows.Forms.OpenFileDialog ofd;
-        private System.Windows.Forms.CheckBox eventsReversed;
+        private System.Windows.Forms.CheckBox reversed;
     }
 }

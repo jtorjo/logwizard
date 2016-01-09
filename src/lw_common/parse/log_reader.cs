@@ -105,6 +105,10 @@ namespace lw_common {
             }
         }
 
+        public bool reverse_order {
+            get { return parser_.reverse_order; }
+        }
+
         public bool parser_up_to_date {
             get { return parser_.up_to_date; }
         }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace lw_common.parse.parsers {
     class generic_entry_log_parser : log_parser_base {
-        private entry_text_reader_base reader_;
+        protected readonly entry_text_reader_base reader_;
 
         // this contains the full string
         protected large_string string_ = new large_string();

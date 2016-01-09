@@ -9,14 +9,14 @@ using lw_common.parse;
 namespace lw_common {
     public abstract class entry_text_reader_base : text_reader {
         
-        private List<log_entry_line> lines_now_ = new List<log_entry_line>(); 
+        protected List<log_entry_line> lines_now_ = new List<log_entry_line>(); 
         protected abstract List<log_entry_line> read_next_lines();
 
-        private bool reloaded_ = false;
+        protected bool reloaded_ = false;
         private bool was_rewritten_ = false;
 
         protected entry_text_reader_base(settings_as_string sett) : base(sett) {
-            new Thread(read_entries_thread) {IsBackground = true}.Start();
+            util.postpone(() => new Thread(read_entries_thread) {IsBackground = true}.Start(), 1);
         }
 
         // if null, we don't have anything
@@ -53,7 +53,7 @@ namespace lw_common {
             return true;
         }
 
-        private void read_entries_thread() {
+        protected virtual void read_entries_thread() {
             // http://stackoverflow.com/questions/7531557/why-does-eventrecord-formatdescription-return-null
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 

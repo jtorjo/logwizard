@@ -1018,6 +1018,7 @@ namespace lw_common.ui
             bool needs_ui_update = model_.needs_ui_update;
             needs_scroll_ = needs_scroll_to_last() && !needs_ui_update;
 
+            filter_.matches.reverse_order = log_.reverse_order;
             model_.refresh();
             int new_item_count = item_count;
             filter_.compute_matches(log_);

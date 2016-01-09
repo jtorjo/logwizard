@@ -12,11 +12,13 @@ Once I do this, new entries are shown to the top (as opposed to at the bottom, a
 IMPORTANT: basically, i need to be able to add records to the end and to the beginning. Need to figure out how to do it
 
 
-
+- event viewer: 
+  - line_idx shown in reverse
+  - scroll to last: in reverse -> reverse it (go to top all the time)
 
 
 - post on https://www.reddit.com/r/dotnet/
-          https://news.ycombinator.com/news
+          https://news.ycombinator.com/news (9 jan 2016)
 		  quora
 
 
@@ -24,7 +26,8 @@ IMPORTANT: basically, i need to be able to add records to the end and to the beg
 - event viewer: convert computername/username to friendly?
 
 
-1.6.10
+1.6.10a
+- event viewer events read in reverse : old items works
 
 
 1.6.9b

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -75,13 +76,9 @@ namespace lw_common {
 
         private string remote_password_ = "";
 
-        // if true, we're reading events in reverse order (latest event is first)
-        private bool reverse_ = false;
-
         public event_log_reader(settings_as_string sett) : base(sett) {
             settings.on_changed += on_settings_changed;
             sett.set("name", friendly_name);
-            reverse_ = settings.get("event.reversed", "0") != "0"; 
         }
 
         public string[] log_types {
@@ -107,9 +104,6 @@ namespace lw_common {
             get {
                 return settings.get("event.remote_domain", ""); 
             }
-        }
-        public bool reverse {
-            get { return reverse_; }
         }
 
         public override string friendly_name {
@@ -145,7 +139,6 @@ namespace lw_common {
                 }
                 return;
             }
-            reverse_ = settings.get("event.reversed", "0") != "0"; 
             force_reload();
         }
 
@@ -233,11 +226,16 @@ namespace lw_common {
                 }
 
                 while (needs_more_processing) {
+                    // 1.6.10+ at this point, we know AT LEAST one thread still has old events
+
                     // If there is one or more threads that doesn't have at least one element, return an empty list
                     int listen_for_last_events_and_have_no_events = event_logs_.Count(x => !x.listening_for_new_events_ && x.last_events_.Count == 0);
                     if (listen_for_last_events_and_have_no_events > 0)
                         // at least one thread listening for old events and got nothing
                         break;
+
+                    // 1.6.10+ if I have new events, I will NOT return any, until all old events have been processed
+                    //         this is so that we correctly handle wether we're reversed or not
 
                     // ... the last bool -> if true, the item can be added right now ; if false, we can't add this item now
                     List < Tuple<EventRecord,string,int, bool> > last = new List<Tuple<EventRecord,string, int, bool>>();
@@ -245,13 +243,12 @@ namespace lw_common {
                         var log = event_logs_[log_idx];
                         if ( log.last_events_.Count > 0)
                             last.Add(new Tuple<EventRecord, string,int, bool>( log.last_events_[0], log.log_type, log_idx, log.last_events_.Count > 1 || log.listening_for_new_events_));
-                        else if (log.new_events_.Count > 0) 
-                            // if I'm listening for new events, this is ok - return this entry
-                            last.Add(new Tuple<EventRecord, string,int, bool>( log.new_events_[0], log.log_type, log_idx, true));
+                        else 
+                            Debug.Assert(event_logs_[log_idx].listening_for_new_events_);
                     }
                     if (last.Count < 1)
                         break;
-                    var min = reverse_ ? last.Max(x => x.Item1.TimeCreated) :  last.Min(x => x.Item1.TimeCreated);
+                    var min = reverse_order ? last.Max(x => x.Item1.TimeCreated) :  last.Min(x => x.Item1.TimeCreated);
                     var item = last.Find(x => x.Item1.TimeCreated == min);
                     if (!item.Item4)
                         break;
@@ -302,7 +299,7 @@ namespace lw_common {
                 pwd.Dispose();
 
                 EventLogQuery query = new EventLogQuery(log.log_type, PathType.LogName, query_string);
-                query.ReverseDirection = reverse_;
+                query.ReverseDirection = reverse_order;
                 if ( session != null)
                     query.Session = session;
 
@@ -318,7 +315,7 @@ namespace lw_common {
                     log.listening_for_new_events_ = true;
 
                 // at this point, listen for new events
-                if (reverse_) {
+                if (reverse_order) {
                     // if reverse, I need to create another query, or it won't allow watching
                     query = new EventLogQuery(log.log_type, PathType.LogName, query_string);                
                     if ( session != null)
@@ -410,6 +407,32 @@ namespace lw_common {
                 return "";
             }
         }
+        /*
+        protected override void read_entries_thread() {
+            // http://stackoverflow.com/questions/7531557/why-does-eventrecord-formatdescription-return-null
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
+            while (!disposed) {
+                Thread.Sleep( app.inst.check_new_lines_interval_ms);
+                bool reloaded;
+                lock (this) {
+                    reloaded = reloaded_;
+                    reloaded_ = false;
+                }
+
+                var lines = read_next_lines();
+                if (reverse_order)
+                    lines.Reverse();
+                if (lines.Count > 0 || reloaded) {
+                    lock(this)
+                        if ( !reverse_order)
+                            lines_now_.AddRange(lines);
+                        else 
+                            lines_now_.InsertRange(0, lines);
+                    parser.on_log_has_new_lines(reloaded);
+                }
+            }
+        }*/
 
     }
 }

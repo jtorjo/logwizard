@@ -102,6 +102,10 @@ namespace lw_common
             new_lines_event_.signal();
         }
 
+        public bool reverse_order {
+            get { return reader_.reverse_order; }
+        }
+
 
         // once we've been forced to reload - we should return true once per each reader
         public bool forced_reload(log_reader reader) {

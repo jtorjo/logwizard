@@ -80,7 +80,7 @@ namespace lw_common.ui {
             remoteUserName.Text = settings_.get("event.remote_user_name");
             remotePassword.Text = settings_.get("event.remote_password");
             selectedEventLogs.Text = settings_.get("event.log_type").Replace("|", "\r\n");
-            eventsReversed.Checked = settings_.get("event.reversed", "0") != "0";
+            reversed.Checked = settings_.get("reverse", "0") != "0";
 
             type.SelectedIndex = type_to_index();
             if (edit == edit_type.add) {
@@ -234,6 +234,8 @@ namespace lw_common.ui {
             settings_.set("friendly_name", friendlyName.Text);
 
             settings_.set("syntax", syntax.Text);
+            settings_.set("reverse", reversed.Checked ? "1" : "0");
+
             settings_.set("line.if_line", ifLine.Checked ? "1" : "0");
             settings_.set("part.separator", partSeparator.Text);
             settings_.set("xml.delimeter", xmlDelimeter.Text);
@@ -245,7 +247,6 @@ namespace lw_common.ui {
             settings_.set("event.remote_user_name", remoteUserName.Text);
             settings_.set("event.remote_password", remotePassword.Text);
             settings_.set("event.log_type", selectedEventLogs.Text.Trim().Replace("\r\n", "|"));
-            settings_.set("event.reversed", eventsReversed.Checked ? "1" : "0");
 
             settings_.set("debug.global", debugGlobal.Checked ? "1" : "0");
             settings_.set("debug.process_name", debugProcessName.Text);
@@ -272,7 +273,9 @@ namespace lw_common.ui {
 
             typeTab.SelectedIndex = type.SelectedIndex;
 
-            if (index_to_type() == "event_log")
+            bool is_event_log = index_to_type() == "event_log";
+            reversed.Checked = is_event_log;
+            if (is_event_log)
                 update_event_log_list();
         }
         private void type_DropDownClosed(object sender, EventArgs e) {

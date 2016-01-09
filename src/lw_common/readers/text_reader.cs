@@ -39,9 +39,12 @@ namespace lw_common
 
         protected error_list_keeper errors_ = new error_list_keeper();
 
+        private bool reverse_order_ = false;
+
         protected text_reader(settings_as_string sett) {
             settings_ = sett;
             settings_.on_changed += on_settings_changed;
+            on_settings_changed("");
         }
 
 
@@ -79,15 +82,24 @@ namespace lw_common
             get { return true; }
         }
 
-        private void on_settings_changed(string name) {
-            if ( name != "name")
-                settings_.set("name", friendly_name);
-        }
 
 
         /////////////////////////////////////////////////////////////////////////////////////
         // non-overridables
 
+        // 1.6.10+ - if true, we reverse the order of items read
+        //           each reader can decide what to do with this
+        //
+        //           at this time, we are using this in Event Log viewer, where new items are shown at the top by default
+        public bool reverse_order {
+            get { return reverse_order_; }
+        }
+
+        private void on_settings_changed(string name) {
+            if ( name != "name")
+                settings_.set("name", friendly_name);
+            reverse_order_ = settings_.get("reverse", "0") != "0";
+        }
 
         public string name {
             get { return settings.get("name"); }

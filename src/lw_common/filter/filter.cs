@@ -83,9 +83,7 @@ namespace lw_common {
 
             private match empty_match;
 
-            public match_list(match empty_match) {
-                this.empty_match = empty_match;
-            }
+            public bool reverse_order = false;
 
             // the filter matches
             //
@@ -95,6 +93,10 @@ namespace lw_common {
                 min_capacity = app.inst.no_ui.min_list_data_source_capacity, increase_percentage = 0.4            
             };
 
+            public match_list(match empty_match) {
+                this.empty_match = empty_match;
+            }
+
             public int count {
                 get { lock (this) return matches_.Count;  }
             }
@@ -102,8 +104,11 @@ namespace lw_common {
             // in case we're asking for an invalid line, just return something that is fully empty
             // next time, the log view will see that we've updated
             public match match_at(int idx) {
-                lock (this) 
+                lock (this) {
+                    if (reverse_order)
+                        idx = matches_.Count - idx - 1;
                     return idx >= 0 && idx < matches_.Count ? matches_[idx] : empty_match;
+                }
             }
 
             internal void clear() {
@@ -111,7 +116,6 @@ namespace lw_common {
                     matches_.Clear();
             }
 
-            // 1.0.84 note: if this is proves too slow, i'll do a binary search by m.line_idx !!!
             public int index_of(match m) {
                 if (m.line_idx < 0)
                     // it's the empty match
@@ -119,8 +123,8 @@ namespace lw_common {
 
                 lock (this) {
                     //return matches_.IndexOf(m);
-                    int idx = matches_.binary_search_closest(x => x.line_idx, m.line_idx).Item2;
-                    if ( idx >= 0)
+                    int idx = matches_.binary_search_closest(x => reverse_order ? -x.line_idx : x.line_idx, reverse_order ? -m.line_idx : m.line_idx).Item2;
+                    if ( idx >= 0 && !reverse_order)
                         Debug.Assert(matches_[idx] == m);
                     return idx;
                 }
@@ -154,7 +158,7 @@ namespace lw_common {
             // returns the index where we can insert a line - if I return -1, it means there's already a line with this index
             public int insert_line_idx(int line_idx) {
                 lock (this) {
-                    int insert_idx = matches_.binary_search_insert(x => x.line_idx, line_idx);
+                    int insert_idx = matches_.binary_search_insert(x => reverse_order ? -x.line_idx : x.line_idx, reverse_order ? -line_idx : line_idx);
                     if (insert_idx < matches_.Count)
                         if (matches_[insert_idx].line_idx == line_idx)
                             return -1; // we already have a match
@@ -170,20 +174,16 @@ namespace lw_common {
 
             public Tuple<match, int> binary_search(int line_idx) {
                 lock (this)
-                    return matches_.binary_search(x => x.line_idx, line_idx);
+                    return matches_.binary_search(x => reverse_order ? -x.line_idx : x.line_idx, reverse_order ? -line_idx : line_idx);
             }
 
             public Tuple<match, int> binary_search_closest(int line_idx) {
                 lock (this)
-                    return matches_.binary_search_closest(x => x.line_idx, line_idx);
+                    return matches_.binary_search_closest(x => reverse_order ? -x.line_idx : x.line_idx, reverse_order ? -line_idx : line_idx);
             }
             public Tuple<match, int> binary_search_closest(DateTime time) {
-                lock (this) {
-                    bool is_descending = matches_.Count > 1 && matches_[0].line.time > matches_[1].line.time;
-                    if ( is_descending)
-                        return matches_.binary_search_closest(x => -x.line.time.Ticks, -time.Ticks);
-                    return matches_.binary_search_closest(x => x.line.time, time);
-                }
+                lock (this) 
+                    return matches_.binary_search_closest(x => reverse_order ? -x.line.time.Ticks : x.line.time.Ticks, reverse_order ? -time.Ticks : time.Ticks);
             }
         }
 
