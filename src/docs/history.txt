@@ -10,8 +10,6 @@ Once I do this, new entries are shown to the top (as opposed to at the bottom, a
 IMPORTANT: basically, i need to be able to add records to the end and to the beginning. Need to figure out how to do it
 
 
-- event viewer: 
-  - scroll to last: in reverse -> reverse it (go to top all the time)
 
 
 - post on https://www.reddit.com/r/dotnet/
@@ -21,6 +19,12 @@ IMPORTANT: basically, i need to be able to add records to the end and to the beg
 
 
 - event viewer: convert computername/username to friendly?
+
+
+1.6.10c
+#20 fully solved
+- event viewer: 
+  - scroll to last: in reverse -> reverse it (go to top all the time)
 
 
 1.6.10b

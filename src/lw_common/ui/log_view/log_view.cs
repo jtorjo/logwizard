@@ -914,7 +914,10 @@ namespace lw_common.ui
                 return true;
             if (sel_row_idx < 0)
                 return true;
-            if (old_item_count_ > 0 && sel_row_idx == old_item_count_ - 1)
+            bool reversed_order = log_ != null && log_.reverse_order;
+            if (old_item_count_ > 0 && sel_row_idx == old_item_count_ - 1 && !reversed_order)
+                return true;
+            if (reversed_order && sel_row_idx <= 0)
                 return true;
             return false;
         }
@@ -1195,11 +1198,20 @@ namespace lw_common.ui
         private void go_last() {
             var count = item_count;
             if (count > 0) {
-                if (ensure_row_visible(count - 1))
-                    select_row_idx(count - 1, select_type.do_not_notify_parent);
-                else
-                // in this case, we failed to go to the last item - try again ASAP
-                    util.postpone(go_last, 10);
+                if (!log_.reverse_order) {
+                    if (ensure_row_visible(count - 1))
+                        select_row_idx(count - 1, select_type.do_not_notify_parent);
+                    else
+                        // in this case, we failed to go to the last item - try again ASAP
+                        util.postpone(go_last, 10);
+                } else {
+                    // reversed
+                    if (ensure_row_visible(0))
+                        select_row_idx(0, select_type.do_not_notify_parent);
+                    else
+                        // in this case, we failed to go to the last item - try again ASAP
+                        util.postpone(go_last, 10);                    
+                }
             }
         }
 
