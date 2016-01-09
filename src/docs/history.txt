@@ -1,5 +1,20 @@
 
 
+
+... so that I see the latest as first
+
+For now, the only reason I can think about this is for Event Logs (since that's what Event Viewer does).
+
+On Event viewer -> "reverse" should be selected by default.
+
+Once I do this, new entries are shown to the top (as opposed to at the bottom, as is now)
+
+IMPORTANT: basically, i need to be able to add records to the end and to the beginning. Need to figure out how to do it
+
+
+
+
+
 - post on https://www.reddit.com/r/dotnet/
           https://news.ycombinator.com/news
 		  quora
@@ -8,6 +23,8 @@
 
 - event viewer: convert computername/username to friendly?
 
+
+1.6.10
 
 
 1.6.9b
