@@ -1030,13 +1030,12 @@ namespace lw_common {
 
         static public void set_current_dir() {
              if (!is_debug) {
-                 // 1.6.5+ use the Local dir, instead of Roaming - https://github.com/jtorjo/logwizard/issues/3
-                 if (File.Exists(old_local_dir() + "logwizard_user.txt")) {
-                     File.Move( old_local_dir() + "logwizard_user.txt", local_dir() + "logwizard_user.txt");
-                 }
-
                  try {
                      Directory.CreateDirectory(local_dir());
+                     // 1.6.10+ use the Local dir, instead of Roaming - https://github.com/jtorjo/logwizard/issues/3
+                     if (File.Exists(old_local_dir() + "logwizard_user.txt")) {
+                         File.Move( old_local_dir() + "logwizard_user.txt", local_dir() + "logwizard_user.txt");
+                     }
                  } catch {
                  }
 
