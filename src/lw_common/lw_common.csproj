@@ -234,6 +234,7 @@
     <Compile Include="util\error_list_keeper.cs" />
     <Compile Include="util\export_text.cs" />
     <Compile Include="util\list_extensions.cs" />
+    <Compile Include="util\log_settings_string_readonly.cs" />
     <Compile Include="util\memory_optimized_list.cs" />
     <Compile Include="util\mouse_wheel.cs" />
     <Compile Include="util\olv_extensions.cs" />

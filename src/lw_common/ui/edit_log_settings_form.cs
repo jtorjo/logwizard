@@ -62,8 +62,8 @@ namespace lw_common.ui {
             hide_tabs(fileTypeTab);
             cancel.Left = -100;
             friendlyName.Text = settings_.get("friendly_name");
-
             fileType.SelectedIndex = file_type_to_index( settings_.get("file_type") );
+            reversed.Checked = settings_.get("reverse", "0") != "0";
 
             update_syntax();
             ifLine.Checked = settings_.get("line.if_line", "0") != "0";
@@ -80,7 +80,6 @@ namespace lw_common.ui {
             remoteUserName.Text = settings_.get("event.remote_user_name");
             remotePassword.Text = settings_.get("event.remote_password");
             selectedEventLogs.Text = settings_.get("event.log_type").Replace("|", "\r\n");
-            reversed.Checked = settings_.get("reverse", "0") != "0";
 
             type.SelectedIndex = type_to_index();
             if (edit == edit_type.add) {
