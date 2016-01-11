@@ -104,6 +104,7 @@ namespace lw_common.ui {
                 parts += util.concatenate(r.parts_.Select(x => "" + i + "," + (int)x.type 
                     + "," + (x.visible ? "1" : "0") + "," + (x.multi_line ? "1" : "0") + "," + (x.auto_resize ? "1" : "0") + "," + x.line_count), ";");
             }
+            // note: when too many settings here, I should use a log_settings_string-like or something - at this point, it's manageable, but perhaps later
             settings_as_string sett = new settings_as_string("");
             sett.set("rows", rows);
             sett.set("parts", parts);

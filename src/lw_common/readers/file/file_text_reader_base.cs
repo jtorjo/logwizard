@@ -13,7 +13,7 @@ namespace lw_common {
             return false;
         }
 
-        protected file_text_reader_base(settings_as_string sett) : base(sett) {
+        protected file_text_reader_base(log_settings_string sett) : base(sett) {
             
         }
 

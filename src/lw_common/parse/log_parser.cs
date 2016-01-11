@@ -76,7 +76,7 @@ namespace lw_common
             get { return forward_to_parser_.column_names; }
         }
 
-        public settings_as_string_readonly settings {
+        public log_settings_string_readonly settings {
             get { return reader_.settings; }
         }
 
@@ -85,7 +85,7 @@ namespace lw_common
                 return forward_to_parser_.aliases;
             }
             set {
-                reader_.set_setting("aliases", value.ToString());
+                reader_.write_settings.aliases.set( value.ToString());
             }
         }
 

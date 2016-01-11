@@ -106,8 +106,8 @@ namespace lw_common.parse.parsers {
         private bool if_line_does_not_match_assume_from_prev_line = false;
 
         public text_file_line_by_line(file_text_reader_base reader) : base(reader.settings) {
-            string syntax_str = reader.settings.get("syntax", "$msg[0]");
-            if_line_does_not_match_assume_from_prev_line = reader.settings.get("line.if_line", "0") == "1";
+            string syntax_str = reader.settings.syntax;
+            if_line_does_not_match_assume_from_prev_line = reader.settings.line_if_line;
             logger.Debug("[parse] parsing syntax " + syntax_str);
 
             Debug.Assert(reader != null);
@@ -590,7 +590,7 @@ namespace lw_common.parse.parsers {
 
         private  List<string> syntax_to_column_names() {
             // syntax is like $name1[...] $name2[...] ...
-            string syntax = sett_.get("syntax");
+            string syntax = sett_.syntax;
 
             var names = syntax.Split('$');
             List<string> result = new List<string>();

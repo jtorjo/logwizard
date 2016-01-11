@@ -470,16 +470,17 @@ namespace lw_common {
             test_normalize_time("2:3:5,123", "02:03:05.123");
         }*/
 
+        // when updater returns true, we stop the timer
         public delegate bool update_control_func();
         public delegate void void_func();
 
         public static void add_timer(update_control_func updater, int refresh_ms = 100) {
-            if (!updater())
+            if (updater())
                 return;
 
             Timer t = new Timer(){ Interval = refresh_ms };
             t.Tick += (sender, args) => {
-                if ( !updater()) {
+                if ( updater()) {
                     t.Enabled = false;
                     t.Dispose();
                 }

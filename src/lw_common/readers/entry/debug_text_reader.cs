@@ -34,17 +34,17 @@ namespace lw_common
     public class debug_text_reader : entry_text_reader_base {
         private int last_event_id_ = -1;
 
-        public debug_text_reader(settings_as_string sett) : base(sett) {
+        public debug_text_reader(log_settings_string sett) : base(sett) {
             settings.on_changed += (a) => force_reload();
         }
 
         // Global Win32 Messages vs Win32 Messages
         private bool use_global {
-            get { return settings.get("debug.global", "0") != "0"; }
+            get { return settings.debug_global; }
         }
 
         private string lo_process_name {
-            get { return settings.get("debug.process_name").ToLower(); }
+            get { return settings.debug_process_name.get().ToLower(); }
         }
 
         public override bool fully_read_once {
@@ -53,7 +53,7 @@ namespace lw_common
         }
 
         public override string friendly_name {
-            get { return lo_process_name != "" ? "[" + settings.get("debug.process_name") + "]" : "From All Processes" ; }
+            get { return lo_process_name != "" ? "[" + settings.debug_process_name + "]" : "From All Processes" ; }
         }
 
 

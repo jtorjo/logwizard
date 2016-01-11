@@ -51,48 +51,30 @@ namespace LogWizard
         private static List<log_wizard> forms_ = new List<log_wizard>();
 
         private class history {
-            public enum entry_type {
-                file, shmem, event_log, debug
-            }
 
-            private settings_as_string settings_ = new settings_as_string("");
+            private log_settings_string settings_ = new log_settings_string("");
 
-            public entry_type type {
+            public log_type type {
                 get {
-                    string type_str = settings.get("type", "file");
-                    if (type_str == "0")
-                        // old (pre 1.5.6)
-                        return entry_type.file;
-
-                    switch (type_str) {
-                    case "file":
-                        return entry_type.file;
-                    case "event_log":
-                        return entry_type.event_log;
-                    case "debug_print":
-                        return entry_type.debug;
-                    default:
-                        Debug.Assert(false);
-                        return entry_type.file;
-                    }
+                    return settings_.type;
                 }
             }
 
             public string name {
-                get { return settings.get("name"); }
+                get { return settings.name; }
             }
 
             // uniquely identifies this entry (across all history)
             public string unique_id {
                 get {
-                    string guid = settings.get("guid");
+                    string guid = settings.guid;
                     Debug.Assert(guid != "");
                     return guid;
                 }
             }
 
             public string friendly_name {
-                get { return settings.get("friendly_name"); }
+                get { return settings.friendly_name; }
             }
 
             public string ui_friendly_name {
@@ -101,15 +83,15 @@ namespace LogWizard
                         return friendly_name;
 
                     switch ( type) {
-                        case entry_type.file: 
+                        case log_type.file: 
                             var fi = new FileInfo(name);
                             string ui = fi.Name + " - " + util.friendly_size(fi.Length) + " (" + fi.DirectoryName + ")";
                             return ui;
 
-                        case entry_type.shmem: return "Shared Memory: " + name;
+                        //case log_type.shmem: return "Shared Memory: " + name;
 
-                        case entry_type.event_log: return name;
-                        case entry_type.debug: return "Debug: " + name;
+                        case log_type.event_log: return name;
+                        case log_type.debug_print: return "Debug: " + name;
                         default: Debug.Assert(false); break;
                     }
 
@@ -117,16 +99,19 @@ namespace LogWizard
                 }
             }
 
-            public settings_as_string_readonly settings {
+            public log_settings_string_readonly settings {
+                get { return settings_; }
+            }
+            public log_settings_string write_settings {
                 get { return settings_; }
             }
 
             public void from_text_reader(text_reader reader) {
-                settings_ = reader.settings as settings_as_string;
+                settings_ = reader.write_settings;
             }
 
-            public void from_settings(settings_as_string_readonly sett) {
-                settings_ = sett as settings_as_string;
+            public void from_settings(log_settings_string sett) {
+                settings_ = sett;
             }
         }
         
@@ -526,7 +511,7 @@ namespace LogWizard
                         continue; // entry removed
                     }
                     Debug.Assert(settings.Contains(guid));
-                    hist.from_settings(new settings_as_string(settings));  
+                    hist.from_settings(new log_settings_string(settings));  
                 } else {
                     // old code (pre 1.5.6)
                     string type_str = sett.get("history." + idx + "type", "file");
@@ -535,19 +520,19 @@ namespace LogWizard
                     string name = sett.get("history." + idx + "name");
                     string friendly_name = sett.get("history." + idx + "friendly_name");
 
-                    settings_as_string history_sett = new settings_as_string("");
-                    history_sett.set("type", type_str);
-                    history_sett.set("name", name);
-                    history_sett.set("friendly_name", friendly_name);
+                    var history_sett = new log_settings_string("");
+                    history_sett.type.set( (log_type) Enum.Parse(typeof (log_type), type_str));
+                    history_sett.name.set(name);
+                    history_sett.friendly_name.set(friendly_name);
                     // create a guid now
-                    history_sett.set("guid", Guid.NewGuid().ToString());
+                    history_sett.guid.set(Guid.NewGuid().ToString());
                     hist.from_settings(history_sett);
                 }
 
                 history_.Add( hist );
             }
             history_ = history_.Where(h => {
-                if (h.type == history.entry_type.file) {
+                if (h.type == log_type.file) {
                     // 1.5.11 - don't include this into the list next time the user opens the app
                     //          (so that he'll see the "Drop me like it's hot" huge message)
                     if (h.name.ToLower().EndsWith("logwizardsetup.sample.log"))
@@ -581,9 +566,9 @@ namespace LogWizard
             for ( int idx = 0; idx < history_.Count; ++idx) {
                 // 1.5.6+ - save settings-per-log
                 var settings = history_[idx].settings.ToString();
-                var guid = history_[idx].settings.get("guid");
+                string guid = history_[idx].settings.guid;
                 Debug.Assert(guid != "");
-                var file = history_[idx].settings.get("type") == "file" ? history_[idx].settings.get("name") : "";
+                var file = history_[idx].settings.type == log_type.file ? history_[idx].settings.name : "";
 
                 // note : the way I have settings point to guid is this: I may actually allow user to delete history
                 //        however, if after deleting history, user opens a file he opened before, we want those settings to still take effect.
@@ -746,8 +731,8 @@ namespace LogWizard
             }
         }
 
-        private ui_context settings_to_context(settings_as_string_readonly log_settings) {
-            string context_name = log_settings.get("context");
+        private ui_context settings_to_context(log_settings_string_readonly log_settings) {
+            string context_name = log_settings.context;
             if (context_name != "") {
                 var existing = contexts_.FirstOrDefault(x => x.name == context_name);
                 if (existing != null)
@@ -756,7 +741,7 @@ namespace LogWizard
             }
 
             // old way of forcing file to have a context (pre 1.5.6)
-            string file = log_settings.get("type") == "file" ? log_settings.get("name") : "";
+            string file = log_settings.type == log_type.file ? log_settings.name : "";
             if ( file != "" && app.inst.forced_file_to_context.ContainsKey(file)) {
                 string forced = app.inst.forced_file_to_context[file];
                 var context_from_forced = contexts_.FirstOrDefault(x => x.name == forced);
@@ -791,9 +776,9 @@ namespace LogWizard
             if (!File.Exists(name))
                 return default_;
 
-            settings_as_string sett = new settings_as_string("");
-            sett.set("type", "file");
-            sett.set("name", name);
+            log_settings_string sett = new log_settings_string("");
+            sett.type.set(log_type.file);
+            sett.name.set(name);
             return settings_to_context(sett);
         }
 
@@ -1715,8 +1700,8 @@ namespace LogWizard
               - the idea is for the uesr not to have to mistakenly delete a context when he's selecting a different type of file,
                 (since he would want new filters). thus, just create a new context where he can do anything
         */
-        private void create_context_for_log(settings_as_string log_settings) {
-            string context_name = log_settings.get("context");
+        private void create_context_for_log(log_settings_string log_settings) {
+            string context_name = log_settings.context;
             if (contexts_.FirstOrDefault(x => x.name == context_name) != null)
                 // in this case, I already have a context, and the context exists
                 return;
@@ -1729,16 +1714,16 @@ namespace LogWizard
             ui_context new_ctx = new ui_context();
             contexts_.Add(new_ctx);
 
-            switch (log_settings.get("type")) {
-            case "file":
-                string file = log_settings.get("name");
+            switch (log_settings.type.get()) {
+            case log_type.file:
+                string file = log_settings.name;
                 Debug.Assert(file != "");
                 new_ctx.name = Path.GetFileNameWithoutExtension(new FileInfo(file).Name);
                 break;
-            case "event_log":
+            case log_type.event_log:
                 new_ctx.name = least_unused_context_name("Event Log");
                 break;
-            case "debug_print":
+            case log_type.debug_print:
                 new_ctx.name = least_unused_context_name("Debug");
                 break;
             default:
@@ -1747,7 +1732,7 @@ namespace LogWizard
             }
 
             Debug.Assert(new_ctx.name != "");
-            log_settings.set("context", new_ctx.name);
+            log_settings.context.set(new_ctx.name);
 
             update_contexts_combos_in_all_forms();
         }
@@ -1765,42 +1750,36 @@ namespace LogWizard
         private void on_new_file_log(string name, string friendly_name) {
             string guid = sett_.get("file_to_guid." + name);
             if (guid != "") 
-                create_text_reader(new settings_as_string(sett_.get("guid." + guid)));
+                create_text_reader(new log_settings_string(sett_.get("guid." + guid)));
             else {
                 // at this point, we know it's a ***new*** file
-                settings_as_string file_settings = new settings_as_string("");
-                file_settings.set("type", "file");
-                file_settings.set("name", name);
-                file_settings.set("friendly_name", friendly_name);
-                file_settings.set("guid", Guid.NewGuid().ToString());
+                log_settings_string file_settings = new log_settings_string("");
+                file_settings.type.set( log_type.file);
+                file_settings.name.set(name);
+                file_settings.friendly_name.set(friendly_name);
+                file_settings.guid.set( Guid.NewGuid().ToString());
                 create_text_reader(file_settings);
             }
         }
 
-        private void create_text_reader(settings_as_string_readonly settings) {
-            bool is_file = settings.get("type") == "file";
-            if (text_ != null && text_.settings.get("guid") == settings.get("guid")) {
+        private void create_text_reader(log_settings_string settings) {
+            bool is_file = settings.type == log_type.file;
+            if (text_ != null && text_.settings.guid == settings.guid) {
                 if (is_file)
                     merge_notes();
                 return;
             }
-#if old_code
-            if (text_ != null && is_file && text_.name == settings.get("name")) {
-                merge_notes();
-                return;
-            }
-#endif
 
             if (text_ != null)
                 text_.Dispose();
 
-            create_context_for_log( settings as settings_as_string);
-            text_ = factory.create_text_reader(settings as settings_as_string);
+            create_context_for_log( settings);
+            text_ = factory.create_text_reader(settings);
             on_new_log();
                 
             if (log_parser_.needs_text_syntax) {
                 var file_settings = log_parser_.settings;
-                if ( file_settings.get("syntax") == find_log_syntax.UNKNOWN_SYNTAX) {
+                if ( file_settings.syntax == find_log_syntax.UNKNOWN_SYNTAX) {
                     set_status("We don't know the syntax of this Log File. We recommend you set it yourself. Press the 'Edit Log Settings' button on the top-right.",
                         status_ctrl.status_type.err);
                     show_source(true);
@@ -1818,7 +1797,7 @@ namespace LogWizard
         }
 
         private void on_description_template_changed(string name) {
-            (text_.settings as settings_as_string).set("description_template", name);
+            text_.write_settings.description_template .set(name);
             cur_context().merge_settings( factory.get_context_dependent_settings(text_, text_.settings), false);
             save();
         }
@@ -1829,36 +1808,36 @@ namespace LogWizard
             dropHere.Visible = false;
 
             if (history_.Count < 1)
-                history_select(text_.settings);
+                history_select(text_.write_settings);
 
-            var reader_settings_copy = new settings_as_string( text_.settings.ToString() );
-            var context_settings_copy = new settings_as_string( settings_to_context(reader_settings_copy).default_settings.ToString());
+            var reader_settings_copy = new log_settings_string( text_.settings.ToString() );
+            var context_settings_copy = new log_settings_string( settings_to_context(reader_settings_copy).default_settings.ToString());
             context_settings_copy.merge(reader_settings_copy.ToString());
             var file_text = text_ as file_text_reader;
             if (file_text != null) 
-                if ( factory.guess_file_type(file_text.name) == "line-by-line")
-                    if (reader_settings_copy.get("syntax") == "") {
+                if ( factory.guess_file_type(file_text.name) == file_log_type.line_by_line)
+                    if (reader_settings_copy.syntax == "") {
                         // file reader doesn't know syntax
                         // by default - try to find the syntax by reading the header info; otherwise, try to parse it
                         string file_to_syntax = log_to.file_to_syntax(text_.name);
                         if (file_to_syntax != "") 
                             // note: file-to-syntax overrides the context syntax
-                            context_settings_copy.set("syntax", file_to_syntax);                        
+                            context_settings_copy.syntax .set(file_to_syntax);                        
                         // note: if the context already knows syntax, use that
-                        else if (context_settings_copy.get("syntax") == "") {
+                        else if (context_settings_copy.syntax == "") {
                             string found_syntax = file_text.try_to_find_log_syntax();
                             if (found_syntax != "" && found_syntax != file_text_reader.UNKNOWN_SYNTAX) 
-                                context_settings_copy.set("syntax", found_syntax);
+                                context_settings_copy.syntax. set(found_syntax);
                         }
-                    }            
+                    }
 
-            text_.merge_setings( context_settings_copy);
+            text_.write_settings. merge( context_settings_copy);
 
             // note: we recreate the log, so that cached filters know to rebuild
             log_parser_ = new log_parser(text_);
             log_parser_.on_aliases_changed = on_aliases_changed;
-            if ( text_.settings.get("description_template") != "")
-                description.set_layout( text_.settings.get("description_template"));
+            if ( text_.settings.description_template != "")
+                description.set_layout( text_.settings.description_template);
 
             ui_context log_ctx = settings_to_context( text_.settings );
             bool same_context = log_ctx == cur_context();
@@ -1995,12 +1974,12 @@ namespace LogWizard
         }
 
         // checks if log is already in history - if so, updates its guid and returns true
-        private bool is_log_in_history(ref settings_as_string_readonly settings) {
-            if (settings.get("type") == "file") {
-                string name = settings.get("name");
+        private bool is_log_in_history(ref log_settings_string settings) {
+            if (settings.type == log_type.file) {
+                string name = settings.name;
                 var found = history_.FirstOrDefault(x => x.name == name);
                 if (found != null) {
-                    settings = found.settings;
+                    settings = found.write_settings;
                     return true;
                 }
             }
@@ -2008,18 +1987,18 @@ namespace LogWizard
             return false;
         }
 
-        private void history_select(settings_as_string_readonly settings) {
+        private void history_select(log_settings_string settings) {
             ++ignore_change_;
             bool needs_save = false;
             logHistory.SelectedIndex = -1;
-            string unique_id = settings.get("guid");
+            string unique_id = settings.guid;
 
             bool found = false;
             for (int i = 0; i < history_.Count && !found; ++i)
                 if (history_[i].unique_id == unique_id) {
                     found = true;
                     // 1.6.4+ we renamed the logwizard setup sample
-                    bool is_sample = settings.get("name").ToLower().EndsWith("logwizardsetup.sample.log") || settings.get("name").ToLower().EndsWith("logwizardsetupsample.log");
+                    bool is_sample = settings.name.get().ToLower().EndsWith("logwizardsetup.sample.log") || settings.name.get().ToLower().EndsWith("logwizardsetupsample.log");
                     // if not default form - don't move the selection to the end
                     bool is_default_form = toggled_to_custom_ui_ < 0;
                     if (is_sample || !is_default_form)
@@ -2067,7 +2046,7 @@ namespace LogWizard
         }
 
         private void add_reader_to_history() {
-            int history_idx = history_.FindIndex(x => x.settings.get("guid") == text_.unique_id);
+            int history_idx = history_.FindIndex(x => x.settings.guid == text_.unique_id);
 
             ++ignore_change_;
             if (history_idx < 0) {
@@ -2136,7 +2115,7 @@ namespace LogWizard
         }
 
         private void on_log_listory_changed() {
-            create_text_reader( history_[logHistory.SelectedIndex].settings );
+            create_text_reader( history_[logHistory.SelectedIndex].write_settings );
         }
 
         private void LogWizard_FormClosing(object sender, FormClosingEventArgs e) {
@@ -2186,7 +2165,7 @@ namespace LogWizard
         }
 
         private string selected_file_name() {
-            if (logHistory.SelectedIndex >= 0 && history_[logHistory.SelectedIndex].type == history.entry_type.file)
+            if (logHistory.SelectedIndex >= 0 && history_[logHistory.SelectedIndex].type == log_type.file)
                 return history_[logHistory.SelectedIndex].name;
             else
                 return "";
@@ -3645,7 +3624,7 @@ namespace LogWizard
             // I want to visually show to the user that we're dealing with views
             ui_context cur = cur_context();
             string name = name = "View_" + (cur.views.Count + 1);
-            if (history_[logHistory.SelectedIndex].type == history.entry_type.file) {
+            if (history_[logHistory.SelectedIndex].type == log_type.file) {
                 name = Path.GetFileNameWithoutExtension(new FileInfo(selected_file_name()).Name) + "_View" + (cur.views.Count + 1);
             }
 
@@ -3801,7 +3780,7 @@ namespace LogWizard
         private void whatsupOpen_Click(object sender, EventArgs e) {
             var add = new edit_log_settings_form("", edit_log_settings_form.edit_type.add);
             if (add.ShowDialog(this) == DialogResult.OK) {
-                settings_as_string_readonly settings = new settings_as_string(add.settings);
+                log_settings_string settings = new log_settings_string(add.settings);
                 if (is_log_in_history(ref settings)) {
                     // we already have this in history
                     create_text_reader(settings);
@@ -3817,7 +3796,7 @@ namespace LogWizard
                 --ignore_change_;
 
                 Text = reader_title() + " - Log Wizard " + version();
-                create_text_reader(new_.settings);
+                create_text_reader(new_.write_settings);
                 save();
             }
         }
@@ -3827,12 +3806,12 @@ namespace LogWizard
                 return;
 
             var cur_history = history_[logHistory.SelectedIndex];
-            var old_syntax = cur_history.settings.get("syntax");
+            var old_syntax = cur_history.settings.syntax;
             var edit = new edit_log_settings_form(cur_history.settings.ToString());
             if (edit.ShowDialog(this) == DialogResult.OK) {
                 bool friendly_name_changed = cur_history.friendly_name != edit.friendly_name;
                 // at this point, we've updated all settings
-                text_.merge_setings(new settings_as_string(edit.settings));
+                text_.write_settings .merge(new log_settings_string(edit.settings));
                 cur_context().merge_settings( factory.get_context_dependent_settings(text_, text_.settings), edit.edited_syntax_now);
 
                 Text = reader_title() + " - Log Wizard " + version();
@@ -3846,8 +3825,8 @@ namespace LogWizard
                         will_restart = true;
 
                 var new_settings = cur_history.settings; 
-                var new_syntax = new_settings.get("syntax");
-                if ( new_settings.get("type") == "file")
+                var new_syntax = new_settings.syntax;
+                if ( new_settings.type == log_type.file)
                     if (old_syntax != new_syntax && !will_restart) {
                         // in this case, the user has changed the syntax - need to reload everything
                         save();

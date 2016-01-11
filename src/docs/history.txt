@@ -30,8 +30,10 @@ Probably, I should auto show the Details pane? (or perhaps just show a tooltip i
 
 - file associations -> don't do it by default
 
-1.6.12a
-- created the log_settings_string[_readonly] classes
+
+1.6.12
+- REFACTORING: created the log_settings_string[_readonly] classes
+
 
 
 1.6.11

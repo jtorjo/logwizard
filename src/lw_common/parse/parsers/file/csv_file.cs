@@ -45,8 +45,8 @@ namespace lw_common.parse.parsers {
 
         protected override void on_updated_settings() {
             base.on_updated_settings();
-            has_header_line_ = sett_.get("csv.has_header", "1") == "1";
-            separator_ = sett_.get("csv.separator", ",");
+            has_header_line_ = sett_.cvs_has_header;
+            separator_ = sett_.cvs_separator_char;
         }
 
         public override void force_reload() {

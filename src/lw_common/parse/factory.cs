@@ -33,25 +33,25 @@ namespace lw_common.parse {
     public class factory {
 
         // these are the settings that are to be saved in the context
-        static public settings_as_string get_context_dependent_settings(text_reader reader, settings_as_string_readonly settings) {
+        static public log_settings_string get_context_dependent_settings(text_reader reader, log_settings_string_readonly settings) {
             if (reader is file_text_reader) 
-                return settings.sub(new []{ "syntax", "aliases", "description_template" });
+                return settings.sub(new []{ settings.syntax.get(), settings.aliases, settings.description_template });
             
-            return new settings_as_string( settings.ToString());
+            return new log_settings_string( settings.ToString());
         }
 
         // these are the settings that are to be saved per-log
-        static public settings_as_string get_log_dependent_settings(text_reader reader, settings_as_string_readonly settings) {
-            return new settings_as_string( settings.ToString());
+        static public log_settings_string get_log_dependent_settings(text_reader reader, log_settings_string_readonly settings) {
+            return new log_settings_string( settings.ToString());
         }
 
-        static public text_reader create_text_reader(settings_as_string settings) {
-            Debug.Assert(settings.get("guid") != "");
+        static public text_reader create_text_reader(log_settings_string settings) {
+            Debug.Assert(settings.guid != "");
 
-            switch (settings.get("type", "file")) {
-            case "file":        return new file_text_reader(settings);
-            case "event_log":   return new event_log_reader(settings);
-            case "debug_print": return new debug_text_reader(settings);
+            switch (settings.type.get()) {
+            case log_type.file:        return new file_text_reader(settings);
+            case log_type.event_log:   return new event_log_reader(settings);
+            case log_type.debug_print: return new debug_text_reader(settings);
             default:
                 Debug.Assert(false);
                 return null;
@@ -60,9 +60,11 @@ namespace lw_common.parse {
         }
 
         static internal log_parser_base create_parser(text_reader reader) {
-            reader.set_setting("type", text_reader.type(reader));
-            if ( reader.settings.get("guid") == "")
-                reader.set_setting("guid", Guid.NewGuid().ToString());
+            var reader_sett = reader.write_settings;
+            reader_sett.type.set( text_reader.type(reader));
+
+            if ( reader_sett.guid == "")
+                reader_sett.guid.set( Guid.NewGuid().ToString());
 
             if (reader is file_text_reader) 
                 return create_file_parser(reader as file_text_reader);
@@ -71,11 +73,8 @@ namespace lw_common.parse {
                 // for testing syntax
                 return new text_file_line_by_line(reader as inmem_text_reader);
 
-            if (reader is event_log_reader) {
-                if ( reader.settings.get("event.log_type") == "")
-                    reader.set_setting("event.log_type", "Application|System");
+            if (reader is event_log_reader) 
                 return new event_viewer(reader as event_log_reader);
-            }
 
             if (reader is debug_text_reader) 
                 return new debug_print(reader as debug_text_reader);
@@ -85,33 +84,32 @@ namespace lw_common.parse {
             return null;
         }
 
-        public static string guess_file_type(string file_name) {
+        public static file_log_type guess_file_type(string file_name) {
             if (file_name == "")
-                return "line-by-line";
+                return file_log_type.line_by_line;
             
             file_name = file_name.ToLower();
             if (file_name.EndsWith(".xml"))
-                return "xml";
+                return file_log_type.xml;
             if (file_name.EndsWith(".csv"))
-                return "csv";
+                return file_log_type.csv;
 
-            if (text_file_part_on_single_line.is_single_line(file_name, new settings_as_string("")))
-                return "part-by-line";
+            if (text_file_part_on_single_line.is_single_line(file_name, new log_settings_string("")))
+                return file_log_type.part_to_line;
 
-            return "line-by-line";
+            return file_log_type.line_by_line;
         }
 
         public static bool is_file_line_by_line(string file_name, string sett) {
             file_name = file_name.ToLower();
-            var all = new settings_as_string(sett);
-            var file_type = all.get("file_type");
+            var all = new log_settings_string(sett);
 
-            switch (file_type) {
-            case "line-by-line":
+            switch (all.file_type.get()) {
+            case file_log_type.line_by_line:
                 return true;
-            case "":
+            case file_log_type.best_guess:
                 // best guess
-                return guess_file_type(file_name) == "line-by-line";
+                return guess_file_type(file_name) == file_log_type.line_by_line;
             default:
                 return false;
             }
@@ -121,17 +119,16 @@ namespace lw_common.parse {
         private static log_parser_base create_file_parser(file_text_reader reader) {
             string file_name = reader.name.ToLower();
 
-            var file_type = reader.settings.get("file_type");
-            switch (file_type) {
-            case "line-by-line":
+            switch (reader.settings.file_type.get()) {
+            case file_log_type.line_by_line:
                 return new text_file_line_by_line(reader);
-            case "part-by-line":
+            case file_log_type.part_to_line:
                 return new text_file_part_on_single_line(reader);
-            case "xml":
+            case file_log_type.xml:
                 return new xml_file(reader);
-            case "csv":
+            case file_log_type.csv:
                 return new csv_file(reader);
-            case "":
+            case file_log_type.best_guess:
                 // best guess
                 break;
             default:
@@ -144,7 +141,7 @@ namespace lw_common.parse {
             if ( file_name.EndsWith(".csv"))
                 return new csv_file(reader);
 
-            string syntax = reader.settings.get("syntax");
+            string syntax = reader.settings.syntax;
             if ( syntax == "" || syntax == find_log_syntax.UNKNOWN_SYNTAX)
                 if ( text_file_part_on_single_line.is_single_line(reader.name, reader.settings))
                     return new text_file_part_on_single_line(reader);

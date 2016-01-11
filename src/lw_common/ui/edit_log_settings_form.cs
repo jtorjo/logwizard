@@ -19,17 +19,17 @@ namespace lw_common.ui {
     public partial class edit_log_settings_form : Form {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private settings_as_string old_settings_;
-        private settings_as_string settings_;
+        private log_settings_string old_settings_;
+        private log_settings_string settings_;
 
         private bool needs_restart_ = false;
 
-        private double_dictionary<string,int> type_to_index_ = new double_dictionary<string, int>( new Dictionary<string, int>() {
-            { "file", 0 }, { "event_log", 1 }, { "debug_print", 2}, { "db", 3}, {"multi", 4}
+        private double_dictionary<log_type,int> type_to_index_ = new double_dictionary<log_type, int>( new Dictionary<log_type, int>() {
+            { log_type.file, 0 }, { log_type.event_log, 1 }, { log_type.debug_print, 2}, { log_type.db, 3}, {log_type.multi, 4}
         });
 
-        private double_dictionary<string, int> file_type_to_index_ = new double_dictionary<string, int>(new Dictionary<string, int>() {
-            { "", 0}, { "line-by-line", 1}, { "part-by-line", 2}, { "xml", 3}, { "csv", 4}
+        private double_dictionary<file_log_type, int> file_type_to_index_ = new double_dictionary<file_log_type, int>(new Dictionary<file_log_type, int>() {
+            { file_log_type.best_guess, 0}, { file_log_type.line_by_line, 1}, {file_log_type.part_to_line, 2}, { file_log_type.xml, 3}, { file_log_type.csv, 4}
         });
 
         public enum edit_type {
@@ -46,45 +46,41 @@ namespace lw_common.ui {
 
         // file name is set only if it's a file
         public edit_log_settings_form(string settings, edit_type edit = edit_type.edit) {
-            old_settings_ = new settings_as_string(settings);
-            settings_ = new settings_as_string(settings);
+            old_settings_ = new log_settings_string(settings);
+            settings_ = new log_settings_string(settings);
             edit_ = edit;
             InitializeComponent();
-            fileName.Text =  settings_.get("type") == "file" ? settings_.get("name") : "" ;
+            fileName.Text =  settings_.type == log_type.file ? settings_.name : "" ;
             type.Enabled = edit == edit_type.add;
             browserFile.Enabled = edit == edit_type.add;
-
-            if (edit == edit_type.add) {
-                settings_.set("event.log_type", "Application|System");
-            }
 
             hide_tabs(typeTab);
             hide_tabs(fileTypeTab);
             cancel.Left = -100;
-            friendlyName.Text = settings_.get("friendly_name");
-            fileType.SelectedIndex = file_type_to_index( settings_.get("file_type") );
-            reversed.Checked = settings_.get("reverse", "0") != "0";
+            friendlyName.Text = settings_.friendly_name;
+            fileType.SelectedIndex = file_type_to_index( settings_.file_type );
+            reversed.Checked = settings_.reverse;
 
             update_syntax();
-            ifLine.Checked = settings_.get("line.if_line", "0") != "0";
+            ifLine.Checked = settings_.line_if_line;
             
-            partSeparator.Text = settings_.get("part.separator");
+            partSeparator.Text = settings_.part_separator;
 
-            xmlDelimeter.Text = settings_.get("xml.delimeter");
+            xmlDelimeter.Text = settings_.xml_delimiter;
 
-            csvHasHeader.Checked = settings_.get("csv.has_header", "1") != "0";
-            csvSeparator.Text = settings_.get("csv.separator", ",");
+            csvHasHeader.Checked = settings_.cvs_has_header;
+            csvSeparator.Text = settings_.cvs_separator_char;
 
-            remoteMachineName.Text = settings_.get("event.remote_machine_name");
-            remoteDomain.Text = settings_.get("event.remote_domain");
-            remoteUserName.Text = settings_.get("event.remote_user_name");
-            remotePassword.Text = settings_.get("event.remote_password");
-            selectedEventLogs.Text = settings_.get("event.log_type").Replace("|", "\r\n");
+            remoteMachineName.Text = settings_.event_remote_machine_name;
+            remoteDomain.Text = settings_.event_remote_domain;
+            remoteUserName.Text = settings_.event_remote_user_name;
+            remotePassword.Text = settings_.event_remote_password;
+            selectedEventLogs.Text = settings_.event_log_type.get() .Replace("|", "\r\n");
 
             type.SelectedIndex = type_to_index();
             if (edit == edit_type.add) {
                 Text = "Open Log";
-                settings_.set("guid", Guid.NewGuid().ToString());
+                settings_.guid .set( Guid.NewGuid().ToString());
                 util.postpone(() => type.Focus(), 1);
                 util.postpone(() => type.DroppedDown = true, 200);
             }
@@ -175,18 +171,18 @@ namespace lw_common.ui {
         }
 
         private int type_to_index() {
-            return type_to_index_.key_to_value(settings_.get("type", "file"));
+            return type_to_index_.key_to_value(settings_.type);
         }
 
-        private string index_to_type() {
+        private log_type index_to_type() {
             return type_to_index_.value_to_key(type.SelectedIndex);
         }
 
-        private int file_type_to_index(string file_type) {
+        private int file_type_to_index(file_log_type file_type) {
             return file_type_to_index_.key_to_value(file_type);
         }
 
-        private string index_to_file_type() {
+        private file_log_type index_to_file_type() {
             return file_type_to_index_.value_to_key(fileType.SelectedIndex);
         }
 
@@ -224,43 +220,43 @@ namespace lw_common.ui {
         }
 
         private void save_settings() {
-            settings_.set("type", index_to_type());
-            settings_.set("file_type", index_to_file_type());
+            settings_.type .set(index_to_type());
+            settings_.file_type .set(index_to_file_type());
 
-            if ( index_to_type() == "file" && edit_ == edit_type.add)
-                settings_.set("name", fileName.Text);
+            if ( index_to_type() == log_type.file && edit_ == edit_type.add)
+                settings_.name .set( fileName.Text);
 
-            settings_.set("friendly_name", friendlyName.Text);
+            settings_.friendly_name.set( friendlyName.Text);
 
-            settings_.set("syntax", syntax.Text);
-            settings_.set("reverse", reversed.Checked ? "1" : "0");
+            settings_.syntax.set( syntax.Text);
+            settings_.reverse.set( reversed.Checked );
 
-            settings_.set("line.if_line", ifLine.Checked ? "1" : "0");
-            settings_.set("part.separator", partSeparator.Text);
-            settings_.set("xml.delimeter", xmlDelimeter.Text);
-            settings_.set("csv.has_header", csvHasHeader.Checked ? "1" : "0");
-            settings_.set("csv.separator", csvSeparator.Text);            
+            settings_.line_if_line.set( ifLine.Checked );
+            settings_.part_separator.set(partSeparator.Text);
+            settings_.xml_delimiter.set(xmlDelimeter.Text);
+            settings_.cvs_has_header.set(csvHasHeader.Checked);
+            settings_.cvs_separator_char.set(csvSeparator.Text);            
 
-            settings_.set("event.remote_machine_name", remoteMachineName.Text);
-            settings_.set("event.remote_domain", remoteDomain.Text);
-            settings_.set("event.remote_user_name", remoteUserName.Text);
-            settings_.set("event.remote_password", remotePassword.Text);
-            settings_.set("event.log_type", selectedEventLogs.Text.Trim().Replace("\r\n", "|"));
+            settings_.event_remote_machine_name.set(remoteMachineName.Text);
+            settings_.event_remote_domain.set(remoteDomain.Text);
+            settings_.event_remote_user_name.set(remoteUserName.Text);
+            settings_.event_remote_password.set(remotePassword.Text);
+            settings_.event_log_type.set(selectedEventLogs.Text.Trim().Replace("\r\n", "|"));
 
-            settings_.set("debug.global", debugGlobal.Checked ? "1" : "0");
-            settings_.set("debug.process_name", debugProcessName.Text);
+            settings_.debug_global.set(debugGlobal.Checked );
+            settings_.debug_process_name.set(debugProcessName.Text);
 
-            edited_syntax_now_ = settings_.get("syntax") != old_settings_.get("syntax");
+            edited_syntax_now_ = settings_.syntax != old_settings_.syntax;
         }
 
         private bool change_needs_restart() {
             if (edit_ == edit_type.add)
                 return false;
 
-            if (old_settings_.get("type", "file") != settings_.get("type"))
+            if (old_settings_.type != settings_.type)
                 return true;
-            if ( settings_.get("type") == "file")
-                if (old_settings_.get("file_type") != settings_.get("file_type"))
+            if ( settings_.type == log_type.file)
+                if (old_settings_.file_type != settings_.file_type)
                     // user changed format, like, from XML to CSV
                     return true;
             return false;
@@ -272,7 +268,7 @@ namespace lw_common.ui {
 
             typeTab.SelectedIndex = type.SelectedIndex;
 
-            bool is_event_log = index_to_type() == "event_log";
+            bool is_event_log = index_to_type() == log_type.event_log;
             reversed.Checked = is_event_log;
             if (is_event_log)
                 update_event_log_list();
@@ -306,9 +302,9 @@ namespace lw_common.ui {
             }
 
             // 1.3.24+ - use the old syntax when we're modifying
-            var test = new test_syntax_form(guess, settings_.get("syntax"));
+            var test = new test_syntax_form(guess, settings_.syntax);
             if (test.ShowDialog() == DialogResult.OK) {
-                settings_.set("syntax", test.found_syntax);
+                settings_.syntax.set( test.found_syntax);
                 update_syntax();
             }
 
@@ -413,14 +409,14 @@ namespace lw_common.ui {
                     string file_syntax = log_to.file_to_syntax(fileName.Text);
                     if ( file_syntax == "")
                         file_syntax = new find_log_syntax().try_find_log_syntax_file(fileName.Text);
-                    settings_.set("syntax", file_syntax);
+                    settings_.syntax.set(file_syntax);
                 }
                 update_syntax();
             }
         }
 
         private void update_syntax() {            
-            syntax.Text = settings_.get("syntax");
+            syntax.Text = settings_.syntax;
             syntax.ForeColor = syntax.Text == find_log_syntax.UNKNOWN_SYNTAX ? Color.Red : Color.Black;
         }
 

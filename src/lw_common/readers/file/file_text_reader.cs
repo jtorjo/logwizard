@@ -72,11 +72,11 @@ namespace lw_common
 
         private Encoding file_encoding_ = null;
         
-        public file_text_reader(string file) : this(new settings_as_string("name=" + file)) {
+        public file_text_reader(string file) : this(new log_settings_string("name=" + file)) {
         }
 
-        public file_text_reader(settings_as_string sett) : base(sett) {
-            string file = sett.get("name");
+        public file_text_reader(log_settings_string sett) : base(sett) {
+            string file = sett.name;
             buffer_ = new byte[max_read_in_one_go];
             try {
                 // get absolute path - normally, this should be the absolute path, but just to be sure

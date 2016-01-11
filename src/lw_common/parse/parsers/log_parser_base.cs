@@ -30,14 +30,14 @@ namespace lw_common.parse.parsers {
     internal abstract class log_parser_base : IDisposable {
         protected bool disposed_ = false;
 
-        protected readonly settings_as_string_readonly sett_;
+        protected readonly log_settings_string_readonly sett_;
         private aliases aliases_;
 
         private List<string> column_names_ = new List<string>();
 
         private util.void_func on_aliases_changed_;
 
-        protected log_parser_base(settings_as_string_readonly sett) {
+        protected log_parser_base(log_settings_string_readonly sett) {
             sett_ = sett;
             sett_.on_changed += on_settings_changed;
             on_updated_settings();            
@@ -79,7 +79,7 @@ namespace lw_common.parse.parsers {
         }
 
         protected virtual void on_updated_settings() {
-            var new_aliases = new aliases(sett_.get("aliases"));
+            var new_aliases = new aliases(sett_.aliases);
             if (aliases_ != null && aliases_.to_enter_separated_string() == new_aliases.to_enter_separated_string())
                 // nothing changed
                 return;
@@ -89,7 +89,7 @@ namespace lw_common.parse.parsers {
                 aliases_.on_column_names(column_names_);
         }
 
-        internal settings_as_string_readonly settings {
+        internal log_settings_string_readonly settings {
             get { return sett_; }
         }
 

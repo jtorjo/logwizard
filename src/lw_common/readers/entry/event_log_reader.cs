@@ -81,33 +81,33 @@ namespace lw_common {
 
         private int event_count_so_far_ = 0;
 
-        public event_log_reader(settings_as_string sett) : base(sett) {
+        public event_log_reader(log_settings_string sett) : base(sett) {
             settings.on_changed += on_settings_changed;
-            sett.set("name", friendly_name);
+            sett.name. set(friendly_name);
         }
 
         public string[] log_types {
             get {
-                return settings.get("event.log_type", "Application|System").Split('|');
+                return settings.event_log_type.get().Split('|');
             }
         }
 
         public string provider_name {
-            get { return settings.get("event.provider_name"); }
+            get { return settings.event_provider_name; }
         } 
         public string remote_machine_name {
             get {
-                return settings.get("event.remote_machine_name").Trim(); 
+                return settings.event_remote_machine_name.get().Trim(); 
             }
         }
         public string remote_user_name {
             get {
-                return settings.get("event.remote_user_name", ""); 
+                return settings.event_remote_user_name; 
             }
         }
         public string remote_domain_name {
             get {
-                return settings.get("event.remote_domain", ""); 
+                return settings.event_remote_domain; 
             }
         }
 
@@ -137,10 +137,10 @@ namespace lw_common {
         }
 
         private void on_settings_changed(string name) {
-            if (name == "event.remote_password") {
-                if (settings.get("event.remote_password") != "") {
-                    remote_password_ = settings.get("event.remote_password");
-                    set_setting("event.remote_password", "");
+            if (name == settings.event_remote_password) {
+                if (settings.event_remote_password != "") {
+                    remote_password_ = settings.event_remote_password;
+                    write_settings.event_remote_password.set("");
                 }
                 return;
             }
@@ -150,7 +150,7 @@ namespace lw_common {
         public override bool are_settings_complete {
             get {
                 if (remote_machine_name != "")
-                    return remote_password_ != "" || settings.get("event.remote_password") != "";
+                    return remote_password_ != "" || settings.event_remote_password != "";
                 return true;
             }
         }

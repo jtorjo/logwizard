@@ -2265,12 +2265,12 @@ namespace lw_common.ui
             edit.force_hide = true;
             util.add_timer(() => {
                 if (any_moving_key_down())
-                    return true;
+                    return false;
                 if (scrolling_time_.AddMilliseconds(250) >= DateTime.Now)
-                    return true;
+                    return false;
 
                 edit.force_hide = false;
-                return false;
+                return true;
             });
         }
 

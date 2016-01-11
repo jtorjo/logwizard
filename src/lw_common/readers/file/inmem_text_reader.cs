@@ -34,10 +34,10 @@ namespace lw_common {
         private string lines_;
         private ulong len_;
 
-        public inmem_text_reader(string lines, string syntax) : base(new settings_as_string("")) {
+        public inmem_text_reader(string lines, string syntax) : base(new log_settings_string("")) {
             lines_ = lines;
             len_ = (ulong)lines.Length;
-            set_setting("syntax", syntax);
+            write_settings.syntax.set(syntax);
         }
 
         public override bool has_more_cached_text() {

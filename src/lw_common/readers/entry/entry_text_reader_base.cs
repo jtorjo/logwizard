@@ -15,7 +15,7 @@ namespace lw_common {
         protected bool reloaded_ = false;
         private bool was_rewritten_ = false;
 
-        protected entry_text_reader_base(settings_as_string sett) : base(sett) {
+        protected entry_text_reader_base(log_settings_string sett) : base(sett) {
             util.postpone(() => new Thread(read_entries_thread) {IsBackground = true}.Start(), 1);
         }
 

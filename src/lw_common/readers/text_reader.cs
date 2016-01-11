@@ -35,13 +35,13 @@ namespace lw_common
 
         private log_parser parser_ = null;
 
-        private readonly settings_as_string settings_ ;
+        private readonly log_settings_string settings_ ;
 
         protected error_list_keeper errors_ = new error_list_keeper();
 
         private bool reverse_order_ = false;
 
-        protected text_reader(settings_as_string sett) {
+        protected text_reader(log_settings_string sett) {
             settings_ = sett;
             settings_.on_changed += on_settings_changed;
             on_settings_changed("");
@@ -95,14 +95,14 @@ namespace lw_common
             get { return reverse_order_; }
         }
 
-        private void on_settings_changed(string name) {
-            if ( name != "name")
-                settings_.set("name", friendly_name);
-            reverse_order_ = settings_.get("reverse", "0") != "0";
+        private void on_settings_changed(string sett_name) {
+            if ( sett_name != settings_.name.name)
+                settings_.name.set(friendly_name);
+            reverse_order_ = settings_.reverse;
         }
 
         public string name {
-            get { return settings.get("name"); }
+            get { return settings.name; }
         }
 
         // 1.5.6+ - returns encountered errors, if any (to be able to show them visually)
@@ -118,7 +118,7 @@ namespace lw_common
 
         public string unique_id {
             get {
-                string guid = settings_.get("guid");
+                string guid = settings_.guid;
                 Debug.Assert(guid != "");
                 return guid;
             }
@@ -133,18 +133,16 @@ namespace lw_common
             get { return parser_; }
         }
 
-        public settings_as_string_readonly settings {
+        public log_settings_string_readonly settings {
             get { return settings_; }
         }
 
-        internal void set_setting(string name, string value) {
-            settings_.set(name, value);
+        // FIXME I don't like allowing writeable access to log settings - i need to think if i can accomplish this in another way, 
+        //       like, allow some settings to be writable
+        public log_settings_string write_settings {
+            get { return settings_; }
         }
 
-
-        public void merge_setings(settings_as_string_readonly other) {
-            settings_.merge(other);
-        }
 
         public void Dispose() {
             disposed_ = true;
@@ -153,20 +151,20 @@ namespace lw_common
                 parser_.on_text_reader_dispose();
         }
 
-        public static string type(text_reader reader) {
+        public static log_type type(text_reader reader) {
             if (reader is file_text_reader)
-                return "file";
+                return log_type.file;
 
             if (reader is inmem_text_reader)
-                return "file";
+                return log_type.file;
 
             if (reader is event_log_reader)
-                return "event_log";
+                return log_type.event_log;
             if (reader is debug_text_reader)
-                return "debug_print";
+                return log_type.debug_print;
 
             Debug.Assert(false);
-            return "file";
+            return log_type.file;
         }
 
 

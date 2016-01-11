@@ -49,19 +49,19 @@ namespace lw_common.parse.parsers {
 
         protected override void on_updated_settings() {
             base.on_updated_settings();
-            separator_char_ = sett_.get("part.separator", ":")[0];
+            separator_char_ = sett_.part_separator.get()[0];
 
             //if ( util.is_debug)
               //  aliases_ = new aliases("_0=file|@#@|first=ctx1{Firsty}");
         }
 
-        public static bool is_single_line(string file, settings_as_string_readonly sett) {
+        public static bool is_single_line(string file, log_settings_string_readonly sett) {
             string[] lines = util.read_beginning_of_file(file, 16834).Split( '\n' );
             for (int index = 0; index < lines.Length; index++) 
                 lines[index] = lines[index].Replace("\r", "");
 
             int empty_lines = 0;
-            string separator = sett.get("part.separator");
+            string separator = sett.part_separator;
             if (separator == "")
                 separator = ":";
             int contains_separator = 0;
