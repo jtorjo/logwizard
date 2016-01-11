@@ -1,14 +1,33 @@
 
 
-- post on https://www.reddit.com/r/dotnet/
+
+
+
+#26 new log with lots of columns - show most of them in Details pane
+When I open a new log, and it has lots of columns (such as, 10 columns or so - such as the Event Viewer), by default, they are all shown in the view.
+
+That's not usually a good idea - they simply clog the screen.
+
+I believe the best idea is to show only 3, and the rest, show them them in Details pane.
+Probably, I should auto show the Details pane? (or perhaps just show a tooltip in case the Details pane is hidden -> "rest of columns shown in Details pane")
+
+
+
+- post on https://www.reddit.com/r/csharp/
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
 
 
-- setup kit ran for first time -> does not show correctly the logwizard.setup sample (32bit)
 
 
 - event viewer: convert computername/username to friendly?
+
+- file associations -> don't do it by default
+
+1.6.11
+- setup kit ran for first time -> does not show correctly the logwizard.setup sample (32bit)
+  probably because of file-to-setting context
+
 
 1.6.10
 - solved setup issue - error at trying to copy to invalid directory
