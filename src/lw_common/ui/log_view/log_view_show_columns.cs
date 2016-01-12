@@ -33,6 +33,9 @@ namespace lw_common.ui {
         internal const int MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS = 10;
         private const int DEFAULT_COL_WIDTH = 80;
 
+        // if too many columns in a log, by default show only a few in the log view - the rest are available via the Details pane
+        private const int MAX_DEFAULT_VIEW_COLUMNS = 6;
+
         static private bool has_value_at_column(log_view lv, info_type type, int max_rows_to_check) {
             // msg is always shown
             if (type == info_type.msg)
@@ -152,11 +155,41 @@ namespace lw_common.ui {
                 } else
                     // if we end up here, we've already refreshed the other views with what we have cached
                     needs_refresh = false;
+
+                if (!full_log.use_previous_available_columns_ && count >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS)
+                    keep_only_important_columns(full_log);
             }
 
             if (count >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS) 
                 full_log.available_columns_refreshed_ = MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS;
             return needs_refresh || force_refresh;
+        }
+
+        static private void keep_only_important_columns(log_view full_log) {
+            Debug.Assert(full_log.is_full_log);
+            // the idea is that we do this only the first time when showing the log
+            // after that, the user can customize it as he wishes
+            Debug.Assert( !full_log.use_previous_available_columns_ );
+
+            var available = full_log.available_columns.OrderBy(x => -info_type_io.show_in_view_by_default(x) ).ToList();
+            if (available.Count <= MAX_DEFAULT_VIEW_COLUMNS)
+                // we're fine
+                return;
+
+            // too many columns, hide a few
+            full_log.list.SuspendLayout();
+
+            var to_erase = available.GetRange(MAX_DEFAULT_VIEW_COLUMNS, available.Count - MAX_DEFAULT_VIEW_COLUMNS);
+            foreach ( var col_type in to_erase)
+                show_column( log_view_cell.column(full_log, col_type), DEFAULT_COL_WIDTH, false );
+
+            full_log.list.RebuildColumns();
+            full_log.list.ResumeLayout(true);
+
+            // recompute visible columns
+            full_log.column_positions = column_positions_as_string(full_log);
+
+            full_log.lv_parent.needs_details_pane();
         }
 
         static private void refresh_visible_columns(log_view lv) {

@@ -70,6 +70,51 @@ namespace lw_common {
             get { return searchable_; }
         }
 
+        // #26 - returns the importance of each column (should it be shown in the view by default?)
+        //       the idea is to keep just a few in the view, not to clog it, and the rest to show them in the Details pane
+        //
+        //       I return an integer - the higher it is, the more important the column is
+        public static int show_in_view_by_default(info_type type) {
+            switch (type) {
+            case info_type.msg:     return Int32.MaxValue;
+
+            case info_type.line:    return 100;
+            case info_type.view:    return 99;
+
+            case info_type.time:    return 90;
+            case info_type.level:   return 89;
+            case info_type.date:    return 88;
+
+            case info_type.thread:  return 87;
+
+            case info_type.file:    return 70;
+            case info_type.func:    return 69;
+            case info_type.class_:  return 68;
+
+            case info_type.ctx1:    return 60;
+            case info_type.ctx2:    return 59;
+            case info_type.ctx3:    return 58;
+
+            case info_type.ctx4:    return 57;
+            case info_type.ctx5:    return 56;
+            case info_type.ctx6:    return 55;
+            case info_type.ctx7:    return 54;
+            case info_type.ctx8:    return 53;
+            case info_type.ctx9:    return 52;
+            case info_type.ctx10:   return 51;
+            case info_type.ctx11:   return 50;
+            case info_type.ctx12:   return 49;
+            case info_type.ctx13:   return 48;
+            case info_type.ctx14:   return 47;
+            case info_type.ctx15:   return 46;
+
+            case info_type.max:     return -1;
+            default:
+                Debug.Assert(false);
+                return -1;
+            }
+        }
+
         public static bool is_searchable(info_type type) {
             switch (type) {
             case info_type.max:

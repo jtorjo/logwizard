@@ -784,6 +784,7 @@ namespace lw_common.ui
 
                 last_item_count_while_current_view_ = 0;
                 available_columns_refreshed_ = -1;
+                use_previous_available_columns_ = false;
                 if ( !was_null)
                     clear();
                 logger.Debug("[view] new log for " + name + " - " + log.log_name);

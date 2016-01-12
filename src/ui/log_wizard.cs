@@ -2248,6 +2248,11 @@ namespace LogWizard
                 lv.on_column_positions_change();
         }
 
+        public void needs_details_pane() {
+            global_ui.show_details = true;
+            show_details(true);
+        }
+
         private bool any_moving_key_still_down() {
             return win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || win32.IsKeyPushedDown(Keys.PageUp) || win32.IsKeyPushedDown(Keys.PageDown) || win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
         }

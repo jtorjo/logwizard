@@ -112,6 +112,9 @@ namespace test_ui {
         public void after_column_positions_change() {
         }
 
+        public void needs_details_pane() {
+        }
+
         public List<info_type> description_columns() {
             return new List<info_type>();
         }

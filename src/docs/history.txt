@@ -1,23 +1,5 @@
 
-
-
-
-
-#26 new log with lots of columns - show most of them in Details pane
-When I open a new log, and it has lots of columns (such as, 10 columns or so - such as the Event Viewer), by default, they are all shown in the view.
-------> check for "column_positions_" = "" -> in this case, se how many columns we actually have (and hide most of them + show them in details pane + show details pane)
-
-That's not usually a good idea - they simply clog the screen.
-
-I believe the best idea is to show only 3, and the rest, show them them in Details pane.
-Probably, I should auto show the Details pane? (or perhaps just show a tooltip in case the Details pane is hidden -> "rest of columns shown in Details pane")
-
-
-
-**apply_column_settings_only_to_me;
- use ALL_VIEWS if needed
-
- remove from global_ui
+----------> look at #36 - should be easy to fix
 
 
 - post on https://www.reddit.com/r/csharp/
@@ -27,6 +9,10 @@ Probably, I should auto show the Details pane? (or perhaps just show a tooltip i
 - event viewer: convert computername/username to friendly?
 
 - file associations -> don't do it by default
+
+
+1.6.14
+- solved #26 : new log with lots of columns - show most of them in Details pane
 
 
 1.6.13
