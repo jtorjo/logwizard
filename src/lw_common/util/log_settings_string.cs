@@ -335,7 +335,7 @@ namespace lw_common {
             // general
             guid_ = new single_setting<string>(settings_, "guid", "");
             name_ = new single_setting<string>(settings_, "name", "");
-            syntax_ = new single_setting<string>(settings_, "syntax", "$msg[0]");
+            syntax_ = new single_setting<string>(settings_, "syntax", file_text_reader.UNKNOWN_SYNTAX);
             context_ = new single_setting<string>(settings_, "context", "");
             friendly_name_ = new single_setting<string>(settings_, "friendly_name", "");
             type_ = new single_setting_enum<log_type>(settings_, "type", log_type.file);

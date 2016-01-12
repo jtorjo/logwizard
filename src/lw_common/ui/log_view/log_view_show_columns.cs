@@ -131,10 +131,15 @@ namespace lw_common.ui {
             bool needs_refresh = count != full_log.available_columns_refreshed_;
             if (needs_refresh) {
                 // if they were previously computed, the only time I recompute them, is after we have at least MIN_ROWS
-                bool needs_recompute_now = !full_log.use_previous_available_columns_ || count >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS;
+                bool needs_recompute_now = count > 0 && ( !full_log.use_previous_available_columns_ || count >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);
                 full_log.available_columns_refreshed_ = count;
                 if (needs_recompute_now) {
                     full_log.list.SuspendLayout();
+
+                    // this is the first time we compute the columns for this log - just in case they were moved around in the previous log(s),
+                    // we want to reset them back
+                    foreach (var column in full_log.list.AllColumns) 
+                        column.LastDisplayIndex = column.fixed_index();
 
                     List<info_type> available_columns = new List<info_type>();
                     int row_count = Math.Min(count, MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS);

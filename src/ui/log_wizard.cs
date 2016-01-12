@@ -1793,7 +1793,7 @@ namespace LogWizard
             var file_text = text_ as file_text_reader;
             if (file_text != null) 
                 if ( factory.guess_file_type(file_text.name) == file_log_type.line_by_line)
-                    if (reader_settings_copy.syntax == "") {
+                    if (reader_settings_copy.syntax == file_text_reader.UNKNOWN_SYNTAX ) {
                         // file reader doesn't know syntax
                         // by default - try to find the syntax by reading the header info; otherwise, try to parse it
                         string file_to_syntax = log_to.file_to_syntax(text_.name);
@@ -1801,7 +1801,7 @@ namespace LogWizard
                             // note: file-to-syntax overrides the context syntax
                             context_settings_copy.syntax .set(file_to_syntax);                        
                         // note: if the context already knows syntax, use that
-                        else if (context_settings_copy.syntax == "") {
+                        else if (context_settings_copy.syntax == file_text_reader.UNKNOWN_SYNTAX) {
                             string found_syntax = file_text.try_to_find_log_syntax();
                             if (found_syntax != "" && found_syntax != file_text_reader.UNKNOWN_SYNTAX) 
                                 context_settings_copy.syntax. set(found_syntax);

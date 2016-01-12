@@ -1,5 +1,4 @@
 
-----------> look at #36 - should be easy to fix
 
 
 - post on https://www.reddit.com/r/csharp/
@@ -9,6 +8,10 @@
 - event viewer: convert computername/username to friendly?
 
 - file associations -> don't do it by default
+
+
+1.6.15
+- solved #36 : First run - the columns are not shown correctly
 
 
 1.6.14
