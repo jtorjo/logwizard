@@ -49,6 +49,8 @@ namespace lw_common.ui
         private const int SEARCH_AROUND_ROWS = 100;
 
         public const string FULLLOG_NAME = "__all_this_is_fulllog__";
+        // 1.6.13+ for settings - this contains the settings for all views
+        private const string ALL_VIEWS = "__all_views__";
 
         private Form parent;
         private readonly filter filter_ ;
@@ -68,8 +70,6 @@ namespace lw_common.ui
         private readonly log_view_render render_;
 
         private log_view_data_source model_ = null;
-        // 1.5.4+ - refresh first time as well (even when there are no rows)
-        internal int visible_columns_refreshed_ = -1;
 
         // lines that are bookmarks (sorted by index)
         private List<int> bookmarks_ = new List<int>();
@@ -106,16 +106,14 @@ namespace lw_common.ui
 
         private int ignore_change_ = 0;
 
-        public bool apply_column_settings_only_to_me = false;
-
-        private string column_positions_ = "";
-
         private bool is_changing_column_width_ = false;
 
         private bool needs_scroll_ = false;
 
-        // this is set while refreshing visible columns (log_view_show_columns)
-        internal List<info_type> visible_columns = new List<info_type>(); 
+        // 1.5.4+ - refresh first time as well (even when there are no rows)
+        // 1.6.13+ - used only in the full log
+        internal int available_columns_refreshed_ = -1;
+        internal bool use_previous_available_columns_ = false;
 
         // last time we received the last scroll event
         private DateTime scrolling_time_ = DateTime.MinValue;
@@ -194,10 +192,7 @@ namespace lw_common.ui
             is_changing_column_width_ = false;
             
             edit.update_ui();
-            var new_positions = log_view_show_columns.save_column_positions(this);
-            if (new_positions != "")
-                column_positions_ = new_positions;
-            lv_parent.after_column_positions_modified(this);
+            column_positions = log_view_show_columns.column_positions_as_string(this);
         }
 
         private void list_ColumnRightClick(object sender, ColumnClickEventArgs e) {
@@ -209,7 +204,7 @@ namespace lw_common.ui
             for (int cur_col_idx = 0; cur_col_idx < list.AllColumns.Count; cur_col_idx++) {
                 var col = list.AllColumns[cur_col_idx];
                 if (col.Width > 0) {
-                    bool is_visible = visible_columns.Contains(log_view_cell.cell_idx_to_type(cur_col_idx));
+                    bool is_visible = available_columns.Contains(log_view_cell.cell_idx_to_type(cur_col_idx));
                     if (!is_visible)
                         continue;
                     ToolStripMenuItem sub = new ToolStripMenuItem(col.Text);
@@ -275,11 +270,13 @@ namespace lw_common.ui
             e.Cancel = e.CloseReason == ToolStripDropDownCloseReason.ItemClicked;
             if (!e.Cancel) {
                 edit.update_ui();
-                var new_positions = log_view_show_columns.save_column_positions(this);
-                if (new_positions != "")
-                    column_positions_ = new_positions;
-                lv_parent.after_column_positions_modified(this);
+                column_positions = log_view_show_columns.column_positions_as_string(this);
+                lv_parent.after_column_positions_change();
             }
+        }
+
+        public void on_column_positions_change() {
+            log_view_show_columns.apply_column_positions(this);
         }
 
         private void toggle_apply_column_settings_to_all(ToolStripMenuItem sub) {
@@ -309,14 +306,46 @@ namespace lw_common.ui
             list.Refresh();
         }
 
-        public string column_positions {
-            get { return column_positions_; }
+        private void save_column_positions(string positions_str) {
+            log_.write_settings.column_positions.set( apply_column_settings_only_to_me ? name : ALL_VIEWS, positions_str);
+            update_cur_col();
+        }
+
+        // this is set while refreshing visible columns (log_view_show_columns)
+        //
+        // it contains the columns that are available for showing
+        internal List<info_type> available_columns {
+            get { return log_ != null ? log_.settings.available_columns.get().Split(new [] { ","}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => (info_type) int.Parse(x)).ToList() : new List<info_type>(); }
             set {
-                column_positions_ = value;
-                if (column_positions_ != "") {
-                    log_view_show_columns.apply_column_positions(this);
-                    update_cur_col();
+                if ( log_ != null)
+                    log_.write_settings.available_columns.set( util.concatenate(value.Select(x => (int)x), ",") );
+            }
+        }
+
+        internal bool apply_column_settings_only_to_me {
+            get { return log_ != null && log_.settings.apply_column_positions_to_me.get(name); }
+            set {
+                if (log_ != null) {
+                    log_.write_settings.apply_column_positions_to_me.set(name, value);
+                    save_column_positions( column_positions);
                 }
+            }
+        }
+
+        // this depends on apply_column_settings_only_to_me!
+        internal string column_positions {
+            get {
+                if (log_ == null)
+                    return "";
+                return log_.settings.column_positions.get( apply_column_settings_only_to_me ? name : ALL_VIEWS ) ;
+            }
+            set {
+                if (column_positions == value)
+                    return; // nothing changed
+
+                if (log_ != null && value != "") 
+                    save_column_positions(value);
             }
         }
 
@@ -339,7 +368,11 @@ namespace lw_common.ui
         }
 
         public void force_refresh_visible_columns(List<log_view> all_views) {
-            visible_columns_refreshed_ = -1;
+            available_columns_refreshed_ = -1;
+            use_previous_available_columns_ = false;
+            log_.write_settings.apply_column_positions_to_me.reset();
+            log_.write_settings.column_positions.reset();
+            log_.write_settings.available_columns.reset();
             log_view_show_columns.refresh_visible_columns(all_views, this);
         }
 
@@ -750,7 +783,7 @@ namespace lw_common.ui
                 log_.on_new_lines += filter_.on_new_reader_lines;
 
                 last_item_count_while_current_view_ = 0;
-                visible_columns_refreshed_ = -1;
+                available_columns_refreshed_ = -1;
                 if ( !was_null)
                     clear();
                 logger.Debug("[view] new log for " + name + " - " + log.log_name);

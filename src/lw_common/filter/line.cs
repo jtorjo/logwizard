@@ -30,6 +30,7 @@ namespace lw_common {
     // ctxX -> context about the message (other than file/func/class)
     //
     public enum info_type { 
+        // 1.6.13+ IMPORTANT: in log_view, I'm persisting them as ints - thus, I can't change the order (or assign constant values to each)
         date, time, level, 
 
         // added in 1.3.8

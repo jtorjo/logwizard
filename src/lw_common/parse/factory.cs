@@ -34,10 +34,18 @@ namespace lw_common.parse {
 
         // these are the settings that are to be saved in the context
         static public log_settings_string get_context_dependent_settings(text_reader reader, log_settings_string_readonly settings) {
+            log_settings_string result;
             if (reader is file_text_reader) 
-                return settings.sub(new []{ settings.syntax.get(), settings.aliases, settings.description_template });
-            
-            return new log_settings_string( settings.ToString());
+                result = settings.sub(new []{ settings.syntax.get(), settings.aliases, settings.description_template });
+            else
+                result = new log_settings_string( settings.ToString());
+
+            result.is_open_first_time.reset();
+            result.apply_column_positions_to_me.reset();
+            result.column_positions.reset();
+            result.available_columns.reset();
+
+            return result;
         }
 
         // these are the settings that are to be saved per-log

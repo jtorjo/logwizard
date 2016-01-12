@@ -243,7 +243,7 @@ namespace lw_common.ui {
             List< Tuple<int,int>> columns_and_displayidx = new List<Tuple<int,int>>();
             for (int col_idx = 0; col_idx < lv.list.AllColumns.Count; ++col_idx) {
                 if ( lv.list.AllColumns[col_idx].Width > 0)
-                    if ( lv.visible_columns.Contains(log_view_cell.cell_idx_to_type(col_idx)))
+                    if ( lv.available_columns.Contains(log_view_cell.cell_idx_to_type(col_idx)))
                         columns_and_displayidx.Add( new Tuple<int, int>(col_idx, lv.list.AllColumns[col_idx].DisplayIndex ));
             }
             var columns = columns_and_displayidx.OrderBy(x => x.Item2).Select(x => x.Item1).ToList();

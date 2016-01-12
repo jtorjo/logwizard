@@ -93,7 +93,15 @@ namespace lw_common {
 
         public List<string> column_names {
             get { return parser_.column_names; }
-        } 
+        }
+
+        public log_settings_string_readonly settings {
+            get { return parser_.settings; }
+        }
+
+        public log_settings_string write_settings {
+            get { return parser_.write_settings; }
+        }
 
         public bool up_to_date {
             get {

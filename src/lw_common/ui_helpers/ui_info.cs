@@ -93,9 +93,6 @@ namespace lw_common {
         private bool show_left_pane_ = false;
         private bool show_notes_ = false;
 
-        // 1.3.34+ - column positions - they apply to all views
-        public string global_column_positions = "";
-
         public int description_splitter_pos = -1;
 
         // IMPORTANT: Update Toggles UI when adding stuff here!
@@ -105,30 +102,20 @@ namespace lw_common {
             // 1.3.28+ if true, we're showing the full log (the rows that don't match the filter are shown in gray)
             internal bool show_full_log_ = false;
 
-            internal string column_positions_ = "";
-
             public bool show_full_log {
                 get { return show_full_log_; }
-            }
-
-            public string column_positions {
-                get { return column_positions_; }
             }
 
             internal view_info() {
             }
 
-            public view_info(string column_positions, bool show_full_log) {
-                column_positions_ = column_positions;
+            public view_info(bool show_full_log) {
                 show_full_log_ = show_full_log;
             }
 
             internal string to_string() {
-                // '/' is the separator
-                Debug.Assert(!column_positions_.Contains("/"));
-
-                // 2 = the version - just in case later on i want to change how i save this
-                return "2/" + (show_full_log_ ? "1" : "0") + "/" + column_positions_;
+                // 3 = the version - just in case later on i want to change how i save this
+                return "3/" + (show_full_log_ ? "1" : "0") ;
             }
 
             internal static view_info from_string(string s) {
@@ -136,13 +123,12 @@ namespace lw_common {
                 if ( s == "")
                     return vi;
                 var from = s.Split('/');
-                if (from[0] != "2")
+                if (from[0] != "3")
                     // older version
                     return vi;
 
                 Debug.Assert(from.Length == 3);
                 vi.show_full_log_ = from[1] != "0";
-                vi.column_positions_ = from[2];
                 return vi;
             }
 
@@ -180,7 +166,7 @@ namespace lw_common {
             show_left_pane_ = other.show_left_pane_;
             show_notes_ = other.show_notes_;
             // ... get a copy
-            views_ = other.views_.ToDictionary(x => x.Key, x => new view_info(x.Value.column_positions, x.Value.show_full_log) );
+            views_ = other.views_.ToDictionary(x => x.Key, x => new view_info(x.Value.show_full_log) );
         }
 
         // note: this is read-only
@@ -235,7 +221,6 @@ namespace lw_common {
             app.load_save(load, ref show_left_pane_, prefix + ".show_left_pane", false);
             app.load_save(load, ref show_notes_, prefix + ".show_notes", false);
 
-            app.load_save(load, ref global_column_positions, prefix + ".global_column_positions");
             app.load_save(load, ref description_splitter_pos, prefix + ".description_splitter_pos", -1);
 
             load_save_view_info(load, prefix + ".view_info");

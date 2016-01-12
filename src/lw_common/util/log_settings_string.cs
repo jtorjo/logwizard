@@ -9,7 +9,7 @@ namespace lw_common {
     public class single_setting_readonly<T> where T : IConvertible, IComparable<T> {
         protected settings_as_string sett_;
         protected string name_;
-        private readonly T default_;
+        protected readonly T default_;
 
         protected bool Equals(single_setting_readonly<T> other) {
             return get().Equals( other.get() );
@@ -65,14 +65,67 @@ namespace lw_common {
         public void set(T value) {
             sett_.set(name_, "" + value);
         }
+        public void reset() {
+            set(default_);
+        }
     }
+
+
+
+
+
+
+    public class dictionary_setting_readonly<T>  where T : IConvertible, IComparable<T> {
+        protected const string separator_ = "|@#@|";
+        protected readonly  settings_as_string values_ = new settings_as_string("");
+
+        protected readonly  settings_as_string sett_;
+        protected readonly string name_;
+        // this is the default value of each item
+        protected readonly T default_;
+
+        public dictionary_setting_readonly(settings_as_string sett, string name, T def = default(T)) {
+            sett_ = sett;
+            name_ = name;
+            default_ = def;
+            values_ = new settings_as_string( sett.get(name).Replace(separator_, "\r\n"));
+        }
+
+        public string name {
+            get { return name_; }
+        }
+
+        public T get(string key) {
+            return (T)Convert.ChangeType( values_.get(key, default_.ToString()), typeof (T));
+        }
+    }
+
+    public class dictionary_setting<T> :dictionary_setting_readonly<T> where T : IConvertible, IComparable<T> {
+        public dictionary_setting(settings_as_string sett, string name, T def = default(T)) : base(sett, name, def) {
+        }
+
+        public void set(string key, T value) {
+            T old = get(key);
+            if (old.Equals( value))
+                return;
+
+            values_.set(key, value.ToString() );
+            sett_.set(name_, values_.ToString().Replace("\r\n", separator_));
+        }
+
+        public void reset() {
+            sett_.set(name_, "");
+        }
+    }
+
+
 
 
 
     public class single_setting_enum_readonly<T> where T : struct {
         protected settings_as_string sett_;
         protected string name_;
-        private readonly T default_;
+        protected readonly T default_;
 
         protected bool Equals(single_setting_enum_readonly<T> other) {
             return get().Equals( other.get() );
@@ -131,6 +184,9 @@ namespace lw_common {
         public void set(T value) {
             sett_.set(name_, value.ToString());
         }
+        public void reset() {
+            set(default_);
+        }
     }
 
 
@@ -139,7 +195,7 @@ namespace lw_common {
     public class single_setting_bool_readonly  {
         protected readonly settings_as_string sett_;
         protected readonly string name_;
-        private readonly bool default_;
+        protected readonly bool default_;
 
         protected bool Equals(single_setting_bool_readonly other) {
             return get() == other.get();
@@ -193,6 +249,10 @@ namespace lw_common {
         public void set(bool value) {
             sett_.set(name_, "" + (value ? "1" : "0") );
         }
+
+        public void reset() {
+            set(default_);
+        }
     }
 
 
@@ -222,12 +282,27 @@ namespace lw_common {
         protected readonly single_setting_enum<log_type> type_;
         protected readonly single_setting_enum<file_log_type> file_type_;
 
+        // if true, we're viewing the log in reverse, last row first
         protected readonly single_setting_bool reverse_;
 
         protected readonly single_setting<string> context_;
 
         protected readonly single_setting<string> description_template_; 
         protected readonly single_setting<string> aliases_; 
+
+        // if true, we're open for the first time (so we can pre-load some settings)
+        protected readonly single_setting_bool is_open_first_time_;
+
+        // 1.6.13+ - the available columns for this specific log - if empty, we don't know them yet
+        protected readonly single_setting<string> available_columns_;
+        // 1.6.13+
+        // contains the columns to show and where - for this view of a log - if empty, show every column
+        // the key : the view name - we have a special key for "positions from all views" (which is the default)
+        protected readonly dictionary_setting<string> column_positions_;
+        // 1.6.13+
+        // if true - for a given view - contains the column positions for that specific view only
+        // the key : the view name - we have a special key for "positions from all views" (which is the default)
+        protected readonly dictionary_setting<bool> apply_column_positions_to_me_; 
 
         // line-by-line
         protected readonly single_setting_bool line_if_line_;
@@ -250,13 +325,14 @@ namespace lw_common {
         protected readonly single_setting<string> event_log_type_;
         protected readonly single_setting<string> event_provider_name_; 
 
-        // debug
+        // debug viewer
         protected readonly single_setting_bool debug_global_;
         protected readonly single_setting<string> debug_process_name_; 
 
         protected log_settings_string_readonly(string sett) {
             settings_ = new settings_as_string(sett);
 
+            // general
             guid_ = new single_setting<string>(settings_, "guid", "");
             name_ = new single_setting<string>(settings_, "name", "");
             syntax_ = new single_setting<string>(settings_, "syntax", "$msg[0]");
@@ -265,6 +341,12 @@ namespace lw_common {
             type_ = new single_setting_enum<log_type>(settings_, "type", log_type.file);
             file_type_ = new single_setting_enum<file_log_type>(settings_, "file_type", file_log_type.best_guess);
             reverse_ = new single_setting_bool(settings_, "reverse");
+
+            available_columns_ = new single_setting<string>(settings_, "available_columns", "");
+            is_open_first_time_ = new single_setting_bool(settings_, "is_open_first_time", true);
+            column_positions_ = new dictionary_setting<string>(settings_, "column_positions", "");
+            apply_column_positions_to_me_  = new dictionary_setting<bool>(settings_, "apply_column_positions_to_me");
+
             description_template_ = new single_setting<string>(settings_, "description_template", "");
             aliases_ = new single_setting<string>(settings_, "aliases", "");
 
@@ -396,6 +478,22 @@ namespace lw_common {
         public single_setting_readonly<string> xml_delimiter {
             get { return xml_delimiter_; }
         }
+
+        public single_setting_bool_readonly is_open_first_time {
+            get { return is_open_first_time_; }
+        }
+
+        public dictionary_setting_readonly<string> column_positions {
+            get { return column_positions_; }
+        }
+
+        public dictionary_setting_readonly<bool> apply_column_positions_to_me {
+            get { return apply_column_positions_to_me_; }
+        }
+
+        public single_setting_readonly<string> available_columns {
+            get { return available_columns_; }
+        }
     }
 
 
@@ -509,6 +607,19 @@ namespace lw_common {
             get { return xml_delimiter_; }
         }
 
+        public new single_setting_bool is_open_first_time {
+            get { return is_open_first_time_; }
+        }
+
+        public new dictionary_setting<string> column_positions {
+            get { return column_positions_; }
+        }
+        public new dictionary_setting<bool> apply_column_positions_to_me {
+            get { return apply_column_positions_to_me_; }
+        }
+        public new single_setting<string> available_columns {
+            get { return available_columns_; }
+        }
 
     }
 }

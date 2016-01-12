@@ -77,9 +77,9 @@ namespace lw_common.ui {
 
         bool can_edit_context { get; }
 
-        void after_column_positions_modified(log_view lv);
-
         void edit_log_settings();
+
+        void after_column_positions_change();
 
         // these are the columns that are visible in the description pane (if it's shown)
         List<info_type> description_columns();

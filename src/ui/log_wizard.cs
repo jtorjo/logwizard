@@ -345,27 +345,6 @@ namespace LogWizard
             --ignore_change_;
         }
 
-        public void after_column_positions_modified(log_view lv) {
-            string positions = lv.column_positions;
-            if (positions == "")
-                // user changed nothing
-                return;
-
-            if ( !lv.apply_column_settings_only_to_me)
-                foreach ( var other in all_log_views())
-                    if ( other != lv && !other.apply_column_settings_only_to_me)
-                        other.column_positions = positions ;
-
-            // now, save them
-            if (lv.apply_column_settings_only_to_me) {
-                var old = global_ui.view(lv.name);
-                global_ui.view( lv.name, new ui_info.view_info(lv.column_positions, old.show_full_log));
-            } else
-                global_ui.global_column_positions = lv.column_positions;
-
-            save();
-        }
-
         private void update_contexts_combos_in_all_forms() {
             foreach(var f in forms)
                 f.recreate_contexts_combo();
@@ -1375,8 +1354,6 @@ namespace LogWizard
             // 1.3.11d+ - right now, we're showing this as soon as we have enough rows
             foreach (var lv in all_log_views_and_full_log()) {
                 var view = global_ui.view(lv.name);
-                lv.column_positions = view.column_positions != "" ? view.column_positions : global_ui.global_column_positions;
-                lv.apply_column_settings_only_to_me = view.column_positions != "";
                 lv.set_filter( false, view.show_full_log );
             }
         }
@@ -2266,6 +2243,11 @@ namespace LogWizard
             editSettings_Click(null,null);
         }
 
+        public void after_column_positions_change() {
+            foreach ( var lv in all_log_views_and_full_log())
+                lv.on_column_positions_change();
+        }
+
         private bool any_moving_key_still_down() {
             return win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || win32.IsKeyPushedDown(Keys.PageUp) || win32.IsKeyPushedDown(Keys.PageDown) || win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
         }
@@ -2817,7 +2799,7 @@ namespace LogWizard
             case action_type.toggle_show_full_log: {
                 lv.set_filter(lv.filter_view, !lv.show_full_log);
                 var old = global_ui.view(lv.name);
-                global_ui.view(lv.name, new ui_info.view_info(old.column_positions, !old.show_full_log) );
+                global_ui.view(lv.name, new ui_info.view_info(!old.show_full_log) );
             }
                 break;
 

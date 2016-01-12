@@ -6,11 +6,6 @@
 #26 new log with lots of columns - show most of them in Details pane
 When I open a new log, and it has lots of columns (such as, 10 columns or so - such as the Event Viewer), by default, they are all shown in the view.
 ------> check for "column_positions_" = "" -> in this case, se how many columns we actually have (and hide most of them + show them in details pane + show details pane)
-        actually, this is not the case -> since they are saved in the global_ui 
-		  -> so, i need to do this when >= MIN_ROWS_FOR_COMPUTE_VISIBLE_COLUMNS
-		  -> i need to somehow save this (per log?) -> so that once i've shown the columns + details pane -> user can do whatever
-		  -> do it extendable -> so that later i can keep more settings per log (guid) -> in teh log's settings?
-		  -> settings_as_string ->use enums!
 
 That's not usually a good idea - they simply clog the screen.
 
@@ -19,21 +14,29 @@ Probably, I should auto show the Details pane? (or perhaps just show a tooltip i
 
 
 
+**apply_column_settings_only_to_me;
+ use ALL_VIEWS if needed
+
+ remove from global_ui
+
+
 - post on https://www.reddit.com/r/csharp/
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
-
-
-
 
 - event viewer: convert computername/username to friendly?
 
 - file associations -> don't do it by default
 
 
+1.6.13
+- REFACTORING: 
+ - column_positions are now kept in the log's settings and is accessible to log_view
+ - column positions + show/hide information is cached and used next time you open the log
+
+
 1.6.12
 - REFACTORING: created the log_settings_string[_readonly] classes
-
 
 
 1.6.11

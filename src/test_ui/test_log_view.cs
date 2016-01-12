@@ -106,10 +106,10 @@ namespace test_ui {
             get { return true; }
         }
 
-        public void after_column_positions_modified(log_view lv) {
+        public void edit_log_settings() {
         }
 
-        public void edit_log_settings() {
+        public void after_column_positions_change() {
         }
 
         public List<info_type> description_columns() {

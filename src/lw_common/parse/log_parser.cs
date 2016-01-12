@@ -80,6 +80,10 @@ namespace lw_common
             get { return reader_.settings; }
         }
 
+        public log_settings_string write_settings {
+            get { return reader_.write_settings; }
+        }
+
         public aliases aliases {
             get {
                 return forward_to_parser_.aliases;
