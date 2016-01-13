@@ -10,6 +10,13 @@
 
 - file associations -> don't do it by default
 
+#39 reverse order -> searching for date/time does not work (ctrl-g)
+
+
+1.6.16b
+- solved #27 date column - care about it when sorting
+- note: still a bug : #39
+
 
 1.6.16a
 - date column - include in sorting

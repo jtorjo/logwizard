@@ -122,7 +122,6 @@ namespace lw_common {
                     return -1;
 
                 lock (this) {
-                    //return matches_.IndexOf(m);
                     int idx = matches_.binary_search_closest(x => reverse_order ? -x.line_idx : x.line_idx, reverse_order ? -m.line_idx : m.line_idx).Item2;
                     // 1.6.10 - this seems to generate a lot of asserts for event viewer, even though logically the code is correct
                     //          I will take a look at a later time
@@ -183,9 +182,21 @@ namespace lw_common {
                 lock (this)
                     return matches_.binary_search_closest(x => reverse_order ? -x.line_idx : x.line_idx, reverse_order ? -line_idx : line_idx);
             }
+
+            private class reverse_compare_time : IComparable<reverse_compare_time> {
+                public DateTime dt;
+                public int CompareTo(reverse_compare_time other) {
+                    var diff = dt.Ticks - other.dt.Ticks;
+                    return diff > 0 ? -1 : diff < 0 ? 1 : 0;
+                }
+            }
+
             public Tuple<match, int> binary_search_closest(DateTime time) {
                 lock (this) 
-                    return matches_.binary_search_closest(x => reverse_order ? -x.line.time.Ticks : x.line.time.Ticks, reverse_order ? -time.Ticks : time.Ticks);
+                    if ( reverse_order)
+                        return matches_.binary_search_closest(x => new reverse_compare_time { dt = x.line.time }, new reverse_compare_time { dt = time });
+                    else 
+                        return matches_.binary_search_closest(x => x.line.time, time);
             }
         }
 
