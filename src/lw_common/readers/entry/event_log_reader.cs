@@ -312,7 +312,8 @@ namespace lw_common {
                 pwd.Dispose();
 
                 EventLogQuery query = new EventLogQuery(log.log_type, PathType.LogName, query_string);
-                query.ReverseDirection = reverse_order;
+                if ( reverse_order)
+                    query.ReverseDirection = reverse_order;
                 if ( session != null)
                     query.Session = session;
 
@@ -360,8 +361,7 @@ namespace lw_common {
                 entry.add("EventID", "" + rec.Id);
 
                 entry.add("level", event_level((StandardEventLevel) rec.Level));
-                entry.add("date", rec.TimeCreated.Value.ToString("dd-MM-yyyy"));
-                entry.add("time", rec.TimeCreated.Value.ToString("HH:mm:ss.fff"));
+                entry.analyze_and_add("timestamp", rec.TimeCreated.Value);
 
                 try {
                     var task = rec.Task != 0 ? rec.TaskDisplayName : "";

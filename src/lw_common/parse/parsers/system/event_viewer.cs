@@ -55,16 +55,18 @@ namespace lw_common.parse.parsers.system {
                 if (idx < entries_.Count) {
                     int old_entries = (reader_ as event_log_reader).old_event_count;
                     if (idx < old_entries || old_entries < 0) {
-                        if (old_entries < 0)
-                            old_entries = entries_.Count;
-                        idx = old_entries - idx - 1;
+                        if (reader_.reverse_order) {
+                            if (old_entries < 0)
+                                old_entries = entries_.Count;
+                            idx = old_entries - idx - 1;
+                        }
                         var entry = entries_[idx];
-                        var l = new line(new sub_string(string_, idx), entry.idx_in_line(aliases));
+                        var l = new line(new sub_string(string_, idx), entry.idx_in_line(aliases), entry.time);
                         return l;
                     } else {
                         // it's new entries
                         var entry = entries_[idx];
-                        var l = new line(new sub_string(string_, idx), entry.idx_in_line(aliases));
+                        var l = new line(new sub_string(string_, idx), entry.idx_in_line(aliases), entry.time);
                         return l;
                     }
                 } 

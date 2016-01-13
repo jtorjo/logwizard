@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -34,6 +35,7 @@ namespace lw_common.parse {
         // .. so i know the order they were added
         private readonly List<string> names_ = new List<string>(); 
 
+        private DateTime time_ = DateTime.MinValue;
 
         // performs an analysis of the text, and then adds it. looks for common patterns, such as whether it's a timestamp or not
         //
@@ -50,6 +52,18 @@ namespace lw_common.parse {
                 add(name, value);
         }
 
+        public void analyze_and_add(string name, DateTime value) {
+            time_ = value;
+            var cult = CultureInfo.CurrentCulture.DateTimeFormat;
+            if (name == "timestamp")
+                name = "";
+            else
+                name += ".";
+
+            add(name + "date", value.ToString( cult.ShortDatePattern));
+            add(name + "time", value.ToString( "HH:mm:ss.fff"));
+        }
+
         public void add(string name, string value) {
             Debug.Assert(value != null);
             infos_.Add(name, entry_.Length);
@@ -59,6 +73,7 @@ namespace lw_common.parse {
 
         private void add_timestamp_to_entry(string name, string text) {
             var stamp = util.split_timestamp(text);
+            time_ = util.str_to_normalized_datetime(text);
             add("date", stamp.Item1);
             add("time", stamp.Item2);
         }
@@ -79,7 +94,11 @@ namespace lw_common.parse {
 
         public List<string> names {
             get { return names_; }
-        } 
+        }
+
+        public DateTime time {
+            get { return time_; }
+        }
 
         public Tuple<int, int>[] idx_in_line(aliases aliases) {
             var idx = new Tuple<int, int>[(int) info_type.max];

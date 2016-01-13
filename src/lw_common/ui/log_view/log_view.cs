@@ -1409,7 +1409,7 @@ namespace lw_common.ui
                 go_to_row(closest.Item2, select_type.notify_parent);
         }
 
-        public void offset_closest_time(int time_ms, bool forward) {
+        public void offset_closest_time(long time_ms, bool forward) {
             if (filter_.match_count < 1)
                 return;
             int sel = sel_row_idx;

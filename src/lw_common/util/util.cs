@@ -410,12 +410,111 @@ namespace lw_common {
             return time;
         }
 
-        public static DateTime str_to_normalized_time(string time_str) {
-            Debug.Assert(time_str != null && time_str != "");
-            DateTime time = DateTime.MinValue;
-            time_str = normalize_time_str(time_str);
-            DateTime.TryParseExact( time_str, "HH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out time);
-            return time;
+        private static DateTime str_to_normalized_time(string time_str) {
+            try {
+                Debug.Assert(time_str != null && time_str != "");
+                DateTime time = DateTime.MinValue;
+                time_str = normalize_time_str(time_str);
+                DateTime.TryParseExact(time_str, "HH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out time);
+                return time;
+            } catch {
+                return DateTime.Today;
+            }
+        }
+
+        // 1.6.16
+        // I parse dates like YYYY-MM-DD and YYYYMMDD, MM-DD, MM/DD, MMDD
+        public static DateTime str_to_normalized_date(string date_str, out bool ok) {
+            ok = true;
+            int separator = date_str.IndexOfAny(new[] {'-', '/'});
+            if (date_str.Length <= 10 && date_str.Length >= 8 && separator >= 0) {
+                try {
+                    var cult_pattern = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower();
+                    int y_idx = cult_pattern.IndexOf('y');
+                    int m_idx = cult_pattern.IndexOf('m');
+                    int d_idx = cult_pattern.IndexOf('d');
+                    var indexes = new Tuple<int,string>[] { new Tuple<int,string>(m_idx, "m"), new Tuple<int, string>(d_idx, "d"), new Tuple<int, string>(y_idx, "y"), }.ToList();
+                    indexes = indexes.OrderBy( x => x.Item1).ToList();
+
+                    int y = indexes.FindIndex(x => x.Item2 == "y"); 
+                    int m = indexes.FindIndex(x => x.Item2 == "m"); 
+                    int d = indexes.FindIndex(x => x.Item2 == "d"); 
+
+                    var ymd = date_str.Split(date_str[separator]).Select(int.Parse).ToList();
+                    return new DateTime(ymd[y], ymd[m], ymd[d]);
+                } catch {
+                }
+            }
+            if (date_str.Length == 8) {
+                try {
+                    int y = int.Parse(date_str.Substring(0, 4));
+                    int m = int.Parse(date_str.Substring(4, 2));
+                    int d = int.Parse(date_str.Substring(6, 2));
+                    return new DateTime(y,m,d);
+                } catch {
+                }
+            }
+            if (date_str.Length == 5 && (date_str[2] == '-' || date_str[2] == '/')) {
+                try {
+                    int y = DateTime.Now.Year;
+                    int m = int.Parse(date_str.Substring(0, 2));
+                    int d = int.Parse(date_str.Substring(3, 2));
+                    return new DateTime(y,m,d);
+                } catch {
+                }                
+            }
+
+            if (date_str.Length == 4 || (date_str.Length <= 4 && separator >= 0)) {
+                try {
+                    int y = DateTime.Now.Year;
+                    if (separator >= 0) {
+                        // example: 2/14 (14th of Feb)
+                        int m = int.Parse(date_str.Substring(0, separator));
+                        int d = int.Parse(date_str.Substring(separator + 1));
+                        return new DateTime(y, m, d);
+                    } else {
+                        int m = int.Parse(date_str.Substring(0, 2));
+                        int d = int.Parse(date_str.Substring(2, 2));
+                        return new DateTime(y, m, d);
+                    }
+                } catch {
+                }                
+            }
+
+            ok = false;
+            return DateTime.Today;
+        }
+
+        public static DateTime str_to_normalized_datetime(string date_str, string time_str) {
+            bool ignore;
+            var date = str_to_normalized_date(date_str, out ignore);
+            var time = str_to_normalized_time(time_str);
+            return date + time.TimeOfDay;
+        }
+
+        public static DateTime str_to_normalized_datetime(string datetime_str) {
+            int idx = datetime_str.IndexOfAny(new [] {' ', 'T', 't' });
+            if (idx >= 0) {
+                string date = datetime_str.Substring(0, idx);
+                string time = datetime_str.Substring(idx + 1);
+                return str_to_normalized_datetime(date, time);
+            } else {
+                // here, figure out if it's a date or a time
+                bool ignore;
+                idx = datetime_str.IndexOfAny(new [] {'/', '-' });
+                if (idx >= 0)
+                    // assume YYYY/MM/DD or so
+                    return str_to_normalized_date(datetime_str, out ignore);
+                if ( datetime_str.Length == 4 && datetime_str.All(Char.IsDigit))
+                    // assume MMDD
+                    return str_to_normalized_date(datetime_str, out ignore);
+                if ( datetime_str.Length >= 4)
+                    if ( datetime_str.Substring(0,4).All(Char.IsDigit) )
+                        // assume YYYY.... (it can't be a time though)
+                        return str_to_normalized_date(datetime_str, out ignore);
+
+                return str_to_normalized_time(datetime_str);
+            }
         }
 
         // checks really fast if this is a timestamp (does not perform a full check, just looks for some key facts)

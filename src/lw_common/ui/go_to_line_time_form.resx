@@ -117,16 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label2.Text" xml:space="preserve">
-    <value>Time is in format HH:MM:SS[.fff]
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>You can specify the line, date/time, or an offset line or offset date/time
+
+Date/Time is in format [[YYYY-]MM-DD] hh:mm:ss[.fff]
+
+11-24            - go to midnight of 11th Dec current year
+2011-02-15 11:15 - go to 15th Feb 2011, 11:15am
 
 You can specify offsets as well:
 +3:20 will go 3 minutes and 20 secons into the future
 -200  will go 200 lines into the past
 
-Extra goodies: offsets in millisecs, seconds, minutes, hours
-+4s (after 4 seconds);        -0.7h (before 0.7 hours), 
-+450ms (after 450 millisecs); -20m (before 20 minutes)</value>
+Extra goodies: you can specify offsets in 
+millisecs, seconds, minutes, hours, days, months, years
++450ms  (after 450 millisecs); 
++4s     (after 4 seconds);        
+-20m    (before 20 minutes)
+-0.7h   (before 0.7 hours) 
++2d     (after 2 days)
++3.5M   (after 3 and a half months)
+- 0.25y (before a quarter of a year)
+
+
+</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

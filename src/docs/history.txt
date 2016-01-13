@@ -1,6 +1,7 @@
 
 
 
+
 - post on https://www.reddit.com/r/csharp/
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
@@ -8,6 +9,12 @@
 - event viewer: convert computername/username to friendly?
 
 - file associations -> don't do it by default
+
+
+1.6.16a
+- date column - include in sorting
+- goto -> show visually where going to (like, after 10 lines, before x lines, to date XXX, extra x seconds etc)
+- goto date -> works as long as it's sorted ascending (in event viewer, by default it's decending)
 
 
 1.6.15

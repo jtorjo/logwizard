@@ -395,7 +395,10 @@ namespace lw_common {
             return l;
         }
 
-        public line(sub_string sub, Tuple<int, int>[] idx_in_line) {
+        public line(sub_string sub, Tuple<int, int>[] idx_in_line) : this(sub, idx_in_line, DateTime.MinValue) {
+        }
+
+        public line(sub_string sub, Tuple<int, int>[] idx_in_line, DateTime time ) {
             sub_ = sub;
             Debug.Assert(idx_in_line.Length == (int) info_type.max);
             string msg = sub.msg;
@@ -430,10 +433,15 @@ namespace lw_common {
                     }
             }
 
-            // normalize time - so that we can do proper comparisons when "Go to Line"
-            var time_str = part(info_type.time);
-            if (time_str != "")
-                time = util.str_to_normalized_time(time_str);
+            if (time != DateTime.MinValue) 
+                this.time = time;
+            else {
+                // normalize time - so that we can do proper comparisons when "Go to Line"
+                var time_str = part(info_type.time);
+                var date_str = part(info_type.date);
+                if (time_str != "")
+                    this.time = util.str_to_normalized_datetime(date_str, time_str);
+            }
         }
 
         public string part(info_type i) {

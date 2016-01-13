@@ -44,6 +44,8 @@ namespace lw_common.ui {
         private string successful_machine_ = "";
         private bool edited_syntax_now_ = false;
 
+        private bool first_time_ = true;
+
         // file name is set only if it's a file
         public edit_log_settings_form(string settings, edit_type edit = edit_type.edit) {
             old_settings_ = new log_settings_string(settings);
@@ -269,7 +271,9 @@ namespace lw_common.ui {
             typeTab.SelectedIndex = type.SelectedIndex;
 
             bool is_event_log = index_to_type() == log_type.event_log;
-            reversed.Checked = is_event_log;
+            if ( first_time_ && edit_ == edit_type.add)
+                reversed.Checked = is_event_log;
+            first_time_ = false;
             if (is_event_log)
                 update_event_log_list();
         }
