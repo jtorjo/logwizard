@@ -195,6 +195,9 @@ namespace lw_common {
         // 1.6.6+ - allow showing a horizontal scrollbar in log-view
         public bool show_horizontal_scrollbar = false;
 
+        // 1.6.17+ - if true, we associate common extensions to LogWizard (.log, .txt and .zip - for now)
+        public bool associate_common_extensions = false;
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // file-by-file
         public bool bring_to_top_on_restart = false;
@@ -409,6 +412,8 @@ namespace lw_common {
             load_save(load, ref has_shown_details_pane, "has_shown_details_pane", false);
             load_save(load, ref show_horizontal_scrollbar, "show_horizontal_scrollbar", false);
             load_save(load, ref edit_click_word_selects_it, "edit_click_word_selects_it", true);
+
+            load_save(load, ref associate_common_extensions, "associate_common_extensions", false);
         }
 
         private string initials(string name) {

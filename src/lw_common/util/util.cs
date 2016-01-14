@@ -83,7 +83,7 @@ namespace lw_common {
         // we really want everything - by default, we'll send much less logs.
         private const int MAX_OLD_LOGS = 25;
 
-        public readonly static char[] any_enter_char = new[] {'\r', '\n'};
+        public static readonly char[] any_enter_char = new[] {'\r', '\n'};
 
         // this way I can emulate "release" behavior in debug mode - I want to avoid using #ifs as much as possible
 #if DEBUG
@@ -91,6 +91,7 @@ namespace lw_common {
 #else
         private static bool is_debug_ = false;
 #endif
+
         public static bool is_debug {
             get { return is_debug_; }
             set { is_debug_ = value; }
@@ -102,35 +103,35 @@ namespace lw_common {
          * is that that windows loop keeps going while showing hte assertion, which can cause further assertions, and all
          * sorts of other problems, making close to impossible to see what the original problem was
          */
+
         private class break_into_debugger : DefaultTraceListener {
-            public override void TraceData(TraceEventCache eventCache, string source, TraceEventType eventType, int id, object data)
-            {
+            public override void TraceData(TraceEventCache eventCache, string source, TraceEventType eventType, int id, object data) {
                 Debugger.Break();
             }
-            public override void TraceData(TraceEventCache eventCache, string source, TraceEventType eventType, int id, params object[] data)
-            {
+
+            public override void TraceData(TraceEventCache eventCache, string source, TraceEventType eventType, int id, params object[] data) {
                 Debugger.Break();
             }
-            public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id)
-            {
+
+            public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id) {
                 Debugger.Break();
             }
-            public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id, string format, params object[] args)
-            {
+
+            public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id, string format, params object[] args) {
                 Debugger.Break();
             }
-            public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id, string message)
-            {
+
+            public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id, string message) {
                 Debugger.Break();
             }
-            public override void Fail(string message)
-            {
-                 Debugger.Break();
-            }
-            public override void Fail(string message, string detailMessage)
-            {
+
+            public override void Fail(string message) {
                 Debugger.Break();
-            }            
+            }
+
+            public override void Fail(string message, string detailMessage) {
+                Debugger.Break();
+            }
         }
 
         public static void force_break_into_debugger() {
@@ -144,7 +145,7 @@ namespace lw_common {
             string format = "HH:mm:ss";
             if (str.Length > 8)
                 format += str[8];
-            if ( str.Length > 9)
+            if (str.Length > 9)
                 format += new string('f', str.Length - 9);
             DateTime dt = DateTime.Now;
             if (!DateTime.TryParseExact(str, format, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out dt))
@@ -162,33 +163,33 @@ namespace lw_common {
                 return Color.LightCoral;
             if (argb == Color.Pink.ToArgb())
                 return Color.LightPink;
-            if ( argb == Color.Black.ToArgb())
+            if (argb == Color.Black.ToArgb())
                 return Color.Gray;
-            if (argb  == Color.Gray.ToArgb())
+            if (argb == Color.Gray.ToArgb())
                 return Color.DarkGray;
 
             ColorEx ex = new ColorEx(col);
-            ex.S = (byte)(ex.S / 5);
+            ex.S = (byte) (ex.S / 5);
             return ex.Color;
         }
 
         public static Color darker_color(Color col) {
             var argb = col.ToArgb();
-            if (argb  == Color.White.ToArgb())
+            if (argb == Color.White.ToArgb())
                 return Color.WhiteSmoke;
-            if (argb  == Color.WhiteSmoke.ToArgb())
+            if (argb == Color.WhiteSmoke.ToArgb())
                 return Color.LightGray;
-            if (argb  == Color.LightGray.ToArgb())
+            if (argb == Color.LightGray.ToArgb())
                 return Color.DarkGray;
-            if (argb  == Color.DarkGray.ToArgb())
+            if (argb == Color.DarkGray.ToArgb())
                 return Color.Gray;
 
             ColorEx ex = new ColorEx(col);
             const double mul_by = 2.3;
-            ex.S = (byte)(ex.S * mul_by > 100 ? 100 : ex.S * mul_by);
+            ex.S = (byte) (ex.S * mul_by > 100 ? 100 : ex.S * mul_by);
             Color darker = ex.Color;
 
-            if ( darker.ToArgb() == col.ToArgb())
+            if (darker.ToArgb() == col.ToArgb())
                 // basically, we never want to return the same color
                 return grayer_color(col);
 
@@ -203,11 +204,11 @@ namespace lw_common {
 
                 var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 fs.Seek(0, SeekOrigin.Begin);
-            
+
                 // read a few lines from the beginning
                 byte[] readBuffer = new byte[len];
                 int bytes = fs.Read(readBuffer, 0, len);
-                
+
                 string now = encoding.GetString(readBuffer, 0, bytes);
                 return now;
             } catch {
@@ -215,7 +216,7 @@ namespace lw_common {
             }
         }
 
-        public static readonly Color transparent = Color.FromArgb(0,0,0,0);
+        public static readonly Color transparent = Color.FromArgb(0, 0, 0, 0);
 
         private static Color str_to_namecolor(string s) {
             s = s.ToLower();
@@ -249,16 +250,16 @@ namespace lw_common {
                 return light ? Color.LightCyan : dark ? Color.DarkCyan : Color.Cyan;
             case "violet":
                 return light ? transparent : dark ? Color.DarkViolet : Color.Violet;
-            case "pink": 
+            case "pink":
                 return light ? Color.LightPink : dark ? transparent : Color.Pink;
             case "whitesmoke":
                 return light ? transparent : dark ? transparent : Color.WhiteSmoke;
 
-            case "brown": 
+            case "brown":
                 return light ? Color.SandyBrown : dark ? Color.SaddleBrown : Color.Brown;
 
 //            case "green":
-  //              return light ? Color.LightGreen : dark ? Color.DarkGreen : Color.Green;
+            //              return light ? Color.LightGreen : dark ? Color.DarkGreen : Color.Green;
 
 
             case "transparent":
@@ -285,7 +286,8 @@ namespace lw_common {
                     int gi = Convert.ToInt16(g, 16);
                     int bi = Convert.ToInt16(b, 16);
                     return Color.FromArgb(ri, gi, bi);
-                } catch {}
+                } catch {
+                }
             }
 
             return transparent;
@@ -300,7 +302,7 @@ namespace lw_common {
         public static Color select_color_via_dlg() {
             var select = new ColorDialog();
             select.Color = transparent;
-            if ( select.ShowDialog() == DialogResult.OK)
+            if (select.ShowDialog() == DialogResult.OK)
                 if (select.Color.ToArgb() != transparent.ToArgb())
                     return select.Color;
 
@@ -308,7 +310,8 @@ namespace lw_common {
         }
 
         public enum beep_type {
-            err, question
+            err,
+            question
         }
 
         public static void beep(beep_type type) {
@@ -334,7 +337,7 @@ namespace lw_common {
         }
 
 
-        private static char[] time_ms_separators = new[] { '.', ',', ':' };
+        private static char[] time_ms_separators = new[] {'.', ',', ':'};
         // normalizes the time, so that no matter what input, it will take out hh:mm:ss.zzz
         //
         // assumes time is in correct form: [h]h:[m]m[:[s]s[.z[z[z]]]]
@@ -344,9 +347,9 @@ namespace lw_common {
 
             // 1.3.11+ recognizes times such as 15:30:46(031) or 15:30:46[043]
             int sep_bracket = time.IndexOf('('), sep_square_bracket = time.IndexOf('[');
-            if (sep_bracket >= 0 || sep_square_bracket >= 0) 
-                time = time.Replace(sep_bracket >= 0 ? '(' : '[', '.').Replace(sep_bracket >= 0 ? ")" : "]" , "");
-            
+            if (sep_bracket >= 0 || sep_square_bracket >= 0)
+                time = time.Replace(sep_bracket >= 0 ? '(' : '[', '.').Replace(sep_bracket >= 0 ? ")" : "]", "");
+
             // in this case, just hh:mm
             if (time.Count(c => c == ':') == 1) {
                 int sep0 = time.IndexOf(':');
@@ -355,7 +358,7 @@ namespace lw_common {
                     // weird, it's an mm:ss.zzz ?
                     time = "00:" + time;
                 else
-                    // it's hh:mm
+                // it's hh:mm
                     time = time + ":00";
             }
 
@@ -377,14 +380,14 @@ namespace lw_common {
                 time = time.Substring(0, 3) + "0" + time.Substring(3);
             if (sep2 > 0) {
                 // look for seconds:  hh:mm:ss.zzz or hh:mm:s.zzz
-                int sep3 = time.IndexOfAny( time_ms_separators, 6);
+                int sep3 = time.IndexOfAny(time_ms_separators, 6);
                 ok = (sep3 == -1 || sep3 == 7 || sep3 == 8);
                 if (!ok)
                     return time;
                 if (sep3 == 7 || time.Length == 7)
                     time = time.Substring(0, 6) + "0" + time.Substring(6);
             } else
-                // in this case, it was just mm:ss - should never happen
+            // in this case, it was just mm:ss - should never happen
                 Debug.Assert(false);
 
             switch (time.Length) {
@@ -403,10 +406,10 @@ namespace lw_common {
                 Debug.Assert(false);
                 break;
             }
-            
-            if ( time.Length > 8 && time[8] != '.')
-                time = time.Substring(0,8) + "." + time.Substring(9);
-            
+
+            if (time.Length > 8 && time[8] != '.')
+                time = time.Substring(0, 8) + "." + time.Substring(9);
+
             return time;
         }
 
@@ -433,12 +436,14 @@ namespace lw_common {
                     int y_idx = cult_pattern.IndexOf('y');
                     int m_idx = cult_pattern.IndexOf('m');
                     int d_idx = cult_pattern.IndexOf('d');
-                    var indexes = new Tuple<int,string>[] { new Tuple<int,string>(m_idx, "m"), new Tuple<int, string>(d_idx, "d"), new Tuple<int, string>(y_idx, "y"), }.ToList();
-                    indexes = indexes.OrderBy( x => x.Item1).ToList();
+                    var indexes =
+                        new Tuple<int, string>[] {new Tuple<int, string>(m_idx, "m"), new Tuple<int, string>(d_idx, "d"), new Tuple<int, string>(y_idx, "y"),}
+                            .ToList();
+                    indexes = indexes.OrderBy(x => x.Item1).ToList();
 
-                    int y = indexes.FindIndex(x => x.Item2 == "y"); 
-                    int m = indexes.FindIndex(x => x.Item2 == "m"); 
-                    int d = indexes.FindIndex(x => x.Item2 == "d"); 
+                    int y = indexes.FindIndex(x => x.Item2 == "y");
+                    int m = indexes.FindIndex(x => x.Item2 == "m");
+                    int d = indexes.FindIndex(x => x.Item2 == "d");
 
                     var ymd = date_str.Split(date_str[separator]).Select(int.Parse).ToList();
                     return new DateTime(ymd[y], ymd[m], ymd[d]);
@@ -450,7 +455,7 @@ namespace lw_common {
                     int y = int.Parse(date_str.Substring(0, 4));
                     int m = int.Parse(date_str.Substring(4, 2));
                     int d = int.Parse(date_str.Substring(6, 2));
-                    return new DateTime(y,m,d);
+                    return new DateTime(y, m, d);
                 } catch {
                 }
             }
@@ -459,9 +464,9 @@ namespace lw_common {
                     int y = DateTime.Now.Year;
                     int m = int.Parse(date_str.Substring(0, 2));
                     int d = int.Parse(date_str.Substring(3, 2));
-                    return new DateTime(y,m,d);
+                    return new DateTime(y, m, d);
                 } catch {
-                }                
+                }
             }
 
             if (date_str.Length == 4 || (date_str.Length <= 4 && separator >= 0)) {
@@ -478,7 +483,7 @@ namespace lw_common {
                         return new DateTime(y, m, d);
                     }
                 } catch {
-                }                
+                }
             }
 
             ok = false;
@@ -493,7 +498,7 @@ namespace lw_common {
         }
 
         public static DateTime str_to_normalized_datetime(string datetime_str) {
-            int idx = datetime_str.IndexOfAny(new [] {' ', 'T', 't' });
+            int idx = datetime_str.IndexOfAny(new[] {' ', 'T', 't'});
             if (idx >= 0) {
                 string date = datetime_str.Substring(0, idx);
                 string time = datetime_str.Substring(idx + 1);
@@ -501,15 +506,15 @@ namespace lw_common {
             } else {
                 // here, figure out if it's a date or a time
                 bool ignore;
-                idx = datetime_str.IndexOfAny(new [] {'/', '-' });
+                idx = datetime_str.IndexOfAny(new[] {'/', '-'});
                 if (idx >= 0)
                     // assume YYYY/MM/DD or so
                     return str_to_normalized_date(datetime_str, out ignore);
-                if ( datetime_str.Length == 4 && datetime_str.All(Char.IsDigit))
+                if (datetime_str.Length == 4 && datetime_str.All(Char.IsDigit))
                     // assume MMDD
                     return str_to_normalized_date(datetime_str, out ignore);
-                if ( datetime_str.Length >= 4)
-                    if ( datetime_str.Substring(0,4).All(Char.IsDigit) )
+                if (datetime_str.Length >= 4)
+                    if (datetime_str.Substring(0, 4).All(Char.IsDigit))
                         // assume YYYY.... (it can't be a time though)
                         return str_to_normalized_date(datetime_str, out ignore);
 
@@ -535,7 +540,7 @@ namespace lw_common {
 
             string date = str.Substring(0, 10);
             // 1.4.8+ note: at this time, we only process/allow 3 digits passed second
-            string time = str.Substring(11, 12); 
+            string time = str.Substring(11, 12);
             return new Tuple<string, string>(date, time);
         }
 
@@ -571,15 +576,16 @@ namespace lw_common {
 
         // when updater returns true, we stop the timer
         public delegate bool update_control_func();
+
         public delegate void void_func();
 
         public static void add_timer(update_control_func updater, int refresh_ms = 100) {
             if (updater())
                 return;
 
-            Timer t = new Timer(){ Interval = refresh_ms };
+            Timer t = new Timer() {Interval = refresh_ms};
             t.Tick += (sender, args) => {
-                if ( updater()) {
+                if (updater()) {
                     t.Enabled = false;
                     t.Dispose();
                 }
@@ -590,12 +596,12 @@ namespace lw_common {
         // update_ms = how long to set_aliases the control visually
         public static void add_timer(update_control_func updater, int update_ms, int refresh_ms = 100) {
             DateTime end = DateTime.Now.AddMilliseconds(update_ms);
-            add_timer( () => updater() || (DateTime.Now > end), refresh_ms );
+            add_timer(() => updater() || (DateTime.Now > end), refresh_ms);
         }
 
         // postpones executing this function
         public static void postpone(void_func f, int time_ms) {
-            Timer t = new Timer(){ Interval = time_ms };
+            Timer t = new Timer() {Interval = time_ms};
             t.Tick += (sender, args) => {
                 t.Enabled = false;
                 t.Dispose();
@@ -627,8 +633,7 @@ namespace lw_common {
         //
         // alternatives: http://www.architectshack.com/TextFileEncodingDetector.ashx (don't like the licensing)
         //               http://www.codeproject.com/Articles/17201/Detect-Encoding-for-In-and-Outgoing-Text    
-        public static Encoding file_encoding(string filename)
-        {
+        public static Encoding file_encoding(string filename) {
             using (var file = new FileStream(filename, FileMode.Open, FileAccess.Read))
                 return file_encoding(file);
         }
@@ -653,43 +658,46 @@ namespace lw_common {
                 if (bom[0] == 0xfe && bom[1] == 0xff) return Encoding.BigEndianUnicode; //UTF-16BE
                 if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) return Encoding.UTF32;
 
-                
+
                 long len = Math.Min(8192, file.Length);
                 byte[] buff = new byte[len];
-                file.Read(buff, 0, (int)len);
+                file.Read(buff, 0, (int) len);
 
                 var detected = EncodingTools.DetectInputCodepage(buff);
-                if (!detected.Equals( Encoding.Default))
+                if (!detected.Equals(Encoding.Default))
                     return detected;
 
                 // use user's default
                 return Encoding.Default;
             } catch {
                 return null;
-            }            
+            }
         }
 
 
-        // http://stackoverflow.com/questions/2681878/associate-file-extension-with-application
         [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
-        public static void set_association(string Extension, string KeyName, string OpenWith, string FileDescription)
-        {
+
+        // http://stackoverflow.com/questions/2681878/associate-file-extension-with-application
+        //
+        // 1.6.17+ - delete user choice - if true, we delete the user's original choice - so that Windows Explorer recalculates it
+        //           there used to be a bug before, and I would always end up modifying the ".ucs" extension instead of our extensions
+        public static void set_association(string extension, string key_name, string open_with, string file_description, bool delete_user_choice) {
             try {
                 RegistryKey BaseKey;
                 RegistryKey OpenMethod;
                 RegistryKey Shell;
                 RegistryKey CurrentUser;
 
-                BaseKey = Registry.ClassesRoot.CreateSubKey(Extension);
-                BaseKey.SetValue("", KeyName);
+                BaseKey = Registry.ClassesRoot.CreateSubKey(extension);
+                BaseKey.SetValue("", key_name);
 
-                OpenMethod = Registry.ClassesRoot.CreateSubKey(KeyName);
-                OpenMethod.SetValue("", FileDescription);
-                OpenMethod.CreateSubKey("DefaultIcon").SetValue("", "\"" + OpenWith + "\",0");
+                OpenMethod = Registry.ClassesRoot.CreateSubKey(key_name);
+                OpenMethod.SetValue("", file_description);
+                OpenMethod.CreateSubKey("DefaultIcon").SetValue("", "\"" + open_with + "\",0");
                 Shell = OpenMethod.CreateSubKey("Shell");
-                Shell.CreateSubKey("edit").CreateSubKey("command").SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
-                Shell.CreateSubKey("open").CreateSubKey("command").SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
+                Shell.CreateSubKey("edit").CreateSubKey("command").SetValue("", "\"" + open_with + "\"" + " \"%1\"");
+                Shell.CreateSubKey("open").CreateSubKey("command").SetValue("", "\"" + open_with + "\"" + " \"%1\"");
                 BaseKey.Close();
                 OpenMethod.Close();
                 Shell.Close();
@@ -702,9 +710,11 @@ namespace lw_common {
                 CurrentUser.Close();
                 */
                 // Delete the key instead of trying to change it
-                CurrentUser = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.ucs", true);
-                CurrentUser.DeleteSubKey("UserChoice", false);
-                CurrentUser.Close();
+                if (delete_user_choice) {
+                    CurrentUser = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\" + extension, true);
+                    CurrentUser.DeleteSubKey("UserChoice", false);
+                    CurrentUser.Close();
+                }
 
                 // Tell explorer the file association has been changed
                 SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
@@ -713,7 +723,44 @@ namespace lw_common {
             }
         }
 
-        public static void create_shortcut(string name, string directory, string description, string iconLocation, string targetPath, string targetArgs)
+        public static void un_set_association(string extension, string key_name, string open_with, string file_description) {
+            
+            try {
+                RegistryKey BaseKey = Registry.ClassesRoot.CreateSubKey(extension);
+                BaseKey.SetValue("", "");
+
+                Registry.ClassesRoot.DeleteSubKeyTree(key_name, false);
+                BaseKey.Close();
+
+                try {
+                    var CurrentUser = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\" + extension + "\\OpenWithList", true);
+                    foreach (string name in CurrentUser.GetValueNames()) {
+                        var value = CurrentUser.GetValue(name, "").ToString();
+                        if (value.ToLower().Contains("logwizard")) {
+                            // this is the value we need to erase
+                            CurrentUser.DeleteValue(name);
+                            string mru = CurrentUser.GetValue("MRUList").ToString();
+                            int idx = mru.IndexOf(name);
+                            if (idx >= 0) {
+                                mru = mru.Substring(0, idx) + mru.Substring(idx + name.Length);
+                                CurrentUser.SetValue("MRUList", mru);
+                            }
+                            break;
+                        }
+                    }
+                    CurrentUser.Close();
+                } catch {
+                }
+
+                // Tell explorer the file association has been changed
+                SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+            } catch (Exception e) {
+                logger.Error("can't set association: " + e.Message);
+            }
+        }
+    
+
+    public static void create_shortcut(string name, string directory, string description, string iconLocation, string targetPath, string targetArgs)
         {
             try {
                 Directory.CreateDirectory(directory);
@@ -1125,6 +1172,15 @@ namespace lw_common {
         private static string old_local_dir() {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LogWizard\\";
             return path;
+        }
+        
+        public static string lw_full_app_name() {
+            var name = new FileInfo(Application.ExecutablePath).DirectoryName + "\\LogWizard.exe";
+            return name;
+        }
+        public static string lw_associations_full_app_name() {
+            var name = new FileInfo(Application.ExecutablePath).DirectoryName + "\\LwFileAssociations.exe";
+            return name;
         }
 
 

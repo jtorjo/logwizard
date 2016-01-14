@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_simple_logger", "test_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fastJSON net35", "lw_common\3rdparty\fastJSON\fastJSON net35.csproj", "{FDAF5695-E651-4D4D-8E15-0BD9FBEF5069}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LwFileAssociations", "LwFileAssociations\LwFileAssociations.csproj", "{90A52BD8-3504-4174-8270-C2FA98FA5380}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Dbg64|Any CPU = Dbg64|Any CPU
@@ -369,6 +371,30 @@ Global
 		{FDAF5695-E651-4D4D-8E15-0BD9FBEF5069}.Release64|Mixed Platforms.Build.0 = Release|Any CPU
 		{FDAF5695-E651-4D4D-8E15-0BD9FBEF5069}.Release64|x64.ActiveCfg = Release|Any CPU
 		{FDAF5695-E651-4D4D-8E15-0BD9FBEF5069}.Release64|x86.ActiveCfg = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Dbg64|Any CPU.ActiveCfg = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Dbg64|Any CPU.Build.0 = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Dbg64|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Dbg64|Mixed Platforms.Build.0 = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Dbg64|x64.ActiveCfg = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Dbg64|x86.ActiveCfg = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release|x64.ActiveCfg = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release|x86.ActiveCfg = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release64|Any CPU.ActiveCfg = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release64|Any CPU.Build.0 = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release64|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release64|Mixed Platforms.Build.0 = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release64|x64.ActiveCfg = Release|Any CPU
+		{90A52BD8-3504-4174-8270-C2FA98FA5380}.Release64|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

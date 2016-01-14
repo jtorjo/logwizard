@@ -1,7 +1,6 @@
 
 
 
-
 - post on https://www.reddit.com/r/csharp/
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
@@ -9,6 +8,12 @@
 - event log : match_list.add_range -> called too many times?
 
 - event viewer: convert computername/username to friendly?
+
+
+
+
+1.6.17
+- solved #34 don't create file associations (.txt, .zip, .log) by default
 
 
 1.6.16c

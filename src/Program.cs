@@ -56,7 +56,7 @@ namespace LogWizard
             Application.SetCompatibleTextRenderingDefault(false);
 
             // uncomment this to test how we'd behave in release
-            //util.is_debug = false;
+            util.is_debug = false;
 
             util.set_current_dir();
             util.init_log();
@@ -94,6 +94,8 @@ namespace LogWizard
             if (args.Length > 0 && args[0] == "showsample") {
                 try {
                     Process.Start( Assembly.GetExecutingAssembly().Location, new FileInfo(util.personal_dir() + "LogWizard\\samples\\LogWizardSetup.sample.log").FullName);
+                    // associate ourselves with .logwizard extension
+                    Process.Start(util.lw_associations_full_app_name());
                 } catch(Exception e) {
                     MessageBox.Show("Exception " + e.Message);
                 }
@@ -105,15 +107,6 @@ namespace LogWizard
 
             if (open_file_name_ != null)
                 wait_for_setup_kit_to_complete();
-
-            if (!util.is_debug) {
-                util.set_association(".log", "Log_file", Application.ExecutablePath, "Log File");
-                util.set_association(".txt", "Text_file", Application.ExecutablePath, "Text File");
-                // 1.1.5+
-                util.set_association(".zip", "Zip_file", Application.ExecutablePath, "Zip File");
-                util.set_association(".logwizard", "LogWizard_file", Application.ExecutablePath, "LogWizard File");
-                util.create_shortcut("LogWizard", util.roaming_dir() + @"Microsoft\Windows\SendTo", "Send To LogWizard", null, Application.ExecutablePath, null);
-            }
 
             Application.Run(new Dummy());
         }

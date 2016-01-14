@@ -125,6 +125,7 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.associateExtensions = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -150,7 +151,7 @@
             // fontLabel
             // 
             this.fontLabel.AutoSize = true;
-            this.fontLabel.Location = new System.Drawing.Point(6, 51);
+            this.fontLabel.Location = new System.Drawing.Point(6, 46);
             this.fontLabel.Name = "fontLabel";
             this.fontLabel.Size = new System.Drawing.Size(44, 17);
             this.fontLabel.TabIndex = 1;
@@ -384,7 +385,7 @@
             // browseFont
             // 
             this.browseFont.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.browseFont.Location = new System.Drawing.Point(236, 49);
+            this.browseFont.Location = new System.Drawing.Point(236, 44);
             this.browseFont.Name = "browseFont";
             this.browseFont.Size = new System.Drawing.Size(29, 20);
             this.browseFont.TabIndex = 12;
@@ -409,7 +410,7 @@
             // 
             this.showVariableFontsAsWell.AutoSize = true;
             this.showVariableFontsAsWell.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.showVariableFontsAsWell.Location = new System.Drawing.Point(236, 75);
+            this.showVariableFontsAsWell.Location = new System.Drawing.Point(236, 70);
             this.showVariableFontsAsWell.Name = "showVariableFontsAsWell";
             this.showVariableFontsAsWell.Size = new System.Drawing.Size(257, 17);
             this.showVariableFontsAsWell.TabIndex = 17;
@@ -463,6 +464,7 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.associateExtensions);
             this.groupBox7.Controls.Add(this.showHorizontalScrollbar);
             this.groupBox7.Controls.Add(this.showTips);
             this.groupBox7.Controls.Add(this.showVariableFontsAsWell);
@@ -475,7 +477,7 @@
             this.groupBox7.Controls.Add(this.fontLabel);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(654, 186);
+            this.groupBox7.Size = new System.Drawing.Size(654, 196);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General";
@@ -483,7 +485,7 @@
             // showHorizontalScrollbar
             // 
             this.showHorizontalScrollbar.AutoSize = true;
-            this.showHorizontalScrollbar.Location = new System.Drawing.Point(9, 153);
+            this.showHorizontalScrollbar.Location = new System.Drawing.Point(9, 123);
             this.showHorizontalScrollbar.Name = "showHorizontalScrollbar";
             this.showHorizontalScrollbar.Size = new System.Drawing.Size(189, 21);
             this.showHorizontalScrollbar.TabIndex = 19;
@@ -495,7 +497,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(363, 156);
+            this.label2.Location = new System.Drawing.Point(363, 174);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(285, 13);
             this.label2.TabIndex = 15;
@@ -504,7 +506,7 @@
             // useFileMonitoringApi
             // 
             this.useFileMonitoringApi.AutoSize = true;
-            this.useFileMonitoringApi.Location = new System.Drawing.Point(9, 112);
+            this.useFileMonitoringApi.Location = new System.Drawing.Point(9, 100);
             this.useFileMonitoringApi.Name = "useFileMonitoringApi";
             this.useFileMonitoringApi.Size = new System.Drawing.Size(360, 21);
             this.useFileMonitoringApi.TabIndex = 14;
@@ -1240,6 +1242,16 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
+            // associateExtensions
+            // 
+            this.associateExtensions.AutoSize = true;
+            this.associateExtensions.Location = new System.Drawing.Point(9, 148);
+            this.associateExtensions.Name = "associateExtensions";
+            this.associateExtensions.Size = new System.Drawing.Size(421, 21);
+            this.associateExtensions.TabIndex = 20;
+            this.associateExtensions.Text = "Associate LogWizard to common extensions (.txt, .log and .zip)";
+            this.associateExtensions.UseVisualStyleBackColor = true;
+            // 
             // settings_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1393,6 +1405,7 @@
         private System.Windows.Forms.CheckBox editSearchAfter;
         private System.Windows.Forms.RadioButton editSearchCurColumnOnly;
         private System.Windows.Forms.CheckBox editSearchBelow;
+        private System.Windows.Forms.CheckBox associateExtensions;
 
     }
 }

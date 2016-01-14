@@ -154,6 +154,7 @@ namespace lw_common.ui {
             showTips.Checked = app.inst.show_tips;
             showHorizontalScrollbar.Checked = app.inst.show_horizontal_scrollbar;
 
+            associateExtensions.Checked = app.inst.associate_common_extensions;
         }
 
         private void save() {
@@ -237,7 +238,19 @@ namespace lw_common.ui {
             app.inst.show_horizontal_scrollbar = showHorizontalScrollbar.Checked;
             app.inst.edit_click_word_selects_it = clickWordAutoSelectsIt.Checked;
 
+            bool associate_change = app.inst.associate_common_extensions != associateExtensions.Checked;
+            app.inst.associate_common_extensions = associateExtensions.Checked;
             app.inst.save();
+
+            if (associate_change)
+                on_associate_change();
+        }
+
+        private void on_associate_change() {
+            try {
+                Process.Start(util.lw_associations_full_app_name(), app.inst.associate_common_extensions ? "1" : "2");
+            } catch {
+            }
         }
 
         private void settings_form_FormClosed(object sender, FormClosedEventArgs e) {
