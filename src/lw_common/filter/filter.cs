@@ -62,11 +62,11 @@ namespace lw_common {
                 return false;
             }
 
-            public match(BitArray matches, font_info font, line line, int lineIdx) {
+            public match(BitArray matches, font_info font, line line, int line_idx) {
                 this.matches = matches;
                 this.font = font;
                 this.line = line;
-                line_idx = lineIdx;
+                this.line_idx = line_idx;
             }
         }
 
@@ -83,7 +83,9 @@ namespace lw_common {
 
             private match empty_match;
 
-            public bool reverse_order = false;
+            // if true, we show the elements VISUALLY in reverse order
+            public bool show_elements_in_reverse_order = false;
+
 
             // the filter matches
             //
@@ -105,7 +107,7 @@ namespace lw_common {
             // next time, the log view will see that we've updated
             public match match_at(int idx) {
                 lock (this) {
-                    if (reverse_order)
+                    if (show_elements_in_reverse_order)
                         idx = matches_.Count - idx - 1;
                     return idx >= 0 && idx < matches_.Count ? matches_[idx] : empty_match;
                 }
@@ -122,7 +124,8 @@ namespace lw_common {
                     return -1;
 
                 lock (this) {
-                    int idx = matches_.binary_search_closest(x => reverse_order ? -x.line_idx : x.line_idx, reverse_order ? -m.line_idx : m.line_idx).Item2;
+                    // 1.6.16 in event log, matches are still sorted correctly
+                    int idx = matches_.binary_search_closest(x => x.line_idx, m.line_idx).Item2;
                     // 1.6.10 - this seems to generate a lot of asserts for event viewer, even though logically the code is correct
                     //          I will take a look at a later time
                     //if ( idx >= 0 && !reverse_order)
@@ -139,6 +142,8 @@ namespace lw_common {
             }
 
             public void add_range(memory_optimized_list<match> new_matches) {
+                if (new_matches.Count < 1)
+                    return;
                 lock (this) {
                     bool optimize = matches_.Count == 0 && new_matches.Count > app.inst.no_ui.min_filter_capacity;
                     if (!optimize) {
@@ -159,7 +164,7 @@ namespace lw_common {
             // returns the index where we can insert a line - if I return -1, it means there's already a line with this index
             public int insert_line_idx(int line_idx) {
                 lock (this) {
-                    int insert_idx = matches_.binary_search_insert(x => reverse_order ? -x.line_idx : x.line_idx, reverse_order ? -line_idx : line_idx);
+                    int insert_idx = matches_.binary_search_insert(x => x.line_idx, line_idx);
                     if (insert_idx < matches_.Count)
                         if (matches_[insert_idx].line_idx == line_idx)
                             return -1; // we already have a match
@@ -175,29 +180,26 @@ namespace lw_common {
 
             public Tuple<match, int> binary_search(int line_idx) {
                 lock (this)
-                    return matches_.binary_search(x => reverse_order ? -x.line_idx : x.line_idx, reverse_order ? -line_idx : line_idx);
+                    return care_about_reverse_order( matches_.binary_search(x => x.line_idx, line_idx));
             }
 
             public Tuple<match, int> binary_search_closest(int line_idx) {
                 lock (this)
-                    return matches_.binary_search_closest(x => reverse_order ? -x.line_idx : x.line_idx, reverse_order ? -line_idx : line_idx);
-            }
-
-            private class reverse_compare_time : IComparable<reverse_compare_time> {
-                public DateTime dt;
-                public int CompareTo(reverse_compare_time other) {
-                    var diff = dt.Ticks - other.dt.Ticks;
-                    return diff > 0 ? -1 : diff < 0 ? 1 : 0;
-                }
+                    return care_about_reverse_order( matches_.binary_search_closest(x => x.line_idx, line_idx));
             }
 
             public Tuple<match, int> binary_search_closest(DateTime time) {
                 lock (this) 
-                    if ( reverse_order)
-                        return matches_.binary_search_closest(x => new reverse_compare_time { dt = x.line.time }, new reverse_compare_time { dt = time });
-                    else 
-                        return matches_.binary_search_closest(x => x.line.time, time);
+                    return care_about_reverse_order( matches_.binary_search_closest(x => x.line.time, time));  
+                
             }
+
+            private Tuple<match, int> care_about_reverse_order( Tuple<match,int> result ) {
+                if ( show_elements_in_reverse_order && result.Item2 >= 0)
+                    result = new Tuple<match, int>(result.Item1, matches_.Count - result.Item2 - 1);
+                return result;
+            }
+
         }
 
 
@@ -267,6 +269,7 @@ namespace lw_common {
                     is_up_to_date_ = false;
                 new_log_ = log;
             }
+            matches_.show_elements_in_reverse_order = log.reverse_order;
 
             start_compute_matches_thread();
         }

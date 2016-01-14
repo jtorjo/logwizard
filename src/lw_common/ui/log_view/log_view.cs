@@ -359,8 +359,8 @@ namespace lw_common.ui
             get { return filter_; }
         }
 
-        private filter.match create_match_object(BitArray matches, font_info font, line line, int lineIdx) {
-            return is_full_log ? new full_log_match_item(matches, font, line, lineIdx, this) : new match_item(matches, font, line, lineIdx, this);
+        private filter.match create_match_object(BitArray matches, font_info font, line line, int line_idx) {
+            return is_full_log ? new full_log_match_item(matches, font, line, line_idx, this) : new match_item(matches, font, line, line_idx, this);
         }
 
         public override string ToString() {
@@ -1055,7 +1055,6 @@ namespace lw_common.ui
             bool needs_ui_update = model_.needs_ui_update;
             needs_scroll_ = needs_scroll_to_last() && !needs_ui_update;
 
-            filter_.matches.reverse_order = log_.reverse_order;
             model_.refresh();
             int new_item_count = item_count;
             filter_.compute_matches(log_);

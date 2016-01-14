@@ -33,7 +33,7 @@ namespace lw_common.ui {
     internal class full_log_match_item : match_item {
         private readonly log_view parent_ = null;
 
-        public full_log_match_item(BitArray matches, font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx, parent) {
+        public full_log_match_item(BitArray matches, font_info font, line line, int line_idx, log_view parent) : base(matches, font, line, line_idx, parent) {
             Debug.Assert(parent != null);
             parent_ = parent;
         }

@@ -50,12 +50,19 @@ namespace lw_common.parse.parsers.system {
             }
         }
 
+
+        // line at 0        - is the oldest
+        // line at Last     - is the newest
         public override line line_at(int idx) {
             lock (this) {
                 if (idx < entries_.Count) {
+                    // the only reason I have this is so that I append things correctly to the large-string, since 
+                    // we're adding always prepending lines when we're in reverse order
+                    //
+                    // thus, the index in the large string should be valid all the time (even after new lines are added)
                     int old_entries = (reader_ as event_log_reader).old_event_count;
                     if (idx < old_entries || old_entries < 0) {
-                        if (reader_.reverse_order) {
+                        if (reader_.are_elements_in_reverse_order) {
                             if (old_entries < 0)
                                 old_entries = entries_.Count;
                             idx = old_entries - idx - 1;

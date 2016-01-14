@@ -40,7 +40,7 @@ namespace lw_common.ui {
 
         public Color override_bg = util.transparent, override_fg = util.transparent;
 
-        public match_item(BitArray matches, font_info font, line line, int lineIdx, log_view parent) : base(matches, font, line, lineIdx) {
+        public match_item(BitArray matches, font_info font, line line, int line_idx, log_view parent) : base(matches, font, line, line_idx) {
         }
 
         public new int line { get { return base.line_idx + 1; }}

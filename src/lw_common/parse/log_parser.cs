@@ -107,7 +107,7 @@ namespace lw_common
         }
 
         public bool reverse_order {
-            get { return reader_.reverse_order; }
+            get { return reader_.show_elements_in_reverse_order; }
         }
 
 

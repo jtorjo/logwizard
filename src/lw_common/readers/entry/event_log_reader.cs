@@ -86,6 +86,10 @@ namespace lw_common {
             sett.name. set(friendly_name);
         }
 
+        public override bool are_elements_in_reverse_order {
+            get { return show_elements_in_reverse_order; }
+        }
+
         public string[] log_types {
             get {
                 return settings.event_log_type.get().Split('|');
@@ -259,7 +263,7 @@ namespace lw_common {
                     }
                     if (last.Count < 1)
                         break;
-                    var min = reverse_order ? last.Max(x => x.Item1.TimeCreated) :  last.Min(x => x.Item1.TimeCreated);
+                    var min = are_elements_in_reverse_order ? last.Max(x => x.Item1.TimeCreated) :  last.Min(x => x.Item1.TimeCreated);
                     var item = last.Find(x => x.Item1.TimeCreated == min);
                     if (!item.Item4)
                         break;
@@ -312,8 +316,8 @@ namespace lw_common {
                 pwd.Dispose();
 
                 EventLogQuery query = new EventLogQuery(log.log_type, PathType.LogName, query_string);
-                if ( reverse_order)
-                    query.ReverseDirection = reverse_order;
+                if ( are_elements_in_reverse_order)
+                    query.ReverseDirection = are_elements_in_reverse_order;
                 if ( session != null)
                     query.Session = session;
 
@@ -329,7 +333,7 @@ namespace lw_common {
                     log.listening_for_new_events_ = true;
 
                 // at this point, listen for new events
-                if (reverse_order) {
+                if (are_elements_in_reverse_order) {
                     // if reverse, I need to create another query, or it won't allow watching
                     query = new EventLogQuery(log.log_type, PathType.LogName, query_string);                
                     if ( session != null)

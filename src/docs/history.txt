@@ -6,11 +6,13 @@
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
 
+- event log : match_list.add_range -> called too many times?
+
 - event viewer: convert computername/username to friendly?
 
-- file associations -> don't do it by default
 
-#39 reverse order -> searching for date/time does not work (ctrl-g)
+1.6.16c
+- #39 reverse order -> searching for date/time does not work (ctrl-g)
 
 
 1.6.16b

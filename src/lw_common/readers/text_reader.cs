@@ -82,6 +82,10 @@ namespace lw_common
             get { return true; }
         }
 
+        // 1.6.16 if true, the element are held internally in reverse order - last element is held first (such as, you can do this for Event Log)
+        public virtual bool are_elements_in_reverse_order {
+            get { return false; }
+        }
 
 
         /////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +95,7 @@ namespace lw_common
         //           each reader can decide what to do with this
         //
         //           at this time, we are using this in Event Log viewer, where new items are shown at the top by default
-        public bool reverse_order {
+        public bool show_elements_in_reverse_order {
             get { return reverse_order_; }
         }
 
