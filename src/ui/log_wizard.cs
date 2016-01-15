@@ -1374,7 +1374,7 @@ namespace LogWizard
             TabPage tab = viewsTab.TabPages[idx];
             log_view lv = log_view_for_tab(idx);
             if (lv != null) {
-                lv.mark_as_not_used();
+                lv.Dispose();
                 tab.Controls.Remove(lv);
             }
         }

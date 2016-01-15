@@ -41,7 +41,7 @@ using LogWizard;
 
 namespace lw_common.ui
 {
-    public partial class log_view : UserControl
+    public partial class log_view : UserControl, IDisposable
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -122,6 +122,7 @@ namespace lw_common.ui
         {
             Debug.Assert(parent is log_view_parent);
 
+            logger.Debug("new log view " + name);
             filter_ = new filter(this.create_match_object);
             filter_.on_change = on_change;
 
@@ -758,7 +759,7 @@ namespace lw_common.ui
         }
 
         // called when this log view is not used anymore (like, when it's removed from its tab page)
-        public void mark_as_not_used() {
+        public new void Dispose() {
             if (log_ != null) {
                 log_.Dispose();
                 log_ = null;

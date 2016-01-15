@@ -552,7 +552,8 @@ namespace lw_common {
                 if ( changed_log || old_log == new_log)
                     logger.Info((new_log != old_log ? "[filter] new log " : "[filter] forced refresh of " ) + new_log.tab_name + " / " + new_log.log_name);
                 lock (this)
-                    force_recompute_matches_ = true;
+                    if ( matches_.count > 0)
+                        force_recompute_matches_ = true;
             }
             lock(this)
                 if (force_recompute_matches_)
@@ -767,6 +768,7 @@ namespace lw_common {
 
         public void Dispose() {
             disposed_ = true;
+            name_ += " (disposed)";
         }
     }
 }

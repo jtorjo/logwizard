@@ -80,7 +80,7 @@ namespace lw_common {
         }
 
         public override string ToString() {
-            return tab_name + " / " + log_name;
+            return tab_name + " / " + log_name + (disposed_ ? " (disposed)" : "");
         }
 
         public bool forced_reload {

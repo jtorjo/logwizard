@@ -1,7 +1,5 @@
 
 
-- event log : match_list.add_range -> called too many times?
-   - not sure?
 
 
 event log
@@ -21,6 +19,10 @@ event log
 
 - event viewer: convert computername/username to friendly?
 
+1.6.19a
+- event log : match_list.add_range -> called too many times
+   - it was called too many times
+   - also, a "file_rewritten" was mistakingly sent after the Event log was fully read (fixed)
 
 
 1.6.18

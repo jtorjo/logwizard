@@ -127,11 +127,13 @@ namespace lw_common
                 bool new_lines_found = false;
                 if (wait_event) {
                     new_lines_found = new_lines_event_.wait();
-                    if (new_lines_found) 
+                    if (new_lines_found)
                         logger.Debug("[log] new lines for " + reader_.name);
-                }
-                else 
+                } else {
+                    // if log hasn't been fully read at least once, there's no file_rewritten_
+                    lock (this) file_rewritten_ = false;
                     Thread.Sleep(app.inst.check_new_lines_interval_ms);
+                }
 
                 forward_to_parser_.read_to_end();
 
