@@ -1,5 +1,5 @@
 ﻿/* 
- * Copyright (C) 2014-2015 John Torjo
+ * Copyright (C) 2014-2016 John Torjo
  *
  * This file is part of LogWizard
  *

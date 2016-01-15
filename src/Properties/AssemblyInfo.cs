@@ -1,5 +1,5 @@
 ﻿/* 
- * Copyright (C) 2014-2015 John Torjo
+ * Copyright (C) 2014-2016 John Torjo
  *
  * This file is part of LogWizard
  *
@@ -50,5 +50,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.6.17.0")]
-[assembly: AssemblyFileVersion("1.6.17.0")]
+[assembly: AssemblyVersion("1.6.18.0")]
+[assembly: AssemblyFileVersion("1.6.18.0")]

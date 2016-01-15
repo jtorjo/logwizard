@@ -23,7 +23,7 @@ event log
 - event log : match_list.add_range -> called too many times
    - it was called too many times
    - also, a "file_rewritten" was mistakingly sent after the Event log was fully read (fixed)
-
+- updated copyright
 
 1.6.18
 - solved #40 -  windows have default icon
