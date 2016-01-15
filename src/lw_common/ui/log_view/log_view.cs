@@ -1780,7 +1780,20 @@ namespace lw_common.ui
                 util.beep(util.beep_type.err);
         }
 
-        public export_text export(List<int> indices, bool msg_only) {
+        private export_text export_current_sel() {
+            export_text export = new export_text();
+            string sel_text = edit.currently_selected_text;
+            int row = sel_row_idx;
+            Debug.Assert(sel_text != "" && row >= 0);
+            match_item i = item_at(row);
+
+            string font = list.Font.Name;
+            export_text.cell c = new export_text.cell(0, 0, sel_text) {fg = i.fg(this), bg = i.bg(this), font = font, font_size = 7};
+            export.add_cell(c);
+            return export;
+        }
+
+        private export_text export(List<int> indices, bool msg_only) {
             export_text export = new export_text();
 
             int row_idx = 0;
@@ -1811,7 +1824,8 @@ namespace lw_common.ui
             if (sel.Count < 1)
                 return;
 
-            var export = this.export(sel, true);
+            string sel_text = edit.currently_selected_text;
+            var export = sel_text == "" ? this.export(sel, true) : export_current_sel();
             string html = export.to_html(), text = export.to_text();
             clipboard_util.copy(html, text);
         }
@@ -1821,7 +1835,9 @@ namespace lw_common.ui
             if (sel.Count < 1)
                 return;
 
-            var export = this.export(sel, false);
+            string sel_text = edit.currently_selected_text;
+            var export = sel_text == "" ? this.export(sel, false) : export_current_sel();
+
             string html = export.to_html(), text = export.to_text();
             clipboard_util.copy(html, text);
         }

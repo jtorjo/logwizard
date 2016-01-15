@@ -82,18 +82,20 @@ namespace lw_common {
                 lengths.Add( column_max_len(col));
 
             StringBuilder txt = new StringBuilder();
-            foreach (var row in cells_) {
+            for (int row_idx = 0; row_idx < cells_.Count; row_idx++) {
+                var row = cells_[row_idx];
                 for (int col = 0; col < columns_; ++col) {
                     int cell_len = 0;
                     if (row[col] != null) {
-                        txt.Append( row[col].text);
+                        txt.Append(row[col].text);
                         cell_len = row[col].text.Length;
                     }
 
-                    if ( col < columns_ - 1)
+                    if (col < columns_ - 1)
                         txt.Append(' ', lengths[col] + 1 - cell_len);
                 }
-                txt.Append("\r\n");
+                if ( row_idx < cells_.Count - 1)
+                    txt.Append("\r\n");
             }
             return txt.ToString();
         }

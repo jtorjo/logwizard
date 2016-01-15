@@ -372,6 +372,11 @@ namespace lw_common.ui {
                 return cached_sel_text_;
             }
         }
+        internal string currently_selected_text {
+            get {
+                return raw_sel_text();
+            }
+        }
 
         public bool force_hide {
             get { return force_hide_; }
