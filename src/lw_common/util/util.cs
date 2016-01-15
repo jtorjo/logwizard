@@ -1266,5 +1266,17 @@ namespace lw_common {
             return result;
         }
 
+        public static void start_gc_collect(string reason, int gc_times = 10, int gc_sleep_ms = 1000) {
+            new Thread(() => gc_collect_thread(reason, gc_times, gc_sleep_ms)) { IsBackground = true }.Start();
+        }
+
+        private static void gc_collect_thread(string reason, int gc_times, int gc_sleep) {
+            for (int i = 0; i < gc_times; ++i) {
+                GC.Collect(2, GCCollectionMode.Forced);
+                Thread.Sleep(gc_sleep);
+                logger.Debug("gc.collect " + reason + " " + (i+1) + " - memory " + GC.GetTotalMemory(false));
+            }
+        }
+
     }
 }

@@ -6,8 +6,9 @@ event log
 - same event added several times(when not reversed)
   - apparently, two event log readers are created or something all adding to same log -> not sure why 
     - maybe just on Open Log??? (not on opening existing log) -> yup, that is why
+	  seems to indeed happen only on Open Log
+	  ------ perhaps event_log_reader.create_logs is created several times???
 - issue still exists at the end. - even after 1.6.19a
-- way too much memory consumption on event log
 - open log go to event log -> not reversed by default
 - search for "110652 1/14/2016 12:45:07.757 INFO Scoping successfully completed for shadowcopy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6." -> too long
              "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6" -> still too long
@@ -18,6 +19,14 @@ event log
 
 
 - event viewer: convert computername/username to friendly?
+
+1.6.20
+- optimized memory consumption on event log
+  note: i thought linq was causing lots of memory consumption, but that was not the case
+        simply running a GC.Collect() after fully read event log into memory did wonders
+		GC.Collect() needs to be called several times several times in order to make a difference
+		results: basically memory goes to half of what it used to be
+
 
 1.6.19c
 - search -> ctrl-c - if text selected, use that

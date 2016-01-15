@@ -79,6 +79,8 @@ namespace lw_common {
         // events received through "last_events" ; if < 0, not known yet
         private int old_event_count_ = -1;
 
+        private bool has_done_gc_collect_ = false;
+
         private int event_count_so_far_ = 0;
 
         public event_log_reader(log_settings_string sett) : base(sett) {
@@ -183,6 +185,7 @@ namespace lw_common {
                 foreach (var log in event_logs_)
                     log.disposed_ = true;
                 event_logs_.Clear();
+                has_done_gc_collect_ = false;
             }
 
             lock(this)
@@ -198,6 +201,80 @@ namespace lw_common {
                 }
         }
 
+        private List<Tuple<EventRecord, string>> read_next_lines_single_log() {
+            var next = (event_logs_[0].last_events_.Count > 0 ? event_logs_[0].last_events_ : event_logs_[0].new_events_)
+                .Select(x => new Tuple<EventRecord,string>(x, event_logs_[0].log_type)).ToList() ;
+            event_logs_[0].last_events_.Clear();
+            event_logs_[0].new_events_.Clear();
+            return next;
+        }
+
+        private List<Tuple<EventRecord, string>> read_next_lines_new_events_on_all_threads() {
+            if (old_event_count_ < 0) 
+                old_event_count_ = event_count_so_far_;
+                        
+            var all = new List<Tuple<EventRecord,string>>();
+            var now = DateTime.Now;
+            foreach (var log in event_logs_)
+                // we're waiting a bit before returning new events - just in case different threads might come up with earlier entries 
+                // (because we can't really count on any speed at all)
+                all.AddRange(log.new_events_
+                                    .Where(x => x.TimeCreated.Value.AddMilliseconds(MAX_DIFF_NEW_EVENT_MS) <= now)
+                                    .Select(x => new Tuple<EventRecord, string>(x, log.log_type)) );
+            all = all.OrderBy(x => x.Item1.TimeCreated).ToList();
+            foreach (var log in event_logs_)
+                foreach (var entry in all)
+                    log.new_events_.Remove(entry.Item1);
+            return  all;
+        }
+
+        private List<Tuple<EventRecord, string>> read_next_lines_existing_events() {
+            bool needs_more_processing = true;
+            // ... the last bool -> if true, the item can be added right now ; if false, we can't add this item now
+            List < Tuple<EventRecord,string,int, bool> > last = new List<Tuple<EventRecord,string, int, bool>>();
+            List< Tuple<EventRecord,string>>  next = new List<Tuple<EventRecord, string>>();
+            while (needs_more_processing) {
+                // 1.6.10+ at this point, we know AT LEAST one thread still has old events
+
+                // If there is one or more threads that doesn't have at least one element, return an empty list
+                int listen_for_last_events_and_have_no_events = event_logs_.Count(x => !x.listening_for_new_events_ && x.last_events_.Count == 0);
+                if (listen_for_last_events_and_have_no_events > 0)
+                    // at least one thread listening for old events and got nothing
+                    break;
+
+                // 1.6.10+ if I have new events, I will NOT return any, until all old events have been processed
+                //         this is so that we correctly handle wether we're reversed or not
+                last.Clear();
+                for (int log_idx = 0; log_idx < event_logs_.Count; log_idx++) {
+                    var log = event_logs_[log_idx];
+                    if ( log.last_events_.Count > 0)
+                        last.Add(new Tuple<EventRecord, string,int, bool>( log.last_events_[0], log.log_type, log_idx, log.last_events_.Count > 1 || log.listening_for_new_events_));
+                    else 
+                        Debug.Assert(event_logs_[log_idx].listening_for_new_events_);
+                }
+                if (last.Count < 1)
+                    break;
+                var min = are_elements_in_reverse_order ? last.Max(x => x.Item1.TimeCreated) :  last.Min(x => x.Item1.TimeCreated);
+                var item = last.Find(x => x.Item1.TimeCreated == min);
+                if (!item.Item4)
+                    break;
+
+                event_logs_[item.Item3].last_events_.RemoveAt(0);
+#if old_code
+                foreach (var log in event_logs_)
+                    if (log.last_events_.Count > 0)
+                        log.last_events_.Remove(item.Item1);
+                    else
+                        log.new_events_.Remove(item.Item1);
+#endif
+                next.Add( new Tuple<EventRecord, string>(item.Item1, item.Item2) );
+                if (next.Count >= MAX_ITEMS_PER_BLOCK)
+                    needs_more_processing = false;
+            }
+            last.TrimExcess();
+            return next;
+        }
+
         protected override List<log_entry_line> read_next_lines() {
             create_logs();
 
@@ -205,15 +282,13 @@ namespace lw_common {
                 fully_read_once_ = event_logs_.Count(x => x.listening_for_new_events_ && x.last_events_.Count == 0) == event_logs_.Count;
 
             // http://www.codeproject.com/Messages/5162204/sorting-information-from-several-threads-is-my-alg.aspx
-            List< Tuple<EventRecord,string>>  next = new List<Tuple<EventRecord, string>>();
+            List< Tuple<EventRecord,string>>  next = null;
             bool needs_more_processing = true;
+            bool needs_gc_collect = false;
             lock (this) {
                 // special case - a single log
                 if (event_logs_.Count == 1) {
-                    next = (event_logs_[0].last_events_.Count > 0 ? event_logs_[0].last_events_ : event_logs_[0].new_events_)
-                        .Select(x => new Tuple<EventRecord,string>(x, event_logs_[0].log_type)).ToList() ;
-                    event_logs_[0].last_events_.Clear();
-                    event_logs_[0].new_events_.Clear();
+                    next = read_next_lines_single_log();
                     needs_more_processing = false;
                 }
 
@@ -221,67 +296,25 @@ namespace lw_common {
                     int listen_for_new_events = event_logs_.Count(x => x.listening_for_new_events_);
                     // note: if we're listing for new events, first process all the last ones
                     if (listen_for_new_events == event_logs_.Count && event_logs_.Count(x => x.last_events_.Count == 0) == event_logs_.Count) {
-                        // we're listening for NEW EVENTS on all threads
-                        if (old_event_count_ < 0) 
-                            old_event_count_ = event_count_so_far_;
-                        
-                        List< Tuple<EventRecord,string> > all = new List<Tuple<EventRecord,string>>();
-                        var now = DateTime.Now;
-                        foreach (var log in event_logs_)
-                            // we're waiting a bit before returning new events - just in case different threads might come up with earlier entries 
-                            // (because we can't really count on any speed at all)
-                            all.AddRange(log.new_events_.Where(x => x.TimeCreated.Value.AddMilliseconds(MAX_DIFF_NEW_EVENT_MS) <= now).Select(x => new Tuple<EventRecord, string>(x,log.log_type)) );
-                        all = all.OrderBy(x => x.Item1.TimeCreated).ToList();
-                        foreach (var log in event_logs_)
-                            foreach (var entry in all)
-                                log.new_events_.Remove(entry.Item1);
-                        next = all;
+                        next = read_next_lines_new_events_on_all_threads();
                         needs_more_processing = false;
+                        if (!has_done_gc_collect_) 
+                            needs_gc_collect = has_done_gc_collect_ = true;
                     }
                 }
 
-                while (needs_more_processing) {
-                    // 1.6.10+ at this point, we know AT LEAST one thread still has old events
-
-                    // If there is one or more threads that doesn't have at least one element, return an empty list
-                    int listen_for_last_events_and_have_no_events = event_logs_.Count(x => !x.listening_for_new_events_ && x.last_events_.Count == 0);
-                    if (listen_for_last_events_and_have_no_events > 0)
-                        // at least one thread listening for old events and got nothing
-                        break;
-
-                    // 1.6.10+ if I have new events, I will NOT return any, until all old events have been processed
-                    //         this is so that we correctly handle wether we're reversed or not
-
-                    // ... the last bool -> if true, the item can be added right now ; if false, we can't add this item now
-                    List < Tuple<EventRecord,string,int, bool> > last = new List<Tuple<EventRecord,string, int, bool>>();
-                    for (int log_idx = 0; log_idx < event_logs_.Count; log_idx++) {
-                        var log = event_logs_[log_idx];
-                        if ( log.last_events_.Count > 0)
-                            last.Add(new Tuple<EventRecord, string,int, bool>( log.last_events_[0], log.log_type, log_idx, log.last_events_.Count > 1 || log.listening_for_new_events_));
-                        else 
-                            Debug.Assert(event_logs_[log_idx].listening_for_new_events_);
-                    }
-                    if (last.Count < 1)
-                        break;
-                    var min = are_elements_in_reverse_order ? last.Max(x => x.Item1.TimeCreated) :  last.Min(x => x.Item1.TimeCreated);
-                    var item = last.Find(x => x.Item1.TimeCreated == min);
-                    if (!item.Item4)
-                        break;
-
-                    foreach (var log in event_logs_)
-                        if (log.last_events_.Count > 0)
-                            log.last_events_.Remove(item.Item1);
-                        else
-                            log.new_events_.Remove(item.Item1);
-                    next.Add( new Tuple<EventRecord, string>(item.Item1, item.Item2) );
-                    if (next.Count >= MAX_ITEMS_PER_BLOCK)
-                        needs_more_processing = false;
-                }
-            }
+                if (needs_more_processing)
+                    next = read_next_lines_existing_events();
+            } // lock
 
             // 1.5.6t - to_log_entry can throw a lot of errors, we don't want that while being lock()ed
             var next_lines = next.Select( (x) => to_log_entry(x.Item1, x.Item2) ).ToList();
-            event_count_so_far_ += next_lines.Count;
+            event_count_so_far_ += next.Count;
+
+            if (needs_gc_collect) 
+                // 1.6.20+ we've created lots of objects (especially EventLogRecord) - lets dispose of them
+                util.start_gc_collect( "event log");
+
             return next_lines;
         }
 
@@ -321,13 +354,13 @@ namespace lw_common {
                 if ( session != null)
                     query.Session = session;
 
-                EventLogReader reader = new EventLogReader(query);
                 int read_idx = 0;
-                for (EventRecord rec = reader.ReadEvent(); rec != null && !log.disposed_ && read_idx++ < max_event_count ; rec = reader.ReadEvent())
-                    lock (this) {
-                        log.last_events_.Add(rec);
-                        ++log.cur_log_count_;
-                    }
+                using (EventLogReader reader = new EventLogReader(query)) 
+                    for (EventRecord rec = reader.ReadEvent(); rec != null && !log.disposed_ && read_idx++ < max_event_count; rec = reader.ReadEvent())
+                        lock (this) {
+                            log.last_events_.Add(rec);
+                            ++log.cur_log_count_;
+                        }                
 
                 lock (this)
                     log.listening_for_new_events_ = true;
@@ -337,18 +370,18 @@ namespace lw_common {
                     // if reverse, I need to create another query, or it won't allow watching
                     query = new EventLogQuery(log.log_type, PathType.LogName, query_string);                
                     if ( session != null)
-                        query.Session = session;                    
+                        query.Session = session; 
                 }
-				using (var watcher = new EventLogWatcher(query))
-				{
+				using (var watcher = new EventLogWatcher(query)) {
 					watcher.EventRecordWritten += (o, e) => {
                         lock(this)
                             log.new_events_.Add(e.EventRecord);
 					};
-					watcher.Enabled = true;
 
+					watcher.Enabled = true;
                     while ( !log.disposed_)
                         Thread.Sleep(100);
+				    watcher.Enabled = false;
 				}
 
             } catch (Exception e) {
