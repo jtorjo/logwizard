@@ -59,7 +59,6 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.reversed = new System.Windows.Forms.CheckBox();
             this.label27 = new System.Windows.Forms.Label();
             this.eventLogCheckStatus = new System.Windows.Forms.Label();
             this.eventLogs = new System.Windows.Forms.CheckedListBox();
@@ -88,6 +87,7 @@
             this.label16 = new System.Windows.Forms.Label();
             this.tabPage9 = new System.Windows.Forms.TabPage();
             this.label17 = new System.Windows.Forms.Label();
+            this.reversed = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -154,7 +154,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(625, 368);
+            this.tabPage1.Size = new System.Drawing.Size(625, 374);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -216,7 +216,7 @@
             this.panel2.Controls.Add(this.fileTypeTab);
             this.panel2.Location = new System.Drawing.Point(2, 41);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(595, 276);
+            this.panel2.Size = new System.Drawing.Size(595, 273);
             this.panel2.TabIndex = 0;
             // 
             // fileTypeTab
@@ -231,7 +231,7 @@
             this.fileTypeTab.Location = new System.Drawing.Point(-5, 0);
             this.fileTypeTab.Name = "fileTypeTab";
             this.fileTypeTab.SelectedIndex = 0;
-            this.fileTypeTab.Size = new System.Drawing.Size(617, 273);
+            this.fileTypeTab.Size = new System.Drawing.Size(617, 270);
             this.fileTypeTab.TabIndex = 0;
             // 
             // tabPage3
@@ -245,7 +245,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(609, 244);
+            this.tabPage3.Size = new System.Drawing.Size(609, 241);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -322,7 +322,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(609, 250);
+            this.tabPage4.Size = new System.Drawing.Size(609, 247);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -374,7 +374,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(609, 250);
+            this.tabPage5.Size = new System.Drawing.Size(609, 247);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -435,7 +435,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(609, 250);
+            this.tabPage6.Size = new System.Drawing.Size(609, 247);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "tabPage6";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -495,26 +495,13 @@
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.selectedEventLogs);
             this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(625, 374);
+            this.tabPage2.Size = new System.Drawing.Size(625, 377);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // reversed
-            // 
-            this.reversed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.reversed.AutoSize = true;
-            this.reversed.Location = new System.Drawing.Point(7, 446);
-            this.reversed.Name = "reversed";
-            this.reversed.Size = new System.Drawing.Size(255, 21);
-            this.reversed.TabIndex = 6;
-            this.reversed.Text = "Reversed (Last Entry is shown First)";
-            this.tip.SetToolTip(this.reversed, "Shows the Log entries in Reversed order\r\n\r\nThis can be useful if retrieving the l" +
-        "ogs is time-consuming,\r\nand you\'d like to see the last entries ASAP");
-            this.reversed.UseVisualStyleBackColor = true;
             // 
             // label27
             // 
@@ -707,10 +694,10 @@
             this.tabPage7.Controls.Add(this.debugProcessName);
             this.tabPage7.Controls.Add(this.label28);
             this.tabPage7.Controls.Add(this.label15);
-            this.tabPage7.Location = new System.Drawing.Point(4, 25);
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(625, 368);
+            this.tabPage7.Size = new System.Drawing.Size(625, 377);
             this.tabPage7.TabIndex = 2;
             this.tabPage7.Text = "tabPage7";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -770,7 +757,7 @@
             this.tabPage8.Location = new System.Drawing.Point(4, 22);
             this.tabPage8.Name = "tabPage8";
             this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(625, 371);
+            this.tabPage8.Size = new System.Drawing.Size(625, 377);
             this.tabPage8.TabIndex = 3;
             this.tabPage8.Text = "tabPage8";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -790,7 +777,7 @@
             this.tabPage9.Location = new System.Drawing.Point(4, 22);
             this.tabPage9.Name = "tabPage9";
             this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage9.Size = new System.Drawing.Size(625, 371);
+            this.tabPage9.Size = new System.Drawing.Size(625, 377);
             this.tabPage9.TabIndex = 4;
             this.tabPage9.Text = "tabPage9";
             this.tabPage9.UseVisualStyleBackColor = true;
@@ -803,6 +790,19 @@
             this.label17.Size = new System.Drawing.Size(234, 17);
             this.label17.TabIndex = 1;
             this.label17.Text = "Multiple Logs (Not implemented yet)";
+            // 
+            // reversed
+            // 
+            this.reversed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.reversed.AutoSize = true;
+            this.reversed.Location = new System.Drawing.Point(7, 446);
+            this.reversed.Name = "reversed";
+            this.reversed.Size = new System.Drawing.Size(255, 21);
+            this.reversed.TabIndex = 6;
+            this.reversed.Text = "Reversed (Last Entry is shown First)";
+            this.tip.SetToolTip(this.reversed, "Shows the Log entries in Reversed order\r\n\r\nThis can be useful if retrieving the l" +
+        "ogs is time-consuming,\r\nand you\'d like to see the last entries ASAP");
+            this.reversed.UseVisualStyleBackColor = true;
             // 
             // checkBox1
             // 
@@ -947,6 +947,7 @@
             this.Controls.Add(this.type);
             this.Controls.Add(this.label2);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "edit_log_settings_form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Log Settings";

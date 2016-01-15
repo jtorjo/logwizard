@@ -1,15 +1,30 @@
 
 
+- event log : match_list.add_range -> called too many times?
+   - not sure?
+
+
+event log
+- search -> ctrl-c - if text selected, use that
+- same event added several times(when not reversed)
+  - apparently, two event log readers are created or something all adding to same log -> not sure why 
+    - maybe just on Open Log??? (not on opening existing log) -> yup, that is why
+- issue still exists at the end.
+- open log go to event log -> not reversed by default
+- search for "110652 1/14/2016 12:45:07.757 INFO Scoping successfully completed for shadowcopy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6." -> too long
+             "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6" -> still too long
 
 - post on https://www.reddit.com/r/csharp/
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
 
-- event log : match_list.add_range -> called too many times?
 
 - event viewer: convert computername/username to friendly?
 
 
+
+1.6.18
+- solved #40 -  windows have default icon
 
 
 1.6.17
