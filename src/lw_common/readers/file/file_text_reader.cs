@@ -187,7 +187,7 @@ namespace lw_common
             }
         }
 
-        public override void force_reload() {
+        public override void force_reload(string reason) {
             lock (this) 
                 if (offset_ == 0)
                     // we're already at beginning of file

@@ -1278,5 +1278,13 @@ namespace lw_common {
             }
         }
 
+        private static object lock_ = new object();
+        private static int next_id_ = 0;
+
+        public static int next_unique_id() {
+            lock (lock_)
+                return ++next_id_;
+        }
+
     }
 }

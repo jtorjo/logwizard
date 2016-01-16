@@ -68,8 +68,8 @@ namespace lw_common {
             base.on_dispose();
         }
 
-        public override void force_reload() {
-            base.force_reload();
+        public override void force_reload(string reason) {
+            base.force_reload(reason);
         }
 
         public override string read_next_text() {

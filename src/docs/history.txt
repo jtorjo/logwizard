@@ -2,14 +2,8 @@
 
 
 
-event log
-- same event added several times(when not reversed)
-  - apparently, two event log readers are created or something all adding to same log -> not sure why 
-    - maybe just on Open Log??? (not on opening existing log) -> yup, that is why
-	  seems to indeed happen only on Open Log
-	  ------ perhaps event_log_reader.create_logs is created several times???
-- issue still exists at the end. - even after 1.6.19a
-- open log go to event log -> not reversed by default
+- issue still exists at the end. (small freeze when event logs fully read) - even after 1.6.19a
+- open log: go to event log -> not reversed by default
 - search for "110652 1/14/2016 12:45:07.757 INFO Scoping successfully completed for shadowcopy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6." -> too long
              "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6" -> still too long
 
@@ -19,6 +13,24 @@ event log
 
 
 - event viewer: convert computername/username to friendly?
+
+- TOTHINK have a way to open the default log for a given position (ctrl-1, ctrl-2, etc)
+  like, event log always in ctrl-8 -> but have it so that when i press a hotkey combination it will go to the ctrl-8 position + open that
+  (perhaps if I don't have anything already open? - like, when i open LW and nothing is open in the current window - i have to think )
+  what i want: for instance, i don't want the event viewer to always open when i open LW, but i do want a very fast way to get to it,
+  while leaving me to focus on my important logs
+
+
+1.6.21
+event log
+- same event added several times(when not reversed)
+  - apparently, two event log readers are created or something all adding to same log -> not sure why 
+    - maybe just on Open Log??? (not on opening existing log) -> yup, that is why
+	  seems to indeed happen only on Open Log
+	  ------ perhaps event_log_reader.create_logs is created several times???
+
+  I have made a workaround to the above, works ok for now. See #43 for a full fix.
+
 
 1.6.20
 - optimized memory consumption on event log

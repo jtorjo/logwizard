@@ -8,6 +8,7 @@ using lw_common.parse;
 
 namespace lw_common {
     public abstract class entry_text_reader_base : text_reader {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
         protected List<log_entry_line> lines_now_ = new List<log_entry_line>(); 
         protected abstract List<log_entry_line> read_next_lines();
@@ -31,7 +32,8 @@ namespace lw_common {
             return null;
         } 
 
-        public override void force_reload() {
+        public override void force_reload(string reason) {
+            logger.Info("entry_text forced reload " + settings.name + " : " + reason);
             lock (this) {
                 reloaded_ = true;
                 was_rewritten_ = true;

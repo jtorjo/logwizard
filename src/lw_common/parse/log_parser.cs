@@ -183,7 +183,7 @@ namespace lw_common
             forward_to_parser_.force_reload();
             // force reloading them
             forward_to_parser_.column_names = new List<string>();
-            reader_.force_reload();
+            reader_.force_reload("parser - force reload");
         }
 
         // forces readers to reload

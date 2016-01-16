@@ -65,7 +65,7 @@ namespace lw_common
             get { return ""; }
         }
 
-        public virtual void force_reload() {            
+        public virtual void force_reload(string reason) {
         }
 
         public virtual void on_dispose() {

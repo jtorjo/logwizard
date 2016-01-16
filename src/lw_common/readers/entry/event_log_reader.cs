@@ -72,6 +72,8 @@ namespace lw_common {
             public int cur_log_count_ = 0;
         }
 
+        // IMPORTANT - we never add or remove from event_logs_ - whenever something gets added/removed, we create a new list
+        //             (so that we don't have to lock() access to it
         private List<log_info> event_logs_ = new List<log_info>();
 
         private string remote_password_ = "";
@@ -150,7 +152,14 @@ namespace lw_common {
                 }
                 return;
             }
-            force_reload();
+
+            var needs_reload = new [] {
+                settings.reverse.name,
+                settings.event_log_type.name, settings.event_provider_name.name, 
+                settings.event_remote_domain.name, settings.event_remote_machine_name.name, settings.event_remote_user_name.name,            
+            };
+            if ( needs_reload.Contains(name)) 
+                force_reload("setting changed " + name);
         }
 
         public override bool are_settings_complete {
@@ -169,36 +178,49 @@ namespace lw_common {
             get { return old_event_count_; }
         }
 
-        public override void force_reload() {
-            base.force_reload();
+        public override void force_reload(string reason) {
+            foreach (var log in event_logs_)
+                log.disposed_ = true;
+            event_logs_ = new List<log_info>();
+
+            base.force_reload(reason);
             fully_read_once_ = false;
-            logs_created_ = false;
             errors_.clear();
+            logs_created_ = false;
         }
 
         private void create_logs() {
             if (logs_created_)
-                return;
-
+                return;            
             logs_created_ = true;
+            logger.Debug("event_log - recreating logs ");
+
+            foreach (var log in event_logs_)
+                log.disposed_ = true;
+            event_logs_ = new List<log_info>();
             lock (this) {
-                foreach (var log in event_logs_)
-                    log.disposed_ = true;
-                event_logs_.Clear();
                 has_done_gc_collect_ = false;
+
+                if (lines_now_.Count > 0) {
+                    logger.Warn("event log: did have elements on create_logs " + lines_now_.Count);
+                    lines_now_.Clear();
+                }
             }
 
+            var new_event_logs = new List<log_info>();
             lock(this)
                 foreach (var type in log_types) {
                     try {
                         var log = new log_info { log_type = type, remote_machine_name = remote_machine_name, remote_domain = remote_domain_name, remote_user_name = remote_user_name};
-                        event_logs_.Add( log);
+                        new_event_logs.Add( log);
                         new Thread(() => read_single_log_thread(log)) {IsBackground = true }.Start();
                     } catch (Exception e) {
                         logger.Error("can't create event log " + type + "/" + remote_machine_name + " : " + e.Message);
                         errors_.add("Can't create Log " + type + " on machine " + remote_machine_name + ", Reason=" + e.Message);
                     }
                 }
+
+            event_logs_ = new_event_logs;
         }
 
         private List<Tuple<EventRecord, string>> read_next_lines_single_log() {
@@ -260,13 +282,6 @@ namespace lw_common {
                     break;
 
                 event_logs_[item.Item3].last_events_.RemoveAt(0);
-#if old_code
-                foreach (var log in event_logs_)
-                    if (log.last_events_.Count > 0)
-                        log.last_events_.Remove(item.Item1);
-                    else
-                        log.new_events_.Remove(item.Item1);
-#endif
                 next.Add( new Tuple<EventRecord, string>(item.Item1, item.Item2) );
                 if (next.Count >= MAX_ITEMS_PER_BLOCK)
                     needs_more_processing = false;
@@ -281,21 +296,22 @@ namespace lw_common {
             lock (this) 
                 fully_read_once_ = event_logs_.Count(x => x.listening_for_new_events_ && x.last_events_.Count == 0) == event_logs_.Count;
 
+            var old_logs = event_logs_;
             // http://www.codeproject.com/Messages/5162204/sorting-information-from-several-threads-is-my-alg.aspx
             List< Tuple<EventRecord,string>>  next = null;
             bool needs_more_processing = true;
             bool needs_gc_collect = false;
             lock (this) {
                 // special case - a single log
-                if (event_logs_.Count == 1) {
+                if (old_logs.Count == 1) {
                     next = read_next_lines_single_log();
                     needs_more_processing = false;
                 }
 
                 if (needs_more_processing) {
-                    int listen_for_new_events = event_logs_.Count(x => x.listening_for_new_events_);
+                    int listen_for_new_events = old_logs.Count(x => x.listening_for_new_events_);
                     // note: if we're listing for new events, first process all the last ones
-                    if (listen_for_new_events == event_logs_.Count && event_logs_.Count(x => x.last_events_.Count == 0) == event_logs_.Count) {
+                    if (listen_for_new_events == old_logs.Count && old_logs.Count(x => x.last_events_.Count == 0) == old_logs.Count) {
                         next = read_next_lines_new_events_on_all_threads();
                         needs_more_processing = false;
                         if (!has_done_gc_collect_) 
@@ -315,6 +331,11 @@ namespace lw_common {
                 // 1.6.20+ we've created lots of objects (especially EventLogRecord) - lets dispose of them
                 util.start_gc_collect( "event log");
 
+            if (old_logs != event_logs_) {
+                // 1.6.21+ in this case, we did a refresh of the event log while we were converting event log entries to our internal structure
+                logger.Debug("event_log - ignoring " + next_lines.Count + " entries, because some event logs got disposed" );
+                next_lines.Clear();
+            }
             return next_lines;
         }
 
@@ -322,6 +343,8 @@ namespace lw_common {
             string query_string = "*";
             if (provider_name != "")
                 query_string = "*[System/Provider/@Name=\"" + provider_name + "\"]";
+
+            logger.Info("event_log new thread - reading from " + log.log_type );
 
             int max_event_count = int.MaxValue;
             // debugging - load much less, faster testing
@@ -360,7 +383,9 @@ namespace lw_common {
                         lock (this) {
                             log.last_events_.Add(rec);
                             ++log.cur_log_count_;
-                        }                
+                        }
+
+                logger.Info("event_log reading from " + log.log_type + " complete - read " + log.cur_log_count_ + " records");
 
                 lock (this)
                     log.listening_for_new_events_ = true;
@@ -373,6 +398,7 @@ namespace lw_common {
                         query.Session = session; 
                 }
 				using (var watcher = new EventLogWatcher(query)) {
+                    logger.Info("event_log reading from " + log.log_type + " watching for new events ");
 					watcher.EventRecordWritten += (o, e) => {
                         lock(this)
                             log.new_events_.Add(e.EventRecord);
@@ -389,6 +415,7 @@ namespace lw_common {
                 errors_.add("Can't create Log " + log.log_type + " on machine " + remote_machine_name + ", Reason=" + e.Message);
             }
             
+            logger.Info("event_log reading from " + log.log_type + " watching for new events COMPLETE");
         }
 
         private log_entry_line to_log_entry(EventRecord rec, string log_name) {

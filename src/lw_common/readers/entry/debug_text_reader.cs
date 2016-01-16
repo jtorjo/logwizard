@@ -35,7 +35,7 @@ namespace lw_common
         private int last_event_id_ = -1;
 
         public debug_text_reader(log_settings_string sett) : base(sett) {
-            settings.on_changed += (a) => force_reload();
+            settings.on_changed += (a) => force_reload("setting changed " + a );
         }
 
         // Global Win32 Messages vs Win32 Messages
@@ -57,7 +57,7 @@ namespace lw_common
         }
 
 
-        public override void force_reload() {
+        public override void force_reload(string reason) {
             lock (this) {
                 last_event_id_ = -1;
             }
