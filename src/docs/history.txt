@@ -8,7 +8,6 @@
 		  quora
 
 
-- event viewer: convert computername/username to friendly?
 
 
 
@@ -21,6 +20,28 @@
   - ctrl-1..9 -> will open a new window, and in history will show the last open log in that position as "last item"
   - ctrl-shift-1..9 -> will open that window and open the last log
   - TOTHINK about teh other feature (not to auto-open the last log by default - #33)
+
+
+1.6.24
+#32 fully solved :  retest event viewer + debugviewer 
+- event viewer: convert computername/username to friendly?
+  - note: no need to cache them, since SecurityIdentifier is quite fast
+[Caching Cells]
+event log:
+- after profiling - the bottleneck is to_log_entry. However, seems there's nothing I can do, since doing a Parallel.For did no improvements whatsoever.
+  The bottleneck is EventLog.GetFormatDescription. To make things worse, seems it has some global lock inside, and calling this from several threads still yields 
+  no performance improvements.
+
+  One other way to improve this is : 
+  - postpone reading description.
+  - have a thread that actually reads this constantly and fills it
+  - create a class line_ex : line, which will cache the description only when requested
+    this will be a pretty big change. And very likely, 
+	- i'll need another large_string that will deal with the cache as new entries are added
+	- i need to make this general, so that I can have other columns that behave the same way (that I would only cache when needed)
+	- perhaps I can also have two types of caching: 'bring on request', 'bring on request and on background' (I would have one or more threads filling the cache in the background)
+	- probably in this case -> for columns that are cached like this, identify each cell with a unique id
+	  the cell will then ask the large_string_cache class for this entry. the class knows how to retrieve the cell (if not already cached)
 
 
 1.6.23

@@ -7,8 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using log4net.Repository.Hierarchy;
 using lw_common.parse;
 using MultiLanguage;
@@ -323,6 +325,14 @@ namespace lw_common {
                     next = read_next_lines_existing_events();
             } // lock
 
+
+            /* note: this pretty much does not bring any speed improvement whatsoever
+                     I'm guessing that inside EventRecord.GetFormatDescription - there's a global lock, so that even if I'm calling this 
+                     from several threads, still no improvement happens
+            var next_lines = new List<log_entry_line>(next.Count);
+            for ( int i = 0; i < next.Count; ++i) next_lines.Add(null);
+            Parallel.For(0, next.Count, (i) => next_lines[i] = to_log_entry(next[i].Item1, next[i].Item2) );
+            */
             // 1.5.6t - to_log_entry can throw a lot of errors, we don't want that while being lock()ed
             var next_lines = next.Select( (x) => to_log_entry(x.Item1, x.Item2) ).ToList();
             event_count_so_far_ += next.Count;
@@ -436,7 +446,10 @@ namespace lw_common {
 
                 entry.add("Machine Name", rec.MachineName);
                 entry.add("Source", "" + rec.ProviderName);
-                entry.add("User Name", rec.UserId != null ? rec.UserId.Value : "");
+                string user_id = rec.UserId != null ? rec.UserId.Value : "";
+                if (user_id != "")
+                    user_id = new SecurityIdentifier(user_id).Translate(typeof(NTAccount)).ToString();;
+                entry.add("User Name", user_id);
                 /* 1.5.14+ this generates waaaay too many errors - just ignore for now
                 try {
                     var keywords = rec.KeywordsDisplayNames;
