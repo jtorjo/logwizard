@@ -2,8 +2,6 @@
 
 
 
-- issue still exists at the end. (small freeze when event logs fully read) - even after 1.6.19a
-- open log: go to event log -> not reversed by default
 - search for "110652 1/14/2016 12:45:07.757 INFO Scoping successfully completed for shadowcopy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6." -> too long
              "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6" -> still too long
 
@@ -14,11 +12,22 @@
 
 - event viewer: convert computername/username to friendly?
 
+
+
 - TOTHINK have a way to open the default log for a given position (ctrl-1, ctrl-2, etc)
   like, event log always in ctrl-8 -> but have it so that when i press a hotkey combination it will go to the ctrl-8 position + open that
   (perhaps if I don't have anything already open? - like, when i open LW and nothing is open in the current window - i have to think )
   what i want: for instance, i don't want the event viewer to always open when i open LW, but i do want a very fast way to get to it,
   while leaving me to focus on my important logs
+  HERE'S HOW
+  - ctrl-1..9 -> will open a new window, and in history will show the last open log in that position as "last item"
+  - ctrl-shift-1..9 -> will open that window and open the last log
+  - TOTHINK about teh other feature (not to auto-open the last log by default - #33)
+
+
+1.6.22
+- fixed: issue still exists at the end. (small freeze when event logs fully read) - even after 1.6.19a
+- open log: go to event log -> not reversed by default
 
 
 1.6.21
