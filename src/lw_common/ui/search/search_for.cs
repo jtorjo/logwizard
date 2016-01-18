@@ -140,7 +140,8 @@ namespace lw_common.ui {
                 // FIXME i need more testing on split class
                 //last_view_names = split.to_list( sett.get(prefix + ".last_view_names"), ",", split.type.use_any_quotes ).ToArray()
                 last_view_names = sett.get(prefix + ".last_view_names").Split('|'),
-                all_columns = sett.get(prefix + ".all_columns", "1") != "0"
+                // 1.6.23+ - by default, don't search all columns - did profiling, and can take a looot of time (example: Event Log)
+                all_columns = sett.get(prefix + ".all_columns", "0") != "0"
             };
             return cur;
         }

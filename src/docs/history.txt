@@ -2,8 +2,6 @@
 
 
 
-- search for "110652 1/14/2016 12:45:07.757 INFO Scoping successfully completed for shadowcopy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6." -> too long
-             "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6" -> still too long
 
 - post on https://www.reddit.com/r/csharp/
           https://news.ycombinator.com/news (9 jan 2016)
@@ -23,6 +21,15 @@
   - ctrl-1..9 -> will open a new window, and in history will show the last open log in that position as "last item"
   - ctrl-shift-1..9 -> will open that window and open the last log
   - TOTHINK about teh other feature (not to auto-open the last log by default - #33)
+
+
+1.6.23
+- search for "110652 1/14/2016 12:45:07.757 INFO Scoping successfully completed for shadowcopy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6." -> too long
+             "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy6" -> still too long
+  profiling: 
+  there's pretty much nothing I can do here to improve on it
+  One thing I could do is to do the search on a different thread. I don't think this is worth it at this time. May come back on this decision
+  at a later time.
 
 
 1.6.22
