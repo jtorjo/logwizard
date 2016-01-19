@@ -12,6 +12,10 @@ namespace lw_common.ui {
             "Wanna edit filters? <a https://github.com/jtorjo/logwizard/wiki/Filters>Here's a bit more info about it</a>.",
             "Want to optimize the LogWizard space? Here's how to use <a https://github.com/jtorjo/logwizard/wiki/Toggles>Toggles</a>",
             "You can resize/move the columns around to suit your needs. Just right click on any column header!",
+            "To open the Last Log, just do <b>Ctrl-H, Enter</b>",
+
+            "Do you have columns that are multi-line? Just toggle the 'Details' pane on! <b>(Ctrl-D)</b>.\r\n." +
+            "You can also edit which columns you want in the 'Details' pane - just right click it.",
         };
 
         private string[] tips_beginner_ = new[] {

@@ -155,6 +155,7 @@ namespace lw_common.ui {
             showHorizontalScrollbar.Checked = app.inst.show_horizontal_scrollbar;
 
             associateExtensions.Checked = app.inst.associate_common_extensions;
+            autoOpenLast.Checked = app.inst.auto_open_last_log;
         }
 
         private void save() {
@@ -240,8 +241,9 @@ namespace lw_common.ui {
 
             bool associate_change = app.inst.associate_common_extensions != associateExtensions.Checked;
             app.inst.associate_common_extensions = associateExtensions.Checked;
-            app.inst.save();
+            app.inst.auto_open_last_log = autoOpenLast.Checked;
 
+            app.inst.save();
             if (associate_change)
                 on_associate_change();
         }

@@ -120,7 +120,7 @@ namespace lw_common
             parser_ = parser;                
         }
 
-        public string unique_id {
+        public string guid {
             get {
                 string guid = settings_.guid;
                 Debug.Assert(guid != "");

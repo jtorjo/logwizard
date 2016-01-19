@@ -54,6 +54,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.associateExtensions = new System.Windows.Forms.CheckBox();
             this.showHorizontalScrollbar = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.useFileMonitoringApi = new System.Windows.Forms.CheckBox();
@@ -125,7 +126,7 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.associateExtensions = new System.Windows.Forms.CheckBox();
+            this.autoOpenLast = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -177,7 +178,7 @@
             this.groupBox2.Controls.Add(this.bringToTopOnRestart);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.toggleTopmost);
-            this.groupBox2.Location = new System.Drawing.Point(6, 208);
+            this.groupBox2.Location = new System.Drawing.Point(6, 247);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(654, 130);
             this.groupBox2.TabIndex = 4;
@@ -464,6 +465,7 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.autoOpenLast);
             this.groupBox7.Controls.Add(this.associateExtensions);
             this.groupBox7.Controls.Add(this.showHorizontalScrollbar);
             this.groupBox7.Controls.Add(this.showTips);
@@ -477,15 +479,25 @@
             this.groupBox7.Controls.Add(this.fontLabel);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(654, 196);
+            this.groupBox7.Size = new System.Drawing.Size(654, 235);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General";
             // 
+            // associateExtensions
+            // 
+            this.associateExtensions.AutoSize = true;
+            this.associateExtensions.Location = new System.Drawing.Point(9, 182);
+            this.associateExtensions.Name = "associateExtensions";
+            this.associateExtensions.Size = new System.Drawing.Size(421, 21);
+            this.associateExtensions.TabIndex = 20;
+            this.associateExtensions.Text = "Associate LogWizard to common extensions (.txt, .log and .zip)";
+            this.associateExtensions.UseVisualStyleBackColor = true;
+            // 
             // showHorizontalScrollbar
             // 
             this.showHorizontalScrollbar.AutoSize = true;
-            this.showHorizontalScrollbar.Location = new System.Drawing.Point(9, 123);
+            this.showHorizontalScrollbar.Location = new System.Drawing.Point(9, 157);
             this.showHorizontalScrollbar.Name = "showHorizontalScrollbar";
             this.showHorizontalScrollbar.Size = new System.Drawing.Size(189, 21);
             this.showHorizontalScrollbar.TabIndex = 19;
@@ -497,7 +509,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(363, 174);
+            this.label2.Location = new System.Drawing.Point(363, 209);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(285, 13);
             this.label2.TabIndex = 15;
@@ -506,7 +518,7 @@
             // useFileMonitoringApi
             // 
             this.useFileMonitoringApi.AutoSize = true;
-            this.useFileMonitoringApi.Location = new System.Drawing.Point(9, 100);
+            this.useFileMonitoringApi.Location = new System.Drawing.Point(9, 134);
             this.useFileMonitoringApi.Name = "useFileMonitoringApi";
             this.useFileMonitoringApi.Size = new System.Drawing.Size(360, 21);
             this.useFileMonitoringApi.TabIndex = 14;
@@ -1242,15 +1254,15 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // associateExtensions
+            // autoOpenLast
             // 
-            this.associateExtensions.AutoSize = true;
-            this.associateExtensions.Location = new System.Drawing.Point(9, 148);
-            this.associateExtensions.Name = "associateExtensions";
-            this.associateExtensions.Size = new System.Drawing.Size(421, 21);
-            this.associateExtensions.TabIndex = 20;
-            this.associateExtensions.Text = "Associate LogWizard to common extensions (.txt, .log and .zip)";
-            this.associateExtensions.UseVisualStyleBackColor = true;
+            this.autoOpenLast.AutoSize = true;
+            this.autoOpenLast.Location = new System.Drawing.Point(9, 107);
+            this.autoOpenLast.Name = "autoOpenLast";
+            this.autoOpenLast.Size = new System.Drawing.Size(278, 21);
+            this.autoOpenLast.TabIndex = 21;
+            this.autoOpenLast.Text = "Automatically Open Last Log on Restart";
+            this.autoOpenLast.UseVisualStyleBackColor = true;
             // 
             // settings_form
             // 
@@ -1406,6 +1418,7 @@
         private System.Windows.Forms.RadioButton editSearchCurColumnOnly;
         private System.Windows.Forms.CheckBox editSearchBelow;
         private System.Windows.Forms.CheckBox associateExtensions;
+        private System.Windows.Forms.CheckBox autoOpenLast;
 
     }
 }

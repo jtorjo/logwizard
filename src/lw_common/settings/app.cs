@@ -198,6 +198,9 @@ namespace lw_common {
         // 1.6.17+ - if true, we associate common extensions to LogWizard (.log, .txt and .zip - for now)
         public bool associate_common_extensions = false;
 
+        // 1.6.25+ - if true, we auto open last log (only on the default window, not on custom1-9)
+        public bool auto_open_last_log;
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // file-by-file
         public bool bring_to_top_on_restart = false;
@@ -414,6 +417,7 @@ namespace lw_common {
             load_save(load, ref edit_click_word_selects_it, "edit_click_word_selects_it", true);
 
             load_save(load, ref associate_common_extensions, "associate_common_extensions", false);
+            load_save(load, ref auto_open_last_log, "auto_open_last_log", true);
         }
 
         private string initials(string name) {

@@ -73,7 +73,7 @@ namespace lw_common.ui {
         }
 
         public void set_prefix(string prefix) {
-            status_prefix_ = prefix;
+            status_prefix_ = prefix != "" ? prefix + " " : "";
             update_status_text(true);
         }
 

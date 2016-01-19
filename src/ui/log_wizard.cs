@@ -65,7 +65,7 @@ namespace LogWizard
             }
 
             // uniquely identifies this entry (across all history)
-            public string unique_id {
+            public string guid {
                 get {
                     string guid = settings.guid;
                     Debug.Assert(guid != "");
@@ -238,13 +238,16 @@ namespace LogWizard
             if ( is_first_form)
                 util.postpone(() => {
                     bool open_cmd_line_file = forms_.Count == 1 && Program.open_file_name != null;
-                    if (history_.Count > 0 && !open_cmd_line_file)
+                    if (history_.Count > 0 && !open_cmd_line_file && app.inst.auto_open_last_log)
                         logHistory.SelectedIndex = history_.Count - 1;
-                    if (open_cmd_line_file)
+                    else if (open_cmd_line_file)
                         on_file_drop(Program.open_file_name);
+                    else 
+                        set_status("Alternatively, you can <i>Actions >> Open Log</i>, or re-open an older log (<i>Actions >> Show History</i>)\r\n" +
+                                   "To open the Last Log, just do <i>Ctrl-H, Enter</i>");
                 }, 10);
             else 
-                set_status("Alternatively, you can <i>Actions >> Open Log</i>, or re-open an older log (<i>Actions >> Show History</i>)");
+                set_status("To open the Last Log, just do <i>Ctrl-H, Enter</i>");
 
             util.postpone(animate_whatsup, util.is_debug ? 2500 : 10000);
         }
@@ -1318,8 +1321,8 @@ namespace LogWizard
 
             util.postpone(() => show_row_based_on_global_ui(), 100);
 
-            if (global_ui.selected_row_idx > 0)
-                if (selected_file_name() == global_ui.log_name)
+            if (global_ui.selected_row_idx > 0 && logHistory.SelectedIndex >= 0)
+                if (history_[logHistory.SelectedIndex].guid == global_ui.last_log_guid)
                     util.postpone(() => try_to_go_to_selected_line(global_ui.selected_row_idx), 250);
             util.postpone(() => show_tabs(global_ui.show_tabs), 100);
 
@@ -1621,7 +1624,7 @@ namespace LogWizard
 
             global_ui.selected_row_idx = global_ui.selected_row_idx = sel.sel_row_idx;
             if (logHistory.SelectedIndex >= 0)
-                global_ui.log_name = global_ui.log_name = history_[logHistory.SelectedIndex].name;
+                global_ui.last_log_guid = history_[logHistory.SelectedIndex].guid;
         }
 
         private void update_notes_current_line() {
@@ -1972,7 +1975,7 @@ namespace LogWizard
 
             bool found = false;
             for (int i = 0; i < history_.Count && !found; ++i)
-                if (history_[i].unique_id == unique_id) {
+                if (history_[i].guid == unique_id) {
                     found = true;
                     // 1.6.4+ we renamed the logwizard setup sample
                     bool is_sample = settings.name.get().ToLower().EndsWith("logwizardsetup.sample.log") || settings.name.get().ToLower().EndsWith("logwizardsetupsample.log");
@@ -1997,7 +2000,7 @@ namespace LogWizard
                 history new_ = new history();
                 new_.from_settings(settings);
                 history_.Add(new_);
-                logHistory.Items.Add(history_.Last().ui_friendly_name);
+                logHistory.Items.Add(new_.ui_friendly_name);
                 logHistory.SelectedIndex = logHistory.Items.Count - 1;
             }
             --ignore_change_;
@@ -2023,7 +2026,7 @@ namespace LogWizard
         }
 
         private void add_reader_to_history() {
-            int history_idx = history_.FindIndex(x => x.settings.guid == text_.unique_id);
+            int history_idx = history_.FindIndex(x => x.settings.guid == text_.guid);
 
             ++ignore_change_;
             if (history_idx < 0) {
@@ -2092,6 +2095,9 @@ namespace LogWizard
         }
 
         private void on_log_listory_changed() {
+            if (logHistory.SelectedIndex < 0)
+                return;
+            global_ui.last_log_guid = history_[logHistory.SelectedIndex].guid;
             create_text_reader( history_[logHistory.SelectedIndex].write_settings );
         }
 
@@ -3778,7 +3784,7 @@ namespace LogWizard
 
                 history_.Add(new_);
                 ++ignore_change_;
-                logHistory.Items.Add(history_.Last().ui_friendly_name);
+                logHistory.Items.Add(new_.ui_friendly_name);
                 logHistory.SelectedIndex = logHistory.Items.Count - 1;
                 --ignore_change_;
 

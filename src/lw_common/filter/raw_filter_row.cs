@@ -108,7 +108,7 @@ namespace lw_common {
 
         // returns a string that **** uniqueyly identifies **** the UNIQUE data of the filter
         //
-        // in other words, if two filters' unique_id are equal, they are the ***same*** filter (except for enabled, dimmed, font information)
+        // in other words, if two filters' guid are equal, they are the ***same*** filter (except for enabled, dimmed, font information)
         public string unique_id {
             get {
                 return unique_id_;

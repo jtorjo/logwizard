@@ -84,7 +84,8 @@ namespace lw_common {
         public bool show_details = false;
 
         public string selected_view = "";
-        public string log_name = ""; // the name of the log 
+        // the name of the last opened log
+        public string last_log_guid = ""; 
         public int selected_row_idx = -1;
         public int full_log_splitter_pos = -1;
         public int left_pane_pos = -1;
@@ -155,7 +156,7 @@ namespace lw_common {
             topmost = other.topmost;
             show_details = other.show_details;
             show_status = other.show_status;
-            log_name = other.log_name;
+            last_log_guid = other.last_log_guid;
 
             selected_view = other.selected_view;
             selected_row_idx = other.selected_row_idx;
@@ -213,7 +214,7 @@ namespace lw_common {
             app.load_save(load, ref topmost, prefix + ".topmost", false);
 
             app.load_save(load, ref selected_view, prefix + ".selected_view", selected_view);
-            app.load_save(load, ref log_name, prefix + ".log_name");
+            app.load_save(load, ref last_log_guid, prefix + ".last_log_guid");
             app.load_save(load, ref selected_row_idx, prefix + ".selected_row_idx", -1);
             app.load_save(load, ref full_log_splitter_pos, prefix + ".full_log_splitter_pos", -1);
             app.load_save(load, ref left_pane_pos, prefix + ".left_pane_pos", -1);
