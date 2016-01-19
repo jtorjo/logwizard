@@ -4,12 +4,16 @@
 
 
 
------- retest on empty settings file
+
 
 - post on https://www.reddit.com/r/csharp/
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
 
+
+1.6.25c
+- retested on empty settings file - works
+- event log: sometimes FormatDescription returns null, so we get the description from the .Properties
 
 
 1.6.25b

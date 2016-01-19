@@ -462,6 +462,8 @@ namespace lw_common {
                 // note: this throws a lot of exceptions; however, we don't have much of a choice here - just showing the raw properties is rather useless
                 try {
                     var desc = rec.FormatDescription();
+                    if ( desc == null)
+                        desc = util.concatenate( rec.Properties.Select(x => x.Value.ToString()), "\r\n");
                     entry.add("msg", desc ?? "");
                 } catch {
                     try {
