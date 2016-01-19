@@ -48,7 +48,7 @@ namespace lw_common.ui {
         Rectangle client_rect_no_filter { get; }
 
         // read-only
-        ui_info current_ui { get; }
+        ui_info global_ui_copy { get; }
 
         // returns the log that contains all lines
         log_view full_log { get; }

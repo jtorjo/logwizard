@@ -141,6 +141,7 @@
     <Compile Include="ui\Dummy.Designer.cs">
       <DependentUpon>Dummy.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\history_list.cs" />
     <Compile Include="ui\log_wizard.cs">
       <SubType>Form</SubType>
     </Compile>

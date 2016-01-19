@@ -85,7 +85,7 @@ namespace lw_common.ui {
             actions.Add(new action { category = "Filter/" + prefix, name = "Color the Full Line", on_click = () => color() });
             actions.Add(new action { category = "Filter/" + prefix, name = "Match Color (color only what matches)", on_click = () => match_color() });
 
-            if (!parent_.lv_parent.current_ui.show_filter) {
+            if (!parent_.lv_parent.global_ui_copy.show_filter) {
                 if ( no_color != null)
                     actions.Add(new action {category = "Filter/" + prefix, name = "Default Color + Take Me to Edit", on_click = () => { 
                         // note: the user can cancel on the color dialog
@@ -277,7 +277,7 @@ namespace lw_common.ui {
 
         private void append_notes_actions(List<action> actions) {
             actions.Add(new action { category = "Note", name = "Create Note On This Line", simple = simple_action.note_create_note });
-            if ( !parent_.lv_parent.current_ui.show_notes)
+            if ( !parent_.lv_parent.global_ui_copy.show_notes)
                 actions.Add(new action { category = "Note", name = "Show notes", simple = simple_action.note_show_notes});
         }
 
@@ -322,14 +322,14 @@ namespace lw_common.ui {
         private void append_button_actions(List<action> actions) {
             actions.Add(new action { category = "", name = "Edit Toggles", simple = simple_action.button_toggles });
 
-            if (!parent_.lv_parent.current_ui.show_title) {
+            if (!parent_.lv_parent.global_ui_copy.show_title) {
                 actions.Add(new action { category = "", name = "Refresh...", simple = simple_action.button_refresh });
                 actions.Add(new action { category = "", name = "Preferences...", simple = simple_action.button_preferences });                
             }
         }
 
         private void append_export_actions(List<action> actions) {
-            if (!parent_.lv_parent.current_ui.show_title) {
+            if (!parent_.lv_parent.global_ui_copy.show_title) {
                 actions.Add(new action {category = "Export", name = "Log + Notes (to .LogWizard file)", simple = simple_action.export_log_and_notes});
                 actions.Add(new action {category = "Export", name = "Current View (to .txt and .html files)", simple = simple_action.export_view});
                 actions.Add(new action {category = "Export", name = "Notes (to .txt and .html files)", simple = simple_action.export_notes });

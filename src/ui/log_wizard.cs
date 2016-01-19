@@ -50,75 +50,12 @@ namespace LogWizard
 
         private static List<log_wizard> forms_ = new List<log_wizard>();
 
-        private class history {
-
-            private log_settings_string settings_ = new log_settings_string("");
-
-            public log_type type {
-                get {
-                    return settings_.type;
-                }
-            }
-
-            public string name {
-                get { return settings.name; }
-            }
-
-            // uniquely identifies this entry (across all history)
-            public string guid {
-                get {
-                    string guid = settings.guid;
-                    Debug.Assert(guid != "");
-                    return guid;
-                }
-            }
-
-            public string friendly_name {
-                get { return settings.friendly_name; }
-            }
-
-            public string ui_friendly_name {
-                get {
-                    if (friendly_name != "")
-                        return friendly_name;
-
-                    switch ( type) {
-                        case log_type.file: 
-                            var fi = new FileInfo(name);
-                            string ui = fi.Name + " - " + util.friendly_size(fi.Length) + " (" + fi.DirectoryName + ")";
-                            return ui;
-
-                        //case log_type.shmem: return "Shared Memory: " + name;
-
-                        case log_type.event_log: return name;
-                        case log_type.debug_print: return "Debug: " + name;
-                        default: Debug.Assert(false); break;
-                    }
-
-                    return name;
-                }
-            }
-
-            public log_settings_string_readonly settings {
-                get { return settings_; }
-            }
-            public log_settings_string write_settings {
-                get { return settings_; }
-            }
-
-            public void from_text_reader(text_reader reader) {
-                settings_ = reader.write_settings;
-            }
-
-            public void from_settings(log_settings_string sett) {
-                settings_ = sett;
-            }
-        }
-        
         private settings_file sett_ = app.inst.sett;
 
         private static List<ui_context> contexts_ = new List<ui_context>();
-        private static List<history> history_ = new List<history>();
+
+        // 1.6.25b+ - we keep a different history per each custom position, so that we always show what the user selected last as the last entry
+        private static readonly history_list history_list_ = new history_list();
 
         private text_reader text_ = null;
         private log_parser log_parser_ = null;
@@ -137,9 +74,8 @@ namespace LogWizard
 
         private int toggled_to_custom_ui_ = -1;
         private static ui_info default_ui_ = new ui_info();
-        private static ui_info[] custom_ui_ = new ui_info[] {
-            new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info(), 
-            new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info()
+        private static ui_info[] custom_ui_ = new ui_info[] { 
+            new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info(), new ui_info()
         };
 
         // if non-empty, we need to merge our notes with other notes
@@ -173,8 +109,8 @@ namespace LogWizard
             bool first_time = contexts_.Count == 0;
             if (first_time) {
                 load_contexts(sett_);
+                load_global_settings();
                 notes_keeper.inst.init( util.is_debug ? "notes" : util.local_dir() + "\\notes", app.inst.identify_notes_files);
-
                 new Thread(load_release_info_thread) {IsBackground = true}.Start();
             }
             notes.set_author( app.inst.notes_author_name, app.inst.notes_initials, app.inst.notes_color);
@@ -206,9 +142,7 @@ namespace LogWizard
             };
 
             recreate_contexts_combo();
-
-            foreach ( history hist in history_)
-                logHistory.Items.Add(hist.ui_friendly_name);
+            recreate_history_combo();
 
             --ignore_change_;
             load();
@@ -230,6 +164,7 @@ namespace LogWizard
 
             update_status_prefix();
             set_status_forever("");
+            Text = reader_title();
 
             // 1.0.80d+ - the reason we postpone this is so that we don't set up all UI in the constructor - the splitters would get extra SplitterMove() events,
             //            and we would end up positioning them wrong
@@ -250,6 +185,26 @@ namespace LogWizard
                 set_status("To open the Last Log, just do <i>Ctrl-H, Enter</i>");
 
             util.postpone(animate_whatsup, util.is_debug ? 2500 : 10000);
+        }
+
+        private List<history> history_ {
+            get {
+                ++ignore_change_;
+                var hist = history_list_.get_history(this, logHistory, global_ui, toggled_to_custom_ui_);
+                --ignore_change_;
+                return hist;
+            }
+        }
+
+        private history cur_history() {
+            Debug.Assert(logHistory.SelectedIndex >= 0);
+            return history_[logHistory.SelectedIndex];
+        }
+
+        private void recreate_history_combo() {
+            ++ignore_change_;
+            history_list_.recreate_combo(this, logHistory, global_ui, toggled_to_custom_ui_);
+            --ignore_change_;
         }
 
         private void animate_whatsup() {
@@ -480,58 +435,7 @@ namespace LogWizard
 
         private static void load_contexts(settings_file sett) {
             logger.Debug("loading contexts");
-
-            int history_count = int.Parse( sett.get("history_count", "0"));
-            for (int idx = 0; idx < history_count; ++idx) {
-                history hist = new history();
-                string guid = sett.get("history." + idx + ".guid");
-                if (guid != "") {
-                    // 1.5.6+ - guid points to the whole settings
-                    string settings = sett.get("guid." + guid);
-                    if (settings == "") {
-                        logger.Debug("history guid removed " + guid);
-                        continue; // entry removed
-                    }
-                    Debug.Assert(settings.Contains(guid));
-                    hist.from_settings(new log_settings_string(settings));  
-                } else {
-                    // old code (pre 1.5.6)
-                    string type_str = sett.get("history." + idx + "type", "file");
-                    if (type_str == "0")
-                        type_str = "file";
-                    string name = sett.get("history." + idx + "name");
-                    string friendly_name = sett.get("history." + idx + "friendly_name");
-
-                    var history_sett = new log_settings_string("");
-                    history_sett.type.set( (log_type) Enum.Parse(typeof (log_type), type_str));
-                    history_sett.name.set(name);
-                    history_sett.friendly_name.set(friendly_name);
-                    // create a guid now
-                    history_sett.guid.set(Guid.NewGuid().ToString());
-                    hist.from_settings(history_sett);
-                }
-
-                history_.Add( hist );
-            }
-            history_ = history_.Where(h => {
-                if (h.type == log_type.file) {
-                    // 1.5.11 - don't include this into the list next time the user opens the app
-                    //          (so that he'll see the "Drop me like it's hot" huge message)
-                    if (h.name.ToLower().EndsWith("logwizardsetup.sample.log"))
-                        return false;
-                    // old name of this sample file
-                    if (h.name.ToLower().EndsWith("logwizardsetupsample.log"))
-                        return false;
-
-                    if (File.Exists(h.name))
-                        // 1.1.5+ - compute md5s for this
-                        md5_log_keeper.inst.compute_default_md5s_for_file(h.name);
-                    else
-                        return false;
-                }
-                return true;
-            }).ToList();
-
+            history_list_.load();
 
             int count = int.Parse( sett.get("context_count", "1"));
             for ( int i = 0; i < count ; ++i) {
@@ -544,22 +448,7 @@ namespace LogWizard
         }
 
         private void save_contexts() {
-            sett_.set( "history_count", "" + history_.Count);
-            for ( int idx = 0; idx < history_.Count; ++idx) {
-                // 1.5.6+ - save settings-per-log
-                var settings = history_[idx].settings.ToString();
-                string guid = history_[idx].settings.guid;
-                Debug.Assert(guid != "");
-                var file = history_[idx].settings.type == log_type.file ? history_[idx].settings.name : "";
-
-                // note : the way I have settings point to guid is this: I may actually allow user to delete history
-                //        however, if after deleting history, user opens a file he opened before, we want those settings to still take effect.
-                sett_.set("history." + idx + ".guid", guid);
-                sett_.set("guid." + guid, settings);
-                // this way, even if we clear the history, and later on we add the same file, we have its settings
-                if ( file != "")
-                    sett_.set("file_to_guid." + file, guid);
-            }
+            history_list_.save();
 
             sett_.set("context_count", "" + contexts_.Count);
             for ( int i = 0; i < contexts_.Count; ++i) {
@@ -1050,7 +939,7 @@ namespace LogWizard
         }
 
         // returns current settings (read-only)
-        public ui_info current_ui {
+        public ui_info global_ui_copy {
             get {
                 ui_info ui = new ui_info();
                 ui.copy_from(global_ui);
@@ -1319,13 +1208,16 @@ namespace LogWizard
                 splitDescription.SplitterDistance = global_ui.description_splitter_pos;
             --ignore_change_;
 
-            util.postpone(() => show_row_based_on_global_ui(), 100);
+            util.postpone(show_row_based_on_global_ui, 100);
 
             if (global_ui.selected_row_idx > 0 && logHistory.SelectedIndex >= 0)
-                if (history_[logHistory.SelectedIndex].guid == global_ui.last_log_guid)
+                if (cur_history().guid == global_ui.last_log_guid)
                     util.postpone(() => try_to_go_to_selected_line(global_ui.selected_row_idx), 250);
             util.postpone(() => show_tabs(global_ui.show_tabs), 100);
 
+            synchronizeWithExistingLogs.Checked = app.inst.sync_all_views;
+            synchronizedWithFullLog.Checked = app.inst.sync_full_log_view;
+            update_sync_texts();
 
             /* not tested
             if (cur.topmost) {
@@ -1363,10 +1255,6 @@ namespace LogWizard
 
 
         private void load_global_settings() {
-            synchronizeWithExistingLogs.Checked = app.inst.sync_all_views;
-            synchronizedWithFullLog.Checked = app.inst.sync_full_log_view;
-            update_sync_texts();
-
             default_ui_.load("ui.default");
             for (int i = 0; i < custom_ui_.Length; ++i)
                 custom_ui_[i].load("ui.custom" + i);
@@ -1430,7 +1318,6 @@ namespace LogWizard
 
         private void load() {
             load_tabs();
-            load_global_settings();
             load_ui();
             load_filters();
             load_bookmarks();
@@ -1621,10 +1508,7 @@ namespace LogWizard
                 return;
             
             on_log_changed_line_do_sync(sel.sel_line_idx, sel);
-
-            global_ui.selected_row_idx = global_ui.selected_row_idx = sel.sel_row_idx;
-            if (logHistory.SelectedIndex >= 0)
-                global_ui.last_log_guid = history_[logHistory.SelectedIndex].guid;
+            global_ui.selected_row_idx = sel.sel_row_idx;
         }
 
         private void update_notes_current_line() {
@@ -1787,8 +1671,7 @@ namespace LogWizard
             set_status_forever("Log: " + text_.name + size);
             dropHere.Visible = false;
 
-            if (history_.Count < 1)
-                history_select(text_.write_settings);
+            add_reader_to_history();
 
             var reader_settings_copy = new log_settings_string( text_.settings.ToString() );
             var context_settings_copy = new log_settings_string( settings_to_context(reader_settings_copy).default_settings.ToString());
@@ -1841,11 +1724,10 @@ namespace LogWizard
                     show_details(global_ui.show_details = true);
                 }
 
-            add_reader_to_history();
             app.inst.set_log_file(selected_file_name());
-            Text = reader_title() + " - Log Wizard " + version();
+            Text = reader_title();
 
-            logger.Info("new reader " + history_[logHistory.SelectedIndex].name);
+            logger.Info("new reader " + cur_history().name);
 
             // at this point, some file has been dropped
             log_view_for_tab(0).Visible = true;
@@ -1927,21 +1809,25 @@ namespace LogWizard
 
 
         private string reader_title() {
-            int sel = logHistory.SelectedIndex;
-            if (sel >= 0)
-                return history_[sel].ui_friendly_name;
-
             var file = text_ as file_text_reader;
-            if (file != null)
-                return file.name;
             var sh = text_ as shared_memory_text_reader;
-            if (sh != null)
-                return "Shared " + sh.name;
             var dbg = text_ as debug_text_reader;
-            if (dbg != null)
+
+            var title = "";
+            if (logHistory.SelectedIndex >= 0)
+                title = cur_history().ui_friendly_name;
+            else if (file != null)
+                title = file.name;
+            else if (sh != null)
+                return "Shared " + sh.name;
+            else if (dbg != null)
                 return "Debug Window";
-            Debug.Assert(false);
-            return "Log";
+
+            if (title != "")
+                title += " - ";
+
+            string prefix = toggled_to_custom_ui_ >= 0 ? "[" + (toggled_to_custom_ui_+1) + "] " : "";
+            return prefix + title + "Log Wizard " + version();
         }
 
         private void on_new_log_parser() {
@@ -1967,49 +1853,6 @@ namespace LogWizard
             return false;
         }
 
-        private void history_select(log_settings_string settings) {
-            ++ignore_change_;
-            bool needs_save = false;
-            logHistory.SelectedIndex = -1;
-            string unique_id = settings.guid;
-
-            bool found = false;
-            for (int i = 0; i < history_.Count && !found; ++i)
-                if (history_[i].guid == unique_id) {
-                    found = true;
-                    // 1.6.4+ we renamed the logwizard setup sample
-                    bool is_sample = settings.name.get().ToLower().EndsWith("logwizardsetup.sample.log") || settings.name.get().ToLower().EndsWith("logwizardsetupsample.log");
-                    // if not default form - don't move the selection to the end
-                    bool is_default_form = toggled_to_custom_ui_ < 0;
-                    if (is_sample || !is_default_form)
-                        logHistory.SelectedIndex = i;
-                    else {
-                        // whatever the user selects, move it to the end
-                        history h = history_[i];
-                        history_.RemoveAt(i);
-                        history_.Add(h);
-                        logHistory.Items.RemoveAt(i);
-                        logHistory.Items.Add(h.ui_friendly_name);
-                        logHistory.SelectedIndex = logHistory.Items.Count - 1;
-                        needs_save = true;
-                    }
-                }
-
-            if (logHistory.SelectedIndex < 0) {
-                // FIXME (minor) if not on the default form -> i should not put it last (since that will be automatically loaded at restart)
-                history new_ = new history();
-                new_.from_settings(settings);
-                history_.Add(new_);
-                logHistory.Items.Add(new_.ui_friendly_name);
-                logHistory.SelectedIndex = logHistory.Items.Count - 1;
-            }
-            --ignore_change_;
-
-            if (needs_save)
-                save();
-            return;
-        }
-
 
         private void merge_notes() {
             if (post_merge_file_ != "" && File.Exists(post_merge_file_)) {
@@ -2026,35 +1869,22 @@ namespace LogWizard
         }
 
         private void add_reader_to_history() {
-            int history_idx = history_.FindIndex(x => x.settings.guid == text_.guid);
+            var existing = history_.FirstOrDefault(x => x.settings.guid == text_.guid);
 
-            ++ignore_change_;
-            if (history_idx < 0) {
+            if (existing == null) {
                 history new_ = new history();
                 new_.from_text_reader(text_);
+                history_list_.add_history(new_);
+                existing = new_;
+            } 
 
-                history_.Add(new_);
-                logHistory.Items.Add(new_.ui_friendly_name);
-            } else {
-                // move to the end
-                var existing = history_[history_idx];
-                history_.RemoveAt(history_idx);
-                logHistory.Items.RemoveAt(history_idx);
+            // move to the end
+            global_ui.last_log_guid = existing.guid;            
+            recreate_history_combo();
 
-                history_.Add(existing);
-                logHistory.Items.Add(existing.ui_friendly_name);
-            }            
-            logHistory.SelectedIndex = history_.Count - 1;
-            --ignore_change_;
-        }
-
-        private void update_history() {
-            int history_idx = logHistory.SelectedIndex;
+            // select last item
             ++ignore_change_;
-            logHistory.Items.Clear();
-            foreach (history hist in history_)
-                logHistory.Items.Add(hist.ui_friendly_name);
-            logHistory.SelectedIndex = history_idx;
+            logHistory.SelectedIndex = logHistory.Items.Count - 1;
             --ignore_change_;
         }
 
@@ -2062,6 +1892,8 @@ namespace LogWizard
             logHistory.Visible = false;
             if (logHistory.Items.Count < 1)
                 return; // nothing is in history
+            if (ignore_change_ > 0)
+                return;
 
             on_log_listory_changed();
 
@@ -2075,15 +1907,27 @@ namespace LogWizard
 
         private void close_history_dropdown() {
             ++ignore_change_;
-            if (selected_history_on_dropdown_ >= 0)
-                logHistory.SelectedIndex = selected_history_on_dropdown_;
-            --ignore_change_;
+            logHistory.SelectedIndex = selected_history_on_dropdown_;
             logHistory.DroppedDown = false;
+            if (selected_history_on_dropdown_ < 0) {
+                // if we want to go back to selecting -1 (nothing), after something was selected while the dropdown was shown,
+                // the only way to do this is to recreate the combo. otherwise, the combo won't allow it
+                //
+                // we need to clear the items, otherwise setting .SelectedIndex to -1 won't work
+                logHistory.Items.Clear();
+                recreate_history_combo();
+            }
+            --ignore_change_;
         }
 
         private void logHistory_DropDown(object sender, EventArgs e) {
             selected_history_on_dropdown_ = logHistory.SelectedIndex;
             set_status("To get back to where you were, press ESC.");
+            ++ignore_change_;
+            if (logHistory.SelectedIndex < 0)
+                // by default, select the last item (the one we last opened)
+                logHistory.SelectedIndex = logHistory.Items.Count - 1;
+            --ignore_change_;
         }
 
         private void logHistory_SelectedIndexChanged(object sender, EventArgs e) {
@@ -2097,8 +1941,8 @@ namespace LogWizard
         private void on_log_listory_changed() {
             if (logHistory.SelectedIndex < 0)
                 return;
-            global_ui.last_log_guid = history_[logHistory.SelectedIndex].guid;
-            create_text_reader( history_[logHistory.SelectedIndex].write_settings );
+            global_ui.last_log_guid = cur_history().guid;
+            create_text_reader( cur_history().write_settings );
         }
 
         private void LogWizard_FormClosing(object sender, FormClosingEventArgs e) {
@@ -2148,8 +1992,8 @@ namespace LogWizard
         }
 
         private string selected_file_name() {
-            if (logHistory.SelectedIndex >= 0 && history_[logHistory.SelectedIndex].type == log_type.file)
-                return history_[logHistory.SelectedIndex].name;
+            if (logHistory.SelectedIndex >= 0 && cur_history().type == log_type.file)
+                return cur_history().name;
             else
                 return "";
         }
@@ -2857,6 +2701,7 @@ namespace LogWizard
             toggled_to_custom_ui_ = new_ui;
             load_ui();
             update_status_prefix();
+            recreate_history_combo();
             save();
         }
 
@@ -3617,9 +3462,8 @@ namespace LogWizard
             // I want to visually show to the user that we're dealing with views
             ui_context cur = cur_context();
             string name = name = "View_" + (cur.views.Count + 1);
-            if (history_[logHistory.SelectedIndex].type == log_type.file) {
-                name = Path.GetFileNameWithoutExtension(new FileInfo(selected_file_name()).Name) + "_View" + (cur.views.Count + 1);
-            }
+            if (logHistory.SelectedIndex >= 0 && cur_history().type == log_type.file) 
+                name = Path.GetFileNameWithoutExtension(new FileInfo(selected_file_name()).Name) + "_View" + (cur.views.Count + 1);            
 
             return name;
         }
@@ -3779,16 +3623,21 @@ namespace LogWizard
                     create_text_reader(settings);
                     return;
                 }
+                
                 var new_ = new history();
                 new_.from_settings(settings);
+                history_list_.add_history(new_);
+                global_ui.last_log_guid = new_.guid;
 
-                history_.Add(new_);
+                // should not be needed
+#if old_code
+                recreate_history_combo();
                 ++ignore_change_;
-                logHistory.Items.Add(new_.ui_friendly_name);
                 logHistory.SelectedIndex = logHistory.Items.Count - 1;
                 --ignore_change_;
+#endif
 
-                Text = reader_title() + " - Log Wizard " + version();
+                Text = reader_title();
                 create_text_reader(new_.write_settings);
                 save();
             }
@@ -3798,7 +3647,7 @@ namespace LogWizard
             if (logHistory.SelectedIndex < 0)
                 return;
 
-            var cur_history = history_[logHistory.SelectedIndex];
+            var cur_history = this.cur_history();
             var old_syntax = cur_history.settings.syntax;
             var edit = new edit_log_settings_form(cur_history.settings.ToString());
             if (edit.ShowDialog(this) == DialogResult.OK) {
@@ -3807,10 +3656,10 @@ namespace LogWizard
                 text_.write_settings .merge(new log_settings_string(edit.settings));
                 cur_context().merge_settings( factory.get_context_dependent_settings(text_, text_.settings), edit.edited_syntax_now);
 
-                Text = reader_title() + " - Log Wizard " + version();
+                Text = reader_title();
 
                 if (friendly_name_changed) 
-                    update_history();
+                    recreate_history_combo();
 
                 bool will_restart = false;
                 if ( edit.needs_restart)
@@ -3842,4 +3691,5 @@ namespace LogWizard
 
 
     }
+
 }

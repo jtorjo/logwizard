@@ -61,7 +61,7 @@ namespace test_ui {
             }
         }
 
-        public ui_info current_ui {
+        public ui_info global_ui_copy {
             get {
                 return new ui_info();
             }

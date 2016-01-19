@@ -1,8 +1,10 @@
 
 
-+ when selecting something from history, mark it as "last" in the given position (default or custom1-9)
-+ when opening history, if in custom position, remember the "last" log and show it as such (depending on what customX I'm on)
 
+
+
+
+------ retest on empty settings file
 
 - post on https://www.reddit.com/r/csharp/
           https://news.ycombinator.com/news (9 jan 2016)
@@ -10,6 +12,11 @@
 
 
 
+1.6.25b
++ when selecting something from history, mark it as "last" in the given position (default or custom1-9)
++ when opening history, if in custom position, remember the "last" log and show it as such (depending on what customX I'm on)
+- every time i open a log -> that needs to go to the end of last_log_guid
+- select a different log (log history) + restart -> does not select the right log at restart
 
 
 1.6.25a
