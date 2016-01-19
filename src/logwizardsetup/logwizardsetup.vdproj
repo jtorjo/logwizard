@@ -112,7 +112,7 @@
         "Entry"
         {
         "MsmKey" = "8:_ACC42FCA563B08AB5DBE4626477480B2"
-        "OwnerKey" = "8:_900BA54346A2479085BF08862BE89061"
+        "OwnerKey" = "8:_0381E054C8674E65AFFF4042D1EADEE4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -124,7 +124,7 @@
         "Entry"
         {
         "MsmKey" = "8:_ACC42FCA563B08AB5DBE4626477480B2"
-        "OwnerKey" = "8:_0381E054C8674E65AFFF4042D1EADEE4"
+        "OwnerKey" = "8:_900BA54346A2479085BF08862BE89061"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -804,15 +804,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
-        "ProductCode" = "8:{0EFDB171-D23F-4751-9296-6391512B012C}"
-        "PackageCode" = "8:{53006104-ABE8-46FF-B2F6-7D73A6E17A1D}"
+        "ProductCode" = "8:{FA69F6B8-9091-4756-A073-AA64828789FB}"
+        "PackageCode" = "8:{B66A840D-C795-4C42-8315-DD56D7DE54A3}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.6.19"
+        "ProductVersion" = "8:1.6.26"
         "Manufacturer" = "8:John Torjo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

@@ -1,14 +1,11 @@
 
-
-
-
-
-
-
-
 - post on https://www.reddit.com/r/csharp/
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
+
+
+1.6.26
+- fixed problem in setup kit - did not upgrade everything to latest version
 
 
 1.6.25c
@@ -25,7 +22,7 @@
 
 1.6.25a
 - not to auto-open the last log by default - #33
-+ tip: Ctrl-H, Enter - select last log
+********************* + tip: Ctrl-H, Enter - select last log
   (making it easy to open different logs on different custom positions)
 
 
