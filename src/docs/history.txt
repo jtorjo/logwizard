@@ -1,7 +1,21 @@
 
+- find: don't load all 1000 rows into preview -> no point (takes too long for event log anyway)
+
+
 - post on https://www.reddit.com/r/csharp/
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
+
+- loading surrounding rows - on a different thread - so that i cna increase the number of surrounding rows
+
+- solved #51 - find: don't load all 1000 rows into preview
+
+
+1.6.27a
+- made large_string thread-safe
+- large_string : cache last lines
+- solved #46 optimize string_search when all columns = true (see line.raw_full_msg)
+- several improvements to search_form (before moving load_surrounding_rows to a different thread)
 
 
 1.6.26

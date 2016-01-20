@@ -316,8 +316,10 @@ namespace lw_common.ui
         //
         // it contains the columns that are available for showing
         internal List<info_type> available_columns {
-            get { return log_ != null ? log_.settings.available_columns.get().Split(new [] { ","}, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => (info_type) int.Parse(x)).ToList() : new List<info_type>(); }
+            get { 
+                return log_ != null ? log_.settings.available_columns.get().Split(new [] { ","}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => (info_type) int.Parse(x)).ToList() : new List<info_type>(); 
+            }
             set {
                 if ( log_ != null)
                     log_.write_settings.available_columns.set( util.concatenate(value.Select(x => (int)x), ",") );

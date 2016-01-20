@@ -33,7 +33,7 @@ namespace lw_common
 {
     // holds the lines in a huge string
     //
-    // note: at this time, we assume the enter is formed of 2 chars - either \r\n or \n\r
+    // 1.6.27 - made it thread-safe. Note: adding lines happens in a single thread usually (the one adding the entries). However, accessing the lines can happen in several threads
     public class large_string
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -45,10 +45,13 @@ namespace lw_common
         // index of each enter
         private memory_optimized_list<int> indexes_ = new memory_optimized_list<int>() { name = "large_string_indexes", min_capacity = app.inst.no_ui.min_lines_capacity };
 
-        private bool test_we_computed_lines_correctly = false; //util.is_debug;
+        // for testing
+        private bool test_we_computed_lines_correctly_ = false; //util.is_debug;
 
         private bool computed_avg_line_ = false;
         private bool expected_bytes_set_ = false;
+
+        private simple_cache_dictionary<int, string> cache_ = new simple_cache_dictionary<int, string>() ;
 
         // tests to see we've computed the lines correctly
         private void test_compute_lines() {
@@ -61,67 +64,108 @@ namespace lw_common
         }
 
         public void expect_bytes(ulong byte_count) {
-            Debug.Assert( byte_count < int.MaxValue);
-            string_.Capacity = (int)byte_count;
-            expected_bytes_set_ = true;
+            lock (this) {
+                Debug.Assert(byte_count < int.MaxValue);
+                string_.Capacity = (int) byte_count;
+                expected_bytes_set_ = true;
+            }
         }
 
         public void add_lines(string lines, ref int added_line_count, ref bool was_last_line_incomplete, ref bool is_last_line_incomplete) {
             if (lines == "")
                 return;
 
-            // 1.3.31+ - the reason i log this - is that in case there's any error parsing the log, I should be able to reproduce,
-            //           by fully rereading the original log + re-adding the exact sequences
-            logger.Debug("[line] added lines: " + string_.Length + "," + lines.Length);
+            lock (this) {
+                // 1.3.31+ - the reason i log this - is that in case there's any error parsing the log, I should be able to reproduce,
+                //           by fully rereading the original log + re-adding the exact sequences
+                logger.Debug("[line] added lines: " + string_.Length + "," + lines.Length);
 
-            was_last_line_incomplete = false;
-            if (string_.Length > 0 && lines.Length > 0) {
-                
-                bool might_be_incomplete = line_count > indexes_.Count;
-                const string LINE_SEP = "\r\n";
-                bool starts_with_enter = LINE_SEP.Contains(lines[0]);
-                was_last_line_incomplete = might_be_incomplete && !starts_with_enter;
+                was_last_line_incomplete = false;
+                if (string_.Length > 0 && lines.Length > 0) {
+
+                    bool might_be_incomplete = line_count > indexes_.Count;
+                    const string LINE_SEP = "\r\n";
+                    bool starts_with_enter = LINE_SEP.Contains(lines[0]);
+                    was_last_line_incomplete = might_be_incomplete && !starts_with_enter;
+                }
+
+                int len = string_.Length;
+                string_.Append(lines);
+                int old_line_count = line_count;
+                compute_indexes(len);
+                added_line_count = line_count - old_line_count;
+                // 1.3.31b+
+                if (ends_in_enter())
+                    ++added_line_count;
+
+                is_last_line_incomplete = line_count > indexes_.Count;
+                logger.Debug("[line] we have read " + line_count + " lines");
+                update_indexes_capacity();
             }
 
-            int len = string_.Length;
-            string_.Append(lines);
-            int old_line_count = line_count;
-            compute_indexes(len);
-            added_line_count = line_count - old_line_count;
-            // 1.3.31b+
-            if (ends_in_enter())
-                ++added_line_count;
-
-            is_last_line_incomplete = line_count > indexes_.Count;
-            logger.Debug("[line] we have read " + line_count + " lines");
-            update_indexes_capacity();
-
-            if (test_we_computed_lines_correctly)
+            if (test_we_computed_lines_correctly_)
                 test_compute_lines();
         }
 
         public void set_lines(string lines, ref int line_count) {
-            indexes_.Clear();
-            string_.Clear();
-            string_.Append(lines);
-            compute_indexes(0);
-            line_count = this.line_count;
-            update_indexes_capacity();
-
-            if (test_we_computed_lines_correctly)
+            lock (this) {
+                indexes_.Clear();
+                string_.Clear();
+                string_.Append(lines);
+                compute_indexes(0);
+                line_count = this.line_count;
+                update_indexes_capacity();
+            }
+            if (test_we_computed_lines_correctly_)
                 test_compute_lines();
         }
 
         // 1.4.8+
         public void add_preparsed_line(string line) {
-            string_.Append(line);
-            indexes_.Add( string_.Length);
-            string_.Append("\r\n");
+            lock (this) {
+                string_.Append(line);
+                indexes_.Add(string_.Length);
+                string_.Append("\r\n");
+            }
         }
 
         public void clear() {
-            indexes_.Clear();
-            string_.Clear();            
+            lock (this) {
+                indexes_.Clear();
+                string_.Clear();
+            }
+        }
+
+        public int char_count {
+            get { lock(this) return string_.Length;  }
+        }
+
+        public int line_count {
+            get {
+                lock (this) {
+                    if (string_.Length == 0)
+                        return 0;
+
+                    int count = indexes_.Count + 1;
+                    if (indexes_.Count > 0) {
+                        if (ends_in_enter())
+                            --count;
+                    }
+                    return count;
+                }
+            }
+        }
+
+        public string line_at(int idx) {
+            var from_cache = cache_.get(idx);
+            if (from_cache != null)
+                return from_cache;
+
+            string line;
+            lock (this) 
+                line = line_at_impl(idx);
+            cache_.set(idx, line);
+            return line;
         }
 
         private void update_indexes_capacity() {
@@ -138,24 +182,6 @@ namespace lw_common
         }
 
 
-        public int char_count {
-            get { return string_.Length;  }
-        }
-
-        public int line_count {
-            get {
-                if (string_.Length == 0)
-                    return 0;
-
-                int count = indexes_.Count + 1;
-                if (indexes_.Count > 0) {
-                    if (ends_in_enter())
-                        --count;
-                }
-                return count;
-            }
-        }
-
         private bool ends_in_enter() {
             if (indexes_.Count > 0) {
                 bool ends_in_enter = indexes_.Last() + 2 >= string_.Length;
@@ -164,7 +190,7 @@ namespace lw_common
                 return false;
         }
 
-        public string line_at(int idx) {
+        private string line_at_impl(int idx) {
             // note : it's possible to ask for an invalid line, while refreshing on the other thread
             //Debug.Assert(idx < line_count);
 

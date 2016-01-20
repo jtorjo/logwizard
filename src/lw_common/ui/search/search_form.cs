@@ -45,6 +45,7 @@ namespace lw_common.ui {
 
         private search_for search_ = new search_for();
 
+        private List<int> column_indexes_ = null; 
         private List< List<string>> preview_items_ = new List<List<string>>();
         // contains the rows that match
         private List<int> matches_ = new List<int>();
@@ -160,13 +161,12 @@ namespace lw_common.ui {
             allColumns.Checked = history_[0].all_columns;
             load_combo();
 
-            load_surrounding_rows(lv);
+            find_result_columns(lv);
             if (smart_edit_search_for_text != "") {
                 combo.Text = smart_edit_search_for_text;
                 radioText.Checked = true;
             }
             update_autorecognize_radio();
-
             prev_search_ = current_search();
 
             util.postpone(() => {
@@ -177,6 +177,7 @@ namespace lw_common.ui {
                 }
             },1);
 
+            load_surrounding_rows(lv);
             new Thread(do_searches_thread) {IsBackground = true }.Start();
         }
 
@@ -218,7 +219,41 @@ namespace lw_common.ui {
             update_autorecognize_radio();
         }
 
+        private void find_result_columns(log_view lv) {
+            // see which columns actually have useful data
+            List< Tuple<int,int>> columns_and_displayidx = new List<Tuple<int,int>>();
+            var available_columns = lv.available_columns; // ... getting available columns: time-consuming
+            for (int col_idx = 0; col_idx < lv.list.AllColumns.Count; ++col_idx) {
+                if ( lv.list.AllColumns[col_idx].Width > 0)
+                    if ( col_idx != lv.viewCol.fixed_index() && available_columns.Contains(log_view_cell.cell_idx_to_type(col_idx)))
+                        columns_and_displayidx.Add( new Tuple<int, int>(col_idx, lv.list.AllColumns[col_idx].DisplayIndex ));
+            }
+            column_indexes_ = columns_and_displayidx.OrderBy(x => x.Item2).Select(x => x.Item1).ToList();
+
+            searchable_columns_.Clear();
+            searchable_columns_msg_only_.Clear();
+            int preview_col_idx = 0;
+            foreach (int col_idx in column_indexes_) {
+                result.AllColumns[preview_col_idx].Width = lv.list.AllColumns[col_idx].Width;
+                result.AllColumns[preview_col_idx].Text = lv.list.AllColumns[col_idx] != lv.msgCol ? lv.list.AllColumns[col_idx].Text : "Message";
+                result.AllColumns[preview_col_idx].FillsFreeSpace = lv.list.AllColumns[col_idx].FillsFreeSpace;
+                // note: the line column never enters the search
+                bool is_searchable = info_type_io.is_searchable(log_view_cell.cell_idx_to_type(col_idx));
+                if (is_searchable)
+                    searchable_columns_.Add(preview_col_idx);
+                if ( lv.msgCol == lv.list.AllColumns[col_idx])
+                    searchable_columns_msg_only_.Add(preview_col_idx);
+
+                if (lv.lineCol != lv.list.AllColumns[col_idx])
+                    result.AllColumns[preview_col_idx].Renderer = render_;
+                ++preview_col_idx;
+            }
+            for (; preview_col_idx < result.AllColumns.Count; ++preview_col_idx)
+                result.AllColumns[preview_col_idx].IsVisible = false;
+            result.RebuildColumns();            
+        }
         private void load_surrounding_rows(log_view lv) {
+
             int sel = lv.sel_row_idx;
             if (sel < 0)
                 sel = 0;
@@ -238,45 +273,13 @@ namespace lw_common.ui {
             if (max > lv.item_count)
                 max = lv.item_count;
             // at this point, we know the start and end
-
-            // see which columns actuall have useful data
-            List< Tuple<int,int>> columns_and_displayidx = new List<Tuple<int,int>>();
-            for (int col_idx = 0; col_idx < lv.list.AllColumns.Count; ++col_idx) {
-                if ( lv.list.AllColumns[col_idx].Width > 0)
-                    if ( lv.available_columns.Contains(log_view_cell.cell_idx_to_type(col_idx)))
-                        columns_and_displayidx.Add( new Tuple<int, int>(col_idx, lv.list.AllColumns[col_idx].DisplayIndex ));
-            }
-            var columns = columns_and_displayidx.OrderBy(x => x.Item2).Select(x => x.Item1).ToList();
-
             for (int idx = min; idx < max; ++idx) {
                 var i = lv.item_at(idx);
                 List<string> row = new List<string>();
-                foreach (int col_idx in columns)
+                foreach (int col_idx in column_indexes_)
                     row.Add(log_view_cell.cell_value(i, col_idx));
                 preview_items_.Add(row);
             }
-
-            searchable_columns_.Clear();
-            searchable_columns_msg_only_.Clear();
-            int preview_col_idx = 0;
-            foreach (int col_idx in columns) {
-                result.AllColumns[preview_col_idx].Width = lv.list.AllColumns[col_idx].Width;
-                result.AllColumns[preview_col_idx].Text = lv.list.AllColumns[col_idx] != lv.msgCol ? lv.list.AllColumns[col_idx].Text : "Message";
-                result.AllColumns[preview_col_idx].FillsFreeSpace = lv.list.AllColumns[col_idx].FillsFreeSpace;
-                // note: the line column never enters the search
-                bool is_searchable = info_type_io.is_searchable(log_view_cell.cell_idx_to_type(col_idx));
-                if (is_searchable)
-                    searchable_columns_.Add(preview_col_idx);
-                if ( lv.msgCol == lv.list.AllColumns[col_idx])
-                    searchable_columns_msg_only_.Add(preview_col_idx);
-
-                if (lv.lineCol != lv.list.AllColumns[col_idx])
-                    result.AllColumns[preview_col_idx].Renderer = render_;
-                ++preview_col_idx;
-            }
-            for (; preview_col_idx < result.AllColumns.Count; ++preview_col_idx)
-                result.AllColumns[preview_col_idx].IsVisible = false;
-            result.RebuildColumns();
 
             for ( int match_idx = 0; match_idx < preview_items_.Count; ++match_idx)
                 matches_.Add(match_idx);

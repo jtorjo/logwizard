@@ -369,6 +369,12 @@ namespace lw_common {
             return sub_.msg;
         }
 
+        // for ***fast*** comparing to see if it contains some text (used in search)
+        // if the comparison returns true, you will need to query each part to see where the text was found
+        public string raw_full_msg() {
+            return sub_.msg;
+        }
+
         public string full_line {
             get {
                 string full = "";

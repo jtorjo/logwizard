@@ -359,7 +359,8 @@ namespace lw_common {
             int max_event_count = int.MaxValue;
             // debugging - load much less, faster testing
             if (util.is_debug)
-                max_event_count = 250;
+                //max_event_count = 250;
+                max_event_count = 750;
 
             try {
                 // we can read the number of entres only for local logs

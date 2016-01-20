@@ -228,6 +228,7 @@
     </Compile>
     <Compile Include="ui_helpers\log_wizard_serializable_classes.cs" />
     <Compile Include="ui_helpers\ui_info.cs" />
+    <Compile Include="util\simple_cache_dictionary.cs" />
     <Compile Include="util\clipboard_util.cs" />
     <Compile Include="util\double_dictionary.cs" />
     <Compile Include="util\easy_mutex.cs" />
