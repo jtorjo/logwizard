@@ -177,7 +177,6 @@ namespace lw_common.ui {
                 }
             },1);
 
-            load_surrounding_rows(lv);
             new Thread(do_searches_thread) {IsBackground = true }.Start();
         }
 
@@ -254,7 +253,8 @@ namespace lw_common.ui {
         }
         private void load_surrounding_rows(log_view lv) {
 
-            int sel = lv.sel_row_idx;
+            int sel = 0;
+            this.async_call_and_wait(() => sel = lv.sel_row_idx );
             if (sel < 0)
                 sel = 0;
             // get as many rows as possible, in both directions
@@ -370,6 +370,8 @@ namespace lw_common.ui {
         }
 
         private void do_searches_thread() {
+            load_surrounding_rows(lv_);
+
             try {
                 do_searches_thread_impl();
             } catch (ObjectDisposedException) {
