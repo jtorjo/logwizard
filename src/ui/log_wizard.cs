@@ -3295,7 +3295,7 @@ namespace LogWizard
             try {
                 string prefix = util.local_dir() + "exported_views";
                 util.create_dir(prefix);
-                prefix += "\\View " + util.remove_disallowed_filename_chars(lv.name) + " from " + new FileInfo(selected_file_name()).Name + " (" + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ")";
+                prefix += "\\View " + util.remove_disallowed_filename_chars(lv.name + " from " + cur_history().ui_short_friendly_name) + " (" + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ")";
 
                 var export = selected_view().export();
 
@@ -3305,6 +3305,23 @@ namespace LogWizard
                 util.open_in_explorer(prefix + ".html");
             } catch (Exception e) {
                 logger.Error("can't export notes to txt/html " + e.Message);
+            }
+        }
+
+        private void exportCurrentViewToCSVToolStripMenuItem_Click(object sender, EventArgs ea) {
+            var lv = selected_view();
+            try {
+                string prefix = util.local_dir() + "exported_views";
+                util.create_dir(prefix);
+                prefix += "\\View " + util.remove_disallowed_filename_chars(lv.name + " from " + cur_history().ui_short_friendly_name) + " (" + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ")";
+
+                var export = selected_view().export_all_columns();
+
+                File.WriteAllText(prefix + ".csv", export.to_csv());
+
+                util.open_in_explorer(prefix + ".csv");
+            } catch (Exception e) {
+                logger.Error("can't export notes to csv " + e.Message);
             }
         }
 
@@ -3688,6 +3705,7 @@ namespace LogWizard
                     restart_app();
             }
         }
+
 
 
     }

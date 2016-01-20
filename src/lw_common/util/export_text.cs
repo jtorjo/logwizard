@@ -27,6 +27,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Windows.Forms;
 
 namespace lw_common {
     // allows exporting text to different formats
@@ -99,6 +100,46 @@ namespace lw_common {
             }
             return txt.ToString();
         }
+
+        private static string to_csv_string(string str) {
+            if (str.IndexOfAny(new[] {',', '"', '\r', '\n'}) < 0)
+                return str;
+
+            StringBuilder sb = new StringBuilder(str.Length);
+            sb.Append('"');
+            foreach (char ch in str) {
+                if (ch == '"') 
+                    sb.Append("\\\"");                 
+                // apparently, that's how most programs parse csv - they can span over several lines
+#if old_code
+                else if (ch == '\n') 
+                    sb.Append("\\n");
+                else if (ch == '\r') 
+                    sb.Append("\\r");
+#endif
+                else
+                    sb.Append(ch);
+            }
+
+            sb.Append('"');
+            return sb.ToString();
+        }
+
+        public string to_csv() {
+            StringBuilder txt = new StringBuilder();
+            for (int row_idx = 0; row_idx < cells_.Count; row_idx++) {
+                var row = cells_[row_idx];
+                for (int col = 0; col < columns_; ++col) {
+                    txt.Append( to_csv_string( row[col] != null ? row[col].text : ""));
+                    if ( col < columns_ - 1)
+                    txt.Append(',');
+                }
+                if ( row_idx < cells_.Count - 1)
+                    txt.Append("\r\n");
+            }
+            return txt.ToString();
+        }
+
 
         private int html_font_size(int size) {
             if (size <= 7) return 2;

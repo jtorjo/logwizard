@@ -6,6 +6,8 @@
 		  quora
 
 
+1.6.28
+- solved #48 - export to csv - works (tested opening in openoffice + reopening in LW)
 
 
 1.6.27b

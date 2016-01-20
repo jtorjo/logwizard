@@ -58,6 +58,28 @@ namespace LogWizard {
             }
         }
 
+        public string ui_short_friendly_name {
+            get {
+                if (friendly_name != "")
+                    return friendly_name;
+
+                switch ( type) {
+                case log_type.file: 
+                    var fi = new FileInfo(name);
+                    string ui = fi.Name;
+                    return ui;
+
+                //case log_type.shmem: return "Shared Memory: " + name;
+
+                case log_type.event_log: return name;
+                case log_type.debug_print: return "Debug: " + name;
+                default: Debug.Assert(false); break;
+                }
+
+                return name;
+            }
+        }
+
         public log_settings_string_readonly settings {
             get { return settings_; }
         }

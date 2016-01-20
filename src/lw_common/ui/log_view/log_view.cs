@@ -2011,6 +2011,67 @@ namespace lw_common.ui
             return export;
         }
 
+        public enum export_type {
+            export_line_column, do_not_export_line_column, 
+            // in this case, it will export it if there's at least one gap between two rows (like, Line 325 and 328 - two lines missing)
+            export_line_column_if_needed
+        }
+
+        public export_text export_all_columns(export_type type = export_type.export_line_column_if_needed) {
+            export_text export = new export_text();
+            
+            int count = filter_.match_count;
+            if (count < 1)
+                // nothing to export
+                return export;
+
+            bool export_line = true;
+            switch (type) {
+            case export_type.export_line_column:                export_line = true; break;
+            case export_type.do_not_export_line_column:         export_line = false; break;
+            case export_type.export_line_column_if_needed:      
+                // ... note: we could have it in reverse order
+                export_line = Math.Abs( item_at(count - 1).line_idx - item_at(0).line_idx ) != count - 1; break;
+            default:                                            Debug.Assert(false); break;
+            }
+
+            int visible_idx = 0;
+            string font = list.Font.Name;
+            var export_columns = available_columns.Where(x => {
+                if (x != info_type.line && x != info_type.view)
+                    return true;
+                if (x == info_type.line)
+                    return export_line;
+                if (x == info_type.view)
+                    return is_full_log;
+                Debug.Assert(false);
+                return false;
+            }).ToList();
+
+            foreach (var col in export_columns) {
+                match_item i = item_at(0);
+                var txt = filter_.log.aliases.friendly_name(col) ;
+
+                export_text.cell c = new export_text.cell(0, visible_idx, txt) { fg = i.fg(this), bg = i.bg(this), font = font, font_size = 7 };
+                export.add_cell(c);
+                ++visible_idx;
+            }
+
+            for (int idx = 0; idx < count; ++idx) {
+                match_item i = item_at(idx);
+
+                visible_idx = 0;
+                foreach (var col in export_columns) {
+                    string txt = log_view_cell.cell_value_by_type(i, col);
+                    export_text.cell c = new export_text.cell(idx + 1, visible_idx, txt) { fg = i.fg(this), bg = i.bg(this), font = font, font_size = 7 };
+                    export.add_cell(c);
+                    ++visible_idx;
+                }
+            }
+
+            return export;
+        }
+
         public bool is_editing {
             get {
                 switch (app.inst.edit_mode) {
@@ -2150,19 +2211,16 @@ namespace lw_common.ui
                     if (is_shift_left) {
                         edit.sel_to_left();
                         return true;
-                    }
-                    else if (is_shift_right) {
+                    } else if (is_shift_right) {
                         edit.sel_to_right();
                         return true;
-                    }
-                    else if (is_ctrl_shift_left) {
+                    } else if (is_ctrl_shift_left) {
                         edit.sel_to_word_left();
                         return true;
-                    }
-                    else if (is_ctrl_shift_right) {
+                    } else if (is_ctrl_shift_right) {
                         edit.sel_to_word_right();
                         return true;
-                    }                    
+                    }
                 }
 
                 switch (keyData) {
@@ -2217,24 +2275,25 @@ namespace lw_common.ui
             for (int col_idx = 0; col_idx < list.AllColumns.Count; ++col_idx)
                 if (list.AllColumns[col_idx].IsVisible) {
                     info_type type = log_view_cell.cell_idx_to_type(col_idx);
-                    if ( !visible.Contains(type))
+                    if (!visible.Contains(type))
                         visible.Add(type);
                 }
 
             return visible;
-        } 
+        }
+
         internal List<info_type> view_visible_column_types() {
             List<info_type> visible = new List<info_type>();
 
             for (int col_idx = 0; col_idx < list.AllColumns.Count; ++col_idx)
                 if (list.AllColumns[col_idx].IsVisible) {
                     info_type type = log_view_cell.cell_idx_to_type(col_idx);
-                    if ( !visible.Contains(type))
+                    if (!visible.Contains(type))
                         visible.Add(type);
                 }
 
             return visible;
-        } 
+        }
 
         // note: searches in the current column
         private void search_ahead(string txt) {
@@ -2265,7 +2324,7 @@ namespace lw_common.ui
                 if (app.inst.edit_search_after)
                     for (int cur_row = sel_row_idx + 1; cur_row < max && found_row < 0; ++cur_row)
                         for (int col_idx = 0; col_idx < list.AllColumns.Count && found_row < 0; ++col_idx)
-                            if (col_idx != cur_col_ && all_visible_column_indexes.Contains(col_idx) )
+                            if (col_idx != cur_col_ && all_visible_column_indexes.Contains(col_idx))
                                 if (can_find_text_at_row(txt, cur_row, col_idx)) {
                                     found_row = cur_row;
                                     // note: where we find the result - might only be visible in the description pane
@@ -2294,18 +2353,15 @@ namespace lw_common.ui
                 if (search_found_col_ < 0) {
                     edit.update_ui();
                     edit.go_to_text(txt);
-                }
-                else 
-                    // the search result is visible only on the description pane
+                } else
+                // the search result is visible only on the description pane
                     edit.force_sel_text(txt);
                 lv_parent.sel_changed(log_view_sel_change_type.search);
             }
         }
 
         private bool any_moving_key_down() {
-            return  win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || 
-                    win32.IsKeyPushedDown(Keys.PageUp) || win32.IsKeyPushedDown(Keys.PageDown) || 
-                    win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
+            return win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || win32.IsKeyPushedDown(Keys.PageUp) || win32.IsKeyPushedDown(Keys.PageDown) || win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
         }
 
         private void list_Scroll(object sender, ScrollEventArgs e) {
@@ -2332,9 +2388,11 @@ namespace lw_common.ui
 
         private void list_MouseClick(object sender, MouseEventArgs e) {
         }
+
         private void list_MouseUp(object sender, MouseEventArgs e) {
             edit.on_mouse_up();
         }
+
         private void list_MouseDown(object sender, MouseEventArgs e) {
             if ((e.Button & MouseButtons.Right) == MouseButtons.Right)
                 right_click_.right_click();
@@ -2360,7 +2418,6 @@ namespace lw_common.ui
 
                 edit.on_mouse_click(list.PointToScreen(mouse));
             }
-            
         }
 
         public void do_right_click_via_key() {
@@ -2379,7 +2436,5 @@ namespace lw_common.ui
         private void log_view_LocationChanged(object sender, EventArgs e) {
             edit.update_ui();
         }
-
     }
-
 }

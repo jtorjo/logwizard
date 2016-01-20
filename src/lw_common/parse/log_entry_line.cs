@@ -66,6 +66,8 @@ namespace lw_common.parse {
 
         public void add(string name, string value) {
             Debug.Assert(value != null);
+            if (name == "Message")
+                name = "msg";
             infos_.Add(name, entry_.Length);
             names_.Add(name);
             entry_ += value;
