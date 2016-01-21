@@ -201,6 +201,9 @@ namespace lw_common {
         // 1.6.25+ - if true, we auto open last log (only on the default window, not on custom1-9)
         public bool auto_open_last_log;
 
+        // 1.7.2+ - not in UI yet - in case we're reading from C:\Windows\System32\winevt\Logs, how many logs should we return?
+        public int max_event_log_files = 50;
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // file-by-file
         public bool bring_to_top_on_restart = false;

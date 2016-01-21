@@ -1,4 +1,8 @@
 
+- regex (installation.*ready) not working if case insensitive
+- Runtime / svchost -> right click and color them (doesn't work)
+  - pictures 12 and 13
+
 
 
 - post on https://www.reddit.com/r/csharp/
@@ -7,6 +11,14 @@
 
 
 
+1.7.2a
+- fix: Microsoft-Windows-TWinUI/Operational - does not work
+- read from C:\Windows\System32\winevt\Logs (find it with Environment.Specialdir), sort by latest ones (for Local) - get the latest 100 files or so
+- checking it in the list should update the text box
+- Test button - test how many entries each log has (read everything, as long as the user wants to - each with its own thread) 
+  - should work even on remote machines if password is set
+- seeting the lv.List cursor - if over the header, don't do anything (leave as is) - also, see if another form is active -if so, don't do anything
+- regex ".*" -> autoregex
 
 
 1.7.1

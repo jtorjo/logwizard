@@ -242,7 +242,7 @@ namespace lw_common.ui {
                 }
                 else if (has_offset != '\0') {
                     long seconds = Math.Abs(time_milliseconds / 1000);
-                    hint = (has_offset == '+' ? "After" : "Before") + (seconds > 0 ? seconds + " secs" : time_milliseconds + "millis");
+                    hint = (has_offset == '+' ? "After" : "Before") + " " + (seconds > 0 ? seconds + " secs" : time_milliseconds + "millis");
                 } else
                     hint = "To Date " + normalized_time.ToString("yyyy/MM/dd HH:mm:ss.fff");
             }

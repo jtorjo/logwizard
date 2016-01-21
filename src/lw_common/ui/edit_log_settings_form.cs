@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using System.Security;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using lw_common.parse;
 using LogWizard.context;
@@ -45,6 +46,8 @@ namespace lw_common.ui {
         private bool edited_syntax_now_ = false;
 
         private bool first_select_event_log_type_ = true;
+
+        private int ignore_change_ = 0;
 
         // file name is set only if it's a file
         public edit_log_settings_form(string settings, edit_type edit = edit_type.edit) {
@@ -339,22 +342,53 @@ namespace lw_common.ui {
             remoteMachineName_TextChanged(null,null);
         }
 
-        private void load_available_event_logs() {
-            available_event_logs_.Clear();
+        private async void load_available_event_logs() {
             eventLogs.Items.Clear();
 
+            string machine_name = remoteMachineName.Text;
+            await Task.Run(() => load_available_event_logs_async(machine_name) );
+        }
+
+        private void load_available_event_logs_async(string machine_name) {
+            // name, friendly name
+            List< Tuple<string, string> > available_logs = new List<Tuple<string, string>>();
+
             try {
-                string machine_name = remoteMachineName.Text;
                 var logs = machine_name == "" ? EventLog.GetEventLogs() : EventLog.GetEventLogs(machine_name);
-                foreach (var log in logs) {
-                    available_event_logs_.Add(log.Log);
-                    bool is_checked = selectedEventLogs.Text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries).Contains(log.Log);
-                    eventLogs.Items.Add(friendly_event_log_name(log), is_checked);
+                foreach (var log in logs) 
+                    available_logs.Add( new Tuple<string, string>(log.Log, friendly_event_log_name(log)));
+
+                // if it's local logs, try to go to C:\Windows\System32\winevt\Logs as well
+                if (machine_name == "") {
+                    string dir = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\winevt\\Logs";
+                    var files = (new DirectoryInfo(dir).EnumerateFiles("*.evtx")).OrderBy(x => -x.LastWriteTime.Ticks).Select(x => {
+                        var name = x.Name.Substring(0, x.Name.Length - 5).Replace("%4", "/");
+                        string desc = "(? events, size: " + (x.Length / 1024) + " KB)";
+                        return new Tuple<string, string>(name, name + desc);
+                    }).ToList();
+                    if (files.Count > app.inst.max_event_log_files)
+                        files = files.GetRange(0, app.inst.max_event_log_files);
+                    // remove dumplicates (entries we already have
+                    files = files.Where(x => !available_logs.Any(y => y.Item1 == x.Item1) ).ToList();
+                    available_logs.AddRange( files );
                 }
 
             } catch (Exception e) {
                 logger.Error("update event log list: " + e.Message);
-            }            
+            }
+
+            available_event_logs_ = available_logs.Select(x => x.Item1).ToList();
+            
+            this.async_call(() => {
+                ++ignore_change_;
+                eventLogs.Items.Clear();
+                foreach (var log in available_logs) {
+                    bool is_checked = selectedEventLogs.Text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries).Contains(log.Item1);
+                    eventLogs.Items.Add(log.Item2, is_checked);
+                }
+                --ignore_change_;
+            });
+
         }
 
         private string friendly_event_log_name(EventLog log) {
@@ -424,6 +458,33 @@ namespace lw_common.ui {
         private void update_syntax() {            
             syntax.Text = settings_.syntax;
             syntax.ForeColor = syntax.Text == find_log_syntax.UNKNOWN_SYNTAX ? Color.Red : Color.Black;
+        }
+
+        private void eventLogs_ItemCheck(object sender, ItemCheckEventArgs e) {
+            if (ignore_change_ > 0)
+                return;
+            if (e.Index < 0)
+                return;
+
+            bool is_checked = e.NewValue == CheckState.Checked;
+            string name = eventLogs.Items[e.Index].ToString();
+            int pos = name.IndexOf("(");
+            if (pos >= 0)
+                name = name.Substring(0, pos).Trim();
+
+            if (is_checked) {
+                selectedEventLogs.Text += "\r\n" + name;
+            } else {
+                // remove it
+                var new_logs = selectedEventLogs.Text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries).Where(x => x != name);
+                selectedEventLogs.Text = util.concatenate(new_logs, "\r\n");
+            }
+        }
+
+        private void testLogSizes_Click(object sender, EventArgs e) {
+            var log_names = selectedEventLogs.Text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var test = new test_event_logs_sizes_form(log_names, remoteMachineName.Text, remoteDomain.Text, remoteUserName.Text, remotePassword.Text);
+            test.ShowDialog(this);
         }
 
     }

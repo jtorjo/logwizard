@@ -2498,6 +2498,16 @@ namespace lw_common.ui
         }
 
         private void updateCursor_Tick(object sender, EventArgs e) {
+            var focus = win32.focused_ctrl();
+            bool here = focus == list || focus == edit;
+            if (!here)
+                return;
+            // see if hovering header
+            var mouse = list.PointToClient( Cursor.Position);
+            bool hovers_header = show_header && list.HeaderControl.ClientRectangle.Contains(mouse);
+            if (hovers_header)
+                return;
+            
             bool busy = is_searching_ > 0 || model_.is_running_filter;
             list.Cursor = busy ? Cursors.WaitCursor : Cursors.IBeam;
         }

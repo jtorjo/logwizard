@@ -147,6 +147,9 @@ namespace lw_common.ui {
         }
 
         internal static bool is_auto_regex(string text) {
+            // 1.7.2+ pretty sure that's a regex :)
+            if (text.Contains(".*"))
+                return true;
             bool is_regex = text.IndexOfAny(new char[] {'[', ']', '(', ')', '\\'}) >= 0;
             return is_regex;
         }

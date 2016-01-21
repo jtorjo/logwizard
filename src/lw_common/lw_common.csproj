@@ -223,6 +223,12 @@
     <Compile Include="ui\status_ctrl.Designer.cs">
       <DependentUpon>status_ctrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\test_event_logs_sizes_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\test_event_logs_sizes_form.Designer.cs">
+      <DependentUpon>test_event_logs_sizes_form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\test_syntax_form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -309,6 +315,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ui\status_ctrl.resx">
       <DependentUpon>status_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\test_event_logs_sizes_form.resx">
+      <DependentUpon>test_event_logs_sizes_form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\test_syntax_form.resx">
       <DependentUpon>test_syntax_form.cs</DependentUpon>

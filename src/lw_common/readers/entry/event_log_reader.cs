@@ -5,6 +5,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Principal;
@@ -359,15 +360,19 @@ namespace lw_common {
             int max_event_count = int.MaxValue;
             // debugging - load much less, faster testing
             if (util.is_debug)
-                //max_event_count = 250;
-                max_event_count = 750;
+                max_event_count = 250;
 
             try {
                 // we can read the number of entres only for local logs
                 if (provider_name == "" && log.remote_machine_name == "") {
                     var dummy_log = new EventLog(log.log_type);
                     lock(this)
-                        log.full_log_count_ = dummy_log.Entries.Count;
+                        try {
+                            log.full_log_count_ = dummy_log.Entries.Count;
+                        } catch {
+                            // can't compute on this specific log
+                            log.full_log_count_ = -1;
+                        }
                     dummy_log.Dispose();
                 }
 

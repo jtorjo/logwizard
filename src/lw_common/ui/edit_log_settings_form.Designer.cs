@@ -101,6 +101,7 @@
             this.needsRestart = new System.Windows.Forms.Label();
             this.checkRequiresRestart = new System.Windows.Forms.Timer(this.components);
             this.ofd = new System.Windows.Forms.OpenFileDialog();
+            this.testLogSizes = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.typeTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -216,7 +217,7 @@
             this.panel2.Controls.Add(this.fileTypeTab);
             this.panel2.Location = new System.Drawing.Point(2, 41);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(595, 270);
+            this.panel2.Size = new System.Drawing.Size(595, 264);
             this.panel2.TabIndex = 0;
             // 
             // fileTypeTab
@@ -231,7 +232,7 @@
             this.fileTypeTab.Location = new System.Drawing.Point(-5, 0);
             this.fileTypeTab.Name = "fileTypeTab";
             this.fileTypeTab.SelectedIndex = 0;
-            this.fileTypeTab.Size = new System.Drawing.Size(617, 267);
+            this.fileTypeTab.Size = new System.Drawing.Size(617, 261);
             this.fileTypeTab.TabIndex = 0;
             // 
             // tabPage3
@@ -245,7 +246,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(609, 238);
+            this.tabPage3.Size = new System.Drawing.Size(609, 232);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -322,7 +323,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(609, 244);
+            this.tabPage4.Size = new System.Drawing.Size(609, 238);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -374,7 +375,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(609, 244);
+            this.tabPage5.Size = new System.Drawing.Size(609, 238);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -435,7 +436,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(609, 244);
+            this.tabPage6.Size = new System.Drawing.Size(609, 238);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "tabPage6";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -489,16 +490,17 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.testLogSizes);
             this.tabPage2.Controls.Add(this.label27);
             this.tabPage2.Controls.Add(this.eventLogCheckStatus);
             this.tabPage2.Controls.Add(this.eventLogs);
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.selectedEventLogs);
             this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(625, 377);
+            this.tabPage2.Size = new System.Drawing.Size(625, 374);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -508,7 +510,7 @@
             this.label27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(358, 190);
+            this.label27.Location = new System.Drawing.Point(358, 212);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(270, 156);
             this.label27.TabIndex = 5;
@@ -518,7 +520,7 @@
             // 
             this.eventLogCheckStatus.AutoSize = true;
             this.eventLogCheckStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.eventLogCheckStatus.Location = new System.Drawing.Point(123, 70);
+            this.eventLogCheckStatus.Location = new System.Drawing.Point(123, 107);
             this.eventLogCheckStatus.Name = "eventLogCheckStatus";
             this.eventLogCheckStatus.Size = new System.Drawing.Size(331, 13);
             this.eventLogCheckStatus.TabIndex = 4;
@@ -531,10 +533,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.eventLogs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.eventLogs.FormattingEnabled = true;
-            this.eventLogs.Location = new System.Drawing.Point(124, 91);
+            this.eventLogs.Location = new System.Drawing.Point(124, 124);
             this.eventLogs.Name = "eventLogs";
-            this.eventLogs.Size = new System.Drawing.Size(488, 36);
+            this.eventLogs.Size = new System.Drawing.Size(488, 68);
             this.eventLogs.TabIndex = 3;
+            this.eventLogs.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.eventLogs_ItemCheck);
             // 
             // groupBox1
             // 
@@ -551,7 +554,7 @@
             this.groupBox1.Controls.Add(this.label22);
             this.groupBox1.Controls.Add(this.remoteMachineName);
             this.groupBox1.Controls.Add(this.label21);
-            this.groupBox1.Location = new System.Drawing.Point(8, 180);
+            this.groupBox1.Location = new System.Drawing.Point(8, 212);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(346, 152);
             this.groupBox1.TabIndex = 2;
@@ -669,11 +672,12 @@
             // 
             this.selectedEventLogs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.selectedEventLogs.Location = new System.Drawing.Point(121, 14);
+            this.selectedEventLogs.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.selectedEventLogs.Location = new System.Drawing.Point(124, 6);
             this.selectedEventLogs.Multiline = true;
             this.selectedEventLogs.Name = "selectedEventLogs";
             this.selectedEventLogs.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.selectedEventLogs.Size = new System.Drawing.Size(491, 53);
+            this.selectedEventLogs.Size = new System.Drawing.Size(487, 96);
             this.selectedEventLogs.TabIndex = 1;
             this.selectedEventLogs.Enter += new System.EventHandler(this.selectedEventLogs_Enter);
             this.selectedEventLogs.Leave += new System.EventHandler(this.selectedEventLogs_Leave);
@@ -694,10 +698,10 @@
             this.tabPage7.Controls.Add(this.debugProcessName);
             this.tabPage7.Controls.Add(this.label28);
             this.tabPage7.Controls.Add(this.label15);
-            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Location = new System.Drawing.Point(4, 25);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(625, 377);
+            this.tabPage7.Size = new System.Drawing.Size(625, 374);
             this.tabPage7.TabIndex = 2;
             this.tabPage7.Text = "tabPage7";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -927,6 +931,20 @@
             // 
             this.ofd.Filter = "Text Files|*.txt|Log Files|*.log|All Files|*.*";
             // 
+            // testLogSizes
+            // 
+            this.testLogSizes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.testLogSizes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.testLogSizes.Location = new System.Drawing.Point(559, 103);
+            this.testLogSizes.Name = "testLogSizes";
+            this.testLogSizes.Size = new System.Drawing.Size(52, 20);
+            this.testLogSizes.TabIndex = 6;
+            this.testLogSizes.Text = "Test";
+            this.tip.SetToolTip(this.testLogSizes, "Tests to see if the logs you selected actually have any entries\r\n(in case you sel" +
+        "ected some logs for which we can\'t easily query that)");
+            this.testLogSizes.UseVisualStyleBackColor = true;
+            this.testLogSizes.Click += new System.EventHandler(this.testLogSizes_Click);
+            // 
             // edit_log_settings_form
             // 
             this.AcceptButton = this.ok;
@@ -1059,5 +1077,6 @@
         private System.Windows.Forms.TextBox fileName;
         private System.Windows.Forms.OpenFileDialog ofd;
         private System.Windows.Forms.CheckBox reversed;
+        private System.Windows.Forms.Button testLogSizes;
     }
 }
