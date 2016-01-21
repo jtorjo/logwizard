@@ -84,7 +84,8 @@ namespace lw_common.ui {
                     use_regex = is_auto_regex(text);
                 if ( use_regex)
                     try {
-                        regex_ = new Regex(text, RegexOptions.Singleline);
+                        // 1.7.2+ - for multi-line logs, we should not rely on single-line. Perhaps in the future, I may revisit this, 
+                        regex_ = case_sensitive ? new Regex(text) : new Regex(text, RegexOptions.IgnoreCase);
                     } catch {
                         regex_  = null;
                     }

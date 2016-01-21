@@ -256,7 +256,6 @@ namespace lw_common {
             try {
                 if (comparison == comparison_type.regex)
                     // 1.7.2+ - for multi-line logs, we should not rely on single-line. Perhaps in the future, I may revisit this, 
-                    //          but for now, don't assume it's single line
                     //regex_ = case_sensitive ? new Regex(text, RegexOptions.Singleline) : new Regex(text, RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     regex_ = case_sensitive ? new Regex(text) : new Regex(text, RegexOptions.IgnoreCase);
             } catch (Exception e) {
