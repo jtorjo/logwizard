@@ -5,6 +5,11 @@
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
 
+1.6.31b
+- solved #47 filtering / finding (next prev) - show progress 
+  - busy cursor when this happens
+  - show progress in status bar
+
 
 1.6.31a
 - find first/next/prev happen on a different thread

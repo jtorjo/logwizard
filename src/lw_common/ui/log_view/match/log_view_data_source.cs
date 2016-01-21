@@ -73,6 +73,8 @@ namespace lw_common.ui {
 
         private int item_count_ = 0;
 
+        private bool is_running_filter_ = false;
+
         public log_view_data_source(VirtualObjectListView lv, log_view parent ) : base(lv) {
             lv_ = lv;
             parent_ = parent;
@@ -244,6 +246,10 @@ namespace lw_common.ui {
             }
         }
 
+        public bool is_running_filter {
+            get { return is_running_filter_; }
+        }
+
 
         public void refresh() {
             if ( items_.count == 0)
@@ -269,10 +275,13 @@ namespace lw_common.ui {
                 }
 
                 // see what changed
-                if (filter_view) 
+                if (filter_view) {
                     // the user toggled on filtering
+                    is_running_filter_ = true;
                     run_filter(show_full_log);
-                                
+                    is_running_filter_ = false;
+                }
+
                 lock (this) {
                     filter_view_ = filter_view_now_;
                     show_full_log_ = show_full_log_now_;

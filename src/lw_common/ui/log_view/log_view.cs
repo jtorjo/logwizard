@@ -119,6 +119,8 @@ namespace lw_common.ui
         // last time we received the last scroll event
         private DateTime scrolling_time_ = DateTime.MinValue;
 
+        private int is_searching_ = 0;
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -363,6 +365,25 @@ namespace lw_common.ui
             get { return filter_; }
         }
 
+        private string last_search_status_ = "";
+        public string search_status {
+            get {
+                string status = "";
+                if (is_searching_ > 0)
+                    status = "Seaching " + cur_search.friendly_name;
+                else if (model_.is_running_filter)
+                    status = "Running Filter";
+
+                if (status != "") {
+                    string suffix = new string('.', DateTime.Now.Second % 5);
+                    status += " " + suffix;
+                }
+                bool was_seaching = last_search_status_ != "";
+                last_search_status_ = status;
+                // after search complete, return ' ', so that we clear the search status visually
+                return was_seaching && status == "" ? " " : status;
+            }
+        }
         private filter.match create_match_object(BitArray matches, font_info font, line line, int line_idx) {
             return is_full_log ? new full_log_match_item(matches, font, line, line_idx, this) : new match_item(matches, font, line, line_idx, this);
         }
@@ -1590,6 +1611,11 @@ namespace lw_common.ui
 
 
         public async void search_next() {
+            if (is_searching_ > 0) {
+                // we're already searching (asynchronously)
+                util.beep(util.beep_type.err);
+                return;
+            }
             /* 1.2.7+   implemented f3/shift-f3 on smart-edit first
                         note: this will never replace search form -> since there you can have extra settings: regexes, case-sensitivity ,full word
             */
@@ -1600,15 +1626,22 @@ namespace lw_common.ui
 
             string sel_text = edit.sel_text.ToLower();
             await Task.Run((() => {
+                ++is_searching_ ;
                 if (cur_search_ != null || sel_text != "")
                     search_for_text_next();
                 else if (cur_filter_row_idx_ >= 0)
                     search_for_next_match(cur_filter_row_idx_);
+                --is_searching_ ;
             }));
             lv_parent.sel_changed(log_view_sel_change_type.search);
         }
 
         public async void search_prev() {
+            if (is_searching_ > 0) {
+                // we're already searching (asynchronously)
+                util.beep(util.beep_type.err);
+                return;
+            }
             /* 1.2.7+   implemented f3/shift-f3 on smart-edit first
                         note: this will never replace search form -> since there you can have extra settings: regexes, case-sensitivity ,full word
             */
@@ -1619,16 +1652,24 @@ namespace lw_common.ui
 
             string sel_text = edit.sel_text.ToLower();
             await Task.Run((() => {
+                ++is_searching_;
                 if (cur_search_ != null || sel_text != "")
                     search_for_text_prev();
                 else if (cur_filter_row_idx_ >= 0)
                     search_for_prev_match(cur_filter_row_idx_);
+                --is_searching_;
             }));
             lv_parent.sel_changed(log_view_sel_change_type.search);
         }
 
         // note: starts from the next row, or, if on row zero -> starts from row zero
         public async void search_for_text_first() {
+            if (is_searching_ > 0) {
+                // we're already searching (asynchronously)
+                util.beep(util.beep_type.err);
+                return;
+            }
+
             if (item_count < 1)
                 return;
             Debug.Assert(cur_search_ != null);
@@ -1646,7 +1687,11 @@ namespace lw_common.ui
                 ensure_row_visible(0);
                 lv_parent.sel_changed(log_view_sel_change_type.search);
             } else
-                await Task.Run(() => search_for_text_next());
+                await Task.Run(() => {
+                    ++is_searching_;
+                    search_for_text_next();
+                    --is_searching_;
+                });
         }
 
         private bool row_contains_search_text(int row_idx, List<int> visible_indexes) {
@@ -2450,6 +2495,11 @@ namespace lw_common.ui
 
         private void log_view_LocationChanged(object sender, EventArgs e) {
             edit.update_ui();
+        }
+
+        private void updateCursor_Tick(object sender, EventArgs e) {
+            bool busy = is_searching_ > 0 || model_.is_running_filter;
+            list.Cursor = busy ? Cursors.WaitCursor : Cursors.IBeam;
         }
     }
 }

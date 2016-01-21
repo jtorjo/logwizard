@@ -61,6 +61,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.edit = new lw_common.ui.smart_readonly_textbox();
+            this.updateCursor = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.list)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -375,6 +376,7 @@
             // edit
             // 
             this.edit.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.edit.force_hide = false;
             this.edit.Location = new System.Drawing.Point(-200, 29);
             this.edit.Multiline = false;
             this.edit.Name = "edit";
@@ -383,6 +385,12 @@
             this.edit.Size = new System.Drawing.Size(50, 20);
             this.edit.TabIndex = 5;
             this.edit.Text = "";
+            // 
+            // updateCursor
+            // 
+            this.updateCursor.Enabled = true;
+            this.updateCursor.Interval = 200;
+            this.updateCursor.Tick += new System.EventHandler(this.updateCursor_Tick);
             // 
             // log_view
             // 
@@ -441,5 +449,6 @@
         internal BrightIdeasSoftware.OLVColumn ctx13Col;
         internal BrightIdeasSoftware.OLVColumn ctx14Col;
         internal BrightIdeasSoftware.OLVColumn ctx15Col;
+        private System.Windows.Forms.Timer updateCursor;
     }
 }

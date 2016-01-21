@@ -1349,7 +1349,12 @@ namespace LogWizard
 
             try {
                 refresh_cur_log_view();
-                show_tips_.handle_tips();
+                var sel = selected_view();
+                string search_status = sel != null ? sel.search_status : "";
+                if ( search_status != "")
+                    status.set_status(search_status);
+                else 
+                    show_tips_.handle_tips();
             } catch (Exception e) {
                 logger.Error("Refresh error" + e.Message);
             }
