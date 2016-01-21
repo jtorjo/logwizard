@@ -34,6 +34,7 @@ using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using lw_common;
@@ -417,14 +418,17 @@ namespace lw_common.ui
             }
         }
 
+        // 1.6.31+ - made thread-safe
         // 1.0.77+ - care about multiple selection - returns the first sel
         public int sel_row_idx {
             get {
-                int sel = list.SelectedIndex;
+                int sel = -1;
+                this.async_call_and_wait(() => sel = list.SelectedIndex);
                 if (sel >= 0)
                     return sel;
                 
-                var multi = list.SelectedIndices;
+                ListView.SelectedIndexCollection multi = null;
+                this.async_call_and_wait(() => multi = list.SelectedIndices);
                 if ( multi != null)
                     if (multi.Count > 0)
                         return multi[0];
@@ -1533,7 +1537,7 @@ namespace lw_common.ui
             e.Handled = true;
         }
 
-        public void search_for_text(search_for search) {
+        public void set_search_for_text(search_for search) {
             cur_search_ = search;
             // as of 1.2.6, we mark the words visually
             list.Refresh();
@@ -1585,7 +1589,7 @@ namespace lw_common.ui
         }
 
 
-        public void search_next() {
+        public async void search_next() {
             /* 1.2.7+   implemented f3/shift-f3 on smart-edit first
                         note: this will never replace search form -> since there you can have extra settings: regexes, case-sensitivity ,full word
             */
@@ -1595,14 +1599,16 @@ namespace lw_common.ui
             // otherwise, search for selected filter (if any)
 
             string sel_text = edit.sel_text.ToLower();
-            if (cur_search_ != null || sel_text != "")
-                search_for_text_next();
-            else if (cur_filter_row_idx_ >= 0)
-                search_for_next_match(cur_filter_row_idx_);
+            await Task.Run((() => {
+                if (cur_search_ != null || sel_text != "")
+                    search_for_text_next();
+                else if (cur_filter_row_idx_ >= 0)
+                    search_for_next_match(cur_filter_row_idx_);
+            }));
             lv_parent.sel_changed(log_view_sel_change_type.search);
         }
 
-        public void search_prev() {
+        public async void search_prev() {
             /* 1.2.7+   implemented f3/shift-f3 on smart-edit first
                         note: this will never replace search form -> since there you can have extra settings: regexes, case-sensitivity ,full word
             */
@@ -1612,15 +1618,17 @@ namespace lw_common.ui
             // otherwise, search for selected filter (if any)
 
             string sel_text = edit.sel_text.ToLower();
-            if (cur_search_ != null || sel_text != "")
-                search_for_text_prev();
-            else if (cur_filter_row_idx_ >= 0)
-                search_for_prev_match(cur_filter_row_idx_);
+            await Task.Run((() => {
+                if (cur_search_ != null || sel_text != "")
+                    search_for_text_prev();
+                else if (cur_filter_row_idx_ >= 0)
+                    search_for_prev_match(cur_filter_row_idx_);
+            }));
             lv_parent.sel_changed(log_view_sel_change_type.search);
         }
 
         // note: starts from the next row, or, if on row zero -> starts from row zero
-        public void search_for_text_first() {
+        public async void search_for_text_first() {
             if (item_count < 1)
                 return;
             Debug.Assert(cur_search_ != null);
@@ -1638,13 +1646,12 @@ namespace lw_common.ui
                 ensure_row_visible(0);
                 lv_parent.sel_changed(log_view_sel_change_type.search);
             } else
-                search_for_text_next();
+                await Task.Run(() => search_for_text_next());
         }
 
         private bool row_contains_search_text(int row_idx, List<int> visible_indexes) {
             string sel_text = edit.sel_text.ToLower();
             Debug.Assert(sel_text != "");
-
 
             if (app.inst.edit_search_all_columns) {
                 foreach (var col in visible_indexes)
@@ -1687,8 +1694,10 @@ namespace lw_common.ui
             }
 
             if (found >= 0) {
-                edit.clear_sel();
-                go_to_row(found, select_type.notify_parent);
+                this.async_call(() => {
+                    edit.clear_sel();
+                    go_to_row(found, select_type.notify_parent);
+                });
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1718,8 +1727,10 @@ namespace lw_common.ui
                     found = idx;
             }
             if (found >= 0) {
-                edit.clear_sel();
-                go_to_row(found, select_type.notify_parent);
+                this.async_call(() => {
+                    edit.clear_sel();
+                    go_to_row(found, select_type.notify_parent);
+                });
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1757,8 +1768,10 @@ namespace lw_common.ui
             }
 
             if (found >= 0) {
-                edit.clear_sel();
-                go_to_row(found, select_type.notify_parent);
+                this.async_call(() => {
+                    edit.clear_sel();
+                    go_to_row(found, select_type.notify_parent);
+                });
             } else
                 util.beep(util.beep_type.err);
         }
@@ -1776,8 +1789,10 @@ namespace lw_common.ui
             }
 
             if (found >= 0) {
-                edit.clear_sel();
-                go_to_row(found, select_type.notify_parent);
+                this.async_call(() => {
+                    edit.clear_sel();
+                    go_to_row(found, select_type.notify_parent);
+                });
             } else
                 util.beep(util.beep_type.err);
         }

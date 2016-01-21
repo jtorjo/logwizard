@@ -6,6 +6,9 @@
 		  quora
 
 
+1.6.31a
+- find first/next/prev happen on a different thread
+
 
 1.6.30
 - generated setup kit - works now

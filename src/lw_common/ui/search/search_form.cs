@@ -253,8 +253,7 @@ namespace lw_common.ui {
         }
         private void load_surrounding_rows(log_view lv) {
 
-            int sel = 0;
-            this.async_call_and_wait(() => sel = lv.sel_row_idx );
+            int sel = lv.sel_row_idx;
             if (sel < 0)
                 sel = 0;
             // get as many rows as possible, in both directions

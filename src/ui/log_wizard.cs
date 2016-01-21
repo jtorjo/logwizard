@@ -2403,7 +2403,7 @@ namespace LogWizard
                     // remove focus from the Filters tab, just in case (otherwise, search prev/next would end up working on that)
                     unfocus_filter_panel();
 
-                    lv.search_for_text(searcher.search);
+                    lv.set_search_for_text(searcher.search);
                     lv.search_for_text_first();
                 }
                 break;
@@ -2417,7 +2417,7 @@ namespace LogWizard
                     search.text = sel_text;
                     search.type = 1; // text 
                 }
-                lv.search_for_text(search);
+                lv.set_search_for_text(search);
                 lv.search_next();
                 break;
 
