@@ -6,6 +6,10 @@
 		  quora
 
 
+1.6.29
+- moved back to .net 4.5 - i want to use async/await keywords
+
+
 1.6.28
 - solved #48 - export to csv - works (tested opening in openoffice + reopening in LW)
 
