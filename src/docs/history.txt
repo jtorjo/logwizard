@@ -1,6 +1,4 @@
 
-- Runtime / svchost -> right click and color them (doesn't work)
-  - pictures 12 and 13
 
 
 
@@ -8,9 +6,13 @@
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
 
+1.7.3
+- Runtime / svchost -> right click and color them (doesn't work)  -> fixed
+
 
 1.7.2b
 - regex (installation.*ready) not working if case insensitive
+
 
 1.7.2a
 - fix: Microsoft-Windows-TWinUI/Operational - does not work

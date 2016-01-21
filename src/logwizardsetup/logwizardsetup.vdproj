@@ -668,7 +668,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C8B46DF279E1B4F613E1AB160AF480C8"
@@ -804,15 +804,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
-        "ProductCode" = "8:{8D11063C-E4C3-4A3B-9B6B-E3DCE65B365D}"
-        "PackageCode" = "8:{F1F36300-2680-4AEB-A676-BB126908BFAB}"
+        "ProductCode" = "8:{0AEA1381-28B1-484B-B916-6187771DD06D}"
+        "PackageCode" = "8:{88FCF62F-A772-4200-8D67-1CCD88AB5045}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.7.2"
+        "ProductVersion" = "8:1.7.3"
         "Manufacturer" = "8:John Torjo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

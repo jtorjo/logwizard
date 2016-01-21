@@ -255,7 +255,9 @@ namespace lw_common.ui {
                 }
 
                 if (!parent_.is_full_log) {
-                    bool belongs_to_view = parent_.sel.matches.Count > 0;
+                    // 1.7.2+ - if we don't have any filter selected, allow color filters
+                    //bool belongs_to_view = parent_.sel.matches.Count > 0;
+                    bool belongs_to_view = parent_.sel.has_matches_via_include(parent_.filter);
                     if (belongs_to_view) {
                         var i = parent_.sel;
                         Debug.Assert(i != null);
