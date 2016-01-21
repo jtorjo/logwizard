@@ -5,6 +5,14 @@
           https://news.ycombinator.com/news (9 jan 2016)
 		  quora
 
+
+
+
+
+1.7.1
+- released to public
+
+
 1.6.31b
 - solved #47 filtering / finding (next prev) - show progress 
   - busy cursor when this happens
