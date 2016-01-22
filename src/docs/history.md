@@ -1,5 +1,9 @@
 
 
+1.7.4b
+- small doc updates
+
+
 1.7.4
 - renamed history file as .md
 - added event_log.md file
@@ -85,10 +89,12 @@
 
 
 1.6.24
-#32 fully solved :  retest event viewer + debugviewer 
-- event viewer: convert computername/username to friendly?
+- #32 fully solved :  retest event viewer + debugviewer 
+  - event viewer: convert computername/username to friendly?
   - note: no need to cache them, since SecurityIdentifier is quite fast
+
 [Caching Cells]
+
 event log:
 - after profiling - the bottleneck is to_log_entry. However, seems there's nothing I can do, since doing a Parallel.For did no improvements whatsoever.
   The bottleneck is EventLog.GetFormatDescription. To make things worse, seems it has some global lock inside, and calling this from several threads still yields 
@@ -203,9 +209,9 @@ event log
 
 
 1.6.10c
-#20 fully solved
-- event viewer: 
-  - scroll to last: in reverse -> reverse it (go to top all the time)
+- #20 fully solved
+  - event viewer: 
+    - scroll to last: in reverse -> reverse it (go to top all the time)
 
 
 1.6.10b
@@ -218,9 +224,9 @@ event log
 
 
 1.6.9b
-#30 completely fixed
-- highlight all search cells in view
-- highlight all search cells in details pane
+- #30 completely fixed
+  - highlight all search cells in view
+  - highlight all search cells in details pane
 
 
 1.6.9a
@@ -1454,8 +1460,7 @@ refactoring so that we notify filters much faster of real-time changes
 
 
 1.2.22a
-- fix: bug: (seems it's not apply to existing lines/???')
-# // DONOT CHANGE this line -color  #Process
+- fix: bug: (seems it's not apply to existing lines/???') - # // DONOT CHANGE this line -color  #Process
 $msg startswith Process
 match_color #9F00FF
 -- this when added to Init/exit messes it up (it shows) all lines instead of just the filtered ones
