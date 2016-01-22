@@ -2,18 +2,16 @@
 
 I created **LogWizard** to help anyone that really needs to deal with logs, in order to _hunt down bugs and/or issues that happen somewhere else_ (read = at customer site).
 
-My focus has been on ease of use from the get go. When using LogWizard, most things should be easy. In case they're not - I've done something wrong :) Let me know!
-
 
 ***
 
-Since 1.6, I've made Log Wizard work with Windows Event Logs as well. However, on 1.7 I've done quite a few improvements to speed things up/help you on Event Logs.
+Since 1.6, I've made Log Wizard work with **Windows Event Logs** as well. However, in 1.7 I've done quite a few improvements to speed things up/help you on Event Logs.
+
+[Read More About Log Wizard Here](https://github.com/jtorjo/logwizard/)
 
 ***
 
-To get started on Windows Event Logs, here's a sneak peak:
-
-Press **Ctrl-O** (equivalent of Actions >> Open Log). Select "Windows Event Log".
+To get started on Windows Event Logs, here's a sneak peak: Press **Ctrl-O** (equivalent of Actions >> Open Log). Select "Windows Event Log".
 
 ![LogWizard](https://github.com/jtorjo/logwizard/blob/master/src/images/el01.png)
 
