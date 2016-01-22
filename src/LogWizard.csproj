@@ -172,6 +172,7 @@
     <Content Include="lw.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="docs\event_log.md" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -190,12 +191,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="docs\history.txt" />
-    <None Include="docs\todo.txt" />
+    <None Include="docs\history.md" />
     <None Include="icons\bug.png" />
     <None Include="icons\bug_disabled.png" />
     <Content Include="app.ico" />
-    <None Include="docs\todo_lowpriority.txt" />
     <Content Include="icons\app.ico" />
     <None Include="icons\eyedropper.png" />
     <Content Include="logwizard.txt">

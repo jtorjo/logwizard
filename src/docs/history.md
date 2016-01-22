@@ -1,10 +1,9 @@
 
 
+1.7.4
+- renamed history file as .md
+- added event_log.md file
 
-
-- post on https://www.reddit.com/r/csharp/
-          https://news.ycombinator.com/news (9 jan 2016)
-		  quora
 
 1.7.3
 - Runtime / svchost -> right click and color them (doesn't work)  -> fixed
@@ -80,7 +79,7 @@
 
 1.6.25a
 - not to auto-open the last log by default - #33
-********************* + tip: Ctrl-H, Enter - select last log
+- ** tip: Ctrl-H, Enter - select last log**
   (making it easy to open different logs on different custom positions)
 
 
@@ -285,7 +284,7 @@ slightly different background (so that the user sees his search is successful)
 1.6.5
 - logwizardsetupsample -> into samples
 - samples -> into personal directory (...Documents)
-- settings kept in %appdata%\\..\\Local instead of Roaming (https://github.com/jtorjo/logwizard/issues/3)
+- settings kept in %appdata%\\..\\Local instead of Roaming (#3)
 - double checked - nothing is written into Roaming (by setup kit or by LW)
 
 
@@ -2930,7 +2929,7 @@ fixes:
 1.0.1
 - roughtly, UI is ready - need to actually read logs and apply filters
 done:
-+ deleting a mid-view -> need to update all filters! (since they are kept by indexes)
-+ adding a view -> copy all filters from existing view!
-+ adding a view -> add it AFTER the existing one (in TabPages)
-+ adding a view -> select it
+- deleting a mid-view -> need to update all filters! (since they are kept by indexes)
+- adding a view -> copy all filters from existing view!
+- adding a view -> add it AFTER the existing one (in TabPages)
+- adding a view -> select it
