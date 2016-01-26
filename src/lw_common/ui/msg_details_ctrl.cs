@@ -37,7 +37,7 @@ namespace lw_common {
         private Form wizard_parent_;
 
         private log_view_item_draw_ui drawer_;
-        private print_info default_print_ = new print_info();
+        private text_part default_print_ = new text_part(0,0);
 
         private log_view force_hide_for_view_ = null;
         private int force_hide_for_row_ = -1;
@@ -153,26 +153,12 @@ namespace lw_common {
             var full_row = lv.list.GetItem(lv.sel_row_idx);
 
             BackColor = txt.BackColor = drawer_.bg_color(full_row, msg_col);
-            int last_idx = 0;
 
-            for (int print_idx = 0; print_idx < prints.Count; ++print_idx) {
-                int cur_idx = prints[print_idx].Item1, cur_len = prints[print_idx].Item2;
-                string before = msg_txt.Substring(last_idx, cur_idx - last_idx);
-                if (before != "") {
-                    txt.Select(last_idx, cur_idx - last_idx);
-                    txt.SelectionColor = drawer_.print_fg_color(full_row, default_print_);
-                    txt.SelectionBackColor = drawer_.bg_color(full_row, msg_col);
-                }
-                txt.Select(cur_idx, cur_len);
-                txt.SelectionColor = drawer_.print_fg_color(full_row, prints[print_idx].Item3);
-                txt.SelectionBackColor = drawer_.print_bg_color(full_row, prints[print_idx].Item3);
-                last_idx = cur_idx + cur_len;
-            }
-            last_idx = prints.Count > 0 ? prints.Last().Item1 + prints.Last().Item2 : 0;
-            if (last_idx < msg_txt.Length) {
-                txt.Select(last_idx, msg_txt.Length - last_idx);
-                txt.SelectionColor = drawer_.print_fg_color(full_row, default_print_);
-                txt.SelectionBackColor = drawer_.bg_color(full_row, msg_col);
+            var parts = prints.parts(default_print_);
+            foreach (var part in parts) {
+                txt.Select(part.start, part.len);
+                txt.SelectionColor = drawer_.print_fg_color(full_row, part);
+                txt.SelectionBackColor = drawer_.print_bg_color(full_row, part);
             }
 
             txt.SelectionStart = 0;

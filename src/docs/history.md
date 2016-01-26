@@ -1,4 +1,54 @@
 
+FIXME if i add_part something already there -> i need to "merge" that (fonts and such, with the emphasis that what I add overrides what exists)
+- i should be able to merge even several entries! -> basically i need to see that when splitting something between two items -> i should probably merge the text_parts TOTHINK
+
+FIXME i need to be able to return it in such a way that i can easily use to print info, wherever
+(in smart edit, etc.)
+
+
+
+This should basically work for both the view and the details pane (for instance, an xml msg could be shown in a friendly manner)
+But for now, I may want to print several lines into one?
+
+Column formatters should be allowed to have context (and eventually have settings based on which they do the formatting)
+- for instance, i could specify, in settings -> what colors to apply to the text
+- they need to be applied in such a way that they can add/modify colors of the text itself (or bold/italic etc.)
+
+Need to be able to easily give colors (defaults) to certain colors, such a green-like-in-VS for line numbers, some color for dates and so on.
+
+Again, the column formatter must be able to have context so for instance I could even be able to mark visually times 
+from minute to minute (like, when minute changes, change color) - this should only happen for the filters are run (so that you can have filters set the line color TOTHINK) 
+
+TODO: 
+- in addition to the message to write, i need to allow extra information, such as alignment.
+- i have to be able to set a column formatter for "all" columns, and for specific columns: however, i may want to set the order of these columns 
+  (for instance, a certain formatter to be applied to all columns before another one is applied to a specific column, etc.). Thus, 
+  I should be able to assign several formatters to the same column(s). Probably the easiest is to just have an "order" setting (integer). 
+  This also means that for a certain column (or for all), i should be able to have several formatters
+- i need to be able to allow for both bg and fg
+
+- comparing numbers: allow comparing for several values, such as:
+  // compare against 100, then against 200
+  compare=100,green,-,orange
+  compare=200,-,-,red
+
+
+column formatters:
+- have context
+- have oder
+- simple formatters : 
+	comparing numbers, 
+	find a number in a string and compare it, such as "time: 133 ms" -> find '133'
+	show time
+	show date???
+- TOTHINK about default formatter
+  - think of a cool way to show time -> needs to be in par with date
+- allow chaining (probably this is inferred from order)
+- allow for pictures
+
+1.7.5
+- REFACTORING: no more Tuple<int,int,print_info> -> move everything into print_info, now renamed as text_part
+
 
 1.7.4b
 - small doc updates

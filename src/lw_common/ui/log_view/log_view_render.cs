@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using lw_common;
+using lw_common.ui.format;
 
 namespace lw_common.ui {
     class log_view_render : BaseRenderer {
@@ -48,10 +49,10 @@ namespace lw_common.ui {
             drawer_.set_font(f);
         }
 
-        private List<Tuple<int, int, print_info>> override_print_ = new List<Tuple<int, int, print_info>> ();
-        print_info default_ = new print_info();
+        private formatted_text  override_print_ = null;
+        text_part default_ = new text_part(0, 0);
 
-        private void draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, print_info print) {
+        private void draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, text_part print) {
             int width = text_width(g, sub);
             if (print != default_) {
                 Rectangle here = new Rectangle(r.Location, r.Size);
@@ -68,34 +69,11 @@ namespace lw_common.ui {
 
 
         private void draw_string(int left, string s, Graphics g, Brush b, Rectangle r, StringFormat fmt) {
-            if ( override_print_.Count < 1) {
-                // no overrides at all
-                draw_sub_string(left, s, g, b, r, fmt, default_);
-                return;
-            }
-
-            // here, we have at least one override
-            for (int idx = 0; idx < override_print_.Count; ++idx) {
-                int start_normal = idx > 0 ? override_print_[idx - 1].Item1 + override_print_[idx - 1].Item2 : 0;
-                int normal_len = override_print_[idx].Item1 - start_normal;
-
-                string up_to_prev = s.Substring(0, start_normal);
-                string up_to_now = s.Substring(0, override_print_[idx].Item1);
-                int left_normal = left + text_width(g, up_to_prev);
-                int left2 = left + text_width(g, up_to_now);
-
-                // first, draw the normal text
-                draw_sub_string(left_normal, s.Substring(start_normal, normal_len), g, b, r, fmt, default_);
-                draw_sub_string(left2, s.Substring( override_print_[idx].Item1, override_print_[idx].Item2 ), g, b, r, fmt, override_print_[idx].Item3);
-            }
-
-            var last_override = override_print_.Last();
-            int last = last_override.Item1 + last_override.Item2;
-            string last_normal = s.Substring(last);
-            if (last_normal != "") {
-                string up_to_now = s.Substring(0, last_override.Item1 + last_override.Item2);
-                int last_left = left + text_width(g, up_to_now);
-                draw_sub_string(last_left, last_normal, g, b, r, fmt, default_);
+            var prints = override_print_.parts(default_);
+            string prev_text = "";
+            foreach (var part in prints) {
+                int left_offset = left + text_width(g, s.Substring(0, part.start) );
+                draw_sub_string(left_offset, part.text, g, b, r, fmt, part);
             }
         }
 
@@ -127,9 +105,11 @@ namespace lw_common.ui {
             var col_idx = Column.fixed_index();
             string text = GetText();
             override_print_ = i.override_print(parent_, text, col_idx);
+
             var type = log_view_cell.cell_idx_to_type(col_idx);
-            if ( info_type_io.can_be_multi_line(type))
-                print_info.get_most_important_single_line(ref text, ref override_print_);
+            if (info_type_io.can_be_multi_line(type)) 
+                override_print_ = override_print_.get_most_important_single_line();
+            text = override_print_.text;
 
             Brush brush = drawer_.bg_brush(ListItem, col_idx);
             g.FillRectangle(brush, r);

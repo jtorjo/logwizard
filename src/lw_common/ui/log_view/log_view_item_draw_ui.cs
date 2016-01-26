@@ -59,7 +59,7 @@ namespace lw_common.ui {
             font_ = f;
             build_fonts();
         }
-        public Font font(print_info print) {
+        public Font font(text_part print) {
             Font f = print.bold ? (print.italic ? bi_font : b_font) : (print.italic ? i_font : font_);
             return f;
         }
@@ -105,19 +105,25 @@ namespace lw_common.ui {
             return (int)(abc - ab);
         }
 
-        public Color print_bg_color(OLVListItem item, print_info print) {
+        public Color print_bg_color(OLVListItem item, text_part print) {
             match_item i = item.RowObject as match_item;            
-            Color bg = print.bg != util.transparent ? print.bg : util.darker_color( i.bg(parent_) );
+            bool is_sel = !ignore_selection ? parent_.multi_sel_idx.Contains(item.Index) : false;
+
+            Color default_bg = is_sel ? i.sel_bg(parent_) : i.bg(parent_);            
+            Color bg = print.bg != util.transparent ? print.bg : default_bg;
             if (bg == util.transparent)
                 bg = app.inst.bg;
+
+            if (print.is_typed_search)
+                bg = util.darker_color(bg);
             return bg;
         }
 
-        public Brush print_bg_brush(OLVListItem item, print_info print) {
+        public Brush print_bg_brush(OLVListItem item, text_part print) {
             return brush_.brush(print_bg_color(item, print));
         }
 
-        public Color print_fg_color(OLVListItem item, print_info print) {
+        public Color print_fg_color(OLVListItem item, text_part print) {
             match_item i = item.RowObject as match_item;            
             Color fg = i.fg(parent_);
             Color print_fg = print.fg != util.transparent ? print.fg : fg;
@@ -126,7 +132,7 @@ namespace lw_common.ui {
             return print_fg;
         }
 
-        public Brush print_fg_brush(OLVListItem item, print_info print) {
+        public Brush print_fg_brush(OLVListItem item, text_part print) {
             return brush_.brush(print_fg_color(item, print));
         }
 

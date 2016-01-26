@@ -130,6 +130,7 @@
       <DependentUpon>filter_ctrl.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\font_list.cs" />
+    <Compile Include="ui\format\formatted_text.cs" />
     <Compile Include="ui\go_to_line_time_form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -176,7 +177,7 @@
     <Compile Include="ui\note_ctrl.Designer.cs">
       <DependentUpon>note_ctrl.cs</DependentUpon>
     </Compile>
-    <Compile Include="ui\print_info.cs" />
+    <Compile Include="ui\format\text_part.cs" />
     <Compile Include="ui\search\search_for.cs" />
     <Compile Include="ui\search\search_form.cs">
       <SubType>Form</SubType>

@@ -63,7 +63,7 @@ namespace lw_common.ui {
         private font_list fonts_ = new font_list();
 
         private log_view_item_draw_ui drawer_ = null;
-        print_info default_print_ = new print_info();
+        text_part default_print_ = new text_part(0, 0);
 
         public delegate void on_description_template_changed_func(string description);
         public on_description_template_changed_func on_description_changed;
@@ -759,8 +759,9 @@ namespace lw_common.ui {
 
             string txt = (item as filter.match).line.part(type);
             int col = log_view_cell.info_type_to_cell_idx(type);
-            var prints = lv.sel.override_print(lv, txt, type);
-            print_info.to_single_enter_char(ref txt, ref prints);
+            var prints = lv.sel.override_print(lv, txt, type).to_single_enter_char();
+            // ... text has changed
+            txt = prints.text;
 
             text_ctrl.Clear();
             text_ctrl.AppendText(txt);
@@ -769,27 +770,12 @@ namespace lw_common.ui {
 
             text_ctrl.BackColor = drawer_.bg_color(full_row, col);
 
-            int last_idx = 0;
-            for (int print_idx = 0; print_idx < prints.Count; ++print_idx) {
-                int cur_idx = prints[print_idx].Item1, cur_len = prints[print_idx].Item2;
-                string before = txt.Substring(last_idx, cur_idx - last_idx);
-                if (before != "") {
-                    text_ctrl.Select(last_idx, cur_idx - last_idx);
-                    text_ctrl.SelectionColor = drawer_.print_fg_color(full_row, default_print_);
-                    text_ctrl.SelectionBackColor = drawer_.bg_color(full_row, col);
-                }
-                text_ctrl.Select(cur_idx, cur_len);
-                text_ctrl.SelectionColor = drawer_.print_fg_color(full_row, prints[print_idx].Item3);
-                text_ctrl.SelectionBackColor = drawer_.print_bg_color(full_row, prints[print_idx].Item3);
-                last_idx = cur_idx + cur_len;
+            var parts = prints.parts(default_print_);
+            foreach (var part in parts) {
+                text_ctrl.Select(part.start, part.len);
+                text_ctrl.SelectionColor = drawer_.print_fg_color(full_row, part);
+                text_ctrl.SelectionBackColor = drawer_.print_bg_color(full_row, part);
             }
-            last_idx = prints.Count > 0 ? prints.Last().Item1 + prints.Last().Item2 : 0;
-            if (last_idx < txt.Length) {
-                text_ctrl.Select(last_idx, txt.Length - last_idx);
-                text_ctrl.SelectionColor = drawer_.print_fg_color(full_row, default_print_);
-                text_ctrl.SelectionBackColor = drawer_.bg_color(full_row, col);
-            }
-            
         }
 
         public void show_cur_item(log_view lv) {

@@ -34,7 +34,7 @@ namespace lw_common.ui {
     public partial class rich_label_ctrl : UserControl {
         private class part {
             public string text = "";
-            public print_info print = new print_info();
+            public text_part print = new text_part(0,0);
             public string link = "";
             public bool ends_line = false;
         }
@@ -108,7 +108,7 @@ namespace lw_common.ui {
         // <bg #col>.... </bg>
         // <font name>... </font>
         public void set_text(string text) {
-            print_info cur_print = new print_info();
+            text_part cur_print = new text_part(0,0);
             string cur_link = "";
             parts_.Clear();
             while (text != "") {
@@ -160,7 +160,7 @@ namespace lw_common.ui {
             tip.SetToolTip(this, tooltip);
         }
 
-        private void parse_format(string format, ref print_info print, ref string link) {
+        private void parse_format(string format, ref text_part print, ref string link) {
             switch (format) {
             case "b":
                 print.bold = true;
