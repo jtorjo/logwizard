@@ -1321,5 +1321,15 @@ namespace lw_common {
                 return ++next_id_;
         }
 
+        private static List<string> font_families_ = new List<string>();
+        public static List<string> font_families() {
+            if (font_families_.Count < 1)
+                try {
+                    foreach (FontFamily font in System.Drawing.FontFamily.Families)
+                        font_families_.Add(font.Name);
+                } catch {
+                }
+            return font_families_;
+        }
     }
 }

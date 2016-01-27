@@ -79,6 +79,7 @@ namespace lw_common.ui {
             text = other.text;
             is_typed_search = other.is_typed_search;
             is_find_search = other.is_find_search;
+            font_size = other.font_size;
         }
 
         // constructs a new object as a merge of this and other
@@ -98,8 +99,11 @@ namespace lw_common.ui {
                 copy.bold = true;
             if (other.italic)
                 copy.italic = true;
+
             if (other.font_name != "")
                 copy.font_name = other.font_name;
+            if (other.font_size > 0)
+                copy.font_size = other.font_size;
 
             if (other.is_typed_search)
                 copy.is_typed_search = true;
@@ -109,21 +113,85 @@ namespace lw_common.ui {
             return copy;
         }
         
-        // 1.7.5+ - keep the offsets from the original text as well
-        private int start_;
-        private int len_;
 
         public Color fg = util.transparent;
         public Color bg = util.transparent;
         public bool bold = false, italic = false, underline = false;
+
+        public string font_name = "";
+
+        // 1.7.9+ if > 0, the font' size
+        public int font_size = 0;
+
+
+        /*  string is internally separated by '/'
+
+            every entry can be any of: 
+            - font name, font size, foreground color, background color, bold, italic, underline
+            The above is the precendence order as well
+
+            If you want to force having a background color without a foreground color, just prepend an extra #, like
+            ##aabbcc
+        */
+        public static text_part from_friendly_string(string str) {
+            text_part friendly = new text_part(0,0);
+
+            foreach (string word in str.Split('/').Select(x => x.ToLower())) {
+                if (friendly.font_name == "") {
+                    var possible_font = util.font_families().FirstOrDefault(x => x.ToLower() == word);
+                    if (possible_font != null) {
+                        friendly.font_name = possible_font;
+                        continue;
+                    }
+                }
+
+                int possible_size = 0;
+                if ( int.TryParse(word, out possible_size))
+                    // don't allow too huge sizes
+                    if (possible_size > 5 && possible_size < 24) {
+                        friendly.font_size = possible_size;
+                        continue;
+                    }
+
+                bool force_bg = word.StartsWith("##");
+                Color col = util.str_to_color(force_bg ? word.Substring(1) : word);
+                if (col != util.transparent) {
+                    bool is_bg = force_bg || friendly.fg != util.transparent;
+                    if (is_bg)
+                        friendly.bg = col;
+                    else
+                        friendly.fg = col;
+                    continue;
+                }
+
+                switch (word) {
+                case "bold":
+                    friendly.bold = true;
+                    break;
+                case "italic":
+                    friendly.italic = true;
+                    break;
+                case "underline":
+                    friendly.underline = true;
+                    break;
+                }
+            }
+
+            return friendly;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        // From here on -> attributes that don't relate to printing this on screen
+
+        // 1.7.5+ - keep the offsets from the original text as well
+        private int start_;
+        private int len_;
 
         // 1.5.10+ - if true, it's the result of what the user typed
         public bool is_typed_search = false;
 
         // 1.7.5+ - if true, it's the result of a find (ctrl-f)
         public bool is_find_search = false;
-
-        public string font_name = "";
             
         // useful when sorting - to avoid collisions
         public string text = "";

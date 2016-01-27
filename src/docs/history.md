@@ -1,4 +1,6 @@
 
+- time/date -> use cusom font!!!
+
 column formatters:
 - allow specifying alignment (left or right) + allow specifying font name/size, bold, italic, fg color, bg color
 - have context; question: where do i keep the settings (make it really easy to load/save)
@@ -43,11 +45,16 @@ Defaults:
 - line numbers - green a-la-VS2013
 - time + date: show only difference compared to previous (the rest in much lighter color) - default, in blue
 - things in brackets - perhaps show them in slightly lighter color
-- level : show as pictures
+**************- level : show as pictures
 - date: no year
 - directory/file names in slighly different color
 - number / strings -> in msg -> show differently (number, string_)
+********* alignment
 
+
+1.7.9
+- column formatter
+  - compare_number works
 
 
 1.7.8
