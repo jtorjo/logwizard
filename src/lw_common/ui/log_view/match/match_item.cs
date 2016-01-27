@@ -199,10 +199,12 @@ namespace lw_common.ui {
 
         // returns the overrides, sorted by index in the string to print
         public formatted_text override_print(log_view parent, string text, int col_idx) {
-            var print = override_print_from_all_places(parent, text, col_idx);
-            var formatted = new formatted_text(text);
-            formatted.add_parts( print);
-            return formatted;
+            column_formatter.format_cell cell = new column_formatter.format_cell(this, parent, col_idx, log_view_cell.cell_idx_to_type(col_idx), new formatted_text(text));
+            parent.formatter.format_before(cell);
+            var print = override_print_from_all_places(parent, cell.format_text.text, col_idx);
+            cell.format_text.add_parts( print);
+            parent.formatter.format_after(cell);
+            return cell.format_text;
         } 
 
         public filter.match match {

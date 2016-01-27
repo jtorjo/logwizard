@@ -76,6 +76,8 @@ namespace lw_common.parse {
         }.ToList();
 
         private double_dictionary<string, info_type> name_to_column_ = new double_dictionary<string, info_type>();
+        // convert low-case name into name
+        private Dictionary<string, string> loname_to_name_ = new Dictionary<string, string>(); 
 
         private util.void_func on_column_names_changed_;
 
@@ -112,6 +114,7 @@ namespace lw_common.parse {
         // the idea is to be able to match each column to an info-type 
         public void on_column_names(List<string> column_names) {
             name_to_column_.clear();
+            loname_to_name_.Clear();
             foreach (string col in column_names) {
                 info_type type;
                 if (Enum.TryParse(col, true, out type)) {
@@ -122,6 +125,9 @@ namespace lw_common.parse {
                 }
                 to_info_type(col, column_names);
             }
+
+            foreach ( var key in name_to_column_.keys())
+                loname_to_name_.Add(key.ToLower(), key);
 
             if ( on_column_names_changed_ != null)
                 on_column_names_changed_();
@@ -273,6 +279,12 @@ namespace lw_common.parse {
         public info_type to_info_type(string column_name) {
             if (name_to_column_.has_key(column_name))
                 return name_to_column_.key_to_value(column_name);
+
+            // 1.7.8+ make the search for column name - case-insensitive
+            string name;
+            if (loname_to_name_.TryGetValue(column_name.ToLower(), out name)) 
+                return name_to_column_.key_to_value(name);
+            
 
             return string_to_info_type( get_value_part(sett_.get(column_name, column_name)));
         }

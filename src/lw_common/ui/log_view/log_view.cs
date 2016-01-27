@@ -38,6 +38,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using lw_common;
+using lw_common.ui.format;
 using LogWizard;
 
 namespace lw_common.ui
@@ -121,6 +122,8 @@ namespace lw_common.ui
 
         private int is_searching_ = 0;
 
+        private column_formatter_array formatter_ = new column_formatter_array();
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -157,6 +160,11 @@ namespace lw_common.ui
             list.ColumnWidthChanged += List_on_column_width_changed;
             list.ColumnWidthChanging += List_on_column_width_changing;
             msgCol.FillsFreeSpace = !app.inst.show_horizontal_scrollbar;
+
+            if ( util.is_debug)
+                // testing
+                app.inst.default_column_format = app.DEFAULT_COLUMN_SYNTAX;
+            formatter_.load(app.inst.default_column_format);
         }
 
         private void List_on_column_width_changing(object sender, ColumnWidthChangingEventArgs e) {
@@ -2160,6 +2168,10 @@ namespace lw_common.ui
 
         internal bool needs_scroll {
             get { return needs_scroll_; }
+        }
+
+        public column_formatter_array formatter {
+            get { return formatter_; }
         }
 
 

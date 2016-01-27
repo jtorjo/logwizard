@@ -37,6 +37,10 @@ namespace lw_common {
             values_.Add(value, key);
         }
 
+        public List<K> keys() {
+            return keys_.Keys.ToList();
+        } 
+
         public bool has_key(K key) {
             return keys_.ContainsKey(key);
         }

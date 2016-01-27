@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace lw_common.ui.format {
     // contains all the text parts - formatted
@@ -11,12 +12,19 @@ namespace lw_common.ui.format {
         private List<text_part> parts_ = new List<text_part>();
         private readonly string text_;
 
+        // 1.7.7 not used yet
+        private HorizontalAlignment align_ = HorizontalAlignment.Left;
+
         public formatted_text(string text) {
             text_ = text;
         }
 
         public string text {
             get { return text_; }
+        }
+
+        public void replace_text(int start, int len, string new_text) {
+            
         }
 
         public void add_parts(List<text_part> parts) {

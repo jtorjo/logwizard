@@ -1,22 +1,3 @@
-This should basically work for both the view and the details pane (for instance, an xml msg could be shown in a friendly manner)
-But for now, I may want to print several lines into one?
-
-Column formatters should be allowed to have context (and eventually have settings based on which they do the formatting)
-- for instance, i could specify, in settings -> what colors to apply to the text
-- they need to be applied in such a way that they can add/modify colors of the text itself (or bold/italic etc.)
-
-Need to be able to easily give colors (defaults) to certain colors, such a green-like-in-VS for line numbers, some color for dates and so on.
-
-Again, the column formatter must be able to have context so for instance I could even be able to mark visually times 
-from minute to minute (like, when minute changes, change color) - this should only happen for the filters are run (so that you can have filters set the line color TOTHINK) 
-
-TODO: 
-- in addition to the message to write, i need to allow extra information, such as alignment.
-- i have to be able to set a column formatter for "all" columns, and for specific columns: however, i may want to set the order of these columns 
-  (for instance, a certain formatter to be applied to all columns before another one is applied to a specific column, etc.). Thus, 
-  I should be able to assign several formatters to the same column(s). Probably the easiest is to just have an "order" setting (integer). 
-  This also means that for a certain column (or for all), i should be able to have several formatters
-- i need to be able to allow for both bg and fg
 
 - comparing numbers: allow comparing for several values, such as:
   // compare against 100, then against 200
@@ -25,35 +6,61 @@ TODO:
 
 
 column formatters:
-- have context
-- have oder
+- allow specifying alignment (left or right) + allow specifying font name/size, bold, italic, fg color, bg color
+- have context; question: where do i keep the settings (make it really easy to load/save)
+- have order - so that I know which formatter follows which formatter
+- specifying settings via settings_as_string?
 - simple formatters : 
+    color formatter -> just apply color to all text
 	comparing numbers, 
 	find a number in a string and compare it, such as "time: 133 ms" -> find '133'
 	show time - perhaps show only diff to previous (if any?) 
 	 ----------> in this case, i need to always find out the first visible index (because the first visible index is always to be shown)
 	             basically, hours, mins, seconds that are the same, show them in a lighter color
+				 - have a different date/time font by default  - agency fb - bold,SimSun, DengXian
 	show date??? perhaps show only diff to previous (if any?)
 	(later) xml msg could be shown in a friendly manner
-	multi-line - when on view, show the paragraph sign
+	(later) recognize stack trace and show it nicely
+	multiline 
+	  - when on view, show the paragraph sign
+	  - allow showing everything as a single line (replace enter by space)
 	alternate colors (by default, every line, but can have it so that i alternate from 10 to 10 or something)
-	- perhaps this is indeed a good idea (10 by 10)
+	  - perhaps this is indeed a good idea (10 by 10)
+
+
+
+
 - TOTHINK about default formatter
   - think of a cool way to show time -> needs to be in par with date
 - allow chaining (probably this is inferred from order)
 - allow for pictures
 - work for view/details pane/msg details
 
-TOTHINK Easy syntax, like -> the order is inferred from here. see how easy to allow syntax coloring
-[all]
-blabla
 
-[time]
-blabla
 
-[all]
-#again, to be applied last
+- tooltip: when hovering a number, show it in hexa, octal, decimal and binary
+- by default, this should apply to all log (not just this view)
+- i should have a default column formatter syntax 
+- when editing colum formatters -> allow for preview
+- if any "number" formatter -> allow ctrl-shift-B to switch between bases (hexa, decimal, octal, binary)
 
+Defaults:
+- line numbers - green a-la-VS2013
+- time + date: show only difference compared to previous (the rest in much lighter color) - default, in blue
+- things in brackets - perhaps show them in slightly lighter color
+- level : show as pictures
+- date: no year
+- directory/file names in slighly different color
+- number / strings -> in msg -> show differently (number, string_)
+
+
+
+
+1.7.7
+- column formatter skeletron:
+	- special words "lighter", "darker"
+	- easy syntax, see column_formatter_array
+	- line numbers shown in green-a-la-VS2013
 
 
 1.7.6

@@ -48,6 +48,15 @@ namespace lw_common {
             }
         }
 
+        public const string DEFAULT_COLUMN_SYNTAX = "[line]\r\n" +
+                                                    "color-all\r\n" +
+                                                    "color=#2B91AF\r\n" +
+                                                    "\r\n" +
+                                                    "[all]\r\n" +
+                                                    "format\r\n" +
+                                                    "date.color=blue\r\n" +
+                                                    "time.color=blue";
+
         // these are settings that are NOT shown in the UI
         public class no_ui_ {
             //public ulong file_max_read_in_one_go = (ulong) (util.is_debug ? 128 * 1024 : 16 * 1024 * 1024);
@@ -203,6 +212,9 @@ namespace lw_common {
 
         // 1.7.2+ - not in UI yet - in case we're reading from C:\Windows\System32\winevt\Logs, how many logs should we return?
         public int max_event_log_files = 50;
+
+        // 1.7.8 - column formatting
+        public string default_column_format = "";
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // file-by-file
@@ -421,6 +433,7 @@ namespace lw_common {
 
             load_save(load, ref associate_common_extensions, "associate_common_extensions", false);
             load_save(load, ref auto_open_last_log, "auto_open_last_log", true);
+            load_save(load, ref default_column_format, "default_column_format", DEFAULT_COLUMN_SYNTAX);
         }
 
         private string initials(string name) {
