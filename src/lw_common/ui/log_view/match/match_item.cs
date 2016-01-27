@@ -193,13 +193,16 @@ namespace lw_common.ui {
             return print;
         }
 
-        public formatted_text override_print(log_view parent, string text, info_type type) {
-            return override_print(parent, text, log_view_cell.info_type_to_cell_idx(type));
-        }
-
         // returns the overrides, sorted by index in the string to print
         public formatted_text override_print(log_view parent, string text, int col_idx) {
-            column_formatter.format_cell cell = new column_formatter.format_cell(this, parent, col_idx, log_view_cell.cell_idx_to_type(col_idx), new formatted_text(text));
+            int row_idx = parent.item_index(this);
+            int top_row_idx = parent.top_row_idx;
+            string prev_text = "";
+            if (row_idx > 0)
+                prev_text = log_view_cell.cell_value(parent.item_at(row_idx - 1), col_idx);
+
+            var cell = new column_formatter.format_cell(this, parent, col_idx, log_view_cell.cell_idx_to_type(col_idx), new formatted_text(text),
+                row_idx, top_row_idx, prev_text);
             parent.formatter.format_before(cell);
             var print = override_print_from_all_places(parent, cell.format_text.text, col_idx);
             cell.format_text.add_parts( print);

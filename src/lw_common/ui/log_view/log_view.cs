@@ -466,6 +466,10 @@ namespace lw_common.ui
             }
         }
 
+        public int top_row_idx {
+            get { return visible_row_indexes().Item1; }
+        }
+
         internal int cur_col_idx {
             get { return cur_col_; }
         }
@@ -884,6 +888,10 @@ namespace lw_common.ui
 
         internal match_item item_at(int idx) {
             return model_.item_at(idx);
+        }
+
+        internal int item_index(match_item m) {
+            return model_.GetObjectIndex(m);
         }
 
 

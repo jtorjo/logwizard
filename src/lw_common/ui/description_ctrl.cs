@@ -758,8 +758,8 @@ namespace lw_common.ui {
             int row = lv.sel_row_idx;
 
             string txt = (item as filter.match).line.part(type);
-            int col = log_view_cell.info_type_to_cell_idx(type);
-            var prints = lv.sel.override_print(lv, txt, type).to_single_enter_char();
+            int col_idx = log_view_cell.info_type_to_cell_idx(type);
+            var prints = lv.sel.override_print(lv, txt, col_idx).to_single_enter_char();
             // ... text has changed
             txt = prints.text;
 
@@ -768,7 +768,7 @@ namespace lw_common.ui {
              
             var full_row = lv.list.GetItem(row);
 
-            text_ctrl.BackColor = drawer_.bg_color(full_row, col);
+            text_ctrl.BackColor = drawer_.bg_color(full_row, col_idx);
 
             var parts = prints.parts(default_print_);
             foreach (var part in parts) {

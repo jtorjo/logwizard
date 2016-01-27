@@ -102,7 +102,7 @@ namespace lw_common.ui.format {
         }
 
         private bool needs_apply_formatter(formatter format, column_formatter.format_cell cell) {
-            if (format.name == "all")
+            if (format.column_type == "all")
                 return true;
 
             var aliases = cell.parent.filter.log.aliases;

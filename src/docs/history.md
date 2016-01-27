@@ -1,10 +1,4 @@
 
-- comparing numbers: allow comparing for several values, such as:
-  // compare against 100, then against 200
-  compare=100,green,-,orange
-  compare=200,-,-,red
-
-
 column formatters:
 - allow specifying alignment (left or right) + allow specifying font name/size, bold, italic, fg color, bg color
 - have context; question: where do i keep the settings (make it really easy to load/save)
@@ -43,6 +37,7 @@ column formatters:
 - i should have a default column formatter syntax 
 - when editing colum formatters -> allow for preview
 - if any "number" formatter -> allow ctrl-shift-B to switch between bases (hexa, decimal, octal, binary)
+- update setup kit sample - show it with formatting 
 
 Defaults:
 - line numbers - green a-la-VS2013
@@ -54,6 +49,11 @@ Defaults:
 - number / strings -> in msg -> show differently (number, string_)
 
 
+
+1.7.8
+- column formatter
+  - time formatter works
+  - date formatter works
 
 
 1.7.7

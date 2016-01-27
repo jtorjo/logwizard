@@ -11,7 +11,7 @@ namespace lw_common.ui.format.column_formatters {
 
         internal override void load_syntax(settings_as_string sett, ref string error) {
             color_ = sett.get("color");
-            if (!is_color_str_valid(color_))
+            if (color_ != "" && !is_color_str_valid(color_))
                 error = "Invalid color: " + color_;
         }
 

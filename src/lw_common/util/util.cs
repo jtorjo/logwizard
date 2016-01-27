@@ -270,6 +270,9 @@ namespace lw_common {
         }
 
         public static Color str_to_color(string s) {
+            if (s == "")
+                return transparent;
+
             Color name = str_to_namecolor(s);
             if (name != transparent)
                 return name;
@@ -1278,9 +1281,41 @@ namespace lw_common {
             }
         }
 
+        // compares two dates or two times, and shows me where they are different
+        // ASSUMES they are in the same format (each of them)
+        public static int datetime_difference_offset(string prev, string now) {
+            if (prev.Length != now.Length)
+                // different dates/times - can't compare
+                return 0;
+
+            List<int> non_digit_indexes = new List<int>();
+            for ( int i = 0; i < prev.Length; ++i)
+                if (!Char.IsDigit(prev[i])) {
+                    // ... ignore consecutive non-digits; only last non-digit matters
+                    if ( non_digit_indexes.Count > 0 && non_digit_indexes.Last() + 1 == i)
+                        non_digit_indexes.RemoveAt( non_digit_indexes.Count - 1);
+                    non_digit_indexes.Add(i);
+                }
+            int last_offset = 0;
+            int start = 0;
+            foreach (int end in non_digit_indexes) {
+                for ( int i = start; i < end; ++i)
+                    if (prev[i] != now[i])
+                        return last_offset;
+                // this pack of digits was same
+                start = end + 1;
+                last_offset = start;
+            }
+
+            // if we end up here, up to last non-digit, they were the same
+            if (prev == now)
+                last_offset = prev.Length;
+
+            return last_offset;
+        }
+
         private static object lock_ = new object();
         private static int next_id_ = 0;
-
         public static int next_unique_id() {
             lock (lock_)
                 return ++next_id_;

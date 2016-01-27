@@ -139,6 +139,9 @@ namespace lw_common.ui {
         public int start {
             get { return start_; }
         }
+        public int end {
+            get { return start_ + len_; }
+        }
 
         public int len {
             get { return len_; }

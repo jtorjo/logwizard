@@ -17,12 +17,20 @@ namespace lw_common.ui.format {
             public readonly Color fg_color;
             public readonly Color bg_color;
 
-            public format_cell(match_item item, log_view parent, int col_idx, info_type col_type, formatted_text text) {
+            public readonly int row_index;
+            public readonly int top_row_index;
+            // the text from the cell above (if any)
+            public readonly string prev_text;
+
+            public format_cell(match_item item, log_view parent, int col_idx, info_type col_type, formatted_text text, int row_index, int top_row_index, string prev_text) {
                 this.item = item;
                 this.parent = parent;
                 this.col_idx = col_idx;
                 this.col_type = col_type;
                 this.format_text = text;
+                this.row_index = row_index;
+                this.top_row_index = top_row_index;
+                this.prev_text = prev_text;
 
                 fg_color = item.fg(parent);
                 bg_color = item.bg(parent);

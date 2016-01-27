@@ -55,7 +55,9 @@ namespace lw_common {
                                                     "[all]\r\n" +
                                                     "format\r\n" +
                                                     "date.color=blue\r\n" +
-                                                    "time.color=blue";
+                                                    "date.light_color=#adc7e8\r\n" +
+                                                    "time.color=blue\r\n" +
+                                                    "time.light_color=#adc7e8";
 
         // these are settings that are NOT shown in the UI
         public class no_ui_ {

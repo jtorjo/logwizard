@@ -15,6 +15,15 @@ namespace lw_common.ui.format.column_formatters {
         compare=value
         compare2=value2
         ...
+
+
+
+
+- comparing numbers: allow comparing for several values, such as:
+  // compare against 100, then against 200
+  compare=100,green,-,orange
+  compare=200,-,-,red
+
     */
     class compare_number : column_formatter {
     }

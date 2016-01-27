@@ -10,7 +10,7 @@ namespace lw_common.ui.format {
     // contains all the text parts - formatted
     class formatted_text {
         private List<text_part> parts_ = new List<text_part>();
-        private readonly string text_;
+        private string text_;
 
         // 1.7.7 not used yet
         private HorizontalAlignment align_ = HorizontalAlignment.Left;
@@ -24,15 +24,61 @@ namespace lw_common.ui.format {
         }
 
         public void replace_text(int start, int len, string new_text) {
-            
+            if (start + len > text_.Length)
+                len = text_.Length - start;
+            if (len < 0)
+                return; // nothing to replace
+
+            int end = start + len;
+            foreach (var part in parts_) {
+                bool start_inside = part.start >= start && part.start <= end;
+                bool end_inside = part.end >= start && part.end <= end;
+
+                bool start_outside = part.start <= start || part.start >= end;
+                bool end_outside = part.end <= start || part.end >= end;
+
+                // don't allow intersections
+                Debug.Assert((start_inside && end_inside) || (start_outside && end_outside));
+            }
+
+            int new_len = new_text.Length;
+            for (int part_idx = 0; part_idx < parts_.Count; part_idx++) {
+                var part = parts_[part_idx];
+                bool start_inside = part.start >= start && part.start <= end;
+                bool end_inside = part.end >= start && part.end <= end;
+
+                // note: if before, nothing to do
+                bool before = part.start <= start && part.end <= start;
+                bool after = part.start >= end;
+
+                if (start_inside && end_inside) {
+                    // this part is insde the text we're replacing
+                    int offset = part.start - start;
+                    if (offset + part.len > new_len) {
+                        // at this point, this inside text needs to either become smaller, or be erased completely
+                        if (offset < new_len)
+                            parts_[part_idx] = new text_part(part.start, new_len - offset, part);
+                        else {
+                            parts_.RemoveAt(part_idx);
+                            --part_idx;
+                        }
+                    }
+                }
+                else if (after) 
+                    parts_[part_idx] = new text_part(part.start - (len - new_len), part.len, part);                    
+            }
+
+            // finally, do the replace
+            text_ = text_.Substring(0, start) + new_text + text_.Substring(start + len);
         }
 
         public void add_parts(List<text_part> parts) {
+            parts = parts.Where(p => p.len > 0).ToList();
             if (parts.Count < 1)
                 return;
 
             foreach ( var p in parts)
-                Debug.Assert(p.start >= 0 && p.len > 0);
+                Debug.Assert(p.start >= 0);
 
             parts_.AddRange(parts);
             

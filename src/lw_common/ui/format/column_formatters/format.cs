@@ -24,5 +24,45 @@ namespace lw_common.ui.format.column_formatters {
         private alternate_bg_color alternate_bg_ = new alternate_bg_color();
         private regex_color regex_color_ = new regex_color();
 
+        private List<column_formatter> sub_ = new List<column_formatter>(); 
+        public format() {
+            sub_.Add(color_);
+            sub_.Add(date_);
+            sub_.Add(time_);
+            sub_.Add(compare_number_);
+            sub_.Add(format_number_);
+            sub_.Add(alternate_bg_);
+            sub_.Add(regex_color_);
+        }
+
+        internal override void load_syntax(settings_as_string sett, ref string error) {
+            load_sub_syntax(sett, color_, "all", ref error);
+            load_sub_syntax(sett, date_, "date", ref error);
+            load_sub_syntax(sett, time_, "time", ref error);
+            load_sub_syntax(sett, compare_number_, "compare-n", ref error);
+            load_sub_syntax(sett, format_number_, "number", ref error);
+            load_sub_syntax(sett, alternate_bg_, "alternate", ref error);
+            load_sub_syntax(sett, regex_color_, "regex", ref error);
+        }
+
+        private void load_sub_syntax(settings_as_string sett, column_formatter sub, string prefix, ref string error) {
+            prefix += ".";
+            settings_as_string sub_sett = new settings_as_string("");
+            foreach ( var name in sett.names())
+                if ( name.StartsWith(prefix)) 
+                    sub_sett.set(name.Substring(prefix.Length), sett.get(name));
+
+            sub.load_syntax(sub_sett, ref error);
+        }
+
+        internal override void format_before(format_cell cell) {
+            foreach ( var formatter in sub_)
+                formatter.format_before(cell);
+        }
+
+        internal override void format_after(format_cell cell) {
+            foreach ( var formatter in sub_)
+                formatter.format_after(cell);
+        }
     }
 }

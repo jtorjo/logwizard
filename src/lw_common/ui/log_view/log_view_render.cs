@@ -73,6 +73,9 @@ namespace lw_common.ui {
             string prev_text = "";
             foreach (var part in prints) {
                 int left_offset = left + text_width(g, s.Substring(0, part.start) );
+                if (part.start > 0)
+                    // 1.7.8+ a few pixels are simply ignored when starting to draw. However, when drawing one thing after another, we don't want gaps
+                    left_offset -= 4;
                 draw_sub_string(left_offset, part.text, g, b, r, fmt, part);
             }
         }
