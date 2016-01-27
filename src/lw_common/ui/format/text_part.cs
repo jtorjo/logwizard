@@ -80,6 +80,34 @@ namespace lw_common.ui {
             is_typed_search = other.is_typed_search;
             is_find_search = other.is_find_search;
         }
+
+        // constructs a new object as a merge of this and other
+        // other overrides everything from this
+        // 
+        // note: start/len/text are taken from other (overridden)
+        public text_part merge_copy(text_part other) {
+            var copy = new text_part(other.start, other.len, this) { text = other.text };
+
+            if (other.fg != util.transparent)
+                copy.fg = other.fg;
+            if (other.bg != util.transparent)
+                copy.bg = other.bg;
+            if (other.underline)
+                copy.underline = true;
+            if (other.bold)
+                copy.bold = true;
+            if (other.italic)
+                copy.italic = true;
+            if (other.font_name != "")
+                copy.font_name = other.font_name;
+
+            if (other.is_typed_search)
+                copy.is_typed_search = true;
+            if (other.is_find_search)
+                copy.is_find_search = true;
+
+            return copy;
+        }
         
         // 1.7.5+ - keep the offsets from the original text as well
         private int start_;

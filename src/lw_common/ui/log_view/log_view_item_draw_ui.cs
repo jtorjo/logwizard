@@ -114,7 +114,7 @@ namespace lw_common.ui {
             if (bg == util.transparent)
                 bg = app.inst.bg;
 
-            if (print.is_typed_search)
+            if (print.is_typed_search && !print.is_find_search)
                 bg = util.darker_color(bg);
             return bg;
         }

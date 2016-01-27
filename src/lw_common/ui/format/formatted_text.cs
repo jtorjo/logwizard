@@ -9,7 +9,7 @@ namespace lw_common.ui.format {
     // contains all the text parts - formatted
     class formatted_text {
         private List<text_part> parts_ = new List<text_part>();
-        private string text_;
+        private readonly string text_;
 
         public formatted_text(string text) {
             text_ = text;
@@ -23,14 +23,11 @@ namespace lw_common.ui.format {
             if (parts.Count < 1)
                 return;
 
-            foreach ( var p in parts_)
+            foreach ( var p in parts)
                 Debug.Assert(p.start >= 0 && p.len > 0);
 
             parts_.AddRange(parts);
             
-            // for testing only
-            // var old_print = util.is_debug ? print.ToList() : null;
-
             // check for collitions
             bool collitions_found = true;
             while (collitions_found) {
@@ -66,10 +63,11 @@ namespace lw_common.ui.format {
                     if (collitions_found) {
                         // first, see what type of collision it is
                         bool exactly_same = now.start == next.start && now.len == next.len;
-                        if (exactly_same)
-                            // doesn't matter - just keep one
+                        if (exactly_same) {
+                            // doesn't matter - just keep one - 1.7.6+ the latter overrides all settings
+                            parts_[idx] = now.merge_copy(next);
                             parts_.RemoveAt(idx + 1);
-                        else {
+                        } else {
                             // here - either one completely contains the other, or they just intersect
                             bool contains_fully = now.start + now.len >= next.start + next.len;
                             if (contains_fully) {
@@ -79,7 +77,7 @@ namespace lw_common.ui.format {
                                     int len = next.len;
                                     int second_len = now.len - len;
                                     Debug.Assert(second_len >= 0);
-                                    parts_[idx + 1] = new text_part(now.start + len, second_len, now);
+                                    parts_[idx + 1] = new text_part(now.start + len, second_len, now.merge_copy(next));
                                 } else {
                                     // in this case, we need to split in 3
                                     int len1 = next.start - now.start;
@@ -88,16 +86,30 @@ namespace lw_common.ui.format {
                                     var now2 = new text_part(next.start + next.len, len2, now);
                                     Debug.Assert(len1 >= 0 && len2 >= 0);
                                     parts_[idx] = now1;
+                                    // 1.7.6
+                                    parts_[idx + 1] = now.merge_copy(next);
                                     parts_.Insert(idx + 2, now2);
                                 }
                             } else {
-                                // they just intersect
+                                // 1.7.6+ they just intersect - split into three
+                                int intersect_count = now.start + now.len - next.start;
+                                Debug.Assert(intersect_count > 0);
+                                int now_new_len = now.len - intersect_count;
+                                Debug.Assert(now_new_len >= 0);
+                                parts_[idx] = new text_part(now.start, now_new_len, now);
+                                var intersected = new text_part(now.start + now_new_len, intersect_count, now.merge_copy(next));
+                                parts_[idx + 1] = new text_part(next.start + intersect_count, next.len - intersect_count, next);
+                                parts_.Insert(idx + 1, intersected);
+#if old_code
+    // normally, this should actually be split in three - but for now, leave it like this:
+    //          just allow the latter become bigger
                                 int intersect_count = now.start + now.len - next.start;
                                 Debug.Assert( intersect_count > 0);
                                 int interesect_len = now.len - intersect_count;
                                 Debug.Assert(interesect_len >= 0);
                                 now = new text_part(now.start, interesect_len, now);
                                 parts_[idx] = now;
+#endif
                             }
                         }
                     }
