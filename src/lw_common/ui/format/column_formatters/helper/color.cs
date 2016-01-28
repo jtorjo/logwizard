@@ -22,7 +22,7 @@ namespace lw_common.ui.format.column_formatters {
         internal override void format_after(format_cell cell) {
             var text = cell.format_text.text;
             if ( color_ != "")
-                cell.format_text.add_part( new text_part(0, text.Length) { fg = parse_fg_color(color_, cell) });
+                cell.format_text.add_part( new text_part(0, text.Length) { fg = parse_color(color_, cell) });
         }
     }
 }

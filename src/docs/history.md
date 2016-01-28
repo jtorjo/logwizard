@@ -1,38 +1,8 @@
 
-- time/date -> use cusom font!!!
 
-
-
-
-
-- allow for pictures
-
-
-
-- tooltip: when hovering a number, show it in hexa, octal, decimal and binary
-- by default, this should apply to all log (not just this view)
-	- when editing colum formatters -> allow for preview
-- i should have a default column formatter syntax 
-- if any "number" formatter -> allow ctrl-shift-B to switch between bases (hexa, decimal, octal, binary)
-
-- bug: since now different text parts are overlapping (i'm writing each part with a -4 offset), sometimes not all text is seen - from a part. 
-      the solution might be to write everything backwards (last text first?)
-
-
-help
-- update setup kit sample - show it with formatting 
-  - have a very easy way to reopen the original sample or the others + show_tips -> explain about it.
-- page about column formatting (each of the arguments to the formatters)
-
-Defaults:
-- line numbers - green a-la-VS2013
-- time + date: show only difference compared to previous (the rest in much lighter color) - default, in blue
-- things in brackets - perhaps show them in slightly lighter color
-**************- level : show as pictures
-- date: no year
-- directory/file names in slighly different color
-- number / strings -> in msg -> show differently (number, string_)
-********* alignment
+1.7.12a
+- column formatter:
+  - alternate bg: allow specifying alternate color
 
 
 1.7.11

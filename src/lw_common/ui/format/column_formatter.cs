@@ -37,7 +37,18 @@ namespace lw_common.ui.format {
             }
         }
 
-        internal Color parse_fg_color(string str, format_cell cell) {
+        internal Color parse_color(string str, Color col) {
+            switch (str) {
+            case "darker":
+                return util.darker_color(col);
+            case "lighter":
+                return util.grayer_color(col);
+            default:
+                return util.str_to_color(str);
+            }
+        }
+
+        internal Color parse_color(string str, format_cell cell) {
             switch (str) {
             case "darker":
                 return util.darker_color(cell.fg_color);

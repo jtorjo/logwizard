@@ -7,6 +7,8 @@
 *.user
 *.sln.docstates
 
+*.internal.txt
+
 # Build results
 
 [Dd]ebug/

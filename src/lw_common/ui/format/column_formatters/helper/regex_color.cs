@@ -56,7 +56,7 @@ namespace lw_common.ui.format.column_formatters {
                 return;
 
             var text = cell.format_text.text;
-            Color col = parse_fg_color(color_, cell);
+            Color col = parse_color(color_, cell);
 
             var found = util.regex_matches(regex_, text).OrderBy(x => x.Item1).ToList();
             // see if i need to replace with written in another base

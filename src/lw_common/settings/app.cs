@@ -67,9 +67,8 @@ namespace lw_common {
                                                     "regex.color=lighter\r\n" +
                                                     "regex2.expr=(?<=\")(?:\\\\.|[^\"\\\\])*(?=\")|(?<=')(?:\\\\.|[^'\\\\])*(?=')\r\n" + // strings
                                                     "regex2.color=darkviolet\r\n" +
-                                                    @"regex3.expr=(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*\w([\w.])+" + "\r\n" + // directory names
-                                                    "regex3.color=darker\r\n" +
-                                                    "alternate.row_count=10\r\n" +
+                                                    "alternate.row_count=1\r\n" +
+                                                    "alternate.color=#fbfdf9" +
                                                     ""
                                                     ; 
 

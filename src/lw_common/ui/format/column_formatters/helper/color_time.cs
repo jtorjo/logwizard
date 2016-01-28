@@ -48,7 +48,7 @@ namespace lw_common.ui.format.column_formatters {
             if (cell.col_type != expected_type)
                 return; // only color time column
 
-            Color col = parse_fg_color(color_, cell);
+            Color col = parse_color(color_, cell);
             if (col == util.transparent)
                 col = cell.fg_color;
 
@@ -56,7 +56,7 @@ namespace lw_common.ui.format.column_formatters {
             bool needs_show_diff_now = show_diff_ && cell.row_index != cell.top_row_index;
             if (needs_show_diff_now) {
                 int offset = util.datetime_difference_offset(cell.prev_text, text);
-                Color lighter_col = light_color_ != "" ? parse_fg_color(light_color_, cell) : util.grayer_color(col);
+                Color lighter_col = light_color_ != "" ? parse_color(light_color_, cell) : util.grayer_color(col);
                 var parts = new List<text_part>() { new text_part(0, offset) { fg = lighter_col }, new text_part(offset, text.Length - offset) { fg = col } };
                 cell.format_text.add_parts( parts);
             }

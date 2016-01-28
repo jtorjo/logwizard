@@ -196,19 +196,6 @@ namespace lw_common {
 
             return darker;
         }
-        public static Color darker_color(Color col, double mul_by) {
-            var argb = col.ToArgb();
-
-            ColorEx ex = new ColorEx(col);
-            ex.S = (byte) (ex.S * mul_by > 100 ? 100 : ex.S * mul_by);
-            Color darker = ex.Color;
-
-            if (darker.ToArgb() == col.ToArgb())
-                // basically, we never want to return the same color
-                return grayer_color(col);
-
-            return darker;
-        }
 
         public static string read_beginning_of_file(string file, int len) {
             try {

@@ -169,6 +169,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="docs\todo.internal.txt" />
     <Content Include="lw.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
