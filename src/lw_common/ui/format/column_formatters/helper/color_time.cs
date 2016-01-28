@@ -23,6 +23,8 @@ namespace lw_common.ui.format.column_formatters {
         private bool show_diff_ = true;
 
         protected info_type expected_type = info_type.time;
+        // extra formatting, if any
+        private text_part formatting_ = null;
 
         internal override void load_syntax(settings_as_string sett, ref string error) {
             base.load_syntax(sett, ref error);
@@ -35,6 +37,9 @@ namespace lw_common.ui.format.column_formatters {
                 error = "Invalid color: " + light_color_;
 
             show_diff_ = sett.get("show_diff", "1") == "1";
+            var format = sett.get("format");
+            if ( format != "")
+                formatting_ = text_part.from_friendly_string(format);
         }
 
         internal override void format_before(format_cell cell) {
@@ -53,6 +58,9 @@ namespace lw_common.ui.format.column_formatters {
                 col = cell.fg_color;
 
             var text = cell.format_text.text;
+            if ( formatting_ != null)
+                cell.format_text.add_part(new text_part(0, text.Length, formatting_) );
+
             bool needs_show_diff_now = show_diff_ && cell.row_index != cell.top_row_index;
             if (needs_show_diff_now) {
                 int offset = util.datetime_difference_offset(cell.prev_text, text);

@@ -45,7 +45,6 @@ namespace lw_common.ui {
         public search_renderer(log_view parent, search_form search) {
             search_ = search;
             drawer_ = new log_view_item_draw_ui(parent);
-            drawer_.set_font(parent.list.Font);
 
             Color normal_fg_ = app.inst.fg, normal_bg_ = app.inst.bg;
             default_ = new text_part(0,0) { fg = normal_fg_, bg = normal_bg_, };

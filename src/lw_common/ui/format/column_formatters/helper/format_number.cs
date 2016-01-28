@@ -31,7 +31,9 @@ namespace lw_common.ui.format.column_formatters.helper {
         private bool look_for_hex_ = true;
 
         // ... not perfect, but a good start
-        private Regex regex_hex_ = new Regex(@"(?<=[\s=,{\(\[<>/])[0-9a-fA-F]{4,30}(?=[\s.,<>/=\-}\]\)+*])");
+        //private Regex regex_hex_ = new Regex(@"(?<=[\s=,{\(\[<>/])[0-9a-fA-F]{4,30}(?=[\s.,<>/=\-}\]\)+*])");
+        // 1.7.12 - limit the possibility of false positives - search only for only capital letters (a-f)
+        private Regex regex_hex_ = new Regex(@"(?<=[\s=,{\(\[<>/])[0-9A-F]{4,30}(?=[\s.,<>/=\-}\]\)+*])");
 
         private Regex regex_decimal_ = new Regex(@"(?<=[\s=,{\(\[<>/])\d*[,.]?\d*(?=[\s.,<>/=\-}\]\)+*])");
 

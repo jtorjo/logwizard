@@ -50,7 +50,8 @@ namespace lw_common {
 
         public const string DEFAULT_COLUMN_SYNTAX = "[line]\r\n" +
                                                     "color-all\r\n" +
-                                                    "color=#2B91AF\r\n" +
+                                                    //"format=courier new/#2B91AF/#F0F0F0\r\n" +
+                                                    "format=courier new/#800000/#F0F0F0\r\n" +
                                                     "\r\n" +
                                                     "[all]\r\n" +
                                                     "format\r\n" +
@@ -58,6 +59,8 @@ namespace lw_common {
                                                     "date.light_color=#adc7e8\r\n" +
                                                     "time.color=blue\r\n" +
                                                     "time.light_color=#adc7e8\r\n" +
+                                                    //"time.format=DejaVu Sans Mono/bold\r\n" +
+                                                    "time.format=courier new/bold\r\n" +
                                                     "\r\n" +
                                                     "[msg]\r\n" +
                                                     "format\r\n" +

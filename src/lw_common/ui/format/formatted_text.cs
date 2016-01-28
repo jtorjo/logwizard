@@ -140,7 +140,7 @@ namespace lw_common.ui.format {
                             if (contains_fully) {
                                 bool starts_at_same_idx = now.start == next.start;
                                 if (starts_at_same_idx) {
-                                    parts_[idx] = next;
+                                    parts_[idx] = now.merge_copy(next);
                                     int len = next.len;
                                     int second_len = now.len - len;
                                     Debug.Assert(second_len >= 0);

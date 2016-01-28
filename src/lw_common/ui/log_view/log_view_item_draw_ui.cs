@@ -31,42 +31,27 @@ using lw_common.ui.format;
 
 namespace lw_common.ui {
     internal class log_view_item_draw_ui {
-        private solid_brush_list brush_ = new solid_brush_list();
-        private gradient_brush_list gradient_ = new gradient_brush_list();
 
         private log_view parent_;
 
-        private Font font_, b_font, bi_font, i_font;
+        private font_list fonts_ = new font_list();
 
         // if true, we consider none of the items is selected
         public bool ignore_selection = false;
 
         public log_view_item_draw_ui(log_view parent) {
             parent_ = parent;
-
-            font_ = parent_.list.Font;
-            b_font = new Font(font_.FontFamily, font_.Size, FontStyle.Bold);
-            bi_font = new Font(font_.FontFamily, font_.Size, FontStyle.Bold | FontStyle.Italic);
-            i_font = new Font(font_.FontFamily, font_.Size, FontStyle.Italic);
         }
 
-        private void build_fonts() {
-            b_font = new Font(font_.FontFamily, font_.Size, FontStyle.Bold);
-            bi_font = new Font(font_.FontFamily, font_.Size, FontStyle.Bold | FontStyle.Italic);
-            i_font = new Font(font_.FontFamily, font_.Size, FontStyle.Italic);            
-        }
-
-        public void set_font(Font f) {
-            font_ = f;
-            build_fonts();
-        }
         public Font font(text_part print) {
-            Font f = print.bold ? (print.italic ? bi_font : b_font) : (print.italic ? i_font : font_);
+            string font_name = print.font_name != "" ? print.font_name : default_font.FontFamily.Name;
+            int font_size = print.font_size > 0 ? print.font_size : (int)(default_font.Size + .5);
+            Font f = fonts_.get_font(font_name, font_size, print.bold, print.italic, print.underline);
             return f;
         }
 
         public Font default_font {
-            get { return font_; }
+            get { return parent_.list.Font; }
         }
 
         // allow overriding the parent  
@@ -76,31 +61,56 @@ namespace lw_common.ui {
                 return;
 
             parent_ = parent;
-            set_font(parent.list.Font);
         }
 
-        public int text_width(Graphics g, string text) {
+        private int measure_text_width(Graphics g, string text, Font override_font ) {
+            // IMPORTANT: at this time, we assume we have a fixed font
+            return (int)(g.MeasureString(text, override_font ?? default_font).Width + .7);
+        }
+
+        public int text_width(Graphics g, string text, Font override_font = null) {
             // IMPORTANT: at this time, we assume we have a fixed font
             bool ends_in_space = text.EndsWith(" ");
-            if (ends_in_space)
-                // just append any character, so that the spaces are taken into account
-                text += "_";
-
-            int width = (int)g.MeasureString(text, font_).Width + 1;
+            int width = measure_text_width(g, text, override_font);
             if (ends_in_space) {
-                int avg_per_char = width / text.Length;
-                width -= avg_per_char;
+                // we need to find out the size of "_" - only reliable way is to print it twice
+                int width1 = measure_text_width(g, text + "_", override_font);
+                int width2 = measure_text_width(g, text + "__", override_font);
+                int underscore_size = width2 - width1;
+                width = width1 - underscore_size;
             }
+
             return width;
-//            return char_size(g) * text.Length;
         }
 
+        // 1.7.12+ a few pixels are simply ignored when starting to draw. However, when drawing one thing after another, we don't want gaps
+        //         now I compute this offset correctly regardless of font
+        private const string dummy_extra_ = "ABCDEFGZYX";
+        public int text_offset(Graphics g, string text, Font override_font = null) {
+            // IMPORTANT: at this time, we assume we have a fixed font
+            bool ends_in_space = text.EndsWith(" ");
+            int width = measure_text_width(g, text, override_font);
+            if (ends_in_space) {
+                // we need to find out the size of "_" - only reliable way is to print it twice
+                int width1 = measure_text_width(g, text + "_", override_font);
+                int width2 = measure_text_width(g, text + "__", override_font);
+                int underscore_size = width2 - width1;
+                width = width1 - underscore_size;
+            }
+
+            int text_and_extra_width = measure_text_width(g, text + dummy_extra_, override_font);
+            int extra_width = measure_text_width(g, dummy_extra_, override_font);
+
+            // normally, this should be zero, but always, the OS pads a few pixels - we need to ignore them
+            int offset = width + extra_width - text_and_extra_width;
+            return width - offset;
+        }
 
         public int char_size(Graphics g) {
             // IMPORTANT: at this time, we assume we have a fixed font
-            var ab = g.MeasureString("ab", font_).Width;
-            var abc = g.MeasureString("abc", font_).Width;
-            var abcd = g.MeasureString("abcd", font_).Width;
+            var ab = g.MeasureString("ab", default_font).Width;
+            var abc = g.MeasureString("abc", default_font).Width;
+            var abcd = g.MeasureString("abcd", default_font).Width;
             Debug.Assert( (int)((abc - ab) * 100) == (int)((abcd - abc) * 100)) ;
 
             return (int)(abc - ab);
@@ -114,15 +124,15 @@ namespace lw_common.ui {
             Color bg = print.bg != util.transparent ? print.bg : default_bg;
             if (bg == util.transparent)
                 bg = app.inst.bg;
+            // selection overrides everything
+            if (is_sel)
+                bg = default_bg;
 
             if (print.is_typed_search && !print.is_find_search)
                 bg = util.darker_color(bg);
             return bg;
         }
 
-        public Brush print_bg_brush(OLVListItem item, text_part print) {
-            return brush_.brush(print_bg_color(item, print));
-        }
 
         public Color print_fg_color(OLVListItem item, text_part print) {
             match_item i = item.RowObject as match_item;            
@@ -133,9 +143,6 @@ namespace lw_common.ui {
             return print_fg;
         }
 
-        public Brush print_fg_brush(OLVListItem item, text_part print) {
-            return brush_.brush(print_fg_color(item, print));
-        }
 
         public Color bg_color(OLVListItem item, int col_idx) {
             match_item i = item.RowObject as match_item;
@@ -167,24 +174,15 @@ namespace lw_common.ui {
             return color;
         }
 
-        public Brush bg_brush(OLVListItem item, int col_idx, formatted_text format) {
+        public Color bg_color(OLVListItem item, int col_idx, formatted_text format) {
             match_item i = item.RowObject as match_item;
             int row_idx = item.Index;
             bool is_sel = !ignore_selection ? parent_.multi_sel_idx.Contains(row_idx) : false;
-
             if ( !is_sel)
                 if (format.bg != util.transparent)
-                    return brush_.brush(format.bg);
+                    return format.bg;
 
-            if (col_idx == parent_.msgCol.fixed_index()) {
-                if (!is_sel && app.inst.use_bg_gradient) {
-                    Rectangle r = item.GetSubItemBounds(col_idx);
-                    if ( r.Width > 0 && r.Height > 0)
-                        return gradient_.brush(r, app.inst.bg_from, app.inst.bg_to);
-                }
-            }
-
-            return brush_.brush( bg_color(item, col_idx));
+            return bg_color(item, col_idx);
         }
     }
 }

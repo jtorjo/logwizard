@@ -1,5 +1,13 @@
 
 
+1.7.12b
+- fix: all project compiles (moved to .net4.5)
+- not using gradient at all - it was just an experiment, and with current way of implementing renders, too complicated
+- fix: time/date -> use custom font
+- fix: alternate doesn't work completely, for all row text
+- line: shown awesomely, like in intellij
+
+
 1.7.12a
 - column formatter:
   - alternate bg: allow specifying alternate color

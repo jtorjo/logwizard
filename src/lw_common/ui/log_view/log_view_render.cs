@@ -40,31 +40,29 @@ namespace lw_common.ui {
         private log_view parent_;
         private log_view_item_draw_ui drawer_ = null;
 
+        private solid_brush_list brush_ = new solid_brush_list();
+
         public log_view_render(log_view parent) {
             parent_ = parent;
             drawer_ = new log_view_item_draw_ui(parent_);            
-        }
-
-        public void set_font(Font f) {
-            drawer_.set_font(f);
         }
 
         private formatted_text  override_print_ = null;
         text_part default_ = new text_part(0, 0);
 
         private void draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, text_part print) {
-            int width = text_width(g, sub);
-            if (print != default_) {
+            int width = drawer_.text_width(g, sub, drawer_.font(print));
+            if (print.bg != util.transparent) {
                 Rectangle here = new Rectangle(r.Location, r.Size);
                 here.X += left;
                 here.Width = width + 1;
-                g.FillRectangle( drawer_.print_bg_brush(ListItem, print) , here);
+                g.FillRectangle( brush_.brush( drawer_.print_bg_color(ListItem, print)) , here);
             }
 
             Rectangle sub_r = new Rectangle(r.Location, r.Size);
             sub_r.X += left;
             sub_r.Width -= left;
-            g.DrawString(sub, drawer_.font(print), drawer_.print_fg_brush(ListItem, print) , sub_r, fmt);
+            g.DrawString(sub, drawer_.font(print), brush_.brush( drawer_.print_fg_color(ListItem, print)) , sub_r, fmt);
         }
 
 
@@ -72,16 +70,9 @@ namespace lw_common.ui {
             var prints = override_print_.parts(default_);
             string prev_text = "";
             foreach (var part in prints) {
-                int left_offset = left + text_width(g, s.Substring(0, part.start) );
-                if (part.start > 0)
-                    // 1.7.8+ a few pixels are simply ignored when starting to draw. However, when drawing one thing after another, we don't want gaps
-                    left_offset -= 4;
+                int left_offset = left + drawer_.text_offset(g, s.Substring(0, part.start), drawer_.font(part) );
                 draw_sub_string(left_offset, part.text, g, b, r, fmt, part);
             }
-        }
-
-        private int text_width(Graphics g, string text) {
-            return drawer_.text_width(g, text);
         }
 
 
@@ -93,7 +84,7 @@ namespace lw_common.ui {
         public List<int> text_widths(Graphics g ,string text) {
             List<int> widths = new List<int>();
             for ( int i = 0; i < text.Length; ++i)
-                widths.Add( i > 0 ? text_width(g, text.Substring(0, i)) : 0);
+                widths.Add( i > 0 ? drawer_.text_width(g, text.Substring(0, i)) : 0);
             return widths;
         } 
 
@@ -114,7 +105,7 @@ namespace lw_common.ui {
                 override_print_ = override_print_.get_most_important_single_line();
             text = override_print_.text;
 
-            Brush brush = drawer_.bg_brush(ListItem, col_idx, override_print_);
+            Brush brush = brush_.brush( drawer_.bg_color(ListItem, col_idx, override_print_));
             g.FillRectangle(brush, r);
 
             StringFormat fmt = new StringFormat(StringFormatFlags.NoWrap);

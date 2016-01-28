@@ -21,10 +21,10 @@ namespace test_ui {
             string file = @"C:\john\code\buff\lw-tests\small.log";
             string syntax = "$time[0,12] $ctx1[13,10] $level[24,5] $class[' ','- '] $msg";
 
-            settings_as_string sett = new settings_as_string("");
-            sett.set("type", "file");
-            sett.set("name", file);
-            sett.set("syntax", syntax);
+            var sett = new log_settings_string("");
+            sett.type.set(log_type.file);
+            sett.name.set(file);
+            sett.syntax.set(syntax);
 
             lv_ = new log_view(this, "testing 123");
             lv_.Dock = DockStyle.Fill;
