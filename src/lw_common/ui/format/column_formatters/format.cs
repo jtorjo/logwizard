@@ -22,7 +22,6 @@ namespace lw_common.ui.format.column_formatters {
         private compare_number compare_number_ = new compare_number();
         private format_number format_number_ = new format_number();
         private alternate_bg_color alternate_bg_ = new alternate_bg_color();
-        private regex_color regex_color_ = new regex_color();
 
         private List<column_formatter> sub_ = new List<column_formatter>(); 
         public format() {
@@ -32,7 +31,6 @@ namespace lw_common.ui.format.column_formatters {
             sub_.Add(compare_number_);
             sub_.Add(format_number_);
             sub_.Add(alternate_bg_);
-            sub_.Add(regex_color_);
         }
 
         internal override void load_syntax(settings_as_string sett, ref string error) {
@@ -44,7 +42,16 @@ namespace lw_common.ui.format.column_formatters {
             load_sub_syntax(sett, compare_number_, "compare-n", ref error);
             load_sub_syntax(sett, format_number_, "number", ref error);
             load_sub_syntax(sett, alternate_bg_, "alternate", ref error);
-            load_sub_syntax(sett, regex_color_, "regex", ref error);
+
+            for (int idx = 0;; idx++) {
+                string prefix = "regex" + (idx > 0 ? "" + (idx + 1) : "");
+                string regex_expr = sett.get(prefix + ".expr");
+                if (regex_expr != "") {
+                    regex_color regex = new regex_color();
+                    load_sub_syntax(sett, regex, prefix, ref error);
+                    sub_.Add(regex);
+                } else break;
+            }
         }
 
         private void load_sub_syntax(settings_as_string sett, column_formatter sub, string prefix, ref string error) {

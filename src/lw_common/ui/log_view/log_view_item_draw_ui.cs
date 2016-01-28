@@ -27,6 +27,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using BrightIdeasSoftware;
+using lw_common.ui.format;
 
 namespace lw_common.ui {
     internal class log_view_item_draw_ui {
@@ -166,12 +167,16 @@ namespace lw_common.ui {
             return color;
         }
 
-        public Brush bg_brush(OLVListItem item, int col_idx) {
+        public Brush bg_brush(OLVListItem item, int col_idx, formatted_text format) {
             match_item i = item.RowObject as match_item;
             int row_idx = item.Index;
+            bool is_sel = !ignore_selection ? parent_.multi_sel_idx.Contains(row_idx) : false;
+
+            if ( !is_sel)
+                if (format.bg != util.transparent)
+                    return brush_.brush(format.bg);
 
             if (col_idx == parent_.msgCol.fixed_index()) {
-                bool is_sel = !ignore_selection ? parent_.multi_sel_idx.Contains(row_idx) : false;
                 if (!is_sel && app.inst.use_bg_gradient) {
                     Rectangle r = item.GetSubItemBounds(col_idx);
                     if ( r.Width > 0 && r.Height > 0)

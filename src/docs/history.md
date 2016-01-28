@@ -1,49 +1,28 @@
 
 - time/date -> use cusom font!!!
 
-column formatters:
-- allow specifying alignment (left or right) + allow specifying font name/size, bold, italic, fg color, bg color
-- have context; question: where do i keep the settings (make it really easy to load/save)
-- have order - so that I know which formatter follows which formatter
-- specifying settings via settings_as_string?
-- simple formatters : 
-    color formatter -> just apply color to all text
-	comparing numbers, 
-	find a number in a string and compare it, such as "time: 133 ms" -> find '133'
-	show time - perhaps show only diff to previous (if any?) 
-	 ----------> in this case, i need to always find out the first visible index (because the first visible index is always to be shown)
-	             basically, hours, mins, seconds that are the same, show them in a lighter color
-				 - have a different date/time font by default  - agency fb - bold,SimSun, DengXian
-	show date??? perhaps show only diff to previous (if any?)
-	(later) xml msg could be shown in a friendly manner
-	(later) recognize stack trace and show it nicely
-	multiline 
-	  - when on view, show the paragraph sign
-	  - allow showing everything as a single line (replace enter by space)
-	alternate colors (by default, every line, but can have it so that i alternate from 10 to 10 or something)
-	  - perhaps this is indeed a good idea (10 by 10)
 
 
 
 
-- TOTHINK about default formatter
-  - think of a cool way to show time -> needs to be in par with date
-- allow chaining (probably this is inferred from order)
 - allow for pictures
-- work for view/details pane/msg details
 
 
 
 - tooltip: when hovering a number, show it in hexa, octal, decimal and binary
 - by default, this should apply to all log (not just this view)
+	- when editing colum formatters -> allow for preview
 - i should have a default column formatter syntax 
-- when editing colum formatters -> allow for preview
 - if any "number" formatter -> allow ctrl-shift-B to switch between bases (hexa, decimal, octal, binary)
+
+- bug: since now different text parts are overlapping (i'm writing each part with a -4 offset), sometimes not all text is seen - from a part. 
+      the solution might be to write everything backwards (last text first?)
+
+
+help
 - update setup kit sample - show it with formatting 
   - have a very easy way to reopen the original sample or the others + show_tips -> explain about it.
 - page about column formatting (each of the arguments to the formatters)
-- bug: since now different text parts are overlapping (i'm writing each part with a -4 offset), sometimes not all text is seen - from a part. 
-      the solution might be to write everything backwards (last text first?)
 
 Defaults:
 - line numbers - green a-la-VS2013
@@ -54,6 +33,12 @@ Defaults:
 - directory/file names in slighly different color
 - number / strings -> in msg -> show differently (number, string_)
 ********* alignment
+
+
+1.7.11
+- column formatter
+  - regex color works
+  - alternate bg slightly works - does not work in all cases - some text is shown in white bg
 
 
 1.7.10

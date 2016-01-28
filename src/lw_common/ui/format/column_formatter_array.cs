@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using lw_common.ui.format.column_formatters;
@@ -68,6 +69,9 @@ namespace lw_common.ui.format {
                     else
                         errors += "Invalid line: " + line + "\r\n";
                 }
+                else if (line.StartsWith("#"))
+                    // comment
+                    continue;
                 else if (line != "") {
                     if (last.name == "")
                         // first line = the name of the formatter
@@ -131,7 +135,9 @@ namespace lw_common.ui.format {
             // this way, I can modify the text before (when dealing with numbers and such)
             foreach ( var format in formatters_)
                 if ( needs_apply_formatter(format, cell))
-                    format.the_formatter.format_after(cell);            
+                    format.the_formatter.format_after(cell);
+
+            cell.format_text.update_parts_bg();
         }
 
         // note: it's possible to create a valid formatter, and have an error. Like, when the syntax is partially right

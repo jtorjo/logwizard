@@ -114,7 +114,7 @@ namespace lw_common.ui {
                 override_print_ = override_print_.get_most_important_single_line();
             text = override_print_.text;
 
-            Brush brush = drawer_.bg_brush(ListItem, col_idx);
+            Brush brush = drawer_.bg_brush(ListItem, col_idx, override_print_);
             g.FillRectangle(brush, r);
 
             StringFormat fmt = new StringFormat(StringFormatFlags.NoWrap);

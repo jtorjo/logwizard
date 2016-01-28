@@ -62,8 +62,16 @@ namespace lw_common {
                                                     "[msg]\r\n" +
                                                     "format\r\n" +
                                                     "number.base=2\r\n" +
-                                                    "number.color=cyan\r\n" +
-                                                    ""; 
+                                                    "number.color=darkred\r\n" +
+                                                    @"regex.expr=(?<=\[).*(?=\])|(?<=\().*(?=\))|(?<=\{).*(?=\})" + "\r\n" + // brackets
+                                                    "regex.color=lighter\r\n" +
+                                                    "regex2.expr=(?<=\")(?:\\\\.|[^\"\\\\])*(?=\")|(?<=')(?:\\\\.|[^'\\\\])*(?=')\r\n" + // strings
+                                                    "regex2.color=darkviolet\r\n" +
+                                                    @"regex3.expr=(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*\w([\w.])+" + "\r\n" + // directory names
+                                                    "regex3.color=darker\r\n" +
+                                                    "alternate.row_count=10\r\n" +
+                                                    ""
+                                                    ; 
 
         // these are settings that are NOT shown in the UI
         public class no_ui_ {

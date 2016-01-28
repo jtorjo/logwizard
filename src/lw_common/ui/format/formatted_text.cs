@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,12 +16,21 @@ namespace lw_common.ui.format {
         // 1.7.7 not used yet
         private HorizontalAlignment align_ = HorizontalAlignment.Left;
 
+        public Color bg = util.transparent;
+
         public formatted_text(string text) {
             text_ = text;
         }
 
         public string text {
             get { return text_; }
+        }
+
+        public void update_parts_bg() {
+            if ( bg != util.transparent)
+                foreach ( var part in parts_)
+                    if (part.bg == util.transparent)
+                        part.bg = bg;
         }
 
         public void replace_text(int start, int len, string new_text) {
@@ -208,7 +218,7 @@ namespace lw_common.ui.format {
             var parts = parts_.ToList();
             if (!text.Contains('\r') && !text.Contains('\n'))
                 // text is single line
-            return new formatted_text(text) { parts_ = parts };
+            return new formatted_text(text) { parts_ = parts, bg = bg };
 
 
             char more = '¶';
@@ -223,7 +233,7 @@ namespace lw_common.ui.format {
                     int line_idx = lines.IndexOf(text);
                     text = (line_idx > 0 && app.inst.show_paragraph_sign ? more + " " : "") + text.Trim() + (line_idx < lines.Count - 1 && app.inst.show_paragraph_sign ? " " + more : "");
                 }
-                return new formatted_text(text) { parts_ = parts };
+                return new formatted_text(text) { parts_ = parts, bg = bg };
             }
 
             // we have custom printing - first, see if we have typed search
@@ -266,7 +276,7 @@ namespace lw_common.ui.format {
 
             text = (line_before ? more + " " : "") + relevant_line + (line_after ? " " + more : "");
 
-            return new formatted_text(text) { parts_ = parts };
+            return new formatted_text(text) { parts_ = parts, bg = bg };
         }
 
         public List<text_part> parts(text_part default_) {
