@@ -146,7 +146,7 @@ namespace lw_common.ui.format {
             error = "";
             column_formatter result = null;
             switch (name) {
-            case "color-all": result = new color();
+            case "cell": result = new cell();
                 break;
             case "format": result = new column_formatters.format();
                 break;

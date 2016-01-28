@@ -49,7 +49,7 @@ namespace lw_common {
         }
 
         public const string DEFAULT_COLUMN_SYNTAX = "[line]\r\n" +
-                                                    "color-all\r\n" +
+                                                    "cell\r\n" +
                                                     //"format=courier new/#2B91AF/#F0F0F0\r\n" +
                                                     "format=courier new/#800000/#F0F0F0\r\n" +
                                                     "\r\n" +

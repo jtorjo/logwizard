@@ -6,9 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace lw_common.ui.format.column_formatters {
-    class color : column_formatter {
-        private string color_ = "";
-
+    // formats the whole cell
+    class cell : column_formatter {
         // extra formatting, if any
         private text_part formatting_ = null;
 

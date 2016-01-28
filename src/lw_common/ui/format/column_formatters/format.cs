@@ -16,7 +16,7 @@ namespace lw_common.ui.format.column_formatters {
 
     */
     class format : column_formatter {
-        private color color_ = new color();
+        private cell color_ = new cell();
         private color_date date_ = new color_date();
         private color_time time_ = new color_time();
         private compare_number compare_number_ = new compare_number();

@@ -131,14 +131,15 @@
     </Compile>
     <Compile Include="ui\font_list.cs" />
     <Compile Include="ui\format\column_formatters\helper\alternate_bg_color.cs" />
-    <Compile Include="ui\format\column_formatters\helper\color.cs" />
+    <Compile Include="ui\format\column_formatters\cell.cs" />
     <Compile Include="ui\format\column_formatter.cs" />
     <Compile Include="ui\format\column_formatters\helper\color_date.cs" />
     <Compile Include="ui\format\column_formatters\helper\compare_number.cs" />
     <Compile Include="ui\format\column_formatters\helper\color_time.cs" />
     <Compile Include="ui\format\column_formatters\helper\format_number.cs" />
     <Compile Include="ui\format\column_formatters\helper\regex_color.cs" />
-    <Compile Include="ui\format\column_formatters\multiline.cs" />
+    <Compile Include="ui\format\column_formatters\helper\multiline.cs" />
+    <Compile Include="ui\format\column_formatters\picture.cs" />
     <Compile Include="ui\format\column_formatters\stack_trace.cs" />
     <Compile Include="ui\format\column_formatters\format.cs" />
     <Compile Include="ui\format\column_formatters\xml.cs" />

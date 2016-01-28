@@ -1,4 +1,7 @@
 
+1.7.12c
+- column formatter: color renamed as cell + not a helper
+
 
 1.7.12b
 - fix: all project compiles (moved to .net4.5)

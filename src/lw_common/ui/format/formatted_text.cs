@@ -14,7 +14,7 @@ namespace lw_common.ui.format {
         private string text_;
 
         // 1.7.7 not used yet
-        private HorizontalAlignment align_ = HorizontalAlignment.Left;
+        //private HorizontalAlignment align_ = HorizontalAlignment.Left;
 
         public Color bg = util.transparent;
 

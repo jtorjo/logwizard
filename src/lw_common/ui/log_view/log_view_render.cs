@@ -68,7 +68,6 @@ namespace lw_common.ui {
 
         private void draw_string(int left, string s, Graphics g, Brush b, Rectangle r, StringFormat fmt) {
             var prints = override_print_.parts(default_);
-            string prev_text = "";
             foreach (var part in prints) {
                 int left_offset = left + drawer_.text_offset(g, s.Substring(0, part.start), drawer_.font(part) );
                 draw_sub_string(left_offset, part.text, g, b, r, fmt, part);
