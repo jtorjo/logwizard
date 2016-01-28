@@ -51,7 +51,10 @@ namespace lw_common.ui.format {
                 bool before = part.start <= start && part.end <= start;
                 bool after = part.start >= end;
 
-                if (start_inside && end_inside) {
+                bool exactly_same = part.start == start && part.len == len;
+                if (exactly_same) 
+                    parts_[part_idx] = new text_part(part.start, new_len, part);
+                else if (start_inside && end_inside) {
                     // this part is insde the text we're replacing
                     int offset = part.start - start;
                     if (offset + part.len > new_len) {

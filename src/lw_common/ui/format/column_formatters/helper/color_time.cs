@@ -25,6 +25,7 @@ namespace lw_common.ui.format.column_formatters {
         protected info_type expected_type = info_type.time;
 
         internal override void load_syntax(settings_as_string sett, ref string error) {
+            base.load_syntax(sett, ref error);
             color_ = sett.get("color");
             if (color_ != "" && !is_color_str_valid(color_))
                 error = "Invalid color: " + color_;

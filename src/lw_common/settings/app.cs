@@ -61,9 +61,9 @@ namespace lw_common {
                                                     "\r\n" +
                                                     "[msg]\r\n" +
                                                     "format\r\n" +
-                                                    "compare-n.compare=1000,orange,red,green\r\n" +
-                                                    "compare-n.compare2=5000,-,-,brown/bold\r\n" +
-                                                    "compare-n.where=Process*/";
+                                                    "number.base=2\r\n" +
+                                                    "number.color=cyan\r\n" +
+                                                    ""; 
 
         // these are settings that are NOT shown in the UI
         public class no_ui_ {

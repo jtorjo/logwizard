@@ -40,6 +40,10 @@ column formatters:
 - when editing colum formatters -> allow for preview
 - if any "number" formatter -> allow ctrl-shift-B to switch between bases (hexa, decimal, octal, binary)
 - update setup kit sample - show it with formatting 
+  - have a very easy way to reopen the original sample or the others + show_tips -> explain about it.
+- page about column formatting (each of the arguments to the formatters)
+- bug: since now different text parts are overlapping (i'm writing each part with a -4 offset), sometimes not all text is seen - from a part. 
+      the solution might be to write everything backwards (last text first?)
 
 Defaults:
 - line numbers - green a-la-VS2013
@@ -50,6 +54,11 @@ Defaults:
 - directory/file names in slighly different color
 - number / strings -> in msg -> show differently (number, string_)
 ********* alignment
+
+
+1.7.10
+- column formatter
+  - format number works
 
 
 1.7.9

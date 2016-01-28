@@ -55,6 +55,8 @@ namespace lw_common.ui.format.column_formatters {
         private List<compare> compare_ = new List<compare>();
 
         internal override void load_syntax(settings_as_string sett, ref string error) {
+            base.load_syntax(sett, ref error);
+
             var where = sett.get("where");
             if (where != "") {
                 int delim = where.IndexOf("*");

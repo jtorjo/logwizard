@@ -36,6 +36,8 @@ namespace lw_common.ui.format.column_formatters {
         }
 
         internal override void load_syntax(settings_as_string sett, ref string error) {
+            base.load_syntax(sett, ref error);
+
             load_sub_syntax(sett, color_, "all", ref error);
             load_sub_syntax(sett, date_, "date", ref error);
             load_sub_syntax(sett, time_, "time", ref error);

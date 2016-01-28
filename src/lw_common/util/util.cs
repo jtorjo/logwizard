@@ -33,6 +33,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using ColorSchemeExtension;
@@ -1331,5 +1332,16 @@ namespace lw_common {
                 }
             return font_families_;
         }
+
+        public static List< Tuple <int, int>> regex_matches(Regex regex, string text) {
+            var matches = regex.Match(text);
+
+            List<Tuple<int, int>> result = new List<Tuple<int, int>>();
+            while (matches.Success) {
+                result.Add( new Tuple<int, int>(matches.Index, matches.Length));
+                matches = matches.NextMatch();
+            }
+            return result;
+        } 
     }
 }
