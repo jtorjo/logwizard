@@ -55,16 +55,14 @@ namespace lw_common {
                                                     "\r\n" +
                                                     "[all]\r\n" +
                                                     "format\r\n" +
-                                                    "date.color=blue\r\n" +
-                                                    "date.light_color=#adc7e8\r\n" +
-                                                    "time.color=blue\r\n" +
+                                                    "time.format=courier new/blue/bold\r\n" +
+                                                    "# Custom date/time format, a' la C#\r\n" +
+                                                    "time.format_time=MM/dd HH:mm:ss,fff\r\n" +
                                                     "time.light_color=#adc7e8\r\n" +
-                                                    //"time.format=DejaVu Sans Mono/bold\r\n" +
-                                                    "time.format=courier new/bold\r\n" +
                                                     "\r\n" +
                                                     "[msg]\r\n" +
                                                     "format\r\n" +
-                                                    "number.base=2\r\n" +
+                                                    //"number.base=2\r\n" +
                                                     "number.color=darkred\r\n" +
                                                     @"regex.expr=(?<=\[).*(?=\])|(?<=\().*(?=\))|(?<=\{).*(?=\})" + "\r\n" + // brackets
                                                     "regex.color=lighter\r\n" +

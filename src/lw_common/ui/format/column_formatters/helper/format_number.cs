@@ -80,7 +80,25 @@ namespace lw_common.ui.format.column_formatters.helper {
             }
         }
 
+        private bool is_cell_type_ok(info_type type) {
+            switch (type) {
+            case info_type.date:
+            case info_type.time:
+            case info_type.level:
+            case info_type.thread:
+            case info_type.file:
+            case info_type.func:
+            case info_type.class_:
+            case info_type.view:
+            case info_type.line:
+                return false;
+            }
+            return true;
+        }
+
         internal override void format_before(format_cell cell) {
+            if (!is_cell_type_ok(cell.col_type))
+                return;
             if (color_ == "" && base_ == 10 && pad_ == "" && !look_for_hex_)
                 // we don't need to do anything
                 return;
@@ -92,9 +110,8 @@ namespace lw_common.ui.format.column_formatters.helper {
             Color col = parse_color(color_, cell);
             if (look_for_hex_) {
                 // ... note: we don't want the delimeters included
-                var hex_numbers =
-                    util.regex_matches(regex_hex_, text).Where(x => double_check_is_hex(text.Substring(x.Item1, x.Item2))).ToList();
-                cell.format_text.add_parts( hex_numbers.Select(x => new text_part(x.Item1, x.Item2) { fg = col }).ToList() );
+                var hex_numbers = util.regex_matches(regex_hex_, text).Where(x => double_check_is_hex(text.Substring(x.Item1, x.Item2))).ToList();
+                cell.format_text.add_parts(hex_numbers.Select(x => new text_part(x.Item1, x.Item2) {fg = col}).ToList());
             }
 
             /* IMPORTANT: we have the following assumption: the hexa numbers NEVER interfere with the decimal numbers.
@@ -107,7 +124,7 @@ namespace lw_common.ui.format.column_formatters.helper {
             */
             var dec_numbers = util.regex_matches(regex_decimal_, text).OrderBy(x => x.Item1).ToList();
             // see if i need to replace with written in another base
-            cell.format_text.add_parts( dec_numbers.Select(x => new text_part(x.Item1, x.Item2) { fg = col }).ToList());
+            cell.format_text.add_parts(dec_numbers.Select(x => new text_part(x.Item1, x.Item2) {fg = col}).ToList());
 
             int start_offset = 0;
             foreach (var cur_number_offset in dec_numbers) {
@@ -117,7 +134,7 @@ namespace lw_common.ui.format.column_formatters.helper {
                     cell.format_text.replace_text(start, len, new_number);
                     int diff = new_number.Length - len;
                     start_offset += diff;
-                }            
+                }
             }
         }
 

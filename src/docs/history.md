@@ -1,4 +1,10 @@
 
+1.7.13
+- column formatter: color_time
+  - use 'format' for formatting (instead of 'color')
+  - time: allow using the line.time -> allow specifying format: yyyy/MM/dd and so on 
+
+
 1.7.12c
 - column formatter: color renamed as cell + not a helper
 
