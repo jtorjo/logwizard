@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using lw_common.ui.format.column_formatters;
 
 namespace lw_common.ui.format {
@@ -138,8 +140,25 @@ namespace lw_common.ui.format {
             //
             // this way, I can modify the text before (when dealing with numbers and such)
             foreach ( var format in formatters_)
-                if ( needs_apply_formatter(format, cell))
+                if (needs_apply_formatter(format, cell)) {
                     format.the_formatter.format_after(cell);
+                    switch (format.the_formatter.align) {
+                    case column_formatter.align_type.left:
+                        cell.format_text.align = HorizontalAlignment.Left;
+                        break;
+                    case column_formatter.align_type.center:
+                        cell.format_text.align = HorizontalAlignment.Center;
+                        break;
+                    case column_formatter.align_type.right:
+                        cell.format_text.align = HorizontalAlignment.Right;
+                        break;
+                    case column_formatter.align_type.none:
+                        break;
+                    default:
+                        Debug.Assert(false);
+                        break;
+                    }
+                }
 
             cell.format_text.update_parts_bg();
         }
@@ -150,12 +169,15 @@ namespace lw_common.ui.format {
             error = "";
             column_formatter result = null;
             switch (name) {
-            case "cell": result = new cell();
+            case "cell":
+                result = new cell();
                 break;
-            case "format": result = new column_formatters.format();
+            case "format":
+                result = new column_formatters.format();
                 break;
             case "multiline":
-            case "multi-line": result = new multiline();
+            case "multi-line":
+                result = new multiline();
                 break;
             case "stack_trace":
             case "stack-trace":
@@ -169,8 +191,8 @@ namespace lw_common.ui.format {
                 break;
             }
             // load_syntax
-            if ( result != null)
-                result.load_syntax(  new settings_as_string(syntax), ref error);
+            if (result != null)
+                result.load_syntax(new settings_as_string(syntax), ref error);
             return result;
         }
     }

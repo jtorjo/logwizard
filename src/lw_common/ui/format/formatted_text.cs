@@ -14,7 +14,7 @@ namespace lw_common.ui.format {
         private string text_;
 
         // 1.7.7 not used yet
-        private HorizontalAlignment align_ = HorizontalAlignment.Left;
+        public HorizontalAlignment align = HorizontalAlignment.Left;
 
         public Color bg = util.transparent;
 
@@ -25,12 +25,57 @@ namespace lw_common.ui.format {
             text_ = text;
             parts_ = other.parts_;
             bg = other.bg;
-            align_ = other.align_;
+            align = other.align;
         }
 
         public string text {
             get { return text_; }
         }
+
+        // returns the parts that are same throughout all parts
+        public text_part merge_parts {
+            get {
+                // optimize
+                if (parts_.Count == 0)
+                    return null;
+                if (parts_.Count == 1)
+                    return parts_[0];
+
+                text_part first = parts_[0];
+                var fg = parts_.Select(x => x.fg).Any(x => x == first.fg);
+                var bg = parts_.Select(x => x.bg).Any(x => x == first.bg);
+                var bold = parts_.Select(x => x.bold).Any(x => x == first.bold);
+                var italic = parts_.Select(x => x.italic).Any(x => x == first.italic);
+                var underline = parts_.Select(x => x.underline).Any(x => x == first.underline);
+                var font_name = parts_.Select(x => x.font_name).Any(x => x == first.font_name);
+                var font_size = parts_.Select(x => x.font_size).Any(x => x == first.font_size);
+                var modify_fg = parts_.Select(x => x.modify_fg).Any(x => x == first.modify_fg);
+                var modify_bg = parts_.Select(x => x.modify_bg).Any(x => x == first.modify_bg);
+
+                text_part merged = new text_part(0,0);
+                if (fg)
+                    merged.fg = first.fg;
+                if (bg)
+                    merged.bg = first.bg;
+                if (bold)
+                    merged.bold = first.bold;
+                if (italic)
+                    merged.italic = first.italic;
+                if (underline)
+                    merged.underline = first.underline;
+                if (font_name)
+                    merged.font_name = first.font_name;
+                if (font_size)
+                    merged.font_size = first.font_size;
+                if (modify_fg)
+                    merged.modify_fg = first.modify_fg;
+                if (modify_bg)
+                    merged.modify_bg = first.modify_bg;
+
+                return merged;
+            }
+        }
+
 
         public void update_parts_bg() {
             if ( bg != util.transparent)

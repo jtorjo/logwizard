@@ -1,4 +1,9 @@
 
+
+1.7.15
+- column formatter: alignment works
+
+
 1.7.14b
 - column formatter: multiline works
 

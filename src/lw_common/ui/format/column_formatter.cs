@@ -4,9 +4,17 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace lw_common.ui.format {
     public abstract class column_formatter {
+
+        public enum align_type {
+            left, center, right, none
+        }
+
+        private align_type align_ = align_type.none;
+
         internal class format_cell {
             public readonly match_item item;
             public readonly log_view parent;
@@ -44,6 +52,10 @@ namespace lw_common.ui.format {
             }
         }
 
+        public align_type align {
+            get { return align_; }
+        }
+
         // FIXME avoid this - I can use the text_part.from_friendly_string
         protected Color parse_color(string str, Color col) {
             switch (str) {
@@ -69,6 +81,18 @@ namespace lw_common.ui.format {
         }
 
         internal virtual void load_syntax(settings_as_string sett, ref string error) {
+            var align = sett.get("align");
+            switch (align) {
+            case "left":
+                align_ = align_type.left;
+                break;
+            case "center": 
+                align_ = align_type.center;
+                break;
+            case "right":
+                align_ = align_type.right;
+                break;
+            }
         }
 
         /*  You should override this is you're replacing large parts of the text. The idea is to do this first,

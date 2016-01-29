@@ -85,7 +85,20 @@ namespace lw_common.ui {
             for ( int i = 0; i < text.Length; ++i)
                 widths.Add( i > 0 ? drawer_.text_width(g, text.Substring(0, i)) : 0);
             return widths;
-        } 
+        }
+
+        // 1.7.15 - make sure the line cell is fully drawn (height wize)
+        protected override void DrawBackground(Graphics g, Rectangle r) {
+            if (!this.IsDrawBackground)
+                return;
+
+            int PAD = 2;
+            Color backgroundColor = this.GetBackgroundColor();
+
+            using (Brush brush = new SolidBrush(backgroundColor)) {
+                g.FillRectangle(brush, r.X - PAD, r.Y - PAD, r.Width + 2 * PAD, r.Height + 2 * PAD);
+            }
+        }
 
         public override void Render(Graphics g, Rectangle r) {
             // 1.3.30+ solved rendering issue :)
@@ -109,14 +122,18 @@ namespace lw_common.ui {
 
             StringFormat fmt = new StringFormat(StringFormatFlags.NoWrap);
             fmt.LineAlignment = StringAlignment.Center;
-            fmt.Trimming = StringTrimming.EllipsisCharacter;
-            switch (this.Column.TextAlign) {
-                case HorizontalAlignment.Center: fmt.Alignment = StringAlignment.Center; break;
-                case HorizontalAlignment.Left: fmt.Alignment = StringAlignment.Near; break;
-                case HorizontalAlignment.Right: fmt.Alignment = StringAlignment.Far; break;
+            fmt.Trimming = override_print_.align == HorizontalAlignment.Left ? StringTrimming.EllipsisCharacter : StringTrimming.None;
+            fmt.Alignment = StringAlignment.Near;
+
+            int left = 0;
+            if (override_print_.align != HorizontalAlignment.Left) {
+                var full_text_size = drawer_.text_width(g, text, drawer_.font(override_print_.merge_parts));
+                int width = r.Width;
+                int extra = width - full_text_size;
+                left = override_print_.align == HorizontalAlignment.Right ? extra - 5 : extra / 2;
             }
 
-            draw_string(0, text, g, brush, r, fmt);
+            draw_string(left, text, g, brush, r, fmt);
         }
     }
 

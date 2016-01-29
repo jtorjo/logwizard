@@ -52,6 +52,7 @@ namespace lw_common {
                                                     "cell\r\n" +
                                                     //"format=courier new/#2B91AF/#F0F0F0\r\n" +
                                                     "format=courier new/#800000/#F0F0F0\r\n" +
+                                                    "align=right\r\n" +
                                                     "\r\n" +
                                                     "[all]\r\n" +
                                                     "format\r\n" +

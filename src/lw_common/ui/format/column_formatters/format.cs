@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using lw_common.ui.format.column_formatters.helper;
 
 namespace lw_common.ui.format.column_formatters {
@@ -25,6 +26,8 @@ namespace lw_common.ui.format.column_formatters {
         private alternate_bg_color alternate_bg_ = new alternate_bg_color();
 
         private List<column_formatter> sub_ = new List<column_formatter>(); 
+
+
         public format() {
             sub_.Add(multi_);
             sub_.Add(color_);
