@@ -107,7 +107,7 @@ namespace lw_common.ui.format.column_formatters.helper {
             // also, doubles -> don't care about base
             var text = cell.format_text.text;
 
-            Color col = parse_color(color_, cell);
+            Color col = parse_color(color_, cell.fg_color);
             if (look_for_hex_) {
                 // ... note: we don't want the delimeters included
                 var hex_numbers = util.regex_matches(regex_hex_, text).Where(x => double_check_is_hex(text.Substring(x.Item1, x.Item2))).ToList();

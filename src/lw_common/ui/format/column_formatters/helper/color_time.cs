@@ -12,6 +12,9 @@ namespace lw_common.ui.format.column_formatters {
     format=format_string (text_part)
     show_diff=0 or 1 (1 = default)
     time_format=formatting for showing time, a' la https://msdn.microsoft.com/en-us/library/8kb3ddd4%28v=vs.110%29.aspx
+
+    // what to show as "lighter" color
+    light=color
     */
     class color_time : column_formatter {
         private string light_color_ = "";
@@ -25,7 +28,7 @@ namespace lw_common.ui.format.column_formatters {
 
         internal override void load_syntax(settings_as_string sett, ref string error) {
             base.load_syntax(sett, ref error);
-            light_color_ = sett.get("light_color");
+            light_color_ = sett.get("light");
             if (light_color_ != "" && !is_color_str_valid(light_color_))
                 error = "Invalid color: " + light_color_;
 
@@ -83,7 +86,7 @@ namespace lw_common.ui.format.column_formatters {
             bool needs_show_diff_now = show_diff_ && cell.row_index != cell.top_row_index;
             if (needs_show_diff_now) {
                 int offset = util.datetime_difference_offset( prev_text(cell), text);
-                Color lighter_col = light_color_ != "" ? parse_color(light_color_, cell) : util.grayer_color(col);
+                Color lighter_col = light_color_ != "" ? parse_color(light_color_, cell.fg_color) : util.grayer_color(col);
                 var parts = new List<text_part>() { new text_part(0, offset) { fg = lighter_col }, new text_part(offset, text.Length - offset) { fg = col } };
                 cell.format_text.add_parts( parts);
             }

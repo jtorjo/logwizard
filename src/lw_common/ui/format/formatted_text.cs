@@ -89,6 +89,7 @@ namespace lw_common.ui.format {
 
             // finally, do the replace
             text_ = text_.Substring(0, start) + new_text + text_.Substring(start + len);
+            invariant();
         }
 
         public void add_parts(List<text_part> parts) {
@@ -96,10 +97,8 @@ namespace lw_common.ui.format {
             if (parts.Count < 1)
                 return;
 
-            foreach ( var p in parts)
-                Debug.Assert(p.start >= 0);
-
             parts_.AddRange(parts);
+            invariant();
             
             // check for collitions
             bool collitions_found = true;
@@ -189,8 +188,12 @@ namespace lw_common.ui.format {
                 }
             }
 
+            invariant();
+        }
+
+        private void invariant() {
             foreach ( var p in parts_)
-                Debug.Assert(p.start >= 0 && p.len > 0);
+                Debug.Assert(p.start >= 0 && p.len > 0 && p.end <= text_.Length);            
         }
 
         public void add_part(text_part part) {

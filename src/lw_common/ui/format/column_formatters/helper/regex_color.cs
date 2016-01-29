@@ -26,7 +26,9 @@ namespace lw_common.ui.format.column_formatters {
 
     Syntax:
         expr=regex_expression
-        color=color
+        format=color
+
+    FIXME Later, parse the format using text_part.from_friendly_string
     */
     class regex_color : column_formatter {
         private string color_ = "";
@@ -35,7 +37,7 @@ namespace lw_common.ui.format.column_formatters {
 
         internal override void load_syntax(settings_as_string sett, ref string error) {
             base.load_syntax(sett, ref error);
-            color_ = sett.get("color");
+            color_ = sett.get("format");
             if (color_ != "" && !is_color_str_valid(color_))
                 error = "Invalid color: " + color_;
             expr_ = sett.get("expr");
@@ -56,7 +58,7 @@ namespace lw_common.ui.format.column_formatters {
                 return;
 
             var text = cell.format_text.text;
-            Color col = parse_color(color_, cell);
+            Color col = parse_color(color_, cell.fg_color);
 
             var found = util.regex_matches(regex_, text).OrderBy(x => x.Item1).ToList();
             // see if i need to replace with written in another base

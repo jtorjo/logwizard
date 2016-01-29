@@ -28,6 +28,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using lw_common.ui.format;
 
 namespace lw_common.ui {
     internal class text_part {
@@ -80,6 +81,8 @@ namespace lw_common.ui {
             is_typed_search = other.is_typed_search;
             is_find_search = other.is_find_search;
             font_size = other.font_size;
+            modify_bg = other.modify_bg;
+            modify_fg = other.modify_fg;
         }
 
         // constructs a new object as a merge of this and other
@@ -110,6 +113,11 @@ namespace lw_common.ui {
             if (other.is_find_search)
                 copy.is_find_search = true;
 
+            if (other.modify_fg != modify_color_type.same)
+                copy.modify_fg = other.modify_fg;
+            if (other.modify_bg != modify_color_type.same)
+                copy.modify_bg = other.modify_bg;
+
             return copy;
         }
         
@@ -122,6 +130,22 @@ namespace lw_common.ui {
 
         // 1.7.9+ if > 0, the font' size
         public int font_size = 0;
+
+        public enum modify_color_type {
+            
+            same,  // do nothing
+            darker, lighter
+        }
+
+        public modify_color_type modify_fg = modify_color_type.same;
+        public modify_color_type modify_bg = modify_color_type.same;
+
+        public void update_colors(column_formatter.format_cell cell) {
+            if (modify_fg != modify_color_type.same)
+                fg = modify_fg == modify_color_type.darker ? util.darker_color(cell.fg_color) : util.grayer_color(cell.fg_color);
+            if (modify_bg != modify_color_type.same)
+                bg = modify_bg == modify_color_type.darker ? util.darker_color(cell.bg_color) : util.grayer_color(cell.bg_color);
+        }
 
 
         /*  string is internally separated by '/'
@@ -173,6 +197,18 @@ namespace lw_common.ui {
                     break;
                 case "underline":
                     friendly.underline = true;
+                    break;
+                case "darker":
+                    friendly.modify_fg = modify_color_type.darker;
+                    break;
+                case "lighter":
+                    friendly.modify_fg = modify_color_type.lighter;
+                    break;
+                case "darker-bg":
+                    friendly.modify_bg = modify_color_type.darker;
+                    break;
+                case "lighter-bg":
+                    friendly.modify_bg = modify_color_type.lighter;
                     break;
                 }
             }

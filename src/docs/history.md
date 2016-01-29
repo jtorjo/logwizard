@@ -1,4 +1,8 @@
 
+1.7.14b
+- column formatter: multiline works
+
+
 1.7.14a
 - column formatter: multiline
    implemented, not tested (with alternate/separator as colors)

@@ -125,6 +125,10 @@ namespace lw_common.ui.format {
             // this way, I can modify the text before (when dealing with numbers and such)
             foreach ( var format in formatters_)
                 if ( needs_apply_formatter(format, cell))
+                    format.the_formatter.format_before_do_replace(cell);
+
+            foreach ( var format in formatters_)
+                if ( needs_apply_formatter(format, cell))
                     format.the_formatter.format_before(cell);
             
         }

@@ -16,6 +16,7 @@ namespace lw_common.ui.format.column_formatters {
 
     */
     class format : column_formatter {
+        private multiline multi_ = new multiline();
         private cell color_ = new cell();
         private color_date date_ = new color_date();
         private color_time time_ = new color_time();
@@ -25,6 +26,7 @@ namespace lw_common.ui.format.column_formatters {
 
         private List<column_formatter> sub_ = new List<column_formatter>(); 
         public format() {
+            sub_.Add(multi_);
             sub_.Add(color_);
             sub_.Add(date_);
             sub_.Add(time_);
@@ -36,6 +38,7 @@ namespace lw_common.ui.format.column_formatters {
         internal override void load_syntax(settings_as_string sett, ref string error) {
             base.load_syntax(sett, ref error);
 
+            load_sub_syntax(sett, multi_, "multiline", ref error);
             load_sub_syntax(sett, color_, "all", ref error);
             load_sub_syntax(sett, date_, "date", ref error);
             load_sub_syntax(sett, time_, "time", ref error);
@@ -62,6 +65,11 @@ namespace lw_common.ui.format.column_formatters {
                     sub_sett.set(name.Substring(prefix.Length), sett.get(name));
 
             sub.load_syntax(sub_sett, ref error);
+        }
+
+        internal override void format_before_do_replace(format_cell cell) {
+            foreach ( var formatter in sub_)
+                formatter.format_before_do_replace(cell);
         }
 
         internal override void format_before(format_cell cell) {

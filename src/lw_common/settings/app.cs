@@ -58,19 +58,22 @@ namespace lw_common {
                                                     "time.format=courier new/blue/bold\r\n" +
                                                     "# Custom date/time format, a' la C#\r\n" +
                                                     "time.format_time=MM/dd HH:mm:ss,fff\r\n" +
-                                                    "time.light_color=#adc7e8\r\n" +
+                                                    "time.light=#adc7e8\r\n" +
                                                     "\r\n" +
                                                     "[msg]\r\n" +
                                                     "format\r\n" +
                                                     //"number.base=2\r\n" +
                                                     "number.color=darkred\r\n" +
                                                     @"regex.expr=(?<=\[).*(?=\])|(?<=\().*(?=\))|(?<=\{).*(?=\})" + "\r\n" + // brackets
-                                                    "regex.color=lighter\r\n" +
+                                                    "regex.format=lighter\r\n" +
                                                     "regex2.expr=(?<=\")(?:\\\\.|[^\"\\\\])*(?=\")|(?<=')(?:\\\\.|[^'\\\\])*(?=')\r\n" + // strings
-                                                    "regex2.color=darkviolet\r\n" +
+                                                    "regex2.format=darkviolet\r\n" +
                                                     "alternate.row_count=1\r\n" +
-                                                    "alternate.color=#fbfdf9" +
-                                                    ""
+                                                    "alternate.color=#fbfdf9\r\n" +
+                                                    "multiline.multi=1\r\n" +
+                                                    "multiline.alternate_format=lighter\r\n" +
+                                                    "multiline.separator=|\r\n" +
+                                                    "multiline.separator_format=blue\r\n"
                                                     ; 
 
         // these are settings that are NOT shown in the UI

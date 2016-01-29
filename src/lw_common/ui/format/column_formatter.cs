@@ -44,23 +44,13 @@ namespace lw_common.ui.format {
             }
         }
 
-        internal Color parse_color(string str, Color col) {
+        // FIXME avoid this - I can use the text_part.from_friendly_string
+        protected Color parse_color(string str, Color col) {
             switch (str) {
             case "darker":
                 return util.darker_color(col);
             case "lighter":
                 return util.grayer_color(col);
-            default:
-                return util.str_to_color(str);
-            }
-        }
-
-        internal Color parse_color(string str, format_cell cell) {
-            switch (str) {
-            case "darker":
-                return util.darker_color(cell.fg_color);
-            case "lighter":
-                return util.grayer_color(cell.fg_color);
             default:
                 return util.str_to_color(str);
             }
@@ -81,7 +71,18 @@ namespace lw_common.ui.format {
         internal virtual void load_syntax(settings_as_string sett, ref string error) {
         }
 
-        internal virtual void format_before(format_cell cell) {            
+        /*  You should override this is you're replacing large parts of the text. The idea is to do this first,
+            because replacing large text (thtat internally contains formatted parts) can go wrong. Namely, the formatted parts might point to the wrong location.
+
+            Example: 
+            say I'm replacig "I have 23 lines of awesome text." with "I have plenty of awesome text".
+            Say the "23" part is formatted to show in red. What shall I do with this part in the replaced text? 
+            I would end up showing "pl" characters in red - which makes no sense.
+        */
+        internal virtual void format_before_do_replace(format_cell cell) { 
+        }
+
+        internal virtual void format_before(format_cell cell) { 
         }
         internal virtual void format_after(format_cell cell) {            
         }
