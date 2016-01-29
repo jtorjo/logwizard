@@ -9,6 +9,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Windows.Forms;
 using lw_common.parse;
+using lw_common.ui.format;
 
 namespace lw_common.ui {
     public partial class description_ctrl : UserControl {
@@ -759,7 +760,7 @@ namespace lw_common.ui {
 
             string txt = (item as filter.match).line.part(type);
             int col_idx = log_view_cell.info_type_to_cell_idx(type);
-            var prints = lv.sel.override_print(lv, txt, col_idx).to_single_enter_char();
+            var prints = lv.sel.override_print(lv, txt, col_idx, column_formatter.format_cell.location_type.details_pane).to_single_enter_char();
             // ... text has changed
             txt = prints.text;
 

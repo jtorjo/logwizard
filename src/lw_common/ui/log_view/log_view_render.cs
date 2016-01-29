@@ -97,7 +97,7 @@ namespace lw_common.ui {
 
             var col_idx = Column.fixed_index();
             string text = GetText();
-            override_print_ = i.override_print(parent_, text, col_idx);
+            override_print_ = i.override_print(parent_, text, col_idx, column_formatter.format_cell.location_type.view);
 
             var type = log_view_cell.cell_idx_to_type(col_idx);
             if (info_type_io.can_be_multi_line(type)) 

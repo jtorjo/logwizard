@@ -30,6 +30,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using lw_common.ui;
+using lw_common.ui.format;
 
 namespace lw_common {
     public partial class msg_details_ctrl : UserControl {
@@ -149,7 +150,7 @@ namespace lw_common {
             txt.Clear();
             txt.AppendText(msg_txt);
 
-            var prints = lv.sel.override_print(lv, msg_txt, msg_col);
+            var prints = lv.sel.override_print(lv, msg_txt, msg_col, column_formatter.format_cell.location_type.msg_description);
             var full_row = lv.list.GetItem(lv.sel_row_idx);
 
             BackColor = txt.BackColor = drawer_.bg_color(full_row, msg_col);

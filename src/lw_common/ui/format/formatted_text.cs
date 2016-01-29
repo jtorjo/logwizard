@@ -14,12 +14,18 @@ namespace lw_common.ui.format {
         private string text_;
 
         // 1.7.7 not used yet
-        //private HorizontalAlignment align_ = HorizontalAlignment.Left;
+        private HorizontalAlignment align_ = HorizontalAlignment.Left;
 
         public Color bg = util.transparent;
 
         public formatted_text(string text) {
             text_ = text;
+        }
+        private formatted_text(string text, formatted_text other) {
+            text_ = text;
+            parts_ = other.parts_;
+            bg = other.bg;
+            align_ = other.align_;
         }
 
         public string text {
@@ -218,7 +224,7 @@ namespace lw_common.ui.format {
             var parts = parts_.ToList();
             if (!text.Contains('\r') && !text.Contains('\n'))
                 // text is single line
-            return new formatted_text(text) { parts_ = parts, bg = bg };
+                return new formatted_text(text, this);
 
 
             char more = '¶';
@@ -233,7 +239,7 @@ namespace lw_common.ui.format {
                     int line_idx = lines.IndexOf(text);
                     text = (line_idx > 0 && app.inst.show_paragraph_sign ? more + " " : "") + text.Trim() + (line_idx < lines.Count - 1 && app.inst.show_paragraph_sign ? " " + more : "");
                 }
-                return new formatted_text(text) { parts_ = parts, bg = bg };
+                return new formatted_text(text, this);
             }
 
             // we have custom printing - first, see if we have typed search
@@ -275,8 +281,7 @@ namespace lw_common.ui.format {
                 parts[i] = new text_part(parts[i].start - start + (line_before ? 2 : 0), parts[i].len, parts[i]);
 
             text = (line_before ? more + " " : "") + relevant_line + (line_after ? " " + more : "");
-
-            return new formatted_text(text) { parts_ = parts, bg = bg };
+            return new formatted_text(text, this);
         }
 
         public List<text_part> parts(text_part default_) {

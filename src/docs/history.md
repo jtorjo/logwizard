@@ -1,4 +1,9 @@
 
+1.7.14a
+- column formatter: multiline
+   implemented, not tested (with alternate/separator as colors)
+
+
 1.7.13
 - column formatter: color_time
   - use 'format' for formatting (instead of 'color')

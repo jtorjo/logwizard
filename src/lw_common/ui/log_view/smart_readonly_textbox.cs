@@ -31,6 +31,7 @@ using System.Text;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using log4net.Repository.Hierarchy;
+using lw_common.ui.format;
 
 namespace lw_common.ui {
     internal partial class smart_readonly_textbox : RichTextBox {
@@ -231,7 +232,7 @@ namespace lw_common.ui {
 
             ++ignore_change_;
             Multiline = txt.IndexOfAny(util.any_enter_char) >= 0;
-            var prints = parent_.sel.override_print(parent_, txt, sel_col_).to_single_enter_char();
+            var prints = parent_.sel.override_print(parent_, txt, sel_col_, column_formatter.format_cell.location_type.smart_edit ).to_single_enter_char();
             // ... text has changed
             txt = prints.text;
 
