@@ -23,14 +23,15 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(edit_column_formatters_form));
             this.label1 = new System.Windows.Forms.Label();
             this.syntax = new System.Windows.Forms.TextBox();
             this.applyToCurrentViewOnly = new System.Windows.Forms.CheckBox();
-            this.close = new System.Windows.Forms.Button();
+            this.cancel = new System.Windows.Forms.Button();
             this.help = new System.Windows.Forms.LinkLabel();
             this.previewStatus = new System.Windows.Forms.Label();
-            this.list = new BrightIdeasSoftware.VirtualObjectListView();
+            this.list = new BrightIdeasSoftware.ObjectListView();
             this.lineCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.viewCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.dateCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -56,6 +57,8 @@
             this.ctx14Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.ctx15Col = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.msgCol = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ok = new System.Windows.Forms.Button();
+            this.refresh = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.list)).BeginInit();
             this.SuspendLayout();
             // 
@@ -95,16 +98,18 @@
             this.applyToCurrentViewOnly.Text = "Apply only to Current View";
             this.applyToCurrentViewOnly.UseVisualStyleBackColor = true;
             // 
-            // close
+            // cancel
             // 
-            this.close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.close.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.close.Location = new System.Drawing.Point(587, 446);
-            this.close.Name = "close";
-            this.close.Size = new System.Drawing.Size(75, 28);
-            this.close.TabIndex = 16;
-            this.close.Text = "Close";
-            this.close.UseVisualStyleBackColor = true;
+            this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cancel.Location = new System.Drawing.Point(587, 446);
+            this.cancel.Name = "cancel";
+            this.cancel.Size = new System.Drawing.Size(75, 28);
+            this.cancel.TabIndex = 16;
+            this.cancel.Text = "Cancel";
+            this.cancel.UseVisualStyleBackColor = true;
+            this.cancel.Click += new System.EventHandler(this.cancel_Click);
             // 
             // help
             // 
@@ -378,19 +383,39 @@
             this.msgCol.Text = "Message";
             this.msgCol.Width = 100;
             // 
+            // ok
+            // 
+            this.ok.Location = new System.Drawing.Point(506, 446);
+            this.ok.Name = "ok";
+            this.ok.Size = new System.Drawing.Size(75, 28);
+            this.ok.TabIndex = 20;
+            this.ok.Text = "OK";
+            this.ok.UseVisualStyleBackColor = true;
+            this.ok.Click += new System.EventHandler(this.ok_Click);
+            // 
+            // refresh
+            // 
+            this.refresh.Enabled = true;
+            this.refresh.Interval = 500;
+            this.refresh.Tick += new System.EventHandler(this.refresh_Tick);
+            // 
             // edit_column_formatters_form
             // 
+            this.AcceptButton = this.ok;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.CancelButton = this.cancel;
             this.ClientSize = new System.Drawing.Size(674, 481);
+            this.Controls.Add(this.ok);
             this.Controls.Add(this.list);
             this.Controls.Add(this.previewStatus);
             this.Controls.Add(this.help);
-            this.Controls.Add(this.close);
+            this.Controls.Add(this.cancel);
             this.Controls.Add(this.applyToCurrentViewOnly);
             this.Controls.Add(this.syntax);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "edit_column_formatters_form";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Column Formatters";
             ((System.ComponentModel.ISupportInitialize)(this.list)).EndInit();
             this.ResumeLayout(false);
@@ -403,7 +428,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox syntax;
         private System.Windows.Forms.CheckBox applyToCurrentViewOnly;
-        private System.Windows.Forms.Button close;
+        private System.Windows.Forms.Button cancel;
         private System.Windows.Forms.LinkLabel help;
         private System.Windows.Forms.Label previewStatus;
         internal BrightIdeasSoftware.OLVColumn lineCol;
@@ -431,6 +456,8 @@
         internal BrightIdeasSoftware.OLVColumn ctx14Col;
         internal BrightIdeasSoftware.OLVColumn ctx15Col;
         internal BrightIdeasSoftware.OLVColumn msgCol;
-        private BrightIdeasSoftware.VirtualObjectListView list;
+        private BrightIdeasSoftware.ObjectListView list;
+        private System.Windows.Forms.Button ok;
+        private System.Windows.Forms.Timer refresh;
     }
 }

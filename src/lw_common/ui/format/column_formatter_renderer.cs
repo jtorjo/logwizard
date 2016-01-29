@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,17 +14,26 @@ namespace lw_common.ui.format {
 
         private log_view parent_;
         private log_view_item_draw_ui drawer_ = null;
-
         private solid_brush_list brush_ = new solid_brush_list();
-
-        public column_formatter_renderer(log_view parent) {
-            parent_ = parent;
-            drawer_ = new log_view_item_draw_ui(parent_);            
-        }
-
+        private column_formatter_array formatter_;
         private formatted_text  override_print_ = null;
         text_part default_ = new text_part(0, 0);
         private Color bg_color_ = util.transparent;
+        private ObjectListView list_;
+
+        public column_formatter_renderer(log_view parent, ObjectListView list) {
+            parent_ = parent;
+            list_ = list;
+            drawer_ = new log_view_item_draw_ui(parent_);
+            formatter_ = parent.formatter;
+        }
+
+        public column_formatter_array formatter {
+            get { return formatter_; }
+            set {
+                formatter_ = value; 
+            }
+        }
 
         private void draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, text_part print) {
             int width = drawer_.text_width(g, sub, drawer_.font(print));
@@ -62,17 +72,45 @@ namespace lw_common.ui.format {
         protected override void DrawBackground(Graphics g, Rectangle r) {
             if (!this.IsDrawBackground)
                 return;
-
             int PAD = 2;
             Color backgroundColor = this.GetBackgroundColor();
-
             using (Brush brush = new SolidBrush(backgroundColor)) {
                 g.FillRectangle(brush, r.X - PAD, r.Y - PAD, r.Width + 2 * PAD, r.Height + 2 * PAD);
             }
         }
 
+        private int top_idx() {
+            int PAD = 5;
+            var top = list_.GetItemAt(PAD, list_.HeaderControl.ClientRectangle.Height + PAD);
+            if (top == null)
+                return 0;
+
+            int top_idx = top.Index;
+            if (top_idx < 0)
+                top_idx = 0;
+
+            return top_idx;
+        }
+
+        // IMPORTANT: here, when doing preview, we don't show any results from find/find-as-you-type/running filters
+        private formatted_text override_print(match_item i, string text, int col_idx, column_formatter.format_cell.location_type location) {
+            int row_idx = list_.IndexOf(i);
+            Debug.Assert(row_idx >= 0);
+
+            int top_row_idx = top_idx();
+            string prev_text = "";
+            if (row_idx > 0)
+                prev_text = log_view_cell.cell_value( list_.GetItem(row_idx - 1).RowObject as match_item , col_idx);
+
+            var cell = new column_formatter.format_cell(i, parent_, col_idx, log_view_cell.cell_idx_to_type(col_idx), new formatted_text(text),
+                row_idx, top_row_idx, prev_text, location);
+            formatter_.format_before(cell);
+            formatter_.format_after(cell);
+            return cell.format_text;
+        } 
+
+
         public override void Render(Graphics g, Rectangle r) {
-            // 1.3.30+ solved rendering issue :)
             DrawBackground(g, r);
 
             var i = ListItem.RowObject as match_item;
@@ -81,7 +119,7 @@ namespace lw_common.ui.format {
 
             var col_idx = Column.fixed_index();
             string text = GetText();
-            override_print_ = i.override_print(parent_, text, col_idx, column_formatter.format_cell.location_type.view);
+            override_print_ = override_print(i, text, col_idx, column_formatter.format_cell.location_type.view);
 
             var type = log_view_cell.cell_idx_to_type(col_idx);
             if (info_type_io.can_be_multi_line(type)) 

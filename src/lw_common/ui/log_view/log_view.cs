@@ -161,9 +161,14 @@ namespace lw_common.ui
             list.ColumnWidthChanging += List_on_column_width_changing;
             msgCol.FillsFreeSpace = !app.inst.show_horizontal_scrollbar;
 
-            if ( util.is_debug)
+            if (util.is_debug) {
                 // testing
                 app.inst.default_column_format = app.DEFAULT_COLUMN_SYNTAX;
+                util.postpone(() => {
+                    if ( is_full_log)
+                        new edit_column_formatters_form(this).ShowDialog(this);
+                }, 1000 );
+            }
             formatter_.load(app.inst.default_column_format);
         }
 

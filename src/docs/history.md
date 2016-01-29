@@ -1,6 +1,12 @@
 
+1.7.17b
+- column formatter
+  Edit Column Formatters works - even preview works like a charm
+
+
 1.7.17a
 - column formatter : before making list into ObjectListView (from VirtualObjectListView)
+
 
 1.7.16
 - column formatter: solved bugs:

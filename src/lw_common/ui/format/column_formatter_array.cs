@@ -50,6 +50,11 @@ namespace lw_common.ui.format {
         }
 
         private List<formatter> formatters_ = new List<formatter>();
+        private string syntax_ = "";
+
+        public string syntax {
+            get { return syntax_; }
+        }
 
         public void load(string syntax) {
             string errors = "";
@@ -57,6 +62,7 @@ namespace lw_common.ui.format {
         }
 
         public void load(string syntax, ref string errors) {
+            syntax_ = syntax;
             errors = "";
             var formatters = new List<formatter>();
             var last = new formatter();
