@@ -117,6 +117,15 @@
     <Compile Include="ui\description_ctrl.Designer.cs">
       <DependentUpon>description_ctrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\format\column_formatter_renderer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ui\format\edit_column_formatters_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\format\edit_column_formatters_form.Designer.cs">
+      <DependentUpon>edit_column_formatters_form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\edit_log_settings_form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,7 +179,7 @@
     <Compile Include="ui\log_view\match\log_view_data_source.cs" />
     <Compile Include="ui\log_view\match\match_full_item.cs" />
     <Compile Include="ui\log_view\match\match_item.cs" />
-    <Compile Include="ui\log_view\search_renderer.cs">
+    <Compile Include="ui\search\search_renderer.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ui\msg_details_ctrl.cs">
@@ -288,6 +297,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ui\description_ctrl.resx">
       <DependentUpon>description_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\format\edit_column_formatters_form.resx">
+      <DependentUpon>edit_column_formatters_form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\edit_log_settings_form.resx">
       <DependentUpon>edit_log_settings_form.cs</DependentUpon>

@@ -1,4 +1,6 @@
 
+1.7.17a
+- column formatter : before making list into ObjectListView (from VirtualObjectListView)
 
 1.7.16
 - column formatter: solved bugs:

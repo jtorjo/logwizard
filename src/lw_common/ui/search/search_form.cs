@@ -251,8 +251,8 @@ namespace lw_common.ui {
                 result.AllColumns[preview_col_idx].IsVisible = false;
             result.RebuildColumns();            
         }
-        private void load_surrounding_rows(log_view lv) {
 
+        private void load_surrounding_rows(log_view lv) {
             int sel = lv.sel_row_idx;
             if (sel < 0)
                 sel = 0;
