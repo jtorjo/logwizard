@@ -108,11 +108,11 @@ namespace lw_common.ui {
             if (other.font_size > 0)
                 copy.font_size = other.font_size;
 
-            if (other.is_typed_search)
-                copy.is_typed_search = true;
             if (other.is_find_search)
                 copy.is_find_search = true;
-
+            if (other.is_typed_search)
+                copy.is_typed_search = true;
+            
             if (other.modify_fg != modify_color_type.same)
                 copy.modify_fg = other.modify_fg;
             if (other.modify_bg != modify_color_type.same)

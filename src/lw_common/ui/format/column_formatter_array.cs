@@ -160,7 +160,7 @@ namespace lw_common.ui.format {
                     }
                 }
 
-            cell.format_text.update_parts_bg();
+            cell.format_text.update_parts();
         }
 
         // note: it's possible to create a valid formatter, and have an error. Like, when the syntax is partially right

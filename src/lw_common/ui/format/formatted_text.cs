@@ -77,11 +77,15 @@ namespace lw_common.ui.format {
         }
 
 
-        public void update_parts_bg() {
+        public void update_parts() {
             if ( bg != util.transparent)
                 foreach ( var part in parts_)
                     if (part.bg == util.transparent)
                         part.bg = bg;
+
+            if ( util.is_debug)
+                foreach (var part in parts_)
+                    part.text = text_.Substring(part.start, part.len);
         }
 
         public void replace_text(int start, int len, string new_text) {
@@ -194,7 +198,7 @@ namespace lw_common.ui.format {
                                     int len = next.len;
                                     int second_len = now.len - len;
                                     Debug.Assert(second_len >= 0);
-                                    parts_[idx + 1] = new text_part(now.start + len, second_len, now.merge_copy(next));
+                                    parts_[idx + 1] = new text_part(now.start + len, second_len, now);
                                 } else {
                                     // in this case, we need to split in 3
                                     int len1 = next.start - now.start;

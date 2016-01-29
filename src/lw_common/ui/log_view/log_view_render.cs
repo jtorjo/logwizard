@@ -49,14 +49,16 @@ namespace lw_common.ui {
 
         private formatted_text  override_print_ = null;
         text_part default_ = new text_part(0, 0);
+        private Color bg_color_ = util.transparent;
 
         private void draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, text_part print) {
             int width = drawer_.text_width(g, sub, drawer_.font(print));
-            if (print.bg != util.transparent) {
+            Color print_bg = drawer_.print_bg_color(ListItem, print);
+            if (print_bg.ToArgb() != bg_color_.ToArgb()) {
                 Rectangle here = new Rectangle(r.Location, r.Size);
                 here.X += left;
                 here.Width = width + 1;
-                g.FillRectangle( brush_.brush( drawer_.print_bg_color(ListItem, print)) , here);
+                g.FillRectangle( brush_.brush( print_bg) , here);
             }
 
             Rectangle sub_r = new Rectangle(r.Location, r.Size);
@@ -72,11 +74,6 @@ namespace lw_common.ui {
                 int left_offset = left + drawer_.text_offset(g, s.Substring(0, part.start), drawer_.font(part) );
                 draw_sub_string(left_offset, part.text, g, b, r, fmt, part);
             }
-        }
-
-
-        private int char_size(Graphics g) {
-            return drawer_.char_size(g);
         }
 
         // for each character of the printed text, see how many pixels it takes
@@ -117,7 +114,8 @@ namespace lw_common.ui {
                 override_print_ = override_print_.get_most_important_single_line();
             text = override_print_.text;
 
-            Brush brush = brush_.brush( drawer_.bg_color(ListItem, col_idx, override_print_));
+            bg_color_ = drawer_.bg_color(ListItem, col_idx, override_print_);
+            Brush brush = brush_.brush( bg_color_);
             g.FillRectangle(brush, r);
 
             StringFormat fmt = new StringFormat(StringFormatFlags.NoWrap);

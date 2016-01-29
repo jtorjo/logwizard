@@ -1,5 +1,11 @@
 
 
+1.7.16
+- column formatter: solved bugs:
+	- bg -> not computed correctly for search text
+	- 'e' -> will select too much text
+
+
 1.7.15
 - column formatter: alignment works
 
