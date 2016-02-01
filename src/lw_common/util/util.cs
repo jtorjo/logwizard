@@ -638,7 +638,7 @@ namespace lw_common {
         // alternatives: http://www.architectshack.com/TextFileEncodingDetector.ashx (don't like the licensing)
         //               http://www.codeproject.com/Articles/17201/Detect-Encoding-for-In-and-Outgoing-Text    
         public static Encoding file_encoding(string filename) {
-            using (var file = new FileStream(filename, FileMode.Open, FileAccess.Read))
+            using (var file = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 return file_encoding(file);
         }
 

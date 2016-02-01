@@ -1,4 +1,9 @@
 
+1.7.17d
+- HM3 logs: a new syntax
+- fix: open files with fileshare.readwrite access - all over the place
+
+
 1.7.17c
 - column formatter 
   - Edit Column Formatters works 

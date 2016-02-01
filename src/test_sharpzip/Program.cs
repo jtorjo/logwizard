@@ -21,7 +21,7 @@ namespace test_sharpzip {
         static List<string> enum_file_names_in_zip(string file_name) {
             List<string> names = new List<string>();
             try {
-                using (var fs = new FileStream(file_name, FileMode.Open, FileAccess.Read)) {
+                using (var fs = new FileStream(file_name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
                     using (var zf = new ZipFile(fs)) {
                         foreach (ZipEntry ze in zf) {
                             if (ze.IsDirectory)
@@ -38,7 +38,7 @@ namespace test_sharpzip {
 
         static bool try_extract_file_names_in_zip(string file_name, string extract_dir, Dictionary<string,string> extract_files) {
             try {
-                using (var fs = new FileStream(file_name, FileMode.Open, FileAccess.Read)) {
+                using (var fs = new FileStream(file_name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
                     using (var zf = new ZipFile(fs)) {
                         foreach (ZipEntry ze in zf) {
                             if (ze.IsDirectory)
