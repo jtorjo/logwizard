@@ -1,4 +1,12 @@
 
+1.7.17c
+- column formatter 
+  - Edit Column Formatters works 
+	- from right click on teh column header
+	- saves settings correctly
+- Settings: have default column formatting, which can be changed
+
+
 1.7.17b
 - column formatter
   Edit Column Formatters works - even preview works like a charm

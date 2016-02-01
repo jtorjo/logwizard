@@ -79,6 +79,8 @@ namespace lw_common.ui {
 
         void edit_log_settings();
 
+        void edit_column_formatting();
+
         void after_column_positions_change();
 
         void needs_details_pane();

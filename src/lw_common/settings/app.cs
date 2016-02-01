@@ -50,7 +50,6 @@ namespace lw_common {
 
         public const string DEFAULT_COLUMN_SYNTAX = "[line]\r\n" +
                                                     "cell\r\n" +
-                                                    //"format=courier new/#2B91AF/#F0F0F0\r\n" +
                                                     "format=courier new/#800000/#F0F0F0\r\n" +
                                                     "align=right\r\n" +
                                                     "\r\n" +
@@ -63,7 +62,6 @@ namespace lw_common {
                                                     "\r\n" +
                                                     "[msg]\r\n" +
                                                     "format\r\n" +
-                                                    //"number.base=2\r\n" +
                                                     "number.color=darkred\r\n" +
                                                     @"regex.expr=(?<=\[).*(?=\])|(?<=\().*(?=\))|(?<=\{).*(?=\})" + "\r\n" + // brackets
                                                     "regex.format=lighter\r\n" +
@@ -71,7 +69,7 @@ namespace lw_common {
                                                     "regex2.format=darkviolet\r\n" +
                                                     "alternate.row_count=1\r\n" +
                                                     "alternate.color=#fbfdf9\r\n" +
-                                                    "multiline.multi=1\r\n" +
+                                                    "multiline.multi=0\r\n" +
                                                     "multiline.alternate_format=lighter\r\n" +
                                                     "multiline.separator=|\r\n" +
                                                     "multiline.separator_format=blue\r\n"

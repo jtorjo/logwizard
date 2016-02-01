@@ -177,17 +177,7 @@ namespace lw_common.ui {
                         continue;
                     }
 
-                bool force_bg = word.StartsWith("##");
-                Color col = util.str_to_color(force_bg ? word.Substring(1) : word);
-                if (col != util.transparent) {
-                    bool is_bg = force_bg || friendly.fg != util.transparent;
-                    if (is_bg)
-                        friendly.bg = col;
-                    else
-                        friendly.fg = col;
-                    continue;
-                }
-
+                bool word_recognized = true;
                 switch (word) {
                 case "bold":
                     friendly.bold = true;
@@ -210,7 +200,24 @@ namespace lw_common.ui {
                 case "lighter-bg":
                     friendly.modify_bg = modify_color_type.lighter;
                     break;
+                default:
+                    word_recognized = false;
+                    break;
                 }
+                if (word_recognized)
+                    continue;
+
+                bool force_bg = word.StartsWith("##");
+                Color col = util.str_to_color(force_bg ? word.Substring(1) : word);
+                if (col != util.transparent) {
+                    bool is_bg = force_bg || friendly.fg != util.transparent;
+                    if (is_bg)
+                        friendly.bg = col;
+                    else
+                        friendly.fg = col;
+                    continue;
+                }
+
             }
 
             return friendly;

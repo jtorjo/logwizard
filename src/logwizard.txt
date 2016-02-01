@@ -986,6 +986,32 @@ edit_mode=0
 edit_search_after=1
 edit_search_all_columns=0
 edit_search_before=1
+default_column_format=[line]
+	cell
+	format=courier new/#800000/#F0F0F0
+	align=right
+	
+	[all]
+	format
+	time.format=courier new/blue/bold
+	# Custom date/time format, a' la C#
+	time.format_time=MM/dd HH:mm:ss,fff
+	time.light=#adc7e8
+	
+	[msg]
+	format
+	number.color=darkred
+	regex.expr=(?<=\[).*(?=\])|(?<=\().*(?=\))|(?<=\{).*(?=\})
+	regex.format=lighter
+	regex2.expr=(?<=")(?:\\.|[^"\\])*(?=")|(?<=')(?:\\.|[^'\\])*(?=')
+	regex2.format=darkviolet
+	alternate.row_count=1
+	alternate.color=#fbfdf9
+	multiline.multi=0
+	multiline.alternate_format=lighter
+	multiline.separator=|
+	multiline.separator_format=blue
+	
 file_to_context.0.key=HM2 Version: 2.
 file_to_context.0.value=HM2
 file_to_context.1.key=HM3 Version=3

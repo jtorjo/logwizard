@@ -52,7 +52,7 @@ namespace lw_common.ui
 
         public const string FULLLOG_NAME = "__all_this_is_fulllog__";
         // 1.6.13+ for settings - this contains the settings for all views
-        private const string ALL_VIEWS = "__all_views__";
+        public const string ALL_VIEWS = "__all_views__";
 
         private Form parent;
         private readonly filter filter_ ;
@@ -160,16 +160,6 @@ namespace lw_common.ui
             list.ColumnWidthChanged += List_on_column_width_changed;
             list.ColumnWidthChanging += List_on_column_width_changing;
             msgCol.FillsFreeSpace = !app.inst.show_horizontal_scrollbar;
-
-            if (util.is_debug) {
-                // testing
-                app.inst.default_column_format = app.DEFAULT_COLUMN_SYNTAX;
-                util.postpone(() => {
-                    if ( is_full_log)
-                        new edit_column_formatters_form(this).ShowDialog(this);
-                }, 1000 );
-            }
-            formatter_.load(app.inst.default_column_format);
         }
 
         private void List_on_column_width_changing(object sender, ColumnWidthChangingEventArgs e) {
@@ -259,6 +249,10 @@ namespace lw_common.ui
             var edit_log_settings = new ToolStripMenuItem("Edit Log Settings...");
             menu.Items.Add(edit_log_settings);
             edit_log_settings.Click += (a,ee) => lv_parent.edit_log_settings();
+
+            var edit_formatting = new ToolStripMenuItem("Edit Column Formatting...");
+            menu.Items.Add(edit_formatting);
+            edit_formatting.Click += (a, ee) => lv_parent.edit_column_formatting();
 
             menu.Closing += menu_Closing;
             edit.Visible = false;
@@ -834,6 +828,9 @@ namespace lw_common.ui
                     clear();
                 logger.Debug("[view] new log for " + name + " - " + log.log_name);
                 update_x_of_y();
+
+                if ( was_null)
+                    reload_column_formatter();
             }
         }
 
@@ -850,7 +847,20 @@ namespace lw_common.ui
                 if (log_ != null)
                     log_.tab_name = value;
                 update_x_of_y();
+                reload_column_formatter();
             }
+        }
+
+        private void reload_column_formatter() {
+            var sett = log_.write_settings;
+            bool apply_to_me = sett.apply_column_formatting_to_me.get(name);
+            var format = sett.column_formatting.get( apply_to_me ? name : ALL_VIEWS );
+            if (!apply_to_me && format == "") {
+                format = app.inst.default_column_format;
+                sett.column_formatting.set(ALL_VIEWS, format);
+            }
+
+            formatter_.load(format);            
         }
 
         public void update_show_name() {            
@@ -2185,6 +2195,7 @@ namespace lw_common.ui
 
         public column_formatter_array formatter {
             get { return formatter_; }
+            set { formatter_ = value; }
         }
 
 

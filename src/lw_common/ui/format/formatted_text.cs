@@ -83,9 +83,8 @@ namespace lw_common.ui.format {
                     if (part.bg == util.transparent)
                         part.bg = bg;
 
-            if ( util.is_debug)
-                foreach (var part in parts_)
-                    part.text = text_.Substring(part.start, part.len);
+            foreach (var part in parts_)
+                part.text = text_.Substring(part.start, part.len);
         }
 
         public void replace_text(int start, int len, string new_text) {

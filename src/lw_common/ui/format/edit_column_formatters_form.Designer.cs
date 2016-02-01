@@ -401,7 +401,6 @@
             // 
             // edit_column_formatters_form
             // 
-            this.AcceptButton = this.ok;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.cancel;
             this.ClientSize = new System.Drawing.Size(674, 481);

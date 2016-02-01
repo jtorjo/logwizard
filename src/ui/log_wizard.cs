@@ -39,6 +39,7 @@ using BrightIdeasSoftware;
 using lw_common;
 using lw_common.parse;
 using lw_common.ui;
+using lw_common.ui.format;
 using LogWizard.context;
 using LogWizard.Properties;
 
@@ -2098,6 +2099,7 @@ namespace LogWizard
             editSettings_Click(null,null);
         }
 
+
         public void after_column_positions_change() {
             foreach ( var lv in all_log_views_and_full_log())
                 lv.on_column_positions_change();
@@ -3711,6 +3713,34 @@ namespace LogWizard
             }
         }
 
+        public void edit_column_formatting() {
+            var sett = this.cur_history().write_settings;
+            var cur_view_name = selected_view().name;
+            bool old_apply_to_me = sett.apply_column_formatting_to_me.get(cur_view_name);
+            var old_format = sett.column_formatting.get( old_apply_to_me ? cur_view_name : log_view.ALL_VIEWS );
+            var form = new edit_column_formatters_form(selected_view(), old_format, old_apply_to_me);
+            if (form.ShowDialog(this) == DialogResult.OK) {
+                bool new_apply_to_me = form.apply_only_to_me;
+                string new_format = form.format_syntax;
+                sett.column_formatting.set( new_apply_to_me ? cur_view_name : log_view.ALL_VIEWS, new_format);
+                sett.apply_column_formatting_to_me.set( cur_view_name, new_apply_to_me);
+                save();
+                var needs_refresh = all_log_views_and_full_log();
+                if ( new_apply_to_me)
+                    needs_refresh = new List<log_view>() { selected_view() };
+
+                foreach ( var view in needs_refresh) {
+                    // ignore those views with "apply only to me" 
+                    bool view_has_apply_only_to_me = view != selected_view() && sett.apply_column_formatting_to_me.get(view.name);
+                    if (!view_has_apply_only_to_me) {
+                        var new_formatter = new column_formatter_array();
+                        new_formatter.load(new_format);
+                        view.formatter = new_formatter;
+                    }
+                }
+                selected_view().list.Refresh();
+            }
+        }
 
 
     }

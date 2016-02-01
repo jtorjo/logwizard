@@ -54,6 +54,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.autoOpenLast = new System.Windows.Forms.CheckBox();
             this.associateExtensions = new System.Windows.Forms.CheckBox();
             this.showHorizontalScrollbar = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -83,20 +84,16 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.label28 = new System.Windows.Forms.Label();
             this.bookmarkFg = new ColorPicker.ColorPickerCombobox();
-            this.label29 = new System.Windows.Forms.Label();
             this.bookmarkBg = new ColorPicker.ColorPickerCombobox();
             this.label27 = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
             this.fullLogGrayFg = new ColorPicker.ColorPickerCombobox();
-            this.label26 = new System.Windows.Forms.Label();
             this.fullLogGrayBg = new ColorPicker.ColorPickerCombobox();
             this.label23 = new System.Windows.Forms.Label();
             this.dimmedFg = new ColorPicker.ColorPickerCombobox();
-            this.label24 = new System.Windows.Forms.Label();
             this.dimmedBg = new ColorPicker.ColorPickerCombobox();
             this.label22 = new System.Windows.Forms.Label();
             this.logFg = new ColorPicker.ColorPickerCombobox();
-            this.label13 = new System.Windows.Forms.Label();
             this.logBg = new ColorPicker.ColorPickerCombobox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.button2 = new System.Windows.Forms.Button();
@@ -126,7 +123,9 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.autoOpenLast = new System.Windows.Forms.CheckBox();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.defaultColumnFormatting = new System.Windows.Forms.TextBox();
+            this.formatHelp = new System.Windows.Forms.LinkLabel();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -147,6 +146,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.fileToContext)).BeginInit();
             this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).BeginInit();
+            this.groupBox10.SuspendLayout();
             this.SuspendLayout();
             // 
             // fontLabel
@@ -250,7 +250,7 @@
             this.groupBox3.Controls.Add(this.syncColorsAllViews);
             this.groupBox3.Controls.Add(this.syncColorsCurView);
             this.groupBox3.Controls.Add(this.syncColorsNone);
-            this.groupBox3.Location = new System.Drawing.Point(6, 278);
+            this.groupBox3.Location = new System.Drawing.Point(6, 176);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(628, 146);
             this.groupBox3.TabIndex = 5;
@@ -483,6 +483,16 @@
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General";
+            // 
+            // autoOpenLast
+            // 
+            this.autoOpenLast.AutoSize = true;
+            this.autoOpenLast.Location = new System.Drawing.Point(9, 107);
+            this.autoOpenLast.Name = "autoOpenLast";
+            this.autoOpenLast.Size = new System.Drawing.Size(278, 21);
+            this.autoOpenLast.TabIndex = 21;
+            this.autoOpenLast.Text = "Automatically Open Last Log on Restart";
+            this.autoOpenLast.UseVisualStyleBackColor = true;
             // 
             // associateExtensions
             // 
@@ -724,6 +734,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox10);
             this.tabPage2.Controls.Add(this.groupBox8);
             this.tabPage2.Controls.Add(this.groupBox5);
             this.tabPage2.Controls.Add(this.groupBox3);
@@ -770,24 +781,20 @@
             // 
             this.groupBox5.Controls.Add(this.label28);
             this.groupBox5.Controls.Add(this.bookmarkFg);
-            this.groupBox5.Controls.Add(this.label29);
             this.groupBox5.Controls.Add(this.bookmarkBg);
             this.groupBox5.Controls.Add(this.label27);
             this.groupBox5.Controls.Add(this.label25);
             this.groupBox5.Controls.Add(this.fullLogGrayFg);
-            this.groupBox5.Controls.Add(this.label26);
             this.groupBox5.Controls.Add(this.fullLogGrayBg);
             this.groupBox5.Controls.Add(this.label23);
             this.groupBox5.Controls.Add(this.dimmedFg);
-            this.groupBox5.Controls.Add(this.label24);
             this.groupBox5.Controls.Add(this.dimmedBg);
             this.groupBox5.Controls.Add(this.label22);
             this.groupBox5.Controls.Add(this.logFg);
-            this.groupBox5.Controls.Add(this.label13);
             this.groupBox5.Controls.Add(this.logBg);
             this.groupBox5.Location = new System.Drawing.Point(3, 88);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(628, 184);
+            this.groupBox5.Size = new System.Drawing.Size(628, 85);
             this.groupBox5.TabIndex = 6;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Log";
@@ -795,33 +802,24 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(19, 55);
+            this.label28.Location = new System.Drawing.Point(262, 19);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(149, 17);
+            this.label28.Size = new System.Drawing.Size(112, 17);
             this.label28.TabIndex = 22;
-            this.label28.Text = "Bookmark Foreground";
+            this.label28.Text = "Bookmark Fg/Bg";
             // 
             // bookmarkFg
             // 
-            this.bookmarkFg.Location = new System.Drawing.Point(186, 55);
+            this.bookmarkFg.Location = new System.Drawing.Point(402, 18);
             this.bookmarkFg.Name = "bookmarkFg";
             this.bookmarkFg.SelectedItem = System.Drawing.Color.Wheat;
             this.bookmarkFg.Size = new System.Drawing.Size(42, 17);
             this.bookmarkFg.TabIndex = 21;
             this.bookmarkFg.Text = "colorPickerCombobox1";
             // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(232, 55);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(151, 17);
-            this.label29.TabIndex = 20;
-            this.label29.Text = "Bookmark Background";
-            // 
             // bookmarkBg
             // 
-            this.bookmarkBg.Location = new System.Drawing.Point(389, 55);
+            this.bookmarkBg.Location = new System.Drawing.Point(450, 18);
             this.bookmarkBg.Name = "bookmarkBg";
             this.bookmarkBg.SelectedItem = System.Drawing.Color.Wheat;
             this.bookmarkBg.Size = new System.Drawing.Size(42, 17);
@@ -833,7 +831,7 @@
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label27.ForeColor = System.Drawing.Color.Red;
-            this.label27.Location = new System.Drawing.Point(19, 159);
+            this.label27.Location = new System.Drawing.Point(19, 64);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(283, 13);
             this.label27.TabIndex = 18;
@@ -842,33 +840,24 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(19, 121);
+            this.label25.Location = new System.Drawing.Point(262, 41);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(113, 17);
+            this.label25.Size = new System.Drawing.Size(134, 17);
             this.label25.TabIndex = 17;
-            this.label25.Text = "Full Log Gray Fg";
+            this.label25.Text = "Full Log Gray Fg/Bg";
             // 
             // fullLogGrayFg
             // 
-            this.fullLogGrayFg.Location = new System.Drawing.Point(186, 121);
+            this.fullLogGrayFg.Location = new System.Drawing.Point(402, 40);
             this.fullLogGrayFg.Name = "fullLogGrayFg";
             this.fullLogGrayFg.SelectedItem = System.Drawing.Color.Wheat;
             this.fullLogGrayFg.Size = new System.Drawing.Size(42, 17);
             this.fullLogGrayFg.TabIndex = 16;
             this.fullLogGrayFg.Text = "colorPickerCombobox3";
             // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(269, 121);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(114, 17);
-            this.label26.TabIndex = 15;
-            this.label26.Text = "Full Log Gray Bg";
-            // 
             // fullLogGrayBg
             // 
-            this.fullLogGrayBg.Location = new System.Drawing.Point(389, 121);
+            this.fullLogGrayBg.Location = new System.Drawing.Point(450, 40);
             this.fullLogGrayBg.Name = "fullLogGrayBg";
             this.fullLogGrayBg.SelectedItem = System.Drawing.Color.Wheat;
             this.fullLogGrayBg.Size = new System.Drawing.Size(42, 17);
@@ -878,33 +867,24 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(19, 96);
+            this.label23.Location = new System.Drawing.Point(19, 40);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(137, 17);
+            this.label23.Size = new System.Drawing.Size(100, 17);
             this.label23.TabIndex = 13;
-            this.label23.Text = "Dimmed Foreground";
+            this.label23.Text = "Dimmed Fg/Bg";
             // 
             // dimmedFg
             // 
-            this.dimmedFg.Location = new System.Drawing.Point(186, 96);
+            this.dimmedFg.Location = new System.Drawing.Point(149, 40);
             this.dimmedFg.Name = "dimmedFg";
             this.dimmedFg.SelectedItem = System.Drawing.Color.Wheat;
             this.dimmedFg.Size = new System.Drawing.Size(42, 17);
             this.dimmedFg.TabIndex = 12;
             this.dimmedFg.Text = "colorPickerCombobox1";
             // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(244, 96);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(139, 17);
-            this.label24.TabIndex = 11;
-            this.label24.Text = "Dimmed Background";
-            // 
             // dimmedBg
             // 
-            this.dimmedBg.Location = new System.Drawing.Point(389, 96);
+            this.dimmedBg.Location = new System.Drawing.Point(197, 41);
             this.dimmedBg.Name = "dimmedBg";
             this.dimmedBg.SelectedItem = System.Drawing.Color.Wheat;
             this.dimmedBg.Size = new System.Drawing.Size(42, 17);
@@ -916,31 +896,22 @@
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(19, 18);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(82, 17);
+            this.label22.Size = new System.Drawing.Size(45, 17);
             this.label22.TabIndex = 9;
-            this.label22.Text = "Foreground";
+            this.label22.Text = "Fg/Bg";
             // 
             // logFg
             // 
-            this.logFg.Location = new System.Drawing.Point(186, 18);
+            this.logFg.Location = new System.Drawing.Point(149, 18);
             this.logFg.Name = "logFg";
             this.logFg.SelectedItem = System.Drawing.Color.Wheat;
             this.logFg.Size = new System.Drawing.Size(42, 17);
             this.logFg.TabIndex = 8;
             this.logFg.Text = "colorPickerCombobox1";
             // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(299, 18);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(84, 17);
-            this.label13.TabIndex = 7;
-            this.label13.Text = "Background";
-            // 
             // logBg
             // 
-            this.logBg.Location = new System.Drawing.Point(389, 18);
+            this.logBg.Location = new System.Drawing.Point(197, 18);
             this.logBg.Name = "logBg";
             this.logBg.SelectedItem = System.Drawing.Color.Wheat;
             this.logBg.Size = new System.Drawing.Size(42, 17);
@@ -1254,20 +1225,49 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // autoOpenLast
+            // groupBox10
             // 
-            this.autoOpenLast.AutoSize = true;
-            this.autoOpenLast.Location = new System.Drawing.Point(9, 107);
-            this.autoOpenLast.Name = "autoOpenLast";
-            this.autoOpenLast.Size = new System.Drawing.Size(278, 21);
-            this.autoOpenLast.TabIndex = 21;
-            this.autoOpenLast.Text = "Automatically Open Last Log on Restart";
-            this.autoOpenLast.UseVisualStyleBackColor = true;
+            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox10.Controls.Add(this.formatHelp);
+            this.groupBox10.Controls.Add(this.defaultColumnFormatting);
+            this.groupBox10.Location = new System.Drawing.Point(6, 329);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(628, 100);
+            this.groupBox10.TabIndex = 8;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Column Formatting : Default Format";
+            // 
+            // defaultColumnFormatting
+            // 
+            this.defaultColumnFormatting.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.defaultColumnFormatting.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.defaultColumnFormatting.Location = new System.Drawing.Point(6, 22);
+            this.defaultColumnFormatting.Multiline = true;
+            this.defaultColumnFormatting.Name = "defaultColumnFormatting";
+            this.defaultColumnFormatting.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.defaultColumnFormatting.Size = new System.Drawing.Size(574, 72);
+            this.defaultColumnFormatting.TabIndex = 0;
+            this.defaultColumnFormatting.WordWrap = false;
+            // 
+            // formatHelp
+            // 
+            this.formatHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.formatHelp.AutoSize = true;
+            this.formatHelp.Location = new System.Drawing.Point(586, 80);
+            this.formatHelp.Name = "formatHelp";
+            this.formatHelp.Size = new System.Drawing.Size(37, 17);
+            this.formatHelp.TabIndex = 1;
+            this.formatHelp.TabStop = true;
+            this.formatHelp.Text = "Help";
+            this.formatHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.formatHelp_LinkClicked);
             // 
             // settings_form
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(694, 514);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.close);
@@ -1311,6 +1311,8 @@
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).EndInit();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1379,19 +1381,15 @@
         private System.Windows.Forms.CheckBox filterShowFilterRowInFilterColor;
         private System.Windows.Forms.Label label22;
         private ColorPicker.ColorPickerCombobox logFg;
-        private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label25;
         private ColorPicker.ColorPickerCombobox fullLogGrayFg;
-        private System.Windows.Forms.Label label26;
         private ColorPicker.ColorPickerCombobox fullLogGrayBg;
         private System.Windows.Forms.Label label23;
         private ColorPicker.ColorPickerCombobox dimmedFg;
-        private System.Windows.Forms.Label label24;
         private ColorPicker.ColorPickerCombobox dimmedBg;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label label28;
         private ColorPicker.ColorPickerCombobox bookmarkFg;
-        private System.Windows.Forms.Label label29;
         private ColorPicker.ColorPickerCombobox bookmarkBg;
         private System.Windows.Forms.Button browseFont;
         private System.Windows.Forms.Label label31;
@@ -1419,6 +1417,9 @@
         private System.Windows.Forms.CheckBox editSearchBelow;
         private System.Windows.Forms.CheckBox associateExtensions;
         private System.Windows.Forms.CheckBox autoOpenLast;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.LinkLabel formatHelp;
+        private System.Windows.Forms.TextBox defaultColumnFormatting;
 
     }
 }

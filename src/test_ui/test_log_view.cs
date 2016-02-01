@@ -109,6 +109,9 @@ namespace test_ui {
         public void edit_log_settings() {
         }
 
+        public void edit_column_formatting() {
+        }
+
         public void after_column_positions_change() {
         }
 

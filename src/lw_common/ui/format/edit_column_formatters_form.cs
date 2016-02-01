@@ -20,21 +20,30 @@ namespace lw_common.ui {
 
         private string prev_syntax_ = "";
 
-        public edit_column_formatters_form(log_view lv) {
+        public edit_column_formatters_form(log_view lv, string format_syntax, bool apply_only_to_me) {
             lv_ = lv;
             InitializeComponent();
             list.VirtualMode = false;
             list.Font = lv.list.Font;
 
             var formatter = new column_formatter_array();
-            formatter.load(lv_.formatter.syntax);
+            formatter.load(format_syntax);
             render_ = new column_formatter_renderer(lv, list);
             render_.formatter = formatter;
 
             syntax.Text = prev_syntax_ = render_.formatter.syntax;
+            applyToCurrentViewOnly.Checked = apply_only_to_me;
                         
             update_column_visibility();
             load_surrounding_rows();
+        }
+
+        public string format_syntax {
+            get { return syntax.Text; }
+        }
+
+        public bool apply_only_to_me {
+            get { return applyToCurrentViewOnly.Checked; }
         }
 
         private void update_column_visibility() {

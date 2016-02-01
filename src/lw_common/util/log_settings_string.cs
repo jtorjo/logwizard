@@ -77,6 +77,7 @@ namespace lw_common {
 
     public class dictionary_setting_readonly<T>  where T : IConvertible, IComparable<T> {
         protected const string separator_ = "|@#@|";
+        protected const string within_value_separator_ = "|#@@#|";
         protected readonly  settings_as_string values_ = new settings_as_string("");
 
         protected readonly  settings_as_string sett_;
@@ -96,7 +97,9 @@ namespace lw_common {
         }
 
         public T get(string key) {
-            return (T)Convert.ChangeType( values_.get(key, default_.ToString()), typeof (T));
+            var cur = values_.get(key, default_.ToString());
+            cur = cur.Replace(within_value_separator_, "\r\n");
+            return (T)Convert.ChangeType( cur, typeof (T));
         }
     }
 
@@ -109,7 +112,7 @@ namespace lw_common {
             if (old.Equals( value))
                 return;
 
-            values_.set(key, value.ToString() );
+            values_.set(key, value.ToString().Replace("\r\n", within_value_separator_) );
             sett_.set(name_, values_.ToString().Replace("\r\n", separator_));
         }
 
@@ -297,12 +300,18 @@ namespace lw_common {
         protected readonly single_setting<string> available_columns_;
         // 1.6.13+
         // contains the columns to show and where - for this view of a log - if empty, show every column
-        // the key : the view name - we have a special key for "positions from all views" (which is the default)
+        // the key : the view name - we have a special key for "XYZ from all views" (which is the default)
         protected readonly dictionary_setting<string> column_positions_;
         // 1.6.13+
         // if true - for a given view - contains the column positions for that specific view only
-        // the key : the view name - we have a special key for "positions from all views" (which is the default)
+        // the key : the view name - we have a special key for "XYZ from all views" (which is the default)
         protected readonly dictionary_setting<bool> apply_column_positions_to_me_; 
+
+        // 1.7.17+
+        // contains the columns to show and where - for this view of a log - if empty, show every column
+        // the key : the view name - we have a special key for "XYZ from all views" (which is the default)
+        protected readonly dictionary_setting<string> column_formatting_;
+        protected readonly dictionary_setting<bool> apply_column_formatting_to_me_; 
 
         // line-by-line
         protected readonly single_setting_bool line_if_line_;
@@ -346,6 +355,9 @@ namespace lw_common {
             is_open_first_time_ = new single_setting_bool(settings_, "is_open_first_time", true);
             column_positions_ = new dictionary_setting<string>(settings_, "column_positions", "");
             apply_column_positions_to_me_  = new dictionary_setting<bool>(settings_, "apply_column_positions_to_me");
+
+            column_formatting_ = new dictionary_setting<string>(settings_, "column_format", "");
+            apply_column_formatting_to_me_ = new dictionary_setting<bool>(settings_, "apply_column_format_to_me");
 
             description_template_ = new single_setting<string>(settings_, "description_template", "");
             aliases_ = new single_setting<string>(settings_, "aliases", "");
@@ -494,6 +506,14 @@ namespace lw_common {
         public single_setting_readonly<string> available_columns {
             get { return available_columns_; }
         }
+
+        public dictionary_setting_readonly<string> column_formatting {
+            get { return column_formatting_; }
+        }
+
+        public dictionary_setting_readonly<bool> apply_column_formatting_to_me {
+            get { return apply_column_formatting_to_me_; }
+        }
     }
 
 
@@ -619,6 +639,14 @@ namespace lw_common {
         }
         public new single_setting<string> available_columns {
             get { return available_columns_; }
+        }
+
+        public new dictionary_setting<string> column_formatting {
+            get { return column_formatting_; }
+        }
+
+        public new dictionary_setting<bool> apply_column_formatting_to_me {
+            get { return apply_column_formatting_to_me_; }
         }
 
     }

@@ -156,6 +156,7 @@ namespace lw_common.ui {
 
             associateExtensions.Checked = app.inst.associate_common_extensions;
             autoOpenLast.Checked = app.inst.auto_open_last_log;
+            defaultColumnFormatting.Text = app.inst.default_column_format;
         }
 
         private void save() {
@@ -238,6 +239,7 @@ namespace lw_common.ui {
             app.inst.show_tips = showTips.Checked;
             app.inst.show_horizontal_scrollbar = showHorizontalScrollbar.Checked;
             app.inst.edit_click_word_selects_it = clickWordAutoSelectsIt.Checked;
+            app.inst.default_column_format = defaultColumnFormatting.Text;
 
             bool associate_change = app.inst.associate_common_extensions != associateExtensions.Checked;
             app.inst.associate_common_extensions = associateExtensions.Checked;
@@ -305,6 +307,10 @@ namespace lw_common.ui {
 
         private void useFileMonitoringApi_CheckedChanged(object sender, EventArgs e) {
 
+        }
+
+        private void formatHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            Process.Start("https://github.com/jtorjo/logwizard/wiki/Formatters");
         }
     }
 }
