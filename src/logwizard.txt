@@ -1012,6 +1012,15 @@ default_column_format=[line]
 	multiline.separator=|
 	multiline.separator_format=blue
 	
+	[level]
+	picture
+	pic=info->icons\level\info.png
+	pic2=error->icons\level\error.png
+	pic3=fatal->icons\level\fatal.png
+	pic4=debug->icons\level\debug.png
+	pic5=warn->icons\level\warn.png
+	align=center
+	
 file_to_context.0.key=HM2 Version: 2.
 file_to_context.0.value=HM2
 file_to_context.1.key=HM3 Version=3

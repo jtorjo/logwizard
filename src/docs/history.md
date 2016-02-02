@@ -1,4 +1,8 @@
 
+1.7.20
+- column formatter: allow for pictures (picture formatter)
+
+
 1.7.17d
 - HM3 logs: a new syntax
 - fix: open files with fileshare.readwrite access - all over the place

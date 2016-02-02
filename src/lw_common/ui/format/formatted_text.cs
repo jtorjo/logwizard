@@ -13,10 +13,11 @@ namespace lw_common.ui.format {
         private List<text_part> parts_ = new List<text_part>();
         private string text_;
 
-        // 1.7.7 not used yet
         public HorizontalAlignment align = HorizontalAlignment.Left;
 
         public Color bg = util.transparent;
+
+        public Image image = null;
 
         public formatted_text(string text) {
             text_ = text;
@@ -26,6 +27,7 @@ namespace lw_common.ui.format {
             parts_ = other.parts_;
             bg = other.bg;
             align = other.align;
+            image = other.image;
         }
 
         public string text {

@@ -166,6 +166,13 @@ namespace lw_common.ui.format {
                     }
                 }
 
+            foreach ( var format in formatters_)
+                if (needs_apply_formatter(format, cell))
+                    if (format.the_formatter.get_image() != null) {
+                        cell.format_text.image = format.the_formatter.get_image();
+                        break;
+                    }
+
             cell.format_text.update_parts();
         }
 
@@ -181,9 +188,8 @@ namespace lw_common.ui.format {
             case "format":
                 result = new column_formatters.format();
                 break;
-            case "multiline":
-            case "multi-line":
-                result = new multiline();
+            case "picture":
+                result = new picture();
                 break;
             case "stack_trace":
             case "stack-trace":

@@ -46,7 +46,7 @@ namespace lw_common.ui {
         public Font font(text_part print) {
             string font_name = print != null && print.font_name != "" ? print.font_name : default_font.FontFamily.Name;
             int font_size = print != null && print.font_size > 0 ? print.font_size : (int)(default_font.Size + .5);
-            Font f = fonts_.get_font(font_name, font_size, print.bold, print.italic, print.underline);
+            Font f = fonts_.get_font(font_name, font_size, print != null && print.bold, print != null && print.italic, print != null && print.underline);
             return f;
         }
 

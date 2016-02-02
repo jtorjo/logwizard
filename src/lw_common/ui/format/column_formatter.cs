@@ -110,5 +110,9 @@ namespace lw_common.ui.format {
         }
         internal virtual void format_after(format_cell cell) {            
         }
+
+        internal virtual Image get_image() {
+            return null;
+        }
     }
 }

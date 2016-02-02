@@ -72,7 +72,16 @@ namespace lw_common {
                                                     "multiline.multi=0\r\n" +
                                                     "multiline.alternate_format=lighter\r\n" +
                                                     "multiline.separator=|\r\n" +
-                                                    "multiline.separator_format=blue\r\n"
+                                                    "multiline.separator_format=blue\r\n" +
+                                                    "\r\n" +
+                                                    "[level]\r\n" +
+                                                    "picture\r\n" +
+                                                    "pic=info->icons\\level\\info.png\r\n" +
+                                                    "pic2=error->icons\\level\\error.png\r\n" +
+                                                    "pic3=fatal->icons\\level\\fatal.png\r\n" +
+                                                    "pic4=debug->icons\\level\\debug.png\r\n" +
+                                                    "pic5=warn->icons\\level\\warn.png\r\n" +
+                                                    "align=center\r\n"
                                                     ; 
 
         // these are settings that are NOT shown in the UI
