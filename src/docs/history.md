@@ -1,4 +1,15 @@
 
+1.7.21
+- column formatters speed improvements
+  - multi_sel_idx can get expensive if called multiple times (during UI drawing) -> cached it in log_view_renderer
+  - cache: 
+    - override print is very CPU intensive - I cached it -> only for log_view_renderer (the other renderers aren't used that ofen, so it doesn't matter for them)
+	- see which columns can't be cached (time/date) -> because they compute formatting based on prev text / top row
+	- when any column formatting changes -> clear cache
+	- typing something -> clear cache
+	- searching changes -> clear cache 
+
+
 1.7.20
 - column formatter: allow for pictures (picture formatter)
 

@@ -42,14 +42,17 @@ namespace lw_common.ui {
 
         private solid_brush_list brush_ = new solid_brush_list();
 
-        public log_view_render(log_view parent) {
-            parent_ = parent;
-            drawer_ = new log_view_item_draw_ui(parent_);            
-        }
-
         private formatted_text  override_print_ = null;
         text_part default_ = new text_part(0, 0);
         private Color bg_color_ = util.transparent;
+
+        private formatted_text_cache cache_;
+
+        public log_view_render(log_view parent) {
+            parent_ = parent;
+            drawer_ = new log_view_item_draw_ui(parent_);
+            cache_ = new formatted_text_cache(parent_, column_formatter.format_cell.location_type.view);
+        }
 
         private void draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, text_part print) {
             int width = drawer_.text_width(g, sub, drawer_.font(print));
@@ -72,6 +75,10 @@ namespace lw_common.ui {
             var prints = override_print_.parts(default_);
             foreach (var part in prints) {
                 int left_offset = left + drawer_.text_offset(g, s.Substring(0, part.start), drawer_.font(part) );
+                if (left_offset > r.Right)
+                    // nothing to actually draw
+                    // assuming we're going left to right, we're reached passed the end
+                    break; 
                 draw_sub_string(left_offset, part.text, g, b, r, fmt, part);
             }
         }
@@ -97,6 +104,10 @@ namespace lw_common.ui {
             }
         }
 
+        public void clear_format_cache(string reason) {
+            cache_.clear(reason);
+        }
+
         public override void Render(Graphics g, Rectangle r) {
             // 1.3.30+ solved rendering issue :)
             DrawBackground(g, r);
@@ -106,13 +117,9 @@ namespace lw_common.ui {
                 return;
 
             var col_idx = Column.fixed_index();
-            string text = GetText();
-            override_print_ = i.override_print(parent_, text, col_idx, column_formatter.format_cell.location_type.view);
-
-            var type = log_view_cell.cell_idx_to_type(col_idx);
-            if (info_type_io.can_be_multi_line(type)) 
-                override_print_ = override_print_.get_most_important_single_line();
-            text = override_print_.text;
+            drawer_.cached_sel = parent_.multi_sel_idx;
+            override_print_ = cache_.override_print(i, GetText(), col_idx);
+            var text = override_print_.text;
 
             bg_color_ = drawer_.bg_color(ListItem, col_idx, override_print_);
             Brush brush = brush_.brush( bg_color_);

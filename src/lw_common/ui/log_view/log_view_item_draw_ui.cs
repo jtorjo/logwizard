@@ -39,6 +39,9 @@ namespace lw_common.ui {
         // if true, we consider none of the items is selected
         public bool ignore_selection = false;
 
+        // 1.7.21 asking for multi_sel_idx can get very expensive - we allow for caching
+        public List<int> cached_sel = null; 
+
         public log_view_item_draw_ui(log_view parent) {
             parent_ = parent;
         }
@@ -118,7 +121,7 @@ namespace lw_common.ui {
 
         public Color print_bg_color(OLVListItem item, text_part print) {
             match_item i = item.RowObject as match_item;            
-            bool is_sel = !ignore_selection ? parent_.multi_sel_idx.Contains(item.Index) : false;
+            bool is_sel = !ignore_selection ? parent_sel.Contains(item.Index) : false;
 
             Color default_bg = is_sel ? i.sel_bg(parent_) : i.bg(parent_);            
             Color bg = print.bg != util.transparent ? print.bg : default_bg;
@@ -143,13 +146,16 @@ namespace lw_common.ui {
             return print_fg;
         }
 
+        private List<int> parent_sel {
+            get { return cached_sel ?? parent_.multi_sel_idx; }
+        } 
 
         public Color bg_color(OLVListItem item, int col_idx) {
             match_item i = item.RowObject as match_item;
             int row_idx = item.Index;
 
             Color color;
-            bool is_sel = !ignore_selection ? parent_.multi_sel_idx.Contains(row_idx) : false;
+            bool is_sel = !ignore_selection ? parent_sel.Contains(row_idx) : false;
 
             Color bg = i.bg(parent_);
             Color dark_bg = i.sel_bg(parent_);
@@ -177,7 +183,7 @@ namespace lw_common.ui {
         public Color bg_color(OLVListItem item, int col_idx, formatted_text format) {
             match_item i = item.RowObject as match_item;
             int row_idx = item.Index;
-            bool is_sel = !ignore_selection ? parent_.multi_sel_idx.Contains(row_idx) : false;
+            bool is_sel = !ignore_selection ? parent_sel.Contains(row_idx) : false;
             if ( !is_sel)
                 if (format.bg != util.transparent)
                     return format.bg;

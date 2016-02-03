@@ -154,6 +154,7 @@
     <Compile Include="ui\format\column_formatters\xml.cs" />
     <Compile Include="ui\format\column_formatter_array.cs" />
     <Compile Include="ui\format\formatted_text.cs" />
+    <Compile Include="ui\format\formatted_text_cache.cs" />
     <Compile Include="ui\go_to_line_time_form.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1591,6 +1591,7 @@ namespace lw_common.ui
 
         public void set_search_for_text(search_for search) {
             cur_search_ = search;
+            render_.clear_format_cache("search changed");
             // as of 1.2.6, we mark the words visually
             list.Refresh();
         }
@@ -1626,6 +1627,7 @@ namespace lw_common.ui
             }
             else if (cur_search_ != null) {
                 cur_search_ = null;
+                render_.clear_format_cache("search cleared");
                 list.Refresh();
             }
             else if (cur_filter_row_idx_ >= 0) {
@@ -2195,7 +2197,10 @@ namespace lw_common.ui
 
         public column_formatter_array formatter {
             get { return formatter_; }
-            set { formatter_ = value; }
+            set {
+                formatter_ = value;
+                render_.clear_format_cache("new formatter");
+            }
         }
 
 
@@ -2354,6 +2359,7 @@ namespace lw_common.ui
 
         private void on_edit_sel_changed() {
             // logger.Debug("[lv] sel= [" + edit.sel_text + "]");
+            render_.clear_format_cache("sel changed");
             list.Refresh();
         }
 
