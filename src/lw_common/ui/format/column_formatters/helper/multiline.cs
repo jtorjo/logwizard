@@ -22,7 +22,7 @@ namespace lw_common.ui.format.column_formatters {
         alternate_format=format
         separator_format=format
     */
-    class multiline : column_formatter {
+    class multiline : column_formatter_base {
         private bool show_multi_into_single_line_ = false;
 
         private string separator_ = "";

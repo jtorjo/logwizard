@@ -2203,6 +2203,27 @@ namespace lw_common.ui
             }
         }
 
+        public bool formatter_applies_only_to_me {
+            get {
+                if (log_ == null)
+                    return false;
+                var sett = log_.settings;
+                return sett.apply_column_formatting_to_me.get(name);
+            }
+        }
+
+        public void toggle_number_base() {
+            formatter.toggle_number_base();
+            render_.clear_format_cache("toggle number base");
+            Refresh();
+        }
+
+        public void toggle_abbreviation() {
+            formatter.toggle_abbvreviation();
+            render_.clear_format_cache("toggle abbreviation");
+            Refresh();
+        }
+
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
             bool is_renaming = win32.focused_ctrl() == viewName;

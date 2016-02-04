@@ -117,6 +117,7 @@
     <Compile Include="ui\description_ctrl.Designer.cs">
       <DependentUpon>description_ctrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\format\column_formatters\helper\abbreviation.cs" />
     <Compile Include="ui\format\column_formatter_renderer.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -141,7 +142,7 @@
     <Compile Include="ui\font_list.cs" />
     <Compile Include="ui\format\column_formatters\helper\alternate_bg_color.cs" />
     <Compile Include="ui\format\column_formatters\cell.cs" />
-    <Compile Include="ui\format\column_formatter.cs" />
+    <Compile Include="ui\format\column_formatter_base.cs" />
     <Compile Include="ui\format\column_formatters\helper\color_date.cs" />
     <Compile Include="ui\format\column_formatters\helper\compare_number.cs" />
     <Compile Include="ui\format\column_formatters\helper\color_time.cs" />

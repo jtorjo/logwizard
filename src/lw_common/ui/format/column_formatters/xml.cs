@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace lw_common.ui.format.column_formatters {
     // later
-    class xml : column_formatter {
+    class xml : column_formatter_base {
     }
 }

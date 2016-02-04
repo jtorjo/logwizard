@@ -16,7 +16,7 @@ namespace lw_common.ui.format.column_formatters {
     // what to show as "lighter" color
     light=color
     */
-    class color_time : column_formatter {
+    class color_time : column_formatter_base {
         private string light_color_ = "";
         private bool show_diff_ = true;
 

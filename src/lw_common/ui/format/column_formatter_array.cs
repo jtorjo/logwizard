@@ -42,7 +42,7 @@ namespace lw_common.ui.format {
             public string column_type = "";
             public string name = "";
             public string syntax = "";
-            public column_formatter the_formatter = null;
+            public column_formatter_base the_formatter = null;
 
             public bool ok {
                 get { return name != "";  }
@@ -113,7 +113,7 @@ namespace lw_common.ui.format {
             last = new_last;
         }
 
-        private bool needs_apply_formatter(formatter format, column_formatter.format_cell cell) {
+        private bool needs_apply_formatter(formatter format, column_formatter_base.format_cell cell) {
             if (format.column_type == "all")
                 return true;
 
@@ -126,7 +126,7 @@ namespace lw_common.ui.format {
             return false;
         }
 
-        internal void format_before(column_formatter.format_cell cell) {
+        internal void format_before(column_formatter_base.format_cell cell) {
             // each formatter is called once "before" the filters
             // then, it's called again "after" the filters
             //
@@ -140,7 +140,7 @@ namespace lw_common.ui.format {
                     format.the_formatter.format_before(cell);
             
         }
-        internal void format_after(column_formatter.format_cell cell) {
+        internal void format_after(column_formatter_base.format_cell cell) {
             // each formatter is called once "before" the filters
             // then, it's called again "after" the filters
             //
@@ -149,16 +149,16 @@ namespace lw_common.ui.format {
                 if (needs_apply_formatter(format, cell)) {
                     format.the_formatter.format_after(cell);
                     switch (format.the_formatter.align) {
-                    case column_formatter.align_type.left:
+                    case column_formatter_base.align_type.left:
                         cell.format_text.align = HorizontalAlignment.Left;
                         break;
-                    case column_formatter.align_type.center:
+                    case column_formatter_base.align_type.center:
                         cell.format_text.align = HorizontalAlignment.Center;
                         break;
-                    case column_formatter.align_type.right:
+                    case column_formatter_base.align_type.right:
                         cell.format_text.align = HorizontalAlignment.Right;
                         break;
-                    case column_formatter.align_type.none:
+                    case column_formatter_base.align_type.none:
                         break;
                     default:
                         Debug.Assert(false);
@@ -178,9 +178,9 @@ namespace lw_common.ui.format {
 
         // note: it's possible to create a valid formatter, and have an error. Like, when the syntax is partially right
         //       In that case, I will just use what is valid
-        private static column_formatter create_formatter(string name, string syntax, ref string error) {
+        private static column_formatter_base create_formatter(string name, string syntax, ref string error) {
             error = "";
-            column_formatter result = null;
+            column_formatter_base result = null;
             switch (name) {
             case "cell":
                 result = new cell();
@@ -206,6 +206,17 @@ namespace lw_common.ui.format {
             if (result != null)
                 result.load_syntax(new settings_as_string(syntax), ref error);
             return result;
+        }
+
+        public void toggle_number_base() {
+            foreach (var format in formatters_)
+                format.the_formatter.toggle_number_base();
+        }
+
+        public void toggle_abbvreviation() {
+            foreach (var format in formatters_)
+                format.the_formatter.toggle_number_base();
+            
         }
     }
 }

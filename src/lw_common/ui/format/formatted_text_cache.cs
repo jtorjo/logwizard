@@ -14,7 +14,7 @@ namespace lw_common.ui.format {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private log_view parent_;
-        private column_formatter.format_cell.location_type location_;
+        private column_formatter_base.format_cell.location_type location_;
 
         private class cache_data {
             public formatted_text format;
@@ -28,7 +28,7 @@ namespace lw_common.ui.format {
 
         private int next_cache_index_ = 0;
 
-        public formatted_text_cache(log_view parent, column_formatter.format_cell.location_type location) {
+        public formatted_text_cache(log_view parent, column_formatter_base.format_cell.location_type location) {
             parent_ = parent;
             location_ = location;
         }

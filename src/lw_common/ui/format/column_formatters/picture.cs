@@ -15,7 +15,7 @@ namespace lw_common.ui.format.column_formatters {
 
     name can be a name that is relative to homepath (%appdata%\..\local) or absolute
     */
-    class picture : column_formatter {
+    class picture : column_formatter_base {
 
         private Dictionary<string, Image> name_to_picture_ = new Dictionary<string, Image>();
 

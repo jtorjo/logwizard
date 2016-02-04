@@ -93,7 +93,7 @@ namespace lw_common.ui.format {
         }
 
         // IMPORTANT: here, when doing preview, we don't show any results from find/find-as-you-type/running filters
-        private formatted_text override_print(match_item i, string text, int col_idx, column_formatter.format_cell.location_type location) {
+        private formatted_text override_print(match_item i, string text, int col_idx, column_formatter_base.format_cell.location_type location) {
             int row_idx = list_.IndexOf(i);
             Debug.Assert(row_idx >= 0);
 
@@ -102,7 +102,7 @@ namespace lw_common.ui.format {
             if (row_idx > 0)
                 prev_text = log_view_cell.cell_value( list_.GetItem(row_idx - 1).RowObject as match_item , col_idx);
 
-            var cell = new column_formatter.format_cell(i, parent_, col_idx, log_view_cell.cell_idx_to_type(col_idx), new formatted_text(text),
+            var cell = new column_formatter_base.format_cell(i, parent_, col_idx, log_view_cell.cell_idx_to_type(col_idx), new formatted_text(text),
                 row_idx, top_row_idx, prev_text, location);
             formatter_.format_before(cell);
             formatter_.format_after(cell);
@@ -119,7 +119,7 @@ namespace lw_common.ui.format {
 
             var col_idx = Column.fixed_index();
             string text = GetText();
-            override_print_ = override_print(i, text, col_idx, column_formatter.format_cell.location_type.view);
+            override_print_ = override_print(i, text, col_idx, column_formatter_base.format_cell.location_type.view);
 
             var type = log_view_cell.cell_idx_to_type(col_idx);
             if (info_type_io.can_be_multi_line(type)) 

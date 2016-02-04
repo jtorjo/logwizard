@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace lw_common.ui.format.column_formatters {
     // alternates the background slightly - for every X rows
-    class alternate_bg_color : column_formatter {
+    class alternate_bg_color : column_formatter_base {
         // if <= 0, don't alternate. Otherwise, alternate every X rows
         private int row_count_ = 0;
         private string alternate_color_ = "";

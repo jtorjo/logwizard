@@ -24,7 +24,7 @@ namespace lw_common.ui.format.column_formatters.helper {
     look_for_hex=0 or 1 (1 by default)
 
     */
-    class format_number : column_formatter {
+    class format_number : column_formatter_base {
         private int base_ = 10;
         private string pad_ = "";
         private string color_ = "";
@@ -36,6 +36,12 @@ namespace lw_common.ui.format.column_formatters.helper {
         private Regex regex_hex_ = new Regex(@"(?<=[\s=,{\(\[<>/])[0-9A-F]{4,30}(?=[\s.,<>/=\-}\]\)+*])");
 
         private Regex regex_decimal_ = new Regex(@"(?<=[\s=,{\(\[<>/])\d*[,.]?\d*(?=[\s.,<>/=\-}\]\)+*])");
+
+        private int overridden_base_ = -1;
+
+        public int number_base {
+            get { return overridden_base_ >= 0 ? overridden_base_ : base_; }
+        }
 
         internal override void load_syntax(settings_as_string sett, ref string error) {
             base.load_syntax(sett, ref error);
@@ -69,12 +75,12 @@ namespace lw_common.ui.format.column_formatters.helper {
                     return pad_ != "" ? String.Format("{0:" + pad_ + "}", d) : "";
 
                 // here, it's a decimal
-                if ( base_ == 10)
+                if ( number_base == 10)
                     // perform padding, if any
                     return pad_ != "" ? String.Format("{0:" + pad_ + "}", n) : "";
 
                 // here, it's in a different base. Note: we can't have both base and padding. Base overrides padding
-                return Convert.ToString(n, base_).ToUpper();
+                return Convert.ToString(n, number_base).ToUpper();
             } catch {
                 return "";
             }
@@ -96,10 +102,33 @@ namespace lw_common.ui.format.column_formatters.helper {
             return true;
         }
 
+        internal override void toggle_number_base() {
+            if (overridden_base_ < 0)
+                overridden_base_ = base_;
+
+            switch (overridden_base_) {
+            case 10:
+                overridden_base_ = 16;
+                break;
+            case 16:
+                overridden_base_ = 8;
+                break;
+            case 8:
+                overridden_base_ = 2;
+                break;
+            case 2:
+                overridden_base_ = 10;
+                break;
+            default:
+                overridden_base_ = 10;
+                break;
+            }
+        }
+
         internal override void format_before(format_cell cell) {
             if (!is_cell_type_ok(cell.col_type))
                 return;
-            if (color_ == "" && base_ == 10 && pad_ == "" && !look_for_hex_)
+            if (color_ == "" && number_base == 10 && pad_ == "" && !look_for_hex_)
                 // we don't need to do anything
                 return;
 

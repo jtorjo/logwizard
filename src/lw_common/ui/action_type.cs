@@ -115,6 +115,10 @@ namespace lw_common {
         // 1.5.6+
         open_log,
 
+        // 1.7.23+
+        toggle_number_base,
+        toggle_abbreviation,
+
         none,
     }
 

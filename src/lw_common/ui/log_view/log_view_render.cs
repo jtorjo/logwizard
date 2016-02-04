@@ -51,7 +51,7 @@ namespace lw_common.ui {
         public log_view_render(log_view parent) {
             parent_ = parent;
             drawer_ = new log_view_item_draw_ui(parent_);
-            cache_ = new formatted_text_cache(parent_, column_formatter.format_cell.location_type.view);
+            cache_ = new formatted_text_cache(parent_, column_formatter_base.format_cell.location_type.view);
         }
 
         private void draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, text_part print) {

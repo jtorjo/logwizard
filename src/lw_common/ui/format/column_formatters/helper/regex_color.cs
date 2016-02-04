@@ -30,7 +30,7 @@ namespace lw_common.ui.format.column_formatters {
 
     FIXME Later, parse the format using text_part.from_friendly_string
     */
-    class regex_color : column_formatter {
+    class regex_color : column_formatter_base {
         private string color_ = "";
         private string expr_ = "";
         private Regex regex_ = null;

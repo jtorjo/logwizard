@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace lw_common.ui.format {
-    public abstract class column_formatter {
+    public abstract class column_formatter_base {
 
         public enum align_type {
             left, center, right, none
@@ -113,6 +113,15 @@ namespace lw_common.ui.format {
 
         internal virtual Image get_image() {
             return null;
+        }
+
+        // toggles the number base - 10-16-8-2, where it makes sense (for formatters that actually deal with numbers)
+        internal virtual void toggle_number_base() {
+            
+        }
+
+        internal virtual void toggle_abbreviation() {
+            
         }
     }
 }

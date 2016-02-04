@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace lw_common.ui.format.column_formatters {
     // later - identify stack trace
-    class stack_trace : column_formatter {
+    class stack_trace : column_formatter_base {
     }
 }

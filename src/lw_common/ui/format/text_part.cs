@@ -140,7 +140,7 @@ namespace lw_common.ui {
         public modify_color_type modify_fg = modify_color_type.same;
         public modify_color_type modify_bg = modify_color_type.same;
 
-        public void update_colors(column_formatter.format_cell cell) {
+        public void update_colors(column_formatter_base.format_cell cell) {
             if (modify_fg != modify_color_type.same)
                 fg = modify_fg == modify_color_type.darker ? util.darker_color(cell.fg_color) : util.grayer_color(cell.fg_color);
             if (modify_bg != modify_color_type.same)

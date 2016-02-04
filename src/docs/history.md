@@ -1,8 +1,15 @@
 
 
+1.7.23
+- column formatter: if any "number" formatter -> allow ctrl-alt-B to switch between bases (hexa, decimal, octal, binary)
+    - override this only for now (non-persistent)
+	- clear cache
+
+
 1.7.22
-- render -> when showing search/typeasyougo increased background -> increase it based on the original background, not the one now (like, when using alternate)
-- fix: column format preview: picture - does not work in preview mode
+- column formatter
+	- render -> when showing search/typeasyougo increased background -> increase it based on the original background, not the one now (like, when using alternate)
+	- fix: column format preview: picture - does not work in preview mode
 
 
 1.7.21

@@ -2389,6 +2389,11 @@ namespace LogWizard
             case "ctrl-alt-l":
                 return action_type.toggle_show_full_log;
 
+            case "ctrl-alt-b":
+                return action_type.toggle_number_base;
+            case "ctrl-alt-a":
+                return action_type.toggle_abbreviation;
+
             }
 
             return action_type.none;
@@ -2667,6 +2672,13 @@ namespace LogWizard
 
             case action_type.open_log:
                 whatsupOpen_Click(null, null);
+                break;
+
+            case action_type.toggle_number_base:
+                toggle_number_base();
+                break;
+            case action_type.toggle_abbreviation:
+                toggle_abbreviation();
                 break;
 
             default:
@@ -3731,7 +3743,7 @@ namespace LogWizard
 
                 foreach ( var view in needs_refresh) {
                     // ignore those views with "apply only to me" 
-                    bool view_has_apply_only_to_me = view != selected_view() && sett.apply_column_formatting_to_me.get(view.name);
+                    bool view_has_apply_only_to_me = view != selected_view() && view.formatter_applies_only_to_me;
                     if (!view_has_apply_only_to_me) {
                         var new_formatter = new column_formatter_array();
                         new_formatter.load(new_format);
@@ -3742,6 +3754,25 @@ namespace LogWizard
             }
         }
 
+        private void toggle_number_base() {
+            var sel = selected_view();
+            if (sel.formatter_applies_only_to_me) 
+                sel.toggle_number_base();
+            else 
+                foreach (var view in all_log_views_and_full_log())
+                    if ( !view.formatter_applies_only_to_me)
+                        view.toggle_number_base();
+        }
+
+        private void toggle_abbreviation() {
+            var sel = selected_view();
+            if (sel.formatter_applies_only_to_me) 
+                sel.toggle_abbreviation();
+            else 
+                foreach (var view in all_log_views_and_full_log())
+                    if ( !view.formatter_applies_only_to_me)
+                        view.toggle_abbreviation();
+        }
 
     }
 

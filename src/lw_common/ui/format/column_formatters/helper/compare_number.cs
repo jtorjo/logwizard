@@ -42,7 +42,7 @@ namespace lw_common.ui.format.column_formatters {
   compare=200,-,-,red
 
     */
-    class compare_number : column_formatter {
+    class compare_number : column_formatter_base {
         private bool is_int_ = true;
         private string before_ = "", after_ = "";
 
