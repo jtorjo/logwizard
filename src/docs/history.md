@@ -1,4 +1,10 @@
 
+
+1.7.22
+- render -> when showing search/typeasyougo increased background -> increase it based on the original background, not the one now (like, when using alternate)
+- fix: column format preview: picture - does not work in preview mode
+
+
 1.7.21
 - column formatters speed improvements
   - multi_sel_idx can get expensive if called multiple times (during UI drawing) -> cached it in log_view_renderer
@@ -8,6 +14,15 @@
 	- when any column formatting changes -> clear cache
 	- typing something -> clear cache
 	- searching changes -> clear cache 
+
+Defaults for column formatting:
+	- line numbers - a' la intelliJ
+	- time + date: show only difference compared to previous (the rest in much lighter color) - default, in blue
+	- things in brackets - perhaps show them in slightly lighter color
+	- number / strings -> in msg -> show differently (number, string_)
+	- level : show as pictures
+	- date: no year
+	- alignment
 
 
 1.7.20

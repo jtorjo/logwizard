@@ -26,6 +26,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using BrightIdeasSoftware;
 using lw_common.ui.format;
 
@@ -132,7 +134,8 @@ namespace lw_common.ui {
                 bg = default_bg;
 
             if (print.is_typed_search && !print.is_find_search)
-                bg = util.darker_color(bg);
+                // 1.7.22 - don't use the overridden background - we want to have the same background for all finds
+                bg = util.darker_color(default_bg);
             return bg;
         }
 
@@ -190,5 +193,6 @@ namespace lw_common.ui {
 
             return bg_color(item, col_idx);
         }
+
     }
 }
