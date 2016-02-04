@@ -1576,8 +1576,38 @@ namespace lw_common.ui
         private static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
 
         private void list_CellToolTipShowing(object sender, ToolTipShowingEventArgs e) {
-            // 1.6.6+ - I think this is wrong!
-            if (e.ColumnIndex == msgCol.fixed_index())
+            string tooltip = "";
+            var row_idx = e.RowIndex;
+            if (row_idx >= 0) {
+                var i = model_.item_at(row_idx);
+                var col_idx = e.Column.fixed_index();
+                string text = log_view_cell.cell_value(i, col_idx) ; 
+                var cell = i.override_print(this, text, col_idx, column_formatter_base.format_cell.location_type.view);
+                
+                int char_idx = 0;
+                using (Graphics g = CreateGraphics()) {
+                    var widths = render.text_widths(g, text);
+                    int offset_x = list.GetItem(row_idx).GetSubItemBounds(e.ColumnIndex).X;
+                    for (int idx = 0; idx < widths.Count; ++idx)
+                        widths[idx] += offset_x;
+
+                    var mouse = list.PointToClient( Cursor.Position);
+                    char_idx = widths.FindLastIndex(x => x < mouse.X);
+                    if (widths.Count == 0 || widths.Last() < mouse.X)
+                        char_idx = widths.Count;
+
+                    if (char_idx < 0)
+                        char_idx = 0;
+                }
+
+                if ( char_idx >= 0 && char_idx < text.Length)
+                    tooltip = formatter.get_tooltip(cell, char_idx);
+                //logger.Debug("getting tooltip for " + row_idx + "," + col_idx + "," + char_idx);
+            }
+
+            if (tooltip != "")
+                e.Text = tooltip;
+            else
                 ShowWindow(e.ToolTipControl.Handle, 0);
         }
 

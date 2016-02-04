@@ -1,4 +1,8 @@
 
+1.7.24
+- tooltip: when hovering a number, show it in hexa, octal, decimal and binary
+     - ask formatters for tooltip - different formatters can do different stuff!
+
 
 1.7.23
 - column formatter: if any "number" formatter -> allow ctrl-alt-B to switch between bases (hexa, decimal, octal, binary)

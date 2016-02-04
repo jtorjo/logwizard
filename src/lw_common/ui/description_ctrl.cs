@@ -760,7 +760,7 @@ namespace lw_common.ui {
 
             string txt = (item as filter.match).line.part(type);
             int col_idx = log_view_cell.info_type_to_cell_idx(type);
-            var prints = lv.sel.override_print(lv, txt, col_idx, column_formatter_base.format_cell.location_type.details_pane).to_single_enter_char();
+            var prints = lv.sel.override_print(lv, txt, col_idx, column_formatter_base.format_cell.location_type.details_pane).format_text.to_single_enter_char();
             // ... text has changed
             txt = prints.text;
 

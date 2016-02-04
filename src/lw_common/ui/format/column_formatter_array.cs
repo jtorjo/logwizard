@@ -215,8 +215,15 @@ namespace lw_common.ui.format {
 
         public void toggle_abbvreviation() {
             foreach (var format in formatters_)
-                format.the_formatter.toggle_number_base();
-            
+                format.the_formatter.toggle_number_base();            
+        }
+
+        internal string get_tooltip(column_formatter_base.format_cell cell, int char_index) {
+            string tooltip = "";
+            foreach ( var format in formatters_)
+                if (needs_apply_formatter(format, cell)) 
+                    format.the_formatter.get_tooltip(cell, char_index, ref tooltip);
+            return tooltip;
         }
     }
 }

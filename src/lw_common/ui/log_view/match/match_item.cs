@@ -194,7 +194,7 @@ namespace lw_common.ui {
         }
 
         // returns the overrides, sorted by index in the string to print
-        public formatted_text override_print(log_view parent, string text, int col_idx, column_formatter_base.format_cell.location_type location) {
+        public column_formatter_base.format_cell override_print(log_view parent, string text, int col_idx, column_formatter_base.format_cell.location_type location) {
             int row_idx = parent.item_index(this);
             int top_row_idx = parent.top_row_idx;
             string prev_text = "";
@@ -207,7 +207,7 @@ namespace lw_common.ui {
             var print = override_print_from_all_places(parent, cell.format_text.text, col_idx);
             cell.format_text.add_parts( print);
             parent.formatter.format_after(cell);
-            return cell.format_text;
+            return cell;
         } 
 
         public filter.match match {

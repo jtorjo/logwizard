@@ -48,6 +48,11 @@ namespace lw_common.ui.format.column_formatters {
                     formatter.toggle_abbreviation();
         }
 
+        internal override void get_tooltip(format_cell cell, int char_index, ref string tooltip) {
+            foreach ( var formatter in sub_)
+                formatter.get_tooltip(cell, char_index, ref tooltip);
+        }
+
         internal override void load_syntax(settings_as_string sett, ref string error) {
             base.load_syntax(sett, ref error);
 

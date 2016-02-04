@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Dynamic;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -122,6 +125,57 @@ namespace lw_common.ui.format.column_formatters.helper {
             default:
                 overridden_base_ = 10;
                 break;
+            }
+        }
+
+        private bool is_number_char(char ch) {
+            if (ch >= '0' && ch <= '9')
+                return true;
+            if (number_base > 10) {
+                // hexa decimal numbers - only uppercase
+                if (ch >= 'A' && ch <= 'F')
+                    return true;
+            }
+            return false;
+        }
+
+        // can throw!
+        long to_number(string s) {
+            // find out if hex
+            bool is_hex = s.Any(c => !Char.IsDigit(c));
+            if (is_hex)
+                return long.Parse(s, NumberStyles.HexNumber);
+
+            long result = 0;
+            foreach (char c in s) {
+                result *= number_base;
+                result += c - '0';
+            }
+            return result;
+        }
+
+        internal override void get_tooltip(format_cell cell, int char_index, ref string tooltip) {
+            var text = cell.format_text.text;
+            if (text == "")
+                return;
+
+            int start = char_index, end = char_index;
+            while (start >= 0 && is_number_char(text[start]))
+                --start;
+            if (!is_number_char(text[start]))
+                ++start;
+            while (end < text.Length && is_number_char(text[end]))
+                ++end;
+
+            if (end > start) {
+                string number = text.Substring(start, end - start);
+                try {
+                    long n = to_number(number);
+                    tooltip = String.Format("D {0}\r\nH {1}\r\nO {2}\r\nB {3}",
+                        Convert.ToString(n, 10), Convert.ToString(n, 16), Convert.ToString(n, 8), Convert.ToString(n, 2));
+                } catch {
+                    // invalid number
+                }
             }
         }
 

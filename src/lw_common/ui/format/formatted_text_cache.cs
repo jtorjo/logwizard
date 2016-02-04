@@ -34,7 +34,7 @@ namespace lw_common.ui.format {
         }
 
         private formatted_text override_print_no_cache(match_item i, string text, int col_idx) {
-            var print = i.override_print(parent_, text, col_idx, location_);
+            var print = i.override_print(parent_, text, col_idx, location_).format_text;
 
             var type = log_view_cell.cell_idx_to_type(col_idx);
             if (info_type_io.can_be_multi_line(type)) 

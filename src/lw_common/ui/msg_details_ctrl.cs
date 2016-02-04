@@ -150,7 +150,7 @@ namespace lw_common {
             txt.Clear();
             txt.AppendText(msg_txt);
 
-            var prints = lv.sel.override_print(lv, msg_txt, msg_col, column_formatter_base.format_cell.location_type.msg_description);
+            var prints = lv.sel.override_print(lv, msg_txt, msg_col, column_formatter_base.format_cell.location_type.msg_description).format_text;
             var full_row = lv.list.GetItem(lv.sel_row_idx);
 
             BackColor = txt.BackColor = drawer_.bg_color(full_row, msg_col);

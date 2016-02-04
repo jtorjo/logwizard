@@ -123,5 +123,8 @@ namespace lw_common.ui.format {
         internal virtual void toggle_abbreviation() {
             
         }
+
+        internal virtual void get_tooltip(format_cell cell, int char_index, ref string tooltip) {
+        }
     }
 }
