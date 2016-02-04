@@ -144,6 +144,27 @@ namespace lw_common.ui.format {
             }
 
             draw_string(left, text, g, brush, r, fmt);
+            draw_image(g, r);
         }
+
+        private int image_width() {
+            return override_print_.image != null ? override_print_.image.Width : 0;
+        }
+
+        private void draw_image(Graphics g, Rectangle r) {
+            if (override_print_.image == null)
+                return;
+
+            string text = override_print_.text;
+            int left = 0;
+            if (override_print_.align != HorizontalAlignment.Left) {
+                var full_text_size = drawer_.text_width(g, text, drawer_.font(override_print_.merge_parts)) + image_width();
+                int width = r.Width;
+                int extra = width - full_text_size;
+                left = override_print_.align == HorizontalAlignment.Right ? extra - 5 : extra / 2;
+            }
+            g.DrawImage( override_print_.image, new Point(r.X + left, r.Y ));
+        }
+
     }
 }

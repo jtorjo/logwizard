@@ -385,6 +385,7 @@
             // 
             // ok
             // 
+            this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ok.Location = new System.Drawing.Point(506, 446);
             this.ok.Name = "ok";
             this.ok.Size = new System.Drawing.Size(75, 28);
