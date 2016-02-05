@@ -76,7 +76,7 @@ namespace lw_common.ui.format.column_formatters {
 
             for (int idx = 0;; idx++) {
                 string prefix = "abb" + (idx > 0 ? "" + (idx + 1) : "");
-                string abbr_expr = sett.get(prefix + ".expr");
+                string abbr_expr = sett.get(prefix + ".find");
                 if (abbr_expr != "") {
                     var abb = new abbreviation();
                     load_sub_syntax(sett, abb, prefix, ref error);

@@ -215,7 +215,7 @@ namespace lw_common.ui.format {
 
         public void toggle_abbvreviation() {
             foreach (var format in formatters_)
-                format.the_formatter.toggle_number_base();            
+                format.the_formatter.toggle_abbreviation();            
         }
 
         internal string get_tooltip(column_formatter_base.format_cell cell, int char_index) {

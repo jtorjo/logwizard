@@ -1,6 +1,16 @@
 
+1.7.25
+- column formatter: abbreviation works AWESOMELY
+  - you can use subexpressions: - https://msdn.microsoft.com/en-us/library/bs2twtah%28v=vs.110%29.aspx#named_matched_subexpression
+  - allow toggle between shortcuts ON/OFF (ctrl-shift-a) -for some strange reason, ctrl-alt-a doesn't work. Very likely the smart edit (richtextbox) is using it?
+  - formatting specified in ["blabla"]
+  - example: 
+		- abb.find=\{x=(?<x>\d*),y=(?<y>\d*),width=(?<w>\d*),height=(?<h>\d*)\}
+		- abb.replace=["green"][["red/bold"]${x},["blue/italic"]${y},["violet/bold"]${w}/${h}["green"]]
+
+
 1.7.24
-- tooltip: when hovering a number, show it in hexa, octal, decimal and binary
+- column formatter: tooltip: when hovering a number, show it in hexa, octal, decimal and binary
      - ask formatters for tooltip - different formatters can do different stuff!
 
 

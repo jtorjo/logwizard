@@ -2246,12 +2246,14 @@ namespace lw_common.ui
             formatter.toggle_number_base();
             render_.clear_format_cache("toggle number base");
             Refresh();
+            edit.force_refresh();
         }
 
         public void toggle_abbreviation() {
             formatter.toggle_abbvreviation();
             render_.clear_format_cache("toggle abbreviation");
             Refresh();
+            edit.force_refresh();
         }
 
 

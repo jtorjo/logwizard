@@ -162,6 +162,8 @@ namespace lw_common.ui.format.column_formatters.helper {
             int start = char_index, end = char_index;
             while (start >= 0 && is_number_char(text[start]))
                 --start;
+            if (start < 0)
+                start = 0;
             if (!is_number_char(text[start]))
                 ++start;
             while (end < text.Length && is_number_char(text[end]))

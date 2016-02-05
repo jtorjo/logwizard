@@ -2391,7 +2391,7 @@ namespace LogWizard
 
             case "ctrl-alt-b":
                 return action_type.toggle_number_base;
-            case "ctrl-alt-a":
+            case "ctrl-shift-a":
                 return action_type.toggle_abbreviation;
 
             }
