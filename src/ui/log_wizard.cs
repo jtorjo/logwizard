@@ -3571,7 +3571,7 @@ namespace LogWizard
 
 
         private void whatsup_Click(object sender, EventArgs e) {
-            whatupMenu.Show(Cursor.Position);
+            whatupMenu.Show(Cursor.Position, util.menu_direction(whatupMenu, Cursor.Position));
         }
 
 

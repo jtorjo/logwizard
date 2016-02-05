@@ -36,7 +36,8 @@
             // 
             // rich_label_ctrl
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Name = "rich_label_ctrl";
             this.Size = new System.Drawing.Size(613, 24);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.status_ctrl_Paint);

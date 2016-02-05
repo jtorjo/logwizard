@@ -78,6 +78,9 @@
             this.editSearchCurColumnOnly = new System.Windows.Forms.RadioButton();
             this.editSearchBelow = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.formatHelp = new System.Windows.Forms.LinkLabel();
+            this.defaultColumnFormatting = new System.Windows.Forms.TextBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.label21 = new System.Windows.Forms.Label();
             this.filterShowFilterRowInFilterColor = new System.Windows.Forms.CheckBox();
@@ -123,9 +126,6 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.defaultColumnFormatting = new System.Windows.Forms.TextBox();
-            this.formatHelp = new System.Windows.Forms.LinkLabel();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -136,6 +136,7 @@
             this.groupBox1.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -146,7 +147,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.fileToContext)).BeginInit();
             this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).BeginInit();
-            this.groupBox10.SuspendLayout();
             this.SuspendLayout();
             // 
             // fontLabel
@@ -746,6 +746,46 @@
             this.tabPage2.Text = "Colors";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // groupBox10
+            // 
+            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox10.Controls.Add(this.formatHelp);
+            this.groupBox10.Controls.Add(this.defaultColumnFormatting);
+            this.groupBox10.Location = new System.Drawing.Point(6, 329);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(628, 100);
+            this.groupBox10.TabIndex = 8;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Column Formatting : Default Format";
+            // 
+            // formatHelp
+            // 
+            this.formatHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.formatHelp.AutoSize = true;
+            this.formatHelp.Location = new System.Drawing.Point(586, 80);
+            this.formatHelp.Name = "formatHelp";
+            this.formatHelp.Size = new System.Drawing.Size(37, 17);
+            this.formatHelp.TabIndex = 1;
+            this.formatHelp.TabStop = true;
+            this.formatHelp.Text = "Help";
+            this.formatHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.formatHelp_LinkClicked);
+            // 
+            // defaultColumnFormatting
+            // 
+            this.defaultColumnFormatting.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.defaultColumnFormatting.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.defaultColumnFormatting.Location = new System.Drawing.Point(6, 22);
+            this.defaultColumnFormatting.Multiline = true;
+            this.defaultColumnFormatting.Name = "defaultColumnFormatting";
+            this.defaultColumnFormatting.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.defaultColumnFormatting.Size = new System.Drawing.Size(574, 72);
+            this.defaultColumnFormatting.TabIndex = 0;
+            this.defaultColumnFormatting.WordWrap = false;
+            // 
             // groupBox8
             // 
             this.groupBox8.Controls.Add(this.label21);
@@ -1225,49 +1265,10 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
-            // groupBox10
-            // 
-            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox10.Controls.Add(this.formatHelp);
-            this.groupBox10.Controls.Add(this.defaultColumnFormatting);
-            this.groupBox10.Location = new System.Drawing.Point(6, 329);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(628, 100);
-            this.groupBox10.TabIndex = 8;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "Column Formatting : Default Format";
-            // 
-            // defaultColumnFormatting
-            // 
-            this.defaultColumnFormatting.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.defaultColumnFormatting.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.defaultColumnFormatting.Location = new System.Drawing.Point(6, 22);
-            this.defaultColumnFormatting.Multiline = true;
-            this.defaultColumnFormatting.Name = "defaultColumnFormatting";
-            this.defaultColumnFormatting.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.defaultColumnFormatting.Size = new System.Drawing.Size(574, 72);
-            this.defaultColumnFormatting.TabIndex = 0;
-            this.defaultColumnFormatting.WordWrap = false;
-            // 
-            // formatHelp
-            // 
-            this.formatHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.formatHelp.AutoSize = true;
-            this.formatHelp.Location = new System.Drawing.Point(586, 80);
-            this.formatHelp.Name = "formatHelp";
-            this.formatHelp.Size = new System.Drawing.Size(37, 17);
-            this.formatHelp.TabIndex = 1;
-            this.formatHelp.TabStop = true;
-            this.formatHelp.Text = "Help";
-            this.formatHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.formatHelp_LinkClicked);
-            // 
             // settings_form
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(694, 514);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.close);
@@ -1294,6 +1295,8 @@
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -1311,8 +1314,6 @@
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).EndInit();
-            this.groupBox10.ResumeLayout(false);
-            this.groupBox10.PerformLayout();
             this.ResumeLayout(false);
 
         }

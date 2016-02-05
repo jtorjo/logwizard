@@ -1,4 +1,9 @@
 
+1.7.27
+- Actions menu: show it depending on mouse position
+- all forms: changed to dpi (auto scale)
+
+
 1.7.26
 - column formatter: 
   - abbreviation : tested removing parts completely - works now	

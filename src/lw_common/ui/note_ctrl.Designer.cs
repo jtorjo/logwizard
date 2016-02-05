@@ -203,7 +203,8 @@
             // 
             // note_ctrl
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.sortByLine);
             this.Controls.Add(this.sortByTime);
             this.Controls.Add(this.selectColor);

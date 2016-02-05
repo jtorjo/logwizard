@@ -51,7 +51,7 @@
             // name
             // 
             this.name.Location = new System.Drawing.Point(119, 7);
-            this.name.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.name.Margin = new System.Windows.Forms.Padding(4);
             this.name.Name = "name";
             this.name.Size = new System.Drawing.Size(201, 23);
             this.name.TabIndex = 1;
@@ -59,7 +59,7 @@
             // ok
             // 
             this.ok.Location = new System.Drawing.Point(112, 131);
-            this.ok.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ok.Margin = new System.Windows.Forms.Padding(4);
             this.ok.Name = "ok";
             this.ok.Size = new System.Drawing.Size(100, 28);
             this.ok.TabIndex = 2;
@@ -71,7 +71,7 @@
             // 
             this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancel.Location = new System.Drawing.Point(220, 131);
-            this.cancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cancel.Margin = new System.Windows.Forms.Padding(4);
             this.cancel.Name = "cancel";
             this.cancel.Size = new System.Drawing.Size(100, 28);
             this.cancel.TabIndex = 3;
@@ -85,7 +85,7 @@
             this.basedOnExisting.CheckState = System.Windows.Forms.CheckState.Checked;
             this.basedOnExisting.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.basedOnExisting.Location = new System.Drawing.Point(78, 38);
-            this.basedOnExisting.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.basedOnExisting.Margin = new System.Windows.Forms.Padding(4);
             this.basedOnExisting.Name = "basedOnExisting";
             this.basedOnExisting.Size = new System.Drawing.Size(242, 17);
             this.basedOnExisting.TabIndex = 4;
@@ -112,8 +112,8 @@
             // new_context_form
             // 
             this.AcceptButton = this.ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.cancel;
             this.ClientSize = new System.Drawing.Size(330, 164);
             this.Controls.Add(this.label3);
@@ -124,7 +124,7 @@
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "new_context_form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "New Template";
