@@ -59,6 +59,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.testLogSizes = new System.Windows.Forms.Button();
             this.label27 = new System.Windows.Forms.Label();
             this.eventLogCheckStatus = new System.Windows.Forms.Label();
             this.eventLogs = new System.Windows.Forms.CheckedListBox();
@@ -101,7 +102,6 @@
             this.needsRestart = new System.Windows.Forms.Label();
             this.checkRequiresRestart = new System.Windows.Forms.Timer(this.components);
             this.ofd = new System.Windows.Forms.OpenFileDialog();
-            this.testLogSizes = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.typeTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -217,7 +217,7 @@
             this.panel2.Controls.Add(this.fileTypeTab);
             this.panel2.Location = new System.Drawing.Point(2, 41);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(595, 264);
+            this.panel2.Size = new System.Drawing.Size(595, 261);
             this.panel2.TabIndex = 0;
             // 
             // fileTypeTab
@@ -232,7 +232,7 @@
             this.fileTypeTab.Location = new System.Drawing.Point(-5, 0);
             this.fileTypeTab.Name = "fileTypeTab";
             this.fileTypeTab.SelectedIndex = 0;
-            this.fileTypeTab.Size = new System.Drawing.Size(617, 261);
+            this.fileTypeTab.Size = new System.Drawing.Size(617, 258);
             this.fileTypeTab.TabIndex = 0;
             // 
             // tabPage3
@@ -246,7 +246,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(609, 232);
+            this.tabPage3.Size = new System.Drawing.Size(609, 229);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -320,10 +320,10 @@
             this.tabPage4.Controls.Add(this.partSeparator);
             this.tabPage4.Controls.Add(this.label8);
             this.tabPage4.Controls.Add(this.label7);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(609, 238);
+            this.tabPage4.Size = new System.Drawing.Size(609, 229);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -372,10 +372,10 @@
             this.tabPage5.Controls.Add(this.xmlDelimeter);
             this.tabPage5.Controls.Add(this.label12);
             this.tabPage5.Controls.Add(this.label9);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(609, 238);
+            this.tabPage5.Size = new System.Drawing.Size(609, 229);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -433,10 +433,10 @@
             this.tabPage6.Controls.Add(this.csvSeparator);
             this.tabPage6.Controls.Add(this.label11);
             this.tabPage6.Controls.Add(this.label10);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Location = new System.Drawing.Point(4, 25);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(609, 238);
+            this.tabPage6.Size = new System.Drawing.Size(609, 229);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "tabPage6";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -504,6 +504,20 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // testLogSizes
+            // 
+            this.testLogSizes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.testLogSizes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.testLogSizes.Location = new System.Drawing.Point(559, 103);
+            this.testLogSizes.Name = "testLogSizes";
+            this.testLogSizes.Size = new System.Drawing.Size(52, 20);
+            this.testLogSizes.TabIndex = 6;
+            this.testLogSizes.Text = "Test";
+            this.tip.SetToolTip(this.testLogSizes, "Tests to see if the logs you selected actually have any entries\r\n(in case you sel" +
+        "ected some logs for which we can\'t easily query that)");
+            this.testLogSizes.UseVisualStyleBackColor = true;
+            this.testLogSizes.Click += new System.EventHandler(this.testLogSizes_Click);
             // 
             // label27
             // 
@@ -758,10 +772,10 @@
             // tabPage8
             // 
             this.tabPage8.Controls.Add(this.label16);
-            this.tabPage8.Location = new System.Drawing.Point(4, 22);
+            this.tabPage8.Location = new System.Drawing.Point(4, 25);
             this.tabPage8.Name = "tabPage8";
             this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(625, 377);
+            this.tabPage8.Size = new System.Drawing.Size(625, 374);
             this.tabPage8.TabIndex = 3;
             this.tabPage8.Text = "tabPage8";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -778,10 +792,10 @@
             // tabPage9
             // 
             this.tabPage9.Controls.Add(this.label17);
-            this.tabPage9.Location = new System.Drawing.Point(4, 22);
+            this.tabPage9.Location = new System.Drawing.Point(4, 25);
             this.tabPage9.Name = "tabPage9";
             this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage9.Size = new System.Drawing.Size(625, 377);
+            this.tabPage9.Size = new System.Drawing.Size(625, 374);
             this.tabPage9.TabIndex = 4;
             this.tabPage9.Text = "tabPage9";
             this.tabPage9.UseVisualStyleBackColor = true;
@@ -931,24 +945,11 @@
             // 
             this.ofd.Filter = "Text Files|*.txt|Log Files|*.log|All Files|*.*";
             // 
-            // testLogSizes
-            // 
-            this.testLogSizes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.testLogSizes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.testLogSizes.Location = new System.Drawing.Point(559, 103);
-            this.testLogSizes.Name = "testLogSizes";
-            this.testLogSizes.Size = new System.Drawing.Size(52, 20);
-            this.testLogSizes.TabIndex = 6;
-            this.testLogSizes.Text = "Test";
-            this.tip.SetToolTip(this.testLogSizes, "Tests to see if the logs you selected actually have any entries\r\n(in case you sel" +
-        "ected some logs for which we can\'t easily query that)");
-            this.testLogSizes.UseVisualStyleBackColor = true;
-            this.testLogSizes.Click += new System.EventHandler(this.testLogSizes_Click);
-            // 
             // edit_log_settings_form
             // 
             this.AcceptButton = this.ok;
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.cancel;
             this.ClientSize = new System.Drawing.Size(626, 493);

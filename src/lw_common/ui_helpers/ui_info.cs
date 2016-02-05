@@ -128,7 +128,7 @@ namespace lw_common {
                     // older version
                     return vi;
 
-                Debug.Assert(from.Length == 3);
+                Debug.Assert(from.Length == 2);
                 vi.show_full_log_ = from[1] != "0";
                 return vi;
             }

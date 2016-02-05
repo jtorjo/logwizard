@@ -59,10 +59,9 @@ namespace lw_common.ui.format.column_formatters.helper {
                 int start = remaining.IndexOf("[\"");
                 int end = start >= 0 ? remaining.IndexOf("\"]", start + 2) : -1;
                 if (start < 0 || end < 0) {
-                    if (remaining != "") {
+                    if (remaining != "") 
                         replace_parts_.Add(new abbreviation_part { prefix = remaining, format_prefix = FORMAT_PREFIX + MAX_PREFIX });
-                        break;
-                    }
+                    break;
                 }
 
                 string format = remaining.Substring(start + 2, end - start - 2);

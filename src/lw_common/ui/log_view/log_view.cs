@@ -794,6 +794,8 @@ namespace lw_common.ui
         public void set_filter(List<raw_filter_row> filter) {
             filter_.name = name;
             filter_.update_rows(filter);
+            if (filter_.rows_changed)
+                render_.clear_format_cache("filter changed");
         }
 
         // called when this log view is not used anymore (like, when it's removed from its tab page)
@@ -816,6 +818,7 @@ namespace lw_common.ui
                 if (log_ != null)
                     log_.Dispose();
 
+                render_.clear_format_cache("new log");
                 bool was_null = log_ == null;
                 log_ = log;
                 log_.tab_name = name;

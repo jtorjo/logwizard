@@ -1,4 +1,10 @@
 
+1.7.26
+- column formatter: 
+  - abbreviation : tested removing parts completely - works now	
+  - logview filter changes? -> clear format cache
+
+
 1.7.25
 - column formatter: abbreviation works AWESOMELY
   - you can use subexpressions: - https://msdn.microsoft.com/en-us/library/bs2twtah%28v=vs.110%29.aspx#named_matched_subexpression
