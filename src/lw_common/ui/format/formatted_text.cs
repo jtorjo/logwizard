@@ -250,6 +250,14 @@ namespace lw_common.ui.format {
             add_parts( new List<text_part>() { part } );
         }
 
+        // returns the text part that contains this index, if any
+        public text_part part_at_index(int idx) {
+            foreach ( var part in parts_)
+                if (idx >= part.start && idx < part.end)
+                    return part;
+            return null;
+        }
+
         // converts '\r\n' to '\r' = this is a must for rich text box - because otherwise we'd end up having the wrong chars printed with different infos
         // (since rich text box considers "\r\n" as a single char, thus we would end up printing colored text off-by-one for each new line)
         public formatted_text to_single_enter_char() {

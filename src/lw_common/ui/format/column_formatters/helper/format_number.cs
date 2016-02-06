@@ -181,6 +181,19 @@ namespace lw_common.ui.format.column_formatters.helper {
             }
         }
 
+        private bool already_formatted(format_cell cell, int start, int len) {
+            var text = cell.format_text.text;
+            for (int idx = start; idx < start + len; ++idx) {
+                var part = cell.format_text.part_at_index(idx);
+                if ( part != null)
+                    // in this case, we consider "formatted" only if the part found is less than then whole text
+                    if (part.len < text.Length)
+                        return true;
+
+            }
+            return false;
+        }
+
         internal override void format_before(format_cell cell) {
             if (!is_cell_type_ok(cell.col_type))
                 return;
@@ -195,7 +208,10 @@ namespace lw_common.ui.format.column_formatters.helper {
             Color col = parse_color(color_, cell.fg_color);
             if (look_for_hex_) {
                 // ... note: we don't want the delimeters included
-                var hex_numbers = util.regex_matches(regex_hex_, text).Where(x => double_check_is_hex(text.Substring(x.Item1, x.Item2))).ToList();
+                var hex_numbers = util.regex_matches(regex_hex_, text).Where(
+                    // note: if the number is already formatted in some way, don't format it again
+                    x => double_check_is_hex(text.Substring(x.Item1, x.Item2)) && !already_formatted(cell, x.Item1, x.Item2) )
+                    .ToList();
                 cell.format_text.add_parts(hex_numbers.Select(x => new text_part(x.Item1, x.Item2) {fg = col}).ToList());
             }
 
@@ -207,7 +223,9 @@ namespace lw_common.ui.format.column_formatters.helper {
                 Normally, that should work ok (formatted_text.replace_text), but if texts got to be imbricated one another, things could get ugly 
 
             */
-            var dec_numbers = util.regex_matches(regex_decimal_, text).OrderBy(x => x.Item1).ToList();
+            var dec_numbers = util.regex_matches(regex_decimal_, text)
+                // note: if the number is already formatted in some way, don't format it again
+                .Where(x => !already_formatted(cell, x.Item1, x.Item2)) .OrderBy(x => x.Item1).ToList();
             // see if i need to replace with written in another base
             cell.format_text.add_parts(dec_numbers.Select(x => new text_part(x.Item1, x.Item2) {fg = col}).ToList());
 

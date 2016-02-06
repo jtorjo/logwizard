@@ -1,4 +1,10 @@
 
+1.7.28
+- column formatter: 
+  - format number if any part of the number is already formatted -> don't do anything
+    - only if frmo a smaller part than the whole text
+
+
 1.7.27
 - Actions menu: show it depending on mouse position
 - all forms: changed to dpi (auto scale)
