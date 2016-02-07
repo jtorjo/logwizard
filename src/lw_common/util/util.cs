@@ -36,9 +36,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using ColorSchemeExtension;
 using href.Utils;
 using log4net;
+using lw_common.hsl;
 using Microsoft.Win32;
 using Timer = System.Windows.Forms.Timer;
 
@@ -154,6 +154,7 @@ namespace lw_common {
             return dt;
         }
 
+#if old_code
         public static Color grayer_color(Color col) {
             var argb = col.ToArgb();
             if (argb == Color.Blue.ToArgb())
@@ -195,6 +196,28 @@ namespace lw_common {
                 return grayer_color(col);
 
             return darker;
+        }
+#endif
+
+        public static Color grayer_color(Color col) {
+            HSL hsl = rgb_convert.RGBtoHSL(col.R, col.G, col.B);
+            hsl.Luminance *= 1.1;
+            RGB rgb = rgb_convert.HSLtoRGB(hsl.Hue, hsl.Saturation, hsl.Luminance);
+            return Color.FromArgb(rgb.Red, rgb.Green, rgb.Blue) ;
+        }
+
+        public static Color darker_color(Color col) {
+            HSL hsl = rgb_convert.RGBtoHSL(col.R, col.G, col.B);
+            hsl.Luminance *= .9;
+            RGB rgb = rgb_convert.HSLtoRGB(hsl.Hue, hsl.Saturation, hsl.Luminance);
+            return Color.FromArgb(rgb.Red, rgb.Green, rgb.Blue) ;
+        }
+        public static Color color_luminance(Color col, double luminance) {
+            Debug.Assert(luminance >= 0 && luminance <= 1);
+            HSL hsl = rgb_convert.RGBtoHSL(col.R, col.G, col.B);
+            hsl.Luminance = luminance;
+            RGB rgb = rgb_convert.HSLtoRGB(hsl.Hue, hsl.Saturation, hsl.Luminance);
+            return Color.FromArgb(rgb.Red, rgb.Green, rgb.Blue) ;
         }
 
         public static string read_beginning_of_file(string file, int len) {

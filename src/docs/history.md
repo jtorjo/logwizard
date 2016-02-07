@@ -1,4 +1,14 @@
 
+1.7.29
+- categories
+  - cursor -> hand on color selection
+  - click 
+    - show color picker
+    - on ok -> set color + update + generate event (something changed) + update preview
+  - selecting a certain row -> update preview so that selection is of that color
+    -have a max number of items (so that if i have too many -> show something or so)
+
+
 1.7.28
 - column formatter: 
   - format number if any part of the number is already formatted -> don't do anything

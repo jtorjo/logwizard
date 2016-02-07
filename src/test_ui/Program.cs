@@ -59,9 +59,10 @@ namespace test_ui {
 //            Application.Run(new test_status_ctrl());
 //            Application.Run(new test_olv());
 //            Application.Run(new test_edit_ctrl());
-            Application.Run(new test_log_view());
+//            Application.Run(new test_log_view());
 //            Application.Run(new test_notes_ctrl());
 //            Application.Run(new test_filter_ctrl());
+            Application.Run(new test_categories_ctrl());
         }
     }
 }

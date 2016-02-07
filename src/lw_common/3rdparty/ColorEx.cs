@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Drawing;
 
+// 8 Feb 2016 - yeah, this turned out to be a very stupid idea - much better to use the HSL from http://www.codeproject.com/Articles/19045/Manipulating-colors-in-NET-Part
+//
 // imported from http://www.codeproject.com/Articles/1001468/Color-Scheme-Selector
 //
 // modified to use System.Drawing
-namespace ColorSchemeExtension
+namespace ColorSchemeExtension_DO_NOT_USE
 {
 	public class ColorEx
 	{
