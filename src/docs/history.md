@@ -1,4 +1,9 @@
 
+1.7.30
+- categories:
+  - synchronize the category names from the categories list into the Preview (the Category column)
+
+
 1.7.29
 - categories
   - cursor -> hand on color selection

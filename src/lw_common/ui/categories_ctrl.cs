@@ -160,6 +160,7 @@ namespace lw_common.ui {
 
             public string thread {
                 get { return thread_; }
+                set { thread_ = value; }
             }
 
             public string message {
@@ -267,7 +268,7 @@ namespace lw_common.ui {
         }
 
         private void initialize_preview() {
-            // this needs to be synchronized with preview_FormatRow !!!
+            // this needs to be synchronized with preview_FormatRow + preview_indexes_array !!!
             var preview = new[] {
                 new preview_item("11:02:32.012", "Info", "one", "This is a simple preview list."), 
                 new preview_item("11:02:37.023", "Debug", "sel", "The normal color is used"), 
@@ -282,10 +283,40 @@ namespace lw_common.ui {
             this.preview.AddObjects(preview);
         }
 
+        // what we consider selection - in the Preview
+        private int preview_selected_index() {
+            var sel_index = categories.SelectedIndex;
+            if (sel_index < 0 && categories.GetItemCount() > 0)
+                sel_index = 0;
+            return sel_index;
+        }
+
+        private int[] preview_indexes_array() {
+            // 0 - one, 1- two, 2 - main,  3 - sel, 4 -selected-sel
+            var indexes = new[] { 0, 3, 1, 2, 4, 2, 0, 0, 1 };
+            return indexes;
+        }
+
         private void update_preview() {
-            // "Thread" -> care about the selected Category
-            for ( int i = 0; i < preview.GetItemCount(); ++i)
-                preview.RefreshItem( preview.GetItem(i));
+            List<int> category_types = new List<int>();
+            var sel_index = preview_selected_index();
+            int color_index = 0;
+            for (int i = 0; i < 3; ++i) {
+                if (color_index == sel_index)
+                    ++color_index;
+                category_types.Add( color_index < colors_.Count ? color_index : -1);
+                ++color_index;
+            }
+            category_types.Add(sel_index);
+            category_types.Add(sel_index);
+            var indexes = preview_indexes_array();
+
+            for (int i = 0; i < preview.GetItemCount(); ++i) {
+                var row = preview.GetItem(i).RowObject as preview_item;
+                if ( category_types[ indexes[i]] >= 0 )
+                row.thread = colors_[ category_types[ indexes[i]]].name;
+                preview.RefreshItem(preview.GetItem(i));
+            }
         }
 
         private void categories_SelectedIndexChanged(object sender, EventArgs e) {
@@ -344,16 +375,14 @@ namespace lw_common.ui {
             }
         }
 
+
         private void preview_FormatRow(object sender, BrightIdeasSoftware.FormatRowEventArgs e) {
             if (e.RowIndex < 0)
                 return;
             var row = preview.GetItem(e.RowIndex);
-            // 0 - one, 1- two, 2 - main,  3 - sel, 4 -selected-sel
-            var indexes = new[] { 0, 3, 1, 2, 4, 2, 0, 0, 1 };
+            var indexes = preview_indexes_array();
             Debug.Assert(e.RowIndex < indexes.Length);
-            var sel_index = categories.SelectedIndex;
-            if (sel_index < 0 && categories.GetItemCount() > 0)
-                sel_index = 0;
+            var sel_index = preview_selected_index();
             List<category_colors> colors = new List<category_colors>();
             int color_index = 0;
             for (int i = 0; i < 3; ++i) {
