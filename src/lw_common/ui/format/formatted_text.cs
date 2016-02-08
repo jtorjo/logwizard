@@ -24,10 +24,18 @@ namespace lw_common.ui.format {
         }
         private formatted_text(string text, formatted_text other) {
             text_ = text;
-            parts_ = other.parts_;
+
             bg = other.bg;
             align = other.align;
             image = other.image;
+            parts_ = other.parts_;
+        }
+
+        public formatted_text copy() {
+            formatted_text the_copy = new formatted_text(text) {
+                bg = bg, align = align, image = image, parts_ = parts_.Select(x => x.copy() ).ToList()
+            };
+            return the_copy;
         }
 
         public string text {

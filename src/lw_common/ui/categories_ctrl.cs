@@ -14,7 +14,7 @@ namespace lw_common.ui {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public class category_colors {
-            // the same category
+            // the name of the category
             public string name = "";
 
             // the background for this category - if transparent, LogWizard will choose something

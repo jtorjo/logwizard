@@ -32,6 +32,7 @@ using System.Windows.Forms;
 using BrightIdeasSoftware;
 using lw_common;
 using lw_common.ui.format;
+using lw_common.ui.format.column_formatters;
 
 namespace lw_common.ui {
     class log_view_render : BaseRenderer {
@@ -48,10 +49,16 @@ namespace lw_common.ui {
 
         private formatted_text_cache cache_;
 
+        private readonly category_formatter category_formatter_ = new category_formatter();
+
         public log_view_render(log_view parent) {
             parent_ = parent;
             drawer_ = new log_view_item_draw_ui(parent_);
             cache_ = new formatted_text_cache(parent_, column_formatter_base.format_cell.location_type.view);
+        }
+
+        public category_formatter category_format {
+            get { return category_formatter_; }
         }
 
         private void draw_sub_string(int left, string sub, Graphics g, Brush b, Rectangle r, StringFormat fmt, text_part print) {
@@ -118,7 +125,7 @@ namespace lw_common.ui {
 
             var col_idx = Column.fixed_index();
             drawer_.cached_sel = parent_.multi_sel_idx;
-            override_print_ = cache_.override_print(i, GetText(), col_idx);
+            override_print_ = category_formatted( cache_.override_print(i, GetText(), col_idx), col_idx);
             var text = override_print_.text;
 
             bg_color_ = drawer_.bg_color(ListItem, col_idx, override_print_);
@@ -141,6 +148,19 @@ namespace lw_common.ui {
 
             draw_string(left, text, g, brush, r, fmt);
             draw_image(g, r);
+        }
+
+        private formatted_text category_formatted(formatted_text txt, int col_idx) {
+            if (category_formatter_.running) {
+                txt = txt.copy();
+                int sel_row = parent_.sel_row_idx;
+                if (sel_row >= 0) {
+                    var sel = parent_.item_at(sel_row);
+                    category_formatter_.format(txt, log_view_cell.cell_value(sel, col_idx) );
+                }
+            }
+
+            return txt;
         }
 
         private int image_width() {

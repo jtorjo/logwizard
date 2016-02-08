@@ -247,6 +247,11 @@ namespace lw_common.ui {
             len_ = len;
         }
 
+        public text_part copy() {
+            var new_ = new text_part(start, len, this);
+            return new_;
+        }
+
         public int start {
             get { return start_; }
         }

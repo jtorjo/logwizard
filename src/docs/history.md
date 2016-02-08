@@ -1,4 +1,9 @@
 
+1.7.31a
+- categories:
+  - category formatter added (not tested)
+
+
 1.7.30
 - categories:
   - synchronize the category names from the categories list into the Preview (the Category column)

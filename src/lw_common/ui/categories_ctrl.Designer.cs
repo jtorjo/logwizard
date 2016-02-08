@@ -142,8 +142,6 @@
             // 
             this.isRunning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.isRunning.Appearance = System.Windows.Forms.Appearance.Button;
-            this.isRunning.Checked = true;
-            this.isRunning.CheckState = System.Windows.Forms.CheckState.Checked;
             this.isRunning.Location = new System.Drawing.Point(505, 681);
             this.isRunning.Name = "isRunning";
             this.isRunning.Size = new System.Drawing.Size(67, 26);

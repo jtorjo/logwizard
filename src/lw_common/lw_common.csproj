@@ -124,6 +124,7 @@
     <Compile Include="ui\description_ctrl.Designer.cs">
       <DependentUpon>description_ctrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\log_view\category_formatter.cs" />
     <Compile Include="ui\format\column_formatters\helper\abbreviation.cs" />
     <Compile Include="ui\format\column_formatter_renderer.cs">
       <SubType>Component</SubType>
