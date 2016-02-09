@@ -68,8 +68,7 @@
             this.filtersTab = new System.Windows.Forms.TabPage();
             this.filtCtrl = new lw_common.ui.filter_ctrl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.categories = new lw_common.ui.categories_ctrl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.notes = new lw_common.ui.note_ctrl();
             this.sourceUp = new System.Windows.Forms.SplitContainer();
@@ -161,7 +160,7 @@
             this.newFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.newFilteredView.ContextMenuStrip = this.newViewMenu;
             this.newFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.newFilteredView.Location = new System.Drawing.Point(302, 29);
+            this.newFilteredView.Location = new System.Drawing.Point(394, 29);
             this.newFilteredView.Name = "newFilteredView";
             this.newFilteredView.Size = new System.Drawing.Size(18, 20);
             this.newFilteredView.TabIndex = 1;
@@ -196,7 +195,7 @@
             // 
             this.delFilteredView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.delFilteredView.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.delFilteredView.Location = new System.Drawing.Point(320, 29);
+            this.delFilteredView.Location = new System.Drawing.Point(412, 29);
             this.delFilteredView.Name = "delFilteredView";
             this.delFilteredView.Size = new System.Drawing.Size(18, 20);
             this.delFilteredView.TabIndex = 2;
@@ -257,7 +256,7 @@
             this.synchronizedWithFullLog.Checked = true;
             this.synchronizedWithFullLog.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizedWithFullLog.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizedWithFullLog.Location = new System.Drawing.Point(389, 29);
+            this.synchronizedWithFullLog.Location = new System.Drawing.Point(286, 29);
             this.synchronizedWithFullLog.Name = "synchronizedWithFullLog";
             this.synchronizedWithFullLog.Size = new System.Drawing.Size(46, 20);
             this.synchronizedWithFullLog.TabIndex = 1;
@@ -273,7 +272,7 @@
             this.synchronizeWithExistingLogs.Checked = true;
             this.synchronizeWithExistingLogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.synchronizeWithExistingLogs.Font = new System.Drawing.Font("Segoe UI", 7F);
-            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(343, 29);
+            this.synchronizeWithExistingLogs.Location = new System.Drawing.Point(240, 29);
             this.synchronizeWithExistingLogs.Name = "synchronizeWithExistingLogs";
             this.synchronizeWithExistingLogs.Size = new System.Drawing.Size(46, 20);
             this.synchronizeWithExistingLogs.TabIndex = 3;
@@ -514,8 +513,7 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.listBox1);
-            this.tabPage3.Controls.Add(this.label6);
+            this.tabPage3.Controls.Add(this.categories);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -524,23 +522,18 @@
             this.tabPage3.Text = "By Threads / By Context";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // listBox1
+            // categories
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 15;
-            this.listBox1.Location = new System.Drawing.Point(7, 30);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(256, 259);
-            this.listBox1.TabIndex = 1;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(4, 12);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(67, 15);
-            this.label6.TabIndex = 0;
-            this.label6.Text = "Quick Filter";
+            this.categories.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.categories.BackColor = System.Drawing.Color.White;
+            this.categories.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.categories.Location = new System.Drawing.Point(0, 0);
+            this.categories.Margin = new System.Windows.Forms.Padding(4);
+            this.categories.Name = "categories";
+            this.categories.Size = new System.Drawing.Size(269, 465);
+            this.categories.TabIndex = 0;
             // 
             // tabPage4
             // 
@@ -620,7 +613,7 @@
             this.splitDescription.Panel2.Controls.Add(this.description);
             this.splitDescription.Panel2MinSize = 100;
             this.splitDescription.Size = new System.Drawing.Size(974, 450);
-            this.splitDescription.SplitterDistance = 312;
+            this.splitDescription.SplitterDistance = 308;
             this.splitDescription.SplitterWidth = 6;
             this.splitDescription.TabIndex = 18;
             this.splitDescription.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitDescription_SplitterMoved);
@@ -641,8 +634,8 @@
             this.filteredLeft.Panel1.Controls.Add(this.viewsTab);
             this.filteredLeft.Panel1MinSize = 100;
             this.filteredLeft.Panel2MinSize = 100;
-            this.filteredLeft.Size = new System.Drawing.Size(974, 312);
-            this.filteredLeft.SplitterDistance = 473;
+            this.filteredLeft.Size = new System.Drawing.Size(974, 308);
+            this.filteredLeft.SplitterDistance = 469;
             this.filteredLeft.SplitterWidth = 6;
             this.filteredLeft.TabIndex = 0;
             this.filteredLeft.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.filteredLeft_SplitterMoved);
@@ -658,7 +651,7 @@
             this.viewsTab.Location = new System.Drawing.Point(0, 3);
             this.viewsTab.Name = "viewsTab";
             this.viewsTab.SelectedIndex = 0;
-            this.viewsTab.Size = new System.Drawing.Size(468, 310);
+            this.viewsTab.Size = new System.Drawing.Size(464, 306);
             this.viewsTab.TabIndex = 0;
             this.viewsTab.SelectedIndexChanged += new System.EventHandler(this.viewsTab_SelectedIndexChanged);
             this.viewsTab.DragDrop += new System.Windows.Forms.DragEventHandler(this.filteredViews_DragDrop);
@@ -670,7 +663,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(460, 282);
+            this.tabPage1.Size = new System.Drawing.Size(456, 278);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "View";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -683,9 +676,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dropHere.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dropHere.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.dropHere.Location = new System.Drawing.Point(3, 3);
+            this.dropHere.Location = new System.Drawing.Point(5, 3);
             this.dropHere.Name = "dropHere";
-            this.dropHere.Size = new System.Drawing.Size(449, 282);
+            this.dropHere.Size = new System.Drawing.Size(445, 278);
             this.dropHere.TabIndex = 0;
             this.dropHere.Text = "Drop a Log file here\r\n to open";
             this.dropHere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -698,7 +691,7 @@
             this.description.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.description.Location = new System.Drawing.Point(0, 0);
             this.description.Name = "description";
-            this.description.Size = new System.Drawing.Size(974, 132);
+            this.description.Size = new System.Drawing.Size(974, 136);
             this.description.TabIndex = 0;
             // 
             // refresh
@@ -930,7 +923,6 @@
             this.leftPane.ResumeLayout(false);
             this.filtersTab.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.sourceUp.Panel1.ResumeLayout(false);
             this.sourceUp.Panel1.PerformLayout();
@@ -975,8 +967,6 @@
         private System.Windows.Forms.TabPage filtersTab;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.CheckBox synchronizeWithExistingLogs;
         private System.Windows.Forms.Button contextFromClipboard;
         private System.Windows.Forms.Button contextToClipboard;
@@ -1030,6 +1020,7 @@
         private System.Windows.Forms.SplitContainer splitDescription;
         private lw_common.ui.description_ctrl description;
         private System.Windows.Forms.ToolStripMenuItem exportCurrentViewToCSVToolStripMenuItem;
+        private lw_common.ui.categories_ctrl categories;
     }
 }
 

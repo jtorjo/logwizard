@@ -155,6 +155,8 @@ namespace lw_common.ui.format.column_formatters.helper {
         }
 
         internal override void get_tooltip(format_cell cell, int char_index, ref string tooltip) {
+            if (!is_cell_type_ok(cell.col_type))
+                return;
             var text = cell.format_text.text;
             if (text == "")
                 return;

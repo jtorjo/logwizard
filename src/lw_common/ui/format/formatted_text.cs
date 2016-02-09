@@ -350,7 +350,10 @@ namespace lw_common.ui.format {
                 parts[i] = new text_part(parts[i].start - start + (line_before ? 2 : 0), parts[i].len, parts[i]);
 
             text = (line_before ? more + " " : "") + relevant_line + (line_after ? " " + more : "");
-            return new formatted_text(text, this);
+            var result = new formatted_text(text, this);
+            result.parts_ = parts;
+            result.invariant();
+            return result;
         }
 
         public List<text_part> parts(text_part default_) {

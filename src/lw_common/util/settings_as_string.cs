@@ -37,8 +37,11 @@ namespace lw_common {
         // 1.5.6+ get notified of changes
         public on_changed_func on_changed;
 
-        public settings_as_string_readonly(string str) {
-            var lines = str.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+        private string delimiter_;
+
+        public settings_as_string_readonly(string str, string delimiter = "\r\n") {
+            delimiter_ = delimiter;
+            var lines = str.Split(new string[] {delimiter_}, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines) {
                 if (line.Trim() == "")
                     continue;
@@ -69,7 +72,7 @@ namespace lw_common {
             lock(this)
                 foreach (var kv in sett_) {
                     if (str != "")
-                        str += "\r\n";
+                        str += delimiter_;
                     str += kv.Key + "=" + kv.Value;
                 }
             return str;
@@ -98,10 +101,13 @@ namespace lw_common {
 
     // thread-safe
     public class settings_as_string : settings_as_string_readonly {
-        public settings_as_string(string str) : base(str) {
+        public settings_as_string(string str, string delimiter = "\r\n") : base(str, delimiter) {
         }
 
         public void set(string name, string val) {
+            // 1.7.31+ - we assume our inner settings don't have Enter within them
+            Debug.Assert(val.IndexOf("\r") < 0 && val.IndexOf("\n") < 0);
+
             lock (this) {
                 bool exists = sett_.ContainsKey(name);
                 if (exists && sett_[name] == val)

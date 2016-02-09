@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BrightIdeasSoftware;
+using lw_common.ui;
 
 namespace lw_common {
     
@@ -311,7 +312,9 @@ namespace lw_common {
         // contains the columns to show and where - for this view of a log - if empty, show every column
         // the key : the view name - we have a special key for "XYZ from all views" (which is the default)
         protected readonly dictionary_setting<string> column_formatting_;
-        protected readonly dictionary_setting<bool> apply_column_formatting_to_me_; 
+        protected readonly dictionary_setting<bool> apply_column_formatting_to_me_;
+
+        protected readonly single_setting<string> category_format_;
 
         // line-by-line
         protected readonly single_setting_bool line_if_line_;
@@ -338,6 +341,8 @@ namespace lw_common {
         protected readonly single_setting_bool debug_global_;
         protected readonly single_setting<string> debug_process_name_; 
 
+
+
         protected log_settings_string_readonly(string sett) {
             settings_ = new settings_as_string(sett);
 
@@ -358,6 +363,8 @@ namespace lw_common {
 
             column_formatting_ = new dictionary_setting<string>(settings_, "column_format", "");
             apply_column_formatting_to_me_ = new dictionary_setting<bool>(settings_, "apply_column_format_to_me");
+
+            category_format_ = new single_setting<string>( settings_, "category_format", "");
 
             description_template_ = new single_setting<string>(settings_, "description_template", "");
             aliases_ = new single_setting<string>(settings_, "aliases", "");
@@ -510,6 +517,9 @@ namespace lw_common {
         public dictionary_setting_readonly<string> column_formatting {
             get { return column_formatting_; }
         }
+        public single_setting_readonly<string> category_format {
+            get { return category_format_; }
+        }
 
         public dictionary_setting_readonly<bool> apply_column_formatting_to_me {
             get { return apply_column_formatting_to_me_; }
@@ -647,6 +657,9 @@ namespace lw_common {
 
         public new dictionary_setting<bool> apply_column_formatting_to_me {
             get { return apply_column_formatting_to_me_; }
+        }
+        public new single_setting<string> category_format {
+            get { return category_format_; }
         }
 
     }

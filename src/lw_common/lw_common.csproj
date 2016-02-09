@@ -124,7 +124,8 @@
     <Compile Include="ui\description_ctrl.Designer.cs">
       <DependentUpon>description_ctrl.cs</DependentUpon>
     </Compile>
-    <Compile Include="ui\log_view\category_formatter.cs" />
+    <Compile Include="ui\log_view\category_formatter\category_colors.cs" />
+    <Compile Include="ui\log_view\category_formatter\category_formatter.cs" />
     <Compile Include="ui\format\column_formatters\helper\abbreviation.cs" />
     <Compile Include="ui\format\column_formatter_renderer.cs">
       <SubType>Component</SubType>
@@ -171,6 +172,7 @@
       <DependentUpon>go_to_line_time_form.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\gradient_brush_list.cs" />
+    <Compile Include="ui\log_view\category_formatter\category_format_settings.cs" />
     <Compile Include="ui\log_view\log_view.cs">
       <SubType>UserControl</SubType>
     </Compile>

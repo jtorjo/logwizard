@@ -85,6 +85,8 @@ namespace lw_common.ui {
 
         void needs_details_pane();
 
+        void on_available_columns_known();
+
         // these are the columns that are visible in the description pane (if it's shown)
         List<info_type> description_columns();
     }

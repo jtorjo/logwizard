@@ -79,6 +79,9 @@ namespace lw_common {
 
         toggle_status,
 
+        // 1.7.31+
+        toggle_categories,
+
         // 1.0.67
         open_in_explorer,
 

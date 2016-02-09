@@ -1365,6 +1365,12 @@ namespace lw_common {
                 matches = matches.NextMatch();
             }
             return result;
-        } 
+        }
+
+        // returns an ellipsis suffix, depending on current time ("." to ".....", and it changes, as time changes)
+        public static string ellipsis_suffix(int max_dots = 5) {
+            int seconds = DateTime.Now.Second % max_dots;
+            return new string('.', seconds);
+        }
     }
 }

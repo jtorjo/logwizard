@@ -34,6 +34,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using BrightIdeasSoftware;
 using lw_common;
@@ -64,7 +65,11 @@ namespace LogWizard
 
         private int old_line_count_ = 0;
 
-        const int MAX_HISTORY_ENTRIES = 100;
+        private const int MAX_HISTORY_ENTRIES = 100;
+
+        // how many max. category values do we allow? (for category background coloring)
+        // if we have too many, it defeats the point of having this - since the colors could not easily be differenciated
+        private const int MAX_CATEGORY_UNIQUE_VALUES = 25;
 
         private int ignore_change_ = 0;
 
@@ -142,6 +147,10 @@ namespace LogWizard
                 lv.mark_match(filter_idx, fg, bg);
             };
 
+            categories.on_category_colors_change += On_category_colors_change;
+            categories.on_change_category_type += On_change_category_type;
+            categories.on_running_changed += On_running_changed;
+
             recreate_contexts_combo();
             recreate_history_combo();
 
@@ -186,6 +195,47 @@ namespace LogWizard
                 set_status("To open the Last Log, just do <i>Ctrl-H, Enter</i>");
 
             util.postpone(animate_whatsup, util.is_debug ? 2500 : 10000);
+        }
+
+        private void On_running_changed(bool running) {
+            foreach ( var view in all_log_views_and_full_log())
+                view.set_category_running(running);
+
+            if (running)
+                show_left_pane(false);
+        }
+
+        private void On_change_category_type(string category_type) {
+            category_format_settings new_ = category_format();
+            new_.default_category_type = category_type;
+            category_format( new_);
+            var col_type = log_parser_.aliases.to_info_type(category_type);
+
+            // at this point, i need to load all available categories for this type
+            Task.Run(() => load_categories_task(col_type));
+        }
+
+        private void load_categories_task(info_type col_type) {
+            var values = full_log.unique_values(col_type, MAX_CATEGORY_UNIQUE_VALUES + 1);
+            categories.async_call(() => {
+                if (values.Count > MAX_CATEGORY_UNIQUE_VALUES)
+                    categories.set_error("Too Many Values!");
+                else {
+                    var colors = category_format().get_colors(col_type, values);
+                    categories.set_categories(colors);
+                    foreach ( var view in all_log_views_and_full_log())
+                        view.set_category_colors(colors, col_type);
+                }
+            });
+        }
+
+        private void On_category_colors_change(List<category_colors> colors) {
+            category_format_settings new_ = category_format();
+            var category_type = log_parser_.aliases.to_info_type(new_.default_category_type);
+            new_.set_colors( category_type, colors );
+            category_format( new_);
+            foreach ( var view in all_log_views_and_full_log())
+                view.set_category_colors(colors, category_type);
         }
 
         private List<history> history_ {
@@ -724,6 +774,35 @@ namespace LogWizard
             global_ui.show_status = global_ui.show_status = !shown;
         }
 
+        private category_format_settings category_format() {
+            return new category_format_settings( text_.settings.category_format);
+        }
+
+        private void category_format(category_format_settings sett) {
+            text_.write_settings.category_format.set(sett.ToString());
+        }
+
+        private void toggle_categories() {
+            global_ui.show_categories = !global_ui.show_categories;
+            show_left_pane( global_ui.show_left_pane);
+
+            if (global_ui.show_categories) 
+                update_categories_list();
+
+            save();
+            update_msg_details(true);            
+        }
+
+        private void update_categories_list() {
+            if ( log_parser_ != null && log_parser_.up_to_date ) {
+                var available_categories = full_log.available_columns.Where(info_type_io.can_be_category). Select(x => log_parser_.aliases.friendly_name(x) ).ToList();
+                categories.set_category_types(available_categories, category_format().default_category_type);
+            } else {
+                categories.set_category_types(new List<string>(), "");
+                categories.set_error("Please wait until Log is fully loaded" + util.ellipsis_suffix() );
+                util.postpone(update_categories_list, 250);
+            }
+        }
 
         private int extra_width_ = 0, extra_height_ = 0;
         private void show_title(bool show) {
@@ -1157,6 +1236,8 @@ namespace LogWizard
                 leftPane.SelectedIndex = 0;
             else if (global_ui.show_notes)
                 leftPane.SelectedIndex = 2;
+            else if (global_ui.show_categories)
+                leftPane.SelectedIndex = 1;
             else {
                 Debug.Assert(false);
                 global_ui.show_filter = true;
@@ -2110,6 +2191,11 @@ namespace LogWizard
             show_details(true);
         }
 
+        public void on_available_columns_known() {
+            if (global_ui.show_categories) 
+                 update_categories_list();
+        }
+
         private bool any_moving_key_still_down() {
             return win32.IsKeyPushedDown(Keys.Up) || win32.IsKeyPushedDown(Keys.Down) || win32.IsKeyPushedDown(Keys.PageUp) || win32.IsKeyPushedDown(Keys.PageDown) || win32.IsKeyPushedDown(Keys.Home) || win32.IsKeyPushedDown(Keys.End);
         }
@@ -2383,6 +2469,8 @@ namespace LogWizard
                 return action_type.toggle_details;
             case "alt-s":
                 return action_type.toggle_status;
+            case "alt-c":
+                return action_type.toggle_categories;
 
             case "ctrl-alt-f":
                 return action_type.toggle_filter_view;
@@ -2590,6 +2678,10 @@ namespace LogWizard
                 break;
             case action_type.toggle_status:
                 toggle_status();
+                break;
+
+            case action_type.toggle_categories:
+                toggle_categories();
                 break;
 
             case action_type.toggle_view_tabs:

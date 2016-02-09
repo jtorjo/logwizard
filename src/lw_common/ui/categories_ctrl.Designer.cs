@@ -54,6 +54,7 @@
             this.categoryTypes.Size = new System.Drawing.Size(495, 24);
             this.categoryTypes.TabIndex = 0;
             this.categoryTypes.SelectedIndexChanged += new System.EventHandler(this.categoryTypes_SelectedIndexChanged);
+            this.categoryTypes.DropDownClosed += new System.EventHandler(this.categoryTypes_DropDownClosed);
             // 
             // label1
             // 
@@ -83,7 +84,7 @@
             this.categories.Name = "categories";
             this.categories.OwnerDraw = true;
             this.categories.ShowGroups = false;
-            this.categories.Size = new System.Drawing.Size(568, 452);
+            this.categories.Size = new System.Drawing.Size(568, 430);
             this.categories.TabIndex = 2;
             this.categories.UseCellFormatEvents = true;
             this.categories.UseCompatibleStateImageBehavior = false;
@@ -132,9 +133,10 @@
             // 
             this.previewLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.previewLabel.AutoSize = true;
-            this.previewLabel.Location = new System.Drawing.Point(3, 491);
+            this.previewLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.previewLabel.Location = new System.Drawing.Point(3, 469);
             this.previewLabel.Name = "previewLabel";
-            this.previewLabel.Size = new System.Drawing.Size(57, 17);
+            this.previewLabel.Size = new System.Drawing.Size(52, 13);
             this.previewLabel.TabIndex = 4;
             this.previewLabel.Text = "Preview";
             // 
@@ -142,9 +144,9 @@
             // 
             this.isRunning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.isRunning.Appearance = System.Windows.Forms.Appearance.Button;
-            this.isRunning.Location = new System.Drawing.Point(505, 681);
+            this.isRunning.Location = new System.Drawing.Point(505, 683);
             this.isRunning.Name = "isRunning";
-            this.isRunning.Size = new System.Drawing.Size(67, 26);
+            this.isRunning.Size = new System.Drawing.Size(67, 24);
             this.isRunning.TabIndex = 5;
             this.isRunning.Text = "Start";
             this.isRunning.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -166,11 +168,11 @@
             this.olvColumn8});
             this.preview.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.preview.FullRowSelect = true;
-            this.preview.Location = new System.Drawing.Point(4, 511);
+            this.preview.Location = new System.Drawing.Point(4, 486);
             this.preview.Name = "preview";
             this.preview.OwnerDraw = true;
             this.preview.ShowGroups = false;
-            this.preview.Size = new System.Drawing.Size(495, 193);
+            this.preview.Size = new System.Drawing.Size(568, 193);
             this.preview.TabIndex = 6;
             this.preview.UseCellFormatEvents = true;
             this.preview.UseCompatibleStateImageBehavior = false;
@@ -208,7 +210,7 @@
             // 
             this.errorStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.errorStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.errorStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.errorStatus.Location = new System.Drawing.Point(3, 66);
             this.errorStatus.Name = "errorStatus";
             this.errorStatus.Size = new System.Drawing.Size(569, 95);

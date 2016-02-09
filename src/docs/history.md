@@ -1,4 +1,9 @@
 
+1.7.31b
+- categories formatter
+  - works, but the background for the text is not correct (it's always white)
+
+
 1.7.31a
 - categories:
   - category formatter added (not tested)

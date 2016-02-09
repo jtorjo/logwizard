@@ -48,6 +48,7 @@ namespace lw_common {
                 show_filter_ = value;
                 if (show_filter_) {
                     show_notes_ = false;
+                    show_categories_ = false;
                     show_left_pane_ = true;
                 } else
                     show_left_pane_ = false;
@@ -59,6 +60,20 @@ namespace lw_common {
             set {
                 show_notes_ = value;
                 if (show_notes_) {
+                    show_filter_ = false;
+                    show_categories_ = false;
+                    show_left_pane_ = true;
+                } else
+                    show_left_pane_ = false;
+            }
+        }
+
+        public bool show_categories {
+            get { return show_categories_; }
+            set {
+                show_categories_ = value;
+                if (show_categories_) {
+                    show_notes_ = false;
                     show_filter_ = false;
                     show_left_pane_ = true;
                 } else
@@ -93,6 +108,7 @@ namespace lw_common {
         private bool show_filter_ = false;
         private bool show_left_pane_ = false;
         private bool show_notes_ = false;
+        private bool show_categories_ = false;
 
         public int description_splitter_pos = -1;
 
@@ -166,6 +182,7 @@ namespace lw_common {
 
             show_left_pane_ = other.show_left_pane_;
             show_notes_ = other.show_notes_;
+            show_categories_ = other.show_categories_;
             // ... get a copy
             views_ = other.views_.ToDictionary(x => x.Key, x => new view_info(x.Value.show_full_log) );
         }
@@ -221,6 +238,7 @@ namespace lw_common {
 
             app.load_save(load, ref show_left_pane_, prefix + ".show_left_pane", false);
             app.load_save(load, ref show_notes_, prefix + ".show_notes", false);
+            app.load_save(load, ref show_categories_, prefix + ".show_categories", false);
 
             app.load_save(load, ref description_splitter_pos, prefix + ".description_splitter_pos", -1);
 

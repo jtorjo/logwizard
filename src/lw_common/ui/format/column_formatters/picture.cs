@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using log4net.Repository.Hierarchy;
 
 namespace lw_common.ui.format.column_formatters {
     /* 
@@ -16,6 +17,7 @@ namespace lw_common.ui.format.column_formatters {
     name can be a name that is relative to homepath (%appdata%\..\local) or absolute
     */
     class picture : column_formatter_base {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private Dictionary<string, Image> name_to_picture_ = new Dictionary<string, Image>();
 
@@ -30,6 +32,7 @@ namespace lw_common.ui.format.column_formatters {
                 if (pic != "") {
                     var sep = pic.IndexOf("->");
                     if (sep >= 0) {
+                        Image bmp = null;
                         string prefix = pic.Substring(0, sep).Trim().ToLower();
                         string file = pic.Substring(sep + 2).Trim();
                         if (prefix == "" || file == "")
@@ -38,13 +41,16 @@ namespace lw_common.ui.format.column_formatters {
                             if (!Path.IsPathRooted(file))
                                 file = util.personal_dir() + "LogWizard\\" + file;
 
-                            if (File.Exists(file)) {
-                                Image bmp = Image.FromFile(file);
-                                if (bmp != null)
-                                    name_to_picture_.Add(prefix, bmp);
-                            }
-                        } catch {
+                            if (File.Exists(file)) 
+                                bmp = Image.FromFile(file);                            
+                        } catch(Exception e) {                            
+                            logger.Error("bad picture " + e.Message);
+                        }
+                        if (bmp != null)
+                            name_to_picture_.Add(prefix, bmp);
+                        else {
                             error = "Invalid file: " + file;
+                            logger.Error("could not load file " + file);
                         }
                     } else
                         error = "Invalid line: " + pic;

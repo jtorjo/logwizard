@@ -325,14 +325,16 @@ namespace lw_common.ui
         // this is set while refreshing visible columns (log_view_show_columns)
         //
         // it contains the columns that are available for showing
-        internal List<info_type> available_columns {
+        public List<info_type> available_columns {
             get { 
                 return log_ != null ? log_.settings.available_columns.get().Split(new [] { ","}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => (info_type) int.Parse(x)).ToList() : new List<info_type>(); 
             }
-            set {
-                if ( log_ != null)
-                    log_.write_settings.available_columns.set( util.concatenate(value.Select(x => (int)x), ",") );
+            internal set {
+                if (log_ != null) {
+                    log_.write_settings.available_columns.set(util.concatenate(value.Select(x => (int) x), ","));
+                    lv_parent.on_available_columns_known();
+                }
             }
         }
 
@@ -381,10 +383,8 @@ namespace lw_common.ui
                 else if (model_.is_running_filter)
                     status = "Running Filter";
 
-                if (status != "") {
-                    string suffix = new string('.', DateTime.Now.Second % 5);
-                    status += " " + suffix;
-                }
+                if (status != "") 
+                    status += util.ellipsis_suffix();
                 bool was_seaching = last_search_status_ != "";
                 last_search_status_ = status;
                 // after search complete, return ' ', so that we clear the search status visually
@@ -832,8 +832,7 @@ namespace lw_common.ui
                 logger.Debug("[view] new log for " + name + " - " + log.log_name);
                 update_x_of_y();
 
-                if ( was_null)
-                    reload_column_formatter();
+                reload_column_formatter();
             }
         }
 
@@ -2257,6 +2256,25 @@ namespace lw_common.ui
             render_.clear_format_cache("toggle abbreviation");
             Refresh();
             edit.force_refresh();
+        }
+
+        public List<string> unique_values(info_type col_type, int max_unique_values) {
+            int count = item_count;
+            HashSet<string> values = new HashSet<string>();
+            for (int i = 0; i < count && values.Count < max_unique_values; ++i) 
+                values.Add(log_view_cell.cell_value_by_type(item_at(i), col_type));
+
+            return values.ToList();
+        }
+
+        public void set_category_colors(List<category_colors> colors, info_type category_type) {
+            render_.category_format.set_colors(colors, category_type);
+            list.Refresh();
+        }
+
+        public void set_category_running(bool running) {
+            render_.category_format.running = running;
+            list.Refresh();
         }
 
 

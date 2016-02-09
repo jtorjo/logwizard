@@ -13,54 +13,10 @@ namespace lw_common.ui {
     public partial class categories_ctrl : UserControl {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public class category_colors {
-            // the name of the category
-            public string name = "";
-
-            // the background for this category - if transparent, LogWizard will choose something
-            //
-            // this is used per-se only for computing the background colors (same_category_bg and this_category_bg)
-            private Color bg_color_ = util.transparent;
-
-            // the background for the rows that are of the same category
-            // if tranasparent, I compute it from bg_color
-            private Color raw_same_category_bg_ = util.transparent;
-            
-            // the background for the rows that are of the same category as the selected row
-            private Color raw_this_category_bg_ = util.transparent;
-
-            public Color bg_color {
-                get { return bg_color_; }
-                set {
-                    bg_color_ = value;
-                    if (bg_color != util.transparent) 
-                        // at this point, they're computed from the bg_color
-                        raw_same_category_bg_ = raw_this_category_bg_ = util.transparent;                    
-                }
-            }
-
-            public Color same_category_bg {
-                get { return raw_same_category_bg != util.transparent ? raw_same_category_bg : same_category_color(bg_color); }
-            }
-
-            public Color this_category_bg {
-                get { return raw_this_category_bg != util.transparent ? raw_this_category_bg : this_category_color(bg_color); }
-            }
-
-            public Color raw_same_category_bg {
-                get { return raw_same_category_bg_; }
-                set { raw_same_category_bg_ = value; }
-            }
-
-            public Color raw_this_category_bg {
-                get { return raw_this_category_bg_; }
-                set { raw_this_category_bg_ = value; }
-            }
-        }
-
         private static string[] default_color_names_ = {
             "red", "blue", "green", "brown", "yellow", "cyan", "pink", "violet", "orange", "coral",
             "darkred", "darkblue", "darkgreen", "darkbrown", "darkyellow", "darkcyan", "darkpink", "darkviolet", "darkorange", "darkcoral",
+            "lightred", "lightblue", "lightgreen", "lightbrown", "lightyellow", "lightcyan", "lightpink", "lightviolet", "lightorange", "lightcoral",
         };
 
         private class item {
@@ -174,6 +130,9 @@ namespace lw_common.ui {
         public delegate void on_category_colors_change_func(List<category_colors> colors);
         public on_category_colors_change_func on_category_colors_change;
 
+        public delegate void on_running_changed_func(bool running);
+        public on_running_changed_func on_running_changed;
+
         private List<category_colors> colors_ = new List<category_colors>();
         private List<Color> unused_ = new List<Color>(); 
 
@@ -184,19 +143,14 @@ namespace lw_common.ui {
             initialize_preview();
         }
 
-        private static Color same_category_color(Color bg) {
-            return util.color_luminance(bg, 0.96) ;
-        }
-        private static Color this_category_color(Color bg) {
-            return util.color_luminance(bg, 0.9) ;
-        }
-
         private void isRunning_CheckedChanged(object sender, EventArgs e) {
             update_is_running_text();
         }
 
         private void update_is_running_text() {
             isRunning.Text = isRunning.Checked ? "Stop" : "Start";
+            if ( on_running_changed != null)
+                on_running_changed(isRunning.Checked);
         }
 
         private void objectListView1_CellToolTipShowing(object sender, BrightIdeasSoftware.ToolTipShowingEventArgs e) {
@@ -211,7 +165,7 @@ namespace lw_common.ui {
             categoryTypes.Items.Clear();
             foreach (var str in category_strings)
                 categoryTypes.Items.Add(str);
-            int sel = category_strings.FindIndex(x => x == default_category);
+            int sel = category_strings.FindIndex(x => x.ToLower() == default_category.ToLower());
             if (sel >= 0)
                 categoryTypes.SelectedIndex = sel;
             else if ( category_strings.Count > 0)
@@ -219,24 +173,23 @@ namespace lw_common.ui {
 
             // at this point, we wait to be notified of the possible categories
             categories.Items.Clear();
+            set_error("");
         }
 
         public void set_error(string err) {
+            bool has_error = err != "";
             errorStatus.Text = err;
-            errorStatus.Visible = true;
-            isRunning.Visible = false;
-            isRunning.Checked = false;
-            categories.Visible = false;
-            preview.Visible = false;
-            previewLabel.Visible = false;
+            errorStatus.Visible = has_error;
+            isRunning.Visible = !has_error;
+            if ( has_error)
+                isRunning.Checked = false;
+            categories.Visible = !has_error;
+            preview.Visible = !has_error;
+            previewLabel.Visible = !has_error;
         }
 
         public void set_categories(List<category_colors> colors) {
-            errorStatus.Visible = false;
-            isRunning.Visible = true;
-            categories.Visible = true;
-            preview.Visible = true;
-            previewLabel.Visible = true;
+            set_error("");
 
             colors_ = colors.ToList();
             var items = colors_.Select(x => new item(x)).ToList();
@@ -324,6 +277,9 @@ namespace lw_common.ui {
         }
 
         private void categoryTypes_SelectedIndexChanged(object sender, EventArgs e) {
+            if (categoryTypes.DroppedDown)
+                return;
+
             if (categoryTypes.SelectedIndex >= 0)
                 util.postpone(() => 
                     on_change_category_type( categoryTypes.Items[categoryTypes.SelectedIndex].ToString()), 1);
@@ -410,5 +366,10 @@ namespace lw_common.ui {
             row.BackColor = bg;
         }
 
+        private void categoryTypes_DropDownClosed(object sender, EventArgs e) {
+            categoryTypes_SelectedIndexChanged(null, null);
+        }
+
     }
+
 }

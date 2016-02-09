@@ -124,8 +124,9 @@ namespace lw_common.ui {
                 return;
 
             var col_idx = Column.fixed_index();
+            var col_type = log_view_cell.cell_idx_to_type(col_idx);
             drawer_.cached_sel = parent_.multi_sel_idx;
-            override_print_ = category_formatted( cache_.override_print(i, GetText(), col_idx), col_idx);
+            override_print_ = category_formatted( cache_.override_print(i, GetText(), col_idx), i);
             var text = override_print_.text;
 
             bg_color_ = drawer_.bg_color(ListItem, col_idx, override_print_);
@@ -150,13 +151,13 @@ namespace lw_common.ui {
             draw_image(g, r);
         }
 
-        private formatted_text category_formatted(formatted_text txt, int col_idx) {
+        private formatted_text category_formatted(formatted_text txt, match_item row) {
             if (category_formatter_.running) {
                 txt = txt.copy();
-                int sel_row = parent_.sel_row_idx;
-                if (sel_row >= 0) {
-                    var sel = parent_.item_at(sel_row);
-                    category_formatter_.format(txt, log_view_cell.cell_value(sel, col_idx) );
+                int sel_row_idx = parent_.sel_row_idx;
+                if (sel_row_idx >= 0) {
+                    var sel = parent_.item_at(sel_row_idx);
+                    category_formatter_.format(txt, row, sel );
                 }
             }
 

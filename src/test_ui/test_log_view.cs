@@ -118,6 +118,9 @@ namespace test_ui {
         public void needs_details_pane() {
         }
 
+        public void on_available_columns_known() {
+        }
+
         public List<info_type> description_columns() {
             return new List<info_type>();
         }
