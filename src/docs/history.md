@@ -1,4 +1,8 @@
 
+1.7.33
+- made the current selection much lighter than before - so that it interferes least with rest of our coloring
+
+
 1.7.32
 - solved: #70 line : show the selection with an image (this will make things easier)
   - added bookmarks as well

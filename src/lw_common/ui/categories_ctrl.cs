@@ -357,7 +357,7 @@ namespace lw_common.ui {
             Color bg = default_;
             if (colors[index] != null) {
                 if (index == 4)
-                    bg = util.darker_color(colors[index].this_category_bg);
+                    bg = util.darker_color(colors[index].this_category_bg, app.inst.selection_dark_effect);
                 else if (index == 3)
                     bg = colors[index].this_category_bg;
                 else

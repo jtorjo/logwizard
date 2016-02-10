@@ -232,7 +232,6 @@ namespace lw_common.ui {
             ++ignore_change_;
             Multiline = txt.IndexOfAny(util.any_enter_char) >= 0;
             var prints = parent_.sel.override_print(parent_, txt, sel_col_, column_formatter_base.format_cell.location_type.smart_edit ).format_text.to_single_enter_char();
-            //var prints = parent_.sel.override_print(parent_, txt, sel_col_, column_formatter_base.format_cell.location_type.smart_edit ).format_text;
             prints.bg = parent_.render.sel_bg_color();
             // ... text has changed
             txt = prints.text;

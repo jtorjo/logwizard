@@ -242,6 +242,12 @@ namespace lw_common {
         // 1.7.8 - column formatting
         public string default_column_format = "";
 
+        // 1.7.33 - when making the current selection slightly darker, by how much?
+        //          do it in such a way that it's as seamless as possible - even on alternate colors
+        //
+        //          note: at this time, not settable via UI
+        public double selection_dark_effect = 1.02;
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // file-by-file
         public bool bring_to_top_on_restart = false;

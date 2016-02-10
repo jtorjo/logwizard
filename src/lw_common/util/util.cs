@@ -199,16 +199,18 @@ namespace lw_common {
         }
 #endif
 
-        public static Color grayer_color(Color col) {
+        public static Color grayer_color(Color col, double effect = 1.1) {
+            Debug.Assert(effect > 1);
             HSL hsl = rgb_convert.RGBtoHSL(col.R, col.G, col.B);
-            hsl.Luminance *= 1.1;
+            hsl.Luminance *= effect;
             RGB rgb = rgb_convert.HSLtoRGB(hsl.Hue, hsl.Saturation, hsl.Luminance);
             return Color.FromArgb(rgb.Red, rgb.Green, rgb.Blue) ;
         }
 
-        public static Color darker_color(Color col) {
+        public static Color darker_color(Color col, double effect = 1.1) {
+            Debug.Assert(effect > 1);
             HSL hsl = rgb_convert.RGBtoHSL(col.R, col.G, col.B);
-            hsl.Luminance *= .9;
+            hsl.Luminance *= 1 / effect;
             RGB rgb = rgb_convert.HSLtoRGB(hsl.Hue, hsl.Saturation, hsl.Luminance);
             return Color.FromArgb(rgb.Red, rgb.Green, rgb.Blue) ;
         }

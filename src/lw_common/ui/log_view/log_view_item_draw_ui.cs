@@ -131,8 +131,8 @@ namespace lw_common.ui {
                 if (parent_.filter.last_change.AddSeconds(3.5) > DateTime.Now)
                     return bg;
 
-            Color dark = util.darker_color(bg);
-            Color darker = util.darker_color(dark);
+            Color dark = util.darker_color(bg, app.inst.selection_dark_effect);
+            Color darker = util.darker_color(dark, app.inst.selection_dark_effect);
             var focus = win32.focused_ctrl();
             bool is_focused = focus == parent_.list || focus == parent_.edit;
             bool is_single = parent_.lv_parent.is_showing_single_view;
