@@ -77,6 +77,8 @@ namespace lw_common.ui {
 
         bool can_edit_context { get; }
 
+        bool is_showing_single_view { get;  }
+
         void edit_log_settings();
 
         void edit_column_formatting();

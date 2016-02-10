@@ -106,6 +106,8 @@ namespace test_ui {
             get { return true; }
         }
 
+        public bool is_showing_single_view { get; private set; }
+
         public void edit_log_settings() {
         }
 

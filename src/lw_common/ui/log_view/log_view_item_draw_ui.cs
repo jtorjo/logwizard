@@ -121,17 +121,34 @@ namespace lw_common.ui {
             return (int)(abc - ab);
         }
 
+        // ... code initially moved from match_item.sel_bg
+        public Color sel_bg_color(Color bg) {
+            if ( parent_.needs_scroll)
+                // the idea is that if this view updates a LOT and we're at the last row, 
+                // it's disturbing to the eye to constantly have new rows added (thus the former "last" would go up - being marked as "selected",
+                // then the selection would change to be the new "last", and so on)
+                if (parent_.filter.last_change.AddSeconds(3.5) > DateTime.Now)
+                    return bg;
+
+            Color dark = util.darker_color(bg);
+            Color darker = util.darker_color(dark);
+            var focus = win32.focused_ctrl();
+            bool is_focused = focus == parent_.list || focus == parent_.edit;
+            bool is_single = parent_.lv_parent.is_showing_single_view;
+            return is_focused && !is_single ? darker : dark;
+        }
+
         public Color print_bg_color(OLVListItem item, text_part print) {
             match_item i = item.RowObject as match_item;            
             bool is_sel = !ignore_selection ? parent_sel.Contains(item.Index) : false;
 
-            Color default_bg = is_sel ? i.sel_bg(parent_) : i.bg(parent_);            
+            Color default_bg = i.bg(parent_);
             Color bg = print.bg != util.transparent ? print.bg : default_bg;
             if (bg == util.transparent)
                 bg = app.inst.bg;
-            // selection overrides everything
+            // selection needs a bit of dark
             if (is_sel)
-                bg = default_bg;
+                bg = sel_bg_color(bg);
 
             if (print.is_typed_search && !print.is_find_search)
                 // 1.7.22 - don't use the overridden background - we want to have the same background for all finds
@@ -153,45 +170,27 @@ namespace lw_common.ui {
             get { return cached_sel ?? parent_.multi_sel_idx; }
         } 
 
-        public Color bg_color(OLVListItem item, int col_idx) {
+        private Color bg_color(OLVListItem item) {
             match_item i = item.RowObject as match_item;
             int row_idx = item.Index;
 
-            Color color;
             bool is_sel = !ignore_selection ? parent_sel.Contains(row_idx) : false;
 
             Color bg = i.bg(parent_);
-            Color dark_bg = i.sel_bg(parent_);
+            Color dark_bg = sel_bg_color(bg);
 
-            if (col_idx == parent_.msgCol.fixed_index()) {
-                if (is_sel) 
-                    color = is_sel ? dark_bg : bg;
-                else if (app.inst.use_bg_gradient) {
-                    Rectangle r = item.GetSubItemBounds(col_idx);
-                    if (r.Width > 0 && r.Height > 0)
-                        // it's a gradient
-                        color = util.transparent;
-                    else
-                        color = bg;
-                } else
-                    color = bg;
-            } else 
-                color = is_sel ? dark_bg : bg;
-
-            if (color == util.transparent)
-                color = app.inst.bg;
+            var color = is_sel ? dark_bg : bg;
+            Debug.Assert(color != util.transparent);
             return color;
         }
 
         public Color bg_color(OLVListItem item, int col_idx, formatted_text format) {
-            match_item i = item.RowObject as match_item;
             int row_idx = item.Index;
             bool is_sel = !ignore_selection ? parent_sel.Contains(row_idx) : false;
-            if ( !is_sel)
-                if (format.bg != util.transparent)
-                    return format.bg;
+            if (format.bg != util.transparent)
+                return is_sel ? sel_bg_color(format.bg) : format.bg;
 
-            return bg_color(item, col_idx);
+            return bg_color(item);
         }
 
     }

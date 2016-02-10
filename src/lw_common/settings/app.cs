@@ -136,7 +136,6 @@ namespace lw_common {
         public synchronize_colors_type syncronize_colors = synchronize_colors_type.none;
         public bool sync_colors_all_views_gray_non_active = false;
 
-        public bool use_bg_gradient = false;
         public Color bg = Color.White;
         public Color fg = Color.Black;
 
@@ -394,8 +393,6 @@ namespace lw_common {
 
             load_save(load, ref syncronize_colors, "synchronize_colors", synchronize_colors_type.with_all_views);
             load_save(load, ref sync_colors_all_views_gray_non_active, "synchronize_colors_gray_non_active", false);
-
-            load_save(load, ref use_bg_gradient, "use_bg_gradient", false);
 
             load_save(load, ref fg, "fg", Color.Black);
             load_save(load, ref bg, "bg", Color.White);

@@ -15,7 +15,7 @@ namespace lw_common.ui.format {
 
         public HorizontalAlignment align = HorizontalAlignment.Left;
 
-        public Color bg = util.transparent;
+        private Color bg_ = util.transparent;
 
         public Image image = null;
 
@@ -25,7 +25,7 @@ namespace lw_common.ui.format {
         private formatted_text(string text, formatted_text other) {
             text_ = text;
 
-            bg = other.bg;
+            bg_ = other.bg_;
             align = other.align;
             image = other.image;
             parts_ = other.parts_;
@@ -33,13 +33,24 @@ namespace lw_common.ui.format {
 
         public formatted_text copy() {
             formatted_text the_copy = new formatted_text(text) {
-                bg = bg, align = align, image = image, parts_ = parts_.Select(x => x.copy() ).ToList()
+                bg_ = bg_, align = align, image = image, parts_ = parts_.Select(x => x.copy() ).ToList()
             };
             return the_copy;
         }
 
         public string text {
             get { return text_; }
+        }
+
+        public Color bg {
+            get { return bg_; }
+            set {
+                var old_bg = bg_;
+                bg_ = value; 
+                foreach ( var part in parts_)
+                    if (part.bg == old_bg)
+                        part.bg = bg_;
+            }
         }
 
         // returns the parts that are same throughout all parts
@@ -86,15 +97,16 @@ namespace lw_common.ui.format {
             }
         }
 
-
         public void update_parts() {
-            if ( bg != util.transparent)
+            if ( bg_ != util.transparent)
                 foreach ( var part in parts_)
                     if (part.bg == util.transparent)
-                        part.bg = bg;
+                        part.bg = bg_;
 
-            foreach (var part in parts_)
-                part.text = text_.Substring(part.start, part.len);
+            // just for  testing - normally, the text is set correctly in .parts(default_)
+            if ( util.is_debug)
+                foreach (var part in parts_)
+                    part.text = text_.Substring(part.start, part.len);
         }
 
         public void replace_text(int start, int len, string new_text) {
@@ -283,7 +295,7 @@ namespace lw_common.ui.format {
                 text = text.Substring(0, next_enter) + text.Substring(next_enter + 1);
             }
 
-            return new formatted_text(text) { parts_ = parts };
+            return new formatted_text(text, this) { parts_ = parts };
         }
 
         // this updates text + infos, so that it will return a single line from a possible multi-line text
@@ -371,6 +383,11 @@ namespace lw_common.ui.format {
             last_idx = parts_.Count > 0 ? parts_.Last().start + parts_.Last().len : 0;
             if (last_idx < text_.Length) 
                 result.Add(new text_part(last_idx, text_.Length - last_idx, default_) { text = text_.Substring(last_idx) } );
+
+            if ( bg_ != util.transparent)
+                foreach ( var part in result)
+                    if (part.bg == util.transparent)
+                        part.bg = bg_;
 
             return result;
         } 

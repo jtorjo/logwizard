@@ -444,6 +444,17 @@ namespace LogWizard
             get { return can_edit_context_; }
         }
 
+        // the idea here is to know whether we're the only view shown. If so, it doesn't make sense to double-dark the selection
+        public bool is_showing_single_view {
+            get {
+                if (global_ui.show_current_view && global_ui.show_fulllog)
+                    return false;
+                if (global_ui.show_left_pane)
+                    return false;
+                return true;
+            }
+        }
+
         private ui_info global_ui {
             get {
                 Debug.Assert( toggled_to_custom_ui_ >= -1 && toggled_to_custom_ui_ < custom_ui_.Length);

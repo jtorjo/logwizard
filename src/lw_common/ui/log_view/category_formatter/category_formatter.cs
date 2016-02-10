@@ -23,8 +23,11 @@ namespace lw_common.ui {
             }
             column_ = column;
         }
-        internal void format(formatted_text text, match_item row, match_item sel) {
+        internal void format(formatted_text text, match_item row, match_item sel, info_type col_type) {
             if (!running || colors_ == null || colors_.Count < 1 || column_ == info_type.max)
+                return;
+            if (col_type == info_type.line)
+                // don't category format the line
                 return;
 
             var row_text = log_view_cell.cell_value_by_type(row, column_);
@@ -34,6 +37,7 @@ namespace lw_common.ui {
             if (colors_.TryGetValue(row_text, out category_col)) {
                 var color = row_text == sel_text ? category_col.this_category_bg : category_col.same_category_bg;
                 text.bg = color;
+                text.update_parts();
             }
 
         }

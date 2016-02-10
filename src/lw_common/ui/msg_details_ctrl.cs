@@ -153,7 +153,7 @@ namespace lw_common {
             var prints = lv.sel.override_print(lv, msg_txt, msg_col, column_formatter_base.format_cell.location_type.msg_description).format_text;
             var full_row = lv.list.GetItem(lv.sel_row_idx);
 
-            BackColor = txt.BackColor = drawer_.bg_color(full_row, msg_col);
+            BackColor = txt.BackColor = drawer_.bg_color(full_row, msg_col, prints);
 
             var parts = prints.parts(default_print_);
             foreach (var part in parts) {

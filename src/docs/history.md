@@ -1,4 +1,9 @@
 
+1.7.31c
+- solved #54 - selection: don't double-dark it
+- categories: finally works, together with all other formatters
+
+
 1.7.31b
 - categories formatter
   - works, but the background for the text is not correct (it's always white)

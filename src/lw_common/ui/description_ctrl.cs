@@ -769,7 +769,7 @@ namespace lw_common.ui {
              
             var full_row = lv.list.GetItem(row);
 
-            text_ctrl.BackColor = drawer_.bg_color(full_row, col_idx);
+            text_ctrl.BackColor = drawer_.bg_color(full_row, col_idx, prints);
 
             var parts = prints.parts(default_print_);
             foreach (var part in parts) {

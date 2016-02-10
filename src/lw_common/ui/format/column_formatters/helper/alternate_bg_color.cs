@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 namespace lw_common.ui.format.column_formatters {
     // alternates the background slightly - for every X rows
     class alternate_bg_color : column_formatter_base {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         // if <= 0, don't alternate. Otherwise, alternate every X rows
         private int row_count_ = 0;
         private string alternate_color_ = "";
@@ -24,6 +26,7 @@ namespace lw_common.ui.format.column_formatters {
             if (row_count_ < 1)
                 return;
             int per_row = cell.row_index / row_count_;
+            logger.Debug("row " + cell.row_index + " - " + cell.format_text.text);
 
             if (per_row % 2 == 1) {
                 Color dark = parse_color(alternate_color_, cell.bg_color); 

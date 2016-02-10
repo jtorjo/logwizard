@@ -21,12 +21,15 @@ namespace lw_common.ui.format {
             // ... so we know which items are old
             public int cache_index;
         }
-        private Dictionary< Tuple<int,string>, cache_data > cache_ = new Dictionary<Tuple<int, string>, cache_data>();
+        private Dictionary< Tuple<int,int>, cache_data > cache_ = new Dictionary<Tuple<int, int>, cache_data>();
 
         // when I reach this size, I clear half of it
         public int max_cache_size = 2048;
 
         private int next_cache_index_ = 0;
+
+        // just for testing - normally should always be true
+        public bool use_cache = true; //!util.is_debug;
 
         public formatted_text_cache(log_view parent, column_formatter_base.format_cell.location_type location) {
             parent_ = parent;
@@ -43,6 +46,9 @@ namespace lw_common.ui.format {
         }
 
         private bool can_cache(int col_idx) {
+            if (!use_cache)
+                return false;
+
             // 1.7.21 - for now, keep it easy - date/time can't be cached, because they user prev_text and top_idx to generate formatting
             switch ( log_view_cell.cell_idx_to_type(col_idx) ) {
             case info_type.date:
@@ -53,7 +59,7 @@ namespace lw_common.ui.format {
             return true;
         }
 
-        public formatted_text override_print(match_item i, string text, int col_idx) {
+        public formatted_text override_print(match_item i, string text, int row_idx, int col_idx) {
             if (!can_cache(col_idx))
                 return override_print_no_cache(i, text, col_idx);
 
@@ -62,7 +68,7 @@ namespace lw_common.ui.format {
             if (next_cache_index_ % 500 == 0)
                 dump_cache_info();
 
-            var key = new Tuple<int,string>(col_idx, text);
+            var key = new Tuple<int,int>(row_idx, col_idx);
             cache_data in_cache;
             if (cache_.TryGetValue(key, out in_cache)) {
                 in_cache.cache_index = ++next_cache_index_;

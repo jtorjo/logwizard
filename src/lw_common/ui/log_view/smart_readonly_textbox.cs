@@ -196,8 +196,7 @@ namespace lw_common.ui {
 
             match_item i = parent_.sel;
             ForeColor = i.fg(parent_);
-            BackColor = i.sel_bg(parent_);
-
+            BackColor = parent_.render.sel_bg_color();
             set_text(false);
             SelectionBackColor = BackColor;
             SelectionColor = ForeColor;
@@ -233,6 +232,8 @@ namespace lw_common.ui {
             ++ignore_change_;
             Multiline = txt.IndexOfAny(util.any_enter_char) >= 0;
             var prints = parent_.sel.override_print(parent_, txt, sel_col_, column_formatter_base.format_cell.location_type.smart_edit ).format_text.to_single_enter_char();
+            //var prints = parent_.sel.override_print(parent_, txt, sel_col_, column_formatter_base.format_cell.location_type.smart_edit ).format_text;
+            prints.bg = parent_.render.sel_bg_color();
             // ... text has changed
             txt = prints.text;
 
@@ -245,7 +246,7 @@ namespace lw_common.ui {
             foreach (var part in parts) {
                 Select(part.start, part.len);
                 SelectionColor = drawer_.print_fg_color(full_row, part);
-                SelectionBackColor = drawer_.print_bg_color(full_row, part);
+                SelectionBackColor = part.bg;
             }
 
             // ... safety net

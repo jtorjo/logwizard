@@ -73,6 +73,7 @@ namespace lw_common.ui {
 
         public virtual string view { get { return ""; }}
 
+#if old_code
         public Color sel_bg(log_view parent) {
             var bg = this.bg(parent);
 
@@ -87,8 +88,10 @@ namespace lw_common.ui {
             Color darker_bg = util.darker_color(dark_bg);
             var focus = win32.focused_ctrl();
             bool is_focused = focus == parent.list || focus == parent.edit;
-            return is_focused ? darker_bg : dark_bg;
+            bool is_single = parent.lv_parent.is_showing_single_view;
+            return is_focused && !is_single ? darker_bg : dark_bg;
         }
+#endif
 
 
         public virtual Color fg(log_view parent) {
