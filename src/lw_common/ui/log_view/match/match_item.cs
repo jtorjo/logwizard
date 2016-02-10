@@ -204,8 +204,11 @@ namespace lw_common.ui {
             if (row_idx > 0)
                 prev_text = log_view_cell.cell_value(parent.item_at(row_idx - 1), col_idx);
 
+            int sel_index = parent.sel_row_idx_ui_thread;
+            bool is_bokmark = parent.has_bookmark(line_idx);
+
             var cell = new column_formatter_base.format_cell(this, parent, col_idx, log_view_cell.cell_idx_to_type(col_idx), new formatted_text(text),
-                row_idx, top_row_idx, prev_text, location);
+                row_idx, top_row_idx, sel_index, is_bokmark, prev_text, location);
             parent.formatter.format_before(cell);
             var print = override_print_from_all_places(parent, cell.format_text.text, col_idx);
             cell.format_text.add_parts( print);

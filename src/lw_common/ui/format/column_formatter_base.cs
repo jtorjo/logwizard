@@ -25,6 +25,9 @@ namespace lw_common.ui.format {
             public readonly Color fg_color;
             public readonly Color bg_color;
 
+            public readonly int sel_index;
+            public readonly bool is_bookmark;
+
             public readonly int row_index;
             public readonly int top_row_index;
             // the text from the cell above (if any)
@@ -36,7 +39,7 @@ namespace lw_common.ui.format {
 
             public readonly location_type location;
 
-            public format_cell(match_item item, log_view parent, int col_idx, info_type col_type, formatted_text text, int row_index, int top_row_index, string prev_text, location_type location) {
+            public format_cell(match_item item, log_view parent, int col_idx, info_type col_type, formatted_text text, int row_index, int top_row_index, int sel_index, bool is_bookmark, string prev_text, location_type location) {
                 this.item = item;
                 this.parent = parent;
                 this.col_idx = col_idx;
@@ -46,6 +49,8 @@ namespace lw_common.ui.format {
                 this.top_row_index = top_row_index;
                 this.prev_text = prev_text;
                 this.location = location;
+                this.sel_index = sel_index;
+                this.is_bookmark = is_bookmark;
 
                 fg_color = item.fg(parent);
                 bg_color = item.bg(parent);

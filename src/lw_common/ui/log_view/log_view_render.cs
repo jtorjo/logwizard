@@ -125,7 +125,7 @@ namespace lw_common.ui {
 
             var col_idx = Column.fixed_index();
             var col_type = log_view_cell.cell_idx_to_type(col_idx);
-            drawer_.cached_sel = parent_.multi_sel_idx;
+            drawer_.cached_sel = parent_.multi_sel_idx_ui_thread;
             override_print_ = category_formatted( cache_.override_print(i, GetText(), ListItem.Index, col_idx), i, col_type);
             var text = override_print_.text;
 

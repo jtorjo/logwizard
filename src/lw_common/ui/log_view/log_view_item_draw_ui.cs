@@ -42,6 +42,7 @@ namespace lw_common.ui {
         public bool ignore_selection = false;
 
         // 1.7.21 asking for multi_sel_idx can get very expensive - we allow for caching
+        // 1.7.32 this might not be needed anymore (i optimized it - but did not profile it)
         public List<int> cached_sel = null; 
 
         public log_view_item_draw_ui(log_view parent) {
@@ -167,7 +168,7 @@ namespace lw_common.ui {
         }
 
         private List<int> parent_sel {
-            get { return cached_sel ?? parent_.multi_sel_idx; }
+            get { return cached_sel ?? parent_.multi_sel_idx_ui_thread; }
         } 
 
         private Color bg_color(OLVListItem item) {

@@ -858,8 +858,34 @@ namespace lw_common {
         }
 
 
+        // tries to find a an absolute file - whether it's a logwizard file or not
+        public static string absolute_logwizard_filename(string file) {
+            try {
+                if (!Path.IsPathRooted(file))
+                    file = util.personal_dir() + "LogWizard\\" + file;
 
+                if (File.Exists(file))
+                    return new FileInfo(file).FullName;
+            } catch {
+            }
+            return "";
+        }
 
+        public static Bitmap merge_images_horizontally(Image first, Image second) {
+            Debug.Assert(first != null && second != null);
+
+            int out_width = first.Width + second.Width;
+            int out_height = Math.Max(first.Height , second.Height);
+
+            Bitmap out_image = new Bitmap(out_width, out_height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            using (Graphics g = Graphics.FromImage(out_image)) {
+                g.DrawImage(first, new Rectangle(new Point(), first.Size), new Rectangle(new Point(), first.Size), GraphicsUnit.Pixel);
+                g.DrawImage(second, new Rectangle(new Point(first.Width, 0), second.Size), new Rectangle(new Point(), second.Size), GraphicsUnit.Pixel);
+            }
+
+            return out_image;
+        }
 
 
 

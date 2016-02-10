@@ -26,8 +26,6 @@ namespace lw_common.ui.format.column_formatters {
             if (row_count_ < 1)
                 return;
             int per_row = cell.row_index / row_count_;
-            logger.Debug("row " + cell.row_index + " - " + cell.format_text.text);
-
             if (per_row % 2 == 1) {
                 Color dark = parse_color(alternate_color_, cell.bg_color); 
                 cell.format_text.bg = dark;

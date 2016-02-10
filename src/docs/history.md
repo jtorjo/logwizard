@@ -1,7 +1,12 @@
 
+1.7.32
+- solved: #70 line : show the selection with an image (this will make things easier)
+  - added bookmarks as well
+
+
 1.7.31c
 - solved #54 - selection: don't double-dark it
-- categories: finally works, together with all other formatters
+- categories #69 : finally works, together with all other formatters
 
 
 1.7.31b

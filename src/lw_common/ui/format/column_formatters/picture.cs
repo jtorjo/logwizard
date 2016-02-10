@@ -37,11 +37,9 @@ namespace lw_common.ui.format.column_formatters {
                         string file = pic.Substring(sep + 2).Trim();
                         if (prefix == "" || file == "")
                             continue;
+                        file = util.absolute_logwizard_filename(file);
                         try {
-                            if (!Path.IsPathRooted(file))
-                                file = util.personal_dir() + "LogWizard\\" + file;
-
-                            if (File.Exists(file)) 
+                            if (file != "") 
                                 bmp = Image.FromFile(file);                            
                         } catch(Exception e) {                            
                             logger.Error("bad picture " + e.Message);

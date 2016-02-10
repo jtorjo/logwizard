@@ -284,7 +284,7 @@ namespace lw_common.ui {
         }
 
         private void append_copy_actions(List<action> actions) {
-            bool multi = parent_.multi_sel_idx.Count > 1;
+            bool multi = parent_.multi_sel_idx_ui_thread.Count > 1;
             actions.Add(new action { category = "Copy", name = "Selected Line" + (multi ? "s" : "") + " To Clipboard (Just Message)", simple = simple_action.copy_msg });
             actions.Add(new action { category = "Copy", name = "Selected Line" + (multi ? "s" : "") + " To Clipboard (Full Line)", simple = simple_action.copy_full_line });
         }
@@ -360,7 +360,7 @@ namespace lw_common.ui {
 
 
         public List<action> available_actions() {
-            var multi = parent_.multi_sel_idx;
+            var multi = parent_.multi_sel_idx_ui_thread;
             if (multi.Count == 0)
                 return available_actions_no_sel();
             else if (multi.Count > 1)

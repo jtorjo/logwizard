@@ -465,6 +465,23 @@ namespace lw_common.ui
             }
         }
 
+        // to be called only from the UI thread!!!
+        internal int sel_row_idx_ui_thread {
+            get {
+                int sel = list.SelectedIndex;
+                if (sel >= 0)
+                    return sel;
+                
+                ListView.SelectedIndexCollection multi = list.SelectedIndices;
+                if ( multi != null)
+                    if (multi.Count > 0)
+                        return multi[0];
+
+                return -1;
+            }
+        }
+
+
         public int top_row_idx {
             get { return visible_row_indexes().Item1; }
         }
@@ -473,7 +490,8 @@ namespace lw_common.ui
             get { return cur_col_; }
         }
 
-        public List<int> multi_sel_idx {
+        // to be called only from the UI thread!!!
+        internal List<int> multi_sel_idx_ui_thread {
             get {
                 List<int> sel = new List<int>();
                 var multi = list.SelectedIndices;
@@ -481,7 +499,7 @@ namespace lw_common.ui
                     for ( int i = 0; i < multi.Count; ++i)
                         sel.Add(multi[i]);
                 
-                var cur_row = sel_row_idx;
+                var cur_row = list.SelectedIndex;
                 if ( sel.Count == 0 && cur_row >= 0)
                     // in this case, a single selection
                     sel.Add(cur_row);

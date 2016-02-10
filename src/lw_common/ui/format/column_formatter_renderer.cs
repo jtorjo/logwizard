@@ -102,8 +102,11 @@ namespace lw_common.ui.format {
             if (row_idx > 0)
                 prev_text = log_view_cell.cell_value( list_.GetItem(row_idx - 1).RowObject as match_item , col_idx);
 
+            int sel_index = parent_.sel_row_idx_ui_thread;
+            bool is_bokmark = parent_.has_bookmark(i.line_idx);
+
             var cell = new column_formatter_base.format_cell(i, parent_, col_idx, log_view_cell.cell_idx_to_type(col_idx), new formatted_text(text),
-                row_idx, top_row_idx, prev_text, location);
+                row_idx, top_row_idx, sel_index, is_bokmark, prev_text, location);
             formatter_.format_before(cell);
             formatter_.format_after(cell);
             return cell.format_text;

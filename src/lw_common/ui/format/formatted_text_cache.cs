@@ -51,6 +51,9 @@ namespace lw_common.ui.format {
 
             // 1.7.21 - for now, keep it easy - date/time can't be cached, because they user prev_text and top_idx to generate formatting
             switch ( log_view_cell.cell_idx_to_type(col_idx) ) {
+                // 1.7.32 - can't cache line - we show selection/bookmark images
+            case info_type.line:
+
             case info_type.date:
             case info_type.time:
                 return false;
