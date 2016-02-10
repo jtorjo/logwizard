@@ -39,7 +39,6 @@ namespace lw_common.ui {
     public partial class search_form : Form {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const int MAX_PREVIEW_ROWS = 1000;
         // re-showing rows is VERY expensive - so, we want to allow just a few - the user will get it if he's got the right search or not
         private const int MAX_SHOW_ROWS = 20;
 
@@ -257,7 +256,7 @@ namespace lw_common.ui {
             if (sel < 0)
                 sel = 0;
             // get as many rows as possible, in both directions
-            int max_count = Math.Min(MAX_PREVIEW_ROWS, lv.item_count);
+            int max_count = Math.Min(app.inst.look_around_find, lv.item_count);
             int min = sel - max_count / 2, max = sel + max_count / 2;
             if (min < 0) {
                 max += -min;

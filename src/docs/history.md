@@ -1,4 +1,9 @@
 
+1.7.34
+- fixed #17 Look around - make it configurable
+- bookmark - don't show in any color
+
+
 1.7.33
 - made the current selection much lighter than before - so that it interferes least with rest of our coloring
 

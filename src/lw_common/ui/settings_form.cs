@@ -157,6 +157,10 @@ namespace lw_common.ui {
             associateExtensions.Checked = app.inst.associate_common_extensions;
             autoOpenLast.Checked = app.inst.auto_open_last_log;
             defaultColumnFormatting.Text = app.inst.default_column_format;
+
+            findPreviewLookAround.Text = "" + app.inst.look_around_find;
+            smartCompletionLookAround.Text = "" + app.inst.look_around_type_as_you_go;
+            editColumnFormattingLookAround.Text = "" + app.inst.look_around_edit_column_formatting;
         }
 
         private void save() {
@@ -244,6 +248,14 @@ namespace lw_common.ui {
             bool associate_change = app.inst.associate_common_extensions != associateExtensions.Checked;
             app.inst.associate_common_extensions = associateExtensions.Checked;
             app.inst.auto_open_last_log = autoOpenLast.Checked;
+
+            int val ;
+            if (int.TryParse(findPreviewLookAround.Text, out val))
+                app.inst.look_around_find = val;
+            if (int.TryParse(smartCompletionLookAround.Text, out val))
+                app.inst.look_around_type_as_you_go = val;
+            if (int.TryParse(editColumnFormattingLookAround.Text, out val))
+                app.inst.look_around_edit_column_formatting = val;
 
             app.inst.save();
             if (associate_change)

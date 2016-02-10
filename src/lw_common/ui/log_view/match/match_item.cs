@@ -97,9 +97,12 @@ namespace lw_common.ui {
         public virtual Color fg(log_view parent) {
             Color result;
 
+#if old_code
             if (parent.has_bookmark(base.line_idx))
                 result = parent.bookmark_fg;
-            else if (override_fg != util.transparent)
+            else 
+#endif
+            if (override_fg != util.transparent)
                 result = override_fg;
             else if (parent.filter.matches.binary_search(line_idx).Item2 < 0)
                 result = font_info.full_log_gray.fg;
@@ -113,9 +116,12 @@ namespace lw_common.ui {
 
         public virtual Color bg(log_view parent) {
             Color result;
+#if old_code
             if (parent.has_bookmark(base.line_idx))
                 result = parent.bookmark_bg;
-            else if (override_bg != util.transparent)
+            else 
+#endif
+            if (override_bg != util.transparent)
                 result = override_bg;
             else 
                 result = font.bg;

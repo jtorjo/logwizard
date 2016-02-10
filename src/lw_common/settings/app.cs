@@ -248,6 +248,15 @@ namespace lw_common {
         //          note: at this time, not settable via UI
         public double selection_dark_effect = 1.02;
 
+        // 1.7.34 - look around (find preview)
+        public int look_around_find = 1000;
+
+        // 1.7.34 - look around - type-as-you-go
+        public int look_around_type_as_you_go = 200;
+
+        // 1.7.34 - look around - column formatting
+        public int look_around_edit_column_formatting = 100;
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // file-by-file
         public bool bring_to_top_on_restart = false;
@@ -464,6 +473,10 @@ namespace lw_common {
             load_save(load, ref associate_common_extensions, "associate_common_extensions", false);
             load_save(load, ref auto_open_last_log, "auto_open_last_log", true);
             load_save(load, ref default_column_format, "default_column_format", DEFAULT_COLUMN_SYNTAX);
+
+            load_save(load, ref look_around_find, "look_around_find", 1000);
+            load_save(load, ref look_around_type_as_you_go, "look_around_type_as_you_go", 200);
+            load_save(load, ref look_around_edit_column_formatting, "look_around_edit_column_formatting", 100);
         }
 
         private string initials(string name) {

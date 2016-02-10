@@ -13,8 +13,6 @@ using lw_common.ui.format;
 namespace lw_common.ui {
     public partial class edit_column_formatters_form : Form {
 
-        private const int MAX_PREVIEW_ROWS = 100;
-
         private log_view lv_;
         private column_formatter_renderer render_ ;
 
@@ -63,7 +61,7 @@ namespace lw_common.ui {
             if (sel < 0)
                 sel = 0;
             // get as many rows as possible, in both directions
-            int max_count = Math.Min(MAX_PREVIEW_ROWS, lv_.item_count);
+            int max_count = Math.Min(app.inst.look_around_edit_column_formatting, lv_.item_count);
             int min = sel - max_count / 2, max = sel + max_count / 2;
             if (min < 0) {
                 max += -min;

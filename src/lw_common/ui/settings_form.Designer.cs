@@ -126,6 +126,16 @@
             this.fileToSyntax = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.findPreviewLookAround = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.smartCompletionLookAround = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.editColumnFormattingLookAround = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -147,6 +157,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.fileToContext)).BeginInit();
             this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).BeginInit();
+            this.groupBox11.SuspendLayout();
             this.SuspendLayout();
             // 
             // fontLabel
@@ -559,6 +570,7 @@
             // 
             // tabPage8
             // 
+            this.tabPage8.Controls.Add(this.groupBox11);
             this.tabPage8.Controls.Add(this.groupBox1);
             this.tabPage8.Controls.Add(this.groupBox9);
             this.tabPage8.Location = new System.Drawing.Point(4, 25);
@@ -577,7 +589,7 @@
             this.groupBox1.Controls.Add(this.viewLineCount);
             this.groupBox1.Location = new System.Drawing.Point(6, 237);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(654, 141);
+            this.groupBox1.Size = new System.Drawing.Size(654, 80);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Views";
@@ -585,7 +597,7 @@
             // viewLine
             // 
             this.viewLine.AutoSize = true;
-            this.viewLine.Location = new System.Drawing.Point(16, 99);
+            this.viewLine.Location = new System.Drawing.Point(396, 45);
             this.viewLine.Name = "viewLine";
             this.viewLine.Size = new System.Drawing.Size(226, 21);
             this.viewLine.TabIndex = 3;
@@ -604,7 +616,7 @@
             // viewIndex
             // 
             this.viewIndex.AutoSize = true;
-            this.viewIndex.Location = new System.Drawing.Point(16, 72);
+            this.viewIndex.Location = new System.Drawing.Point(196, 45);
             this.viewIndex.Name = "viewIndex";
             this.viewIndex.Size = new System.Drawing.Size(194, 21);
             this.viewIndex.TabIndex = 1;
@@ -1265,6 +1277,99 @@
             this.olvColumn2.FillsFreeSpace = true;
             this.olvColumn2.Text = "Syntax";
             // 
+            // groupBox11
+            // 
+            this.groupBox11.Controls.Add(this.label30);
+            this.groupBox11.Controls.Add(this.editColumnFormattingLookAround);
+            this.groupBox11.Controls.Add(this.label32);
+            this.groupBox11.Controls.Add(this.label29);
+            this.groupBox11.Controls.Add(this.smartCompletionLookAround);
+            this.groupBox11.Controls.Add(this.label26);
+            this.groupBox11.Controls.Add(this.label24);
+            this.groupBox11.Controls.Add(this.findPreviewLookAround);
+            this.groupBox11.Controls.Add(this.label13);
+            this.groupBox11.Location = new System.Drawing.Point(6, 323);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(654, 107);
+            this.groupBox11.TabIndex = 9;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Look Around (Preview)";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(13, 25);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(176, 17);
+            this.label13.TabIndex = 0;
+            this.label13.Text = "Find Preview. Look around";
+            // 
+            // findPreviewLookAround
+            // 
+            this.findPreviewLookAround.Location = new System.Drawing.Point(271, 20);
+            this.findPreviewLookAround.Name = "findPreviewLookAround";
+            this.findPreviewLookAround.Size = new System.Drawing.Size(100, 23);
+            this.findPreviewLookAround.TabIndex = 1;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(377, 23);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(188, 17);
+            this.label24.TabIndex = 2;
+            this.label24.Text = "rows (half above, half below)";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(13, 52);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(207, 17);
+            this.label26.TabIndex = 3;
+            this.label26.Text = "Smart Completion. Look around";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(377, 52);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(188, 17);
+            this.label29.TabIndex = 5;
+            this.label29.Text = "rows (half above, half below)";
+            // 
+            // smartCompletionLookAround
+            // 
+            this.smartCompletionLookAround.Location = new System.Drawing.Point(271, 49);
+            this.smartCompletionLookAround.Name = "smartCompletionLookAround";
+            this.smartCompletionLookAround.Size = new System.Drawing.Size(100, 23);
+            this.smartCompletionLookAround.TabIndex = 4;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(377, 82);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(188, 17);
+            this.label30.TabIndex = 8;
+            this.label30.Text = "rows (half above, half below)";
+            // 
+            // editColumnFormattingLookAround
+            // 
+            this.editColumnFormattingLookAround.Location = new System.Drawing.Point(271, 79);
+            this.editColumnFormattingLookAround.Name = "editColumnFormattingLookAround";
+            this.editColumnFormattingLookAround.Size = new System.Drawing.Size(100, 23);
+            this.editColumnFormattingLookAround.TabIndex = 7;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(13, 82);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(242, 17);
+            this.label32.TabIndex = 6;
+            this.label32.Text = "Edit Column Formatting. Look around";
+            // 
             // settings_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1314,6 +1419,8 @@
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileToSyntax)).EndInit();
+            this.groupBox11.ResumeLayout(false);
+            this.groupBox11.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1421,6 +1528,16 @@
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.LinkLabel formatHelp;
         private System.Windows.Forms.TextBox defaultColumnFormatting;
+        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox editColumnFormattingLookAround;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.TextBox smartCompletionLookAround;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox findPreviewLookAround;
+        private System.Windows.Forms.Label label13;
 
     }
 }

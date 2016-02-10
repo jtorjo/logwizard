@@ -47,9 +47,6 @@ namespace lw_common.ui
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        // how many rows to search ahead (smart search)
-        private const int SEARCH_AROUND_ROWS = 100;
-
         public const string FULLLOG_NAME = "__all_this_is_fulllog__";
         // 1.6.13+ for settings - this contains the settings for all views
         public const string ALL_VIEWS = "__all_views__";
@@ -768,6 +765,7 @@ namespace lw_common.ui
             get { return right_click_; }
         }
 
+#if old_code
         internal Color bookmark_fg {
             get { return app.inst.bookmark_fg; }
         }
@@ -775,6 +773,7 @@ namespace lw_common.ui
         internal Color bookmark_bg {
             get { return app.inst.bookmark_bg; }
         }
+#endif
 
 
         // while this is true, has anything_changed always returns false (basically, we want this during loading,
@@ -1620,9 +1619,8 @@ namespace lw_common.ui
                         char_idx = 0;
                 }
 
-                if ( char_idx >= 0 && char_idx < text.Length)
+                if ( char_idx >= 0 && char_idx < cell.format_text. text.Length)
                     tooltip = formatter.get_tooltip(cell, char_idx);
-                //logger.Debug("getting tooltip for " + row_idx + "," + col_idx + "," + char_idx);
             }
 
             if (tooltip != "")
@@ -2494,8 +2492,8 @@ namespace lw_common.ui
             Debug.Assert(txt == txt.ToLower());
 
             int count = item_count;
-            int max = Math.Min(sel_row_idx + SEARCH_AROUND_ROWS, count);
-            int min = Math.Max(sel_row_idx - SEARCH_AROUND_ROWS, 0);
+            int max = Math.Min(sel_row_idx + app.inst.look_around_type_as_you_go / 2, count);
+            int min = Math.Max(sel_row_idx - app.inst.look_around_type_as_you_go / 2, 0);
 
             // note: even if we search all columns, we first search ahead/before for the selected column - then, the rest
             int found_row = -1;
