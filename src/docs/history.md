@@ -1,4 +1,15 @@
 
+1.7.37
+- fix: showing all lines (ctrl-alt-l), then going back to just view (ctrl-alt-l) which shows just a single view while real-time
+       new lines are shown incorrectly (because I had cached them)
+- test logwizard on TN2 - while it starts/runs - works as expected
+- retest on event log -> see i don't show date by default
+- fix: #67 retest samples on clean config
+	
+
+1.7.36
+- added selection + bookmark icons by default
+
 
 1.7.35
 - fixed #42 - syntax not working

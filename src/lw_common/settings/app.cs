@@ -468,7 +468,8 @@ namespace lw_common {
 
             load_save(load, ref has_shown_details_pane, "has_shown_details_pane", false);
             load_save(load, ref show_horizontal_scrollbar, "show_horizontal_scrollbar", false);
-            load_save(load, ref edit_click_word_selects_it, "edit_click_word_selects_it", true);
+            // 1.7.37+ - by default turned off - usually you don't want it
+            load_save(load, ref edit_click_word_selects_it, "edit_click_word_selects_it", false);
 
             load_save(load, ref associate_common_extensions, "associate_common_extensions", false);
             load_save(load, ref auto_open_last_log, "auto_open_last_log", true);

@@ -990,6 +990,8 @@ default_column_format=[line]
 	cell
 	format=courier new/#800000/#F0F0F0
 	align=right
+	selection=icons\arrow4.png
+	bookmark=icons\bookmark8.png
 	
 	[all]
 	format
@@ -1046,7 +1048,11 @@ file_to_syntax.4.key=logging started: |Calling process: |msiexec.exe ===
 file_to_syntax.4.value=$ctx1['MSI (',') '] $ctx2['(',')'] $time['[',']: ']  $msg
 file_to_syntax.5.key=[System] PokerTracker v
 file_to_syntax.5.value=$date[0,' '] $time['',' '] $ctx1['[',']:'] $ctx2['[',']'] $ctx3['[','] '] $msg
-file_to_syntax.count=6
+file_to_syntax.6.key=Welcome to TableNinja!
+file_to_syntax.6.value=$time[0,12] $thread[13,10] $level[24,5] $class[' ','- '] $msg
+file_to_syntax.7.key=Started LogWizard v
+file_to_syntax.7.value=$file[0,': '] $time['',' '] $thread['',11] $level['',' - '] $msg
+file_to_syntax.count=8
 default_font_names=Consolas,Courier New,Terminal,Monoid,Tahoma,Arial
 forced_file_to_context.count=0
 identify_notes_files=0

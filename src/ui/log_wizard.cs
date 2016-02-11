@@ -693,7 +693,7 @@ namespace LogWizard
                         return context_from_header;
                 }
                 // 1.1.25+ - match the context that matches the name completely
-                string name_no_ext = Path.GetFileNameWithoutExtension(new FileInfo(file).Name);
+                string name_no_ext = util.filename_no_ext(file);
                 var found = contexts_.FirstOrDefault(x => x.name == name_no_ext);
                 if (found != null)
                     return found;

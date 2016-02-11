@@ -1423,5 +1423,20 @@ namespace lw_common {
             int seconds = DateTime.Now.Second % max_dots;
             return new string('.', seconds);
         }
+
+        // ignores the FULL extension
+        // note : GetFileNameWithoutExtension ignores only the last extension, so that "a.b.c" returns "a.b", we want to return "a"
+        public static string filename_no_ext(string file) {
+            string name_no_ext = Path.GetFileNameWithoutExtension(new FileInfo(file).Name);
+            while (true) {
+                int last_ext = name_no_ext.LastIndexOf('.');
+                int last_dir = name_no_ext.LastIndexOfAny(new[] {'\\', '/'});
+                if (last_ext > last_dir)
+                    name_no_ext = name_no_ext.Substring(0, last_ext);
+                else
+                    break;
+            }
+            return name_no_ext;
+        }
     }
 }

@@ -648,6 +648,8 @@ namespace lw_common.ui
             if (model_.filter_view == filter_view && model_.show_full_log == show_full_log)
                 // nothing changed
                 return;
+            // 1.7.37+ - when items are re-computed, clear cache
+            render_.clear_format_cache("changed filter view/full-log");
 
             // until we finish running the filter, don't allow any more toggling
             Enabled = false;

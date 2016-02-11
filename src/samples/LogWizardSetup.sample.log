@@ -33,7 +33,7 @@
 11:06:12,939 main       INFO  wizard_intro - In order to create views for your log, you will set different filters. 
 11:06:12,939 main       INFO  wizard_intro - If a filter matches a line in the log, that line will be shown.
 11:06:12,939 main       INFO  wizard_intro - 
-11:06:12,939 main       INFO  wizard_intro - For now, press "Ctrl-RightArrow", to move to the next view.
+11:06:12,939 main       INFO  wizard_intro - For now, press "Ctrl-Tab", to move to the next view.
 11:06:12,939 main       INFO  wi2a - 
 11:06:12,939 main       INFO  wi2a - Dealing with Filters.
 11:06:12,939 main       INFO  wi2a - 
@@ -66,12 +66,12 @@
 11:06:12,939 main       INFO  wi2b - important to you)
 11:06:12,939 main       INFO  wi2b - 
 11:06:12,939 main       INFO  wi2b - 
-11:06:12,939 main       INFO  wi2b - Now, press "Ctrl-RightArrow" to move to the next view.
+11:06:12,939 main       INFO  wi2b - Now, press "Ctrl-Tab" to move to the next view.
 11:06:12,939 main       INFO  wi3 - 
 11:06:12,939 main       INFO  wi3 - Several Views of the same log file
 11:06:12,939 main       INFO  wi3 - 
 11:06:12,939 main       INFO  wi3 - This is the main pane, that is always visible. Going between views is extremly easy:
-11:06:12,939 main       INFO  wi3 - just use Ctrl-RightArrow or Ctrl-LeftArrow.
+11:06:12,939 main       INFO  wi3 - just use Ctrl-Tab or Ctrl-LeftArrow.
 11:06:12,939 main       INFO  wi3 - 
 11:06:12,939 main       INFO  wi3 - To create a new view, just use '+' on the rightmost of all views. This will let you choose to either create a
 11:06:12,939 main       INFO  wi3 - copy of the existing view (thus allowing you to further customize it), or to start a new view from scratch.
@@ -90,7 +90,7 @@
 11:06:12,939 main       INFO  wi3 - 
 11:06:12,939 main       INFO  wi3 - Toggling the panes (Source Pane/Full Log) is also possible via the "Toggles" button.
 11:06:12,939 main       INFO  wi3 - 
-11:06:12,939 main       INFO  wi3 - Now, press "Ctrl-RightArrow" to move to the next view.
+11:06:12,939 main       INFO  wi3 - Now, press "Ctrl-Tab" to move to the next view.
 11:06:12,939 main       INFO  wi4 - 
 11:06:12,939 main       INFO  wi4 - The "Source Pane" (Advanced)
 11:06:12,939 main       INFO  wi4 - 
@@ -106,7 +106,7 @@
 11:06:12,939 main       INFO  wi4 - More info about Templates: http://www.codeproject.com/Articles/1023815/LogWizard-Log-Viewing-Made-Easy#LogWizardTemplates%28Advanced%2912
 11:06:12,939 main       INFO  wi4 - 
 11:06:12,939 main       INFO  wi4 - 
-11:06:12,939 main       INFO  wi4 - Now, press "Ctrl-RightArrow" to move to the next view.
+11:06:12,939 main       INFO  wi4 - Now, press "Ctrl-Tab" to move to the next view.
 11:06:12,939 main       INFO  wi5 - 
 11:06:12,939 main       INFO  wi5 - Hotkeys 
 11:06:12,939 main       INFO  wi5 - 
