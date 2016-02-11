@@ -29,7 +29,7 @@ namespace lw_common.ui.format {
         private int next_cache_index_ = 0;
 
         // just for testing - normally should always be true
-        public bool use_cache = true; //!util.is_debug;
+        public bool use_cache = !util.is_debug;
 
         public formatted_text_cache(log_view parent, column_formatter_base.format_cell.location_type location) {
             parent_ = parent;

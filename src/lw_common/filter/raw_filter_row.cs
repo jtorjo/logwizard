@@ -174,7 +174,7 @@ namespace lw_common {
             enabled_ = other.enabled;
             dimmed_ = other.dimmed_;
 
-            font_ = font_info.default_font_copy;
+            font_ = font_info.default_font.copy();
             update_font();
         }
 
@@ -202,7 +202,7 @@ namespace lw_common {
                 }
             }
             unique_id_ += "" + apply_to_existing_lines;
-            font_ = font_info.default_font_copy;
+            font_ = font_info.default_font.copy();
             init(lines, additions);
 
             if (items_.Count < 1)

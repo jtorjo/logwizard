@@ -66,6 +66,12 @@ namespace lw_common {
             match_bg = other.match_bg;
         }
 
+        public font_info copy() {
+            var new_ = new font_info();
+            new_.copy_from(this);
+            return new_;
+        }
+
         public void merge(font_info other) {
             if (fg == util.transparent)
                 fg = other.fg;
@@ -94,14 +100,6 @@ namespace lw_common {
 
         public static font_info default_font {
             get { return default_font_; }
-        }
-
-        public static font_info default_font_copy {
-            get {
-                font_info new_ = new font_info();
-                new_.copy_from(default_font_);
-                return new_;
-            }
         }
 
         public static font_info full_log_gray {

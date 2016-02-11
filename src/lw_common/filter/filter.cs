@@ -242,7 +242,7 @@ namespace lw_common {
         public filter(create_match_func creator) {
             create_match = creator;
 
-            var empty_match = new_match(new BitArray(0), line.empty_line(), -1, font_info.default_font_copy);
+            var empty_match = new_match(new BitArray(0), line.empty_line(), -1, font_info.default_font.copy());
             matches_ = new match_list(empty_match);
         }
 
@@ -624,7 +624,7 @@ namespace lw_common {
                         }
 
                     if (any_match) {
-                        font_info font = existing_filter_font ?? font_info.default_font_copy;
+                        font_info font = (existing_filter_font ?? font_info.default_font).copy();
 
                         int enabled_idx = -1;
                         for (int filter_idx = 0; filter_idx < matches.Length && enabled_idx < 0; ++filter_idx)

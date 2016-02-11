@@ -1,4 +1,10 @@
 
+1.7.38
+- fixed bug: sometimes we would show the wrong line color for rows
+  because we could end up using a line's existing font (not its copy), thus we could end up modifying it, and all references to that font
+  would then point to the changed font
+
+
 1.7.37
 - fix: showing all lines (ctrl-alt-l), then going back to just view (ctrl-alt-l) which shows just a single view while real-time
        new lines are shown incorrectly (because I had cached them)
