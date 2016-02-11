@@ -1,4 +1,10 @@
 
+
+1.7.35
+- fixed #42 - syntax not working
+- fixed #73 - by default, I should not show Date column
+
+
 1.7.34
 - fixed #17 Look around - make it configurable
 - bookmark - don't show in any color

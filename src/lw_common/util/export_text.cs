@@ -111,12 +111,6 @@ namespace lw_common {
                 if (ch == '"') 
                     sb.Append("\\\"");                 
                 // apparently, that's how most programs parse csv - they can span over several lines
-#if old_code
-                else if (ch == '\n') 
-                    sb.Append("\\n");
-                else if (ch == '\r') 
-                    sb.Append("\\r");
-#endif
                 else
                     sb.Append(ch);
             }

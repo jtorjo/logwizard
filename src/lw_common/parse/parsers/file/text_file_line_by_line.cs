@@ -307,6 +307,8 @@ namespace lw_common.parse.parsers {
                 // invalid syntax
                 return new Tuple<int, string>(-1,null);
 
+            // 1.7.35 - allow spaces in between
+            syntax = syntax.Trim();
             if (Char.IsDigit(syntax[0])) {
                 int end = 1;
                 while (Char.IsDigit(syntax[end]) && end < syntax.Length)

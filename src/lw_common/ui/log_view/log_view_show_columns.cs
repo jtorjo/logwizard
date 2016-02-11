@@ -177,7 +177,8 @@ namespace lw_common.ui {
             Debug.Assert( !full_log.use_previous_available_columns_ );
 
             var available = full_log.available_columns.OrderBy(x => -info_type_io.show_in_view_by_default(x) ).ToList();
-            if (available.Count <= MAX_DEFAULT_VIEW_COLUMNS)
+            bool has_date_column = available.Contains(info_type.date);
+            if (available.Count <= MAX_DEFAULT_VIEW_COLUMNS && !has_date_column)
                 // we're fine
                 return;
 
@@ -185,6 +186,8 @@ namespace lw_common.ui {
             full_log.list.SuspendLayout();
 
             var to_erase = available.GetRange(MAX_DEFAULT_VIEW_COLUMNS, available.Count - MAX_DEFAULT_VIEW_COLUMNS);
+            if ( has_date_column && !to_erase.Contains(info_type.date))
+                to_erase.Add(info_type.date);
             foreach ( var col_type in to_erase)
                 show_column( log_view_cell.column(full_log, col_type), DEFAULT_COL_WIDTH, false );
 

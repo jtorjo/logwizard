@@ -83,7 +83,6 @@ namespace lw_common {
 
             case info_type.time:    return 90;
             case info_type.level:   return 89;
-            case info_type.date:    return 88;
 
             case info_type.thread:  return 87;
 
@@ -107,6 +106,9 @@ namespace lw_common {
             case info_type.ctx13:   return 48;
             case info_type.ctx14:   return 47;
             case info_type.ctx15:   return 46;
+
+            // 1.7.35+ the idea is that time column should contain everything
+            case info_type.date:    return 40;
 
             case info_type.max:     return -1;
             default:

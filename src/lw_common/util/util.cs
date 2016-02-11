@@ -465,16 +465,39 @@ namespace lw_common {
                     int y_idx = cult_pattern.IndexOf('y');
                     int m_idx = cult_pattern.IndexOf('m');
                     int d_idx = cult_pattern.IndexOf('d');
-                    var indexes =
-                        new Tuple<int, string>[] {new Tuple<int, string>(m_idx, "m"), new Tuple<int, string>(d_idx, "d"), new Tuple<int, string>(y_idx, "y"),}
-                            .ToList();
-                    indexes = indexes.OrderBy(x => x.Item1).ToList();
-
-                    int y = indexes.FindIndex(x => x.Item2 == "y");
-                    int m = indexes.FindIndex(x => x.Item2 == "m");
-                    int d = indexes.FindIndex(x => x.Item2 == "d");
-
+                    int y = 0, m = 0, d = 0;
                     var ymd = date_str.Split(date_str[separator]).Select(int.Parse).ToList();
+                    bool know_ymd = false;
+                    if (date_str.Length == 10) {
+                        // we have exactly 10 chars - at this point, we know for sure the year is written in 4 digits
+                        // we ASSUME the year is either at the beginning, or at the end
+                        //      if year is first, we assume it's YYYY/MM/DD
+                        //      if year is last, we take the MM to DD position from the current culture
+                        bool year_is_first = ymd[0] > 100;
+                        // if the current culture is "year-first", use that
+                        bool try_guess = !year_is_first || (year_is_first && !cult_pattern.StartsWith("yyyy"));
+                        if (try_guess) {
+                            know_ymd = true;
+                            if (year_is_first) {
+                                y = 0;
+                                m = 1;
+                                d = 2;
+                            } else {
+                                y = 2;
+                                m = (m_idx < d_idx) ? 0 : 1;
+                                d = m == 1 ? 0 : 1;
+                            }
+                        }
+                    } 
+
+                    if (!know_ymd) {
+                        var indexes = new[] {new Tuple<int, string>(m_idx, "m"), new Tuple<int, string>(d_idx, "d"), new Tuple<int, string>(y_idx, "y"),}.ToList();
+                        indexes = indexes.OrderBy(x => x.Item1).ToList();
+                        y = indexes.FindIndex(x => x.Item2 == "y");
+                        m = indexes.FindIndex(x => x.Item2 == "m");
+                        d = indexes.FindIndex(x => x.Item2 == "d");                        
+                    }
+
                     return new DateTime(ymd[y], ymd[m], ymd[d]);
                 } catch {
                 }
