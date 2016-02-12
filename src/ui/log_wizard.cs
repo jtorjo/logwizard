@@ -2488,7 +2488,7 @@ namespace LogWizard
             case "ctrl-alt-l":
                 return action_type.toggle_show_full_log;
 
-            case "ctrl-alt-b":
+            case "ctrl-shift-b":
                 return action_type.toggle_number_base;
             case "ctrl-shift-a":
                 return action_type.toggle_abbreviation;

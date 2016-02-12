@@ -17,7 +17,7 @@ namespace lw_common.ui {
             "Do you have columns that are multi-line? Just toggle the 'Details' pane on! <b>(Ctrl-D)</b>.\r\n." +
             "You can also edit which columns you want in the 'Details' pane - just right click it.",
             "Wanna open the Last Log? Do <b>Ctrl-H, Enter</b>!",
-            "Want Pretty Formatting? Right click on Any column header, and select 'Edit Custom Formatting'. Here's a bit of <a https://github.com/jtorjo/logwizard/wiki/Formatters>help</a>",
+            "Want Pretty Formatting? Right click on Any column header, and select 'Edit Column Formatting'. Here's a bit of <a https://github.com/jtorjo/logwizard/wiki/Formatters>help</a>",
             "Want to take Formatting to the next level? Try <a https://github.com/jtorjo/logwizard/wiki/Categories>Categories</a>!",
         };
 
@@ -53,7 +53,7 @@ namespace lw_common.ui {
             "You can open a new LogWizard window at any time by doing <i>Actions >> New LogWizard Window</i> or <b>Ctrl-N</b>.\r\n" +
             "Just open any Log in the newly opened Window. You can even access the History (Ctrl-H), as you normally would.",
             "Don't know what to do? Try some samples! (<i>Actions >> Open Log Samples</i>)",
-            "Want Pretty Formatting? Right click on Any column header, and select 'Edit Custom Formatting'. Here's a bit of <a https://github.com/jtorjo/logwizard/wiki/Formatters>help</a>",
+            "Want Pretty Formatting? Right click on Any column header, and select 'Edit Column Formatting'. Here's a bit of <a https://github.com/jtorjo/logwizard/wiki/Formatters>help</a>",
             "Want to take Formatting to the next level? Try <a https://github.com/jtorjo/logwizard/wiki/Categories>Categories</a>!",
         };
 

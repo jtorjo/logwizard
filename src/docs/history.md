@@ -1,4 +1,9 @@
 
+1.8.1
+- to release to public
+- ctrl-shift-b for changing number base (to be consistent with ctrl-shift-a)
+
+
 1.7.41
 - added samples to menu (Open Log Sample)
 - added tips
