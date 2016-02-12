@@ -1,4 +1,11 @@
 
+1.7.41
+- added samples to menu (Open Log Sample)
+- added tips
+- while loading categories -> hide the list + show "Loading"
+- improved category colors
+
+
 1.7.38
 - fixed bug: sometimes we would show the wrong line color for rows
   because we could end up using a line's existing font (not its copy), thus we could end up modifying it, and all references to that font

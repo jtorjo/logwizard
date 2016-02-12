@@ -3877,6 +3877,18 @@ namespace LogWizard
                         view.toggle_abbreviation();
         }
 
+        private void defaultSampleToolStripMenuItem_Click(object sender, EventArgs e) {
+            on_file_drop(util.personal_dir() + "LogWizard\\samples\\LogWizardSetup.sample.log");
+        }
+
+        private void bigLogToolStripMenuItem_Click(object sender, EventArgs e) {
+            on_file_drop(util.personal_dir() + "LogWizard\\samples\\uk_small.sample.log");
+        }
+
+        private void smallSampleLogToolStripMenuItem_Click(object sender, EventArgs e) {
+            on_file_drop(util.personal_dir() + "LogWizard\\samples\\LogWizard.sample.log");
+        }
+
     }
 
 }

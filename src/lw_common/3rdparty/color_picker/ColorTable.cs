@@ -10,8 +10,13 @@ using System.Reflection;
 
 namespace ColorPicker
 {
-	public class ColorTable : LabelRotate
-	{
+	public class ColorTable : LabelRotate {
+	    public static bool copy_color_to_clipboard = false;
+
+        private static string color_to_str(Color c) {
+            return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+        }
+
 		public event EventHandler SelectedIndexChanged;
 		public Color SelectedItem
 		{
@@ -28,6 +33,7 @@ namespace ColorPicker
 				int index = m_colors.IndexOf(value);
 				if (index < 0)
 					return;
+
 				SetIndex(index);
 			}
 		}
@@ -204,6 +210,11 @@ namespace ColorPicker
 		{
 			if (index == m_selindex)
 				return;
+
+			if (copy_color_to_clipboard && index >= 0 && index < m_colors.Count) 
+                // 1.7.41+ for easy testing
+			    Clipboard.SetText("\"" + color_to_str(m_colors[index]) + "\", ");
+
 			Invalidate(GetSelectedItemRect());
 			m_selindex = index;
 			if (SelectedIndexChanged != null)

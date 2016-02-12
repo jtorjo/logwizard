@@ -14,9 +14,15 @@ namespace lw_common.ui {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static string[] default_color_names_ = {
+                                                           /*
             "red", "blue", "green", "brown", "yellow", "cyan", "pink", "violet", "orange", "coral",
             "darkred", "darkblue", "darkgreen", "darkbrown", "darkyellow", "darkcyan", "darkpink", "darkviolet", "darkorange", "darkcoral",
             "lightred", "lightblue", "lightgreen", "lightbrown", "lightyellow", "lightcyan", "lightpink", "lightviolet", "lightorange", "lightcoral",
+                                                           */
+            "#FF0000", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#FF00FF", "#FF7F00", "#BF00FF", "#009FFF", "#005FFF", 
+            "#6FBF3F", "#BF4F3F", "#9FBF3F", "#BF9F3F", "#3FBF4F", "#3F6FBF", "#3FBF8F", "#7F00FF", "#BF3F4F", "#999999", 
+            "#1E1E1E", "#3FBF3F", "#BFBF3F", "#BF3F4F", "#DF00FF", 
+
         };
 
         private class item {
@@ -174,6 +180,9 @@ namespace lw_common.ui {
             // at this point, we wait to be notified of the possible categories
             categories.Items.Clear();
             set_error("");
+            categories.Visible = false;
+            errorStatus.Text = "Loading... Please wait...";
+            errorStatus.Visible = true;
         }
 
         public void set_error(string err) {
@@ -280,9 +289,13 @@ namespace lw_common.ui {
             if (categoryTypes.DroppedDown)
                 return;
 
-            if (categoryTypes.SelectedIndex >= 0)
-                util.postpone(() => 
-                    on_change_category_type( categoryTypes.Items[categoryTypes.SelectedIndex].ToString()), 1);
+            if (categoryTypes.SelectedIndex >= 0) {
+                categories.Visible = false;
+                errorStatus.Text = "Loading... Please wait...";
+                errorStatus.Visible = true;
+                util.postpone(() =>
+                    on_change_category_type(categoryTypes.Items[categoryTypes.SelectedIndex].ToString()), 1);
+            }
         }
 
         private void categories_FormatCell(object sender, BrightIdeasSoftware.FormatCellEventArgs e) {

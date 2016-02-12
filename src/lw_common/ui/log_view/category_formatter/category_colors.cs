@@ -33,10 +33,12 @@ namespace lw_common.ui {
         }
 
         private static Color same_category_color(Color bg) {
-            return util.color_luminance(bg, 0.96) ;
+            return util.color_luminance(bg, 0.98) ;
+            //return util.color_luminance(bg, 0.96) ;
         }
         private static Color this_category_color(Color bg) {
-            return util.color_luminance(bg, 0.9) ;
+            return util.color_luminance(bg, 0.95) ;
+            //return util.color_luminance(bg, 0.9) ;
         }
 
         public Color same_category_bg {

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ColorPicker;
 using lw_common;
 using lw_common.ui;
 
@@ -14,6 +15,9 @@ namespace test_ui {
     public partial class test_categories_ctrl : Form {
         public test_categories_ctrl() {
             InitializeComponent();
+
+            ColorTable.copy_color_to_clipboard = true;
+
             categories.on_change_category_type += On_change_category_type;
             categories.set_category_types( new List<string>() { "thread", "level", "date", "err1", "err2" }, "thread" );
             categories.on_category_colors_change += On_category_colors_change;
