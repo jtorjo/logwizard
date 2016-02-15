@@ -50,7 +50,8 @@ namespace lw_common {
                 if (idx >= 0) {
                     string name = line.Substring(0, idx);
                     string value = line.Substring(idx + 1);
-                    sett_.Add(name, value);
+                    if (!sett_.ContainsKey(name))
+                        sett_.Add(name, value);
                 } else {
                     logger.Warn("invalid settings_as_string_readonly line, ignoring " + line);
                 }

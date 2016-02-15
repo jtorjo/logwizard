@@ -1110,6 +1110,7 @@ namespace lw_common.ui
             switch (change) {
             case filter.change_type.new_lines:
             case filter.change_type.changed_filter:
+                // ... so that we're showing the new lines instantly
                 this.async_call(refresh);
                 break;
 
@@ -1124,6 +1125,7 @@ namespace lw_common.ui
         }
 
         public void clear() {
+            render_.clear_format_cache("file rewritten");
             filter_.clear();
             refresh();
         }

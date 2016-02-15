@@ -1,4 +1,7 @@
 
+1.8.2
+- small fixes
+
 1.8.1
 - to release to public
 - ctrl-shift-b for changing number base (to be consistent with ctrl-shift-a)

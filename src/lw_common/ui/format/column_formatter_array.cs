@@ -37,6 +37,8 @@ namespace lw_common.ui.format {
 
     */
     public class column_formatter_array {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private class formatter {
             // ... such as "all", "time", "msg", "ctx1", etc.
             public string column_type = "";
@@ -204,7 +206,12 @@ namespace lw_common.ui.format {
             }
             // load_syntax
             if (result != null)
-                result.load_syntax(new settings_as_string(syntax), ref error);
+                try {
+                    result.load_syntax(new settings_as_string(syntax), ref error);
+                } catch (Exception e) {
+                    logger.Error("can't load formatter " + e.Message);
+                    error = "Cannot load " + name + ". Invalid syntax";
+                }
             return result;
         }
 
