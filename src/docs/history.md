@@ -1,5 +1,5 @@
 
-1.8.4
+1.8.5
 - fixed #78 Syntax not working with pipe symbol separators 
 - added "If line starts with tab, assume from previous line" log setting (for line-by-line files)
 - fix: when changing the syntax, and then updating column positions, they were ignored at next restart
