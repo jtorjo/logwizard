@@ -451,7 +451,7 @@ namespace lw_common {
             Debug.Assert(idx_in_line.Length == (int) info_type.max);
             string msg = sub.msg;
             // ... indexes a short can hold
-            Debug.Assert(msg.Length < 65536);
+            Debug.Assert(msg.Length < 32768);
 
             for (int part_idx = 0; part_idx < idx_in_line.Length; ++part_idx) {
                 var index = idx_in_line[part_idx];
@@ -467,6 +467,11 @@ namespace lw_common {
                             start = (short) index.Item1;
                             len = (short) (msg.Length - index.Item1);
                         }
+                        if ( part_idx == (int)info_type.msg)
+                            if (index.Item2 == -1)
+                                // 1.8.4 - allow merging several lines into one (that is, merging line X+1 to X; in this case,
+                                //         the length needs to be "variable")
+                                len = -1;
 
                         bool needs_trim = part_idx != (int) info_type.msg;
                         if (needs_trim)
@@ -494,7 +499,7 @@ namespace lw_common {
 
         public string part(info_type i) {
             Debug.Assert(i < info_type.max);
-            if (parts[(int) i * 2] < 0 || parts[(int) i * 2 + 1] <= 0)
+            if (parts[(int) i * 2] < 0 )
                 return "";
 
             string result = "";
@@ -502,7 +507,7 @@ namespace lw_common {
             try {
                 short start = parts[(int) i * 2], len = parts[(int) i * 2 + 1];
                 if (start < msg.Length && start + len <= msg.Length)
-                    result = msg.Substring(parts[(int) i * 2], parts[(int) i * 2 + 1]);
+                    result = len < 0 ? msg.Substring(start) : msg.Substring(start, len);
             } catch {
                 // this can happen when the log has changed or has been re-written, thus, the sub_ has become suddenly empty
             }

@@ -103,11 +103,14 @@ namespace lw_common.parse.parsers {
 
         // if true, if a line does not match the syntax, assume it's from previous line
         // 1.4.8+ - not used yet
-        private bool if_line_does_not_match_assume_from_prev_line = false;
+        private bool if_line_does_not_match_syntax_assume_from_prev_line = false;
+        // 1.8.4+
+        private bool if_line_starts_with_tab_assume_from_prev_line = false;
 
         public text_file_line_by_line(file_text_reader_base reader) : base(reader.settings) {
             string syntax_str = reader.settings.syntax;
-            if_line_does_not_match_assume_from_prev_line = reader.settings.line_if_line;
+            if_line_does_not_match_syntax_assume_from_prev_line = reader.settings.line_if_line_does_not_match_syntax;
+            if_line_starts_with_tab_assume_from_prev_line = reader.settings.line_if_line_starts_with_tab;
             logger.Debug("[parse] parsing syntax " + syntax_str);
 
             Debug.Assert(reader != null);
@@ -287,7 +290,8 @@ namespace lw_common.parse.parsers {
 
         private void parse_syntax(string syntax) {
             try {
-                string[] several = syntax.Split(new string[] {"|"}, StringSplitOptions.RemoveEmptyEntries);
+                // 1.8.4+ - make the syntax separator rather impossible to occur as a separator in the log itself (#78)
+                string[] several = syntax.Split(new string[] {"|syntax|"}, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string single in several) {
                     var parsed = parse_single_syntax(single);
                     if ( parsed != null)
@@ -392,8 +396,23 @@ namespace lw_common.parse.parsers {
             int start_idx = old_line_count - (was_last_line_incomplete ? 1 : 0);
             int end_idx = string_.line_count;
             List<line> now = new List<line>(end_idx - start_idx);
-            for ( int i = start_idx; i < end_idx; ++i) 
-                now.Add( parse_line( new sub_string(string_,i) ));
+            int merged_line_count = 0;
+            for (int i = start_idx; i < end_idx; ++i) {
+                var cur_line = new sub_string(string_, i - merged_line_count);
+                bool is_from_prev_line = false;
+                if ( if_line_starts_with_tab_assume_from_prev_line)
+                    if (cur_line.msg.StartsWith("\t"))
+                        is_from_prev_line = true;
+                if (i == 0)
+                    is_from_prev_line = false; // there's no previous line
+
+                if (!is_from_prev_line)
+                    now.Add(parse_line(cur_line));
+                else {
+                    string_.merge_line_into_previous_line(i - merged_line_count);
+                    ++merged_line_count;
+                }
+            }
 
             lock (this) {
                 if (needs_reparse_last_line) {
@@ -491,7 +510,9 @@ namespace lw_common.parse.parsers {
                 // return remainder of the string
                 int at = idx;
                 idx = l.Length;
-                return new Tuple<int, int>(at, l.Length - at);
+                //return new Tuple<int, int>(at, l.Length - at);
+                // 1.8.4+ - this way, I can merge a consecutive line into this one
+                return new Tuple<int, int>(at, -1);
             }
 
             int start = -1, end = -1;
@@ -540,7 +561,7 @@ namespace lw_common.parse.parsers {
                 var index = parse_relative_part(sub, rel, ref cur_idx);
                 if (index == null)
                     return null;
-                if (index.Item1 >= 0 && index.Item2 >= 0) {
+                if (index.Item1 >= 0 ) {
                     indexes[(int) rel.type] = index;
                     ++correct_count;
                 }

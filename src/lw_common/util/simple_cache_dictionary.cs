@@ -45,5 +45,11 @@ namespace lw_common {
             }
         }
 
+        public void clear() {
+            lock (this) {
+                values_.Clear();
+            }
+        }
+
     }
 }

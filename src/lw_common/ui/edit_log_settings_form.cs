@@ -67,7 +67,8 @@ namespace lw_common.ui {
             reversed.Checked = settings_.reverse;
 
             update_syntax();
-            ifLine.Checked = settings_.line_if_line;
+            ifLine.Checked = settings_.line_if_line_does_not_match_syntax;
+            ifLineStartsWithTab.Checked = settings_.line_if_line_starts_with_tab;
             
             partSeparator.Text = settings_.part_separator;
 
@@ -236,7 +237,8 @@ namespace lw_common.ui {
             settings_.syntax.set( syntax.Text);
             settings_.reverse.set( reversed.Checked );
 
-            settings_.line_if_line.set( ifLine.Checked );
+            settings_.line_if_line_does_not_match_syntax.set( ifLine.Checked );
+            settings_.line_if_line_starts_with_tab.set( ifLineStartsWithTab.Checked);
             settings_.part_separator.set(partSeparator.Text);
             settings_.xml_delimiter.set(xmlDelimeter.Text);
             settings_.cvs_has_header.set(csvHasHeader.Checked);

@@ -102,6 +102,7 @@
             this.needsRestart = new System.Windows.Forms.Label();
             this.checkRequiresRestart = new System.Windows.Forms.Timer(this.components);
             this.ofd = new System.Windows.Forms.OpenFileDialog();
+            this.ifLineStartsWithTab = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.typeTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -237,6 +238,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.ifLineStartsWithTab);
             this.tabPage3.Controls.Add(this.label6);
             this.tabPage3.Controls.Add(this.syntaxLink);
             this.tabPage3.Controls.Add(this.syntax);
@@ -945,6 +947,16 @@
             // 
             this.ofd.Filter = "Text Files|*.txt|Log Files|*.log|All Files|*.*";
             // 
+            // ifLineStartsWithTab
+            // 
+            this.ifLineStartsWithTab.AutoSize = true;
+            this.ifLineStartsWithTab.Location = new System.Drawing.Point(60, 170);
+            this.ifLineStartsWithTab.Name = "ifLineStartsWithTab";
+            this.ifLineStartsWithTab.Size = new System.Drawing.Size(360, 21);
+            this.ifLineStartsWithTab.TabIndex = 8;
+            this.ifLineStartsWithTab.Text = "If Line starts with Tab, consider it\'s from previous line";
+            this.ifLineStartsWithTab.UseVisualStyleBackColor = true;
+            // 
             // edit_log_settings_form
             // 
             this.AcceptButton = this.ok;
@@ -1079,5 +1091,6 @@
         private System.Windows.Forms.OpenFileDialog ofd;
         private System.Windows.Forms.CheckBox reversed;
         private System.Windows.Forms.Button testLogSizes;
+        private System.Windows.Forms.CheckBox ifLineStartsWithTab;
     }
 }

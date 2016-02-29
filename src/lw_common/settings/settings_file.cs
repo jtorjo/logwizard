@@ -145,7 +145,7 @@ namespace lw_common
                     data[text] = val;
                     dirty = true;
                     if ( log_each_set)
-                        logger.Debug("[sett] " + text + "=" + val);
+                        logger.Debug("[sett] " + text + "=" + val.Replace("\r\n", "\r\n\t") );
                 }
         }
 

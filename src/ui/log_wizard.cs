@@ -1975,6 +1975,9 @@ namespace LogWizard
                 history_list_.add_history(new_);
                 existing = new_;
             } 
+            else 
+                // 1.8.4
+                existing.from_text_reader(text_);
 
             // move to the end
             global_ui.last_log_guid = existing.guid;            
@@ -3787,7 +3790,7 @@ namespace LogWizard
                 return;
 
             var cur_history = this.cur_history();
-            var old_syntax = cur_history.settings.syntax;
+            string old_syntax = cur_history.settings.syntax;
             var edit = new edit_log_settings_form(cur_history.settings.ToString());
             if (edit.ShowDialog(this) == DialogResult.OK) {
                 bool friendly_name_changed = cur_history.friendly_name != edit.friendly_name;

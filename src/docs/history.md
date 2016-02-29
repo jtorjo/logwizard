@@ -1,4 +1,16 @@
 
+1.8.4
+- fixed #78 Syntax not working with pipe symbol separators 
+- added "If line starts with tab, assume from previous line" log setting (for line-by-line files)
+- fix: when changing the syntax, and then updating column positions, they were ignored at next restart
+  (because history and text_'s settings got de-synchronized)
+
+
+1.8.3
+- column formatters
+  - categories: - Column: Name -> Value
+
+
 1.8.2
 - small fixes
 

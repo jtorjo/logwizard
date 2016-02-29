@@ -102,7 +102,7 @@
             this.olvColumn1.AspectName = "name";
             this.olvColumn1.FillsFreeSpace = true;
             this.olvColumn1.IsEditable = false;
-            this.olvColumn1.Text = "Name";
+            this.olvColumn1.Text = "Value";
             this.olvColumn1.Width = 150;
             // 
             // olvColumn2

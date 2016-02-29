@@ -71,6 +71,14 @@ namespace lw_common
             }
         }
 
+        public void merge_line_into_previous_line(int line_idx) {
+            cache_.clear();
+            lock (this) {
+                Debug.Assert(line_idx > 0 && line_idx <= indexes_.Count);
+                indexes_.RemoveAt(line_idx - 1);
+            }
+        }
+
         public void add_lines(string lines, ref int added_line_count, ref bool was_last_line_incomplete, ref bool is_last_line_incomplete) {
             if (lines == "")
                 return;
@@ -156,6 +164,37 @@ namespace lw_common
             }
         }
 
+        private string line_at_impl(int idx) {
+            // note : it's possible to ask for an invalid line, while refreshing on the other thread
+            //Debug.Assert(idx < line_count);
+
+            if (idx == 0) 
+                return (indexes_.Count > 0) ? string_.ToString(0, indexes_[0]) : "";
+
+            if (idx < indexes_.Count) {
+                int start = indexes_[idx - 1] + 1;
+                // 1.3.11+ account for enters in all cases : '\r', '\n', '\r\n', '\n\r'
+                if (string_[start] == '\r' || string_[start] == '\n')
+                    ++start;
+
+                int end = indexes_[idx];
+                return string_.ToString(start, end - start);
+            } else if (idx == indexes_.Count) {
+                // last line
+                int start = indexes_.Last() + 1;
+                int end = string_.Length;
+                if (end <= start)
+                    return "";
+
+                // 1.3.11+ account for enters in all cases : '\r', '\n', '\r\n', '\n\r'
+                if (string_[start] == '\r' || string_[start] == '\n')
+                    ++start;
+
+                return string_.ToString(start, end - start);
+            } else
+                return "";
+        }
+
         public string line_at(int idx) {
             var from_cache = cache_.get(idx);
             if (from_cache != null)
@@ -190,36 +229,6 @@ namespace lw_common
                 return false;
         }
 
-        private string line_at_impl(int idx) {
-            // note : it's possible to ask for an invalid line, while refreshing on the other thread
-            //Debug.Assert(idx < line_count);
-
-            if (idx == 0) 
-                return (indexes_.Count > 0) ? string_.ToString(0, indexes_[0]) : "";
-
-            if (idx < indexes_.Count) {
-                int start = indexes_[idx - 1] + 1;
-                // 1.3.11+ account for enters in all cases : '\r', '\n', '\r\n', '\n\r'
-                if (string_[start] == '\r' || string_[start] == '\n')
-                    ++start;
-
-                int end = indexes_[idx];
-                return string_.ToString(start, end - start);
-            } else if (idx == indexes_.Count) {
-                // last line
-                int start = indexes_.Last() + 1;
-                int end = string_.Length;
-                if (end <= start)
-                    return "";
-
-                // 1.3.11+ account for enters in all cases : '\r', '\n', '\r\n', '\n\r'
-                if (string_[start] == '\r' || string_[start] == '\n')
-                    ++start;
-
-                return string_.ToString(start, end - start);
-            } else
-                return "";
-        }
 
         private int next_enter(int start_pos) {
             if (start_pos >= string_.Length)

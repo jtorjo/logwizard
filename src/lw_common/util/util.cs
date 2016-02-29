@@ -419,20 +419,25 @@ namespace lw_common {
             // in this case, it was just mm:ss - should never happen
                 Debug.Assert(false);
 
+            // least is 'hh:mm:ss' (8 chars)
+            Debug.Assert(time.Length >= 8);
+            // 1.8.4+ - allow more granular times, such as hh.mm:ss.ffff[ffff]
             switch (time.Length) {
             case 8:
                 time = time + ".000";
+                break;
+            case 9:
+                if ( Char.IsPunctuation(time[8]))
+                    time = time + "000";
+                else 
+                    // invalid time?
+                    Debug.Assert(false);
                 break;
             case 10:
                 time = time + "00";
                 break;
             case 11:
                 time = time + "0";
-                break;
-            case 12:
-                break;
-            default:
-                Debug.Assert(false);
                 break;
             }
 
@@ -442,16 +447,21 @@ namespace lw_common {
             return time;
         }
 
+        // 1.8.4+ - allow more granular times, such as hh.mm:ss.ffff[ffff]
+        private static string[] normalized_time_suffix_ = new[] { "HH:mm:ss", "HH:mm:ss.", "HH:mm:ss.f", "HH:mm:ss.ff", "HH:mm:ss.fff", "HH:mm:ss.ffff", "HH:mm:ss.fffff", "HH:mm:ss.ffffff", "HH:mm:ss.fffffff", "HH:mm:ss.ffffffff" };
         private static DateTime str_to_normalized_time(string time_str) {
             try {
                 Debug.Assert(time_str != null && time_str != "");
                 DateTime time = DateTime.MinValue;
                 time_str = normalize_time_str(time_str);
-                DateTime.TryParseExact(time_str, "HH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out time);
-                return time;
+                var format = time_str.Length - 8 < normalized_time_suffix_.Length ? normalized_time_suffix_[time_str.Length - 8] : null;
+                if (format != null) {
+                    DateTime.TryParseExact(time_str, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out time);
+                    return time;
+                }
             } catch {
-                return DateTime.Today;
             }
+            return DateTime.Today;
         }
 
         // 1.6.16

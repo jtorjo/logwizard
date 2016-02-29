@@ -317,7 +317,8 @@ namespace lw_common {
         protected readonly single_setting<string> category_format_;
 
         // line-by-line
-        protected readonly single_setting_bool line_if_line_;
+        protected readonly single_setting_bool line_if_line_does_not_match_syntax_;
+        protected readonly single_setting_bool line_if_line_starts_with_tab_;
 
         // part-by-line
         protected readonly single_setting<string> part_separator_;
@@ -369,7 +370,8 @@ namespace lw_common {
             description_template_ = new single_setting<string>(settings_, "description_template", "");
             aliases_ = new single_setting<string>(settings_, "aliases", "");
 
-            line_if_line_ = new single_setting_bool(settings_, "line.if_line");
+            line_if_line_does_not_match_syntax_ = new single_setting_bool(settings_, "line.if_line_does_not_match_syntax");
+            line_if_line_starts_with_tab_ = new single_setting_bool(settings_, "line.if_line_starts_with_tab", true);
             
             part_separator_ = new single_setting<string>(settings_, "part.separator", ":");
             
@@ -438,8 +440,11 @@ namespace lw_common {
             get { return aliases_; }
         }
 
-        public single_setting_bool_readonly line_if_line {
-            get { return line_if_line_; }
+        public single_setting_bool_readonly line_if_line_does_not_match_syntax {
+            get { return line_if_line_does_not_match_syntax_; }
+        }
+        public single_setting_bool_readonly line_if_line_starts_with_tab {
+            get { return line_if_line_starts_with_tab_; }
         }
 
         public single_setting_readonly<string> part_separator {
@@ -580,8 +585,11 @@ namespace lw_common {
             get { return aliases_; }
         }
 
-        public new single_setting_bool line_if_line {
-            get { return line_if_line_; }
+        public new single_setting_bool line_if_line_does_not_match_syntax {
+            get { return line_if_line_does_not_match_syntax_; }
+        }
+        public new single_setting_bool line_if_line_starts_with_tab {
+            get { return line_if_line_starts_with_tab_; }
         }
 
         public new single_setting<string> part_separator {
