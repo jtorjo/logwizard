@@ -1039,7 +1039,7 @@ file_to_context.count=6
 file_to_syntax.0.key=HM2 Version: 2.
 file_to_syntax.0.value=$time[0,12] $ctx1['[','-'] $func[' ',']'] $ctx2['[[','] ]'] $msg
 file_to_syntax.1.key=HM3 Version=3
-file_to_syntax.1.value=$time[0,12] $ctx1['[',']'] $ctx2['[','] '] $level['[','] '] $msg|$time[0,12] $ctx1['[',']'] $msg['---']|$time[0,12] $ctx1['[',']'] $msg['  ']
+file_to_syntax.1.value=$time[0,12] $ctx1['[',']'] $ctx2['[','] '] $level['[','] '] $msg|syntax|$time[0,12] $ctx1['[',']'] $msg['---']|syntax|$time[0,12] $ctx1['[',']'] $msg['  ']
 file_to_syntax.2.key=This is a LogWizard Setup sample
 file_to_syntax.2.value=$time[0,12] $ctx1[13,10] $level[24,5] $class[' ','- '] $msg
 file_to_syntax.3.key=Welcome to TableNinja! debug
