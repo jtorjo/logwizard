@@ -76,6 +76,7 @@ namespace lw_common {
             }
         }
 
+        // if can't access file (for instance, access denied), returns an empty string
         public string notes_file_for_file(string file) {
             var local = md5_log_keeper.inst.local_md5s_for_file(file);
             foreach ( string md5 in local)
@@ -85,6 +86,9 @@ namespace lw_common {
 
             // it's a new file
             string file_md5 = md5_log_keeper.inst.get_md5_for_file(file, prefer_md5_method_);
+            if (file_md5 == "")
+                // can't access file
+                return file_md5;
 
             // reload the md5s - computing the md5 for this file might add another md5 to the local md5s
             // (when this md5 method was not used before)

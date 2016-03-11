@@ -1059,6 +1059,10 @@ namespace lw_common.ui {
             // set the author color first!
             Debug.Assert(author_color_ != util.transparent);
 
+            if (file_name == "")
+                // maybe we could not access the original file...
+                return;
+
             ++ignore_change_;
             if (file_name_ != "")
                 // in this case, we're loading the notes from somewhere else, save_to existing first

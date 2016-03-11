@@ -71,6 +71,9 @@ namespace lw_common.parse.parsers {
             List<string> csv = new List<string>();
             csv.Add("");
 
+            // 1.8.6+ - account for empty lines - which can precede a valid line
+            line = line.Trim();
+
             StringBuilder last = new StringBuilder();
             bool inside_quote = false;
             char prev_ch = '\0';
@@ -97,7 +100,22 @@ namespace lw_common.parse.parsers {
                 // in this case, the last cell is not finished
                 csv.RemoveAt(csv.Count - 1);
             return csv;
-        } 
+        }
+
+
+        private bool is_header_present(List<string> names ) {
+            var unique = names;
+            bool present = true;
+            if (unique.Any(x => x == "")) 
+                present = false;
+            else if (names.Distinct().Count() != names.Count) 
+                // in this case, we'd have two equal values - we can't have that in the header
+                present = false;
+            if (!present)
+                unique = util.unique_names(new string[names.Count], "Unnamed");
+            this.column_names = unique;
+            return present;
+        }
 
         protected override void on_new_lines(string new_lines) {
             int line_count = 0;
@@ -109,10 +127,8 @@ namespace lw_common.parse.parsers {
             if (has_header_line_) 
                 lock (this) 
                     // if at least one entry - can't read column names
-                    if (this.column_names.Count < 1 && entries_.Count == 0) {
-                        this.column_names = parse_csv( last_lines_string_.line_at(0));
-                        start_idx = 1;
-                    }
+                    if (this.column_names.Count < 1 && entries_.Count == 0) 
+                        start_idx = is_header_present( parse_csv( last_lines_string_.line_at(0))) ? 1 : 0;
 
             List<log_entry_line> entries_now = new List<log_entry_line>();
             var column_names = this.column_names;

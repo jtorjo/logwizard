@@ -261,7 +261,7 @@ namespace lw_common.ui
             update_column_names();
         }
 
-        internal void update_column_names() {
+        public void update_column_names() {
             if (filter.log == null)
                 return;
 

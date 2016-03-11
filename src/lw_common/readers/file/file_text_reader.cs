@@ -71,6 +71,8 @@ namespace lw_common
         private bool fully_read_once_ = false;
 
         private Encoding file_encoding_ = null;
+
+        private DateTime cannot_read_until_this_time_ = DateTime.MinValue;
         
         public file_text_reader(string file) : this(new log_settings_string("name=" + file)) {
         }
@@ -208,6 +210,15 @@ namespace lw_common
 
         // reads a file block from the file (as much as we can, in a single go)
         private void read_file_block() {
+            if (DateTime.Now < cannot_read_until_this_time_)
+                return;
+
+            if (file_.EndsWith(".evtx")) {
+                errors_.add("Donot add Event Log files like this. Please open via Ctrl-O, and select 'Windows Event Log' as the type.");
+                cannot_read_until_this_time_ = DateTime.MaxValue;
+                return;
+            }
+
             try {
                 if (file_encoding_ == null) {
                     var encoding = util.file_encoding(file_);
@@ -267,10 +278,15 @@ namespace lw_common
                 // file may have been erased
                 if (read_byte_count_ > 0) {
                     on_rewritten_file();
-                    lock(this)
+                    lock (this)
                         fully_read_once_ = true;
                     parser.on_log_has_new_lines(true);
                 }
+            } catch (UnauthorizedAccessException) {
+                errors_.clear();
+                errors_.add("Access Denied: " + file_ + " at " + DateTime.Now.ToString("HH:mm:ss") + ". Waiting 5 seconds");
+                logger.Error("access denied " + file_);
+                cannot_read_until_this_time_ = DateTime.Now.AddSeconds(5);
             } catch (Exception e) {
                 logger.Error("[file] can't read file - " + file_ + " : " + e.Message);
             }

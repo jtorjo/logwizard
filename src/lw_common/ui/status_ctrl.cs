@@ -28,6 +28,7 @@ namespace lw_common.ui {
         // sets the status for a given period - after that ends, the previous status is shown
         // if < 0, it's forever
         public void set_status(string msg, status_type type = status_type.msg, int set_status_for_ms = 7500) {
+            bool was_showing_error = is_showing_error;
             if (set_status_for_ms <= 0)
                 statuses_.Clear();
 
@@ -49,8 +50,17 @@ namespace lw_common.ui {
                 return;
             show_last_status();
 
-            if (type == status_type.err)
+            // 1.8.6+ (if showing a new error, no need to beep again)
+            if (type == status_type.err && !was_showing_error)
                 util.beep(util.beep_type.err);
+        }
+
+        public bool is_showing_error {
+            get {
+                if (statuses_.Count > 0)
+                    return (statuses_.Last().Item2 == status_type.err);
+                return false;
+            }
         }
 
         private void show_last_status() {

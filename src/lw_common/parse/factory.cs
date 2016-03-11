@@ -102,6 +102,10 @@ namespace lw_common.parse {
             if (file_name.EndsWith(".csv"))
                 return file_log_type.csv;
 
+            // 1.8.6
+            if (util.read_beginning_of_file(file_name, 16).StartsWith("<?"))
+                return file_log_type.xml;
+
             if (text_file_part_on_single_line.is_single_line(file_name, new log_settings_string("")))
                 return file_log_type.part_to_line;
 
@@ -127,7 +131,11 @@ namespace lw_common.parse {
         private static log_parser_base create_file_parser(file_text_reader reader) {
             string file_name = reader.name.ToLower();
 
-            switch (reader.settings.file_type.get()) {
+            var file_type = reader.settings.file_type.get();
+            if (file_type == file_log_type.best_guess)
+                file_type = guess_file_type(file_name);
+
+            switch (file_type) {
             case file_log_type.line_by_line:
                 return new text_file_line_by_line(reader);
             case file_log_type.part_to_line:

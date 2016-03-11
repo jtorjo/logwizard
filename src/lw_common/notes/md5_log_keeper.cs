@@ -93,7 +93,6 @@ namespace lw_common {
             if (file_md5_[file].by_md5(type) == "")
                 compute_md5_for_file(file, type);
 
-            Debug.Assert( file_md5_[file].by_md5(type) != "");
             return file_md5_[file].by_md5(type);
         }
 
@@ -199,7 +198,12 @@ namespace lw_common {
                 //         (for instance, say you send the file to someone, and he renames it)
                 string md5 = util.md5_hash(buff) + "-" + size ;
                 return "Fast-" + md5;
-            } catch (Exception e) {
+            }
+            catch (UnauthorizedAccessException) {
+                logger.Error("[md5] access denied " + file);
+                return "";
+            }
+            catch (Exception e) {
                 logger.Error("[md5] can't compute md5-fast for " + file + " : " + e.Message);
                 return "";
             }
@@ -232,6 +236,10 @@ namespace lw_common {
 
                 string md5 = util.md5_hash(md5_blocks);
                 return "Slow-" + md5;
+            }
+            catch (UnauthorizedAccessException) {
+                logger.Error("[md5] access denied " + file);
+                return "";
             } catch (Exception e) {
                 logger.Error("[md5] can't compute md5-fast for " + file + " : " + e.Message);
                 return "";

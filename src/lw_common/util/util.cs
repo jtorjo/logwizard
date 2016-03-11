@@ -1448,5 +1448,30 @@ namespace lw_common {
             }
             return name_no_ext;
         }
+
+        public static List<string> unique_names(IEnumerable<string> names, string prefix) {
+            return unique_names(names, prefix, s => s == null || s == "");
+        }
+
+        public static List<string> unique_names(IEnumerable<string> names, string prefix, Func<string,bool> needs_new_name ) {
+            List<string> result = new List<string>();
+            int prefix_idx = 0;
+            foreach ( var name in names)
+                if (!needs_new_name(name))
+                    result.Add(name);
+                else {
+                    string new_name = "";
+                    while (true) {
+                        new_name = prefix + (prefix_idx > 0 ? "" + prefix_idx : "");
+                        ++prefix_idx;
+                        if (!names.Contains(new_name))
+                            break;
+                    }
+                    // we have a unique name
+                    result.Add(new_name);
+                }
+            return result;
+        }
+
     }
 }

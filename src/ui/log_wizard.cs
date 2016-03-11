@@ -1444,10 +1444,12 @@ namespace LogWizard
                 refresh_cur_log_view();
                 var sel = selected_view();
                 string search_status = sel != null ? sel.search_status : "";
-                if ( search_status != "")
-                    status.set_status(search_status);
-                else 
-                    show_tips_.handle_tips();
+                if (!status.is_showing_error) {
+                    if (search_status != "")
+                        status.set_status(search_status);
+                    else
+                        show_tips_.handle_tips();
+                }
             } catch (Exception e) {
                 logger.Error("Refresh error" + e.Message);
             }
@@ -1497,8 +1499,11 @@ namespace LogWizard
             if (text_.has_it_been_rewritten)
                 on_rewritten_log();
 
-            if (!text_.fully_read_once && text_.progress != "")
+            if (text_.errors.Count > 0)
+                set_status( util.concatenate( text_.errors, "\r\n"), status_ctrl.status_type.err, 15000);
+            else if (!text_.fully_read_once && text_.progress != "")
                 set_status(text_.progress);
+
         }
 
         // ... just setting .TopMost sometimes does not work
@@ -1755,7 +1760,11 @@ namespace LogWizard
         }
 
         private void on_aliases_changed() {
-            this.async_call( () => description.set_aliases(log_parser_.aliases) );
+            this.async_call(() => {
+                description.set_aliases(log_parser_.aliases);
+                foreach (var lv in all_log_views_and_full_log())
+                    lv.update_column_names();
+            });
         }
 
         private void on_description_template_changed(string name) {
