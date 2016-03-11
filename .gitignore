@@ -24,6 +24,9 @@ src/logwizardsetup/Release/*
 src/logwizardsetup/Dbg64/*
 src/logwizardsetup/Release64/*
 src/output/*
+src/test_nlog/packages/NLog*
+src/test_nlog/packages/Entity*
+src/test_nlog/packages/System*
 
 *.exe
 log4net.xml

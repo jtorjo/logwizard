@@ -1,4 +1,9 @@
 
+
+1.8.7a
+- created test program for logging dummy data using nlog. works for sqlite databases as well.
+
+
 1.8.6
 - hm3 syntax -> separate via '|syntax|'
 - fix for #79 (.csv and .svg files)
