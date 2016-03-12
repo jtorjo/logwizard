@@ -18,8 +18,8 @@ build/
 [Bb]in/
 [Oo]bj/
 
-src/packages/log4net.2.0.3/*
-src/packages/ObjectListView.Official.2.8.1/*
+src/packages/log4net*/*
+src/packages/ObjectListView*/*
 src/logwizardsetup/Release/*
 src/logwizardsetup/Dbg64/*
 src/logwizardsetup/Release64/*

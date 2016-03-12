@@ -21,10 +21,8 @@ namespace lw_common {
                 errors_.Clear();
         }
 
-        // returns null if there are no errors
-        // most error is shown first
         public List<string> errors {
-            get { lock(this) return errors_.Count > 0 ? errors_.ToList() : null; }
+            get { lock(this) return errors_.Count > 0 ? errors_.ToList() : errors_; }
         } 
     }
 }
