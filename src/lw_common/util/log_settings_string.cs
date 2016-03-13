@@ -10,7 +10,11 @@ namespace lw_common {
     public class single_setting_readonly<T> where T : IConvertible, IComparable<T> {
         protected settings_as_string sett_;
         protected string name_;
-        protected readonly T default_;
+        protected T default_;
+
+        protected bool can_be_multi_line_ = false;
+
+        protected const string REPLACE_ENTER = "||%%^^%%||";
 
         protected bool Equals(single_setting_readonly<T> other) {
             return get().Equals( other.get() );
@@ -40,19 +44,23 @@ namespace lw_common {
             return !Equals(left, right);
         }
 
-        internal single_setting_readonly(settings_as_string sett, string name, T default_ = default(T) ) {
+        protected single_setting_readonly(settings_as_string sett, string name, T default_ = default(T) ) {
             sett_ = sett;
             name_ = name;
             this.default_ = default_;
         }
 
         public T get() {
-            return (T)Convert.ChangeType(sett_.get(name_, default_.ToString()), typeof (T));
+            var val = sett_.get(name_, default_.ToString());
+            if (can_be_multi_line_)
+                val = val.Replace(REPLACE_ENTER, "\r\n");
+            return (T)Convert.ChangeType(val, typeof (T));
         }
 
         public string name {
             get { return name_; }
         }
+
 
 
         public static implicit operator T(single_setting_readonly<T> val ) {
@@ -64,10 +72,20 @@ namespace lw_common {
         internal single_setting(settings_as_string sett, string name, T default_ = default(T)) : base(sett, name, default_) {
         }
         public void set(T value) {
-            sett_.set(name_, "" + value);
+            var str_value = "" + value;
+            if (can_be_multi_line)
+                str_value = str_value.Replace("\r\n", REPLACE_ENTER);
+            sett_.set(name_, str_value);
         }
         public void reset() {
             set(default_);
+        }
+
+        public bool can_be_multi_line {
+            get { return can_be_multi_line_; }
+            set {
+                can_be_multi_line_ = value;
+            }
         }
     }
 
@@ -342,6 +360,11 @@ namespace lw_common {
         protected readonly single_setting_bool debug_global_;
         protected readonly single_setting<string> debug_process_name_; 
 
+        // database
+        protected readonly single_setting<string> db_provider_;
+        protected readonly single_setting<string> db_connection_string_;
+        protected readonly single_setting<string> db_table_name_;
+        protected readonly single_setting<string> db_fields_; 
 
 
         protected log_settings_string_readonly(string sett) {
@@ -389,6 +412,13 @@ namespace lw_common {
             debug_process_name_ = new single_setting<string>(settings_, "debug.process_name", "");
 
             xml_delimiter_ = new single_setting<string>(settings_, "xml.delimiter", "");
+
+            db_provider_ = new single_setting<string>(settings_, "db_provider", "System.Data.SQLite");
+            // http://stackoverflow.com/questions/11414399/sqlite-throwing-a-string-not-recognized-as-a-valid-datetime
+            db_connection_string_ = new single_setting<string>(settings_, "db_connection_string", "Data Source=<your_db_file>;Version=3;new=False;datetimeformat=CurrentCulture");
+            db_table_name_ = new single_setting<string>(settings_, "db_table_name", "logtable");
+            db_fields_ = new single_setting<string>(settings_, "db_fields", "time_stamp\r\nlevel\r\nlogger\r\nmessage") { can_be_multi_line = true };
+
             // = new single_setting<string>(settings_, "", "");
         }
 
@@ -528,6 +558,22 @@ namespace lw_common {
 
         public dictionary_setting_readonly<bool> apply_column_formatting_to_me {
             get { return apply_column_formatting_to_me_; }
+        }
+
+        public single_setting_readonly<string> db_provider {
+            get { return db_provider_; }
+        }
+
+        public single_setting_readonly<string> db_connection_string {
+            get { return db_connection_string_; }
+        }
+
+        public single_setting_readonly<string> db_table_name {
+            get { return db_table_name_; }
+        }
+
+        public single_setting_readonly<string> db_fields {
+            get { return db_fields_; }
         }
     }
 
@@ -670,5 +716,20 @@ namespace lw_common {
             get { return category_format_; }
         }
 
+        public new single_setting<string> db_provider {
+            get { return db_provider_; }
+        }
+
+        public new single_setting<string> db_connection_string {
+            get { return db_connection_string_; }
+        }
+
+        public new single_setting<string> db_table_name {
+            get { return db_table_name_; }
+        }
+
+        public new single_setting<string> db_fields {
+            get { return db_fields_; }
+        }
     }
 }

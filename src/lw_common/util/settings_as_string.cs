@@ -39,7 +39,7 @@ namespace lw_common {
 
         private string delimiter_;
 
-        public settings_as_string_readonly(string str, string delimiter = "\r\n") {
+        protected settings_as_string_readonly(string str, string delimiter) {
             delimiter_ = delimiter;
             var lines = str.Split(new string[] {delimiter_}, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines) {
@@ -135,7 +135,7 @@ namespace lw_common {
         }
 
         public void merge(string other) {
-            settings_as_string_readonly other_sett = new settings_as_string_readonly(other);
+            settings_as_string_readonly other_sett = new settings_as_string(other);
             merge(other_sett);
         }
 

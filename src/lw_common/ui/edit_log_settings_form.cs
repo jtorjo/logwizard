@@ -83,6 +83,12 @@ namespace lw_common.ui {
             remotePassword.Text = settings_.event_remote_password;
             selectedEventLogs.Text = settings_.event_log_type.get() .Replace("|", "\r\n");
 
+            dbProvider.SelectedIndex = db_provider_string_to_index( settings_.db_provider);
+            dbConnectionString.Text = settings_.db_connection_string;
+            dbTableName.Text = settings_.db_table_name;
+            dbFields.Text = settings_.db_fields;
+            update_db_mappings();
+
             type.SelectedIndex = type_to_index();
             if (edit == edit_type.add) {
                 Text = "Open Log";
@@ -94,6 +100,41 @@ namespace lw_common.ui {
                 util.postpone(() => remotePassword.Focus(), 1);
 
             new Thread(check_event_log_thread) {IsBackground = true}.Start();
+        }
+
+        private int db_provider_string_to_index(string provider) {
+            for ( int i = 0; i < dbProvider.Items.Count; ++i)
+                if (dbProvider.Items[i].ToString().Contains("(" + provider + ")"))
+                    return i;
+            return 0;
+        }
+
+        private string db_provider_index_to_string() {
+            var str = dbProvider.Items[dbProvider.SelectedIndex].ToString();
+            Debug.Assert(str.Contains("(") && str.Contains(")"));
+            int start = str.IndexOf("(") + 1, end = str.IndexOf(")");
+            return str.Substring(start, end - start);
+        }
+
+        private List<Tuple<string, info_type>> get_db_mappings() {
+            List<Tuple<string,info_type>> user_typed_mappings = new List<Tuple<string, info_type>>();
+            foreach (var line in dbFields.Text.Split(new[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries)) {
+                int delim = line.IndexOf('=');
+                if (delim >= 0) {
+                    string name = line.Substring(0, delim).Trim(), value = line.Substring(delim + 1).Trim();
+                    var info_value = info_type_io.from_str(value);
+                    user_typed_mappings.Add( new Tuple<string, info_type>(name, info_value));
+                }
+                else 
+                    user_typed_mappings.Add(new Tuple<string, info_type>(line.Trim(), info_type.max));
+            }
+            var lw_mappings = info_type_io.match_db_column_to_lw_column(user_typed_mappings);
+            return lw_mappings;
+        }
+
+        private void update_db_mappings() {
+            var lw_mappings = get_db_mappings();
+            dbMappings.Text = util.concatenate( lw_mappings.Select(x => x.Item1 + "=" + info_type_io.to_friendly_str(x.Item2)), "\r\n" );
         }
 
         private void check_event_log_thread() {
@@ -252,6 +293,11 @@ namespace lw_common.ui {
 
             settings_.debug_global.set(debugGlobal.Checked );
             settings_.debug_process_name.set(debugProcessName.Text);
+
+            settings_.db_provider.set( db_provider_index_to_string());
+            settings_.db_connection_string.set( dbConnectionString.Text);
+            settings_.db_table_name.set(dbTableName.Text);
+            settings_.db_fields.set( dbFields.Text);
 
             edited_syntax_now_ = settings_.syntax != old_settings_.syntax;
         }
@@ -487,6 +533,74 @@ namespace lw_common.ui {
             var log_names = selectedEventLogs.Text.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries).ToList();
             var test = new test_event_logs_sizes_form(log_names, remoteMachineName.Text, remoteDomain.Text, remoteUserName.Text, remotePassword.Text);
             test.ShowDialog(this);
+        }
+
+        private void refresh_Tick(object sender, EventArgs e) {
+            update_db_mappings();
+        }
+
+        private void testDb_Click(object sender, EventArgs ea) {
+            typeTab.Enabled = false;
+            Cursor = Cursors.WaitCursor;
+            dbTestStatus.Text = "Testing Now... Please Wait...";
+            // update UI
+            Application.DoEvents();
+
+            var lw_mappings = get_db_mappings();
+            var fields = util.concatenate(lw_mappings.Select(x => x.Item1), ", ");
+            string sql = "select " + fields + " from " + dbTableName.Text;
+            // sort by date/time if possible
+            var date_mapping = lw_mappings.FirstOrDefault(x => x.Item2 == info_type.date);
+            var time_mapping = lw_mappings.FirstOrDefault(x => x.Item2 == info_type.time);
+            if (date_mapping != null)
+                sql += " order by " + date_mapping.Item1;
+            if (time_mapping != null) {
+                sql += sql.Contains(" order by ") ? ", " : " order by ";
+                sql += time_mapping.Item1;
+            }
+            logger.Debug("executing db command [" + sql + "]" + " on [" + dbConnectionString.Text + "]");
+            
+            // test connecting to database + and reading 1 record + read everything we need from that record (according to the fields)
+            string status = "Congratulations! Successful connection.";
+            try {
+                using (var conn = db_util.create_db_connection(db_provider_index_to_string(), dbConnectionString.Text))
+                    using (var cmd = conn.CreateCommand()) {
+                        conn.Open();
+                        cmd.CommandText = sql;
+                        using (var rs = cmd.ExecuteReader()) {
+                            if (rs.Read()) {
+                                // at this point, I will read all fields
+                                for (int i = 0; i < lw_mappings.Count; ++i) {
+                                    bool is_time = lw_mappings[i].Item2 == info_type.date || lw_mappings[i].Item2 == info_type.time;
+                                    // here, I'm just testing for exceptions
+                                    if (is_time) {
+                                        // http://stackoverflow.com/questions/11414399/sqlite-throwing-a-string-not-recognized-as-a-valid-datetime
+                                        // normally, GetDateTime should work. But just in case it doesn't, read it as a string, and then,
+                                        //           later, we'll parse the date/time with util.normalize_* functions
+                                        bool ok = true;
+                                        try {
+                                            rs.GetDateTime(i);
+                                        } catch {
+                                            ok = false;
+                                        }
+                                        if (!ok)
+                                            rs.GetString(i);
+                                    } else
+                                        rs.GetString(i);
+                                }
+                            } else
+                                status = "ERROR: Log Table is empty.";
+                        }
+                            
+                    }
+            } catch (Exception e) {
+                status = "ERROR: " + e.Message;
+            }
+            dbTestStatus.ForeColor = status.StartsWith("ERROR") ? Color.Red : Color.LightSeaGreen;
+            dbTestStatus.Text = status;
+
+            typeTab.Enabled = true;
+            Cursor = Cursors.Default;
         }
 
     }

@@ -20,6 +20,12 @@ build/
 
 src/packages/log4net*/*
 src/packages/ObjectListView*/*
+
+src/packages/Entity*
+src/packages/System*
+src/packages/Oracle*
+src/packages/log4net*
+
 src/logwizardsetup/Release/*
 src/logwizardsetup/Dbg64/*
 src/logwizardsetup/Release64/*
@@ -27,6 +33,8 @@ src/output/*
 src/test_nlog/packages/NLog*
 src/test_nlog/packages/Entity*
 src/test_nlog/packages/System*
+src/test_nlog/packages/Oracle*
+src/test_nlog/packages/log4net*
 
 *.exe
 log4net.xml

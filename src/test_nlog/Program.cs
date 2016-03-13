@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -79,6 +80,45 @@ namespace test_nlog
                     command.ExecuteNonQuery();
                 }
         }
+
+        public static List<string> sqlite_db_tables(string db_name) {
+            // has to be a file
+            Debug.Assert(File.Exists(db_name));
+
+            List<string> tables = new List<string>();
+            try {
+                using (var conn = new SQLiteConnection("Data Source=\"" + db_name + "\";Version=3;")) {
+                    conn.Open();
+                    using (var cmd = new SQLiteCommand("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", conn))
+                    using (var reader = cmd.ExecuteReader())
+                        while (reader.Read())
+                            tables.Add(reader.GetString(0));
+                }
+            } catch  {
+                tables.Clear();
+            }
+            return tables;
+        }
+
+        public static List<string> sqlite_db_table_fields(string db_name, string table_name) {
+            // has to be a file
+            Debug.Assert(File.Exists(db_name));
+
+            List<string> fields = new List<string>();
+            try {
+                using (var conn = new SQLiteConnection("Data Source=\"" + db_name + "\";Version=3;")) {
+                    conn.Open();
+                    using (var cmd = new SQLiteCommand("pragma table_info(" + table_name + ");", conn))
+                        using (var reader = cmd.ExecuteReader())
+                            while (reader.Read())
+                                fields.Add(reader.GetString(1));
+                }
+            }
+            catch {
+                fields.Clear();
+            }
+            return fields;
+        } 
 
         static void nlog_to_db() {
             ensure_db_exists();

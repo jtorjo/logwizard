@@ -1,4 +1,10 @@
 
+1.8.7c
+- connecting to database (Edit Log Settings) works
+  - also added code to handle sqlite and oracle databased
+- I allow mapping from the database columns to Logwizard columns
+- I allow testing the connection, so it's really easy to connect to a database
+
 
 1.8.7a
 - created test program for logging dummy data using nlog. works for sqlite databases as well.
