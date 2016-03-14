@@ -195,6 +195,11 @@ namespace LogWizard
                 set_status("To open the Last Log, just do <i>Ctrl-H, Enter</i>");
 
             util.postpone(animate_whatsup, util.is_debug ? 2500 : 10000);
+
+            if (util.is_debug) {
+                // testing
+                util.postpone(() => on_file_drop(@"C:\john\code\logwiz\logwizard\src\test_nlog\bin\Debug\log.db3"), 1);
+            }
         }
 
         private void On_running_changed(bool running) {
@@ -716,15 +721,21 @@ namespace LogWizard
         }
 
         private void on_file_drop(string file, string friendly_name = "") {
-            if (file.ToLower().EndsWith(".zip")) {
+            string ext = Path.GetExtension(file.ToLower());
+            if (ext == ".zip") {
                 // allow the drag/drop operation to finish - thus the program we got this from can be responsive
                 util.postpone(() => on_zip_drop(file), 1);
                 return;
             }
-            else if (file.ToLower().EndsWith(".logwizard")) {
+            else if (ext == ".logwizard") {
                 // allow the drag/drop operation to finish - thus the program we got this from can be responsive
                 util.postpone(() => import_notes(file), 1);
                 return;
+            }
+            else if (ext.StartsWith(".db") && db_util.sqlite_db_tables(file).Count > 0) {
+                // allow the drag/drop operation to finish - thus the program we got this from can be responsive
+                util.postpone(() => on_sqlite_file_drop(file), 1);
+                return;                
             }
 
             on_new_file_log(file, friendly_name);
@@ -1947,16 +1958,26 @@ namespace LogWizard
         }
 
         // checks if log is already in history - if so, updates its guid and returns true
-        private bool is_log_in_history(ref log_settings_string settings) {
-            if (settings.type == log_type.file) {
+        private bool is_log_in_history(ref log_settings_string settings) {            
+            switch (settings.type.get()) {
+            case log_type.file:
                 string name = settings.name;
                 var found = history_.FirstOrDefault(x => x.name == name);
                 if (found != null) {
                     settings = found.write_settings;
                     return true;
                 }
+                break;
+            case log_type.db:
+                var db_provider = settings.db_provider;
+                var db_conn = settings.db_connection_string;
+                var found_db = history_.FirstOrDefault(x => x.settings.db_provider == db_provider && x.settings.db_connection_string == db_conn);
+                if (found_db != null) {
+                    settings = found_db.write_settings;
+                    return true;
+                }
+                break;
             }
-
             return false;
         }
 
@@ -3766,7 +3787,11 @@ namespace LogWizard
         }
 
         private void whatsupOpen_Click(object sender, EventArgs e) {
-            var add = new edit_log_settings_form("", edit_log_settings_form.edit_type.add);
+            do_open_log("");
+        }
+
+        private void do_open_log(string initial_settings_str) {
+            var add = new edit_log_settings_form(initial_settings_str, edit_log_settings_form.edit_type.add);
             if (add.ShowDialog(this) == DialogResult.OK) {
                 log_settings_string settings = new log_settings_string(add.settings);
                 if (is_log_in_history(ref settings)) {
@@ -3780,18 +3805,36 @@ namespace LogWizard
                 history_list_.add_history(new_);
                 global_ui.last_log_guid = new_.guid;
 
-                // should not be needed
-#if old_code
-                recreate_history_combo();
-                ++ignore_change_;
-                logHistory.SelectedIndex = logHistory.Items.Count - 1;
-                --ignore_change_;
-#endif
-
                 Text = reader_title();
                 create_text_reader(new_.write_settings);
                 save();
-            }
+            }            
+        }
+
+        private void on_sqlite_file_drop(string sqlite_db) {
+            log_settings_string sqlite_sett = new log_settings_string("");
+            sqlite_sett.type.set( log_type.db);
+            sqlite_sett.db_connection_string.set("Data Source=\"" + sqlite_db + "\";Version=3;new=False;datetimeformat=CurrentCulture");
+            
+            // find the log table
+            var tables = db_util.sqlite_db_tables(sqlite_db);
+            string log_table = "logtable";
+            if (tables.Count == 1)
+                log_table = tables[0];
+            var first_starts_with_log = tables.FirstOrDefault(x => x.ToLower().StartsWith("log"));
+            var first_contains_log = tables.FirstOrDefault(x => x.ToLower().Contains("log"));
+            if (first_starts_with_log != null)
+                log_table = first_starts_with_log;
+            else if (first_contains_log != null)
+                log_table = first_contains_log;
+            sqlite_sett.db_table_name.set( log_table);
+
+            // get the log fields
+            var fields = db_util.sqlite_db_table_fields(sqlite_db, log_table);
+            if ( fields.Count > 0)
+                sqlite_sett.db_fields.set( util.concatenate(fields, "\r\n") );
+
+            do_open_log( sqlite_sett.ToString());
         }
 
         private void editSettings_Click(object sender, EventArgs e) {

@@ -93,8 +93,12 @@ namespace lw_common.ui {
             if (edit == edit_type.add) {
                 Text = "Open Log";
                 settings_.guid .set( Guid.NewGuid().ToString());
-                util.postpone(() => type.Focus(), 1);
-                util.postpone(() => type.DroppedDown = true, 200);
+                // 1.8.7+ if it's anything else than file, we have preset some settings - just let the user see them 
+                //        (such as, when user drops an sqlite file, and we fill pretty much all details)
+                if (settings_.type.get() == log_type.file) {
+                    util.postpone(() => type.Focus(), 1);
+                    util.postpone(() => type.DroppedDown = true, 200);
+                }
             }
             if (edit == edit_type.edit && typeTab.SelectedIndex == 1 && remoteMachineName.Text.Trim() != "")
                 util.postpone(() => remotePassword.Focus(), 1);

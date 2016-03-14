@@ -81,7 +81,7 @@ namespace lw_common {
             set(default_);
         }
 
-        public bool can_be_multi_line {
+        internal bool can_be_multi_line {
             get { return can_be_multi_line_; }
             set {
                 can_be_multi_line_ = value;

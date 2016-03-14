@@ -1,4 +1,10 @@
 
+
+1.8.7d
+- if file name ends in .db* -> open the Log Settings with database selected + assume sqlite
+- see if db already exists in history -> if so, use that
+
+
 1.8.7c
 - connecting to database (Edit Log Settings) works
   - also added code to handle sqlite and oracle databased
