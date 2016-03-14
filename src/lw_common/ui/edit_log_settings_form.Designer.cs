@@ -86,6 +86,7 @@
             this.label28 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.dbTestStatus = new System.Windows.Forms.Label();
             this.dbFields = new System.Windows.Forms.TextBox();
             this.label33 = new System.Windows.Forms.Label();
             this.testDb = new System.Windows.Forms.Button();
@@ -114,7 +115,9 @@
             this.checkRequiresRestart = new System.Windows.Forms.Timer(this.components);
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.refresh = new System.Windows.Forms.Timer(this.components);
-            this.dbTestStatus = new System.Windows.Forms.Label();
+            this.dbUniqueIdField = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.typeTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -856,6 +859,9 @@
             // 
             // tabPage8
             // 
+            this.tabPage8.Controls.Add(this.label35);
+            this.tabPage8.Controls.Add(this.dbUniqueIdField);
+            this.tabPage8.Controls.Add(this.label34);
             this.tabPage8.Controls.Add(this.dbTestStatus);
             this.tabPage8.Controls.Add(this.dbFields);
             this.tabPage8.Controls.Add(this.label33);
@@ -877,15 +883,25 @@
             this.tabPage8.Text = "tabPage8";
             this.tabPage8.UseVisualStyleBackColor = true;
             // 
+            // dbTestStatus
+            // 
+            this.dbTestStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dbTestStatus.AutoSize = true;
+            this.dbTestStatus.Location = new System.Drawing.Point(23, 700);
+            this.dbTestStatus.Name = "dbTestStatus";
+            this.dbTestStatus.Size = new System.Drawing.Size(163, 31);
+            this.dbTestStatus.TabIndex = 11;
+            this.dbTestStatus.Text = "_Not Tested";
+            // 
             // dbFields
             // 
             this.dbFields.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.dbFields.Location = new System.Drawing.Point(382, 193);
+            this.dbFields.Location = new System.Drawing.Point(382, 172);
             this.dbFields.Multiline = true;
             this.dbFields.Name = "dbFields";
             this.dbFields.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.dbFields.Size = new System.Drawing.Size(388, 487);
+            this.dbFields.Size = new System.Drawing.Size(388, 399);
             this.dbFields.TabIndex = 7;
             this.dbFields.WordWrap = false;
             // 
@@ -893,7 +909,7 @@
             // 
             this.label33.AutoSize = true;
             this.label33.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label33.Location = new System.Drawing.Point(18, 256);
+            this.label33.Location = new System.Drawing.Point(18, 235);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(331, 336);
             this.label33.TabIndex = 10;
@@ -915,19 +931,19 @@
             // 
             this.dbMappings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.dbMappings.Location = new System.Drawing.Point(793, 193);
+            this.dbMappings.Location = new System.Drawing.Point(793, 172);
             this.dbMappings.Multiline = true;
             this.dbMappings.Name = "dbMappings";
             this.dbMappings.ReadOnly = true;
             this.dbMappings.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.dbMappings.Size = new System.Drawing.Size(388, 487);
+            this.dbMappings.Size = new System.Drawing.Size(388, 399);
             this.dbMappings.TabIndex = 8;
             this.dbMappings.WordWrap = false;
             // 
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(18, 196);
+            this.label32.Location = new System.Drawing.Point(18, 175);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(266, 31);
             this.label32.TabIndex = 6;
@@ -1168,15 +1184,35 @@
             this.refresh.Interval = 750;
             this.refresh.Tick += new System.EventHandler(this.refresh_Tick);
             // 
-            // dbTestStatus
+            // dbUniqueIdField
             // 
-            this.dbTestStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.dbTestStatus.AutoSize = true;
-            this.dbTestStatus.Location = new System.Drawing.Point(23, 700);
-            this.dbTestStatus.Name = "dbTestStatus";
-            this.dbTestStatus.Size = new System.Drawing.Size(163, 31);
-            this.dbTestStatus.TabIndex = 11;
-            this.dbTestStatus.Text = "_Not Tested";
+            this.dbUniqueIdField.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dbUniqueIdField.Location = new System.Drawing.Point(382, 586);
+            this.dbUniqueIdField.Name = "dbUniqueIdField";
+            this.dbUniqueIdField.Size = new System.Drawing.Size(388, 38);
+            this.dbUniqueIdField.TabIndex = 13;
+            // 
+            // label34
+            // 
+            this.label34.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(18, 589);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(280, 31);
+            this.label34.TabIndex = 12;
+            this.label34.Text = "Unique ID Field Name";
+            // 
+            // label35
+            // 
+            this.label35.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label35.AutoSize = true;
+            this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label35.Location = new System.Drawing.Point(23, 633);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(654, 24);
+            this.label35.TabIndex = 14;
+            this.label35.Text = "If set, this uniquely identifies each row, and we use it to sort by it (when tail" +
+    "ing)";
             // 
             // edit_log_settings_form
             // 
@@ -1326,5 +1362,8 @@
         private System.Windows.Forms.TextBox dbMappings;
         private System.Windows.Forms.Timer refresh;
         private System.Windows.Forms.Label dbTestStatus;
+        private System.Windows.Forms.TextBox dbUniqueIdField;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label label35;
     }
 }

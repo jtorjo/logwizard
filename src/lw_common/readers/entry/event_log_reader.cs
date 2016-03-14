@@ -441,7 +441,7 @@ namespace lw_common {
                 entry.add("EventID", "" + rec.Id);
 
                 entry.add("level", event_level((StandardEventLevel) rec.Level));
-                entry.analyze_and_add("timestamp", rec.TimeCreated.Value);
+                entry.add_time(rec.TimeCreated.Value);
 
                 try {
                     var task = rec.Task != 0 ? rec.TaskDisplayName : "";

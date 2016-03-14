@@ -47,13 +47,14 @@ namespace lw_common.parse {
                 is_timestamp = util.is_timestamp_fast(value);
 
             if ( is_timestamp)
-                add_timestamp_to_entry(name, value);
+                add_time(value);
             else 
                 add(name, value);
         }
 
-        public void analyze_and_add(string name, DateTime value) {
+        public void add_time(DateTime value) {
             time_ = value;
+#if old_code
             var cult = CultureInfo.CurrentCulture.DateTimeFormat;
             if (name == "timestamp")
                 name = "";
@@ -62,6 +63,7 @@ namespace lw_common.parse {
 
             add(name + "date", value.ToString( cult.ShortDatePattern));
             add(name + "time", value.ToString( "HH:mm:ss.fff"));
+#endif
         }
 
         public void add(string name, string value) {
@@ -73,11 +75,13 @@ namespace lw_common.parse {
             entry_ += value;
         }
 
-        private void add_timestamp_to_entry(string name, string text) {
-            var stamp = util.split_timestamp(text);
+        public void add_time(string text) {
             time_ = util.str_to_normalized_datetime(text);
+#if old_code
+            var stamp = util.split_timestamp(text);
             add("date", stamp.Item1);
             add("time", stamp.Item2);
+#endif
         }
 
 

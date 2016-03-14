@@ -198,7 +198,7 @@ namespace LogWizard
 
             if (util.is_debug) {
                 // testing
-                util.postpone(() => on_file_drop(@"C:\john\code\logwiz\logwizard\src\test_nlog\bin\Debug\log.db3"), 1);
+                //util.postpone(() => on_file_drop(@"C:\john\code\logwiz\logwizard\src\test_nlog\bin\Debug\log.db3"), 1);
             }
         }
 
@@ -1703,6 +1703,9 @@ namespace LogWizard
                 break;
             case log_type.debug_print:
                 new_ctx.name = least_unused_context_name("Debug");
+                break;
+            case log_type.db:
+                new_ctx.name = least_unused_context_name("Database");
                 break;
             default:
                 Debug.Assert(false);
@@ -3831,8 +3834,12 @@ namespace LogWizard
 
             // get the log fields
             var fields = db_util.sqlite_db_table_fields(sqlite_db, log_table);
-            if ( fields.Count > 0)
-                sqlite_sett.db_fields.set( util.concatenate(fields, "\r\n") );
+            if (fields.Count > 0) {
+                sqlite_sett.db_fields.set(util.concatenate(fields, "\r\n"));
+                var id_field = fields.FirstOrDefault(x => x.ToLower().EndsWith("id") || x.ToLower().EndsWith( "index"));
+                if (id_field != null)
+                    sqlite_sett.db_id_field.set( id_field);
+            }
 
             do_open_log( sqlite_sett.ToString());
         }

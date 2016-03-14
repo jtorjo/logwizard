@@ -138,6 +138,15 @@ namespace lw_common {
 
         public string part(info_type i) {
             Debug.Assert(i < info_type.max);
+
+            // 1.8.7+ - just in case we have set the date/time directly in hte constructor, and we didn't parse them from the line itself
+            //          note that at this time (1.8+), we have the date/time column formatter, which uses the time directly anyway
+            //          so long story short, we should never ask for the time/date as a string here
+            if (i == info_type.time && time != DateTime.MinValue && parts[(int) i * 2] < 0)
+                return time.ToString("HH:mm:ss.ffff");
+            if (i == info_type.date && time != DateTime.MinValue && parts[(int) i * 2] < 0)
+                return time.ToString("yyyy/MM/dd");
+
             if (parts[(int) i * 2] < 0 )
                 return "";
 

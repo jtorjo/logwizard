@@ -111,6 +111,22 @@ namespace lw_common.parse {
             }            
         }
 
+
+        public void on_column_names(List<Tuple<string,info_type>> column_names) {
+            name_to_column_.clear();
+            loname_to_name_.Clear();
+            foreach (var col in column_names) 
+                name_to_column_.set(col.Item1, col.Item2);
+
+            foreach ( var key in name_to_column_.keys())
+                loname_to_name_.Add(key.ToLower(), key);
+
+            if ( on_column_names_changed_ != null)
+                on_column_names_changed_();
+            needs_on_column_names_changed_call_ = on_column_names_changed_ == null;
+        }
+
+
         // the idea is to be able to match each column to an info-type 
         public void on_column_names(List<string> column_names) {
             name_to_column_.clear();

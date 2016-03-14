@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using lw_common.readers.entry;
 
 namespace lw_common
 {
@@ -166,6 +167,8 @@ namespace lw_common
                 return log_type.event_log;
             if (reader is debug_text_reader)
                 return log_type.debug_print;
+            if (reader is database_table_reader)
+                return log_type.db;
 
             Debug.Assert(false);
             return log_type.file;

@@ -26,7 +26,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms.VisualStyles;
 using lw_common.parse.parsers;
+using lw_common.parse.parsers.db;
 using lw_common.parse.parsers.system;
+using lw_common.readers.entry;
 using LogWizard;
 
 namespace lw_common.parse {
@@ -57,9 +59,10 @@ namespace lw_common.parse {
             Debug.Assert(settings.guid != "");
 
             switch (settings.type.get()) {
-            case log_type.file:        return new file_text_reader(settings);
-            case log_type.event_log:   return new event_log_reader(settings);
-            case log_type.debug_print: return new debug_text_reader(settings);
+            case log_type.file:         return new file_text_reader(settings);
+            case log_type.event_log:    return new event_log_reader(settings);
+            case log_type.debug_print:  return new debug_text_reader(settings);
+            case log_type.db:           return new database_table_reader(settings);
             default:
                 Debug.Assert(false);
                 return null;
@@ -86,7 +89,9 @@ namespace lw_common.parse {
 
             if (reader is debug_text_reader) 
                 return new debug_print(reader as debug_text_reader);
-            
+
+            if (reader is database_table_reader)
+                return new database_log_parser(reader as database_table_reader);
 
             Debug.Assert(false);
             return null;

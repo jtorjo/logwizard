@@ -67,6 +67,16 @@ namespace lw_common.parse.parsers {
             }
         }
 
+        // used, for instance, for database column mappings
+        internal List<Tuple<string, info_type>> column_names_to_info_type {
+            set {
+                lock (this)
+                    column_names_ = value.Select(x => x.Item1).ToList();
+                if ( column_names_.Count > 0)
+                    aliases_.on_column_names(value);
+            }
+        } 
+
         internal aliases aliases {
             get { return aliases_; }
         }

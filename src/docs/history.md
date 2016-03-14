@@ -1,4 +1,8 @@
 
+1.8.7e
+- reading from database works
+- tested also tailing the database, which works
+
 
 1.8.7d
 - if file name ends in .db* -> open the Log Settings with database selected + assume sqlite

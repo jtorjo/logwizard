@@ -364,7 +364,9 @@ namespace lw_common {
         protected readonly single_setting<string> db_provider_;
         protected readonly single_setting<string> db_connection_string_;
         protected readonly single_setting<string> db_table_name_;
-        protected readonly single_setting<string> db_fields_; 
+        protected readonly single_setting<string> db_fields_;
+        // if non-empty, it's the DB unique id field - used to sort the rows (especially useful after fully reading all records, and then doing tailing)
+        protected readonly single_setting<string> db_id_field_; 
 
 
         protected log_settings_string_readonly(string sett) {
@@ -418,6 +420,7 @@ namespace lw_common {
             db_connection_string_ = new single_setting<string>(settings_, "db_connection_string", "Data Source=<your_db_file>;Version=3;new=False;datetimeformat=CurrentCulture");
             db_table_name_ = new single_setting<string>(settings_, "db_table_name", "logtable");
             db_fields_ = new single_setting<string>(settings_, "db_fields", "time_stamp\r\nlevel\r\nlogger\r\nmessage") { can_be_multi_line = true };
+            db_id_field_ = new single_setting<string>(settings_, "db_id_field", "");
 
             // = new single_setting<string>(settings_, "", "");
         }
@@ -575,6 +578,10 @@ namespace lw_common {
         public single_setting_readonly<string> db_fields {
             get { return db_fields_; }
         }
+
+        public single_setting_readonly<string> db_id_field {
+            get { return db_id_field_; }
+        }
     }
 
 
@@ -730,6 +737,10 @@ namespace lw_common {
 
         public new single_setting<string> db_fields {
             get { return db_fields_; }
+        }
+
+        public new single_setting<string> db_id_field {
+            get { return db_id_field_; }
         }
     }
 }

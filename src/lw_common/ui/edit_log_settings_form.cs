@@ -87,6 +87,7 @@ namespace lw_common.ui {
             dbConnectionString.Text = settings_.db_connection_string;
             dbTableName.Text = settings_.db_table_name;
             dbFields.Text = settings_.db_fields;
+            dbUniqueIdField.Text = settings_.db_id_field;
             update_db_mappings();
 
             type.SelectedIndex = type_to_index();
@@ -302,6 +303,7 @@ namespace lw_common.ui {
             settings_.db_connection_string.set( dbConnectionString.Text);
             settings_.db_table_name.set(dbTableName.Text);
             settings_.db_fields.set( dbFields.Text);
+            settings_.db_id_field.set( dbUniqueIdField.Text);
 
             edited_syntax_now_ = settings_.syntax != old_settings_.syntax;
         }

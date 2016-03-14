@@ -51,6 +51,8 @@ namespace LogWizard {
 
                 case log_type.event_log: return name;
                 case log_type.debug_print: return "Debug: " + name;
+                case log_type.db:
+                    return "Database: " + settings.db_connection_string;
                 default: Debug.Assert(false); break;
                 }
 

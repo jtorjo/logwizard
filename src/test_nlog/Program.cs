@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using NLog.Internal;
@@ -160,6 +161,19 @@ namespace test_nlog
             
         }
 
+        private static void log_fast() {
+            Logger logger = LogManager.GetLogger("Example");
+            for (int i = 0; i < 1000; ++i)
+                logger.Debug("log message {0}", i);            
+        }
+        private static void log_slow() {
+            Logger logger = LogManager.GetLogger("Example");
+            for (int i = 1000; i < 2000; ++i) {
+                logger.Debug("log message {0}", i);
+                Thread.Sleep(150);
+            }
+        }
+
         static void Main(string[] args) {
             //nlog_to_file_and_archive();
             //nlog_to_simple_file();
@@ -167,10 +181,7 @@ namespace test_nlog
             //nlog_to_console();
             nlog_to_db();
 
-            Logger logger = LogManager.GetLogger("Example");
-            for (int i = 0; i < 1000; ++i)
-                logger.Debug("log message {0}", i);
-
+            log_slow();
         }
     }
 }
