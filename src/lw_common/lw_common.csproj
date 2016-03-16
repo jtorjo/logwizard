@@ -99,6 +99,8 @@
     <Compile Include="parse\parsers\file\text_file_line_by_line.cs" />
     <Compile Include="parse\log_reader.cs" />
     <Compile Include="parse\parsers\log_parser_base.cs" />
+    <Compile Include="parse_syntax\parse_log4net_syntax.cs" />
+    <Compile Include="parse_syntax\parse_nlog_syntax.cs" />
     <Compile Include="readers\entry\capture_all_debug_events.cs" />
     <Compile Include="readers\entry\database_table_reader.cs" />
     <Compile Include="readers\entry\debug_text_reader.cs" />
@@ -307,12 +309,12 @@
     <Compile Include="util\error_list_keeper.cs" />
     <Compile Include="util\export_text.cs" />
     <Compile Include="util\list_extensions.cs" />
-    <Compile Include="util\log_settings_string.cs" />
+    <Compile Include="settings\log_settings_string.cs" />
     <Compile Include="util\memory_optimized_list.cs" />
     <Compile Include="util\mouse_wheel.cs" />
     <Compile Include="util\olv_extensions.cs" />
     <Compile Include="util\read_github_release.cs" />
-    <Compile Include="util\settings_as_string.cs" />
+    <Compile Include="settings\settings_as_string.cs" />
     <Compile Include="util\split.cs" />
     <Compile Include="util\string_search.cs" />
     <Compile Include="util\util.cs" />

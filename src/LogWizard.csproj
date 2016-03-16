@@ -262,6 +262,7 @@
     </Content>
     <Content Include="lw.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="docs\event_log.md" />
     <None Include="docs\v1_8.md" />

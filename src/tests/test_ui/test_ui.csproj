@@ -143,15 +143,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lw_common\3rdparty\color_picker\color_picker.csproj">
+    <ProjectReference Include="..\..\lw_common\3rdparty\color_picker\color_picker.csproj">
       <Project>{5d703fc5-ea9a-4bbb-bf08-e3a80efddaa8}</Project>
       <Name>color_picker</Name>
     </ProjectReference>
-    <ProjectReference Include="..\lw_common\3rdparty\ObjectListView\ObjectListView2012.csproj">
+    <ProjectReference Include="..\..\lw_common\3rdparty\ObjectListView\ObjectListView2012.csproj">
       <Project>{18feda0c-d147-4286-b39a-01204808106a}</Project>
       <Name>ObjectListView2012</Name>
     </ProjectReference>
-    <ProjectReference Include="..\lw_common\lw_common.csproj">
+    <ProjectReference Include="..\..\lw_common\lw_common.csproj">
       <Project>{d7c0968b-59ca-4f94-a875-ef9de8f098eb}</Project>
       <Name>lw_common</Name>
     </ProjectReference>

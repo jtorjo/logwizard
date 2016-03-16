@@ -1,4 +1,9 @@
 
+1.8.8a
+- moved tests into their own dir
+- added scheletron for parsing nlog/log4net syntax (pattern)
+
+
 1.8.7e
 - reading from database works
 - tested also tailing the database, which works
