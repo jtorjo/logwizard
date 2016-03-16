@@ -1,4 +1,8 @@
 
+1.8.8b
+- log4net syntax pattern - recognized correctly
+
+
 1.8.8a
 - moved tests into their own dir
 - added scheletron for parsing nlog/log4net syntax (pattern)

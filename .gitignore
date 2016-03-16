@@ -32,6 +32,7 @@ src/packages/Entity*
 src/packages/System*
 src/packages/Oracle*
 src/packages/log4net*
+src/packages/NLog*
 
 src/test_nlog/packages/NLog*
 src/test_nlog/packages/Entity*
