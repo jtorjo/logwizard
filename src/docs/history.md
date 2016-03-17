@@ -1,4 +1,8 @@
 
+1.8.8c
+- nlog syntax pattern - recognized correctly
+
+
 1.8.8b
 - log4net syntax pattern - recognized correctly
 

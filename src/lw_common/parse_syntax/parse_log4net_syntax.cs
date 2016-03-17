@@ -9,7 +9,7 @@ namespace lw_common.parse_syntax
     public static class parse_log4net_syntax
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public static bool is_nlog_syntax(string syntax) {
+        public static bool is_syntax_string(string syntax) {
             if (syntax.Contains("%newline"))
                 return true;
             int idx1 = syntax.IndexOf("%");
@@ -120,25 +120,21 @@ namespace lw_common.parse_syntax
         // returning an empty string means we could not parse it
         //
         // note: for now, I ignore double %%
+        //
+        // log4net is case sensitive
         public static string parse(string syntax) {
-            string lw_syntax = "";
+            syntax_to_lw_syntax to_lw = new syntax_to_lw_syntax(syntax, "log4net");
             try {
                 var stripped = strip_details(syntax);
-                var formats = stripped.Split( new [] {"%"}, StringSplitOptions.RemoveEmptyEntries);
-                // we will see if each format can be parsed in a fixed manner - if not, we care about the suffix
-                // if ends up being -1, it means from that point on, we can't count on a fixed index
-                int fixed_start_index = 0;
-                int ctx_index = 0;
-                string prev_suffix = "";
-                bool was_last_column_fixed = false;
-                foreach (string format_and_suffix in formats) {
-                    var format = new string( format_and_suffix.TakeWhile(x => Char.IsLetterOrDigit(x) || x == '-' || x == '.').ToArray());
-                    var suffix = format_and_suffix.Substring(format.Length);
+                var patterns = stripped.Split( new [] {"%"}, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string pattern_and_suffix in patterns) {
+                    var pattern = new string( pattern_and_suffix.TakeWhile(x => Char.IsLetterOrDigit(x) || x == '-' || x == '.').ToArray());
+                    var suffix = pattern_and_suffix.Substring(pattern.Length);
 
                     // https://logging.apache.org/log4net/log4net-1.2.13/release/sdk/log4net.Layout.PatternLayout.html
                     // '-' or '.' -> they are padding
-                    var pad = new string( format.TakeWhile(x => Char.IsDigit(x) || x == '-' || x == '.').ToArray() );
-                    format = format.Substring(pad.Length);
+                    var pad = new string( pattern.TakeWhile(x => Char.IsDigit(x) || x == '-' || x == '.').ToArray() );
+                    pattern = pattern.Substring(pad.Length);
 
                     if (pad.StartsWith("-"))
                         pad = pad.Substring(1);
@@ -147,45 +143,16 @@ namespace lw_common.parse_syntax
                     if (fixed_now)
                         pad = pad.Substring(pad.IndexOf(".") + 1);
 
-                    int fixed_len = pad != "" ? int.Parse(pad) : -1;
-
-                    var lw_column = column_to_lw_column(format);
+                    int min_len = pad != "" ? int.Parse(pad) : -1;
+                    var lw_column = column_to_lw_column(pattern);
                     if (lw_column == "newline")
                         continue;
-                    bool recognized = lw_column.Length > 0 && lw_column[0] != '{';
-                    if (!recognized)
-                        lw_column = "ctx" + (++ctx_index) + lw_column;
-                    if (!recognized && !lw_column.StartsWith("{"))
-                        lw_column += "{" + format + "}"; // alias
-                    // transform into LogWizard syntax
-                    lw_syntax += lw_column + "[";
-                    lw_syntax += fixed_start_index >= 0 ? "" + fixed_start_index : (was_last_column_fixed ? "'" + prev_suffix + "'" : "''");
-                    string end_of_format = fixed_len >= 0 && fixed_now ? "," + fixed_len : (suffix != "" ? ",'" + suffix + "'" : "");
-                    // if I don't know the end - the only time I allow this is when the line ends with the message
-                    // otherwise, the syntax is invalid
-                    if ( end_of_format == "")
-                        if (!lw_column.StartsWith("msg")) {
-                            logger.Error("Invalid log4net syntax [" + syntax + "] ");
-                            return "";
-                        }
-                    lw_syntax += end_of_format;
-                    if (fixed_len >= 0 && !fixed_now)
-                        // this last parameter is the minimum number of characters - in other words, look for a suffix, but only after X chars
-                        lw_syntax += ";" + fixed_len;
-                    lw_syntax += "] ";
-
-                    if (pad == "" || !fixed_now)
-                        fixed_start_index = -1;
-                    else if (fixed_start_index >= 0)
-                        fixed_start_index += fixed_len + suffix.Length;
-                    prev_suffix = suffix;
-                    was_last_column_fixed = fixed_now;
+                    to_lw.add_column(min_len, fixed_now, pattern, suffix, lw_column);
                 }
             } catch (Exception e) {
-                logger.Error("Invalid log4net syntax [" + syntax + "] : " + e.Message);
-                lw_syntax = "";
+                to_lw.on_error(e.Message);
             }
-            return lw_syntax;
+            return to_lw.lw_syntax;
         }
 
         // %date{HH:mm:ss,fff} -> %date
