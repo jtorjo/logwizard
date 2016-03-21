@@ -99,9 +99,12 @@
     <Compile Include="parse\parsers\file\text_file_line_by_line.cs" />
     <Compile Include="parse\log_reader.cs" />
     <Compile Include="parse\parsers\log_parser_base.cs" />
-    <Compile Include="parse_syntax\parse_log4net_syntax.cs" />
-    <Compile Include="parse_syntax\parse_nlog_syntax.cs" />
-    <Compile Include="parse_syntax\syntax_to_lw_syntax.cs" />
+    <Compile Include="parse_config\parse_config.cs" />
+    <Compile Include="parse_config\parse_log4net_config.cs" />
+    <Compile Include="parse_config\parse_log4net_syntax.cs" />
+    <Compile Include="parse_config\parse_nlog_config.cs" />
+    <Compile Include="parse_config\parse_nlog_syntax.cs" />
+    <Compile Include="parse_config\syntax_to_lw_syntax.cs" />
     <Compile Include="readers\entry\capture_all_debug_events.cs" />
     <Compile Include="readers\entry\database_table_reader.cs" />
     <Compile Include="readers\entry\debug_text_reader.cs" />

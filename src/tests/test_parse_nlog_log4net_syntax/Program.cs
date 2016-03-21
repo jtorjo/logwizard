@@ -4,7 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using lw_common.parse_syntax;
+using lw_common;
+using lw_common.parse_config;
 
 namespace test_parse_nlog_log4net_syntax
 {
@@ -27,8 +28,54 @@ namespace test_parse_nlog_log4net_syntax
 //            Console.Out.WriteLine( parse_nlog_syntax.parse( a));
         }
 
-        static void Main(string[] args)
-        {
+        private static void test_configs() {
+            test_log4net_config_lw();
+            test_log4net_config_app();
+            test_log4net_config_ado();
+
+            test_nlog_config_nlog();
+            test_nlog_config_ado();
+        }
+
+        private static void test_log4net_config_lw() {
+            var cfg = parse_config.load_config_file("log4net/lw.config");
+            assert(cfg.syntax, "%date{HH:mm:ss,fff} %-10thread %-5level - %message%newline");
+            Debug.Assert(cfg.type == log_type.file );
+            Debug.Assert(cfg.name.get().ToLower().EndsWith("logwizard.log"));
+        }
+        private static void test_log4net_config_app() {
+            var cfg = parse_config.load_config_file("log4net/app.config");
+            assert(cfg.syntax, "%-file(%line): %date{HH:mm:ss,fff} %-10thread %-5level - %message%newline");
+            Debug.Assert(cfg.type == log_type.file );
+            Debug.Assert(cfg.name.get().ToLower().EndsWith("logwizard.log"));
+        }
+        private static void test_log4net_config_ado() {
+            var cfg = parse_config.load_config_file("log4net/ado.config");
+            Debug.Assert(cfg.type == log_type.db );
+            Debug.Assert(cfg.db_provider == "System.Data.SqlClient");
+            Debug.Assert(cfg.db_connection_string == "data source=SQLSVR;initial catalog=test_log4net;integrated security=false;persist security info=True;User ID=sa;Password=sa");
+            Debug.Assert(cfg.db_table_name == "loggy");
+            Debug.Assert(cfg.db_fields == "date\r\nthread\r\nlevel\r\nlogger\r\nmessage");
+        }
+
+        private static void test_nlog_config_nlog() {
+            var cfg = parse_config.load_config_file("nlog/nlog.config");
+            assert(cfg.syntax, "${longdate} ${uppercase:${level}} ${message}");
+            Debug.Assert(cfg.type == log_type.file );
+            Debug.Assert(cfg.name.get().ToLower().EndsWith("logfile.txt"));
+        }
+        private static void test_nlog_config_ado() {
+            var cfg = parse_config.load_config_file("nlog/ado.config");
+            Debug.Assert(cfg.type == log_type.db );
+            Debug.Assert(cfg.db_provider == "System.Data.OracleClient");
+            Debug.Assert(cfg.db_connection_string == "Data Source=MYORACLEDB;User Id=DBO;Password=MYPASSWORD;Integrated Security=no;");
+            Debug.Assert(cfg.db_table_name == "logtable");
+            Debug.Assert(cfg.db_fields == "time_stamp\r\nloglevel\r\nlogger\r\ncallsite\r\nmessage");
+        }
+
+        static void Main(string[] args) {
+            test_configs();
+
             test_nlog(  "${longdate} [${threadid}] ${machinename} ${joblayout} ${uppercase:inner=${level}} ${logger} - ${message} ${onexception:${newline}${exception:format=ToString:innerFormat=ToString:maxInnerExceptionLevel=2}}", 
                         "time[0,' ['] thread['','] '] ctx1{machinename}['',' '] ctx2{joblayout}['',' '] level['',' '] class{logger}['',' - '] msg['']");
             test_nlog(  "${date:format=dd.MM.yyyy HH\\:mm\\:ss,fff} | ${level:uppercase=true} | ${message}", 

@@ -1,4 +1,9 @@
 
+1.8.9
+- parsing nlog/log4net config files works
+  - it recognizes and fills file name, syntax, database details
+
+
 1.8.8c
 - nlog syntax pattern - recognized correctly
 

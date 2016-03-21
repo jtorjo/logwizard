@@ -96,7 +96,10 @@ namespace lw_common.ui {
                 settings_.guid .set( Guid.NewGuid().ToString());
                 // 1.8.7+ if it's anything else than file, we have preset some settings - just let the user see them 
                 //        (such as, when user drops an sqlite file, and we fill pretty much all details)
-                if (settings_.type.get() == log_type.file) {
+                bool any_presets = settings_.type != log_type.file
+                    // ... in this case, it's a file, with its name set
+                    || settings_.name != "" ;
+                if ( !any_presets) {
                     util.postpone(() => type.Focus(), 1);
                     util.postpone(() => type.DroppedDown = true, 200);
                 }

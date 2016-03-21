@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace lw_common.parse_syntax
+namespace lw_common
 {
     public static class parse_nlog_syntax 
     {
