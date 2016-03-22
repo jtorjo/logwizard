@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace lw_common.parse_config
+namespace lw_common
 {
     public static class parse_config
     {
@@ -230,7 +230,6 @@ namespace lw_common.parse_config
                         }
                     }
                 }
-
 
                 // find out pattern (syntax)
                 bool syntax_found = config.syntax != file_text_reader.UNKNOWN_SYNTAX;

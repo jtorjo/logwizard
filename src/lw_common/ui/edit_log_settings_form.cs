@@ -55,13 +55,43 @@ namespace lw_common.ui {
             settings_ = new log_settings_string(settings);
             edit_ = edit;
             InitializeComponent();
-            fileName.Text =  settings_.type == log_type.file ? settings_.name : "" ;
-            type.Enabled = edit == edit_type.add;
-            browserFile.Enabled = edit == edit_type.add;
 
             hide_tabs(typeTab);
             hide_tabs(fileTypeTab);
             cancel.Left = -100;
+            load_settings();
+            if (edit == edit_type.add) {
+                Text = "Open Log";
+                // 1.8.7+ if it's anything else than file, we have preset some settings - just let the user see them 
+                //        (such as, when user drops an sqlite file, and we fill pretty much all details)
+                bool any_presets = settings_.type != log_type.file
+                    // ... in this case, it's a file, with its name set
+                    || settings_.name != "" ;
+                if ( !any_presets) {
+                    util.postpone(() => type.Focus(), 1);
+                    util.postpone(() => type.DroppedDown = true, 200);
+                }
+            }
+            if (edit == edit_type.edit && typeTab.SelectedIndex == 1 && remoteMachineName.Text.Trim() != "")
+                util.postpone(() => remotePassword.Focus(), 1);
+
+            new Thread(check_event_log_thread) {IsBackground = true}.Start();
+        }
+
+        public void load_config(string config_file) {
+            Debug.Assert(edit_ == edit_type.add);
+            var config = parse_config.load_config_file(config_file).ToString();
+            settings_ = new log_settings_string(config);
+            old_settings_ = new log_settings_string(config);
+            load_settings();
+        }
+
+        private void load_settings() {
+            fileName.Text =  settings_.type == log_type.file ? settings_.name : "" ;
+            type.Enabled = edit_ == edit_type.add;
+            browserFile.Enabled = edit_ == edit_type.add;
+
+            loadConfig.Enabled = loadConfigLabel.Enabled = edit_ == edit_type.add;
             friendlyName.Text = settings_.friendly_name;
             fileType.SelectedIndex = file_type_to_index( settings_.file_type );
             reversed.Checked = settings_.reverse;
@@ -91,23 +121,9 @@ namespace lw_common.ui {
             update_db_mappings();
 
             type.SelectedIndex = type_to_index();
-            if (edit == edit_type.add) {
-                Text = "Open Log";
+            
+            if (edit_ == edit_type.add) 
                 settings_.guid .set( Guid.NewGuid().ToString());
-                // 1.8.7+ if it's anything else than file, we have preset some settings - just let the user see them 
-                //        (such as, when user drops an sqlite file, and we fill pretty much all details)
-                bool any_presets = settings_.type != log_type.file
-                    // ... in this case, it's a file, with its name set
-                    || settings_.name != "" ;
-                if ( !any_presets) {
-                    util.postpone(() => type.Focus(), 1);
-                    util.postpone(() => type.DroppedDown = true, 200);
-                }
-            }
-            if (edit == edit_type.edit && typeTab.SelectedIndex == 1 && remoteMachineName.Text.Trim() != "")
-                util.postpone(() => remotePassword.Focus(), 1);
-
-            new Thread(check_event_log_thread) {IsBackground = true}.Start();
         }
 
         private int db_provider_string_to_index(string provider) {
@@ -610,6 +626,11 @@ namespace lw_common.ui {
 
             typeTab.Enabled = true;
             Cursor = Cursors.Default;
+        }
+
+        private void loadConfig_Click(object sender, EventArgs e) {
+            if (ofdConfig.ShowDialog(this) == DialogResult.OK) 
+                load_config( ofdConfig.FileName);
         }
 
     }

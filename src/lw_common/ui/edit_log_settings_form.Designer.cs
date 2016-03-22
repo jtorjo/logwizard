@@ -86,6 +86,9 @@
             this.label28 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.label35 = new System.Windows.Forms.Label();
+            this.dbUniqueIdField = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
             this.dbTestStatus = new System.Windows.Forms.Label();
             this.dbFields = new System.Windows.Forms.TextBox();
             this.label33 = new System.Windows.Forms.Label();
@@ -115,9 +118,9 @@
             this.checkRequiresRestart = new System.Windows.Forms.Timer(this.components);
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.refresh = new System.Windows.Forms.Timer(this.components);
-            this.dbUniqueIdField = new System.Windows.Forms.TextBox();
-            this.label34 = new System.Windows.Forms.Label();
-            this.label35 = new System.Windows.Forms.Label();
+            this.loadConfig = new System.Windows.Forms.Button();
+            this.loadConfigLabel = new System.Windows.Forms.Label();
+            this.ofdConfig = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
             this.typeTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -140,10 +143,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.typeTab);
-            this.panel1.Location = new System.Drawing.Point(-6, 68);
+            this.panel1.Location = new System.Drawing.Point(-6, 117);
             this.panel1.Margin = new System.Windows.Forms.Padding(6);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1256, 812);
+            this.panel1.Size = new System.Drawing.Size(1256, 836);
             this.panel1.TabIndex = 0;
             // 
             // typeTab
@@ -160,7 +163,7 @@
             this.typeTab.Margin = new System.Windows.Forms.Padding(6);
             this.typeTab.Name = "typeTab";
             this.typeTab.SelectedIndex = 0;
-            this.typeTab.Size = new System.Drawing.Size(1266, 806);
+            this.typeTab.Size = new System.Drawing.Size(1282, 830);
             this.typeTab.TabIndex = 0;
             // 
             // tabPage1
@@ -174,7 +177,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage1.Size = new System.Drawing.Size(1250, 753);
+            this.tabPage1.Size = new System.Drawing.Size(1266, 777);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -182,7 +185,7 @@
             // browserFile
             // 
             this.browserFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.browserFile.Location = new System.Drawing.Point(884, 16);
+            this.browserFile.Location = new System.Drawing.Point(900, 16);
             this.browserFile.Margin = new System.Windows.Forms.Padding(6);
             this.browserFile.Name = "browserFile";
             this.browserFile.Size = new System.Drawing.Size(58, 54);
@@ -200,7 +203,7 @@
             this.fileName.Margin = new System.Windows.Forms.Padding(6);
             this.fileName.Name = "fileName";
             this.fileName.ReadOnly = true;
-            this.fileName.Size = new System.Drawing.Size(858, 38);
+            this.fileName.Size = new System.Drawing.Size(874, 38);
             this.fileName.TabIndex = 10;
             // 
             // fileType
@@ -214,7 +217,7 @@
             "Part-Per-Line",
             "XML",
             "CSV"});
-            this.fileType.Location = new System.Drawing.Point(1020, 18);
+            this.fileType.Location = new System.Drawing.Point(1036, 18);
             this.fileType.Margin = new System.Windows.Forms.Padding(6);
             this.fileType.Name = "fileType";
             this.fileType.Size = new System.Drawing.Size(214, 39);
@@ -225,7 +228,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(942, 26);
+            this.label3.Location = new System.Drawing.Point(958, 26);
             this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(75, 31);
@@ -241,7 +244,7 @@
             this.panel2.Location = new System.Drawing.Point(4, 82);
             this.panel2.Margin = new System.Windows.Forms.Padding(6);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1190, 522);
+            this.panel2.Size = new System.Drawing.Size(1262, 697);
             this.panel2.TabIndex = 0;
             // 
             // fileTypeTab
@@ -257,7 +260,7 @@
             this.fileTypeTab.Margin = new System.Windows.Forms.Padding(6);
             this.fileTypeTab.Name = "fileTypeTab";
             this.fileTypeTab.SelectedIndex = 0;
-            this.fileTypeTab.Size = new System.Drawing.Size(1234, 516);
+            this.fileTypeTab.Size = new System.Drawing.Size(1291, 691);
             this.fileTypeTab.TabIndex = 0;
             // 
             // tabPage3
@@ -273,7 +276,7 @@
             this.tabPage3.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage3.Size = new System.Drawing.Size(1218, 463);
+            this.tabPage3.Size = new System.Drawing.Size(1275, 638);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -322,13 +325,13 @@
             this.syntax.Location = new System.Drawing.Point(120, 162);
             this.syntax.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.syntax.Name = "syntax";
-            this.syntax.Size = new System.Drawing.Size(890, 118);
+            this.syntax.Size = new System.Drawing.Size(947, 118);
             this.syntax.TabIndex = 5;
             // 
             // editSyntax
             // 
             this.editSyntax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.editSyntax.Location = new System.Drawing.Point(1026, 152);
+            this.editSyntax.Location = new System.Drawing.Point(1083, 152);
             this.editSyntax.Margin = new System.Windows.Forms.Padding(6);
             this.editSyntax.Name = "editSyntax";
             this.editSyntax.Size = new System.Drawing.Size(126, 54);
@@ -368,7 +371,7 @@
             this.tabPage4.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage4.Size = new System.Drawing.Size(1218, 463);
+            this.tabPage4.Size = new System.Drawing.Size(1275, 638);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -425,7 +428,7 @@
             this.tabPage5.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage5.Size = new System.Drawing.Size(1218, 463);
+            this.tabPage5.Size = new System.Drawing.Size(1275, 638);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "tabPage5";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -492,7 +495,7 @@
             this.tabPage6.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage6.Size = new System.Drawing.Size(1218, 463);
+            this.tabPage6.Size = new System.Drawing.Size(1275, 638);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "tabPage6";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -562,7 +565,7 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage2.Size = new System.Drawing.Size(1250, 753);
+            this.tabPage2.Size = new System.Drawing.Size(1266, 777);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -798,7 +801,7 @@
             this.tabPage7.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage7.Size = new System.Drawing.Size(1250, 753);
+            this.tabPage7.Size = new System.Drawing.Size(1266, 777);
             this.tabPage7.TabIndex = 2;
             this.tabPage7.Text = "tabPage7";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -878,10 +881,40 @@
             this.tabPage8.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage8.Name = "tabPage8";
             this.tabPage8.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage8.Size = new System.Drawing.Size(1250, 753);
+            this.tabPage8.Size = new System.Drawing.Size(1266, 777);
             this.tabPage8.TabIndex = 3;
             this.tabPage8.Text = "tabPage8";
             this.tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // label35
+            // 
+            this.label35.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label35.AutoSize = true;
+            this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label35.Location = new System.Drawing.Point(23, 633);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(654, 24);
+            this.label35.TabIndex = 14;
+            this.label35.Text = "If set, this uniquely identifies each row, and we use it to sort by it (when tail" +
+    "ing)";
+            // 
+            // dbUniqueIdField
+            // 
+            this.dbUniqueIdField.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dbUniqueIdField.Location = new System.Drawing.Point(382, 586);
+            this.dbUniqueIdField.Name = "dbUniqueIdField";
+            this.dbUniqueIdField.Size = new System.Drawing.Size(388, 38);
+            this.dbUniqueIdField.TabIndex = 13;
+            // 
+            // label34
+            // 
+            this.label34.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(18, 589);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(280, 31);
+            this.label34.TabIndex = 12;
+            this.label34.Text = "Unique ID Field Name";
             // 
             // dbTestStatus
             // 
@@ -1016,7 +1049,7 @@
             this.tabPage9.Margin = new System.Windows.Forms.Padding(6);
             this.tabPage9.Name = "tabPage9";
             this.tabPage9.Padding = new System.Windows.Forms.Padding(6);
-            this.tabPage9.Size = new System.Drawing.Size(1250, 753);
+            this.tabPage9.Size = new System.Drawing.Size(1266, 777);
             this.tabPage9.TabIndex = 4;
             this.tabPage9.Text = "tabPage9";
             this.tabPage9.UseVisualStyleBackColor = true;
@@ -1035,7 +1068,7 @@
             // 
             this.reversed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.reversed.AutoSize = true;
-            this.reversed.Location = new System.Drawing.Point(14, 899);
+            this.reversed.Location = new System.Drawing.Point(14, 967);
             this.reversed.Margin = new System.Windows.Forms.Padding(6);
             this.reversed.Name = "reversed";
             this.reversed.Size = new System.Drawing.Size(485, 35);
@@ -1050,7 +1083,7 @@
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox1.AutoSize = true;
             this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(14, 945);
+            this.checkBox1.Location = new System.Drawing.Point(14, 1013);
             this.checkBox1.Margin = new System.Windows.Forms.Padding(6);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(174, 35);
@@ -1062,7 +1095,7 @@
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(214, 934);
+            this.textBox1.Location = new System.Drawing.Point(214, 1005);
             this.textBox1.Margin = new System.Windows.Forms.Padding(6);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(196, 38);
@@ -1073,7 +1106,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
             this.label1.Enabled = false;
-            this.label1.Location = new System.Drawing.Point(426, 940);
+            this.label1.Location = new System.Drawing.Point(426, 1010);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(121, 31);
@@ -1112,7 +1145,7 @@
             // ok
             // 
             this.ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ok.Location = new System.Drawing.Point(1128, 925);
+            this.ok.Location = new System.Drawing.Point(1127, 993);
             this.ok.Margin = new System.Windows.Forms.Padding(6);
             this.ok.Name = "ok";
             this.ok.Size = new System.Drawing.Size(116, 52);
@@ -1124,7 +1157,7 @@
             // cancel
             // 
             this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancel.Location = new System.Drawing.Point(620, 936);
+            this.cancel.Location = new System.Drawing.Point(573, 1332);
             this.cancel.Margin = new System.Windows.Forms.Padding(6);
             this.cancel.Name = "cancel";
             this.cancel.Size = new System.Drawing.Size(122, 52);
@@ -1151,7 +1184,7 @@
             this.friendlyName.Location = new System.Drawing.Point(754, 10);
             this.friendlyName.Margin = new System.Windows.Forms.Padding(6);
             this.friendlyName.Name = "friendlyName";
-            this.friendlyName.Size = new System.Drawing.Size(478, 38);
+            this.friendlyName.Size = new System.Drawing.Size(490, 38);
             this.friendlyName.TabIndex = 9;
             // 
             // needsRestart
@@ -1160,7 +1193,7 @@
             this.needsRestart.AutoSize = true;
             this.needsRestart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.needsRestart.ForeColor = System.Drawing.Color.Red;
-            this.needsRestart.Location = new System.Drawing.Point(862, 940);
+            this.needsRestart.Location = new System.Drawing.Point(860, 1008);
             this.needsRestart.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.needsRestart.Name = "needsRestart";
             this.needsRestart.Size = new System.Drawing.Size(235, 31);
@@ -1184,35 +1217,31 @@
             this.refresh.Interval = 750;
             this.refresh.Tick += new System.EventHandler(this.refresh_Tick);
             // 
-            // dbUniqueIdField
+            // loadConfig
             // 
-            this.dbUniqueIdField.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.dbUniqueIdField.Location = new System.Drawing.Point(382, 586);
-            this.dbUniqueIdField.Name = "dbUniqueIdField";
-            this.dbUniqueIdField.Size = new System.Drawing.Size(388, 38);
-            this.dbUniqueIdField.TabIndex = 13;
+            this.loadConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.loadConfig.Location = new System.Drawing.Point(1055, 55);
+            this.loadConfig.Name = "loadConfig";
+            this.loadConfig.Size = new System.Drawing.Size(187, 53);
+            this.loadConfig.TabIndex = 11;
+            this.loadConfig.Text = "Load Config";
+            this.loadConfig.UseVisualStyleBackColor = true;
+            this.loadConfig.Click += new System.EventHandler(this.loadConfig_Click);
             // 
-            // label34
+            // loadConfigLabel
             // 
-            this.label34.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(18, 589);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(280, 31);
-            this.label34.TabIndex = 12;
-            this.label34.Text = "Unique ID Field Name";
+            this.loadConfigLabel.AutoSize = true;
+            this.loadConfigLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.loadConfigLabel.Location = new System.Drawing.Point(7, 57);
+            this.loadConfigLabel.Name = "loadConfigLabel";
+            this.loadConfigLabel.Size = new System.Drawing.Size(713, 48);
+            this.loadConfigLabel.TabIndex = 12;
+            this.loadConfigLabel.Text = "You can now load your log settings from an nlog / log4net configuration file\r\nSet" +
+    "tings like the log\'s syntax or log type can be loaded from your .config file";
             // 
-            // label35
+            // ofdConfig
             // 
-            this.label35.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label35.AutoSize = true;
-            this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label35.Location = new System.Drawing.Point(23, 633);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(654, 24);
-            this.label35.TabIndex = 14;
-            this.label35.Text = "If set, this uniquely identifies each row, and we use it to sort by it (when tail" +
-    "ing)";
+            this.ofdConfig.Filter = "Config Files (nLog / Log4net)|*.config|nLog Config Files|*.nlog|All Files|*.*";
             // 
             // edit_log_settings_form
             // 
@@ -1221,7 +1250,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.cancel;
-            this.ClientSize = new System.Drawing.Size(1252, 986);
+            this.ClientSize = new System.Drawing.Size(1252, 1054);
+            this.Controls.Add(this.loadConfigLabel);
+            this.Controls.Add(this.loadConfig);
             this.Controls.Add(this.reversed);
             this.Controls.Add(this.needsRestart);
             this.Controls.Add(this.cancel);
@@ -1365,5 +1396,8 @@
         private System.Windows.Forms.TextBox dbUniqueIdField;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Button loadConfig;
+        private System.Windows.Forms.Label loadConfigLabel;
+        private System.Windows.Forms.OpenFileDialog ofdConfig;
     }
 }

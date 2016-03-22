@@ -1,4 +1,9 @@
 
+
+1.8.10
+- edit log settings: can load settings from nlog/log4net config file
+
+
 1.8.9
 - parsing nlog/log4net config files works
   - it recognizes and fills file name, syntax, database details
