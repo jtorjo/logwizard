@@ -722,7 +722,11 @@ namespace LogWizard
 
         private void on_file_drop(string file, string friendly_name = "") {
             string ext = Path.GetExtension(file.ToLower());
-            if (ext == ".zip") {
+            if (parse_config.is_config_file(file)) {
+                util.postpone(() => on_config_file_drop(file), 1);
+                return;
+            }
+            else if (ext == ".zip") {
                 // allow the drag/drop operation to finish - thus the program we got this from can be responsive
                 util.postpone(() => on_zip_drop(file), 1);
                 return;
@@ -741,6 +745,7 @@ namespace LogWizard
             on_new_file_log(file, friendly_name);
             util.bring_to_top(this);
         }
+
 
         // to show/hide the "details" view - the details view contains all information in the message (that is not usually shown in the list)
         private void show_details(bool show) {
@@ -1735,6 +1740,12 @@ namespace LogWizard
             else {
                 // at this point, we know it's a ***new*** file
                 log_settings_string file_settings = new log_settings_string("");
+
+                // 1.8.11+ see if any config file found
+                var config_file = parse_config.find_config_file(name);
+                if (config_file != "")
+                    file_settings = parse_config.load_config_file(config_file) ;
+
                 file_settings.type.set( log_type.file);
                 file_settings.name.set(name);
                 file_settings.friendly_name.set(friendly_name);
@@ -3790,11 +3801,13 @@ namespace LogWizard
         }
 
         private void whatsupOpen_Click(object sender, EventArgs e) {
-            do_open_log("");
+            do_open_log("", "");
         }
 
-        private void do_open_log(string initial_settings_str) {
+        private void do_open_log(string initial_settings_str, string config_file) {
             var add = new edit_log_settings_form(initial_settings_str, edit_log_settings_form.edit_type.add);
+            if (config_file != "")
+                add.load_config(config_file);
             if (add.ShowDialog(this) == DialogResult.OK) {
                 log_settings_string settings = new log_settings_string(add.settings);
                 if (is_log_in_history(ref settings)) {
@@ -3812,6 +3825,10 @@ namespace LogWizard
                 create_text_reader(new_.write_settings);
                 save();
             }            
+        }
+
+        private void on_config_file_drop(string config_file) {
+            do_open_log("", config_file);
         }
 
         private void on_sqlite_file_drop(string sqlite_db) {
@@ -3841,7 +3858,7 @@ namespace LogWizard
                     sqlite_sett.db_id_field.set( id_field);
             }
 
-            do_open_log( sqlite_sett.ToString());
+            do_open_log( sqlite_sett.ToString(), "");
         }
 
         private void editSettings_Click(object sender, EventArgs e) {

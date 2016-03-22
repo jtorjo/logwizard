@@ -62,15 +62,19 @@ namespace lw_common.ui {
             load_settings();
             if (edit == edit_type.add) {
                 Text = "Open Log";
-                // 1.8.7+ if it's anything else than file, we have preset some settings - just let the user see them 
-                //        (such as, when user drops an sqlite file, and we fill pretty much all details)
-                bool any_presets = settings_.type != log_type.file
-                    // ... in this case, it's a file, with its name set
-                    || settings_.name != "" ;
-                if ( !any_presets) {
-                    util.postpone(() => type.Focus(), 1);
-                    util.postpone(() => type.DroppedDown = true, 200);
-                }
+                util.postpone(() => type.Focus(), 1);
+                util.postpone(() => {
+                    // 1.8.11+ I can preload a config after the constructor. In that case, I should not open the dropdown
+                    // 1.8.7+ if it's anything else than file, we have preset some settings - just let the user see them 
+                    //        (such as, when user drops an sqlite file, and we fill pretty much all details)
+                    bool any_presets = settings_.type != log_type.file
+                        // ... in this case, it's a file, with its name set
+                        || settings_.name != "" ;
+                    if ( !any_presets)
+                        type.DroppedDown = true;
+                    else 
+                        util.bring_to_top(this);
+                }, 200);
             }
             if (edit == edit_type.edit && typeTab.SelectedIndex == 1 && remoteMachineName.Text.Trim() != "")
                 util.postpone(() => remotePassword.Focus(), 1);

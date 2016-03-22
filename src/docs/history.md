@@ -1,4 +1,12 @@
 
+1.8.11
+- dropping a .config file : works
+- dropping a log file
+  - automatically parse for .config files
+	  - see if nlog or log4net
+	  - first look for .exe and .exe.config files
+	  - look for config files in directory + parent + parent
+
 
 1.8.10
 - edit log settings: can load settings from nlog/log4net config file

@@ -13,6 +13,7 @@ namespace lw_common
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private const int MAX_CONFIG_FILE_SIZE = 100 * 1024;
 
         private static void add_config_files_from_dir(string dir, List<string> config_files) {
             // https://github.com/nlog/NLog/wiki/Configuration-file
@@ -71,23 +72,29 @@ namespace lw_common
 
                 // I assume any .config file does not have more than 100K - because I will be reading them fully, 
                 // and I don't want to end up reading 100 mega bytes by mistake
-                config_files = config_files.Where(x => new FileInfo(x).Length <= 100 * 1024).ToList();
+                config_files = config_files.Where(x => new FileInfo(x).Length <= MAX_CONFIG_FILE_SIZE).ToList();
 
                 // read config files
                 foreach (var config_file in config_files) {
-                    try {
-                        var all = File.ReadAllText(config_file);
-                        if (all.Contains("<log4net") || all.Contains("<nlog"))
-                            return config_file;
-                    } catch(Exception e) {
-                        // I don't consider this an error, since we may have other .config files to read from
-                        logger.Debug("can't read config file " + config_file + " : " + e.Message);
-                    }
+                    if ( is_config_file(config_file))
+                        return config_file;
                 }
             } catch (Exception e) {
                 logger.Error("can't find .config file " + file_name_or_dir + " : " + e.Message);
             }
             return "";
+        }
+
+        public static bool is_config_file(string config_file) {
+            try {
+                if (new FileInfo(config_file).Length < MAX_CONFIG_FILE_SIZE) {
+                    var all = File.ReadAllText(config_file);
+                    if (all.Contains("<log4net") || all.Contains("<nlog"))
+                        return true;
+                }
+            } catch {
+            }
+            return false;
         }
 
         // reads the config file, and sets as many settings as possible
