@@ -1,4 +1,9 @@
 
+1.8.13
+- fix #84
+  - file line-by-line + nlog/log4net syntax: {} -> treat it as an alias
+
+
 1.8.12
 - dropping file: if syntax is log4net or nlog -> convert into LW syntax (file_text_reader)
 - care about ';' -> min size

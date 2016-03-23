@@ -133,11 +133,60 @@ namespace lw_common.parse.parsers {
                 string_.expect_bytes(full_len);
                 lines_.min_capacity = (int)(full_len / CHARS_PER_AVG_LINE);
             }
+            // otherwise, it would get overridden in log_parser's constructor (force_reload())
+            util.postpone(() => {
+                // 1.8.13+ only if within our syntax, we have some aliases. If so, we force them
+                var aliases = suggested_syntax_aliases;
+                if (aliases.Count > 0)
+                    column_names_to_info_type = aliases;
+            }, 1);
+        }
+
+        private List<Tuple<string, info_type>> suggested_syntax_aliases {
+            get {
+                var aliases = new List<Tuple<string, info_type>>();
+                foreach (var syntax in syntaxes_) 
+                    if ( syntax.relative_syntax_) {
+                        aliases.Clear();
+                        bool has_any_alias = syntax.relative_idx_in_line_.Any(x => x.column_alias != "");
+                        if ( has_any_alias)
+                            foreach ( var rel in syntax.relative_idx_in_line_)
+                                aliases.Add(new Tuple<string, info_type>(rel.column_alias != "" ? rel.column_alias : rel.type.ToString(), rel.type));
+                    }
+                return aliases;
+            }
+        } 
+
+        private  List<string> syntax_to_column_names {
+            get {
+                // syntax is like $name1[...] $name2[...] ...
+                string syntax = sett_.syntax;
+
+                var names = syntax.Split('$');
+                List<string> result = new List<string>();
+                foreach (var name in names) {
+                    int type = name.IndexOf('[');
+                    string column;
+                    if (type >= 0)
+                        column = name.Substring(0, type).Trim();
+                    else
+                        column = name.Trim();
+                    if (column != "")
+                        result.Add(column);
+                }
+
+                return result;
+            }
         }
 
         protected override void on_updated_settings() {
             base.on_updated_settings();
-            column_names = syntax_to_column_names();
+
+            var aliases = suggested_syntax_aliases;
+            if (aliases.Count > 0)
+                column_names_to_info_type = aliases;
+            else 
+                column_names = syntax_to_column_names;
         }
 
         private void update_log_lines_capacity() {
@@ -230,7 +279,10 @@ namespace lw_common.parse.parsers {
                 string column_alias = "";
                 if (type_str.Contains("{")) {
                     column_alias = type_str.Substring(type_str.IndexOf("{") + 1).Trim();
-                    column_alias = column_alias.Substring(column_alias.Length - 1); // ignore ending }
+                    column_alias = column_alias.Substring(0, column_alias.Length - 1); // ignore ending }
+                    // note: we can't have an alias match a logwizard existing column type - like, "line". That would interfere with how we process the columns
+                    if (info_type_io.from_str(column_alias) != info_type.max)
+                        column_alias = "_" + column_alias;
                     type_str = type_str.Substring(0, type_str.IndexOf("{")).Trim();
                 }
                 info_type type = info_type_io.from_str(type_str);
@@ -629,25 +681,6 @@ namespace lw_common.parse.parsers {
             return new line(l, syntax_info.line_contains_msg_only_);
         }
 
-        private  List<string> syntax_to_column_names() {
-            // syntax is like $name1[...] $name2[...] ...
-            string syntax = sett_.syntax;
-
-            var names = syntax.Split('$');
-            List<string> result = new List<string>();
-            foreach (var name in names) {
-                int type = name.IndexOf('[');
-                string column;
-                if (type >= 0) 
-                    column = name.Substring(0,type).Trim();
-                else 
-                    column = name.Trim();
-                if ( column != "")
-                    result.Add(column);
-            }
-
-            return result;
-        }
     }
 
 }
