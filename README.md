@@ -25,6 +25,8 @@ My team and I have created a rather large piece of software that is running on t
 
 Here are some of LogWizard's features:
 - **Easy to filter information** - easy to create filters, easy to turn on/off, easy to copy/paste/modify.
+- [**Pretty Formatting! (v1.8+)**](http://www.codeproject.com/Articles/1078310/Log-Wizard-Make-your-Logs-Look-Pretty) - You can have the information that matters to you most to just stand out of the crowd!
+- [**nlog / log4net Enhanced Support**](https://github.com/jtorjo/logwizard/wiki/loglibraries) - It guesses the log (file/database) syntax from the nlog/log4net .config files
 - **Coloring** - allow a filter to have a certain color - allow you visually identify important information (color-the-full-line or color just-what-matches). You can already see coloring in action in the first image above.
 - **Easy to switch** from "My filtered view" to the "Full log" and back (**Alt-L**).
 - **Easy to switch** between logs. All logs you open are kept in History. Switching between them is bliss - **Ctrl-H**.
@@ -33,6 +35,7 @@ Here are some of LogWizard's features:
 - **Real-time monitoring** - drag and drop a file, and monitor it live, as your program is writing to it
 - **Windows Event Logs** - as of version [1.6](https://github.com/jtorjo/logwizard/releases/tag/1.6.1), you can very easy view `Window Event Logs`. Just hit **Ctrl-O**, select `Windows Event Log` from the combo, and that's it! _It even works for viewing remote event logs!_
 - **Debug Viewer** - as of version [1.6](https://github.com/jtorjo/logwizard/releases/tag/1.6.1), you can view anything your program outputs via `OutputDebugString`. You can view the information from all programs, or filter it just by your program name. Hit **Ctrl-O**, and select `DebugPrint`.
+- **Database Support**. Can read from common databases, such as MSSQL, Oracle, SQLite. Bonus - drop an Sqlite database onto Logwizard and it automatically guesses the log table + log fields
 - **View Summary** - show me how many lines a certain view has. For example, I have View that shows me notifications, errors, and fatal errors. When I open a log, the first thing I check is - how many lines are in that view? If too many, that's the first View I look at.
 - **Remember my settings**. I don't want to have to specify the same thing twice. Once - then reuse it for as many logs as you want!
 - **Auto-saving** - you don't need to save anything. Everything you set is automatically saved by default
