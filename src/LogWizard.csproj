@@ -265,7 +265,7 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="docs\event_log.md" />
-    <None Include="docs\v1_8.md" />
+    <None Include="docs\v1_8_15.md" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
