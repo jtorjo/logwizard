@@ -10,6 +10,8 @@ My focus has been on ease of use from the get go. When using LogWizard, most thi
 
 ***
 
+Want to download the latest release? Head over [here!](https://github.com/jtorjo/logwizard/releases)
+
 Read about **LogWizard** on on <a href="http://www.codeproject.com" target="_blank">CodeProject</a> : 
 * <a href="http://www.codeproject.com/Articles/1023815/LogWizard-a-Log-Viewer-that-is-easy-and-fun-to-use" target="_blank">General (Introduction)</a> 
 * <a href="http://www.codeproject.com/Articles/1045528/LogWizard-Filter-your-Logs-Inside-out" target="_blank">Easy creation of Filters/Views</a> 
