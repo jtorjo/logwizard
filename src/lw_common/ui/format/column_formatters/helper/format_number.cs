@@ -33,12 +33,12 @@ namespace lw_common.ui.format.column_formatters.helper {
         private string color_ = "";
         private bool look_for_hex_ = true;
 
-        // ... not perfect, but a good start
-        //private Regex regex_hex_ = new Regex(@"(?<=[\s=,{\(\[<>/])[0-9a-fA-F]{4,30}(?=[\s.,<>/=\-}\]\)+*])");
+        // 1.8.14+ highly improved - also, looks for XXX-XXX-XX GUIDss
         // 1.7.12 - limit the possibility of false positives - search only for only capital letters (a-f)
-        private Regex regex_hex_ = new Regex(@"(?<=[\s=,{\(\[<>/])[0-9A-F]{4,30}(?=[\s.,<>/=\-}\]\)+*])");
+        private Regex regex_hex_ = new Regex(@"(?<=(\W|^))([0-9]|[A-F]){4,}([0-9]|[A-F]|-)*(?=(\W|$))");
 
-        private Regex regex_decimal_ = new Regex(@"(?<=[\s=,{\(\[<>/])\d*[,.]?\d*(?=[\s.,<>/=\-}\]\)+*])");
+        // 1.8.14+ highly improved
+        private Regex regex_decimal_ = new Regex(@"(?<=(\W|^))-?\d+[,.]?\d*(?=(\W|$))");
 
         private int overridden_base_ = -1;
 
@@ -58,7 +58,7 @@ namespace lw_common.ui.format.column_formatters.helper {
 
         // we know the number **can** be hex. I want to know that it is hex, and not decimal
         private static bool double_check_is_hex(string s) {
-            return s.Any(x => !Char.IsDigit(x));
+            return s.Any(x => !Char.IsDigit(x) && x != '-');
         }
 
         // returning "" means we could not convert

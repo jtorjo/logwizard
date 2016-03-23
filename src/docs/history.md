@@ -1,4 +1,9 @@
 
+1.8.14
+- fix #81
+  - recognized numbers (decimals) + hexa + guids correctly
+
+
 1.8.13
 - fix #84
   - file line-by-line + nlog/log4net syntax: {} -> treat it as an alias
