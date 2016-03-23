@@ -1,4 +1,10 @@
 
+
+
+1.8.15
+- release to public
+
+
 1.8.14
 - fix #81
   - recognized numbers (decimals) + hexa + guids correctly
