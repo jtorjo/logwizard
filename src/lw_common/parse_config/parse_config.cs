@@ -54,6 +54,10 @@ namespace lw_common
                 if (File.Exists(file_name_or_dir))
                     dir = new FileInfo(file_name_or_dir).DirectoryName;
 
+                // 1.8.16 - sample files' context+syntax are pre-set in the settings file
+                if (dir.ToLower().EndsWith("logwizard\\samples"))
+                    return "";
+
                 // gather possible .config files - order counts!
                 List<string> config_files = new List<string>();
                 if (File.Exists(file_name_or_dir + ".config"))

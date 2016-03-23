@@ -1,4 +1,6 @@
 
+1.8.16
+- fixes: when setup kit run first time, did not load setup sample correctly
 
 
 1.8.15

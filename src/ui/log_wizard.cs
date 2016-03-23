@@ -1467,7 +1467,7 @@ namespace LogWizard
                         show_tips_.handle_tips();
                 }
             } catch (Exception e) {
-                logger.Error("Refresh error" + e.Message);
+                logger.Error("Refresh error: " + e.Message);
             }
         }
 
@@ -1733,6 +1733,13 @@ namespace LogWizard
             }
         }
 
+        private void fill_file_default_log_settings(log_settings_string file_settings, string name, string friendly_name) {
+            file_settings.type.set( log_type.file);
+            file_settings.name.set(name);
+            file_settings.friendly_name.set(friendly_name);
+            file_settings.guid.set( Guid.NewGuid().ToString());            
+        }
+
         private void on_new_file_log(string name, string friendly_name) {
             string guid = sett_.get("file_to_guid." + name);
             if (guid != "") 
@@ -1740,16 +1747,19 @@ namespace LogWizard
             else {
                 // at this point, we know it's a ***new*** file
                 log_settings_string file_settings = new log_settings_string("");
+                fill_file_default_log_settings(file_settings, name, friendly_name);
 
-                // 1.8.11+ see if any config file found
-                var config_file = parse_config.find_config_file(name);
-                if (config_file != "")
-                    file_settings = parse_config.load_config_file(config_file) ;
-
-                file_settings.type.set( log_type.file);
-                file_settings.name.set(name);
-                file_settings.friendly_name.set(friendly_name);
-                file_settings.guid.set( Guid.NewGuid().ToString());
+                // 1.8.16+ - once we have a context, keep using that (since the user can modify things to it)
+                ui_context log_ctx = settings_to_context(file_settings);
+                bool already_has_context = log_ctx.name != "Default";
+                if (!already_has_context) {
+                    // 1.8.11+ see if any config file found
+                    var config_file = parse_config.find_config_file(name);
+                    if (config_file != "") {
+                        file_settings = parse_config.load_config_file(config_file);
+                        fill_file_default_log_settings(file_settings, name, friendly_name);
+                    }
+                }
                 create_text_reader(file_settings);
             }
         }
