@@ -10,11 +10,12 @@ My focus has been on ease of use from the get go. When using LogWizard, most thi
 
 ***
 
-Want to download the latest release? Head over [here!](https://github.com/jtorjo/logwizard/releases)
+Want to download the **latest release**? Head over [here!](https://github.com/jtorjo/logwizard/releases)
 
 Read about **LogWizard** on on <a href="http://www.codeproject.com" target="_blank">CodeProject</a> : 
 * <a href="http://www.codeproject.com/Articles/1023815/LogWizard-a-Log-Viewer-that-is-easy-and-fun-to-use" target="_blank">General (Introduction)</a> 
-* <a href="http://www.codeproject.com/Articles/1045528/LogWizard-Filter-your-Logs-Inside-out" target="_blank">Easy creation of Filters/Views</a> 
+* <a href="http:* <a href="http://www.codeproject.com/Articles/1078310/Log-Wizard-Make-your-Logs-Look-Pretty" target="_blank"><b>Pretty Formatting! (v1.8+)</b></a>  (2nd Best C# Article/Feb 2016)
+//www.codeproject.com/Articles/1045528/LogWizard-Filter-your-Logs-Inside-out" target="_blank">Easy creation of Filters/Views</a> 
 * <a href="http://www.codeproject.com/Articles/1039389/LogWizard-Talk-About-your-Logs" target="_blank">Create/Share Notes on Logs</a>
 * <a href="http://www.codeproject.com/Articles/1073292/Log-Wizard-Viewing-Windows-Event-Logs-Can-Be-Fun" target="_blank">Windows Event Logs</a>
 
