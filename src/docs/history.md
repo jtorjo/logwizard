@@ -1,4 +1,11 @@
 
+1.8.12
+- dropping file: if syntax is log4net or nlog -> convert into LW syntax (file_text_reader)
+- care about ';' -> min size
+- msg[''] -> works
+- test syntax dialog -> recognize it correctly (nlog / log4net)
+
+
 1.8.11
 - dropping a .config file : works
 - dropping a log file

@@ -62,6 +62,12 @@ namespace lw_common.parse.parsers {
                 // if != null, we find the start via the finding a string, or end via finding of a string
                 public string start_str = null, end_str = null;
 
+                // if > 0, we only start searching after this many chars from start
+                public int min_chars = 0;
+
+                // if not empty, the alias given to this column
+                public string column_alias = "";
+
                 public bool is_end_of_string {
                     get { return start < 0 && len < 0 && start_str == null && end_str == null; }
                 }
@@ -108,7 +114,7 @@ namespace lw_common.parse.parsers {
         private bool if_line_starts_with_tab_assume_from_prev_line = false;
 
         public text_file_line_by_line(file_text_reader_base reader) : base(reader.settings) {
-            string syntax_str = reader.settings.syntax;
+            string syntax_str = lw_common.parse_syntax.parse(reader.settings.syntax);
             if_line_does_not_match_syntax_assume_from_prev_line = reader.settings.line_if_line_does_not_match_syntax;
             if_line_starts_with_tab_assume_from_prev_line = reader.settings.line_if_line_starts_with_tab;
             logger.Debug("[parse] parsing syntax " + syntax_str);
@@ -221,6 +227,12 @@ namespace lw_common.parse.parsers {
 
                 syntax = syntax.Substring(1);
                 string type_str = syntax.Split('[')[0];
+                string column_alias = "";
+                if (type_str.Contains("{")) {
+                    column_alias = type_str.Substring(type_str.IndexOf("{") + 1).Trim();
+                    column_alias = column_alias.Substring(column_alias.Length - 1); // ignore ending }
+                    type_str = type_str.Substring(0, type_str.IndexOf("{")).Trim();
+                }
                 info_type type = info_type_io.from_str(type_str);
                 if (type == info_type.max)
                     // invalid syntax
@@ -230,15 +242,26 @@ namespace lw_common.parse.parsers {
                 if (syntax == "") {
                     // this was the last item (the remainder of the string)
                     si.relative_idx_in_line_.Add( new syntax_info.relative_pos {
-                        type = type, start = -1, start_str = null, len = -1, end_str = null
+                        type = type, start = -1, start_str = null, len = -1, end_str = null, column_alias = column_alias
                     });
                     break;
                 }
 
                 var start = parse_sub_relative_syntax(ref syntax);
+                syntax = syntax.Length > 0 ? syntax.Substring(1) : syntax; // ignore the delimeter after the number
                 var end = parse_sub_relative_syntax(ref syntax);
+                bool has_min_chars = syntax.StartsWith(";");
+                syntax = syntax.Length > 0 ? syntax.Substring(1) : syntax; // ignore the delimeter after the number
+                int min_chars = 0;
+                if (has_min_chars) {
+                    int idx_next = syntax.IndexOf("]");
+                    if (idx_next >= 0) {
+                        int.TryParse(syntax.Substring(0, idx_next), out min_chars);
+                        syntax = syntax.Substring(idx_next + 1);
+                    }
+                }
                 si.relative_idx_in_line_.Add( new syntax_info.relative_pos {
-                    type = type, start = start.Item1, start_str = start.Item2, len = end.Item1, end_str = end.Item2
+                    type = type, start = start.Item1, start_str = start.Item2, len = end.Item1, end_str = end.Item2, column_alias = column_alias, min_chars = min_chars
                 });
 
                 syntax = syntax.Trim();
@@ -319,9 +342,6 @@ namespace lw_common.parse.parsers {
                     ++end;
                 int number = int.Parse(syntax.Substring(0, end));
                 syntax = syntax.Substring(end);
-                if (syntax != "")
-                    // ignore the delimeter after the number
-                    syntax = syntax.Substring(1);
                 return new Tuple<int, string>(number,null);
             }
             else if (syntax[0] == '\'') {
@@ -331,9 +351,6 @@ namespace lw_common.parse.parsers {
                 if (end != -1) {
                     string str = syntax.Substring(0, end);
                     syntax = syntax.Substring(end + 1);
-                    if (syntax != "")
-                        // ignore the delimeter after the quoted string
-                        syntax = syntax.Substring(1);
                     return new Tuple<int, string>(-1, str);
                 }
             } 
@@ -535,7 +552,8 @@ namespace lw_common.parse.parsers {
                     idx = end;
                 } else {
                     if (part.end_str != null)
-                        end = l.IndexOf(part.end_str, idx);
+                        // 1.8.12 - care about min chars
+                        end = l.IndexOf(part.end_str, idx + part.min_chars);
                     else {
                         end = l.Length;
                         if ( part.start_str != null)

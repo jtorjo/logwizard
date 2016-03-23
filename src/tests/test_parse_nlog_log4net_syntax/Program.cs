@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using lw_common;
-using lw_common.parse_config;
 
 namespace test_parse_nlog_log4net_syntax
 {
@@ -77,26 +76,26 @@ namespace test_parse_nlog_log4net_syntax
             test_configs();
 
             test_nlog(  "${longdate} [${threadid}] ${machinename} ${joblayout} ${uppercase:inner=${level}} ${logger} - ${message} ${onexception:${newline}${exception:format=ToString:innerFormat=ToString:maxInnerExceptionLevel=2}}", 
-                        "time[0,' ['] thread['','] '] ctx1{machinename}['',' '] ctx2{joblayout}['',' '] level['',' '] class{logger}['',' - '] msg['']");
+                        "$time[0,' ['] $thread['','] '] $ctx1{machinename}['',' '] $ctx2{joblayout}['',' '] $level['',' '] $class{logger}['',' - '] $msg['']");
             test_nlog(  "${date:format=dd.MM.yyyy HH\\:mm\\:ss,fff} | ${level:uppercase=true} | ${message}", 
-                        "time[0,' | '] level['',' | '] msg['']");
+                        "$time[0,' | '] $level['',' | '] $msg['']");
             test_nlog(  "${date:format=dd.MM.yyyy HH\\:mm\\:ss,fff} | ${pad:padding=5:fixedlength=true:${level:uppercase=true}} | ${message}", 
-                        "time[0,' | '] level['',5] msg[' | ']");
+                        "$time[0,' | '] $level['',5] $msg[' | ']");
             test_nlog(  "${longdate} [${threadid}] ${machinename} ${joblayout} ${uppercase:inner=${level}} ${logger} - ${message} ", 
-                        "time[0,' ['] thread['','] '] ctx1{machinename}['',' '] ctx2{joblayout}['',' '] level['',' '] class{logger}['',' - '] msg['']");
+                        "$time[0,' ['] $thread['','] '] $ctx1{machinename}['',' '] $ctx2{joblayout}['',' '] $level['',' '] $class{logger}['',' - '] $msg['']");
 
             test_log4net(   "%date{yyyy-MM-dd HH:mm:ss} - %message", 
-                            "time[0,' - '] msg['']");
+                            "$time[0,' - '] $msg['']");
             test_log4net(   "%-70file(%4line): %date{HH:mm:ss,fff} %-5level - %message%newline", 
-                            "file[0,'(';70] ctx1{line}['','): ';4] time['',' '] level['',' - ';5] msg['']");
+                            "$file[0,'(';70] $ctx1{line}['','): ';4] $time['',' '] $level['',' - ';5] $msg['']");
             test_log4net(   "%date{HH:mm:ss,fff} %-5level - %message%newline", 
-                            "time[0,' '] level['',' - ';5] msg['']");
+                            "$time[0,' '] $level['',' - ';5] $msg['']");
             test_log4net(   "%timestamp [%thread] %level %logger %ndc - %message%newline", 
-                            "time[0,' ['] thread['','] '] level['',' '] class{Logger}['',' '] ctx1{ndc}['',' - '] msg['']");
+                            "$time[0,' ['] $thread['','] '] $level['',' '] $class{Logger}['',' '] $ctx1{ndc}['',' - '] $msg['']");
             test_log4net(   "%-6timestamp [%15.15thread] %-5level %30.30logger %ndc - %message%newline", 
-                            "time[0,' [';6] thread['',15] level['] ',' ';5] class{Logger}['',30] ctx1{ndc}[' ',' - '] msg['']");
+                            "$time[0,' [';6] $thread['',15] $level['] ',' ';5] $class{Logger}['',30] $ctx1{ndc}[' ',' - '] $msg['']");
             test_log4net(   "%date [%thread] %-5level %logger [%property{NDC}] - %message%newline", 
-                            "time[0,' ['] thread['','] '] level['',' ';5] class{Logger}['',' ['] ctx1{property}{property}['','] - '] msg['']");
+                            "$time[0,' ['] $thread['','] '] $level['',' ';5] $class{Logger}['',' ['] $ctx1{property}{property}['','] - '] $msg['']");
         }
     }
 }

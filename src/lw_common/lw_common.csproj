@@ -102,6 +102,7 @@
     <Compile Include="parse_config\parse_config.cs" />
     <Compile Include="parse_config\parse_log4net_syntax.cs" />
     <Compile Include="parse_config\parse_nlog_syntax.cs" />
+    <Compile Include="parse_config\parse_syntax.cs" />
     <Compile Include="parse_config\syntax_to_lw_syntax.cs" />
     <Compile Include="readers\entry\capture_all_debug_events.cs" />
     <Compile Include="readers\entry\database_table_reader.cs" />

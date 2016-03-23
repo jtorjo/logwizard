@@ -39,7 +39,7 @@ namespace lw_common
             if (!recognized && !lw_column.StartsWith("{"))
                 lw_column += "{" + pattern + "}"; // alias
             // transform into LogWizard syntax
-            lw_syntax_ += lw_column + "[";
+            lw_syntax_ += "$" + lw_column + "[";
             lw_syntax_ += fixed_start_index >= 0 ? "" + fixed_start_index : (was_last_column_fixed ? "'" + prev_suffix + "'" : "''");
             if (suffix.Trim() == "" && lw_column.StartsWith("msg"))
                 // special case for nlog:

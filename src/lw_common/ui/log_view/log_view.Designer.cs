@@ -71,18 +71,20 @@
             this.labelName.AutoSize = true;
             this.labelName.BackColor = System.Drawing.Color.WhiteSmoke;
             this.labelName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelName.Location = new System.Drawing.Point(3, 2);
+            this.labelName.Location = new System.Drawing.Point(6, 4);
+            this.labelName.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelName.Name = "labelName";
-            this.labelName.Size = new System.Drawing.Size(33, 15);
+            this.labelName.Size = new System.Drawing.Size(66, 29);
             this.labelName.TabIndex = 1;
             this.labelName.Text = "View";
             this.tip.SetToolTip(this.labelName, "Name of the Filtered View (shows up as the tab name)");
             // 
             // viewName
             // 
-            this.viewName.Location = new System.Drawing.Point(41, 0);
+            this.viewName.Location = new System.Drawing.Point(82, 0);
+            this.viewName.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.viewName.Name = "viewName";
-            this.viewName.Size = new System.Drawing.Size(145, 20);
+            this.viewName.Size = new System.Drawing.Size(286, 31);
             this.viewName.TabIndex = 2;
             this.tip.SetToolTip(this.viewName, "Name of the Filtered View (shows up as the tab name)");
             this.viewName.TextChanged += new System.EventHandler(this.filterName_TextChanged);
@@ -147,14 +149,15 @@
             this.list.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.list.FullRowSelect = true;
             this.list.HideSelection = false;
-            this.list.Location = new System.Drawing.Point(2, 22);
+            this.list.Location = new System.Drawing.Point(4, 44);
+            this.list.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.list.Name = "list";
             this.list.OwnerDraw = true;
             this.list.SelectColumnsOnRightClick = false;
             this.list.SelectColumnsOnRightClickBehaviour = BrightIdeasSoftware.ObjectListView.ColumnSelectBehaviour.None;
             this.list.ShowGroups = false;
             this.list.ShowSortIndicators = false;
-            this.list.Size = new System.Drawing.Size(693, 403);
+            this.list.Size = new System.Drawing.Size(1382, 802);
             this.list.TabIndex = 3;
             this.list.UseCompatibleStateImageBehavior = false;
             this.list.UseOverlays = false;
@@ -172,6 +175,7 @@
             this.list.Leave += new System.EventHandler(this.list_Leave);
             this.list.MouseClick += new System.Windows.Forms.MouseEventHandler(this.list_MouseClick);
             this.list.MouseDown += new System.Windows.Forms.MouseEventHandler(this.list_MouseDown);
+            this.list.MouseMove += new System.Windows.Forms.MouseEventHandler(this.list_MouseMove);
             this.list.MouseUp += new System.Windows.Forms.MouseEventHandler(this.list_MouseUp);
             // 
             // lineCol
@@ -357,9 +361,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(2, -1);
+            this.panel1.Location = new System.Drawing.Point(4, -2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(693, 23);
+            this.panel1.Size = new System.Drawing.Size(1386, 46);
             this.panel1.TabIndex = 4;
             // 
             // label1
@@ -367,9 +372,10 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Gray;
-            this.label1.Location = new System.Drawing.Point(189, 4);
+            this.label1.Location = new System.Drawing.Point(378, 8);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(141, 13);
+            this.label1.Size = new System.Drawing.Size(247, 24);
             this.label1.TabIndex = 0;
             this.label1.Text = "Enter to save, Esc to cancel.";
             // 
@@ -377,12 +383,13 @@
             // 
             this.edit.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.edit.force_hide = false;
-            this.edit.Location = new System.Drawing.Point(-200, 29);
+            this.edit.Location = new System.Drawing.Point(-200, 58);
+            this.edit.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.edit.Multiline = false;
             this.edit.Name = "edit";
             this.edit.ReadOnly = true;
             this.edit.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.edit.Size = new System.Drawing.Size(50, 20);
+            this.edit.Size = new System.Drawing.Size(100, 40);
             this.edit.TabIndex = 5;
             this.edit.Text = "";
             // 
@@ -394,7 +401,7 @@
             // 
             // log_view
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.list);
@@ -402,8 +409,9 @@
             this.Controls.Add(this.viewName);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.panel1);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "log_view";
-            this.Size = new System.Drawing.Size(697, 427);
+            this.Size = new System.Drawing.Size(1394, 854);
             this.Load += new System.EventHandler(this.log_view_Load);
             this.LocationChanged += new System.EventHandler(this.log_view_LocationChanged);
             this.SizeChanged += new System.EventHandler(this.log_view_SizeChanged);

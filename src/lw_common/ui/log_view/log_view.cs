@@ -2634,6 +2634,10 @@ namespace lw_common.ui
         }
 
         private void updateCursor_Tick(object sender, EventArgs e) {
+        }
+
+        private void list_MouseMove(object sender, MouseEventArgs e)
+        {
             var focus = win32.focused_ctrl();
             bool here = focus == list || focus == edit;
             if (!here)

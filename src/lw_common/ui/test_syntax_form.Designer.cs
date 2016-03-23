@@ -95,22 +95,23 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lines.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lines.Location = new System.Drawing.Point(16, 73);
-            this.lines.Margin = new System.Windows.Forms.Padding(4);
+            this.lines.Location = new System.Drawing.Point(32, 146);
+            this.lines.Margin = new System.Windows.Forms.Padding(8);
             this.lines.Multiline = true;
             this.lines.Name = "lines";
             this.lines.ReadOnly = true;
             this.lines.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.lines.Size = new System.Drawing.Size(981, 269);
+            this.lines.Size = new System.Drawing.Size(1380, 322);
             this.lines.TabIndex = 0;
             this.lines.WordWrap = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 33);
+            this.label1.Location = new System.Drawing.Point(26, 66);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(713, 34);
+            this.label1.Size = new System.Drawing.Size(1363, 62);
             this.label1.TabIndex = 1;
             this.label1.Text = "To test, copy the beginning at least 10 lines of your log, and come back here. \r\n" +
     "We will automatically paste them and try to guess the syntax. You can then tweak" +
@@ -120,18 +121,20 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(9, 8);
+            this.label2.Location = new System.Drawing.Point(18, 16);
+            this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(624, 15);
+            this.label2.Size = new System.Drawing.Size(1132, 29);
             this.label2.TabIndex = 2;
             this.label2.Text = "The Log Syntax is the syntax of each line of your log. This is how we split each " +
     "line into columns.";
             // 
             // test
             // 
-            this.test.Location = new System.Drawing.Point(868, 9);
+            this.test.Location = new System.Drawing.Point(1203, 8);
+            this.test.Margin = new System.Windows.Forms.Padding(6);
             this.test.Name = "test";
-            this.test.Size = new System.Drawing.Size(68, 26);
+            this.test.Size = new System.Drawing.Size(136, 52);
             this.test.TabIndex = 4;
             this.test.Text = "Test";
             this.test.UseVisualStyleBackColor = true;
@@ -141,9 +144,10 @@
             // 
             this.use.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.use.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.use.Location = new System.Drawing.Point(922, 351);
+            this.use.Location = new System.Drawing.Point(1266, 490);
+            this.use.Margin = new System.Windows.Forms.Padding(6);
             this.use.Name = "use";
-            this.use.Size = new System.Drawing.Size(75, 44);
+            this.use.Size = new System.Drawing.Size(150, 88);
             this.use.TabIndex = 5;
             this.use.Text = "Use it!";
             this.use.UseVisualStyleBackColor = true;
@@ -153,9 +157,10 @@
             // 
             this.help.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.help.AutoSize = true;
-            this.help.Location = new System.Drawing.Point(877, 356);
+            this.help.Location = new System.Drawing.Point(1176, 500);
+            this.help.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.help.Name = "help";
-            this.help.Size = new System.Drawing.Size(37, 17);
+            this.help.Size = new System.Drawing.Size(70, 31);
             this.help.TabIndex = 6;
             this.help.TabStop = true;
             this.help.Text = "Help";
@@ -165,9 +170,10 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 355);
+            this.label3.Location = new System.Drawing.Point(40, 498);
+            this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 17);
+            this.label3.Size = new System.Drawing.Size(105, 31);
             this.label3.TabIndex = 7;
             this.label3.Text = "Syntax:";
             // 
@@ -176,17 +182,19 @@
             this.syntax.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.syntax.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.syntax.Location = new System.Drawing.Point(80, 353);
+            this.syntax.Location = new System.Drawing.Point(160, 494);
+            this.syntax.Margin = new System.Windows.Forms.Padding(6);
             this.syntax.Name = "syntax";
-            this.syntax.Size = new System.Drawing.Size(791, 21);
+            this.syntax.Size = new System.Drawing.Size(1000, 35);
             this.syntax.TabIndex = 8;
             // 
             // cancel
             // 
             this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancel.Location = new System.Drawing.Point(942, 10);
+            this.cancel.Location = new System.Drawing.Point(1351, 10);
+            this.cancel.Margin = new System.Windows.Forms.Padding(6);
             this.cancel.Name = "cancel";
-            this.cancel.Size = new System.Drawing.Size(68, 26);
+            this.cancel.Size = new System.Drawing.Size(136, 52);
             this.cancel.TabIndex = 9;
             this.cancel.Text = "Cancel";
             this.cancel.UseVisualStyleBackColor = true;
@@ -196,12 +204,14 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(81, 377);
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(162, 542);
+            this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(220, 13);
+            this.label4.Size = new System.Drawing.Size(485, 48);
             this.label4.TabIndex = 10;
-            this.label4.Text = "Press Enter to Test, Escape to exit this dialog.";
+            this.label4.Text = "Press Enter to Test, Escape to exit this dialog.\r\nAs of 1.8.15, we recognize nlog" +
+    " and log4net syntax";
             // 
             // result
             // 
@@ -311,11 +321,12 @@
             this.olvColumn50,
             this.olvColumn51});
             this.result.FullRowSelect = true;
-            this.result.Location = new System.Drawing.Point(16, 402);
+            this.result.Location = new System.Drawing.Point(23, 610);
+            this.result.Margin = new System.Windows.Forms.Padding(6);
             this.result.MultiSelect = false;
             this.result.Name = "result";
             this.result.ShowGroups = false;
-            this.result.Size = new System.Drawing.Size(981, 220);
+            this.result.Size = new System.Drawing.Size(1380, 431);
             this.result.TabIndex = 3;
             this.result.UseCompatibleStateImageBehavior = false;
             this.result.View = System.Windows.Forms.View.Details;
@@ -528,10 +539,10 @@
             // test_syntax_form
             // 
             this.AcceptButton = this.test;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.cancel;
-            this.ClientSize = new System.Drawing.Size(1015, 634);
+            this.ClientSize = new System.Drawing.Size(1452, 1056);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.cancel);
             this.Controls.Add(this.syntax);
@@ -545,8 +556,9 @@
             this.Controls.Add(this.lines);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Margin = new System.Windows.Forms.Padding(8);
             this.Name = "test_syntax_form";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Test Log Syntax";
             this.Activated += new System.EventHandler(this.test_syntax_form_Activated);
             ((System.ComponentModel.ISupportInitialize)(this.result)).EndInit();

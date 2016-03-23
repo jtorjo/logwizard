@@ -188,7 +188,7 @@ namespace lw_common
             var appenders = log4net_root.SelectNodes(".//appender");
             foreach (XmlNode appender in appenders) {
                 var appender_type = appender.Attributes["type"].Value.ToLower();
-                if (appender_type.Contains("fileappender")) {
+                if (appender_type.Contains("file")) {
                     // it's a file
                     var file = appender.SelectSingleNode("./file");
                     if (file != null) {
