@@ -28,6 +28,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using log4net.Repository.Hierarchy;
+using lw_common.ui;
 
 namespace lw_common {
     public enum part_type {
@@ -40,6 +41,9 @@ namespace lw_common {
 
         class_, font, case_sensitive_info,
         
+        // 1.8.17+ matches any of the parts
+        any,
+
         invalid
     }
 
@@ -47,6 +51,7 @@ namespace lw_common {
         internal static part_type from_str(string str) {
             part_type part = part_type.invalid;
             switch ( str) {
+            case "$any": part = part_type.any; break;
             case "$msg": part = part_type.message; break;
 
             case "$date": part = part_type.date; break;
@@ -108,6 +113,11 @@ namespace lw_common {
             case part_type.ctx13:    return info_type.ctx13;
             case part_type.ctx14:    return info_type.ctx14;
             case part_type.ctx15:    return info_type.ctx15;
+
+            // we can't convert "all" to anything - since it includes all parts
+            case part_type.any: 
+                Debug.Assert(false);
+                return info_type.msg;
 
             default:
                 Debug.Assert(false);
@@ -205,6 +215,9 @@ namespace lw_common {
         public class match_index {
             public int start = 0, len = 0;
             public Color bg = util.transparent, fg = util.transparent;
+
+            // 1.8.17+ - this match - into what column is it?
+            public info_type type = info_type.msg;
         }
 
 
@@ -268,6 +281,10 @@ namespace lw_common {
             line = line.Trim();
             if (line.StartsWith("#"))
                 // allow comments
+                return null;
+
+            if (line == "full-word")
+                // 1.8.17 - can happen from Find >> To Filter - but we don't handle it yet
                 return null;
 
             if (line.StartsWith("font") || line.StartsWith("color") || line.StartsWith("match_color"))
@@ -353,6 +370,8 @@ namespace lw_common {
                 fi.words = line.Split('|');
                 fi.lo_words = fi.words.Select(w => w.ToLower()).ToArray();
             }
+            // 1.8.17+ - allow specifying quotes for contains or !contains
+            line = trim_quotes(line);
             fi.text = line;
             fi.lo_text = line.ToLower();
             fi.create_regex();
@@ -360,6 +379,14 @@ namespace lw_common {
                 // the regex is invalid at this point
                 return null;
             return fi;
+        }
+
+        // if starts + ends with quotes, trim the quotes
+        private static string trim_quotes(string line) {
+            string trimmed = line.Trim();
+            if (trimmed.StartsWith("'") && trimmed.EndsWith("'") && trimmed.Length >= 2)
+                return trimmed.Substring(1, trimmed.Length - 2);
+            return line;
         }
 
         private string line_part(line l) {
@@ -410,7 +437,7 @@ namespace lw_common {
             return result;            
         }
 
-        private List<match_index> compare_with_indexes(string line_part, string text, string[] words) {
+        private List<match_index> compare_with_indexes(string line_part, string text, string[] words, info_type type) {
             List<match_index> indexes = new List<match_index>();
             switch (comparison) {
             case comparison_type.does_not_start_with:
@@ -421,34 +448,34 @@ namespace lw_common {
 
             case comparison_type.equal:
                 if ( line_part == text)
-                    indexes.Add(new match_index { start = 0, len = text.Length });
+                    indexes.Add(new match_index { start = 0, len = text.Length, type = type });
                 break;
             case comparison_type.not_equal:
                 if ( line_part != text)
-                    indexes.Add(new match_index { start = 0, len = text.Length });
+                    indexes.Add(new match_index { start = 0, len = text.Length, type = type });
                 break;
             case comparison_type.starts_with:
                 if ( line_part.StartsWith(text))
-                    indexes.Add(new match_index { start = 0, len = text.Length });
+                    indexes.Add(new match_index { start = 0, len = text.Length, type = type });
                 break;
             case comparison_type.contains:
                 int pos = line_part.IndexOf(text);
                 if ( pos >= 0)
-                    indexes.Add(new match_index { start = pos, len = text.Length });
+                    indexes.Add(new match_index { start = pos, len = text.Length, type = type });
                 break;
 
             case comparison_type.contains_any:
                 foreach (string word in words) {
                     int word_pos = line_part.IndexOf(word);
                     if ( word_pos >= 0)
-                        indexes.Add(new match_index { start = word_pos, len = word.Length });
+                        indexes.Add(new match_index { start = word_pos, len = word.Length, type = type });
                 }
                 break;
 
             case comparison_type.regex:
                 var matches = regex_.Match(line_part);
                 while (matches.Success) {
-                    indexes.Add( new match_index { start = matches.Index, len = matches.Length } );
+                    indexes.Add( new match_index { start = matches.Index, len = matches.Length, type = type } );
                     matches = matches.NextMatch();
                 }                    
                 break;
@@ -462,22 +489,48 @@ namespace lw_common {
 
         private bool matches_case_sensitive(line l) {
             Debug.Assert( part != part_type.font );
+            if (part == part_type.any)
+                return matches_case_sensitive_any_column(l);
+
             string line_part = this.line_part(l);
             return compare(line_part, text, words);
         }
 
         private bool matches_case_insensitive(line l) {
             Debug.Assert( part != part_type.font );
-            string line_part = this.line_part(l).ToLower();
+            if (part == part_type.any)
+                return matches_case_insensitive_any_column(l);
+            string line_part = this.line_part(l).ToLower() ;
             return compare(line_part, lo_text, lo_words);
         }
+
+        private bool matches_case_sensitive_any_column(line l) {
+            string line_part = l.raw_full_msg();
+            if ( compare(line_part, text, words))
+                // we need an extra step, so that we don't mistakenly match the text in the time/date column, for instance
+                foreach ( var type in info_type_io.searchable)
+                    if (compare(l.part(type), text, words))
+                        return true;
+            return false;
+        }
+
+        private bool matches_case_insensitive_any_column(line l) {
+            string line_part = l.raw_full_msg().ToLower();
+            if ( compare(line_part, lo_text, lo_words))
+                // we need an extra step, so that we don't mistakenly match the text in the time/date column, for instance
+                foreach ( var type in info_type_io.searchable)
+                    if (compare(l.part(type).ToLower(), lo_text, lo_words))
+                        return true;
+            return false;
+        }
+
 
         public bool matches(line l) {
             return case_sensitive ? matches_case_sensitive(l) : matches_case_insensitive(l);
         }
 
         private static readonly List<match_index> empty_ = new List<match_index>();
-        public List<match_index> match_indexes(line l, info_type type) {
+        public List< match_index > match_indexes(line l, info_type type) {
             if (part == part_type.font || part == part_type.case_sensitive_info)
                 return empty_;
 
@@ -507,15 +560,22 @@ namespace lw_common {
             return case_sensitive ? matches_case_sensitive_with_indexes(l, type) : matches_case_insensitive_with_indexes(l, type);
         }
 
+        // returns all the matches from all columns
+        public List<match_index> match_indexes_any_column(line l) {
+            List<match_index> indexes = new List<match_index>();
+            foreach ( var type in info_type_io.searchable)
+                indexes.AddRange( match_indexes(l, type) );
+            return indexes;
+        }
 
         private List<match_index> matches_case_sensitive_with_indexes(line l, info_type type) {
             string line_part = l.part(type);
-            return compare_with_indexes(line_part, text, words);
+            return compare_with_indexes(line_part, text, words, type);
         }
 
         private List<match_index> matches_case_insensitive_with_indexes(line l, info_type type) {
             string line_part = l.part(type).ToLower();
-            return compare_with_indexes(line_part, lo_text, lo_words);
+            return compare_with_indexes(line_part, lo_text, lo_words, type);
         }
 
     }

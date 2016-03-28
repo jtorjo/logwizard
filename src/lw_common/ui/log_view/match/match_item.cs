@@ -196,7 +196,7 @@ namespace lw_common.ui {
                     bool italic = sel != "";
                     foreach ( var match in matches)
                         print.Add( new text_part(match.Item1, match.Item2) { text = find, bg = parent.cur_search.bg, fg = parent.cur_search.fg, bold = true, italic = italic, is_find_search = true } );
-                }                    
+                }
             }
                 
             return print;

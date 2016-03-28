@@ -84,9 +84,12 @@ namespace lw_common {
         }
 
         public static bool matches(filter.match item, IEnumerable<info_type> cols, search_for search) {
+            return matches(item.line, cols, search);
+        }
+        public static bool matches(line l, IEnumerable<info_type> cols, search_for search) {
             // 1.6.27+ faster way to find out if the message is contained - just look at the full message (instead of looking at each part)
-            if (matches_cell(item.line.raw_full_msg(), search))
-                return cols.Any(x => matches_cell(item.line.part(x), search));
+            if (matches_cell(l.raw_full_msg(), search))
+                return cols.Any(x => matches_cell(l.part(x), search));
             else
                 return false;
         }

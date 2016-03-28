@@ -2571,8 +2571,13 @@ namespace LogWizard
                     // remove focus from the Filters tab, just in case (otherwise, search prev/next would end up working on that)
                     unfocus_filter_panel();
 
-                    lv.set_search_for_text(searcher.search);
-                    lv.search_for_text_first();
+                    if (searcher.wants_to_filter) {
+                        var filt = searcher.search.to_filter();
+                        add_or_edit_filter(filt.text, filt.id, filt.apply_to_existing_lines);
+                    } else {
+                        lv.set_search_for_text(searcher.search);
+                        lv.search_for_text_first();
+                    }
                 }
                 break;
 

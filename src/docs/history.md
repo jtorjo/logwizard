@@ -1,4 +1,16 @@
 
+
+1.8.17
+- Search : added "To filter" button
+	- allow negating the filter
+	  - add this to the UI -> also, when negating (negating simply excludes those lines)
+	  - allow "help" -> https://github.com/jtorjo/logwizard/wiki/Filters - updated this page, to explain a bit about Filters (that you can have several, and so on)
+	- select Color/Match Color/default color?
+	  - the color is taken from the filter (fg + bg) colors + when fg/bg colors change, update the color of the button
+	- If "all columns" -> create the filter in such a way that it's an OR of all the columns
+	  - note: at this time, we don't yet match-color any columns except for the $msg column
+
+
 1.8.16
 - fixes: when setup kit run first time, did not load setup sample correctly
 

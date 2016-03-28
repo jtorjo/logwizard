@@ -120,6 +120,7 @@ namespace lw_common.ui {
             sett.set(prefix + ".friendly_regex_name", friendly_regex_name);
             sett.set(prefix + ".last_view_names", util.concatenate(last_view_names,"|"));
             sett.set(prefix + ".all_columns", all_columns ? "1" : "0");
+            sett.set(prefix + ".negate", negate ? "1" : "0");
             // FIXME i need more testing on split class
             //sett.set(prefix + ".last_view_names", split.from_list(last_view_names, ",", split.type.use_any_quotes));
         }
@@ -142,7 +143,8 @@ namespace lw_common.ui {
                 //last_view_names = split.to_list( sett.get(prefix + ".last_view_names"), ",", split.type.use_any_quotes ).ToArray()
                 last_view_names = sett.get(prefix + ".last_view_names").Split('|'),
                 // 1.6.23+ - by default, don't search all columns - did profiling, and can take a looot of time (example: Event Log)
-                all_columns = sett.get(prefix + ".all_columns", "0") != "0"
+                all_columns = sett.get(prefix + ".all_columns", "0") != "0",
+                negate = sett.get(prefix + ".negate", "0") != "0"
             };
             return cur;
         }
@@ -160,6 +162,52 @@ namespace lw_common.ui {
                 return info_type_io.is_searchable(col);
             else
                 return col == info_type.msg;
+        }
+
+        // in case I'm converting to a filter
+        public class filter_info {
+            // the filter itself
+            public readonly string text ;
+            public readonly string id ;
+            public readonly bool apply_to_existing_lines ;
+
+            public filter_info(string text, string id, bool apply_to_existing_lines) {
+                this.text = text;
+                this.id = id;
+                this.apply_to_existing_lines = apply_to_existing_lines;
+            }
+        }
+
+        public filter_info to_filter() {
+            bool is_negated = !use_regex && negate;
+            bool is_color_filter = fg != util.transparent || bg != util.transparent;
+            bool is_exclude_filter = is_negated;
+
+            string filter_str = "";
+
+            string do_not_edit = "DONOT CHANGE this line -";
+            string id = raw_filter_row.FILTER_ID_PREFIX + do_not_edit 
+                + (is_color_filter ? "color " : "") 
+                + (is_exclude_filter ? "exclude " : "")
+                + " #" + text;
+            filter_str += id + "\r\n";
+            filter_str += "## " + (all_columns ? "Any Column" : "Message") + " " + (!is_negated ? "Contains" : "Does not contain") + " " + (use_regex ? "regex" : "text") + " " + text + "\r\n";
+            if (!case_sensitive)
+                filter_str += "case-insensitive\r\n";
+            if (full_word)
+                filter_str += "full-word\r\n";
+
+            filter_str += all_columns ? "$any" : "$msg";
+            filter_str += " " + (use_regex ? text : (negate ? "!" : "") + "contains '" + text + "'") + "\r\n";
+
+
+            if (is_color_filter)
+                // note: when the filter is negated, we're simply excluding lines - thus, there's no color to assign
+                if ( !is_exclude_filter)
+                    filter_str += "match_color " + util.color_to_str(fg) + " " + (bg != util.transparent ? util.color_to_str(bg) : "") + "\r\n";
+
+            bool apply_to_existing_lines = is_color_filter || is_exclude_filter;
+            return new filter_info(filter_str, id, apply_to_existing_lines);
         }
 
 
@@ -183,5 +231,8 @@ namespace lw_common.ui {
         public string[] last_view_names ;
 
         public bool all_columns = true;
+
+        // only for text 
+        public bool negate = false;
     }
 }

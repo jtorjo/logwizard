@@ -140,6 +140,8 @@ namespace lw_common.ui {
 
         private bool closed_ = false;
 
+        private bool wants_to_filter_ = false;
+
         /* Edit mode:
            1. if more than 1 entry, the combo is dropped down by default
            2. if you type any letter while the combo is first dropped down (or paste something), it will auto close the dropdown
@@ -166,6 +168,8 @@ namespace lw_common.ui {
                 radioText.Checked = true;
             }
             update_autorecognize_radio();
+            update_negate();
+            update_to_filter_button();
             prev_search_ = current_search();
 
             util.postpone(() => {
@@ -215,6 +219,8 @@ namespace lw_common.ui {
             combo.Text = search.text;
             allColumns.Checked = search.all_columns;
             update_autorecognize_radio();
+            update_negate();
+            update_to_filter_button();
         }
 
         private void find_result_columns(log_view lv) {
@@ -304,16 +310,22 @@ namespace lw_common.ui {
             get { return search_; }
         }
 
+        public bool wants_to_filter {
+            get { return wants_to_filter_; }
+        }
+
         private void fg_Click(object sender, EventArgs e) {
             var color = util.select_color_via_dlg();
             if (color.ToArgb() != util.transparent.ToArgb())
                 fg.BackColor = color;
+            update_to_filter_button();
         }
 
         private void bg_Click(object sender, EventArgs e) {
             var color = util.select_color_via_dlg();
             if (color.ToArgb() != util.transparent.ToArgb())
                 bg.BackColor = color;
+            update_to_filter_button();
         }
 
         private search_for current_search() {
@@ -365,6 +377,16 @@ namespace lw_common.ui {
 
         private void update_autorecognize_radio() {
             radioAutoRecognize.Text = "Auto recognized (" + (is_auto_regex(combo.Text) ? "Regex" : "Text") + ")";
+        }
+
+        private void update_negate() {
+            bool is_regex = (radioAutoRecognize.Checked && is_auto_regex(combo.Text)) || radioRegex.Checked;
+            negate.Enabled = !is_regex;
+        }
+
+        private void update_to_filter_button() {
+            toFilter.ForeColor = fg.BackColor.ToArgb() != util.transparent.ToArgb() ? fg.BackColor : Color.Black;
+            toFilter.BackColor = bg.BackColor;
         }
 
         private void do_searches_thread() {
@@ -491,6 +513,7 @@ namespace lw_common.ui {
 
         private void combo_TextUpdate(object sender, EventArgs e) {
             update_autorecognize_radio();
+            update_negate();
             if (combo.Text != "" && dropped_first_time_) {
                 string old = combo.Text;
                 dropped_first_time_ = false;
@@ -527,21 +550,42 @@ namespace lw_common.ui {
         private void radioAutoRecognize_CheckedChanged(object sender, EventArgs e) {
             if (radioAutoRecognize.Checked)
                 friendlyRegexName.Enabled = is_auto_regex(combo.Text);
+            update_negate();
         }
 
         private void radioText_CheckedChanged(object sender, EventArgs e) {
             if (radioText.Checked)
                 friendlyRegexName.Enabled = false;
+            update_negate();
         }
 
         private void radioRegex_CheckedChanged(object sender, EventArgs e) {
             if (radioRegex.Checked)
                 friendlyRegexName.Enabled = true;
+            update_negate();
         }
 
         private void combo_DropDownClosed(object sender, EventArgs e) {
             dropped_first_time_ = false;
             combo_SelectedIndexChanged(null, null);
+        }
+
+        private void negate_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void filterHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+            Process.Start("https://github.com/jtorjo/logwizard/wiki/Filters");
+        }
+
+        private void toFilter_Click(object sender, EventArgs e) {
+            search_ = current_search();
+            if ( markAsNewEntry.Checked)
+                unique_search_id_ = 0;
+            search_.unique_id = unique_search_id_;
+            wants_to_filter_ = true;
+            DialogResult = DialogResult.OK;
         }
     }
 

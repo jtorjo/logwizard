@@ -442,6 +442,8 @@ namespace lw_common {
                     indexes.AddRange( row.match_indexes(l, type));
 
             indexes.Sort((x, y) => {
+                if (x.type != y.type)
+                    return x.type - y.type;
                 if (x.start != y.start)
                     return x.start - y.start;
                 return -(x.len - y.len);
