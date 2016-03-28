@@ -1219,6 +1219,8 @@ namespace LogWizard
 
         public void after_set_filter_update() {
             var lv = log_view_for_tab(viewsTab.SelectedIndex);
+            if (lv == null)
+                return; // can happen when changing log (drag and drop a new log)
             string filter = lv.filter_view ? "Extra Filter: " + lv.filter_friendly_name : "";
             string fulllog = lv.show_full_log ? "All Lines" : "View";
 

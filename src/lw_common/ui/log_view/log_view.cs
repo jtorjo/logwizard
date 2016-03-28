@@ -1131,6 +1131,12 @@ namespace lw_common.ui
         public void clear() {
             render_.clear_format_cache("file rewritten");
             filter_.clear();
+            
+            // 1.8.18+ at this point, we clear the filter and/or search            
+            model_.set_filter(false, true);
+            edit.clear_sel();
+            cur_search_ = null;
+
             refresh();
         }
 

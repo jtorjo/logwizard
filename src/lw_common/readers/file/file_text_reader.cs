@@ -327,7 +327,8 @@ namespace lw_common
                 has_it_been_rewritten_ = true;
                 read_byte_count_ = 0;
                 offset_ = 0;
-                fully_read_once_ = false;
+                // 1.8.18+ so that we can properly propagate the "file rewritten" event
+                fully_read_once_ = true;
             }
             read_file_block();
         }

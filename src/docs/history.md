@@ -1,5 +1,9 @@
 
 
+1.8.20
+- fix #85 - log file gets rewritten -> clear filter (ctrl-alf-f) + show full log (ctrl-alt-l)
+
+
 1.8.19
 - fix #12 color filter -> clear selection
 
