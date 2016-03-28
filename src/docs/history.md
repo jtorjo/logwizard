@@ -1,5 +1,9 @@
 
 
+1.8.19
+- fix #12 color filter -> clear selection
+
+
 1.8.18
 - fix #14
   - fg + bg -> use select_color_form

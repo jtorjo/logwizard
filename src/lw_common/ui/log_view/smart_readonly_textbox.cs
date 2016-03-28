@@ -390,6 +390,10 @@ namespace lw_common.ui {
         public void clear_sel() {
             sel_len_ = 0;
             last_positions_.Clear();
+            // 1.8.18+ clear it visually
+            ++ignore_change_;
+            SelectionLength = 0;
+            --ignore_change_;
         }
 
         public void update_sel() {

@@ -859,6 +859,10 @@ namespace lw_common.ui
             edit.force_refresh();            
         }
 
+        public void clear_edit() {
+            edit.clear_sel();
+        }
+
         public string name {
             get { return viewName.Text; }
             set {

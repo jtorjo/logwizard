@@ -1154,6 +1154,8 @@ namespace LogWizard
         public void add_or_edit_filter(string filter_str, string filter_id, bool apply_to_existing_lines) {
             filtCtrl.update_filter_row(filter_id, filter_str, apply_to_existing_lines);
             last_edited_filter_id_ = filter_id;
+            selected_view().clear_edit();
+            selected_view().update_edit();
         }
 
         public void sel_changed(log_view_sel_change_type type) {
