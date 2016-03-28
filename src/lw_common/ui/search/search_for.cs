@@ -32,6 +32,8 @@ namespace lw_common.ui {
     public class search_for {
         internal const int MAX_LAST_VIEW_NAMES = 15;
 
+        private const string DEFAULT_BG = "#faebd7";
+
         protected bool Equals(search_for other) {
             bool equals = case_sensitive == other.case_sensitive && 
                           full_word == other.full_word && 
@@ -132,7 +134,7 @@ namespace lw_common.ui {
             Debug.Assert( type >= 0 && type <= 2);
             search_for cur = new search_for {
                 fg = util.str_to_color( sett.get(prefix + ".fg", "transparent")),
-                bg = util.str_to_color( sett.get(prefix + ".bg", "#faebd7") ),
+                bg = util.str_to_color( sett.get(prefix + ".bg", DEFAULT_BG) ),
                 case_sensitive = sett.get(prefix + ".case_sensitive", "0") != "0",
                 full_word = sett.get(prefix + ".full_word", "0") != "0",
                 mark_lines_with_color = sett.get(prefix + ".mark_lines_with_color", "1") != "0",
@@ -171,15 +173,23 @@ namespace lw_common.ui {
             public readonly string id ;
             public readonly bool apply_to_existing_lines ;
 
-            public filter_info(string text, string id, bool apply_to_existing_lines) {
+            public readonly Color fg, bg;
+
+            public filter_info(string text, string id, bool apply_to_existing_lines, Color fg, Color bg) {
                 this.text = text;
                 this.id = id;
                 this.apply_to_existing_lines = apply_to_existing_lines;
+                this.fg = fg;
+                this.bg = bg;
             }
         }
 
         public filter_info to_filter() {
             bool is_negated = !use_regex && negate;
+            Color fg = this.fg, bg = this.bg;
+            // if the background is left as default, assume that the filter will be created with a transparent background
+            if (bg.ToArgb() == util.str_to_color(DEFAULT_BG).ToArgb())
+                bg = util.transparent;
             bool is_color_filter = fg != util.transparent || bg != util.transparent;
             bool is_exclude_filter = is_negated;
 
@@ -200,14 +210,13 @@ namespace lw_common.ui {
             filter_str += all_columns ? "$any" : "$msg";
             filter_str += " " + (use_regex ? text : (negate ? "!" : "") + "contains '" + text + "'") + "\r\n";
 
-
             if (is_color_filter)
                 // note: when the filter is negated, we're simply excluding lines - thus, there's no color to assign
                 if ( !is_exclude_filter)
                     filter_str += "match_color " + util.color_to_str(fg) + " " + (bg != util.transparent ? util.color_to_str(bg) : "") + "\r\n";
 
             bool apply_to_existing_lines = is_color_filter || is_exclude_filter;
-            return new filter_info(filter_str, id, apply_to_existing_lines);
+            return new filter_info(filter_str, id, apply_to_existing_lines, fg, bg);
         }
 
 

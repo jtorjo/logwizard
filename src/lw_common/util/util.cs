@@ -327,6 +327,8 @@ namespace lw_common {
             return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         }
 
+        // use select_color_form instead!
+#if old_code
         public static Color select_color_via_dlg() {
             var select = new ColorDialog();
             select.Color = transparent;
@@ -336,6 +338,7 @@ namespace lw_common {
 
             return transparent;
         }
+#endif
 
         public enum beep_type {
             err,

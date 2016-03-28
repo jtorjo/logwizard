@@ -1,5 +1,12 @@
 
 
+1.8.18
+- fix #14
+  - fg + bg -> use select_color_form
+  - "to filter" - if fg not set, set it now
+  - bg - if default, don't actually place it in the filter itself
+
+
 1.8.17
 - Search : added "To filter" button
 	- allow negating the filter

@@ -315,17 +315,19 @@ namespace lw_common.ui {
         }
 
         private void fg_Click(object sender, EventArgs e) {
-            var color = util.select_color_via_dlg();
-            if (color.ToArgb() != util.transparent.ToArgb())
-                fg.BackColor = color;
-            update_to_filter_button();
+            var sel = new select_color_form("Foreground Color", fg.BackColor);
+            if (sel.ShowDialog() == DialogResult.OK) {
+                fg.BackColor = sel.SelectedColor;
+                update_to_filter_button();
+            }
         }
 
         private void bg_Click(object sender, EventArgs e) {
-            var color = util.select_color_via_dlg();
-            if (color.ToArgb() != util.transparent.ToArgb())
-                bg.BackColor = color;
-            update_to_filter_button();
+            var sel = new select_color_form("Background Color", fg.BackColor);
+            if (sel.ShowDialog() == DialogResult.OK) {
+                bg.BackColor = sel.SelectedColor;
+                update_to_filter_button();
+            }
         }
 
         private search_for current_search() {
@@ -385,8 +387,9 @@ namespace lw_common.ui {
         }
 
         private void update_to_filter_button() {
-            toFilter.ForeColor = fg.BackColor.ToArgb() != util.transparent.ToArgb() ? fg.BackColor : Color.Black;
-            toFilter.BackColor = bg.BackColor;
+            var filt = current_search().to_filter();
+            toFilter.ForeColor = filt.fg.ToArgb() != util.transparent.ToArgb() ? filt.fg: Color.Black;
+            toFilter.BackColor = filt.bg;
         }
 
         private void do_searches_thread() {
@@ -581,6 +584,18 @@ namespace lw_common.ui {
 
         private void toFilter_Click(object sender, EventArgs e) {
             search_ = current_search();
+
+            if (search_.fg == util.transparent) {
+                var sel = new select_color_form("Filter Foreground Color", Color.Red);
+                if (sel.ShowDialog() == DialogResult.OK) {
+                    fg.BackColor = sel.SelectedColor;
+                    search_ = current_search();
+                    Debug.Assert(search_.fg != util.transparent);
+                } else
+                    // user did not select a foreground - this is required
+                    return;
+            }
+
             if ( markAsNewEntry.Checked)
                 unique_search_id_ = 0;
             search_.unique_id = unique_search_id_;
