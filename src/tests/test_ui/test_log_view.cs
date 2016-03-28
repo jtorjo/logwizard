@@ -127,6 +127,10 @@ namespace test_ui {
             return new List<info_type>();
         }
 
+        public List<int> bookmarks() {
+            return new List<int>();
+        }
+
         private void refresh_Tick(object sender, EventArgs e) {
             //refresh.Enabled = false;
             //new settings_form(this).ShowDialog();

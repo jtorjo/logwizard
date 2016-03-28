@@ -1,4 +1,8 @@
 
+1.8.22
+- fix #63 rewritten file -> need to delete all bookmarks
+- fix #31 bookmark + toggle showing everything
+
 
 1.8.21
 - fix #83 home / end hotkeys don't work correctly anymore

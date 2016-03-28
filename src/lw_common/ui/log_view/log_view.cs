@@ -70,9 +70,6 @@ namespace lw_common.ui
 
         private log_view_data_source model_ = null;
 
-        // lines that are bookmarks (sorted by index)
-        private List<int> bookmarks_ = new List<int>();
-
         private int font_size_ = 9; // default font size
 
         private bool pad_name_on_left_ = false;
@@ -369,6 +366,11 @@ namespace lw_common.ui
 
         internal filter filter {
             get { return filter_; }
+        }
+
+        // lines that are bookmarks (sorted by index)
+        private List<int> bookmarks {
+            get { return lv_parent.bookmarks(); }
         }
 
         private string last_search_status_ = "";
@@ -828,7 +830,7 @@ namespace lw_common.ui
         }
 
         internal bool has_bookmark(int line_idx) {
-            return bookmarks_.Contains(line_idx);
+            return bookmarks.Contains(line_idx);
         }
 
         public void set_log(log_reader log) {
@@ -1136,6 +1138,9 @@ namespace lw_common.ui
             model_.set_filter(false, true);
             edit.clear_sel();
             cur_search_ = null;
+
+            // 1.8.21+ delete old bookmarks - they would not make sense anymore
+            bookmarks.Clear();
 
             refresh();
         }
@@ -1999,31 +2004,16 @@ namespace lw_common.ui
             clipboard_util.copy(html, text);
         }
 
-        public void set_bookmarks(List<int> line_idxs) {
-            var old = bookmarks_.Except(line_idxs);
-            var new_ = line_idxs.Except(bookmarks_);
-
-            bookmarks_ = line_idxs;
-            bookmarks_.Sort();
-
-            foreach (int idx in old) {
-                var row = row_by_line_idx(idx);
-                if (row != null) 
-                    list.RefreshItem(row);
-            }
-            foreach (int idx in new_) {
-                var row = row_by_line_idx(idx);
-                if (row != null) 
-                    list.RefreshItem(row);                
-            }
+        public void on_new_bookmarks() {
+            list.Refresh();
             edit.force_refresh();
         }
 
         public void next_bookmark() {
             int start = sel_row_idx >= 0 ? sel_line_idx + 1 : 0;
-            int mark = bookmarks_.FirstOrDefault(line => line >= start && row_by_line_idx(line) != null);
+            int mark = bookmarks.FirstOrDefault(line => line >= start && row_by_line_idx(line) != null);
             if (mark == 0)
-                if (mark < start || !bookmarks_.Contains(mark))
+                if (mark < start || !bookmarks.Contains(mark))
                     // in this case, we did not find anything and got returned default (0)
                     mark = -1;
 
@@ -2041,9 +2031,9 @@ namespace lw_common.ui
                 return;
 
             int start = sel_row_idx >= 0 ? sel_line_idx - 1 : item_at(sel_row_idx).match.line_idx;
-            int mark = bookmarks_.LastOrDefault(line => line <= start && row_by_line_idx(line) != null);
+            int mark = bookmarks.LastOrDefault(line => line <= start && row_by_line_idx(line) != null);
             if (mark == 0)
-                if (!bookmarks_.Contains(mark))
+                if (!bookmarks.Contains(mark))
                     // in this case, we did not find anything and got returned default (0)
                     mark = -1;
 

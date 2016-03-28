@@ -91,5 +91,9 @@ namespace lw_common.ui {
 
         // these are the columns that are visible in the description pane (if it's shown)
         List<info_type> description_columns();
+
+        // returns the bookmarks - shared between all views
+        List<int> bookmarks();
+
     }
 }

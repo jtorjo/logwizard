@@ -982,7 +982,6 @@ namespace LogWizard
             new_.Dock = DockStyle.Fill;
             tab.Controls.Add(new_);
             new_.show_name = false;
-            new_.set_bookmarks(bookmarks_.ToList());
             if ( log_parser_ != null)
                 new_.set_log( new log_reader(log_parser_));
             return new_;
@@ -2678,6 +2677,7 @@ namespace LogWizard
                         bookmarks_.Remove(line_idx);
                     else
                         bookmarks_.Add(line_idx);
+                    bookmarks_.Sort();
                     save_bookmarks();
                     notify_views_of_bookmarks();
                 }
@@ -3048,27 +3048,27 @@ namespace LogWizard
             bookmarks_.Clear();
             if (text_ == null)
                 return;
-            string bookmarks_key = text_.name.Replace("=", "_").Replace("\\", "_");
+            string bookmarks_key = text_.guid;
             string[] bookmarks = sett_.get("bookmarks." + bookmarks_key).Split(',');
             foreach (var b in bookmarks) {
                 int line_idx;
                 if (int.TryParse(b, out line_idx))
                     bookmarks_.Add(line_idx);
             }
+            bookmarks_.Sort();
             notify_views_of_bookmarks();
         }
 
         // notifies the views of our bookmarks
         private void notify_views_of_bookmarks() {
             foreach (var lv in all_log_views_and_full_log())
-                // always send a copy of the list - this way, the views can see which bookmarks are new/deleted
-                lv.set_bookmarks(bookmarks_.ToList());
+                lv.on_new_bookmarks();
         }
 
         private void save_bookmarks() {
             string str = bookmarks_.Aggregate("", (current, mark) => current + "," + mark);
 
-            string bookmarks_key = text_.name.Replace("=", "_").Replace("\\", "_");
+            string bookmarks_key = text_.guid;
             sett_.set("bookmarks." + bookmarks_key, str);
             sett_.save();
         }
@@ -3736,6 +3736,10 @@ namespace LogWizard
 
         public List<info_type> description_columns() {            
             return global_ui.show_details ? description.shown_columns : new List<info_type>();
+        }
+
+        public List<int> bookmarks() {
+            return bookmarks_;
         }
 
 
