@@ -1,5 +1,9 @@
 
 
+1.8.21
+- fix #83 home / end hotkeys don't work correctly anymore
+
+
 1.8.20
 - fix #85 - log file gets rewritten -> clear filter (ctrl-alf-f) + show full log (ctrl-alt-l)
 

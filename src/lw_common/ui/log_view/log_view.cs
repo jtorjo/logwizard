@@ -2443,17 +2443,17 @@ namespace lw_common.ui
                     return true;
 
                 case Keys.Home:
-                    if (edit.SelectionStart == 0 && edit.SelectionLength == 0) {
+                    if (edit.SelectionStart == 0 && edit.SelectionLength == 0) 
                         on_action(action_type.home);
-                        return true;
-                    }
-                    break;
+                    else 
+                        edit.go_to_char(0);
+                    return true;
                 case Keys.End:
-                    if (edit.SelectionStart == edit.TextLength) {
+                    if (edit.SelectionStart == edit.TextLength) 
                         on_action(action_type.end);
-                        return true;
-                    }
-                    break;
+                    else 
+                        edit.go_to_char(edit.TextLength);
+                    return true;
                 }
             }
 
