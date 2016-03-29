@@ -653,6 +653,9 @@ namespace lw_common.ui
             // 1.7.37+ - when items are re-computed, clear cache
             render_.clear_format_cache("changed filter view/full-log");
 
+            // 1.8.24
+            edit.clear_sel();
+
             // until we finish running the filter, don't allow any more toggling
             Enabled = false;
             Cursor = Cursors.WaitCursor;
@@ -1115,8 +1118,11 @@ namespace lw_common.ui
             logger.Debug("[view] change: " + change + " on " + name);
             switch (change) {
             case filter.change_type.new_lines:
-            case filter.change_type.changed_filter:
                 // ... so that we're showing the new lines instantly
+                this.async_call(refresh);
+                break;
+            case filter.change_type.changed_filter:
+                this.async_call(() => render_.clear_format_cache("changed filter"));
                 this.async_call(refresh);
                 break;
 

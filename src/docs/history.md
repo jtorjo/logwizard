@@ -1,4 +1,9 @@
 
+
+1.8.24
+- fix #80 : after selection made, sometimes not deselected on move
+
+
 1.8.23
 - on errors/fatal errors - show in status bar + link to github issues
 - allow parsers/text readers to add warnings as well - which are shown in the status bar
