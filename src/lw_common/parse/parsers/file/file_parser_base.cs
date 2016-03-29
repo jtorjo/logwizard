@@ -44,6 +44,10 @@ namespace lw_common.parse.parsers.file {
             reader_ = reader;
         }
 
+        protected file_text_reader reader {
+            get { return reader_; }
+        }
+
         protected abstract void on_new_lines(string new_lines);
 
         public override void read_to_end() {

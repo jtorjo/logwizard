@@ -54,35 +54,26 @@ namespace lw_common.parse {
 
         public void add_time(DateTime value) {
             time_ = value;
-#if old_code
-            var cult = CultureInfo.CurrentCulture.DateTimeFormat;
-            if (name == "timestamp")
-                name = "";
-            else
-                name += ".";
+        }
 
-            add(name + "date", value.ToString( cult.ShortDatePattern));
-            add(name + "time", value.ToString( "HH:mm:ss.fff"));
-#endif
+        public void add_time(string text) {
+            time_ = util.str_to_normalized_datetime(text);
         }
 
         public void add(string name, string value) {
             Debug.Assert(value != null);
-            if (name == "Message")
+
+            switch (name.ToLower()) {
+            case "message" :
                 name = "msg";
+                break;
+            }
+
             infos_.Add(name, entry_.Length);
             names_.Add(name);
             entry_ += value;
         }
 
-        public void add_time(string text) {
-            time_ = util.str_to_normalized_datetime(text);
-#if old_code
-            var stamp = util.split_timestamp(text);
-            add("date", stamp.Item1);
-            add("time", stamp.Item2);
-#endif
-        }
 
 
         // it's basically something to be appended to last entry

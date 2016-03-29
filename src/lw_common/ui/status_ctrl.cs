@@ -8,11 +8,21 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace lw_common.ui {
+    public static class status_type_io {
+        public static bool is_error_or_above(this status_ctrl.status_type status) {
+            return status == status_ctrl.status_type.err ;
+        }
+        public static bool is_warn_or_above(this status_ctrl.status_type status) {
+            return status == status_ctrl.status_type.err || status == status_ctrl.status_type.warn;
+        }
+    }
+
     public partial class status_ctrl : rich_label_ctrl {
         // the status(es) to be shown
         public enum status_type {
             msg, warn, err
         }
+
         private List< Tuple<string, status_type, DateTime>> statuses_ = new List<Tuple<string, status_type, DateTime>>();
         // what to be shown behind ALL statuses
         private string status_prefix_ = "";
@@ -63,6 +73,10 @@ namespace lw_common.ui {
             }
         }
 
+        public string shown_msg {
+            get { return statuses_.Count > 0 ? statuses_.Last().Item1 : ""; }
+        }
+
         private void show_last_status() {
             if (statuses_.Count < 1) 
                 return;
@@ -97,10 +111,7 @@ namespace lw_common.ui {
             if (needs_update || force) 
                 show_last_status();
 
-            bool is_err = statuses_.Count > 0 && statuses_.Last().Item2 == status_type.err;
-            if (is_err)
-                return status_type.err;
-            return status_type.msg;
+            return (statuses_.Count > 0) ? statuses_.Last().Item2 : status_type.msg;
         }
 
         private Color status_color(status_type type) {

@@ -1470,7 +1470,16 @@ namespace LogWizard
                         show_tips_.handle_tips();
                 }
             } catch (Exception e) {
-                logger.Error("Refresh error: " + e.Message);
+                exception_keeper.inst.add_error();
+                // 1.8.23+ - don't clog the log file
+                if ( !exception_keeper.inst.too_many_errors ) 
+                    logger.Error("Refresh error: " + e.Message);
+            }
+
+            if ( exception_keeper.inst.is_fatal || exception_keeper.inst.too_many_errors ) {
+                if ( !status.is_showing_error)
+                    set_status( (exception_keeper.inst.is_fatal ? "A <b>Fatal</b> error occured" : "Too many errors happened lately") + ". Please open " +
+                                       "an issue on <a https://github.com/jtorjo/logwizard/issues>github</a>.", status_ctrl.status_type.err);
             }
         }
 
@@ -1518,9 +1527,21 @@ namespace LogWizard
             if (text_.has_it_been_rewritten)
                 on_rewritten_log();
 
-            if (text_.errors.Count > 0)
-                set_status( util.concatenate( text_.errors, "\r\n"), status_ctrl.status_type.err, 15000);
-            else if (!text_.fully_read_once && text_.progress != "")
+            if (text_.errors.Count > 0) {
+                string status_msg_now = status.shown_msg;
+                // show an error/warning only if not already shown
+                bool already_shown = text_.errors.Any(x => x.Item1 == status_msg_now);
+                if (!already_shown) {
+                    var errors =
+                        text_.errors.Where(x => x.Item2 == error_list_keeper.level_type.error || x.Item2 == error_list_keeper.level_type.fatal)
+                             .Select(x => x.Item1).ToList();
+                    var warnings = text_.errors.Where(x => x.Item2 == error_list_keeper.level_type.warning).Select(x => x.Item1).ToList();
+                    if (errors.Any())
+                        set_status(errors[0], status_ctrl.status_type.err, 15000);
+                    else if ( warnings.Any())
+                        set_status(warnings[0], status_ctrl.status_type.warn);
+                }
+            } else if (!text_.fully_read_once && text_.progress != "")
                 set_status(text_.progress);
 
         }
@@ -3175,7 +3196,7 @@ namespace LogWizard
         private void set_status(string msg, status_ctrl.status_type type = status_ctrl.status_type.msg, int set_status_for_ms = 7500) {
             status.set_status(msg, type, set_status_for_ms);
 
-            if (type == status_ctrl.status_type.err && !global_ui.show_status) {
+            if (type.is_warn_or_above() && !global_ui.show_status) {
                 global_ui.temporarily_show_status = true;
                 show_status(global_ui.temporarily_show_status);
             }
@@ -3186,8 +3207,7 @@ namespace LogWizard
         }
 
         private void update_status_text(bool force = false) {
-            bool is_err = status.update_status_text(force) == status_ctrl.status_type.err;
-            if (!is_err)
+            if (!status.update_status_text(force).is_warn_or_above())
                 if (global_ui.temporarily_show_status && !global_ui.show_status) {
                     global_ui.temporarily_show_status = false;
                     show_status(false);

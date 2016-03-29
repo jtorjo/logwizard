@@ -46,7 +46,7 @@ namespace lw_common
         private memory_optimized_list<int> indexes_ = new memory_optimized_list<int>() { name = "large_string_indexes", min_capacity = app.inst.no_ui.min_lines_capacity };
 
         // for testing
-        private bool test_we_computed_lines_correctly_ = false; //util.is_debug;
+        private bool test_we_computed_lines_correctly_ = false; // util.is_debug;
 
         private bool computed_avg_line_ = false;
         private bool expected_bytes_set_ = false;
@@ -55,12 +55,21 @@ namespace lw_common
 
         // tests to see we've computed the lines correctly
         private void test_compute_lines() {
-            string[] lines = string_.ToString().Split(new string[] {"\r\n"}, StringSplitOptions.None);
+            string[] lines = string_.ToString().Split(new string[] {"\n"}, StringSplitOptions.None);
             Debug.Assert(lines.Length == line_count);
             for (int i = 0; i < lines.Length; ++i) {
                 string cur = line_at(i);
-                Debug.Assert(lines[i] == cur);
+                string should_be = lines[i];
+                if (should_be.EndsWith("\r"))
+                    should_be = should_be.Substring(0, should_be.Length - 1);
+                Debug.Assert(should_be == cur);
             }
+        }
+        // for debugging/testing
+        public void dump_lines() {
+            int line_count = this.line_count;
+            for ( int idx = 0; idx < line_count; ++idx)
+                logger.Debug("" + (idx+1) + " : " + line_at(idx));
         }
 
         public void expect_bytes(ulong byte_count) {
@@ -173,11 +182,11 @@ namespace lw_common
 
             if (idx < indexes_.Count) {
                 int start = indexes_[idx - 1] + 1;
+                int end = indexes_[idx];
                 // 1.3.11+ account for enters in all cases : '\r', '\n', '\r\n', '\n\r'
-                if (string_[start] == '\r' || string_[start] == '\n')
+                if (start < end && (string_[start] == '\r' || string_[start] == '\n'))
                     ++start;
 
-                int end = indexes_[idx];
                 return string_.ToString(start, end - start);
             } else if (idx == indexes_.Count) {
                 // last line
@@ -187,7 +196,7 @@ namespace lw_common
                     return "";
 
                 // 1.3.11+ account for enters in all cases : '\r', '\n', '\r\n', '\n\r'
-                if (string_[start] == '\r' || string_[start] == '\n')
+                if (start < end && (string_[start] == '\r' || string_[start] == '\n'))
                     ++start;
 
                 return string_.ToString(start, end - start);
@@ -261,7 +270,10 @@ namespace lw_common
                     break;
 
                 indexes_.Add(next_pos);
-                start_pos = next_pos + 2;
+                bool is_full_enter = next_pos+1 < string_.Length && (
+                    (string_[next_pos] == '\r' && string_[next_pos+1] == '\n') || 
+                    (string_[next_pos] == '\n' && string_[next_pos+1] == '\r'));
+                start_pos = next_pos + (is_full_enter ? 2 : 1);
             }
         }
     }

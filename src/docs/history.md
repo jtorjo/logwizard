@@ -1,4 +1,11 @@
 
+1.8.23
+- on errors/fatal errors - show in status bar + link to github issues
+- allow parsers/text readers to add warnings as well - which are shown in the status bar
+- fix #52 Import cvs file (exported from Windows Events Log) -> Message column not shown correctly 
+  - several fixes at processing csv files
+
+
 1.8.22
 - fix #63 rewritten file -> need to delete all bookmarks
 - fix #31 bookmark + toggle showing everything

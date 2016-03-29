@@ -44,6 +44,13 @@ namespace lw_common.parse.parsers {
         // 1.6.28+ - for now, assume this, since I also assume when separator is found in a  cell, I use quotes
         private string separator_ = ",";
 
+        // 1.8.23+ - some csv files have the last column as "Message", but they don't include it in the header
+        //           example: exporting a column from 
+        private bool has_appended_message_column_ = false;
+
+        private int line_offset_ = 0;
+        private string before_unprocessed_ = "";
+
         public csv_file(file_text_reader reader) : base(reader) {
         }
 
@@ -98,12 +105,13 @@ namespace lw_common.parse.parsers {
             csv[csv.Count - 1] = last.ToString();
             if ( inside_quote)
                 // in this case, the last cell is not finished
-                csv.RemoveAt(csv.Count - 1);
+                // 1.8.23+ - in this case, signal that we need to read more lines
+                csv.Clear();
             return csv;
         }
 
 
-        private bool is_header_present(List<string> names ) {
+        private bool try_parse_header(List<string> names ) {
             var unique = names;
             bool present = true;
             if (unique.Any(x => x == "")) 
@@ -113,8 +121,16 @@ namespace lw_common.parse.parsers {
                 present = false;
             if (!present)
                 unique = util.unique_names(new string[names.Count], "Unnamed");
-            this.column_names = unique;
+            this.column_names = unique.Select(to_logwizard_header_name).ToList();
             return present;
+        }
+
+        private static string to_logwizard_header_name(string name) {
+            switch (name.ToLower()) {
+            case "date and time":
+                return "timestamp";
+            }
+            return name;
         }
 
         protected override void on_new_lines(string new_lines) {
@@ -128,11 +144,11 @@ namespace lw_common.parse.parsers {
                 lock (this) 
                     // if at least one entry - can't read column names
                     if (this.column_names.Count < 1 && entries_.Count == 0) 
-                        start_idx = is_header_present( parse_csv( last_lines_string_.line_at(0))) ? 1 : 0;
+                        start_idx = try_parse_header( parse_csv( last_lines_string_.line_at(0))) ? 1 : 0;
 
             List<log_entry_line> entries_now = new List<log_entry_line>();
             var column_names = this.column_names;
-            string before = "";
+            string before = before_unprocessed_;
             for (int i = start_idx; i < line_count; ++i) {
                 var cur_line = last_lines_string_.line_at(i);
                 var list = parse_csv(before + cur_line);
@@ -140,14 +156,25 @@ namespace lw_common.parse.parsers {
                     before += cur_line + "\r\n";
                     continue;
                 }
-                before = "";
                 if ( list.Count > column_names.Count)
-                    logger.Warn("invalid csv line, too many cells: " + list.Count + " , instead of " + column_names.Count);
+                    if (list.Count == column_names.Count + 1 && !has_appended_message_column_) {
+                        has_appended_message_column_ = true;
+                        var new_column_names = column_names.ToList();
+                        new_column_names.Add("msg");
+                        column_names = this.column_names = new_column_names;
+                    }
+                if (list.Count > column_names.Count) {
+                    logger.Warn("invalid csv line" + (i+line_offset_) + " too many cells: " + list.Count + " , instead of " + column_names.Count);
+                    reader.add_error("Bad CSV Line at " + (i+line_offset_+1) + ". Expected " + column_names.Count + " cells, got " + list.Count, error_list_keeper.level_type.warning);
+                }
                 log_entry_line entry = new log_entry_line();
                 for ( int j = 0; j < column_names.Count; ++j)
-                    entry.add( column_names[j], list[j]);
+                    entry.analyze_and_add( column_names[j], list[j]);
                 entries_now.Add(entry);
+                before = "";
             }
+            line_offset_ += line_count;
+            before_unprocessed_ = before;
 
             lock (this) {
                 foreach ( var entry in entries_now)

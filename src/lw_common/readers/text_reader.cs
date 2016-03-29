@@ -111,8 +111,12 @@ namespace lw_common
         }
 
         // 1.5.6+ - returns encountered errors, if any (to be able to show them visually)
-        public List<string> errors {
+        public List< Tuple<string,error_list_keeper.level_type> > errors {
             get { return errors_.errors; }
+        }
+
+        internal void add_error(string err, error_list_keeper.level_type level = error_list_keeper.level_type.error) {
+            errors_.add(err, level);
         }
 
         internal void on_set_parser(log_parser parser) {

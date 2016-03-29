@@ -863,10 +863,12 @@ namespace lw_common {
         }
         private static void on_thread_exc(object sender, ThreadExceptionEventArgs e) {
             logger.Fatal("Thread Exception: " + e.Exception.Message + "\r\n" + e.Exception.StackTrace);
+            exception_keeper.inst.is_fatal = true;
         }
         private static void on_unhandled_exc(object sender, UnhandledExceptionEventArgs ue) {
             Exception e = ue.ExceptionObject as Exception;
             logger.Fatal("Unhandled Exception: " + e.Message + "\r\n" + e.StackTrace);
+            exception_keeper.inst.is_fatal = true;
         }
 
         public static string concatenate<T>(IEnumerable<T> vals, string between) {
