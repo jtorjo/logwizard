@@ -62,7 +62,8 @@ namespace test_ui {
 //            Application.Run(new test_log_view());
 //            Application.Run(new test_notes_ctrl());
 //            Application.Run(new test_filter_ctrl());
-            Application.Run(new test_categories_ctrl());
+//            Application.Run(new test_categories_ctrl());
+            Application.Run(new test_snoop_form());
         }
     }
 }

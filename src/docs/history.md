@@ -1,4 +1,8 @@
 
+1.8.25
+- scheletron for snooping around
+  - tested in test_ui
+
 
 1.8.24
 - fix #80 : after selection made, sometimes not deselected on move
