@@ -1,4 +1,14 @@
 
+
+1.8.26
+- snoop around
+  - whenever i show it (expand), see if gone through all items. if not, snoop around again
+  - tested filtering, removing filter - works correctly
+  - visually show if we are snooping or not + tooltip on what is selected
+     - collapsing will pause the "snoop" process (looking for values)
+       - restarting it will resume (but i'll have a timeout after which the task stops completely)
+
+
 1.8.25
 - scheletron for snooping around
   - tested in test_ui

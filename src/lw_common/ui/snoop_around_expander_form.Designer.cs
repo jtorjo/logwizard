@@ -43,6 +43,8 @@
             this.reapply.Appearance = System.Windows.Forms.Appearance.Button;
             this.reapply.BackgroundImage = global::lw_common.Properties.Resources.filter;
             this.reapply.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.reapply.Checked = true;
+            this.reapply.CheckState = System.Windows.Forms.CheckState.Checked;
             this.reapply.Cursor = System.Windows.Forms.Cursors.Hand;
             this.reapply.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.reapply.Location = new System.Drawing.Point(0, 0);
@@ -91,8 +93,8 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox reapply;
         private System.Windows.Forms.Button expand;
         private System.Windows.Forms.ToolTip tip;
+        internal System.Windows.Forms.CheckBox reapply;
     }
 }

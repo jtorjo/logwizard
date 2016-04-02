@@ -38,7 +38,7 @@
             this.none = new System.Windows.Forms.Button();
             this.negate = new System.Windows.Forms.Button();
             this.tip = new System.Windows.Forms.ToolTip(this.components);
-            this.clear = new System.Windows.Forms.Button();
+            this.clearFilter = new System.Windows.Forms.Button();
             this.run = new System.Windows.Forms.Button();
             this.status = new System.Windows.Forms.Label();
             this.updateStatus = new System.Windows.Forms.Timer(this.components);
@@ -142,17 +142,17 @@
             // 
             this.tip.ShowAlways = true;
             // 
-            // clear
+            // clearFilter
             // 
-            this.clear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.clear.Image = global::lw_common.Properties.Resources.clear_filter;
-            this.clear.Location = new System.Drawing.Point(688, 361);
-            this.clear.Name = "clear";
-            this.clear.Size = new System.Drawing.Size(44, 42);
-            this.clear.TabIndex = 5;
-            this.tip.SetToolTip(this.clear, "Clear This Filter");
-            this.clear.UseVisualStyleBackColor = true;
-            this.clear.Click += new System.EventHandler(this.clear_Click);
+            this.clearFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.clearFilter.Image = global::lw_common.Properties.Resources.clear_filter;
+            this.clearFilter.Location = new System.Drawing.Point(688, 361);
+            this.clearFilter.Name = "clearFilter";
+            this.clearFilter.Size = new System.Drawing.Size(44, 42);
+            this.clearFilter.TabIndex = 5;
+            this.tip.SetToolTip(this.clearFilter, "Clear This Filter");
+            this.clearFilter.UseVisualStyleBackColor = true;
+            this.clearFilter.Click += new System.EventHandler(this.clear_Click);
             // 
             // run
             // 
@@ -193,7 +193,7 @@
             this.ClientSize = new System.Drawing.Size(732, 436);
             this.ControlBox = false;
             this.Controls.Add(this.status);
-            this.Controls.Add(this.clear);
+            this.Controls.Add(this.clearFilter);
             this.Controls.Add(this.run);
             this.Controls.Add(this.negate);
             this.Controls.Add(this.none);
@@ -225,7 +225,7 @@
         private System.Windows.Forms.Button negate;
         private System.Windows.Forms.ToolTip tip;
         private System.Windows.Forms.Button run;
-        private System.Windows.Forms.Button clear;
+        private System.Windows.Forms.Button clearFilter;
         private System.Windows.Forms.Label status;
         private BrightIdeasSoftware.OLVColumn olvColumn4;
         private System.Windows.Forms.Timer updateStatus;

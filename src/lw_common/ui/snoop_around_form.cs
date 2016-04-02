@@ -13,6 +13,7 @@ namespace lw_common.ui
 {
     // note: the reason this is a form is that we should not tie it to a control - it might end up exceeding the control's boundaries
     public partial class snoop_around_form : Form {
+        private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
         // the control this form conceptually belongs to - the coordinates we relate to are always given relative to this
         private Control logical_parent_;
@@ -28,7 +29,8 @@ namespace lw_common.ui
         private DateTime parent_last_move_ = DateTime.MinValue;
         private bool was_visible_when_started_moving = false;
 
-        public delegate void on_apply_func(bool apply);
+        // if selection is empty -> no selection
+        public delegate void on_apply_func(snoop_around_form self, List<string> selection);
 
         public on_apply_func on_apply;
 
@@ -40,15 +42,10 @@ namespace lw_common.ui
 
         private readonly int min_width_;
 
-        private bool snoop_running_ = false;
-        private bool snoop_paused_ = false;
+        //             the keep_running=false can happen when the user goes somewhere else, while we're snooping (thus, we're collapsed)
+        public delegate void on_snoop_func(snoop_around_form self, ref bool keep_running);
 
-        // run_until - timeout for the snoop function.
-        //             note that the snoop function needs to care about whether it's paused - when paused, do nothing
-        //             the pause can happen when the user goes somewhere else, while we're snooping (thus, we're collapsed)
-        public delegate void do_snoop_func(DateTime run_until, ref bool pause);
-
-        public do_snoop_func do_snoop;
+        public on_snoop_func on_snoop;
 
         // how many values do we allow? (we don't visually show more than this)
         private int max_distinct_values_count_ = 50;
@@ -57,6 +54,16 @@ namespace lw_common.ui
 
         private bool finished_ = false;
         private bool snooped_all_rows_ = false;
+
+        private DateTime deactivated_time_ = DateTime.MinValue;
+
+        private int ignore_change_ = 0;
+
+        private class bool_box {
+            public bool stop = false;
+        }
+        // signal the snoop function to stop
+        private bool_box stop_snoop_ = new bool_box();
 
         private class snoop_item {
             private int number_ = 0;
@@ -90,7 +97,7 @@ namespace lw_common.ui
             InitializeComponent();
             expander_ = new snoop_around_expander_form(this);
 
-            min_width_ = clear.Right - all.Left;
+            min_width_ = clearFilter.Right - all.Left;
             logical_parent.Move += (sender, args) => on_parent_move();
             logical_parent.Resize += (sender, args) => on_parent_move();
 
@@ -121,6 +128,7 @@ namespace lw_common.ui
                     return;
                 expanded_ = value;
                 expander_.show_filter = expanded_ ? false : can_apply_filter();
+                do_snoop(expanded_);
                 update_pos();
             }
         }
@@ -148,6 +156,30 @@ namespace lw_common.ui
             }
         }
 
+        private void do_snoop(bool start) {
+            if (snooped_all_rows_)
+                // at this point, we know all rows have been snooped, so there's no point in ever snooping again
+                return;
+
+            if (start) {
+                finished_ = false;
+                // ... just in case
+                stop_snoop_.stop = true;
+                // we're starting a new snoop
+                stop_snoop_ = new bool_box();
+                Task.Run(() => on_snoop(this, ref stop_snoop_.stop));
+            } else
+                // force stop snooping - user has collapsed us
+                stop_snoop_.stop = true;
+        }
+
+        // ... just in case we need to reuse this for another filter or so
+        public void clear() {
+            stop_snoop_.stop = true;
+            snooped_all_rows_ = false;
+            list.Items.Clear();
+        }
+
         private bool can_apply_filter() {
             if (list.GetItemCount() < 1)
                 return false; // nothing to filter
@@ -171,6 +203,8 @@ namespace lw_common.ui
         }
 
         public void set_values(Dictionary< string, int> values, bool finished, bool snooped_all_rows) {
+            if ( snooped_all_rows)
+                Debug.Assert(finished);
             this.async_call(() => set_values_impl(values, finished, snooped_all_rows) );
         }
 
@@ -283,16 +317,41 @@ namespace lw_common.ui
         }
 
         internal void on_click_expand() {
+            if (deactivated_time_.AddMilliseconds(250) > DateTime.Now)
+                // user clicked on "Expanded" button to actually collapse us - but we also received the "Deactivate" event
+                return;
             expanded = !expanded;
             // need to figure a way to continue an existing process or re-start a new one
         }
 
-        internal void on_click_apply(bool apply) {
+        internal void on_click_apply() {
+            if (ignore_change_ > 0)
+                return;
             expanded = false;
-            on_apply(apply);
+            List<string> is_checked = new List<string>(), is_unchecked = new List<string>();
+            // note: if repply is unchecked, it means the user turned this filter OFF
+            if (expander_.reapply.Checked) {
+                for (int idx = 0; idx < list.GetItemCount(); ++idx) {
+                    var i = list.GetItem(idx).RowObject as snoop_item;
+                    if ( i.is_checked)
+                        is_checked.Add(i.value);
+                    else 
+                        is_unchecked.Add(i.value);
+                }
+                int all = is_checked.Count + is_unchecked.Count;
+                // if all checked or all unchecked, nothing is selected
+                bool any_selection = (is_checked.Count < all && is_unchecked.Count < all);
+                if (!any_selection)
+                    is_checked.Clear();
+            }
+
+            logger.Debug("snoop filter: [" + util.concatenate(is_checked, ",") + "]");
+            if ( on_apply != null)
+                on_apply(this, is_checked);
         }
 
         private void snoop_around_form_Deactivate(object sender, EventArgs e) {
+            deactivated_time_ = DateTime.Now;
             util.postpone(() => expanded = false, 10);
         }
 
@@ -359,10 +418,18 @@ namespace lw_common.ui
         private void clear_Click(object sender, EventArgs e) {
             // clears the filter - shows all items
             Visible = false;
+            ++ignore_change_;
+            expander_.reapply.Checked = false;
+            --ignore_change_;
+            on_click_apply();
         }
 
         private void run_Click(object sender, EventArgs e) {
             // applies the current filter
+            ++ignore_change_;
+            expander_.reapply.Checked = true;
+            --ignore_change_;
+            on_click_apply();
         }
     }
 }

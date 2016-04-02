@@ -39,7 +39,7 @@ namespace test_ui {
 
             log4net.Config.XmlConfigurator.Configure( new FileInfo("test_ui.exe.config"));
             util.force_break_into_debugger();
-            util.init_exceptions();
+            util.init_exceptions();            
 
             //test_export.test();
             /* works

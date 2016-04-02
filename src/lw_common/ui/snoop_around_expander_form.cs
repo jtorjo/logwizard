@@ -82,7 +82,7 @@ namespace lw_common.ui
 
         private void reapply_CheckedChanged(object sender, EventArgs e)
         {
-            parent_.on_click_apply(reapply.Checked);
+            parent_.on_click_apply();
         }
 
         private void expand_Click(object sender, EventArgs e)
