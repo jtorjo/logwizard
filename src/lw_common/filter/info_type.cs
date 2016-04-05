@@ -237,6 +237,45 @@ namespace lw_common {
                 return false;
             }
         }
+        public static bool is_snoopable(info_type type) {
+            switch (type) {
+            case info_type.max:
+
+            case info_type.date:
+            case info_type.time:
+            case info_type.view:
+            case info_type.line:
+            case info_type.msg:
+                return false;
+
+            case info_type.level:
+            case info_type.thread:
+            case info_type.file:
+            case info_type.func:
+            case info_type.class_:
+
+            case info_type.ctx1:
+            case info_type.ctx2:
+            case info_type.ctx3:
+            case info_type.ctx4:
+            case info_type.ctx5:
+            case info_type.ctx6:
+            case info_type.ctx7:
+            case info_type.ctx8:
+            case info_type.ctx9:
+            case info_type.ctx10:
+            case info_type.ctx11:
+            case info_type.ctx12:
+            case info_type.ctx13:
+            case info_type.ctx14:
+            case info_type.ctx15:
+                return true;
+
+            default:
+                Debug.Assert(false);
+                return false;
+            }
+        }
 
         public static bool can_be_category(info_type type) {
             switch (type) {

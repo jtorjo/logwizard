@@ -38,8 +38,9 @@ namespace test_ui
         public test_snoop_form()
         {
             InitializeComponent();
-            var snoop_a = new snoop_around_form(this);
-            snoop_a.logical_parent_rect = new Rectangle(a.Location, a.Size) ;
+            var snoop_a = new snoop_around_form();
+
+            snoop_a.set_parent_rect(this, new Rectangle(a.Location, a.Size) );
             snoop_a.on_snoop = add_values;
         }
 

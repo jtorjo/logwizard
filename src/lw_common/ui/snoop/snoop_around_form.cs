@@ -16,7 +16,7 @@ namespace lw_common.ui
         private static log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
         // the control this form conceptually belongs to - the coordinates we relate to are always given relative to this
-        private Control logical_parent_;
+        private Control logical_parent_ = null;
 
         private Rectangle logical_parent_rect_ = new Rectangle();
 
@@ -92,14 +92,11 @@ namespace lw_common.ui
             }
         }
 
-        public snoop_around_form(Control logical_parent) {
-            logical_parent_ = logical_parent;
+        public snoop_around_form() {
             InitializeComponent();
             expander_ = new snoop_around_expander_form(this);
 
             min_width_ = clearFilter.Right - all.Left;
-            logical_parent.Move += (sender, args) => on_parent_move();
-            logical_parent.Resize += (sender, args) => on_parent_move();
 
             // I need to force this form to be visible for a bit, so that the handle is created, so that .Invoke works correctly
             Location = new Point(-100000, -100000);
@@ -111,14 +108,38 @@ namespace lw_common.ui
 
         public Rectangle logical_parent_rect {
             get { return logical_parent_rect_; }
-            set {
-                logical_parent_rect_ = value;
+        }
+
+        // this way, I can change the parent as well!
+        public void set_parent_rect(Control logical_parent, Rectangle rect) {
+            if (logical_parent != logical_parent_) {
+                if (logical_parent_ != null) {
+                    logical_parent_.Move -= Logical_parent_on_move;
+                    logical_parent_.Resize -= Logical_parent_on_move;
+                    logical_parent_.VisibleChanged -= Logical_parent_on_visible_changed;
+                }
+                logical_parent_ = logical_parent;
+                logical_parent_.Move += Logical_parent_on_move;
+                logical_parent_.Resize += Logical_parent_on_move;
+                logical_parent_.VisibleChanged += Logical_parent_on_visible_changed;
+            }
+
+            if (logical_parent_rect_ != rect) {
+                logical_parent_rect_ = rect;
                 update_pos();
             }
         }
 
+        private void Logical_parent_on_visible_changed(object sender, EventArgs event_args) {
+            update_visible();
+        }
+
+        private void Logical_parent_on_move(object sender, EventArgs event_args) {
+            on_parent_move();
+        }
+
         public Rectangle screen_logical_parent_rect {
-            get { return logical_parent_.RectangleToScreen(logical_parent_rect_); }
+            get { return logical_parent_ != null && logical_parent_rect_.Width > 0 && logical_parent_rect_.Height > 0 ?  logical_parent_.RectangleToScreen(logical_parent_rect_) : Rectangle.Empty; }
         }
 
         public bool expanded {
@@ -198,8 +219,8 @@ namespace lw_common.ui
         }
 
         private void update_visible() {
-            Visible = is_visible_ && expanded_ && logical_parent_.Width > 0;
-            expander_.Visible = is_visible_ && logical_parent_.Width > 0;            
+            Visible = is_visible_ && expanded_ && logical_parent_ != null && logical_parent_.Visible && logical_parent_.Width > 0;
+            expander_.Visible = is_visible_ && logical_parent_ != null && logical_parent_.Visible && logical_parent_.Width > 0;            
         }
 
         public void set_values(Dictionary< string, int> values, bool finished, bool snooped_all_rows) {

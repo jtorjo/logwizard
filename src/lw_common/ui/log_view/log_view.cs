@@ -118,6 +118,8 @@ namespace lw_common.ui
 
         private column_formatter_array formatter_ = new column_formatter_array();
 
+        private snoop_filter snooper_ = new snoop_filter();
+
         public log_view(Form parent, string name)
         {
             Debug.Assert(parent is log_view_parent);
@@ -261,6 +263,7 @@ namespace lw_common.ui
         public void update_column_names() {
             if (filter.log == null)
                 return;
+            snooper_.on_aliases(filter_.log.aliases);
 
             foreach (info_type i in Enum.GetValues(typeof (info_type))) {
                 // for msg column - we use the default name
@@ -269,6 +272,28 @@ namespace lw_common.ui
                 var col = log_view_cell.column(this, i);
                 col.Text = filter_.log.aliases.friendly_name(i);
             }
+            update_snoop_positions();
+        }
+
+        private void update_snoop_positions() {
+            foreach (info_type i in Enum.GetValues(typeof (info_type))) 
+                if ( info_type_io.is_snoopable(i))
+                    if (filter_.log.aliases.has_column(i)) {
+                        var col = log_view_cell.column(this, i);
+                        bool visible = col.is_visible();
+                        var snoop = snooper_.snoop_for(i);
+                        int sel = sel_row_idx_ui_thread;
+                        var bounds = Rectangle.Empty;
+                        if (visible) {
+                            if ( sel >= 0)
+                                bounds = list.GetItem(sel).GetSubItemBounds(col.Index);
+                            visible = sel >= 0 && bounds.Width > 0 && bounds.Height > 0;
+                        }
+                        snoop.is_visible = visible;
+                        snoop.set_parent_rect(list, bounds);
+                    }
+            
+            // FIXME  for description pane
         }
 
         private void menu_Closing(object sender, ToolStripDropDownClosingEventArgs e) {
@@ -824,6 +849,7 @@ namespace lw_common.ui
 
         // called when this log view is not used anymore (like, when it's removed from its tab page)
         public new void Dispose() {
+            snooper_.Dispose();
             if (log_ != null) {
                 log_.Dispose();
                 log_ = null;
@@ -842,6 +868,7 @@ namespace lw_common.ui
                 if (log_ != null)
                     log_.Dispose();
 
+                snooper_.on_new_log();
                 render_.clear_format_cache("new log");
                 bool was_null = log_ == null;
                 log_ = log;
@@ -1396,6 +1423,7 @@ namespace lw_common.ui
 
         private void list_SelectedIndexChanged(object sender, EventArgs e) {
             edit.update_ui();
+            update_snoop_positions();
             int sel = sel_row_idx;
             if (sel < 0)
                 return;

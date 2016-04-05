@@ -1,4 +1,12 @@
 
+1.8.27a
+- snoop_filter 
+  - have a dictionary based on info_type
+  - on different log -> clear all snoops
+  - need to know which columns are snooped (filtered) and which not
+  - can change parent, so that i can apply them on description pane
+- problem - creating the snoop forms and showing them steals focus from the smart edit
+
 
 1.8.26
 - snoop around

@@ -277,18 +277,19 @@
       <DependentUpon>settings_form.cs</DependentUpon>
     </Compile>
     <Compile Include="ui\show_tips.cs" />
-    <Compile Include="ui\snoop_around_expander_form.cs">
+    <Compile Include="ui\snoop\snoop_around_expander_form.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ui\snoop_around_expander_form.Designer.cs">
+    <Compile Include="ui\snoop\snoop_around_expander_form.Designer.cs">
       <DependentUpon>snoop_around_expander_form.cs</DependentUpon>
     </Compile>
-    <Compile Include="ui\snoop_around_form.cs">
+    <Compile Include="ui\snoop\snoop_around_form.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ui\snoop_around_form.Designer.cs">
+    <Compile Include="ui\snoop\snoop_around_form.Designer.cs">
       <DependentUpon>snoop_around_form.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\snoop\snoop_filter.cs" />
     <Compile Include="ui\solid_brush_list.cs" />
     <Compile Include="ui\rich_label_ctrl.cs">
       <SubType>UserControl</SubType>
@@ -401,10 +402,10 @@
     <EmbeddedResource Include="ui\rich_label_ctrl.resx">
       <DependentUpon>rich_label_ctrl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ui\snoop_around_expander_form.resx">
+    <EmbeddedResource Include="ui\snoop\snoop_around_expander_form.resx">
       <DependentUpon>snoop_around_expander_form.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ui\snoop_around_form.resx">
+    <EmbeddedResource Include="ui\snoop\snoop_around_form.resx">
       <DependentUpon>snoop_around_form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\status_ctrl.resx">
