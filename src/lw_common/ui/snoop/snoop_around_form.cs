@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using lw_common.ui.snoop;
 
 namespace lw_common.ui
 {
@@ -21,13 +22,9 @@ namespace lw_common.ui
         private Rectangle logical_parent_rect_ = new Rectangle();
 
         // the expander form
-        private readonly snoop_around_expander_form expander_;
+        private readonly snoop_around_expander_ctrl expander_;
 
         private bool expanded_ = false;
-
-        private Rectangle parent_size_on_move_ = new Rectangle();
-        private DateTime parent_last_move_ = DateTime.MinValue;
-        private bool was_visible_when_started_moving = false;
 
         // if selection is empty -> no selection
         public delegate void on_apply_func(snoop_around_form self, List<string> selection);
@@ -94,7 +91,7 @@ namespace lw_common.ui
 
         public snoop_around_form() {
             InitializeComponent();
-            expander_ = new snoop_around_expander_form(this);
+            expander_ = new snoop_around_expander_ctrl(this) { BorderStyle = BorderStyle.None };
 
             min_width_ = clearFilter.Right - all.Left;
 
@@ -118,6 +115,7 @@ namespace lw_common.ui
                     logical_parent_.Resize -= Logical_parent_on_move;
                     logical_parent_.VisibleChanged -= Logical_parent_on_visible_changed;
                 }
+                expander_.Parent = logical_parent;
                 logical_parent_ = logical_parent;
                 logical_parent_.Move += Logical_parent_on_move;
                 logical_parent_.Resize += Logical_parent_on_move;
@@ -316,22 +314,7 @@ namespace lw_common.ui
         }
 
         private void on_parent_move() {
-            if (parent_last_move_.AddMilliseconds(750) < DateTime.Now)
-                was_visible_when_started_moving = is_visible;
-            parent_last_move_ = DateTime.Now;
-
-            parent_size_on_move_ = logical_parent_.RectangleToScreen( logical_parent_.ClientRectangle);
-            is_visible = false;
-            util.postpone(check_parent_moving, 250);
-        }
-
-        private void check_parent_moving() {
-            var rect_now = logical_parent_.RectangleToScreen( logical_parent_.ClientRectangle);
-            if (rect_now == parent_size_on_move_) {
-                // at this point, the move/resize stopped
-                is_visible = was_visible_when_started_moving;
-                update_pos();
-            }
+            Visible = false;
         }
 
         private void snoop_around_form_VisibleChanged(object sender, EventArgs e) {

@@ -291,6 +291,7 @@ namespace lw_common.ui
                         }
                         snoop.is_visible = visible;
                         snoop.set_parent_rect(list, bounds);
+                        //snoop.set_parent_rect(this, bounds);
                     }
             
             // FIXME  for description pane

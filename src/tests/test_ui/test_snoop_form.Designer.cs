@@ -33,6 +33,7 @@
             this.d = new System.Windows.Forms.TextBox();
             this.b = new System.Windows.Forms.TextBox();
             this.c = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // a
@@ -75,11 +76,22 @@
             this.c.TabIndex = 4;
             this.c.Text = "c";
             // 
+            // button1
+            // 
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button1.Location = new System.Drawing.Point(966, 200);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(204, 77);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "tes";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // test_snoop_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1469, 634);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.c);
             this.Controls.Add(this.b);
             this.Controls.Add(this.d);
@@ -99,5 +111,6 @@
         private System.Windows.Forms.TextBox d;
         private System.Windows.Forms.TextBox b;
         private System.Windows.Forms.TextBox c;
+        private System.Windows.Forms.Button button1;
     }
 }

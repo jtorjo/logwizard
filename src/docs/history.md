@@ -1,4 +1,9 @@
 
+1.8.27b
+- snoop_filter
+  - reshowing the expander as a control (not to steal focus)
+
+
 1.8.27a
 - snoop_filter 
   - have a dictionary based on info_type
