@@ -24,41 +24,10 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.expand = new System.Windows.Forms.Button();
-            this.reapply = new System.Windows.Forms.CheckBox();
             this.refreshZorder = new System.Windows.Forms.Timer(this.components);
+            this.expand = new System.Windows.Forms.Panel();
+            this.reapplyFilter = new System.Windows.Forms.Panel();
             this.SuspendLayout();
-            // 
-            // expand
-            // 
-            this.expand.BackgroundImage = global::lw_common.Properties.Resources.down;
-            this.expand.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.expand.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.expand.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.expand.Location = new System.Drawing.Point(33, 4);
-            this.expand.Margin = new System.Windows.Forms.Padding(4);
-            this.expand.Name = "expand";
-            this.expand.Size = new System.Drawing.Size(32, 32);
-            this.expand.TabIndex = 3;
-            this.expand.UseVisualStyleBackColor = true;
-            this.expand.Click += new System.EventHandler(this.expand_Click);
-            // 
-            // reapply
-            // 
-            this.reapply.Appearance = System.Windows.Forms.Appearance.Button;
-            this.reapply.BackgroundImage = global::lw_common.Properties.Resources.filter;
-            this.reapply.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.reapply.Checked = true;
-            this.reapply.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.reapply.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.reapply.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.reapply.Location = new System.Drawing.Point(1, 4);
-            this.reapply.Margin = new System.Windows.Forms.Padding(4);
-            this.reapply.Name = "reapply";
-            this.reapply.Size = new System.Drawing.Size(32, 32);
-            this.reapply.TabIndex = 2;
-            this.reapply.UseVisualStyleBackColor = true;
-            this.reapply.CheckedChanged += new System.EventHandler(this.reapply_CheckedChanged);
             // 
             // refreshZorder
             // 
@@ -66,12 +35,34 @@
             this.refreshZorder.Interval = 50;
             this.refreshZorder.Tick += new System.EventHandler(this.refreshZorder_Tick);
             // 
+            // expand
+            // 
+            this.expand.BackgroundImage = global::lw_common.Properties.Resources.down;
+            this.expand.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.expand.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.expand.Location = new System.Drawing.Point(24, 0);
+            this.expand.Name = "expand";
+            this.expand.Size = new System.Drawing.Size(24, 24);
+            this.expand.TabIndex = 4;
+            this.expand.Click += new System.EventHandler(this.expand_Click_1);
+            // 
+            // reapplyFilter
+            // 
+            this.reapplyFilter.BackgroundImage = global::lw_common.Properties.Resources.filter;
+            this.reapplyFilter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.reapplyFilter.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.reapplyFilter.Location = new System.Drawing.Point(0, 0);
+            this.reapplyFilter.Name = "reapplyFilter";
+            this.reapplyFilter.Size = new System.Drawing.Size(24, 24);
+            this.reapplyFilter.TabIndex = 5;
+            this.reapplyFilter.Click += new System.EventHandler(this.reapplyFilter_Click);
+            // 
             // snoop_around_expander_ctrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.Controls.Add(this.reapplyFilter);
             this.Controls.Add(this.expand);
-            this.Controls.Add(this.reapply);
             this.Name = "snoop_around_expander_ctrl";
             this.Size = new System.Drawing.Size(213, 39);
             this.VisibleChanged += new System.EventHandler(this.snoop_around_expander_ctrl_VisibleChanged);
@@ -81,8 +72,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button expand;
-        internal System.Windows.Forms.CheckBox reapply;
         private System.Windows.Forms.Timer refreshZorder;
+        private System.Windows.Forms.Panel expand;
+        private System.Windows.Forms.Panel reapplyFilter;
     }
 }

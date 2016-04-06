@@ -334,7 +334,7 @@ namespace lw_common.ui
             expanded = false;
             List<string> is_checked = new List<string>(), is_unchecked = new List<string>();
             // note: if repply is unchecked, it means the user turned this filter OFF
-            if (expander_.reapply.Checked) {
+            if (expander_.filter_pressed) {
                 for (int idx = 0; idx < list.GetItemCount(); ++idx) {
                     var i = list.GetItem(idx).RowObject as snoop_item;
                     if ( i.is_checked)
@@ -423,7 +423,7 @@ namespace lw_common.ui
             // clears the filter - shows all items
             Visible = false;
             ++ignore_change_;
-            expander_.reapply.Checked = false;
+            expander_.filter_pressed = false;
             --ignore_change_;
             on_click_apply();
         }
@@ -431,7 +431,7 @@ namespace lw_common.ui
         private void run_Click(object sender, EventArgs e) {
             // applies the current filter
             ++ignore_change_;
-            expander_.reapply.Checked = true;
+            expander_.filter_pressed = true;
             --ignore_change_;
             on_click_apply();
         }

@@ -19,6 +19,8 @@ namespace lw_common.ui.snoop {
         
         private int control_width_, control_height_;
 
+        private bool reapply_ = true;
+
         public snoop_around_expander_ctrl(snoop_around_form parent) {
             parent_ = parent;
             InitializeComponent();
@@ -40,23 +42,13 @@ namespace lw_common.ui.snoop {
 
         // if true, filter is ON
         public bool filter_pressed {
-            get { return reapply.Checked; }
+            get { return reapply_; }
             set {
-                reapply.Checked = value; 
+                if (reapply_ != value) {
+                    reapply_ = value;
+                    parent_.on_click_apply();
+                }
             }
-        }
-
-        protected override void OnBackColorChanged(EventArgs e)
-        {
-            if (this.Parent != null)
-                Parent.Invalidate(this.Bounds, true);
-            base.OnBackColorChanged(e);
-        }
-
-        protected override void OnParentBackColorChanged(EventArgs e)
-        {
-            this.Invalidate();
-            base.OnParentBackColorChanged(e);
         }
 
         public void update_pos() {
@@ -64,11 +56,11 @@ namespace lw_common.ui.snoop {
             int height = control_width_;
 
             if (show_filter) {
-                reapply.Visible = true;
-                reapply.Location = new Point(0, 0);
+                reapplyFilter.Visible = true;
+                reapplyFilter.Location = new Point(0, 0);
                 expand.Location = new Point(control_width_, 0);
             } else {
-                reapply.Visible = false;
+                reapplyFilter.Visible = false;
                 expand.Location = new Point(0,0);
             }
             // forget it for now
@@ -84,13 +76,6 @@ namespace lw_common.ui.snoop {
             Size = new Size(width, height);
         }
 
-        private void reapply_CheckedChanged(object sender, EventArgs e) {
-            parent_.on_click_apply();
-        }
-
-        private void expand_Click(object sender, EventArgs e) {
-            parent_.on_click_expand();
-        }
 
         private void snoop_around_expander_ctrl_VisibleChanged(object sender, EventArgs e) {
         }
@@ -128,6 +113,14 @@ namespace lw_common.ui.snoop {
                 }
 #endif
             }
+        }
+
+        private void expand_Click_1(object sender, EventArgs e) {
+            parent_.on_click_expand();
+        }
+
+        private void reapplyFilter_Click(object sender, EventArgs e) {
+            filter_pressed = !filter_pressed;
         }
     }
 }

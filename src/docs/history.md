@@ -1,4 +1,9 @@
 
+1.8.27c
+- snoop_filter
+  - the expander control: made the buttons into panels, in order not to have any border
+
+
 1.8.27b
 - snoop_filter
   - reshowing the expander as a control (not to steal focus)
