@@ -1,4 +1,11 @@
 
+1.8.27e
+- snoop_filter
+  - snooping on single column works
+  - ctrl-alt-f / ctrl-alt-l -> clear snoop
+  - disabled alt-f4 on snoop_around_form
+
+
 1.8.27d
 - snoop_filter
   - the filter is cumulated - from all snoop around filters!!!!

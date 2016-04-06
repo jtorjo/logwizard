@@ -686,6 +686,8 @@ namespace lw_common.ui
                 return;
             // 1.7.37+ - when items are re-computed, clear cache
             render_.clear_format_cache("changed filter view/full-log");
+            // 1.8.27
+            snooper_.clear();
 
             // 1.8.24
             edit.clear_sel();

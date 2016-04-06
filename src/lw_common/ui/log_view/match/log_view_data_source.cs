@@ -136,15 +136,12 @@ namespace lw_common.ui {
         }
 
         public override int GetObjectIndex(object o) {
-            bool filter_view;
             bool show_full_log;
-            lock (this) {
-                filter_view = filter_view_;
+            lock (this) 
                 show_full_log = show_full_log_;
-            }
 
             var i = o as match_item;
-            if (!filter_view)
+            if (!is_filtering)
                 return show_full_log ? full_log_items.index_of(i) : items_.index_of(i);
 
             // here, it's filtered
@@ -171,14 +168,11 @@ namespace lw_common.ui {
         }
 
         internal match_item item_at(int idx) {
-            bool filter_view;
             bool show_full_log;
-            lock (this) {
-                filter_view = filter_view_;
-                show_full_log = show_full_log_;
-            }
+            lock (this) 
+                show_full_log = show_full_log_;            
 
-            if (!filter_view) {
+            if (!is_filtering) {
                 // not filtered
                 if ( !show_full_log)
                     return items_.match_at(idx) as match_item;
@@ -207,20 +201,25 @@ namespace lw_common.ui {
             return found as match_item;
         }
 
-        public Tuple<match_item, int> binary_search_closest(int line_idx) {
-            bool filter_view;
-            bool show_full_log;
-            lock (this) {
-                filter_view = filter_view_;
-                show_full_log = show_full_log_;
+        private bool is_filtering {
+            get {
+                // 1.8.27 - even if there's no filter function, we can still have a quick filter
+                lock (this)
+                    return sorted_line_indexes_ != null;
             }
+        }
+
+        public Tuple<match_item, int> binary_search_closest(int line_idx) {
+            bool show_full_log;
+            lock (this) 
+                show_full_log = show_full_log_;
 
             var closest = (show_full_log ? full_log_items.binary_search_closest(line_idx) : items_.binary_search_closest(line_idx));
             if (closest.Item2 < 0)
                 // it wasn't found at all
                 return new Tuple<match_item, int>(closest.Item1 as match_item, closest.Item2);
 
-            if (!filter_view)
+            if (!is_filtering)
                 return new Tuple<match_item, int>(closest.Item1 as match_item, closest.Item2);
 
             // here, we need to further apply the filter
@@ -237,14 +236,11 @@ namespace lw_common.ui {
 
         private int item_count_at_this_time {
             get {
-                bool filter_view;
                 bool show_full_log;
-                lock (this) {
-                    filter_view = filter_view_;
+                lock (this) 
                     show_full_log = show_full_log_;
-                }
 
-                if (!filter_view)
+                if (!is_filtering)
                     // not filtered
                     return show_full_log ? full_log_items.count : items_.count;
 
@@ -277,7 +273,7 @@ namespace lw_common.ui {
             // the client code always asks for model_.item_count - i don't want to go out of sync with what the listview thinks
             // (and the list view thinks what it was last told at UpdateVirtualListSize())
             item_count_ = item_count_at_this_time;
-            lv_.UpdateVirtualListSize();                
+            lv_.UpdateVirtualListSize();
         }
 
         private void update_filter_thread() {
@@ -315,7 +311,7 @@ namespace lw_common.ui {
                     show_full_log_ = show_full_log_now_;
 
                     // 1.8.27 - the quick filter can still return something...
-                    if (!filter_view_ && quick_filter_matches_all)
+                    if ((!filter_view_ || item_filter == null) && quick_filter_matches_all)
                         // here, user toggled off filtering - so, I'm either showing the view, or the full log
                         sorted_line_indexes_ = null;
 
@@ -332,7 +328,7 @@ namespace lw_common.ui {
             lock (this) item_filter = this.item_filter;
 
             bool quick_filter_matches_all = quick_filter_.matches_all();
-            if (item_filter == null && quick_filter_matches_all)
+            if (item_filter == null && quick_filter_matches_all) 
                 return;
 
             memory_optimized_list<int> line_indexes = new memory_optimized_list<int>() { min_capacity = app.inst.no_ui.min_list_data_source_capacity };
