@@ -75,6 +75,8 @@ namespace lw_common.ui {
 
         private bool is_running_filter_ = false;
 
+        private log_view_quick_filter quick_filter_ = null;
+
         public log_view_data_source(VirtualObjectListView lv, log_view parent ) : base(lv) {
             lv_ = lv;
             parent_ = parent;
@@ -89,6 +91,10 @@ namespace lw_common.ui {
                 items_.name = "list_data " + value; 
                 change_event_.friendly_name = "list_data " + value; 
             }
+        }
+
+        public log_view_quick_filter quick_filter {
+            set { quick_filter_ = value; }
         }
 
         private filter.match_list full_log_items {
@@ -110,6 +116,10 @@ namespace lw_common.ui {
 
         // set both filter options in one step (so that change_event_ is triggered only once!)
         public void set_filter(bool filter_view, bool show_full_log) {
+            // we never run anything on the full-log
+            if (parent_.is_full_log)
+                return;
+
             lock (this) {
                 if (filter_view == filter_view_now_ && show_full_log == show_full_log_now_)
                     return;
@@ -250,6 +260,14 @@ namespace lw_common.ui {
             get { return is_running_filter_; }
         }
 
+        public void reapply_quick_filter() {
+            // we never run anything on the full-log
+            if (parent_.is_full_log)
+                return;
+
+            change_event_.signal();
+        }
+
 
         public void refresh() {
             if ( items_.count == 0)
@@ -263,9 +281,17 @@ namespace lw_common.ui {
         }
 
         private void update_filter_thread() {
+            // wait until we have the quick filter set on the main thread
+            while ( quick_filter_ == null)
+                Thread.Sleep(50);
+
             while (!disposed_) {
                 if (!change_event_.wait())
                     continue;
+
+                // we never run anything on the full-log
+                if (parent_.is_full_log)
+                    return;
 
                 bool filter_view;
                 bool show_full_log;
@@ -275,7 +301,9 @@ namespace lw_common.ui {
                 }
 
                 // see what changed
-                if (filter_view) {
+                // 1.8.27+ if the quick filter has anything set, we need to run it
+                bool quick_filter_matches_all = quick_filter_.matches_all();
+                if (filter_view || !quick_filter_matches_all ) {
                     // the user toggled on filtering
                     is_running_filter_ = true;
                     run_filter(show_full_log);
@@ -286,7 +314,8 @@ namespace lw_common.ui {
                     filter_view_ = filter_view_now_;
                     show_full_log_ = show_full_log_now_;
 
-                    if (!filter_view_)
+                    // 1.8.27 - the quick filter can still return something...
+                    if (!filter_view_ && quick_filter_matches_all)
                         // here, user toggled off filtering - so, I'm either showing the view, or the full log
                         sorted_line_indexes_ = null;
 
@@ -302,8 +331,8 @@ namespace lw_common.ui {
             filter_func item_filter;
             lock (this) item_filter = this.item_filter;
 
-            Debug.Assert(item_filter != null);
-            if (item_filter == null)
+            bool quick_filter_matches_all = quick_filter_.matches_all();
+            if (item_filter == null && quick_filter_matches_all)
                 return;
 
             memory_optimized_list<int> line_indexes = new memory_optimized_list<int>() { min_capacity = app.inst.no_ui.min_list_data_source_capacity };
@@ -322,9 +351,12 @@ namespace lw_common.ui {
                     if (in_cur_view != null)
                         i = in_cur_view;
                 }
-                if ( item_filter(i, run_on_full_log))
-                    if ( i.line_idx >= 0)
-                        line_indexes.Add( i.line_idx);
+                // possible optimization:
+                // if the new quick filter is a subset of the former filter, I should run it only on the former sorted_line_indexes
+                if ( quick_filter_matches_all || quick_filter_.matches(i))
+                    if (  item_filter == null || item_filter(i, run_on_full_log))
+                        if ( i.line_idx >= 0)
+                            line_indexes.Add( i.line_idx);
             }
 
             lock (this)

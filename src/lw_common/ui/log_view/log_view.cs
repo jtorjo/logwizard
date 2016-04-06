@@ -118,7 +118,9 @@ namespace lw_common.ui
 
         private column_formatter_array formatter_ = new column_formatter_array();
 
-        private snoop_filter snooper_ = new snoop_filter();
+        private snoop_filter snooper_ = null;
+
+        private log_view_quick_filter quick_filter_ = null;
 
         public log_view(Form parent, string name)
         {
@@ -135,6 +137,9 @@ namespace lw_common.ui
             --ignore_change_;
             model_ = new log_view_data_source(this.list, this ) { name = name };
             list.VirtualListDataSource = model_;
+            snooper_ = new snoop_filter(this);
+            quick_filter_ = new log_view_quick_filter(snooper_);
+            model_.quick_filter = quick_filter_;
 
             load_font();
             lv_parent.handle_subcontrol_keys(this);
@@ -276,6 +281,10 @@ namespace lw_common.ui
         }
 
         private void update_snoop_positions() {
+            // we never run any snoop on the full-log
+            if (is_full_log)
+                return;
+
             foreach (info_type i in Enum.GetValues(typeof (info_type))) 
                 if ( info_type_io.is_snoopable(i))
                     if (filter_.log.aliases.has_column(i)) {
@@ -291,7 +300,6 @@ namespace lw_common.ui
                         }
                         snoop.is_visible = visible;
                         snoop.set_parent_rect(list, bounds);
-                        //snoop.set_parent_rect(this, bounds);
                     }
             
             // FIXME  for description pane
@@ -967,6 +975,11 @@ namespace lw_common.ui
             return model_.GetObjectIndex(m);
         }
 
+        // it reapplies the quick filter on all items (either filtered, or full-log)
+        // 1.8.27 - so far, this reapplies the snoop ; in the future, I'll also have another quick filter for first/last item
+        internal void reapply_quick_filter() {
+            model_.reapply_quick_filter();
+        }
 
         public void on_action(action_type action) {
             switch (action) {
@@ -1172,6 +1185,7 @@ namespace lw_common.ui
             model_.set_filter(false, true);
             edit.clear_sel();
             cur_search_ = null;
+            snooper_.clear();
 
             // 1.8.21+ delete old bookmarks - they would not make sense anymore
             bookmarks.Clear();

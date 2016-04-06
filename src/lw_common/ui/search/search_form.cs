@@ -263,19 +263,8 @@ namespace lw_common.ui {
                 sel = 0;
             // get as many rows as possible, in both directions
             int max_count = Math.Min(app.inst.look_around_find, lv.item_count);
-            int min = sel - max_count / 2, max = sel + max_count / 2;
-            if (min < 0) {
-                max += -min;
-                min = 0;
-            }
-            if (max > lv.item_count) {
-                min -= max - lv.item_count;
-                max = lv.item_count;
-            }
-            if (min < 0)
-                min = 0;
-            if (max > lv.item_count)
-                max = lv.item_count;
+            var surrounding = util.surrounding(sel, max_count, 0, lv.item_count);
+            int min = surrounding.Item1, max = surrounding.Item2;
             // at this point, we know the start and end
             for (int idx = min; idx < max; ++idx) {
                 var i = lv.item_at(idx);

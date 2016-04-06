@@ -1477,5 +1477,24 @@ namespace lw_common {
             return result;
         }
 
+        // returns [min, max) - including min, excluding max
+        public static Tuple<int, int> surrounding(int sel, int count, int start, int end) {
+            int min = sel - count / 2, max = sel + count / 2;
+            if (min < start) {
+                max += start - min;
+                min = start;
+            }
+            if (max > end) {
+                min -= max - end;
+                max = end;
+            }
+            if (min < start)
+                min = start;
+            if (max > end)
+                max = end;
+            return new Tuple<int, int>(min,max);
+        }
+
+
     }
 }

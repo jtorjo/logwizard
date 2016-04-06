@@ -257,6 +257,15 @@ namespace lw_common {
         // 1.7.34 - look around - column formatting
         public int look_around_edit_column_formatting = 100;
 
+        // 1.8.27+ if entries less than this, we'll surround all
+        public int snoop_all_if_entries_less_than = util.is_debug ? 5000 : 10000;
+        // 1.8.27 if entries more than ^ , surround only this
+        public int snoop_surrounding_entries = 1000;
+        // 1.8.27 if snooped already, and moved to a different entry, if it's close to original, reuse it
+        public int reuse_snoop_surrounding = 100;
+        // 1.8.27 how many times should we update the UI "snoop" information? (at how many snooped entries)
+        public int snoop_update_ui_times = 10;
+
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // file-by-file
         public bool bring_to_top_on_restart = false;

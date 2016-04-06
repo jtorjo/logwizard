@@ -57,7 +57,7 @@ namespace lw_common.ui
         private int ignore_change_ = 0;
 
         private class bool_box {
-            public bool stop = false;
+            public bool keep_running = true;
         }
         // signal the snoop function to stop
         private bool_box stop_snoop_ = new bool_box();
@@ -183,18 +183,18 @@ namespace lw_common.ui
             if (start) {
                 finished_ = false;
                 // ... just in case
-                stop_snoop_.stop = true;
+                stop_snoop_.keep_running = false;
                 // we're starting a new snoop
                 stop_snoop_ = new bool_box();
-                Task.Run(() => on_snoop(this, ref stop_snoop_.stop));
+                Task.Run(() => on_snoop(this, ref stop_snoop_.keep_running));
             } else
                 // force stop snooping - user has collapsed us
-                stop_snoop_.stop = true;
+                stop_snoop_.keep_running = false;
         }
 
         // ... just in case we need to reuse this for another filter or so
         public void clear() {
-            stop_snoop_.stop = true;
+            stop_snoop_.keep_running = false;
             snooped_all_rows_ = false;
             list.Items.Clear();
         }
@@ -225,6 +225,10 @@ namespace lw_common.ui
             if ( snooped_all_rows)
                 Debug.Assert(finished);
             this.async_call(() => set_values_impl(values, finished, snooped_all_rows) );
+        }
+
+        public void reuse_last_values() {
+            finished_ = true;
         }
 
         // important: we visually sort them!

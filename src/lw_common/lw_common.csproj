@@ -213,6 +213,7 @@
     <Compile Include="ui\log_view\log_view_cell.cs" />
     <Compile Include="ui\log_view\log_view_item_draw_ui.cs" />
     <Compile Include="ui\log_view\log_view_parent.cs" />
+    <Compile Include="ui\log_view\log_view_quick_filter.cs" />
     <Compile Include="ui\log_view\log_view_show_columns.cs" />
     <Compile Include="ui\log_view\log_view_render.cs">
       <SubType>Component</SubType>

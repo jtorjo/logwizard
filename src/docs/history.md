@@ -1,4 +1,21 @@
 
+1.8.27d
+- snoop_filter
+  - the filter is cumulated - from all snoop around filters!!!!
+  - remembers selection of each snoop
+  - snooping (on another thread) works - even cares about surrounding rows
+	- this could be for "all log" or "surrounding X entries"
+	  - if "surrounding X entries", we do cache, but when we press it again, we keep the existing pre-computed list of items, and recompute the number of entries
+	  - for now, this will be preset -> if more than 10000 entries -> snoop around 1000. If less, go through all of it
+  - done: needs to be general - so that i can have any "quick filter" to be applied to all items
+    - (in quick filter) - later it will be very easy to add the other quick filter : start/end , start-date/end-date
+	- this is per view!!!
+  - can be queried on a specific match_item/line
+  - when it's computed for row X, and very close to that row, I need to reuse it (insted of reswooping)
+  - need to know which columns are snooped (filtered) and which not
+  - initially works rather decent - still quite a few things to fix
+
+
 1.8.27c
 - snoop_filter
   - the expander control: made the buttons into panels, in order not to have any border
