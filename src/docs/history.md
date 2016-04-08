@@ -1,3 +1,20 @@
+- when a column is hidden/shown -> update all snoops
+  - same for when resized
+- description pane
+  - watch for resize?
+- watch when i swith the current log view - needs to sync with description pane
+- based on filter applied or not -> show filter normally or "disabled"
+  - test applying/disabling filter -> also look at tooltip
+
+- when using keys (like, continuously pressing up or down, or pgup/down -> i need to temporarily hide it, and show it later)
+  - this is only needed for the view pane, not the details pane
+  - todo: if focus is not on me, and page/arrow/home/end hotkeys pressed -> if i'm hidden, hide expander as well'
+
+
+- expander : if we're not close, be dimmed so we don't interfere too much
+  - filter: if the filter is there, show it in blue + if we're close show and allow toggling
+
+1.8.27g
 
 1.8.27e
 - snoop_filter
