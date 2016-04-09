@@ -62,6 +62,8 @@ namespace lw_common {
 
         private log_view view_;
 
+        private bool aliases_set_ = false;
+
         internal snoop_filter(log_view view) {
             view_ = view;
             // add the most of possible snoops
@@ -72,6 +74,10 @@ namespace lw_common {
                     form.on_snoop = on_snoop;
                     unused_.Add( new snoop_form_info { form = form } );
                 }
+        }
+
+        public bool aliases_set {
+            get { return aliases_set_; }
         }
 
         private snoop_form_info info(snoop_around_form self) {
@@ -184,6 +190,7 @@ namespace lw_common {
         }
 
         public void on_new_log() {
+            aliases_set_ = false;
             clear();
         }
 
@@ -235,6 +242,7 @@ namespace lw_common {
                                 unuse_now.form.is_visible = false;
                             }
                         }            
+            aliases_set_ = true;
         }
 
 

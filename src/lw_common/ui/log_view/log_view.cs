@@ -266,8 +266,11 @@ namespace lw_common.ui
         }
 
         public void update_column_names() {
-            if (filter.log == null)
+            if (filter.log == null) {
+                // wait until the log is set
+                util.postpone(update_column_names, 100);
                 return;
+            }
             snooper_.on_aliases(filter_.log.aliases);
 
             foreach (info_type i in Enum.GetValues(typeof (info_type))) {
@@ -284,25 +287,49 @@ namespace lw_common.ui
             // we never run any snoop on the full-log
             if (is_full_log)
                 return;
+            if (!snooper_.aliases_set)
+                return; // only when we know all columns, can we show/hide/set positions
+
+            update_snoop_visibility();
 
             foreach (info_type i in Enum.GetValues(typeof (info_type))) 
                 if ( info_type_io.is_snoopable(i))
                     if (filter_.log.aliases.has_column(i)) {
                         var col = log_view_cell.column(this, i);
-                        bool visible = col.is_visible();
                         var snoop = snooper_.snoop_for(i);
                         int sel = sel_row_idx_ui_thread;
                         var bounds = Rectangle.Empty;
+                        if ( sel >= 0)
+                            bounds = list.GetItem(sel).GetSubItemBounds(col.Index);
+                        snoop.set_parent_rect(list, bounds);
+                    }
+            
+            // FIXME  for description pane
+        }
+
+        private void update_snoop_visibility() {
+            // we never run any snoop on the full-log
+            if (is_full_log)
+                return;
+            if (!snooper_.aliases_set)
+                return; // only when we know all columns, can we show/hide/set positions
+
+            bool is_active = this.is_current_view;
+            foreach (info_type i in Enum.GetValues(typeof (info_type))) 
+                if ( info_type_io.is_snoopable(i))
+                    if (filter_.log.aliases.has_column(i)) {
+                        var col = log_view_cell.column(this, i);
+                        bool visible = is_active && col.is_visible() ;
+                        var snoop = snooper_.snoop_for(i);
+                        int sel = sel_row_idx_ui_thread;
                         if (visible) {
+                            var bounds = Rectangle.Empty;
                             if ( sel >= 0)
                                 bounds = list.GetItem(sel).GetSubItemBounds(col.Index);
                             visible = sel >= 0 && bounds.Width > 0 && bounds.Height > 0;
                         }
                         snoop.is_visible = visible;
-                        snoop.set_parent_rect(list, bounds);
                     }
-            
-            // FIXME  for description pane
         }
 
         private void menu_Closing(object sender, ToolStripDropDownClosingEventArgs e) {
@@ -860,6 +887,7 @@ namespace lw_common.ui
 
         // called when this log view is not used anymore (like, when it's removed from its tab page)
         public new void Dispose() {
+            refreshUI.Enabled = false;
             snooper_.Dispose();
             if (log_ != null) {
                 log_.Dispose();
@@ -2684,8 +2712,6 @@ namespace lw_common.ui
             edit.update_ui();
         }
 
-        private void updateCursor_Tick(object sender, EventArgs e) {
-        }
 
         private void list_MouseMove(object sender, MouseEventArgs e)
         {
@@ -2701,6 +2727,11 @@ namespace lw_common.ui
             
             bool busy = is_searching_ > 0 || model_.is_running_filter;
             list.Cursor = busy ? Cursors.WaitCursor : Cursors.IBeam;
+        }
+
+        private void refreshUI_Tick(object sender, EventArgs e) {
+            if ( log_ != null)
+                update_snoop_visibility();
         }
     }
 }

@@ -46,6 +46,10 @@ namespace lw_common.ui.snoop {
         public snoop_around_expander_ctrl(snoop_around_form parent) {
             parent_ = parent;
             InitializeComponent();
+            
+            // don't ever steal focus http://stackoverflow.com/questions/785672/is-there-a-way-to-make-a-usercontrol-unfocussable
+            SetStyle(ControlStyles.Selectable, false);
+
             control_width_ = expand.Width;
             control_height_ = expand.Height;
 

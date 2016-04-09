@@ -61,7 +61,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.edit = new lw_common.ui.smart_readonly_textbox();
-            this.updateCursor = new System.Windows.Forms.Timer(this.components);
+            this.refreshUI = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.list)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -82,7 +82,7 @@
             // viewName
             // 
             this.viewName.Location = new System.Drawing.Point(82, 0);
-            this.viewName.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.viewName.Margin = new System.Windows.Forms.Padding(6);
             this.viewName.Name = "viewName";
             this.viewName.Size = new System.Drawing.Size(286, 31);
             this.viewName.TabIndex = 2;
@@ -150,7 +150,7 @@
             this.list.FullRowSelect = true;
             this.list.HideSelection = false;
             this.list.Location = new System.Drawing.Point(4, 44);
-            this.list.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.list.Margin = new System.Windows.Forms.Padding(6);
             this.list.Name = "list";
             this.list.OwnerDraw = true;
             this.list.SelectColumnsOnRightClick = false;
@@ -362,7 +362,7 @@
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(4, -2);
-            this.panel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.panel1.Margin = new System.Windows.Forms.Padding(6);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1386, 46);
             this.panel1.TabIndex = 4;
@@ -384,7 +384,7 @@
             this.edit.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.edit.force_hide = false;
             this.edit.Location = new System.Drawing.Point(-200, 58);
-            this.edit.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.edit.Margin = new System.Windows.Forms.Padding(6);
             this.edit.Multiline = false;
             this.edit.Name = "edit";
             this.edit.ReadOnly = true;
@@ -393,11 +393,10 @@
             this.edit.TabIndex = 5;
             this.edit.Text = "";
             // 
-            // updateCursor
+            // refreshUI
             // 
-            this.updateCursor.Enabled = true;
-            this.updateCursor.Interval = 200;
-            this.updateCursor.Tick += new System.EventHandler(this.updateCursor_Tick);
+            this.refreshUI.Enabled = true;
+            this.refreshUI.Tick += new System.EventHandler(this.refreshUI_Tick);
             // 
             // log_view
             // 
@@ -409,7 +408,7 @@
             this.Controls.Add(this.viewName);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "log_view";
             this.Size = new System.Drawing.Size(1394, 854);
             this.Load += new System.EventHandler(this.log_view_Load);
@@ -457,6 +456,6 @@
         internal BrightIdeasSoftware.OLVColumn ctx13Col;
         internal BrightIdeasSoftware.OLVColumn ctx14Col;
         internal BrightIdeasSoftware.OLVColumn ctx15Col;
-        private System.Windows.Forms.Timer updateCursor;
+        private System.Windows.Forms.Timer refreshUI;
     }
 }
