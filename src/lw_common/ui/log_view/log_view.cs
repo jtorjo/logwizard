@@ -161,6 +161,7 @@ namespace lw_common.ui
             list.ColumnWidthChanged += List_on_column_width_changed;
             list.ColumnWidthChanging += List_on_column_width_changing;
             msgCol.FillsFreeSpace = !app.inst.show_horizontal_scrollbar;
+            lv_parent.description_pane().on_internal_resize += on_description_pane_resized;
         }
 
         private void List_on_column_width_changing(object sender, ColumnWidthChangingEventArgs e) {
@@ -283,7 +284,7 @@ namespace lw_common.ui
             update_snoop_positions();
         }
 
-        private void update_snoop_positions() {
+        internal void update_snoop_positions() {
             // we never run any snoop on the full-log
             if (is_full_log)
                 return;
@@ -292,19 +293,38 @@ namespace lw_common.ui
 
             update_snoop_visibility();
 
-            foreach (info_type i in Enum.GetValues(typeof (info_type))) 
-                if ( info_type_io.is_snoopable(i))
-                    if (filter_.log.aliases.has_column(i)) {
-                        var col = log_view_cell.column(this, i);
-                        var snoop = snooper_.snoop_for(i);
+            var description_pane = this.description_pane();
+            var description_cols = description_pane != null ? description_pane.shown_columns : null;
+            foreach (info_type col_type in Enum.GetValues(typeof (info_type))) 
+                if ( info_type_io.is_snoopable(col_type))
+                    if (filter_.log.aliases.has_column(col_type)) {
+                        var col = log_view_cell.column(this, col_type);
+                        var snoop = snooper_.snoop_for(col_type);
                         int sel = sel_row_idx_ui_thread;
                         var bounds = Rectangle.Empty;
                         if ( sel >= 0)
                             bounds = list.GetItem(sel).GetSubItemBounds(col.Index);
-                        snoop.set_parent_rect(list, bounds);
+
+                        if (snoop.is_visible) {
+                            // at this point, see if the view column is visible - if so, show snooper in the view
+                            // otherwise, show it in the description pane - if available
+                            if (col.is_visible())
+                                snoop.set_parent_rect(list, bounds);
+                            else if (description_cols != null && description_cols.Contains(col_type)) {
+                                bounds = description_pane.rect_for_column(col_type);
+                                snoop.set_parent_rect(description_pane, bounds);
+                            }
+                                
+                        }
                     }
-            
-            // FIXME  for description pane
+        }
+
+        public void on_current_view_changed() {
+            update_snoop_positions();
+        }
+
+        private void on_description_pane_resized() {
+            update_snoop_positions();
         }
 
         private void update_snoop_visibility() {
@@ -314,19 +334,23 @@ namespace lw_common.ui
             if (!snooper_.aliases_set)
                 return; // only when we know all columns, can we show/hide/set positions
 
+            var description_pane = this.description_pane();
+            var description_cols = description_pane != null ? description_pane.shown_columns : null;
             bool is_active = this.is_current_view;
-            foreach (info_type i in Enum.GetValues(typeof (info_type))) 
-                if ( info_type_io.is_snoopable(i))
-                    if (filter_.log.aliases.has_column(i)) {
-                        var col = log_view_cell.column(this, i);
-                        bool visible = is_active && col.is_visible() ;
-                        var snoop = snooper_.snoop_for(i);
+            foreach (info_type col_type in Enum.GetValues(typeof (info_type))) 
+                if ( info_type_io.is_snoopable(col_type))
+                    if (filter_.log.aliases.has_column(col_type)) {
+                        var col = log_view_cell.column(this, col_type);
+                        bool visible = is_active ;
+                        var snoop = snooper_.snoop_for(col_type);
                         int sel = sel_row_idx_ui_thread;
                         if (visible) {
                             var bounds = Rectangle.Empty;
-                            if ( sel >= 0)
+                            if ( sel >= 0 && col.is_visible())
                                 bounds = list.GetItem(sel).GetSubItemBounds(col.Index);
-                            visible = sel >= 0 && bounds.Width > 0 && bounds.Height > 0;
+                            bool visible_in_view = bounds.Width > 0 && bounds.Height > 0;
+                            bool visible_in_details = description_cols != null && description_cols.Contains(col_type);
+                            visible = sel >= 0 && (visible_in_view || visible_in_details);
                         }
                         snoop.is_visible = visible;
                     }
@@ -343,6 +367,7 @@ namespace lw_common.ui
 
         public void on_column_positions_change() {
             log_view_show_columns.apply_column_positions(this);
+            update_snoop_positions();
         }
 
         private void toggle_apply_column_settings_to_all(ToolStripMenuItem sub) {
@@ -887,6 +912,7 @@ namespace lw_common.ui
 
         // called when this log view is not used anymore (like, when it's removed from its tab page)
         public new void Dispose() {
+            lv_parent.description_pane().on_internal_resize -= on_description_pane_resized;
             refreshUI.Enabled = false;
             snooper_.Dispose();
             if (log_ != null) {
@@ -2543,9 +2569,15 @@ namespace lw_common.ui
             return pos >= 0;
         }
 
+        private description_ctrl description_pane() {
+            var pane = lv_parent.description_pane();
+            return pane != null && pane.Visible && pane.Height > 0 ? pane : null;
+        }
+
         // returns all visible column types - including those from the description control
         internal List<info_type> all_visible_column_types() {
-            List<info_type> visible = lv_parent.description_columns();
+            var description_pane = this.description_pane();
+            List<info_type> visible = description_pane != null ? description_pane.shown_columns : new List<info_type>();
 
             for (int col_idx = 0; col_idx < list.AllColumns.Count; ++col_idx)
                 if (list.AllColumns[col_idx].IsVisible) {

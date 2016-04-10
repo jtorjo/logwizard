@@ -2141,6 +2141,8 @@ namespace LogWizard
             global_ui.selected_view = global_ui.selected_view = name;
             update_notes_current_line();
             util.postpone(() => description.show_cur_item(selected_view()), 150);
+            foreach (var lv in all_log_views())
+                lv.on_current_view_changed();
         }
 
 
@@ -3754,8 +3756,8 @@ namespace LogWizard
                 Debug.Assert(false);
         }
 
-        public List<info_type> description_columns() {            
-            return global_ui.show_details ? description.shown_columns : new List<info_type>();
+        public description_ctrl description_pane() {
+            return description;
         }
 
         public List<int> bookmarks() {

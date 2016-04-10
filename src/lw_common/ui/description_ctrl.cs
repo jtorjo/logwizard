@@ -69,6 +69,9 @@ namespace lw_common.ui {
         public delegate void on_description_template_changed_func(string description);
         public on_description_template_changed_func on_description_changed;
 
+        // this is called when the user has done some internal resize (like, dragging any of the splitters)
+        public util.void_func on_internal_resize;
+
         public description_ctrl() {
             InitializeComponent();
             splits_.Add(split1);
@@ -93,7 +96,15 @@ namespace lw_common.ui {
 
         public List<info_type> shown_columns {
             get { return column_to_controls_.Select(x => x.Key).ToList(); }
-        } 
+        }
+
+        public Rectangle rect_for_column(info_type col_type) {
+            if (column_to_controls_.ContainsKey(col_type)) {
+                var rect = column_to_controls_[col_type].Item2.RectangleToScreen(column_to_controls_[col_type].Item2.ClientRectangle);
+                return RectangleToClient(rect);
+            }
+            return Rectangle.Empty;
+        }
 
         private static string to_string(parts_layout_template layout) {
             string rows = util.concatenate( layout.rows_.Select(x => "" + x.label_width_ + "," + x.row_width_ + "," + x.parts_.Count), ";");
@@ -440,36 +451,48 @@ namespace lw_common.ui {
             if (ignore_change_ > 0)
                 return;
             splitter_widths_to_row_widths(5);
+            if (on_internal_resize != null)
+                on_internal_resize();
         }
 
         private void split5_SplitterMoved(object sender, SplitterEventArgs e) {
             if (ignore_change_ > 0)
                 return;
             splitter_widths_to_row_widths(4);
+            if (on_internal_resize != null)
+                on_internal_resize();
         }
 
         private void split4_SplitterMoved(object sender, SplitterEventArgs e) {
             if (ignore_change_ > 0)
                 return;
             splitter_widths_to_row_widths(3);
+            if (on_internal_resize != null)
+                on_internal_resize();
         }
 
         private void split3_SplitterMoved(object sender, SplitterEventArgs e) {
             if (ignore_change_ > 0)
                 return;
             splitter_widths_to_row_widths(2);
+            if (on_internal_resize != null)
+                on_internal_resize();
         }
 
         private void split2_SplitterMoved(object sender, SplitterEventArgs e) {
             if (ignore_change_ > 0)
                 return;
             splitter_widths_to_row_widths(1);
+            if (on_internal_resize != null)
+                on_internal_resize();
         }
 
         private void split1_SplitterMoved(object sender, SplitterEventArgs e) {
             if (ignore_change_ > 0)
                 return;
             splitter_widths_to_row_widths(0);
+            if (on_internal_resize != null)
+                on_internal_resize();
         }
 
         private List<part> get_visible_parts() {

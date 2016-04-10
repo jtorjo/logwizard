@@ -89,8 +89,8 @@ namespace lw_common.ui {
 
         void on_available_columns_known();
 
-        // these are the columns that are visible in the description pane (if it's shown)
-        List<info_type> description_columns();
+        // if null, description is not shown
+        description_ctrl description_pane();
 
         // returns the bookmarks - shared between all views
         List<int> bookmarks();

@@ -123,8 +123,8 @@ namespace test_ui {
         public void on_available_columns_known() {
         }
 
-        public List<info_type> description_columns() {
-            return new List<info_type>();
+        public description_ctrl description_pane() {
+            return null;
         }
 
         public List<int> bookmarks() {

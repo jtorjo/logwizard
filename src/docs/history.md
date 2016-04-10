@@ -1,5 +1,13 @@
 
 
+1.8.27h
+- snoop_filter
+  - when a column is hidden/shown -> update all snoops
+    - same for when resized
+  - description pane - works
+    - watch for resize works
+
+
 1.8.27g
 - snoop_filter
   - can correctly switch views - snoop positions are computed correctly
