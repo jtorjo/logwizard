@@ -1,5 +1,11 @@
 
 
+1.8.27l
+- snoop_filter
+  - based on filter applied or not -> show filter normally or "disabled"
+  - expander : if we're not close, be dimmed so we don't interfere too much ("close" = vertically, always)
+
+
 1.8.27k
 - fix: .csv bug - create new view -> it's not saved
 - snoop_filter

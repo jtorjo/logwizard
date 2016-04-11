@@ -27,6 +27,7 @@
             this.refreshZorder = new System.Windows.Forms.Timer(this.components);
             this.expand = new System.Windows.Forms.Panel();
             this.reapplyFilter = new System.Windows.Forms.Panel();
+            this.refreshIcons = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // refreshZorder
@@ -57,6 +58,11 @@
             this.reapplyFilter.TabIndex = 5;
             this.reapplyFilter.Click += new System.EventHandler(this.reapplyFilter_Click);
             // 
+            // refreshIcons
+            // 
+            this.refreshIcons.Enabled = true;
+            this.refreshIcons.Tick += new System.EventHandler(this.refreshIcons_Tick);
+            // 
             // snoop_around_expander_ctrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
@@ -75,5 +81,6 @@
         private System.Windows.Forms.Timer refreshZorder;
         private System.Windows.Forms.Panel expand;
         private System.Windows.Forms.Panel reapplyFilter;
+        private System.Windows.Forms.Timer refreshIcons;
     }
 }

@@ -29,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using lw_common.Properties;
 
 namespace lw_common.ui.snoop {
     // opacity - taken from http://stackoverflow.com/questions/9358500/making-a-control-transparent
@@ -43,6 +44,11 @@ namespace lw_common.ui.snoop {
 
         private bool reapply_ = true;
 
+        private Bitmap filter_applied = Resources.filter_applied;
+        private Bitmap filter_not_applied = Resources.filter_not_applied;
+
+        private bool prev_close_by_vertically_ = true;
+
         public snoop_around_expander_ctrl(snoop_around_form parent) {
             parent_ = parent;
             InitializeComponent();
@@ -54,7 +60,7 @@ namespace lw_common.ui.snoop {
             control_height_ = expand.Height;
 
             BackColor = Color.White;
-
+            reapplyFilter.BackgroundImage = reapply_ ? filter_applied : filter_not_applied;
             update_pos();
         }
 
@@ -72,6 +78,7 @@ namespace lw_common.ui.snoop {
             set {
                 if (reapply_ != value) {
                     reapply_ = value;
+                    reapplyFilter.BackgroundImage = reapply_ ? filter_applied : filter_not_applied;
                     parent_.on_click_apply();
                 }
             }
@@ -117,27 +124,6 @@ namespace lw_common.ui.snoop {
 
                 if ( Parent.Controls.GetChildIndex(this) != zorder)
                     Parent.Controls.SetChildIndex(this, zorder);
-
-                // the issue was because i had created the control transparently, cause i wanted opacity :D
-#if old_code
-                var screen_rect = RectangleToScreen(ClientRectangle);
-                var intersecting_controls = Parent.Controls.OfType<TextBoxBase>().Where(x => x.Visible).Where(x => x.RectangleToScreen(x.ClientRectangle).IntersectsWith(screen_rect) );
-                if (intersecting_controls.Any()) {
-                    var rect = Parent.RectangleToClient(screen_rect);
-                    foreach (Control c in intersecting_controls) {
-                        var control_rect = new Rectangle(c.Location, c.Size);
-                        if (control_rect.Right > rect.Left && control_rect.Right < rect.Right)
-                            // control overlaps with our left side
-                            c.Width -= control_rect.Right - rect.Left;
-                        else if (control_rect.Left < rect.Right && control_rect.Left > rect.Left)
-                            // control overlaps with our right side
-                            c.Location = new Point(rect.Right, control_rect.Top);
-                        else if (control_rect.Left <= rect.Left && control_rect.Right >= rect.Right)
-                            // the other control overlaps totally - we can safey assume this is on the right side
-                            c.Width = rect.Left - control_rect.Left;
-                    }
-                }
-#endif
             }
         }
 
@@ -147,6 +133,18 @@ namespace lw_common.ui.snoop {
 
         private void reapplyFilter_Click(object sender, EventArgs e) {
             filter_pressed = !filter_pressed;
+        }
+
+        private void refreshIcons_Tick(object sender, EventArgs e) {
+            var screen_rect = RectangleToScreen(ClientRectangle);
+            var mouse = Cursor.Position;
+            int PAD = 15;
+            bool inside_vertically = screen_rect.Top <= mouse.Y && screen_rect.Bottom >= mouse.Y;
+            bool close_by_vertically = inside_vertically || Math.Abs(screen_rect.Top - mouse.Y) < PAD || Math.Abs(screen_rect.Bottom - mouse.Y) < PAD;
+            var expand_icon = close_by_vertically ? Resources.down_applied : Resources.down_dimmed;
+            if (close_by_vertically != prev_close_by_vertically_)
+                expand.BackgroundImage = expand_icon;
+            prev_close_by_vertically_ = close_by_vertically;
         }
     }
 }
