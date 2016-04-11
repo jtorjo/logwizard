@@ -132,7 +132,7 @@ namespace lw_common {
                 if (views.Count < 1)
                     return false;
                 // in this case, we have a single view
-                if (views[0].is_default_name && views[0].filters.Count < 1)
+                if (views.Count == 1 && views[0].is_default_name && views[0].filters.Count < 1)
                     return false;
 
                 return true;                

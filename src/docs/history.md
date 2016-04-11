@@ -1,5 +1,12 @@
 
 
+1.8.27k
+- fix: .csv bug - create new view -> it's not saved
+- snoop_filter
+  - watch when i swith the current log view - needs to sync with description pane
+     - test on .csv
+
+
 1.8.27h
 - snoop_filter
   - when a column is hidden/shown -> update all snoops
