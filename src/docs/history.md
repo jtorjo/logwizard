@@ -1,4 +1,10 @@
 
+1.8.27p
+- fix #21
+- snoop_filter
+  - snoop around settings : add them in Preferences
+
+
 1.8.27o
 - snoop_filter
   - when using keys (like, continuously pressing up or down, or pgup/down -> i need to temporarily hide it, and show it later)

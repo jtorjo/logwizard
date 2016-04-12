@@ -487,6 +487,10 @@ namespace lw_common {
             load_save(load, ref look_around_find, "look_around_find", 1000);
             load_save(load, ref look_around_type_as_you_go, "look_around_type_as_you_go", 200);
             load_save(load, ref look_around_edit_column_formatting, "look_around_edit_column_formatting", 100);
+
+            load_save(load, ref snoop_all_if_entries_less_than, "snoop_all_if_entries_less_than", 100000);
+            load_save(load, ref snoop_surrounding_entries, "snoop_surrounding_entries", 10000);
+            load_save(load, ref reuse_snoop_surrounding, "reuse_snoop_surrounding", 1000);
         }
 
         private string initials(string name) {

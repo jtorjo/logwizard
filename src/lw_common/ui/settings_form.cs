@@ -161,6 +161,10 @@ namespace lw_common.ui {
             findPreviewLookAround.Text = "" + app.inst.look_around_find;
             smartCompletionLookAround.Text = "" + app.inst.look_around_type_as_you_go;
             editColumnFormattingLookAround.Text = "" + app.inst.look_around_edit_column_formatting;
+
+            snoopAllEntriesLessThan.Text = "" + app.inst.snoop_all_if_entries_less_than;
+            snoopSurroundingEntries.Text = "" + app.inst.snoop_surrounding_entries;
+            reuseLastSnoopAround.Text = "" + app.inst.reuse_snoop_surrounding;
         }
 
         private void save() {
@@ -256,6 +260,13 @@ namespace lw_common.ui {
                 app.inst.look_around_type_as_you_go = val;
             if (int.TryParse(editColumnFormattingLookAround.Text, out val))
                 app.inst.look_around_edit_column_formatting = val;
+
+            if (int.TryParse(snoopAllEntriesLessThan.Text, out val))
+                app.inst.snoop_all_if_entries_less_than = val;
+            if (int.TryParse(snoopSurroundingEntries.Text, out val))
+                app.inst.snoop_surrounding_entries = val;
+            if (int.TryParse(reuseLastSnoopAround.Text, out val))
+                app.inst.reuse_snoop_surrounding = val;
 
             app.inst.save();
             if (associate_change)
