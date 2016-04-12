@@ -38,8 +38,11 @@ namespace lw_common {
             // note that different columns can be snooped at different locations
             public int snoop_sel = -1;
 
-            // what the user snooped - if empty, don't filter at all
+            // what the user snooped - if empty (or selection_used is false), don't filter at all
             public HashSet<string> snoop_selection = new HashSet<string>();
+
+            // if true, we're using the selection - otherwise, not
+            public bool selection_used = true;
 
             // when did I apply this snoop? Each extra snoop is given an index (increased from zero upwards)
             // when the selection for a snoop changes:
@@ -150,36 +153,43 @@ namespace lw_common {
             }
         }
 
-        private void on_apply(snoop_around_form self, List<string> selection) {
+        private void on_apply(snoop_around_form self, List<string> selection, bool used) {
             var new_sel = new HashSet<string>(selection);
             var info = this.info(self);
-            if (info.snoop_selection.SetEquals(new_sel))
+            bool same_snoop = info.snoop_selection.SetEquals(new_sel);
+            if (same_snoop && info.selection_used == used)
                 return; // nothing changed
+            if (same_snoop && selection.Count == 0)
+                // nothing is selected, it doesn't matter
+                return;
 
             lock (this) {
+                info.selection_used = used;
                 info.snoop_selection = new_sel;
 
-                bool has_sel = new_sel.Count > 0;
-                if (info.apply_index >= 0)
-                    // all snoops with a higher index, are cleared (the selection changed, thus, they need to be re-done)
+                if (!same_snoop) {
+                    bool has_sel = new_sel.Count > 0;
+                    if (info.apply_index >= 0)
+                        // all snoops with a higher index, are cleared (the selection changed, thus, they need to be re-done)
+                        foreach (var snoop in snoops_.Values)
+                            if (snoop.apply_index > info.apply_index)
+                                snoop.clear();
+
+                    if (!has_sel)
+                        // user cleared this snoop
+                        info.clear();
+
+                    if (has_sel && info.apply_index < 0) {
+                        // need to find out the apply_index
+                        int max_apply = snoops_.Values.Max(x => x.apply_index);
+                        info.apply_index = max_apply + 1;
+                    }
+
+                    // all snoops that did not have a selection yet, they need re-doing
                     foreach (var snoop in snoops_.Values)
-                        if (snoop.apply_index > info.apply_index)
+                        if (snoop.apply_index < 0)
                             snoop.clear();
-
-                if (!has_sel)
-                    // user cleared this snoop
-                    info.clear();
-
-                if (has_sel && info.apply_index < 0) {
-                    // need to find out the apply_index
-                    int max_apply = snoops_.Values.Max(x => x.apply_index);
-                    info.apply_index = max_apply + 1;
                 }
-
-                // all snoops that did not have a selection yet, they need re-doing
-                foreach (var snoop in snoops_.Values)
-                    if (snoop.apply_index < 0)
-                        snoop.clear();
             }
             view_.reapply_quick_filter();
         }
@@ -197,7 +207,7 @@ namespace lw_common {
         internal bool matches(match_item item) {
             lock(this)
                 foreach ( var snoop in snoops_)
-                    if (snoop.Value.snoop_selection.Count > 0) {
+                    if (snoop.Value.snoop_selection.Count > 0 && snoop.Value.selection_used) {
                         var cur_value = (item as filter.match).line.part(snoop.Key);
                         if (!snoop.Value.snoop_selection.Contains(cur_value))
                             return false;

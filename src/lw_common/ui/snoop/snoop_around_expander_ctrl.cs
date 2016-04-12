@@ -42,7 +42,7 @@ namespace lw_common.ui.snoop {
         
         private int control_width_, control_height_;
 
-        private bool reapply_ = true;
+        private bool reapply_ = false;
 
         private Bitmap filter_applied = Resources.filter_applied;
         private Bitmap filter_not_applied = Resources.filter_not_applied;
@@ -69,6 +69,7 @@ namespace lw_common.ui.snoop {
             set {
                 show_filter_ = value;
                 update_pos();
+                update_tooltips();
             }
         }
 
@@ -79,16 +80,23 @@ namespace lw_common.ui.snoop {
                 if (reapply_ != value) {
                     reapply_ = value;
                     reapplyFilter.BackgroundImage = reapply_ ? filter_applied : filter_not_applied;
+                    update_tooltips();
                     parent_.on_click_apply();
                 }
             }
         }
 
+        private void update_tooltips() {
+            tip.SetToolTip(reapplyFilter, reapply_ ? "Filter is Running\r\nClick to Disable" : "Filter is NOT Running\r\nClick to Enable");
+            tip.SetToolTip(expand, reapply_ ? "Filter is Running\r\nClick to Refine and/or Re-apply your Filter" : "Click to Filter (Snoop Around)");
+        }
+
         public void update_pos() {
-            int width = show_filter ? control_width_ * 2 : control_width_;
+            bool show_filter_button = show_filter_ && is_close_by_vertically();
+            int width = show_filter_button ? control_width_ * 2 : control_width_;
             int height = control_width_;
 
-            if (show_filter) {
+            if (show_filter_button) {
                 reapplyFilter.Visible = true;
                 reapplyFilter.Location = new Point(0, 0);
                 expand.Location = new Point(control_width_, 0);
@@ -98,7 +106,7 @@ namespace lw_common.ui.snoop {
             }
             // forget it for now
             //Opacity = parent_.expanded ? 100 : 20;
-            Width = show_filter ? control_width_ * 2 : control_width_;
+            Width = show_filter_button ? control_width_ * 2 : control_width_;
             Height = control_height_;
 
             // note: not using the parent form's position, since it might be hidden
@@ -107,6 +115,15 @@ namespace lw_common.ui.snoop {
             Point top_left = new Point(low_right.X - width, low_right.Y - height);
             Location = top_left;
             Size = new Size(width, height);
+        }
+
+        private bool is_close_by_vertically() {
+            var screen_rect = RectangleToScreen(ClientRectangle);
+            var mouse = Cursor.Position;
+            int PAD = 15;
+            bool inside_vertically = screen_rect.Top <= mouse.Y && screen_rect.Bottom >= mouse.Y;
+            bool close_by_vertically = inside_vertically || Math.Abs(screen_rect.Top - mouse.Y) < PAD || Math.Abs(screen_rect.Bottom - mouse.Y) < PAD;
+            return close_by_vertically;
         }
 
 
@@ -136,14 +153,13 @@ namespace lw_common.ui.snoop {
         }
 
         private void refreshIcons_Tick(object sender, EventArgs e) {
-            var screen_rect = RectangleToScreen(ClientRectangle);
-            var mouse = Cursor.Position;
-            int PAD = 15;
-            bool inside_vertically = screen_rect.Top <= mouse.Y && screen_rect.Bottom >= mouse.Y;
-            bool close_by_vertically = inside_vertically || Math.Abs(screen_rect.Top - mouse.Y) < PAD || Math.Abs(screen_rect.Bottom - mouse.Y) < PAD;
-            var expand_icon = close_by_vertically ? Resources.down_applied : Resources.down_dimmed;
-            if (close_by_vertically != prev_close_by_vertically_)
+            bool close_by_vertically = is_close_by_vertically();
+            var expand_icon = close_by_vertically ? Resources.down_applied : Resources.down;
+            if (close_by_vertically != prev_close_by_vertically_) {
                 expand.BackgroundImage = expand_icon;
+                update_pos();
+                update_tooltips();
+            }
             prev_close_by_vertically_ = close_by_vertically;
         }
     }

@@ -28,6 +28,7 @@
             this.expand = new System.Windows.Forms.Panel();
             this.reapplyFilter = new System.Windows.Forms.Panel();
             this.refreshIcons = new System.Windows.Forms.Timer(this.components);
+            this.tip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // refreshZorder
@@ -82,5 +83,6 @@
         private System.Windows.Forms.Panel expand;
         private System.Windows.Forms.Panel reapplyFilter;
         private System.Windows.Forms.Timer refreshIcons;
+        private System.Windows.Forms.ToolTip tip;
     }
 }

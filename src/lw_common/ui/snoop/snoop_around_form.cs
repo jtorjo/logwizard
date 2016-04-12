@@ -49,7 +49,10 @@ namespace lw_common.ui
         private bool expanded_ = false;
 
         // if selection is empty -> no selection
-        public delegate void on_apply_func(snoop_around_form self, List<string> selection);
+        // if used = true -> use selection; if used = false -> selection is not used (filter is not applied)
+        //
+        // note: we send the selection, even if it's unused (so that it can be cached and reused)
+        public delegate void on_apply_func(snoop_around_form self, List<string> selection, bool used);
 
         public on_apply_func on_apply;
 
@@ -361,25 +364,23 @@ namespace lw_common.ui
                 return;
             expanded = false;
             List<string> is_checked = new List<string>(), is_unchecked = new List<string>();
-            // note: if repply is unchecked, it means the user turned this filter OFF
-            if (expander_.filter_pressed) {
-                for (int idx = 0; idx < list.GetItemCount(); ++idx) {
-                    var i = list.GetItem(idx).RowObject as snoop_item;
-                    if ( i.is_checked)
-                        is_checked.Add(i.value);
-                    else 
-                        is_unchecked.Add(i.value);
-                }
-                int all = is_checked.Count + is_unchecked.Count;
-                // if all checked or all unchecked, nothing is selected
-                bool any_selection = (is_checked.Count < all && is_unchecked.Count < all);
-                if (!any_selection)
-                    is_checked.Clear();
+            for (int idx = 0; idx < list.GetItemCount(); ++idx) {
+                var i = list.GetItem(idx).RowObject as snoop_item;
+                if ( i.is_checked)
+                    is_checked.Add(i.value);
+                else 
+                    is_unchecked.Add(i.value);
             }
+            int all = is_checked.Count + is_unchecked.Count;
+            // if all checked or all unchecked, nothing is selected
+            bool any_selection = (is_checked.Count < all && is_unchecked.Count < all);
+            bool used = expander_.filter_pressed;
+            if (!any_selection)
+                used = false;
 
             logger.Debug("snoop filter: [" + util.concatenate(is_checked, ",") + "]");
             if ( on_apply != null)
-                on_apply(this, is_checked);
+                on_apply(this, is_checked, used);
         }
 
         private void snoop_around_form_Deactivate(object sender, EventArgs e) {

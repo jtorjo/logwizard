@@ -1,4 +1,12 @@
 
+1.8.27m
+- snoop_filter
+  - expander : if we're not close, be dimmed so we don't interfere too much ("close" = vertically, always)
+    done: - filter: is shown ONLY IF WE'RE close by
+  - based on filter applied or not -> show filter normally or "disabled"
+    - by default, filter is off
+  - test applying/disabling filter -> also look at tooltip - tooltips work
+  
 
 1.8.27l
 - snoop_filter
