@@ -93,6 +93,16 @@ namespace lw_common.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap down_and_filter {
+            get {
+                object obj = ResourceManager.GetObject("down_and_filter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap down_applied {
             get {
                 object obj = ResourceManager.GetObject("down_applied", resourceCulture);

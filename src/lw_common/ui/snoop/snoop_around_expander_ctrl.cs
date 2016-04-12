@@ -70,6 +70,7 @@ namespace lw_common.ui.snoop {
                 show_filter_ = value;
                 update_pos();
                 update_tooltips();
+                update_expand_icon();
             }
         }
 
@@ -81,6 +82,7 @@ namespace lw_common.ui.snoop {
                     reapply_ = value;
                     reapplyFilter.BackgroundImage = reapply_ ? filter_applied : filter_not_applied;
                     update_tooltips();
+                    update_expand_icon();
                     parent_.on_click_apply();
                 }
             }
@@ -89,6 +91,14 @@ namespace lw_common.ui.snoop {
         private void update_tooltips() {
             tip.SetToolTip(reapplyFilter, reapply_ ? "Filter is Running\r\nClick to Disable" : "Filter is NOT Running\r\nClick to Enable");
             tip.SetToolTip(expand, reapply_ ? "Filter is Running\r\nClick to Refine and/or Re-apply your Filter" : "Click to Filter (Snoop Around)");
+        }
+        private void update_expand_icon() {
+            bool close_by_vertically = is_close_by_vertically();
+            var expand_icon = close_by_vertically ? Resources.down_applied : Resources.down;
+            if (filter_pressed)
+                expand_icon = Resources.down_and_filter;
+            
+            expand.BackgroundImage = expand_icon;
         }
 
         public void update_pos() {
@@ -152,11 +162,11 @@ namespace lw_common.ui.snoop {
             filter_pressed = !filter_pressed;
         }
 
+
         private void refreshIcons_Tick(object sender, EventArgs e) {
             bool close_by_vertically = is_close_by_vertically();
-            var expand_icon = close_by_vertically ? Resources.down_applied : Resources.down;
             if (close_by_vertically != prev_close_by_vertically_) {
-                expand.BackgroundImage = expand_icon;
+                update_expand_icon();
                 update_pos();
                 update_tooltips();
             }

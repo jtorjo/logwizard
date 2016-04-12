@@ -1,4 +1,8 @@
 
+1.8.27n
+- visually show that filter is set
+
+
 1.8.27m
 - snoop_filter
   - expander : if we're not close, be dimmed so we don't interfere too much ("close" = vertically, always)
