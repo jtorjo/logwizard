@@ -1,6 +1,13 @@
 
+1.8.27o
+- snoop_filter
+  - when using keys (like, continuously pressing up or down, or pgup/down -> i need to temporarily hide it, and show it later)
+    - this is only needed for the view pane, not the details pane
+
+
 1.8.27n
-- visually show that filter is set
+- snoop_filter
+  - visually show that filter is set
 
 
 1.8.27m

@@ -291,8 +291,6 @@ namespace lw_common.ui
             if (!snooper_.aliases_set)
                 return; // only when we know all columns, can we show/hide/set positions
 
-            update_snoop_visibility();
-
             var description_pane = this.description_pane();
             var description_cols = description_pane != null ? description_pane.shown_columns : null;
             foreach (info_type col_type in Enum.GetValues(typeof (info_type))) 
@@ -305,6 +303,7 @@ namespace lw_common.ui
                         if ( sel >= 0)
                             bounds = list.GetItem(sel).GetSubItemBounds(col.Index);
 
+                        update_snoop_visibility(col_type);
                         if (snoop.is_visible) {
                             // at this point, see if the view column is visible - if so, show snooper in the view
                             // otherwise, show it in the description pane - if available
@@ -314,7 +313,6 @@ namespace lw_common.ui
                                 bounds = description_pane.rect_for_column(col_type);
                                 snoop.set_parent_rect(description_pane, bounds);
                             }
-                                
                         }
                     }
         }
@@ -327,6 +325,28 @@ namespace lw_common.ui
             update_snoop_positions();
         }
 
+        private void update_snoop_visibility(info_type col_type) {
+            bool is_active = this.is_current_view;
+            bool any_move = any_moving_key_down();
+
+            var col = log_view_cell.column(this, col_type);
+            bool visible = is_active && !any_move;
+            var snoop = snooper_.snoop_for(col_type);
+            if (visible) {
+                int sel = sel_row_idx_ui_thread;
+                var bounds = Rectangle.Empty;
+                if ( sel >= 0 && col.is_visible())
+                    bounds = list.GetItem(sel).GetSubItemBounds(col.Index);
+                bool visible_in_view = bounds.Width > 0 && bounds.Height > 0;
+                var description_pane = this.description_pane();
+                // if visible in view, we don't care about visibility in details
+                var description_cols = description_pane != null && !visible_in_view ? description_pane.shown_columns : null;
+                bool visible_in_details = description_cols != null && description_cols.Contains(col_type);
+                visible = sel >= 0 && (visible_in_view || visible_in_details);
+            }
+            snoop.is_visible = visible;            
+        }
+
         private void update_snoop_visibility() {
             // we never run any snoop on the full-log
             if (is_full_log)
@@ -334,26 +354,10 @@ namespace lw_common.ui
             if (!snooper_.aliases_set)
                 return; // only when we know all columns, can we show/hide/set positions
 
-            var description_pane = this.description_pane();
-            var description_cols = description_pane != null ? description_pane.shown_columns : null;
-            bool is_active = this.is_current_view;
             foreach (info_type col_type in Enum.GetValues(typeof (info_type))) 
                 if ( info_type_io.is_snoopable(col_type))
-                    if (filter_.log.aliases.has_column(col_type)) {
-                        var col = log_view_cell.column(this, col_type);
-                        bool visible = is_active ;
-                        var snoop = snooper_.snoop_for(col_type);
-                        int sel = sel_row_idx_ui_thread;
-                        if (visible) {
-                            var bounds = Rectangle.Empty;
-                            if ( sel >= 0 && col.is_visible())
-                                bounds = list.GetItem(sel).GetSubItemBounds(col.Index);
-                            bool visible_in_view = bounds.Width > 0 && bounds.Height > 0;
-                            bool visible_in_details = description_cols != null && description_cols.Contains(col_type);
-                            visible = sel >= 0 && (visible_in_view || visible_in_details);
-                        }
-                        snoop.is_visible = visible;
-                    }
+                    if (filter_.log.aliases.has_column(col_type)) 
+                        update_snoop_visibility(col_type);
         }
 
         private void menu_Closing(object sender, ToolStripDropDownClosingEventArgs e) {
@@ -2685,6 +2689,7 @@ namespace lw_common.ui
                     return false;
 
                 edit.force_hide = false;
+                update_snoop_positions();
                 return true;
             });
         }
