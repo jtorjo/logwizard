@@ -30,13 +30,12 @@ using LogWizard;
 
 namespace lw_common.parse.parsers {
 
-
     class text_file_part_on_single_line  : file_parser_base {
 
         private log_entry_line last_entry_ = new log_entry_line();
         private int valid_line_count_ = 0;
 
-        private char separator_char_ = ':';
+        private string separator_char_ = ":";
 
         // this contains the last lines that were read - the reason i have this is for correct parsing of Enters, regardless of how they are
         // ('\r', '\r\n', \n\r', '\n')
@@ -49,7 +48,7 @@ namespace lw_common.parse.parsers {
 
         protected override void on_updated_settings() {
             base.on_updated_settings();
-            separator_char_ = sett_.part_separator.get()[0];
+            separator_char_ = sett_.part_separator;
 
             //if ( util.is_debug)
               //  aliases_ = new aliases("_0=file|@#@|first=ctx1{Firsty}");
@@ -105,12 +104,12 @@ namespace lw_common.parse.parsers {
                 int separator = cur.IndexOf(separator_char_);
                 if (separator >= 0) {
                     string name = cur.Substring(0, separator).Trim();
-                    string value = cur.Substring(separator + 1).Trim();
+                    string value = cur.Substring(separator + separator_char_.Length).Trim();
                     last_entry.add(name, value);
                     ++valid_line_count_;
                 }
                 else if (cur.Trim() != "")
-                    last_entry.append_to_last(cur);
+                    last_entry.add("msg", cur);
                 else {
                     // empty line signals end of entry
                     entries_now.Add(last_entry);

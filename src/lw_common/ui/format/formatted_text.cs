@@ -22,19 +22,21 @@ namespace lw_common.ui.format {
         public formatted_text(string text) {
             text_ = text;
         }
-        private formatted_text(string text, formatted_text other) {
+        private formatted_text(string text, formatted_text other, List<text_part> other_parts = null) {
             text_ = text;
 
             bg_ = other.bg_;
             align = other.align;
             image = other.image;
-            parts_ = other.parts_;
+            parts_ = other_parts ?? other.parts_;
+            invariant_end();
         }
 
         public formatted_text copy() {
             formatted_text the_copy = new formatted_text(text) {
                 bg_ = bg_, align = align, image = image, parts_ = parts_.Select(x => x.copy() ).ToList()
             };
+            the_copy.invariant_end();
             return the_copy;
         }
 
@@ -159,7 +161,7 @@ namespace lw_common.ui.format {
 
             // finally, do the replace
             text_ = text_.Substring(0, start) + new_text + text_.Substring(start + len);
-            invariant();
+            invariant_end();
         }
 
         public void add_parts(List<text_part> parts) {
@@ -168,7 +170,7 @@ namespace lw_common.ui.format {
                 return;
 
             parts_.AddRange(parts);
-            invariant();
+            invariant_start();
             
             // check for collitions
             bool collitions_found = true;
@@ -258,12 +260,29 @@ namespace lw_common.ui.format {
                 }
             }
 
-            invariant();
+            invariant_end();
         }
 
-        private void invariant() {
-            foreach ( var p in parts_)
-                Debug.Assert(p.start >= 0 && p.len > 0 && p.end <= text_.Length);            
+        private void invariant_start() {
+            for (int index = 0; index < parts_.Count; index++) {
+                var p = parts_[index];
+                Debug.Assert(p.start >= 0 && p.len > 0 && p.end <= text_.Length);
+            }
+        }
+
+        // invariant after all parts are "normalized" (they don't interfere with eachother)
+        private void invariant_end() {
+            invariant_start();
+            for (int index = 0; index < parts_.Count; index++) {
+                var p = parts_[index];
+                if (index > 0) {
+                    Debug.Assert(p.start >= parts_[index - 1].start);
+                    Debug.Assert(p.start >= parts_[index - 1].end);
+                }
+            }
+
+            if ( parts_.Any())
+                Debug.Assert( parts_.Last().end <= text_.Length);
         }
 
         public void add_part(text_part part) {
@@ -288,14 +307,17 @@ namespace lw_common.ui.format {
                 if (next_enter < 0)
                     break;
 
-                int start = parts.FindIndex(x => x.start > next_enter);
-                if ( start >= 0)
-                    for ( int i = start; i < parts.Count; ++i)
+                // 1.8.28 - care if a part would start at the deleted char 
+                for ( int i = 0; i < parts.Count; ++i)
+                    if ( parts[i].start > next_enter)
                         parts[i] = new text_part( parts[i].start - 1, parts[i].len, parts[i] );
+                    else if ( parts[i].start < next_enter && parts[i].end > next_enter)
+                        parts[i] = new text_part( parts[i].start, parts[i].len - 1, parts[i] );
                 text = text.Substring(0, next_enter) + text.Substring(next_enter + 1);
             }
-
-            return new formatted_text(text, this) { parts_ = parts };
+            // 1.8.28 ignore empty parts
+            parts = parts.Where(x => x.len > 0).ToList();
+            return new formatted_text(text, this, parts);
         }
 
         // this updates text + infos, so that it will return a single line from a possible multi-line text
@@ -362,9 +384,8 @@ namespace lw_common.ui.format {
                 parts[i] = new text_part(parts[i].start - start + (line_before ? 2 : 0), parts[i].len, parts[i]);
 
             text = (line_before ? more + " " : "") + relevant_line + (line_after ? " " + more : "");
-            var result = new formatted_text(text, this);
-            result.parts_ = parts;
-            result.invariant();
+            var result = new formatted_text(text, this, parts);
+            result.invariant_end();
             return result;
         }
 

@@ -30,10 +30,12 @@ namespace lw_common.parse {
     // represents a "conceptual" line - contains a log entry, but it could be on several lines
     // however, we will compact it on a single line
     public class log_entry_line {
-        private string entry_ = "";
-        private readonly Dictionary<string ,int> infos_ = new Dictionary<string, int>();
+        private string entry_ = null;
+        private readonly Dictionary<string ,string> infos_ = new Dictionary<string, string>();
         // .. so i know the order they were added
         private readonly List<string> names_ = new List<string>(); 
+
+        private Dictionary<string, int> indexes_ = null; 
 
         private DateTime time_ = DateTime.MinValue;
 
@@ -69,19 +71,35 @@ namespace lw_common.parse {
                 break;
             }
 
-            infos_.Add(name, entry_.Length);
-            names_.Add(name);
-            entry_ += value;
+            if (!infos_.ContainsKey(name)) {
+                infos_.Add(name, value);
+                names_.Add(name);
+            } else
+                // append to the existing entry
+                infos_[name] += "\r\n" + value;
         }
 
-
-
-        // it's basically something to be appended to last entry
-        public void append_to_last(string value) {
-            entry_ += value;
+        private void compute_entry_and_indexes() {
+            lock(this)
+                if (entry_ != null && indexes_ != null)
+                    return;
+            
+            Dictionary<string, int> indexes = new Dictionary<string, int>(); 
+            string entry = "";
+            int cur_idx = 0;
+            foreach (var name in names_) {
+                indexes.Add(name, cur_idx);
+                entry += infos_[name];
+                cur_idx += infos_[name].Length;
+            }
+            lock (this) {
+                entry_ = entry;
+                indexes_ = indexes;
+            }
         }
 
         public override string ToString() {
+            compute_entry_and_indexes();
             return entry_;
         }
 
@@ -98,11 +116,13 @@ namespace lw_common.parse {
         }
 
         public Tuple<int, int>[] idx_in_line(aliases aliases) {
+            compute_entry_and_indexes();
+
             var idx = new Tuple<int, int>[(int) info_type.max];
             for (int i = 0; i < idx.Length; ++i)
                 idx[i] = new Tuple<int, int>(-1, -1);
 
-            var sorted = infos_.OrderBy(x => x.Value).Select(x => new Tuple<int, int>((int) aliases.to_info_type(x.Key) , x.Value)).ToList();
+            var sorted = indexes_.OrderBy(x => x.Value).Select(x => new Tuple<int, int>((int) aliases.to_info_type(x.Key) , x.Value)).ToList();
 
             for (int i = 0; i < sorted.Count; ++i) {
                 int len = i < sorted.Count - 1 ? sorted[i + 1].Item2 - sorted[i].Item2 : -1;

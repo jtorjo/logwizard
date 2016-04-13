@@ -1,4 +1,9 @@
 
+1.8.28
+- fix #87 crash import logfile
+  - also, minor fixes to column formatters
+
+
 1.8.27p
 - fix #21
 - snoop_filter

@@ -223,7 +223,6 @@ namespace lw_common.ui.format.column_formatters.helper {
                 something like "Number 255 is awesome." into "Number FF is awesome". Thus, we're replacing sub-text in a a text that also has formatting.
 
                 Normally, that should work ok (formatted_text.replace_text), but if texts got to be imbricated one another, things could get ugly 
-
             */
             var dec_numbers = util.regex_matches(regex_decimal_, text)
                 // note: if the number is already formatted in some way, don't format it again
