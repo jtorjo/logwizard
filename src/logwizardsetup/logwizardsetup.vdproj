@@ -844,7 +844,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.8.16.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:lw_common, Version=1.9.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C8B46DF279E1B4F613E1AB160AF480C8"
@@ -1073,15 +1073,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Log Wizard Setup"
-        "ProductCode" = "8:{47CD7E02-01C3-4051-A4F8-CD69D8FD7B66}"
-        "PackageCode" = "8:{E62845ED-9272-4BF6-8FBB-6C07E495FDD7}"
+        "ProductCode" = "8:{88CA813F-9A5D-4CBA-9A86-82DB5A57C409}"
+        "PackageCode" = "8:{FB82CD45-B293-405A-BCA3-35CF4F1A6EBF}"
         "UpgradeCode" = "8:{0E5BB812-A969-415B-9362-F64234C67C4A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.8.16"
+        "ProductVersion" = "8:1.9.1"
         "Manufacturer" = "8:John Torjo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1623,7 +1623,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0381E054C8674E65AFFF4042D1EADEE4"
             {
-            "SourcePath" = "8:..\\LwFileAssociations\\obj\\Debug\\LwFileAssociations.exe"
+            "SourcePath" = "8:..\\LwFileAssociations\\obj\\Release\\LwFileAssociations.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E297CB39A550491681319D6F014A659B"
@@ -1679,7 +1679,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_900BA54346A2479085BF08862BE89061"
             {
-            "SourcePath" = "8:..\\obj\\x64\\Dbg64\\LogWizard.exe"
+            "SourcePath" = "8:..\\obj\\x64\\Release64\\LogWizard.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E297CB39A550491681319D6F014A659B"

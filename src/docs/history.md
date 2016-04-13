@@ -1,4 +1,8 @@
 
+1.9.1
+- released to public
+
+
 1.8.28
 - fix #87 crash import logfile
   - also, minor fixes to column formatters
