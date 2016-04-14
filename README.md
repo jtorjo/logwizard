@@ -25,6 +25,7 @@ My team and I have created a rather large piece of software that is running on t
 
 Here are some of LogWizard's features:
 - **Easy to filter information** - easy to create filters, easy to turn on/off, easy to copy/paste/modify.
+  - As of 1.9, I've added another way to easily filter: [Snoop Around](Snoop)
 - [**Pretty Formatting! (v1.8+)**](http://www.codeproject.com/Articles/1078310/Log-Wizard-Make-your-Logs-Look-Pretty) - You can have the information that matters to you most to just stand out of the crowd!
 - [**nlog / log4net Enhanced Support**](https://github.com/jtorjo/logwizard/wiki/loglibraries) - It guesses the log (file/database) syntax from the nlog/log4net .config files
 - **Coloring** - allow a filter to have a certain color - allow you visually identify important information (color-the-full-line or color just-what-matches). You can already see coloring in action in the first image above.
