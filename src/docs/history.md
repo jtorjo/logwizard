@@ -1,4 +1,11 @@
 
+1.9.2
+
+
+1.9.1b
+- updated snoop picture
+
+
 1.9.1
 - released to public
 
