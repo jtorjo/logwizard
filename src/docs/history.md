@@ -1,3 +1,6 @@
+1.10.0
+- modernization and dependency upgrades
+
 
 1.9.2
 
