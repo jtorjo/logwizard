@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Data.Sqlite;
+using NLog;
+using NLog.Layouts;
+using NLog.Targets;
+using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
-using NLog;
-using NLog.Layouts;
-using NLog.Targets;
 
 namespace test_nlog
 {
@@ -65,97 +66,94 @@ namespace test_nlog
             ConfigureLogging(target);
         }
 
-
-        // http://stackoverflow.com/questions/26582818/how-to-use-sqlite-with-nlog-in-net
         private static void ensure_db_exists()
         {
             if (File.Exists("Log.db3"))
                 return;
 
-            using (SQLiteConnection connection = new SQLiteConnection("Data Source=Log.db3;Version=3;"))
-                using (SQLiteCommand command = new SQLiteCommand(
-                    "CREATE TABLE Log (time_stamp TEXT, level TEXT, logger TEXT, message TEXT)",
-                    connection))
+            using (var connection = new SqliteConnection("Data Source=Log.db3"))
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
                 {
-                    connection.Open();
+                    command.CommandText = "CREATE TABLE Log (time_stamp TEXT, level TEXT, logger TEXT, message TEXT)";
                     command.ExecuteNonQuery();
                 }
+            }
         }
 
-        public static List<string> sqlite_db_tables(string db_name) {
-            // has to be a file
+        public static List<string> sqlite_db_tables(string db_name)
+        {
             Debug.Assert(File.Exists(db_name));
 
             List<string> tables = new List<string>();
-            try {
-                using (var conn = new SQLiteConnection("Data Source=\"" + db_name + "\";Version=3;")) {
+            try
+            {
+                using (var conn = new SqliteConnection($"Data Source=\"{db_name}\""))
+                {
                     conn.Open();
-                    using (var cmd = new SQLiteCommand("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;", conn))
-                    using (var reader = cmd.ExecuteReader())
-                        while (reader.Read())
-                            tables.Add(reader.GetString(0));
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;";
+                        using (var reader = cmd.ExecuteReader())
+                            while (reader.Read())
+                                tables.Add(reader.GetString(0));
+                    }
                 }
-            } catch  {
+            }
+            catch
+            {
                 tables.Clear();
             }
             return tables;
         }
 
-        public static List<string> sqlite_db_table_fields(string db_name, string table_name) {
-            // has to be a file
+        public static List<string> sqlite_db_table_fields(string db_name, string table_name)
+        {
             Debug.Assert(File.Exists(db_name));
 
             List<string> fields = new List<string>();
-            try {
-                using (var conn = new SQLiteConnection("Data Source=\"" + db_name + "\";Version=3;")) {
+            try
+            {
+                using (var conn = new SqliteConnection($"Data Source=\"{db_name}\""))
+                {
                     conn.Open();
-                    using (var cmd = new SQLiteCommand("pragma table_info(" + table_name + ");", conn))
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $"pragma table_info({table_name});";
                         using (var reader = cmd.ExecuteReader())
                             while (reader.Read())
                                 fields.Add(reader.GetString(1));
+                    }
                 }
             }
-            catch {
+            catch
+            {
                 fields.Clear();
             }
             return fields;
-        } 
+        }
 
-        static void nlog_to_db() {
+
+        static void nlog_to_db()
+        {
             ensure_db_exists();
 
-            DatabaseTarget target = new DatabaseTarget();
-            DatabaseParameterInfo param;
+            var target = new DatabaseTarget("sqlite")
+            {
+                DBProvider = "Microsoft.Data.Sqlite.SqliteConnection, Microsoft.Data.Sqlite",
+                ConnectionString = "Data Source=Log.db3",
+                CommandType = CommandType.Text,
+                CommandText = "insert into Log(time_stamp,level,logger,message) values(@time_stamp, @level, @logger, @message);"
+            };
+
+            target.Parameters.Add(new DatabaseParameterInfo("@time_stamp", "${date}"));
+            target.Parameters.Add(new DatabaseParameterInfo("@level", "${level}"));
+            target.Parameters.Add(new DatabaseParameterInfo("@logger", "${logger}"));
+            target.Parameters.Add(new DatabaseParameterInfo("@message", "${message}"));
 
             // just in case issues with db.
             LogManager.ThrowExceptions = true;
-
-//            target.DBProvider = "System.Data.SQLite";
-            target.DBProvider = "System.Data.SQLite.SQLiteConnection, System.Data.SQLite";
-            //target.ConnectionString = "Data Source=${basedir}\\Log.db3;Version=3;";
-            target.ConnectionString = "Data Source=Log.db3;Version=3;";
-            target.CommandType = CommandType.Text;
-            target.CommandText = "insert into Log(time_stamp,level,logger,message) values(@time_stamp, @level, @logger, @message);";
-
-            param = new DatabaseParameterInfo();
-            param.Name = "@time_stamp";
-            param.Layout = "${date}";
-            target.Parameters.Add(param);
-
-            param = new DatabaseParameterInfo();
-            param.Name = "@level";
-            param.Layout = "${level}";
-            target.Parameters.Add(param);
-
-            param = new DatabaseParameterInfo();
-            param.Name = "@logger";
-            param.Layout = "${logger}";
-            target.Parameters.Add(param);
-
-            param = new DatabaseParameterInfo();
-            param.Name = "@message";
-            param.Layout = "${message}";
-            target.Parameters.Add(param);
 
             ConfigureLogging(target);
         }
