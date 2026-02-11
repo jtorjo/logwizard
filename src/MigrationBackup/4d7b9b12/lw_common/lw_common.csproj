@@ -1,0 +1,511 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D7C0968B-59CA-4F94-A875-EF9DE8F098EB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>lw_common</RootNamespace>
+    <AssemblyName>lw_common</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.17.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.17\lib\net45\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess">
+      <HintPath>..\packages\Oracle.ManagedDataAccess.12.1.2400\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=2.0.2.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.2.0.2\lib\net471\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=2.0.2.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.2.0.2\lib\net471\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.119.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.119.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="3rdparty\ColorEx.cs" />
+    <Compile Include="3rdparty\HSL.cs" />
+    <Compile Include="async_log\async_file_appender.cs" />
+    <Compile Include="context\find_log_syntax.cs" />
+    <Compile Include="context\log_to.cs" />
+    <Compile Include="filter\addition.cs" />
+    <Compile Include="filter\filter.cs" />
+    <Compile Include="filter\filter_line.cs" />
+    <Compile Include="filter\filter_row.cs" />
+    <Compile Include="filter\font_info.cs" />
+    <Compile Include="filter\info_type.cs" />
+    <Compile Include="filter\raw_filter_row.cs" />
+    <Compile Include="filter\line.cs" />
+    <Compile Include="notes\md5_log_keeper.cs" />
+    <Compile Include="notes\notes_keeper.cs" />
+    <Compile Include="parse\aliases.cs" />
+    <Compile Include="parse\factory.cs" />
+    <Compile Include="parse\log_parser.cs" />
+    <Compile Include="parse\log_entry_line.cs" />
+    <Compile Include="parse\parsers\db\database_log_parser.cs" />
+    <Compile Include="parse\parsers\file\csv_file.cs" />
+    <Compile Include="parse\parsers\file\file_parser_base.cs" />
+    <Compile Include="parse\parsers\file\text_file_part_on_single_line.cs" />
+    <Compile Include="parse\parsers\file\xml\string_builder_reader.cs" />
+    <Compile Include="parse\parsers\file\xml_file.cs" />
+    <Compile Include="parse\parsers\generic_entry_log_parser.cs" />
+    <Compile Include="parse\parsers\system\debug_print.cs" />
+    <Compile Include="parse\parsers\system\event_viewer.cs" />
+    <Compile Include="parse\parsers\file\text_file_line_by_line.cs" />
+    <Compile Include="parse\log_reader.cs" />
+    <Compile Include="parse\parsers\log_parser_base.cs" />
+    <Compile Include="parse_config\parse_config.cs" />
+    <Compile Include="parse_config\parse_log4net_syntax.cs" />
+    <Compile Include="parse_config\parse_nlog_syntax.cs" />
+    <Compile Include="parse_config\parse_syntax.cs" />
+    <Compile Include="parse_config\syntax_to_lw_syntax.cs" />
+    <Compile Include="readers\entry\capture_all_debug_events.cs" />
+    <Compile Include="readers\entry\database_table_reader.cs" />
+    <Compile Include="readers\entry\debug_text_reader.cs" />
+    <Compile Include="readers\entry\entry_text_reader_base.cs" />
+    <Compile Include="readers\entry\event_log_reader.cs" />
+    <Compile Include="readers\file\file_text_reader.cs" />
+    <Compile Include="readers\file\file_text_reader_base.cs" />
+    <Compile Include="readers\file\inmem_text_reader.cs" />
+    <Compile Include="readers\shared_memory_text_reader.cs" />
+    <Compile Include="readers\text_reader.cs" />
+    <Compile Include="settings\app.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="settings\settings_file.cs" />
+    <Compile Include="string\large_string.cs" />
+    <Compile Include="string\sub_string.cs" />
+    <Compile Include="ui\about_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\about_form.Designer.cs">
+      <DependentUpon>about_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\action_type.cs" />
+    <Compile Include="ui\alias_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\alias_form.Designer.cs">
+      <DependentUpon>alias_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\animated_button.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ui\animated_button.Designer.cs">
+      <DependentUpon>animated_button.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\categories_ctrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\categories_ctrl.Designer.cs">
+      <DependentUpon>categories_ctrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\description_ctrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\description_ctrl.Designer.cs">
+      <DependentUpon>description_ctrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\log_view\category_formatter\category_colors.cs" />
+    <Compile Include="ui\log_view\category_formatter\category_formatter.cs" />
+    <Compile Include="ui\format\column_formatters\helper\abbreviation.cs" />
+    <Compile Include="ui\format\column_formatter_renderer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ui\format\edit_column_formatters_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\format\edit_column_formatters_form.Designer.cs">
+      <DependentUpon>edit_column_formatters_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\edit_log_settings_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\edit_log_settings_form.Designer.cs">
+      <DependentUpon>edit_log_settings_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\filter_ctrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\filter_ctrl.Designer.cs">
+      <DependentUpon>filter_ctrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\font_list.cs" />
+    <Compile Include="ui\format\column_formatters\helper\alternate_bg_color.cs" />
+    <Compile Include="ui\format\column_formatters\cell.cs" />
+    <Compile Include="ui\format\column_formatter_base.cs" />
+    <Compile Include="ui\format\column_formatters\helper\color_date.cs" />
+    <Compile Include="ui\format\column_formatters\helper\compare_number.cs" />
+    <Compile Include="ui\format\column_formatters\helper\color_time.cs" />
+    <Compile Include="ui\format\column_formatters\helper\format_number.cs" />
+    <Compile Include="ui\format\column_formatters\helper\regex_color.cs" />
+    <Compile Include="ui\format\column_formatters\helper\multiline.cs" />
+    <Compile Include="ui\format\column_formatters\picture.cs" />
+    <Compile Include="ui\format\column_formatters\stack_trace.cs" />
+    <Compile Include="ui\format\column_formatters\format.cs" />
+    <Compile Include="ui\format\column_formatters\xml.cs" />
+    <Compile Include="ui\format\column_formatter_array.cs" />
+    <Compile Include="ui\format\formatted_text.cs" />
+    <Compile Include="ui\format\formatted_text_cache.cs" />
+    <Compile Include="ui\go_to_line_time_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\go_to_line_time_form.Designer.cs">
+      <DependentUpon>go_to_line_time_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\gradient_brush_list.cs" />
+    <Compile Include="ui\log_view\category_formatter\category_format_settings.cs" />
+    <Compile Include="ui\log_view\log_view.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\log_view\log_view.Designer.cs">
+      <DependentUpon>log_view.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\log_view\log_view_cell.cs" />
+    <Compile Include="ui\log_view\log_view_item_draw_ui.cs" />
+    <Compile Include="ui\log_view\log_view_parent.cs" />
+    <Compile Include="ui\log_view\log_view_quick_filter.cs" />
+    <Compile Include="ui\log_view\log_view_show_columns.cs" />
+    <Compile Include="ui\log_view\log_view_render.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ui\log_view\log_view_right_click.cs" />
+    <Compile Include="ui\log_view\log_view_column_tag.cs" />
+    <Compile Include="ui\log_view\match\log_view_data_source.cs" />
+    <Compile Include="ui\log_view\match\match_full_item.cs" />
+    <Compile Include="ui\log_view\match\match_item.cs" />
+    <Compile Include="ui\search\search_renderer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ui\msg_details_ctrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\msg_details_ctrl.Designer.cs">
+      <DependentUpon>msg_details_ctrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\new_context_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\new_context_form.Designer.cs">
+      <DependentUpon>new_context_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\note_ctrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\note_ctrl.Designer.cs">
+      <DependentUpon>note_ctrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\format\text_part.cs" />
+    <Compile Include="ui\search\search_for.cs" />
+    <Compile Include="ui\search\search_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\search\search_form.Designer.cs">
+      <DependentUpon>search_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\search\search_form_history.cs" />
+    <Compile Include="ui\select_color_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\select_color_form.Designer.cs">
+      <DependentUpon>select_color_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\select_zip_file_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\select_zip_file_form.Designer.cs">
+      <DependentUpon>select_zip_file_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\log_view\smart_readonly_textbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ui\log_view\smart_readonly_textbox.Designer.cs">
+      <DependentUpon>smart_readonly_textbox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\settings_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\settings_form.Designer.cs">
+      <DependentUpon>settings_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\show_tips.cs" />
+    <Compile Include="ui\snoop\snoop_around_expander_ctrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\snoop\snoop_around_expander_ctrl.Designer.cs">
+      <DependentUpon>snoop_around_expander_ctrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\snoop\snoop_around_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\snoop\snoop_around_form.Designer.cs">
+      <DependentUpon>snoop_around_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\snoop\snoop_filter.cs" />
+    <Compile Include="ui\solid_brush_list.cs" />
+    <Compile Include="ui\rich_label_ctrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\rich_label_ctrl.Designer.cs">
+      <DependentUpon>rich_label_ctrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\status_ctrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\status_ctrl.Designer.cs">
+      <DependentUpon>status_ctrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\test_event_logs_sizes_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\test_event_logs_sizes_form.Designer.cs">
+      <DependentUpon>test_event_logs_sizes_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\test_syntax_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\test_syntax_form.Designer.cs">
+      <DependentUpon>test_syntax_form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui_helpers\log_wizard_serializable_classes.cs" />
+    <Compile Include="ui_helpers\ui_info.cs" />
+    <Compile Include="util\db_util.cs" />
+    <Compile Include="util\count_last_period.cs" />
+    <Compile Include="util\exception_keeper.cs" />
+    <Compile Include="util\simple_cache_dictionary.cs" />
+    <Compile Include="util\clipboard_util.cs" />
+    <Compile Include="util\double_dictionary.cs" />
+    <Compile Include="util\easy_mutex.cs" />
+    <Compile Include="util\error_list_keeper.cs" />
+    <Compile Include="util\export_text.cs" />
+    <Compile Include="util\list_extensions.cs" />
+    <Compile Include="settings\log_settings_string.cs" />
+    <Compile Include="util\memory_optimized_list.cs" />
+    <Compile Include="util\mouse_wheel.cs" />
+    <Compile Include="util\olv_extensions.cs" />
+    <Compile Include="util\read_github_release.cs" />
+    <Compile Include="settings\settings_as_string.cs" />
+    <Compile Include="util\split.cs" />
+    <Compile Include="util\string_search.cs" />
+    <Compile Include="util\util.cs" />
+    <Compile Include="util\win32.cs" />
+    <Compile Include="util\zip_util.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\about_form.resx">
+      <DependentUpon>about_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\alias_form.resx">
+      <DependentUpon>alias_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\animated_button.resx">
+      <DependentUpon>animated_button.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\categories_ctrl.resx">
+      <DependentUpon>categories_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\description_ctrl.resx">
+      <DependentUpon>description_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\format\edit_column_formatters_form.resx">
+      <DependentUpon>edit_column_formatters_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\edit_log_settings_form.resx">
+      <DependentUpon>edit_log_settings_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\filter_ctrl.resx">
+      <DependentUpon>filter_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\go_to_line_time_form.resx">
+      <DependentUpon>go_to_line_time_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\log_view\log_view.resx">
+      <DependentUpon>log_view.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\msg_details_ctrl.resx">
+      <DependentUpon>msg_details_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\new_context_form.resx">
+      <DependentUpon>new_context_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\note_ctrl.resx">
+      <DependentUpon>note_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\search\search_form.resx">
+      <DependentUpon>search_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\select_color_form.resx">
+      <DependentUpon>select_color_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\select_zip_file_form.resx">
+      <DependentUpon>select_zip_file_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\log_view\smart_readonly_textbox.resx">
+      <DependentUpon>smart_readonly_textbox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\settings_form.resx">
+      <DependentUpon>settings_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\rich_label_ctrl.resx">
+      <DependentUpon>rich_label_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\snoop\snoop_around_expander_ctrl.resx">
+      <DependentUpon>snoop_around_expander_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\snoop\snoop_around_form.resx">
+      <DependentUpon>snoop_around_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\status_ctrl.resx">
+      <DependentUpon>status_ctrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\test_event_logs_sizes_form.resx">
+      <DependentUpon>test_event_logs_sizes_form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\test_syntax_form.resx">
+      <DependentUpon>test_syntax_form.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Resources\eyedropper.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="3rdparty\color_picker\color_picker.csproj">
+      <Project>{5d703fc5-ea9a-4bbb-bf08-e3a80efddaa8}</Project>
+      <Name>color_picker</Name>
+    </ProjectReference>
+    <ProjectReference Include="3rdparty\EncodingTools\EncodingTools.csproj">
+      <Project>{ca19d4de-b232-491a-92bf-7bf3a2758694}</Project>
+      <Name>EncodingTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="3rdparty\fastJSON\fastJSON net35.csproj">
+      <Project>{fdaf5695-e651-4d4d-8e15-0bd9fbef5069}</Project>
+      <Name>fastJSON net35</Name>
+    </ProjectReference>
+    <ProjectReference Include="3rdparty\ObjectListView\ObjectListView2012.csproj">
+      <Project>{18feda0c-d147-4286-b39a-01204808106a}</Project>
+      <Name>ObjectListView2012</Name>
+    </ProjectReference>
+    <ProjectReference Include="3rdparty\SharpZipLib\src\ICSharpCode.SharpZLib.csproj">
+      <Project>{0e7413ff-eb9e-4714-acf2-be3a6a7b2ffd}</Project>
+      <Name>ICSharpCode.SharpZLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\buggy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\filter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clear-filter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\filter-not-applied.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\filter-applied.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down-applied.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down-dimmed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down-and-filter.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
