@@ -1,32 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using NLog;
-using NLog.Internal;
 using NLog.Layouts;
 using NLog.Targets;
-using NLog.Targets.Wrappers;
 
 namespace test_nlog
 {
     class Program
     {
+        private static void ConfigureLogging(Target target)
+        {
+            LogManager.Setup().LoadConfiguration(cfg =>
+            {
+                cfg.ForLogger(LogLevel.Debug).WriteTo(target);
+            });
+        }
+
         static void nlog_to_file_and_archive() {
             FileTarget target = new FileTarget();
             target.Layout = "${longdate} ${logger} ${message}";
             target.FileName = "${basedir}/logs/fileandarchive.txt";
             target.ArchiveFileName = "${basedir}/archives/log.{#####}.txt";
-            target.ArchiveAboveSize = 1000 * 1024; 
+            target.ArchiveAboveSize = 1000 * 1024;
             //target.ArchiveNumbering = FileTarget.ArchiveNumberingMode.Sequence;
 
-            NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Debug);            
+            ConfigureLogging(target);
         }
 
         static void nlog_to_simple_file() {
@@ -36,7 +39,7 @@ namespace test_nlog
             target.KeepFileOpen = false;
             target.Encoding = Encoding.UTF8;
 
-            NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Debug);            
+            ConfigureLogging(target);
         }
 
         static void nlog_to_csv_file() {
@@ -52,14 +55,14 @@ namespace test_nlog
 
             target.Layout = layout;
 
-            NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Debug);            
+            ConfigureLogging(target);
         }
 
         static void nlog_to_console() {
             ConsoleTarget target = new ConsoleTarget();
             target.Layout = "${date:format=HH\\:MM\\:ss} ${logger} ${message}";
 
-            NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Debug);            
+            ConfigureLogging(target);
         }
 
 
@@ -154,8 +157,7 @@ namespace test_nlog
             param.Layout = "${message}";
             target.Parameters.Add(param);
 
-            NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Debug);
-            
+            ConfigureLogging(target);
         }
 
         private static void log_fast() {
