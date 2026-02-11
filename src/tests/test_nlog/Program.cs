@@ -26,9 +26,6 @@ namespace test_nlog
             target.ArchiveAboveSize = 1000 * 1024; 
             //target.ArchiveNumbering = FileTarget.ArchiveNumberingMode.Sequence;
 
-            // this speeds up things when no other processes are writing to the file
-            target.ConcurrentWrites = true;
-
             NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Debug);            
         }
 
